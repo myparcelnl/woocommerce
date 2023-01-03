@@ -84,13 +84,13 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             try {
                 return $this->getDataFromOrder($order);
             } catch (Throwable $exception) {
-//                DefaultLogger::error(
-//                    'Could not retrieve order data from WooCommerce order',
-//                    [
-//                        'order_id' => $order->get_id(),
-//                        'error'    => $exception->getMessage(),
-//                    ]
-//                );
+                DefaultLogger::error(
+                    'Could not retrieve order data from WooCommerce order',
+                    [
+                        'order_id' => $order->get_id(),
+                        'error'    => $exception->getMessage(),
+                    ]
+                );
 
                 return new PdkOrder();
             }

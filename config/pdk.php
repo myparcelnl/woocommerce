@@ -11,25 +11,26 @@ use MyParcelNL\Pdk\Plugin\Action\EndpointActionsInterface;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
 use MyParcelNL\Pdk\Product\Repository\AbstractProductRepository;
 use MyParcelNL\Pdk\Settings\Repository\AbstractSettingsRepository;
+use MyParcelNL\WooCommerce\Logger\WordPressLogger;
 use MyParcelNL\WooCommerce\Pdk\Guzzle7ClientAdapter;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcEndpointActions;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
 use MyParcelNL\WooCommerce\Pdk\Product\Repository\PdkProductRepository;
 use MyParcelNL\WooCommerce\Pdk\Service\LanguageService;
 use MyParcelNL\WooCommerce\Pdk\Settings\Repository\PdkSettingsRepository;
+use Psr\Log\LoggerInterface;
 use function DI\autowire;
 use function DI\value;
 
 return [
     'mode' => value(WP_DEBUG_LOG ? Pdk::MODE_DEVELOPMENT : Pdk::MODE_PRODUCTION),
 
-    ApiServiceInterface::class        => autowire(MyParcelApiService::class),
     AbstractPdkOrderRepository::class => autowire(PdkOrderRepository::class),
+    AbstractProductRepository::class  => autowire(PdkProductRepository::class),
+    AbstractSettingsRepository::class => autowire(PdkSettingsRepository::class),
+    ApiServiceInterface::class        => autowire(MyParcelApiService::class),
     ClientAdapterInterface::class     => autowire(Guzzle7ClientAdapter::class),
     EndpointActionsInterface::class   => autowire(WcEndpointActions::class),
     LanguageServiceInterface::class   => autowire(LanguageService::class),
-    AbstractSettingsRepository::class => autowire(PdkSettingsRepository::class),
-    AbstractProductRepository::class  => autowire(PdkProductRepository::class),
-
-    //AbstractLogger::class                  => autowire(PdkLogger::class),
+    LoggerInterface::class            => autowire(WordPressLogger::class),
 ];

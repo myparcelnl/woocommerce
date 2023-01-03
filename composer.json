@@ -14,6 +14,9 @@
       "MyParcelNL\\WooCommerce\\": "src"
     }
   },
+  "config": {
+    "prepend-autoloader": false
+  },
   "repositories": [
     {
       "type": "path",

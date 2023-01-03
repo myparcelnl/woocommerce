@@ -6,18 +6,11 @@ namespace MyParcelNL\WooCommerce\Admin;
 
 defined('ABSPATH') or die();
 
-use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
-
 class MessagesRepository
 {
-    use HasInstance;
-
-    public const ORDERS_PAGE   = 'edit-shop_order';
-    public const SETTINGS_PAGE = 'woocommerce_page_wcmp_settings';
-    public const PLUGINS_PAGE  = 'plugins';
-
-    private const OPTION_NOTICE_DISMISSED = 'myparcel_notice_dismissed';
-    private const OPTION_NOTICE_PERSISTED = 'myparcel_notice_persisted';
+    public const  SETTINGS_PAGE           = 'woocommerce_page_wcmp_settings';
+    private const OPTION_NOTICE_DISMISSED = 'myparcelnl_notice_dismissed';
+    private const OPTION_NOTICE_PERSISTED = 'myparcelnl_notice_persisted';
 
     /**
      * @var array
@@ -33,6 +26,39 @@ class MessagesRepository
         if (defined('DOING_AJAX')) {
             register_shutdown_function([$this, 'persistRemainingMessages']);
         }
+    }
+
+    /**
+     * @param  string      $message
+     * @param  string      $level
+     * @param  string|null $messageId
+     * @param  array       $onPages
+     */
+    public function addMessage(string $message, string $level, ?string $messageId = null, array $onPages = []): void
+    {
+        if ($this->messageIsDuplicate($message)) {
+            return;
+        }
+
+        $this->messages[] = [
+            'message'   => $message,
+            'messageId' => $messageId ?? null,
+            'level'     => $level,
+            'onPages'   => $onPages,
+        ];
+    }
+
+    public function ajaxDismissNotice(): void
+    {
+        $messageId    = $_POST['messageid'] ?? null;
+        $messageArray = get_option(self::OPTION_NOTICE_DISMISSED, []);
+
+        if ($messageId && ! in_array($messageId, $messageArray)) {
+            $messageArray[] = $messageId;
+
+            update_option(self::OPTION_NOTICE_DISMISSED, $messageArray);
+        }
+        die();
     }
 
     /**
@@ -59,38 +85,6 @@ class MessagesRepository
         }
     }
 
-    /**
-     * @param  string      $message
-     * @param  string      $level
-     * @param  string|null $messageId
-     * @param  array       $onPages
-     */
-    public function addMessage(string $message, string $level, ?string $messageId = null, array $onPages = []): void
-    {
-        if ($this->messageIsDuplicate($message)) {
-            return;
-        }
-
-        $this->messages[] = [
-            'message'   => $message,
-            'messageId' => $messageId ?? null,
-            'level'     => $level,
-            'onPages'   => $onPages,
-        ];
-    }
-
-    /**
-     * @param string $message
-     *
-     * @return bool whether $this->messages already contains a message with text $message.
-     */
-    private function messageIsDuplicate(string $message): bool
-    {
-        return 0 < count(array_filter($this->messages, static function (array $entry) use ($message) {
-            return $message === $entry['message'];
-        }));
-    }
-
     public function showMessages(): void
     {
         foreach ($this->messages as $message) {
@@ -110,6 +104,20 @@ class MessagesRepository
     }
 
     /**
+     * @param  string $message
+     *
+     * @return bool whether $this->messages already contains a message with text $message.
+     */
+    private function messageIsDuplicate(string $message): bool
+    {
+        return 0 < count(
+                array_filter($this->messages, static function (array $entry) use ($message) {
+                    return $message === $entry['message'];
+                })
+            );
+    }
+
+    /**
      * @param  array $message
      *
      * @return bool
@@ -117,28 +125,16 @@ class MessagesRepository
     private function shouldMessageBeShown(array $message): bool
     {
         $messageAlreadyShown             =
-            $message['messageId'] && in_array(
-            $message['messageId'],
-            (array) get_option(self::OPTION_NOTICE_DISMISSED),
-            true
-        );
+            $message['messageId']
+            && in_array(
+                $message['messageId'],
+                (array) get_option(self::OPTION_NOTICE_DISMISSED),
+                true
+            );
         $currentPageId                   = get_current_screen()->id ?? '';
         $currentPageShouldDisplayMessage = in_array($currentPageId, $message['onPages'], true);
         $allPagesShouldDisplayMessage    = ! $message['onPages'];
 
         return ! $messageAlreadyShown && ($currentPageShouldDisplayMessage || $allPagesShouldDisplayMessage);
-    }
-
-    public function ajaxDismissNotice(): void
-    {
-        $messageId    = $_POST['messageid'] ?? null;
-        $messageArray = get_option(self::OPTION_NOTICE_DISMISSED, []);
-
-        if ($messageId && ! in_array($messageId, $messageArray)) {
-            $messageArray[] = $messageId;
-
-            update_option(self::OPTION_NOTICE_DISMISSED, $messageArray);
-        }
-        die();
     }
 }

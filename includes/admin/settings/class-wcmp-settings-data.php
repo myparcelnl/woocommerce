@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use MyParcelNL\WooCommerce\Admin\MessageLogger;
 use MyParcelNL\WooCommerce\Admin\MessagesRepository;
 use MyParcelNL\WooCommerce\Facade\Messages;
 use MyParcelNL\WooCommerce\includes\admin\settings\CarrierSettings;
@@ -24,22 +23,16 @@ class WCMP_Settings_Data
 {
     public const ENABLED  = '1';
     public const DISABLED = '0';
-
     public const EXPORT_MODE_PPS       = 'pps';
     public const EXPORT_MODE_SHIPMENTS = 'shipments';
-
     public const DISPLAY_FOR_SELECTED_METHODS = 'selected_methods';
     public const DISPLAY_FOR_ALL_METHODS      = 'all_methods';
-
     public const DISPLAY_TOTAL_PRICE     = 'total_price';
     public const DISPLAY_SURCHARGE_PRICE = 'surcharge';
-
     public const PICKUP_LOCATIONS_VIEW_MAP  = 'map';
     public const PICKUP_LOCATIONS_VIEW_LIST = 'list';
-
     public const CHANGE_STATUS_AFTER_PRINTING = 'after_printing';
     public const CHANGE_STATUS_AFTER_EXPORT   = 'after_export';
-
     public const NOT_ACTIVE        = 'notActive';
     public const NO_OPTIONS        = 'noOptions';
     public const EQUAL_TO_SHIPMENT = 'equalToShipment';
@@ -61,6 +54,74 @@ class WCMP_Settings_Data
 
         // Create the MyParcel settings with the admin_init hook.
         add_action('admin_init', [$this, 'createAllSettings']);
+    }
+
+    /**
+     * @param  string       $name
+     * @param  string|array $conditions
+     *
+     * @return array
+     */
+    public static function getFeeField(string $name, array $conditions): array
+    {
+        return [
+            'name'      => $name,
+            'condition' => $conditions,
+            'class'     => ['wcmp__child'],
+            'label'     => __('Fee (optional)', 'woocommerce-myparcel'),
+            'type'      => 'currency',
+            'help_text' => __(
+                'Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.',
+                'woocommerce-myparcel'
+            ),
+        ];
+    }
+
+    /**
+     * @param  string $name
+     *
+     * @return mixed
+     */
+    public static function getSetting(string $name)
+    {
+        return WCMYPA()->settingCollection->getByName($name);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getTabs(): array
+    {
+        $array = [
+            'general'         => __('General', 'woocommerce-myparcel'),
+            'export_defaults' => __('Default export settings', 'woocommerce-myparcel'),
+            'checkout'        => __('Checkout settings', 'woocommerce-myparcel'),
+        ];
+
+        foreach (AccountSettings::getInstance()
+                     ->getEnabledCarriers() as $carrier) {
+            $array[$carrier->getName()] = $carrier->getHuman();
+        }
+
+        return $array;
+    }
+
+    /**
+     * Get the weekdays from WP_Locale and remove any given entries.
+     *
+     * @param  int[] $remove
+     *
+     * @return array
+     */
+    public static function getWeekdays(array $remove = []): array
+    {
+        $weekdays = (new WP_Locale())->weekday;
+
+        foreach ($remove as $index) {
+            unset($weekdays[$index]);
+        }
+
+        return $weekdays;
     }
 
     /**
@@ -88,50 +149,26 @@ class WCMP_Settings_Data
         $this->generateCarrierSettings();
     }
 
-    /**
-     * @param string $name
-     *
-     * @return mixed
-     */
-    public static function getSetting(string $name)
+    public function renderManualUpdateTrigger(): void
     {
-        return WCMYPA()->settingCollection->getByName($name);
+        $baseUrl = 'admin-ajax.php?action=' . 'trigger_manual_update';
+
+        echo sprintf(
+            '<a class="button wcmp__trigger" href="%s">%s</a>',
+            $baseUrl,
+            __('settings_trigger_manual_update_button', 'woocommerce-myparcel')
+        );
     }
 
     /**
      * @return array
      */
-    public static function getTabs(): array
+    private function conditionForModeShipmentsOnly(): array
     {
-        $array = [
-            'general'         => __('General', 'woocommerce-myparcel'),
-            'export_defaults' => __('Default export settings', 'woocommerce-myparcel'),
-            'checkout'        => __('Checkout settings', 'woocommerce-myparcel'),
+        return [
+            'parent_name'  => 'export_mode',
+            'parent_value' => self::EXPORT_MODE_SHIPMENTS,
         ];
-
-        foreach (AccountSettings::getInstance()->getEnabledCarriers() as $carrier) {
-            $array[$carrier->getName()] = $carrier->getHuman();
-        }
-
-        return $array;
-    }
-
-    /**
-     * Get the weekdays from WP_Locale and remove any given entries.
-     *
-     * @param  int[] $remove
-     *
-     * @return array
-     */
-    public static function getWeekdays(array $remove = []): array
-    {
-        $weekdays = (new WP_Locale())->weekday;
-
-        foreach ($remove as $index) {
-            unset($weekdays[$index]);
-        }
-
-        return $weekdays;
     }
 
     /**
@@ -154,9 +191,9 @@ class WCMP_Settings_Data
     /**
      * Generate settings sections and fields by the given $settingsArray.
      *
-     * @param array  $settingsArray - Array of settings to loop through.
-     * @param string $optionName    - Name to use in the identifier.
-     * @param bool   $prefix        - Add the key of the top level settings as prefix before every setting or not.
+     * @param  array  $settingsArray - Array of settings to loop through.
+     * @param  string $optionName    - Name to use in the identifier.
+     * @param  bool   $prefix        - Add the key of the top level settings as prefix before every setting or not.
      *
      * @throws \Exception
      */
@@ -178,7 +215,7 @@ class WCMP_Settings_Data
                     /**
                      * Allows a description to be shown with a section title.
                      */
-                    static function() use ($section) {
+                    static function () use ($section) {
                         WCMP_Settings_Callbacks::renderSection($section);
                     },
                     $optionIdentifier
@@ -206,7 +243,7 @@ class WCMP_Settings_Data
                     }
 
                     // Default callback
-                    $callback = static function() use ($class) {
+                    $callback = static function () use ($class) {
                         WCMP_Settings_Callbacks::renderField($class);
                     };
 
@@ -247,408 +284,60 @@ class WCMP_Settings_Data
     }
 
     /**
-     * @return array
+     * Get the html string to render after the custom css select.
+     *
+     * @return string
      */
-    private function getSectionsGeneral(): array
+    private function getCustomCssAddition(): string
     {
-        return [
-            'general' => [
-                [
-                    'name'     => 'api',
-                    'label'    => __('settings_general_api_title', 'woocommerce-myparcel'),
-                    'settings' => $this->getSectionGeneralApi(),
-                ],
-                [
-                    'name'     => 'general',
-                    'label'    => __('settings_general_general_title', 'woocommerce-myparcel'),
-                    'settings' => $this->getSectionGeneralGeneral(),
-                ],
-                [
-                    'name'     => 'diagnostics',
-                    'label'    => __('settings_general_diagnostics_title', 'woocommerce-myparcel'),
-                    'settings' => $this->getSectionGeneralDiagnostics(),
-                ],
-            ],
-        ];
-    }
+        $currentTheme = wp_get_theme();
 
-    /**
-     * @return array
-     */
-    private function getSectionsExportDefaults(): array
-    {
-        return [
-            'export_defaults' => [
-                [
-                    'name'     => 'main',
-                    'label'    => __('Default export settings', 'woocommerce-myparcel'),
-                    'settings' => $this->getSectionExportDefaultsMain(),
-                ],
-            ],
-        ];
-    }
+        $preset  = sanitize_title($currentTheme);
+        $cssPath = WCMYPA()->plugin_path() . "/assets/css/delivery-options/delivery-options-preset-$preset.css";
 
-    private function getSectionsCheckout(): array
-    {
-        return [
-            'checkout' => [
-                [
-                    'name'     => 'main',
-                    'label'    => __('Checkout settings', 'woocommerce-myparcel'),
-                    'settings' => $this->getSectionCheckoutMain(),
-                ],
-                [
-                    'name'      => 'strings',
-                    'label'     => __('Titles', 'woocommerce-myparcel'),
-                    'condition' => 'delivery_options_enabled',
-                    'settings'  => $this->getSectionCheckoutStrings(),
-                ],
-            ],
-        ];
-    }
+        if (! file_exists($cssPath)) {
+            return '';
+        }
 
-    /**
-     * @return array
-     */
-    private function getSectionGeneralApi(): array
-    {
-        return [
-            [
-                'name'      => 'api_key',
-                'label'     => __('settings_general_api_key', 'woocommerce-myparcel'),
-                'help_text' => __('settings_general_api_key_help_text', 'woocommerce-myparcel'),
-            ],
-            [
-                'name'      => 'trigger_manual_update',
-                'label'     => __('settings_trigger_manual_update', 'woocommerce-myparcel'),
-                'help_text' => __('settings_trigger_manual_update_help_text', 'woocommerce-myparcel'),
-                'condition' => AccountSettingsService::getInstance()->useManualUpdate(),
-                'callback'  => [$this, 'renderManualUpdateTrigger'],
-            ],
-        ];
-    }
-
-    public function renderManualUpdateTrigger(): void
-    {
-        $baseUrl = 'admin-ajax.php?action=' . 'trigger_manual_update';
-
-        echo sprintf(
-            '<a class="button wcmp__trigger" href="%s">%s</a>',
-            $baseUrl,
-            __('settings_trigger_manual_update_button', 'woocommerce-myparcel')
+        return sprintf(
+            '<p>%s <a class="" href="#" onclick="document.querySelector(`#delivery_options_custom_css`).value = `%s`">%s</a></p>',
+            sprintf(__('Theme "%s" detected.', 'woocommerce-myparcel'), $currentTheme),
+            file_get_contents($cssPath),
+            __('Apply preset.', 'woocommerce-myparcel')
         );
     }
 
     /**
-     * @return array
+     * @return string
      */
-    private function getSectionGeneralGeneral(): array
+    private function getExportModeDescription(): string
     {
-        $exportModeSetting = WCMYPA()->settingCollection->getByName('export_mode');
+        return sprintf('<br><div>%s</div>', __('setting_modus_append', 'woocommerce-myparcel'));
+    }
 
-        if (self::EXPORT_MODE_PPS === $exportModeSetting) {
-            Messages::log(
-                __('message_export_mode_on', 'woocommerce-myparcel'),
-                MessageLogger::NOTICE_LEVEL_WARNING,
-                null,
-                [MessagesRepository::SETTINGS_PAGE]
-            );
+    /**
+     * Created html for clickable hints for the variables that can be used in the label description.
+     *
+     * @return string
+     */
+    private function getLabelDescriptionAddition(): string
+    {
+        $output    = '';
+        $variables = [
+            '[DELIVERY_DATE]' => __('Delivery date', 'woocommerce-myparcel'),
+            '[ORDER_NR]'      => __('Order number', 'woocommerce-myparcel'),
+            '[PRODUCT_ID]'    => __('Product id', 'woocommerce-myparcel'),
+            '[PRODUCT_NAME]'  => __('Product name', 'woocommerce-myparcel'),
+            '[PRODUCT_QTY]'   => __('Product quantity', 'woocommerce-myparcel'),
+            '[PRODUCT_SKU]'   => __('Product SKU', 'woocommerce-myparcel'),
+            '[CUSTOMER_NOTE]' => __('Customer note', 'woocommerce-myparcel'),
+        ];
+
+        foreach ($variables as $variable => $description) {
+            $output .= "<br><a onclick=\"var el = document.querySelector('#label_description_field input');el.value += '$variable';el.focus();\">$variable</a>: $description";
         }
 
-        return [
-            [
-                'name'    => 'export_mode',
-                'label'   => __('setting_mode_title', 'woocommerce-myparcel'),
-                'type'    => 'select',
-                'options' => [
-                    self::EXPORT_MODE_SHIPMENTS => __('setting_mode_shipments_title', 'woocommerce-myparcel'),
-                    self::EXPORT_MODE_PPS       => __('setting_mode_pps_title', 'woocommerce-myparcel'),
-                ],
-                'default'   => self::EXPORT_MODE_SHIPMENTS,
-                'help_text' => __('setting_modus_help_text', 'woocommerce-myparcel'),
-                'append'    => $this->getExportModeDescription(),
-            ],
-            [
-                'name'      => 'download_display',
-                'label'     => __('Label display', 'woocommerce-myparcel'),
-                'condition' => $this->conditionForModeShipmentsOnly(),
-                'type'      => 'select',
-                'options'   => [
-                    'download' => __('Download PDF', 'woocommerce-myparcel'),
-                    'display'  => __('Open the PDF in a new tab', 'woocommerce-myparcel'),
-                ],
-            ],
-            [
-                'name'      => 'label_format',
-                'label'     => __('Label format', 'woocommerce-myparcel'),
-                'condition' => $this->conditionForModeShipmentsOnly(),
-                'type'      => 'select',
-                'options'   => [
-                    'A4' => __('Standard printer (A4)', 'woocommerce-myparcel'),
-                    'A6' => __('Label Printer (A6)', 'woocommerce-myparcel'),
-                ],
-            ],
-            [
-                'name'      => 'ask_for_print_position',
-                'label'     => __('Ask for print start position', 'woocommerce-myparcel'),
-                'condition' => [
-                    $this->conditionForModeShipmentsOnly(),
-                    [
-                        'parent_name'  => 'label_format',
-                        'type'         => 'disable',
-                        'parent_value' => 'A4',
-                        'set_value'    => self::DISABLED,
-                    ],
-                ],
-                'type'      => 'toggle',
-                'help_text' => __(
-                    'This option enables you to continue printing where you left off last time',
-                    'woocommerce-myparcel'
-                ),
-            ],
-            [
-                'name'      => 'track_trace_email',
-                'label'     => __('Track & Trace in email', 'woocommerce-myparcel'),
-                'condition' => $this->conditionForModeShipmentsOnly(),
-                'type'      => 'toggle',
-                'help_text' => __(
-                    'Add the Track & Trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the Track & Trace email in your MyParcel backend.',
-                    'woocommerce-myparcel'
-                ),
-            ],
-            [
-                'name'      => 'track_trace_my_account',
-                'label'     => __('Track & Trace in My Account', 'woocommerce-myparcel'),
-                'condition' => $this->conditionForModeShipmentsOnly(),
-                'type'      => 'toggle',
-                'help_text' => __('Show Track & Trace trace code and link in My Account.', 'woocommerce-myparcel'),
-            ],
-            [
-                'name'      => 'show_delivery_day',
-                'label'     => __('setting_show_delivery_day_title', 'woocommerce-myparcel'),
-                'type'      => 'toggle',
-                'help_text' => __('setting_show_delivery_day_help_text', 'woocommerce-myparcel'),
-            ],
-            [
-                'name'      => 'process_directly',
-                'label'     => __('Process shipments directly', 'woocommerce-myparcel'),
-                'condition' => $this->conditionForModeShipmentsOnly(),
-                'type'      => 'toggle',
-                'help_text' => __(
-                    'When you enable this option, shipments will be directly processed when sent to MyParcel.',
-                    'woocommerce-myparcel'
-                ),
-            ],
-            [
-                'name'      => 'order_status_automation',
-                'label'     => __('Order status automation', 'woocommerce-myparcel'),
-                'type'      => 'toggle',
-                'help_text' => __(
-                    'Automatically set order status to a predefined status after successful MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track & Trace in email</strong> option, otherwise the Track & Trace code will not be included in the customer email.',
-                    'woocommerce-myparcel'
-                ),
-            ],
-            [
-                'name'      => 'change_order_status_after',
-                'class'     => ['wcmp__child'],
-                'label'     => __('setting_change_order_status_after', 'woocommerce-myparcel'),
-                'type'      => 'select',
-                'default'   => self::CHANGE_STATUS_AFTER_PRINTING,
-                'options'   => [
-                    self::CHANGE_STATUS_AFTER_PRINTING => __('setting_change_status_after_printing', 'woocommerce-myparcel'),
-                    self::CHANGE_STATUS_AFTER_EXPORT   => __('setting_change_status_after_export', 'woocommerce-myparcel'),
-                ],
-                'help_text' => __(
-                    'setting_change_status_after_help_text',
-                    'woocommerce-myparcel'
-                ),
-            ],
-            [
-                'name'      => 'automatic_order_status',
-                'label'     => __('setting_automatic_order_status', 'woocommerce-myparcel'),
-                'condition' => 'order_status_automation',
-                'class'     => ['wcmp__child'],
-                'type'      => 'select',
-                'options'   => WCMP_Settings_Callbacks::get_order_status_options(),
-            ],
-            [
-                'name'      => 'barcode_in_note',
-                'label'     => __('Place barcode inside note', 'woocommerce-myparcel'),
-                'condition' => $this->conditionForModeShipmentsOnly(),
-                'type'      => 'toggle',
-                'help_text' => __('Place the barcode inside a note of the order', 'woocommerce-myparcel'),
-            ],
-            [
-                'name'      => 'barcode_in_note_title',
-                'condition' => [
-                    $this->conditionForModeShipmentsOnly(),
-                    'barcode_in_note',
-                ],
-                'class'     => ['wcmp__child'],
-                'label'     => __('Title before the barcode', 'woocommerce-myparcel'),
-                'default'   => __('Track & trace code:', 'woocommerce-myparcel'),
-                'help_text' => __(
-                    'You can change the text before the barcode inside an note',
-                    'woocommerce-myparcel'
-                ),
-            ],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    private function getSectionGeneralDiagnostics(): array
-    {
-        return [
-            [
-                'name'        => 'error_logging',
-                'label'       => __('Log API communication', 'woocommerce-myparcel'),
-                'type'        => 'toggle',
-                'description' => '<a href="' . esc_url_raw(
-                        admin_url('admin.php?page=wc-status&tab=logs')
-                    ) . '" target="_blank">' . __('View logs', 'woocommerce-myparcel') . '</a> (wc-myparcel)',
-            ],
-            [
-                'callback' => [Status::class, 'renderDiagnostics'],
-            ],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    private function getSectionExportDefaultsMain(): array
-    {
-        return [
-            [
-                'name'      => 'shipping_methods_package_types',
-                'label'     => __('Package types', 'woocommerce-myparcel'),
-                'callback'  => [WCMP_Settings_Callbacks::class, 'enhanced_select'],
-                'loop'      => Data::getPackageTypesHuman(),
-                'options'   => (new WCMP_Shipping_Methods())->getShippingMethods(),
-                'default'   => [],
-                'help_text' => __(
-                    'Select one or more shipping methods for each MyParcel package type',
-                    'woocommerce-myparcel'
-                ),
-            ],
-            [
-                'name'      => 'connect_email',
-                'label'     => __('Connect customer email', 'woocommerce-myparcel'),
-                'type'      => 'toggle',
-                'help_text' => __(
-                    "When you connect the customer's email, MyParcel can send a Track & Trace email to this address. In your MyParcel backend you can enable or disable this email and format it in your own style.",
-                    'woocommerce-myparcel'
-                ),
-            ],
-            [
-                'name'      => 'connect_phone',
-                'label'     => __('Connect customer phone', 'woocommerce-myparcel'),
-                'type'      => 'toggle',
-                'help_text' => __(
-                    "When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments.",
-                    'woocommerce-myparcel'
-                ),
-            ],
-            [
-                'name'      => 'save_customer_address',
-                'label'     => __('save_customer_address', 'woocommerce-myparcel'),
-                'type'      => 'toggle',
-                'help_text' => __('save_customer_address_help_text', 'woocommerce-myparcel'),
-            ],
-            [
-                'name'      => 'label_description',
-                'label'     => __('Label description', 'woocommerce-myparcel'),
-                'help_text' => __(
-                    'With this option you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in your backoffice. Because of limited space on the label which varies per package type, we recommend that you keep the label description as short as possible.',
-                    'woocommerce-myparcel'
-                ),
-                'append'    => $this->getLabelDescriptionAddition(),
-            ],
-            [
-                'name'      => 'empty_parcel_weight',
-                'type'      => 'number',
-                'default'   => 0,
-                'step'      => 0.001,
-                'label'     => sprintf(
-                    '%s (%s)',
-                    __('Empty parcel weight', 'woocommerce-myparcel'),
-                    get_option('woocommerce_weight_unit')
-                ),
-                'help_text' => __(
-                    'Default weight of your empty parcel.',
-                    'woocommerce-myparcel'
-                ),
-            ],
-            [
-                'name'      => 'empty_digital_stamp_weight',
-                'type'      => 'number',
-                'default'   => 0,
-                'step'      => 0.001,
-                'label'     => sprintf(
-                    '%s (%s)',
-                    __('setting_empty_digital_stamp_weight', 'woocommerce-myparcel'),
-                    get_option('woocommerce_weight_unit')
-                ),
-                'help_text' => __(
-                    'setting_empty_digital_stamp_weight_description',
-                    'woocommerce-myparcel'
-                ),
-            ],
-            [
-                'name'      => 'hs_code',
-                'label'     => __('Default HS Code', 'woocommerce-myparcel'),
-                'help_text' => __(
-                    'HS Codes are used for MyParcel world shipments, you can find the appropriate code on the site of the Dutch Customs.',
-                    'woocommerce-myparcel'
-                ),
-            ],
-            [
-                'name'    => 'package_contents',
-                'label'   => __('Customs shipment type', 'woocommerce-myparcel'),
-                'type'    => 'select',
-                'options' => [
-                    1 => __('Commercial goods', 'woocommerce-myparcel'),
-                    2 => __('Commercial samples', 'woocommerce-myparcel'),
-                    3 => __('Documents', 'woocommerce-myparcel'),
-                    4 => __('Gifts', 'woocommerce-myparcel'),
-                    5 => __('Return shipment', 'woocommerce-myparcel'),
-                ],
-            ],
-            [
-                'name'      => 'country_of_origin',
-                'label'     => __('setting_country_of_origin', 'woocommerce-myparcel'),
-                'type'      => 'select',
-                'options'   => (new WC_Countries())->get_countries(),
-                'default'   => (new WC_Countries())->get_base_country(),
-                'help-text' => __(
-                    'setting_country_of_origin_help_text',
-                    'woocommerce-myparcel'
-                ),
-            ],
-            [
-                'name'      => 'export_automatic',
-                'label'     => __('Automatic export', 'woocommerce-myparcel'),
-                'type'      => 'toggle',
-                'help_text' => __(
-                    'With this setting enabled orders are exported to MyParcel automatically after payment.',
-                    'woocommerce-myparcel'
-                ),
-            ],
-            [
-                'name'      => 'export_automatic_status',
-                'condition' => 'export_automatic',
-                'label'     => __('setting_export_automatic_status', 'woocommerce-myparcel'),
-                'class'     => ['wcmp__child'],
-                'type'      => 'select',
-                'default'   => self::NOT_ACTIVE,
-                'options'   =>
-                    [self::NOT_ACTIVE => __('not_active', 'woocommerce-myparcel')]
-                    + WCMP_Settings_Callbacks::get_order_status_options(),
-                'help_text' => __('setting_export_automatic_status_help_text', 'woocommerce-myparcel'),
-            ],
-        ];
+        return sprintf("<div class=\"label-description-variables\"><p>Available variables: %s</p>", $output);
     }
 
     /**
@@ -842,91 +531,401 @@ class WCMP_Settings_Data
     }
 
     /**
-     * Get the html string to render after the custom css select.
-     *
-     * @return string
+     * @return array
      */
-    private function getCustomCssAddition(): string
+    private function getSectionExportDefaultsMain(): array
     {
-        $currentTheme = wp_get_theme();
-
-        $preset  = sanitize_title($currentTheme);
-        $cssPath = WCMYPA()->plugin_path() . "/assets/css/delivery-options/delivery-options-preset-$preset.css";
-
-        if (! file_exists($cssPath)) {
-            return '';
-        }
-
-        return sprintf(
-            '<p>%s <a class="" href="#" onclick="document.querySelector(`#delivery_options_custom_css`).value = `%s`">%s</a></p>',
-            sprintf(__('Theme "%s" detected.', 'woocommerce-myparcel'), $currentTheme),
-            file_get_contents($cssPath),
-            __('Apply preset.', 'woocommerce-myparcel')
-        );
-    }
-
-    /**
-     * Created html for clickable hints for the variables that can be used in the label description.
-     *
-     * @return string
-     */
-    private function getLabelDescriptionAddition(): string
-    {
-        $output = '';
-        $variables = [
-            '[DELIVERY_DATE]' => __('Delivery date', 'woocommerce-myparcel'),
-            '[ORDER_NR]'      => __('Order number', 'woocommerce-myparcel'),
-            '[PRODUCT_ID]'    => __('Product id', 'woocommerce-myparcel'),
-            '[PRODUCT_NAME]'  => __('Product name', 'woocommerce-myparcel'),
-            '[PRODUCT_QTY]'   => __('Product quantity', 'woocommerce-myparcel'),
-            '[PRODUCT_SKU]'   => __('Product SKU', 'woocommerce-myparcel'),
-            '[CUSTOMER_NOTE]' => __('Customer note', 'woocommerce-myparcel'),
+        return [
+            [
+                'name'      => 'shipping_methods_package_types',
+                'label'     => __('Package types', 'woocommerce-myparcel'),
+                'callback'  => [WCMP_Settings_Callbacks::class, 'enhanced_select'],
+                'loop'      => Data::getPackageTypesHuman(),
+                'options'   => (new WCMP_Shipping_Methods())->getShippingMethods(),
+                'default'   => [],
+                'help_text' => __(
+                    'Select one or more shipping methods for each MyParcel package type',
+                    'woocommerce-myparcel'
+                ),
+            ],
+            [
+                'name'      => 'connect_email',
+                'label'     => __('Connect customer email', 'woocommerce-myparcel'),
+                'type'      => 'toggle',
+                'help_text' => __(
+                    "When you connect the customer's email, MyParcel can send a Track & Trace email to this address. In your MyParcel backend you can enable or disable this email and format it in your own style.",
+                    'woocommerce-myparcel'
+                ),
+            ],
+            [
+                'name'      => 'connect_phone',
+                'label'     => __('Connect customer phone', 'woocommerce-myparcel'),
+                'type'      => 'toggle',
+                'help_text' => __(
+                    "When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments.",
+                    'woocommerce-myparcel'
+                ),
+            ],
+            [
+                'name'      => 'save_customer_address',
+                'label'     => __('save_customer_address', 'woocommerce-myparcel'),
+                'type'      => 'toggle',
+                'help_text' => __('save_customer_address_help_text', 'woocommerce-myparcel'),
+            ],
+            [
+                'name'      => 'label_description',
+                'label'     => __('Label description', 'woocommerce-myparcel'),
+                'help_text' => __(
+                    'With this option you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in your backoffice. Because of limited space on the label which varies per package type, we recommend that you keep the label description as short as possible.',
+                    'woocommerce-myparcel'
+                ),
+                'append'    => $this->getLabelDescriptionAddition(),
+            ],
+            [
+                'name'      => 'empty_parcel_weight',
+                'type'      => 'number',
+                'default'   => 0,
+                'step'      => 0.001,
+                'label'     => sprintf(
+                    '%s (%s)',
+                    __('Empty parcel weight', 'woocommerce-myparcel'),
+                    get_option('woocommerce_weight_unit')
+                ),
+                'help_text' => __(
+                    'Default weight of your empty parcel.',
+                    'woocommerce-myparcel'
+                ),
+            ],
+            [
+                'name'      => 'empty_digital_stamp_weight',
+                'type'      => 'number',
+                'default'   => 0,
+                'step'      => 0.001,
+                'label'     => sprintf(
+                    '%s (%s)',
+                    __('setting_empty_digital_stamp_weight', 'woocommerce-myparcel'),
+                    get_option('woocommerce_weight_unit')
+                ),
+                'help_text' => __(
+                    'setting_empty_digital_stamp_weight_description',
+                    'woocommerce-myparcel'
+                ),
+            ],
+            [
+                'name'      => 'hs_code',
+                'label'     => __('Default HS Code', 'woocommerce-myparcel'),
+                'help_text' => __(
+                    'HS Codes are used for MyParcel world shipments, you can find the appropriate code on the site of the Dutch Customs.',
+                    'woocommerce-myparcel'
+                ),
+            ],
+            [
+                'name'    => 'package_contents',
+                'label'   => __('Customs shipment type', 'woocommerce-myparcel'),
+                'type'    => 'select',
+                'options' => [
+                    1 => __('Commercial goods', 'woocommerce-myparcel'),
+                    2 => __('Commercial samples', 'woocommerce-myparcel'),
+                    3 => __('Documents', 'woocommerce-myparcel'),
+                    4 => __('Gifts', 'woocommerce-myparcel'),
+                    5 => __('Return shipment', 'woocommerce-myparcel'),
+                ],
+            ],
+            [
+                'name'      => 'country_of_origin',
+                'label'     => __('setting_country_of_origin', 'woocommerce-myparcel'),
+                'type'      => 'select',
+                'options'   => (new WC_Countries())->get_countries(),
+                'default'   => (new WC_Countries())->get_base_country(),
+                'help-text' => __(
+                    'setting_country_of_origin_help_text',
+                    'woocommerce-myparcel'
+                ),
+            ],
+            [
+                'name'      => 'export_automatic',
+                'label'     => __('Automatic export', 'woocommerce-myparcel'),
+                'type'      => 'toggle',
+                'help_text' => __(
+                    'With this setting enabled orders are exported to MyParcel automatically after payment.',
+                    'woocommerce-myparcel'
+                ),
+            ],
+            [
+                'name'      => 'export_automatic_status',
+                'condition' => 'export_automatic',
+                'label'     => __('setting_export_automatic_status', 'woocommerce-myparcel'),
+                'class'     => ['wcmp__child'],
+                'type'      => 'select',
+                'default'   => self::NOT_ACTIVE,
+                'options'   =>
+                    [self::NOT_ACTIVE => __('not_active', 'woocommerce-myparcel')]
+                    + WCMP_Settings_Callbacks::get_order_status_options(),
+                'help_text' => __('setting_export_automatic_status_help_text', 'woocommerce-myparcel'),
+            ],
         ];
-
-        foreach ($variables as $variable => $description) {
-            $output .= "<br><a onclick=\"var el = document.querySelector('#label_description_field input');el.value += '$variable';el.focus();\">$variable</a>: $description";
-        }
-
-        return sprintf("<div class=\"label-description-variables\"><p>Available variables: %s</p>", $output);
-    }
-
-    /**
-     * @return string
-     */
-    private function getExportModeDescription(): string
-    {
-        return sprintf('<br><div>%s</div>', __('setting_modus_append', 'woocommerce-myparcel'));
     }
 
     /**
      * @return array
      */
-    private function conditionForModeShipmentsOnly(): array
+    private function getSectionGeneralApi(): array
     {
         return [
-            'parent_name'  => 'export_mode',
-            'parent_value' => self::EXPORT_MODE_SHIPMENTS,
+            [
+                'name'      => 'api_key',
+                'label'     => __('settings_general_api_key', 'woocommerce-myparcel'),
+                'help_text' => __('settings_general_api_key_help_text', 'woocommerce-myparcel'),
+            ],
+            [
+                'name'      => 'trigger_manual_update',
+                'label'     => __('settings_trigger_manual_update', 'woocommerce-myparcel'),
+                'help_text' => __('settings_trigger_manual_update_help_text', 'woocommerce-myparcel'),
+                'condition' => AccountSettingsService::getInstance()
+                    ->useManualUpdate(),
+                'callback'  => [$this, 'renderManualUpdateTrigger'],
+            ],
         ];
     }
 
     /**
-     * @param string $name
-     * @param string|array  $conditions
-     *
      * @return array
      */
-    public static function getFeeField(string $name, array $conditions): array
+    private function getSectionGeneralDiagnostics(): array
     {
         return [
-            'name'      => $name,
-            'condition' => $conditions,
-            'class'     => ['wcmp__child'],
-            'label'     => __('Fee (optional)', 'woocommerce-myparcel'),
-            'type'      => 'currency',
-            'help_text' => __(
-                'Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.',
-                'woocommerce-myparcel'
-            ),
+            [
+                'name'        => 'error_logging',
+                'label'       => __('Log API communication', 'woocommerce-myparcel'),
+                'type'        => 'toggle',
+                'description' => '<a href="' . esc_url_raw(
+                        admin_url('admin.php?page=wc-status&tab=logs')
+                    ) . '" target="_blank">' . __('View logs', 'woocommerce-myparcel') . '</a> (wc-myparcel)',
+            ],
+            [
+                'callback' => [Status::class, 'renderDiagnostics'],
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getSectionGeneralGeneral(): array
+    {
+        $exportModeSetting = WCMYPA()->settingCollection->getByName('export_mode');
+
+        if (self::EXPORT_MODE_PPS === $exportModeSetting) {
+            Messages::warning(
+                __('message_export_mode_on', 'woocommerce-myparcel'),
+                ['onPages' => MessagesRepository::SETTINGS_PAGE]
+            );
+        }
+
+        return [
+            [
+                'name'      => 'export_mode',
+                'label'     => __('setting_mode_title', 'woocommerce-myparcel'),
+                'type'      => 'select',
+                'options'   => [
+                    self::EXPORT_MODE_SHIPMENTS => __('setting_mode_shipments_title', 'woocommerce-myparcel'),
+                    self::EXPORT_MODE_PPS       => __('setting_mode_pps_title', 'woocommerce-myparcel'),
+                ],
+                'default'   => self::EXPORT_MODE_SHIPMENTS,
+                'help_text' => __('setting_modus_help_text', 'woocommerce-myparcel'),
+                'append'    => $this->getExportModeDescription(),
+            ],
+            [
+                'name'      => 'download_display',
+                'label'     => __('Label display', 'woocommerce-myparcel'),
+                'condition' => $this->conditionForModeShipmentsOnly(),
+                'type'      => 'select',
+                'options'   => [
+                    'download' => __('Download PDF', 'woocommerce-myparcel'),
+                    'display'  => __('Open the PDF in a new tab', 'woocommerce-myparcel'),
+                ],
+            ],
+            [
+                'name'      => 'label_format',
+                'label'     => __('Label format', 'woocommerce-myparcel'),
+                'condition' => $this->conditionForModeShipmentsOnly(),
+                'type'      => 'select',
+                'options'   => [
+                    'A4' => __('Standard printer (A4)', 'woocommerce-myparcel'),
+                    'A6' => __('Label Printer (A6)', 'woocommerce-myparcel'),
+                ],
+            ],
+            [
+                'name'      => 'ask_for_print_position',
+                'label'     => __('Ask for print start position', 'woocommerce-myparcel'),
+                'condition' => [
+                    $this->conditionForModeShipmentsOnly(),
+                    [
+                        'parent_name'  => 'label_format',
+                        'type'         => 'disable',
+                        'parent_value' => 'A4',
+                        'set_value'    => self::DISABLED,
+                    ],
+                ],
+                'type'      => 'toggle',
+                'help_text' => __(
+                    'This option enables you to continue printing where you left off last time',
+                    'woocommerce-myparcel'
+                ),
+            ],
+            [
+                'name'      => 'track_trace_email',
+                'label'     => __('Track & Trace in email', 'woocommerce-myparcel'),
+                'condition' => $this->conditionForModeShipmentsOnly(),
+                'type'      => 'toggle',
+                'help_text' => __(
+                    'Add the Track & Trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the Track & Trace email in your MyParcel backend.',
+                    'woocommerce-myparcel'
+                ),
+            ],
+            [
+                'name'      => 'track_trace_my_account',
+                'label'     => __('Track & Trace in My Account', 'woocommerce-myparcel'),
+                'condition' => $this->conditionForModeShipmentsOnly(),
+                'type'      => 'toggle',
+                'help_text' => __('Show Track & Trace trace code and link in My Account.', 'woocommerce-myparcel'),
+            ],
+            [
+                'name'      => 'show_delivery_day',
+                'label'     => __('setting_show_delivery_day_title', 'woocommerce-myparcel'),
+                'type'      => 'toggle',
+                'help_text' => __('setting_show_delivery_day_help_text', 'woocommerce-myparcel'),
+            ],
+            [
+                'name'      => 'process_directly',
+                'label'     => __('Process shipments directly', 'woocommerce-myparcel'),
+                'condition' => $this->conditionForModeShipmentsOnly(),
+                'type'      => 'toggle',
+                'help_text' => __(
+                    'When you enable this option, shipments will be directly processed when sent to MyParcel.',
+                    'woocommerce-myparcel'
+                ),
+            ],
+            [
+                'name'      => 'order_status_automation',
+                'label'     => __('Order status automation', 'woocommerce-myparcel'),
+                'type'      => 'toggle',
+                'help_text' => __(
+                    'Automatically set order status to a predefined status after successful MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track & Trace in email</strong> option, otherwise the Track & Trace code will not be included in the customer email.',
+                    'woocommerce-myparcel'
+                ),
+            ],
+            [
+                'name'      => 'change_order_status_after',
+                'class'     => ['wcmp__child'],
+                'label'     => __('setting_change_order_status_after', 'woocommerce-myparcel'),
+                'type'      => 'select',
+                'default'   => self::CHANGE_STATUS_AFTER_PRINTING,
+                'options'   => [
+                    self::CHANGE_STATUS_AFTER_PRINTING => __(
+                        'setting_change_status_after_printing',
+                        'woocommerce-myparcel'
+                    ),
+                    self::CHANGE_STATUS_AFTER_EXPORT   => __(
+                        'setting_change_status_after_export',
+                        'woocommerce-myparcel'
+                    ),
+                ],
+                'help_text' => __(
+                    'setting_change_status_after_help_text',
+                    'woocommerce-myparcel'
+                ),
+            ],
+            [
+                'name'      => 'automatic_order_status',
+                'label'     => __('setting_automatic_order_status', 'woocommerce-myparcel'),
+                'condition' => 'order_status_automation',
+                'class'     => ['wcmp__child'],
+                'type'      => 'select',
+                'options'   => WCMP_Settings_Callbacks::get_order_status_options(),
+            ],
+            [
+                'name'      => 'barcode_in_note',
+                'label'     => __('Place barcode inside note', 'woocommerce-myparcel'),
+                'condition' => $this->conditionForModeShipmentsOnly(),
+                'type'      => 'toggle',
+                'help_text' => __('Place the barcode inside a note of the order', 'woocommerce-myparcel'),
+            ],
+            [
+                'name'      => 'barcode_in_note_title',
+                'condition' => [
+                    $this->conditionForModeShipmentsOnly(),
+                    'barcode_in_note',
+                ],
+                'class'     => ['wcmp__child'],
+                'label'     => __('Title before the barcode', 'woocommerce-myparcel'),
+                'default'   => __('Track & trace code:', 'woocommerce-myparcel'),
+                'help_text' => __(
+                    'You can change the text before the barcode inside an note',
+                    'woocommerce-myparcel'
+                ),
+            ],
+        ];
+    }
+
+    private function getSectionsCheckout(): array
+    {
+        return [
+            'checkout' => [
+                [
+                    'name'     => 'main',
+                    'label'    => __('Checkout settings', 'woocommerce-myparcel'),
+                    'settings' => $this->getSectionCheckoutMain(),
+                ],
+                [
+                    'name'      => 'strings',
+                    'label'     => __('Titles', 'woocommerce-myparcel'),
+                    'condition' => 'delivery_options_enabled',
+                    'settings'  => $this->getSectionCheckoutStrings(),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getSectionsExportDefaults(): array
+    {
+        return [
+            'export_defaults' => [
+                [
+                    'name'     => 'main',
+                    'label'    => __('Default export settings', 'woocommerce-myparcel'),
+                    'settings' => $this->getSectionExportDefaultsMain(),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getSectionsGeneral(): array
+    {
+        return [
+            'general' => [
+                [
+                    'name'     => 'api',
+                    'label'    => __('settings_general_api_title', 'woocommerce-myparcel'),
+                    'settings' => $this->getSectionGeneralApi(),
+                ],
+                [
+                    'name'     => 'general',
+                    'label'    => __('settings_general_general_title', 'woocommerce-myparcel'),
+                    'settings' => $this->getSectionGeneralGeneral(),
+                ],
+                [
+                    'name'     => 'diagnostics',
+                    'label'    => __('settings_general_diagnostics_title', 'woocommerce-myparcel'),
+                    'settings' => $this->getSectionGeneralDiagnostics(),
+                ],
+            ],
         ];
     }
 }
