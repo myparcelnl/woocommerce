@@ -6,6 +6,9 @@ namespace MyParcelNL\WooCommerce\includes\Concerns;
 
 defined('ABSPATH') or die();
 
+/**
+ * @deprecated
+ */
 trait HasInstance
 {
     /**
@@ -19,6 +22,7 @@ trait HasInstance
      * @return static
      * @TODO         add return type "static" when we've dropped support for php < 8
      * @noinspection PhpMissingReturnTypeInspection
+     * @deprecated
      */
     public static function getInstance()
     {

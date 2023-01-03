@@ -12,7 +12,6 @@ use MyParcelNL\Sdk\src\Model\Fulfilment\Order;
 use MyParcelNL\Sdk\src\Services\Web\Webhook\OrderStatusChangeWebhookWebService;
 use MyParcelNL\WooCommerce\includes\Webhook\Hooks\AbstractWebhook;
 use WCMP_Log;
-use WCMYPA_Settings;
 use WP_REST_Request;
 use WP_REST_Response;
 use WPO\WC\MyParcel\Compatibility\WC_Core;
@@ -93,7 +92,7 @@ class OrderStatusWebhook extends AbstractWebhook
     {
         $wcOrder = WC_Core::get_order($order->getExternalIdentifier());
         $wcOrder->update_status(
-            WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS),
+            WCMYPA()->settingCollection->getByName('automatic_order_status'),
             '',
             true
         );

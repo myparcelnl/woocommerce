@@ -80,10 +80,10 @@ class WCMP_Assets
                 'ajax_url'               => admin_url('admin-ajax.php'),
                 'nonce'                  => wp_create_nonce(WCMYPA::NONCE_ACTION),
                 'download_display'       => WCMYPA()->settingCollection->getByName(
-                    WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY
+                    'download_display'
                 ),
                 'ask_for_print_position' => WCMYPA()->settingCollection->isEnabled(
-                    WCMYPA_Settings::SETTING_ASK_FOR_PRINT_POSITION
+                    'ask_for_print_position'
                 ),
                 'strings'                => [
                     'no_orders_selected' => __('You have not selected any orders!', 'woocommerce-myparcel'),

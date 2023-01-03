@@ -15,113 +15,17 @@ if (class_exists('WCMYPA_Settings')) {
  */
 class WCMYPA_Settings
 {
-    public const SETTINGS_MENU_SLUG = 'wcmp_settings';
-    public const SETTINGS_GENERAL         = 'general';
-    public const SETTINGS_CHECKOUT        = 'checkout';
-    public const SETTINGS_EXPORT_DEFAULTS = 'export_defaults';
-    /**
-     * General
-     */
-    public const SETTING_API_KEY                   = 'api_key';
-    public const SETTING_TRIGGER_MANUAL_UPDATE     = 'trigger_manual_update';
-    public const SETTING_AUTOMATIC_ORDER_STATUS    = 'automatic_order_status';
-    public const SETTING_BARCODE_IN_NOTE           = 'barcode_in_note';
-    public const SETTING_BARCODE_IN_NOTE_TITLE     = 'barcode_in_note_title';
-    public const SETTING_DOWNLOAD_DISPLAY          = 'download_display';
-    public const SETTING_EXPORT_MODE               = 'export_mode';
-    public const SETTING_ERROR_LOGGING             = 'error_logging';
-    public const SETTING_LABEL_FORMAT              = 'label_format';
-    public const SETTING_ORDER_STATUS_AUTOMATION   = 'order_status_automation';
-    public const SETTING_CHANGE_ORDER_STATUS_AFTER = 'change_order_status_after';
-    public const SETTING_ASK_FOR_PRINT_POSITION    = 'ask_for_print_position';
-    public const SETTING_PROCESS_DIRECTLY          = 'process_directly';
-    public const SETTING_TRACK_TRACE_EMAIL         = 'track_trace_email';
-    public const SETTING_TRACK_TRACE_MY_ACCOUNT    = 'track_trace_my_account';
-    /**
-     * Export defaults
-     */
-    public const SETTING_SHIPPING_METHODS_PACKAGE_TYPES = 'shipping_methods_package_types';
-    public const SETTING_CONNECT_EMAIL                  = 'connect_email';
-    public const SETTING_CONNECT_PHONE                  = 'connect_phone';
-    public const SETTING_LABEL_DESCRIPTION              = 'label_description';
-    public const SETTING_EMPTY_PARCEL_WEIGHT            = 'empty_parcel_weight';
-    public const SETTING_EMPTY_DIGITAL_STAMP_WEIGHT     = 'empty_digital_stamp_weight';
-    public const SETTING_HS_CODE                        = 'hs_code';
-    public const SETTING_PACKAGE_CONTENT                = 'package_contents';
-    public const SETTING_COUNTRY_OF_ORIGIN              = 'country_of_origin';
-    public const SETTING_AUTOMATIC_EXPORT               = 'export_automatic';
-    public const SETTING_AUTOMATIC_EXPORT_STATUS        = 'export_automatic_status';
-    public const SETTING_SAVE_CUSTOMER_ADDRESS          = 'save_customer_address';
-    /**
-     * Checkout
-     */
-    public const SETTING_DELIVERY_OPTIONS_CUSTOM_CSS           = 'delivery_options_custom_css';
-    public const SETTING_DELIVERY_OPTIONS_DISPLAY              = 'delivery_options_display';
-    public const SETTING_DELIVERY_OPTIONS_ENABLED              = 'delivery_options_enabled';
-    public const SETTING_DELIVERY_OPTIONS_POSITION             = 'delivery_options_position';
-    public const SETTING_DELIVERY_OPTIONS_PRICE_FORMAT         = 'delivery_options_price_format';
-    public const SETTINGS_SHOW_DELIVERY_OPTIONS_FOR_BACKORDERS = 'delivery_options_enabled_for_backorders';
-    public const SETTING_SHOW_DELIVERY_DAY                     = 'show_delivery_day';
-    public const SETTING_DELIVERY_TITLE                        = 'delivery_title';
-    public const SETTING_HEADER_DELIVERY_OPTIONS_TITLE         = 'header_delivery_options_title';
-    public const SETTING_PICKUP_TITLE                          = 'pickup_title';
-    public const SETTING_PICKUP_LOCATIONS_DEFAULT_VIEW         = 'pickup_locations_default_view';
-    public const SETTING_MORNING_DELIVERY_TITLE                = 'morning_title';
-    public const SETTING_EVENING_DELIVERY_TITLE                = 'evening_title';
-    public const SETTING_ONLY_RECIPIENT_TITLE                  = 'only_recipient_title';
-    public const SETTING_SIGNATURE_TITLE                       = 'signature_title';
-    public const SETTING_STANDARD_TITLE                        = 'standard_title';
-    public const SETTING_SAME_DAY_TITLE                        = 'same_day_title';
-    public const SETTING_USE_SPLIT_ADDRESS_FIELDS              = 'use_split_address_fields';
-    public const DEFAULT_BELGIAN_INSURANCE = 500;
     /*
      * Carrier settings, these will be prefixed with carrier names.
      *
      * e.g. cutoff_time => postnl_cutoff_time/dpd_cutoff_time
      */
     // Defaults
-    public const SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE                = 'export_signature';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT           = 'export_only_recipient';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT             = 'export_large_format';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK                = 'export_age_check';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_RETURN                   = 'export_return_shipments';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY        = 'export_same_day_delivery';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED                  = 'export_insured';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT           = 'export_insured_amount';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE       = 'export_insured_from_price';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FOR_BE           = 'export_insured_for_be';
     // Delivery options settings
-    public const SETTING_CARRIER_CUTOFF_TIME                   = 'cutoff_time';
-    public const SETTING_CARRIER_DELIVERY_DAYS_WINDOW          = 'delivery_days_window';
-    public const SETTING_CARRIER_DELIVERY_ENABLED              = 'delivery_enabled';
-    public const SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE      = 'allow_show_delivery_date';
-    public const SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT  = 'digital_stamp_default_weight';
-    public const SETTING_CARRIER_DROP_OFF_DAYS                 = 'drop_off_days';
-    public const SETTING_CARRIER_DROP_OFF_DELAY                = 'drop_off_delay';
-    public const SETTING_CARRIER_PICKUP_ENABLED                = 'pickup_enabled';
-    public const SETTING_CARRIER_PICKUP_FEE                    = 'pickup_fee';
-    public const SETTING_CARRIER_PICKUP_TITLE                  = 'pickup_title';
-    public const SETTING_CARRIER_ONLY_RECIPIENT_ENABLED        = 'only_recipient_enabled';
-    public const SETTING_CARRIER_ONLY_RECIPIENT_FEE            = 'only_recipient_fee';
-    public const SETTING_CARRIER_SIGNATURE_ENABLED             = 'signature_enabled';
-    public const SETTING_CARRIER_SIGNATURE_FEE                 = 'signature_fee';
-    public const SETTING_CARRIER_DELIVERY_MORNING_ENABLED      = 'delivery_morning_enabled';
-    public const SETTING_CARRIER_DELIVERY_MORNING_FEE          = 'delivery_morning_fee';
-    public const SETTING_CARRIER_DELIVERY_EVENING_ENABLED      = 'delivery_evening_enabled';
-    public const SETTING_CARRIER_DELIVERY_EVENING_FEE          = 'delivery_evening_fee';
-    public const SETTING_CARRIER_DELIVERY_STANDARD_FEE         = 'delivery_standard_fee';
-    public const SETTING_CARRIER_SAME_DAY_DELIVERY             = 'same_day_delivery';
-    public const SETTING_CARRIER_SAME_DAY_DELIVERY_CUTOFF_TIME = 'same_day_delivery_cutoff_time';
-    public const SETTING_CARRIER_SAME_DAY_DELIVERY_FEE         = 'same_day_delivery_fee';
+
     // Saturday delivery
     // TODO; Currently not implemented
-    public const SETTING_CARRIER_FRIDAY_CUTOFF_TIME        = 'friday_cutoff_time';
-    public const SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED = 'saturday_delivery_enabled';
-    public const SETTING_CARRIER_SATURDAY_DELIVERY_FEE     = 'saturday_delivery_fee';
     // Monday delivery
-    public const SETTING_CARRIER_MONDAY_DELIVERY_ENABLED = 'monday_delivery_enabled';
-    public const SETTING_CARRIER_MONDAY_DELIVERY_FEE     = 'monday_delivery_fee';
-    public const SETTING_CARRIER_SATURDAY_CUTOFF_TIME    = 'saturday_cutoff_time';
 
     public function __construct()
     {
@@ -140,7 +44,7 @@ class WCMYPA_Settings
         add_filter(
             'woocommerce_screen_ids',
             function ($ids) {
-                $ids[] = 'woocommerce_page_' . self::SETTINGS_MENU_SLUG;
+                $ids[] = 'woocommerce_page_' . 'wcmp_settings';
 
                 return $ids;
             }
@@ -154,18 +58,29 @@ class WCMYPA_Settings
     }
 
     /**
-     * Add settings item to WooCommerce menu
+     * @param  string $option
+     *
+     * @return string
      */
-    public function menu()
+    public static function getOptionId(string $option): string
     {
-        add_submenu_page(
-            'woocommerce',
-            __('MyParcel', 'woocommerce-myparcel'),
-            __('MyParcel', 'woocommerce-myparcel'),
-            'manage_options',
-            self::SETTINGS_MENU_SLUG,
-            [$this, 'settings_page']
-        );
+        return "woocommerce_myparcel_{$option}_settings";
+    }
+
+    /**
+     * @return string
+     */
+    public static function getSettingsUrl(): string
+    {
+        return admin_url('admin.php?page=' . 'wcmp_settings');
+    }
+
+    /**
+     * @return bool whether the current script is running on one of this plugins own admin settings pages
+     */
+    public static function isViewingOwnSettingsPage(): bool
+    {
+        return (isset($_GET['page']) && 'wcmp_settings' === $_GET['page']);
     }
 
     /**
@@ -188,54 +103,18 @@ class WCMYPA_Settings
     }
 
     /**
-     * Output the settings pages.
+     * Add settings item to WooCommerce menu
      */
-    public function settings_page()
+    public function menu()
     {
-        $settings_tabs = apply_filters(
-            self::SETTINGS_MENU_SLUG . '_tabs',
-            WCMP_Settings_Data::getTabs()
+        add_submenu_page(
+            'woocommerce',
+            __('MyParcel', 'woocommerce-myparcel'),
+            __('MyParcel', 'woocommerce-myparcel'),
+            'manage_options',
+            'wcmp_settings',
+            [$this, 'settings_page']
         );
-
-        $active_tab = $_GET['tab'] ?? self::SETTINGS_GENERAL;
-        ?>
-      <div class="wrap woocommerce">
-        <h1><?php
-            _e('MyParcel Settings', 'woocommerce-myparcel'); ?></h1>
-        <h2 class="nav-tab-wrapper">
-            <?php
-            foreach ($settings_tabs as $tab_slug => $tab_title) :
-                printf(
-                    '<a href="?page='
-                    . self::SETTINGS_MENU_SLUG
-                    . '&tab=%1$s" class="nav-tab nav-tab-%1$s %2$s">%3$s</a>',
-                    $tab_slug,
-                    (($active_tab === $tab_slug) ? 'nav-tab-active' : ''),
-                    $tab_title
-                );
-            endforeach;
-            ?>
-        </h2>
-          <?php
-          do_action('woocommerce_myparcel_before_settings_page', $active_tab); ?>
-        <form
-          method="post"
-          action="options.php"
-          id="<?php
-          echo self::SETTINGS_MENU_SLUG; ?>">
-            <?php
-            do_action('woocommerce_myparcel_before_settings', $active_tab);
-            settings_fields(self::getOptionId($active_tab));
-            $this->render_settings_sections(self::getOptionId($active_tab));
-            do_action('woocommerce_myparcel_after_settings', $active_tab);
-
-            submit_button();
-            ?>
-        </form>
-          <?php
-          do_action('woocommerce_myparcel_after_settings_page', $active_tab); ?>
-      </div>
-        <?php
     }
 
     /**
@@ -274,71 +153,54 @@ class WCMYPA_Settings
     }
 
     /**
-     * @param  string $option
-     *
-     * @return string
+     * Output the settings pages.
      */
-    public static function getOptionId(string $option): string
+    public function settings_page()
     {
-        return "woocommerce_myparcel_{$option}_settings";
-    }
+        $settings_tabs = apply_filters(
+            'wcmp_settings' . '_tabs',
+            WCMP_Settings_Data::getTabs()
+        );
 
-    /**
-     * @return bool whether the current script is running on one of this plugins own admin settings pages
-     */
-    public static function isViewingOwnSettingsPage(): bool
-    {
-        return (isset($_GET['page']) && 'wcmp_settings' === $_GET['page']);
-    }
+        $active_tab = $_GET['tab'] ?? 'general';
+        ?>
+      <div class="wrap woocommerce">
+        <h1><?php
+            _e('MyParcel Settings', 'woocommerce-myparcel'); ?></h1>
+        <h2 class="nav-tab-wrapper">
+            <?php
+            foreach ($settings_tabs as $tab_slug => $tab_title) :
+                printf(
+                    '<a href="?page='
+                    . 'wcmp_settings'
+                    . '&tab=%1$s" class="nav-tab nav-tab-%1$s %2$s">%3$s</a>',
+                    $tab_slug,
+                    (($active_tab === $tab_slug) ? 'nav-tab-active' : ''),
+                    $tab_title
+                );
+            endforeach;
+            ?>
+        </h2>
+          <?php
+          do_action('woocommerce_myparcel_before_settings_page', $active_tab); ?>
+        <form
+          method="post"
+          action="options.php"
+          id="<?php
+          echo 'wcmp_settings'; ?>">
+            <?php
+            do_action('woocommerce_myparcel_before_settings', $active_tab);
+            settings_fields(self::getOptionId($active_tab));
+            $this->render_settings_sections(self::getOptionId($active_tab));
+            do_action('woocommerce_myparcel_after_settings', $active_tab);
 
-    /**
-     * @return string
-     */
-    public static function getSettingsUrl(): string
-    {
-        return admin_url('admin.php?page=' . self::SETTINGS_MENU_SLUG);
-    }
-
-    /**
-     * Render the settings sections. Mostly taken from the WordPress equivalent but done like this so parts can
-     * be overridden/changed easily.
-     *
-     * @param  string $page - Page ID
-     *
-     * @see \do_settings_sections
-     */
-    private function render_settings_sections(string $page): void
-    {
-        global $wp_settings_sections, $wp_settings_fields;
-
-        if (! isset($wp_settings_sections[$page])) {
-            return;
-        }
-
-        foreach ((array) $wp_settings_sections[$page] as $section) {
-            echo '<div class="wcmp__settings-section">';
-            $id       = Arr::get($section, 'id');
-            $title    = Arr::get($section, 'title');
-            $callback = Arr::get($section, 'callback');
-
-            if ($title) {
-                printf('<h2 id="%s">%s</h2>', $id, $title);
-            }
-
-            if ($callback) {
-                call_user_func($callback, $section);
-            }
-
-            if (! isset($wp_settings_fields)
-                || ! isset($wp_settings_fields[$page])
-                || ! isset($wp_settings_fields[$page][$id])) {
-                continue;
-            }
-            echo '<table class="form-table" role="presentation">';
-            $this->render_settings_fields($page, $id);
-            echo '</table>';
-            echo '</div>';
-        }
+            submit_button();
+            ?>
+        </form>
+          <?php
+          do_action('woocommerce_myparcel_after_settings_page', $active_tab); ?>
+      </div>
+        <?php
     }
 
     /**
@@ -387,6 +249,48 @@ class WCMYPA_Settings
             );
             echo '</td>';
             echo '</tr>';
+        }
+    }
+
+    /**
+     * Render the settings sections. Mostly taken from the WordPress equivalent but done like this so parts can
+     * be overridden/changed easily.
+     *
+     * @param  string $page - Page ID
+     *
+     * @see \do_settings_sections
+     */
+    private function render_settings_sections(string $page): void
+    {
+        global $wp_settings_sections, $wp_settings_fields;
+
+        if (! isset($wp_settings_sections[$page])) {
+            return;
+        }
+
+        foreach ((array) $wp_settings_sections[$page] as $section) {
+            echo '<div class="wcmp__settings-section">';
+            $id       = Arr::get($section, 'id');
+            $title    = Arr::get($section, 'title');
+            $callback = Arr::get($section, 'callback');
+
+            if ($title) {
+                printf('<h2 id="%s">%s</h2>', $id, $title);
+            }
+
+            if ($callback) {
+                call_user_func($callback, $section);
+            }
+
+            if (! isset($wp_settings_fields)
+                || ! isset($wp_settings_fields[$page])
+                || ! isset($wp_settings_fields[$page][$id])) {
+                continue;
+            }
+            echo '<table class="form-table" role="presentation">';
+            $this->render_settings_fields($page, $id);
+            echo '</table>';
+            echo '</div>';
         }
     }
 }

@@ -58,7 +58,7 @@ class WCMP_Checkout
         }
 
         // if using split address fields
-        $useSplitAddressFields = WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS);
+        $useSplitAddressFields = WCMYPA()->settingCollection->isEnabled('use_split_address_fields');
         if ($useSplitAddressFields) {
             wp_enqueue_script(
                 'wcmp-checkout-fields',
@@ -70,7 +70,7 @@ class WCMP_Checkout
         }
 
         // Don't load the delivery options scripts if it's disabled
-        if (! WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED)) {
+        if (! WCMYPA()->settingCollection->isEnabled('delivery_options_enabled')) {
             return;
         }
 
@@ -130,7 +130,7 @@ class WCMP_Checkout
             [
                 // Convert true/false to int for JavaScript
                 'isUsingSplitAddressFields'   => (int) WCMYPA()->settingCollection->isEnabled(
-                    WCMYPA_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS
+                    'use_split_address_fields'
                 ),
                 'splitAddressFieldsCountries' => WCMP_NL_Postcode_Fields::COUNTRIES_WITH_SPLIT_ADDRESS_FIELDS,
             ]
@@ -157,7 +157,7 @@ class WCMP_Checkout
         add_action(
             apply_filters(
                 'wc_wcmp_delivery_options_location',
-                WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_POSITION)
+                WCMYPA()->settingCollection->getByName('delivery_options_position')
             ),
             [$this, 'output_delivery_options'],
             10
@@ -176,7 +176,7 @@ class WCMP_Checkout
         $cartTotals                 = WC()->session->get('cart_totals');
         $chosenShippingMethodPrice  = (float) $cartTotals['shipping_total'];
         $displayIncludingTax        = WC()->cart->display_prices_including_tax();
-        $priceFormat                = self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_PRICE_FORMAT);
+        $priceFormat                = self::getDeliveryOptionsTitle('delivery_options_price_format');
         $shippingMethod             = WC()->session->get('chosen_shipping_methods')[0] ?? false;
         $shippingClass              = WCMP_Frontend::get_cart_shipping_class();
         $packageType                = ($shippingMethod)
@@ -225,20 +225,20 @@ class WCMP_Checkout
                 'addressNotFound'       => __('Address details are not entered', 'woocommerce-myparcel'),
                 'city'                  => __('City', 'woocommerce-myparcel'),
                 'closed'                => __('Closed', 'woocommerce-myparcel'),
-                'deliveryEveningTitle'  => self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_EVENING_DELIVERY_TITLE),
-                'deliveryMorningTitle'  => self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_MORNING_DELIVERY_TITLE),
-                'deliveryStandardTitle' => self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_STANDARD_TITLE),
-                'deliverySameDayTitle'  => self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SAME_DAY_TITLE),
-                'deliveryTitle'         => self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_DELIVERY_TITLE),
-                'headerDeliveryOptions' => self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_HEADER_DELIVERY_OPTIONS_TITLE),
+                'deliveryEveningTitle'  => self::getDeliveryOptionsTitle('evening_title'),
+                'deliveryMorningTitle'  => self::getDeliveryOptionsTitle('morning_title'),
+                'deliveryStandardTitle' => self::getDeliveryOptionsTitle('standard_title'),
+                'deliverySameDayTitle'  => self::getDeliveryOptionsTitle('same_day_title'),
+                'deliveryTitle'         => self::getDeliveryOptionsTitle('delivery_title'),
+                'headerDeliveryOptions' => self::getDeliveryOptionsTitle('header_delivery_options_title'),
                 'houseNumber'           => __('House number', 'woocommerce-myparcel'),
-                'onlyRecipientTitle'    => self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE),
+                'onlyRecipientTitle'    => self::getDeliveryOptionsTitle('only_recipient_title'),
                 'openingHours'          => __('Opening hours', 'woocommerce-myparcel'),
                 'pickUpFrom'            => __('Pick up from', 'woocommerce-myparcel'),
-                'pickupTitle'           => self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_PICKUP_TITLE),
+                'pickupTitle'           => self::getDeliveryOptionsTitle('pickup_title'),
                 'postcode'              => __('Postcode', 'woocommerce-myparcel'),
                 'retry'                 => __('Retry', 'woocommerce-myparcel'),
-                'signatureTitle'        => self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SIGNATURE_TITLE),
+                'signatureTitle'        => self::getDeliveryOptionsTitle('signature_title'),
                 'wrongHouseNumberCity'  => __('Postcode/city combination unknown', 'woocommerce-myparcel'),
             ],
         ];
@@ -260,7 +260,7 @@ class WCMP_Checkout
      */
     public function useTotalPrice(): bool
     {
-        $priceFormat = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_PRICE_FORMAT);
+        $priceFormat = WCMYPA()->settingCollection->getByName('delivery_options_price_format');
 
         return ! isset($priceFormat) || WCMP_Settings_Data::DISPLAY_TOTAL_PRICE === $priceFormat;
     }
@@ -282,7 +282,7 @@ class WCMP_Checkout
      */
     public static function getPickupLocationsDefaultView(): string
     {
-        return WCMYPA()->settingCollection->getStringByName(WCMYPA_Settings::SETTING_PICKUP_LOCATIONS_DEFAULT_VIEW);
+        return WCMYPA()->settingCollection->getStringByName('pickup_locations_default_view');
     }
 
     /**
@@ -410,8 +410,8 @@ class WCMP_Checkout
     private function getShippingMethodsAllowingDeliveryOptions(): array
     {
         $allowedMethods               = [];
-        $displayFor                   = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY);
-        $shippingMethodsByPackageType = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
+        $displayFor                   = WCMYPA()->settingCollection->getByName('delivery_options_display');
+        $shippingMethodsByPackageType = WCMYPA()->settingCollection->getByName('shipping_methods_package_types');
 
         if (WCMP_Settings_Data::DISPLAY_FOR_ALL_METHODS === $displayFor || ! $shippingMethodsByPackageType) {
             return $allowedMethods;
@@ -435,7 +435,7 @@ class WCMP_Checkout
      */
     private function alwaysDisplayDeliveryOptions(): bool
     {
-        $display = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY);
+        $display = WCMYPA()->settingCollection->getByName('delivery_options_display');
 
         return $display === WCMP_Settings_Data::DISPLAY_FOR_ALL_METHODS;
     }
@@ -485,32 +485,32 @@ class WCMP_Checkout
     private function getDeliveryOptionsConfigMap(): array
     {
         return [
-            'allowDeliveryOptions'  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED, 'isEnabled', false],
-            'allowEveningDelivery'  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED, 'isEnabled', false],
-            'allowMondayDelivery'   => [WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED, 'isEnabled', false],
-            'allowMorningDelivery'  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED, 'isEnabled', false],
-            'allowOnlyRecipient'    => [WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED, 'isEnabled', false],
-            'allowPickupLocations'  => [WCMYPA_Settings::SETTING_CARRIER_PICKUP_ENABLED, 'isEnabled', false],
-            'allowSaturdayDelivery' => [WCMYPA_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED, 'isEnabled', false],
-            'allowSignature'        => [WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_ENABLED, 'isEnabled', false],
-            'allowShowDeliveryDate' => [WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE, 'isEnabled', false],
-            'priceEveningDelivery'  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE, 'getPriceByName', true],
-            'priceMondayDelivery'   => [WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_FEE, 'getPriceByName', true],
-            'priceStandardDelivery' => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_STANDARD_FEE, 'getPriceByName', true],
-            'priceMorningDelivery'  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE, 'getPriceByName', true],
-            'priceOnlyRecipient'    => [WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE, 'getPriceByName', false],
-            'pricePickup'           => [WCMYPA_Settings::SETTING_CARRIER_PICKUP_FEE, 'getPriceByName', true],
-            'priceSaturdayDelivery' => [WCMYPA_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_FEE, 'getPriceByName', true],
-            'priceSignature'        => [WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_FEE, 'getPriceByName', false],
-            'cutoffTime'            => [WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME, 'getStringByName', false],
-            'deliveryDaysWindow'    => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW, 'getIntegerByName', false],
-            'dropOffDays'           => [WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS, 'getByName', false],
-            'dropOffDelay'          => [WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY, 'getIntegerByName', false],
-            'fridayCutoffTime'      => [WCMYPA_Settings::SETTING_CARRIER_FRIDAY_CUTOFF_TIME, 'getStringByName', false],
-            'saturdayCutoffTime'    => [WCMYPA_Settings::SETTING_CARRIER_SATURDAY_CUTOFF_TIME, 'getStringByName', false],
-            'cutoffTimeSameDay'     => [WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY_CUTOFF_TIME, 'getStringByName', false],
-            'priceSameDayDelivery'  => [WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY_FEE, 'getPriceByName', true],
-            'allowSameDayDelivery'  => [WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY, 'isEnabled', false],
+            'allowDeliveryOptions'  => ['delivery_enabled', 'isEnabled', false],
+            'allowEveningDelivery'  => ['delivery_evening_enabled', 'isEnabled', false],
+            'allowMondayDelivery'   => ['monday_delivery_enabled', 'isEnabled', false],
+            'allowMorningDelivery'  => ['delivery_morning_enabled', 'isEnabled', false],
+            'allowOnlyRecipient'    => ['only_recipient_enabled', 'isEnabled', false],
+            'allowPickupLocations'  => ['pickup_enabled', 'isEnabled', false],
+            'allowSaturdayDelivery' => ['saturday_delivery_enabled', 'isEnabled', false],
+            'allowSignature'        => ['signature_enabled', 'isEnabled', false],
+            'allowShowDeliveryDate' => ['allow_show_delivery_date', 'isEnabled', false],
+            'priceEveningDelivery'  => ['delivery_evening_fee', 'getPriceByName', true],
+            'priceMondayDelivery'   => ['monday_delivery_fee', 'getPriceByName', true],
+            'priceStandardDelivery' => ['delivery_standard_fee', 'getPriceByName', true],
+            'priceMorningDelivery'  => ['delivery_morning_fee', 'getPriceByName', true],
+            'priceOnlyRecipient'    => ['only_recipient_fee', 'getPriceByName', false],
+            'pricePickup'           => ['pickup_fee', 'getPriceByName', true],
+            'priceSaturdayDelivery' => ['saturday_delivery_fee', 'getPriceByName', true],
+            'priceSignature'        => ['signature_fee', 'getPriceByName', false],
+            'cutoffTime'            => ['cutoff_time', 'getStringByName', false],
+            'deliveryDaysWindow'    => ['delivery_days_window', 'getIntegerByName', false],
+            'dropOffDays'           => ['drop_off_days', 'getByName', false],
+            'dropOffDelay'          => ['drop_off_delay', 'getIntegerByName', false],
+            'fridayCutoffTime'      => ['friday_cutoff_time', 'getStringByName', false],
+            'saturdayCutoffTime'    => ['saturday_cutoff_time', 'getStringByName', false],
+            'cutoffTimeSameDay'     => ['same_day_delivery_cutoff_time', 'getStringByName', false],
+            'priceSameDayDelivery'  => ['same_day_delivery_fee', 'getPriceByName', true],
+            'allowSameDayDelivery'  => ['same_day_delivery', 'isEnabled', false],
         ];
     }
 
@@ -522,7 +522,7 @@ class WCMP_Checkout
      */
     private function shouldShowDeliveryOptions(): bool
     {
-        $showForBackorders   = WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTINGS_SHOW_DELIVERY_OPTIONS_FOR_BACKORDERS);
+        $showForBackorders   = WCMYPA()->settingCollection->isEnabled('delivery_options_enabled_for_backorders');
         $showDeliveryOptions = false;
 
         foreach (WC()->cart->get_cart() as $cartItem) {

@@ -173,7 +173,7 @@ class Data
         /**
          * @type PostNLConsignment $carrier
          */
-        $carrier             = ConsignmentFactory::createByCarrierName(CarrierPostNL::NAME);
+        $carrier             = ConsignmentFactory::createByCarrierName('postnl');
         $amountPossibilities = $carrier->getInsurancePossibilities();
 
         foreach ($amountPossibilities as $key => $value) {

@@ -1,6 +1,6 @@
 {
   "name": "myparcelnl/woocommerce",
-  "version": "4.14.0",
+  "version": "5.0.0-alpha.0",
   "require": {
     "myparcelnl/pdk": "*",
     "guzzlehttp/guzzle": "~7.5.0",

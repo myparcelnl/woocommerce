@@ -7,7 +7,6 @@ namespace MyParcelNL\WooCommerce\includes\Concerns;
 defined('ABSPATH') or die();
 
 use Exception;
-use WCMYPA_Settings;
 use WPO\WC\MyParcel\Collections\SettingsCollection;
 
 trait HasApiKey
@@ -51,7 +50,7 @@ trait HasApiKey
      */
     private function fetchApiKey(): ?string
     {
-        $this->apiKey = SettingsCollection::getInstance()->getByName(WCMYPA_Settings::SETTING_API_KEY);
+        $this->apiKey = SettingsCollection::getInstance()->getByName('api_key');
 
         return $this->apiKey ?: null;
     }

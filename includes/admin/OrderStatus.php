@@ -9,9 +9,8 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
 use WC_Order;
 use WCMP_Log;
-use WCMYPA_Settings;
 
-if (! defined("ABSPATH")) {
+if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
@@ -29,9 +28,9 @@ class OrderStatus
      */
     public static function updateOrderStatus(WC_Order $order, string $thisMoment = ''): void
     {
-        $statusAutomation     = WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION);
-        $momentOfStatusChange = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER);
-        $newStatus            = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS);
+        $statusAutomation     = WCMYPA()->settingCollection->isEnabled('order_status_automation');
+        $momentOfStatusChange = WCMYPA()->settingCollection->getByName('change_order_status_after');
+        $newStatus            = WCMYPA()->settingCollection->getByName('automatic_order_status');
 
         if ($statusAutomation && (! $thisMoment || $thisMoment === $momentOfStatusChange)) {
             $order->update_status(

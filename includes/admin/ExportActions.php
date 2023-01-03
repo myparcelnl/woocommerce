@@ -14,7 +14,8 @@ use MyParcelNL\Pdk\Shipment\Repository\ShipmentRepository;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Model\Fulfilment\AbstractOrder;
 use MyParcelNL\Sdk\src\Support\Str;
-use MyParcelNL\WooCommerce\includes\admin\Messages;
+use MyParcelNL\WooCommerce\Admin\MessageLogger;
+use MyParcelNL\WooCommerce\Facade\Messages;
 use MyParcelNL\WooCommerce\includes\admin\OrderStatus;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -150,7 +151,7 @@ class ExportActions
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
             //WCMP_Log::add("$request: {$errorMessage}");
-            Messages::showAdminNotice($errorMessage, Messages::NOTICE_LEVEL_ERROR);
+            Messages::log($errorMessage, MessageLogger::NOTICE_LEVEL_ERROR);
         }
 
         return $response ?? null;
@@ -208,11 +209,11 @@ class ExportActions
      */
     public static function addTrackTraceNoteToOrder(int $order_id, array $track_traces): void
     {
-        if (! WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTING_BARCODE_IN_NOTE)) {
+        if (! WCMYPA()->settingCollection->isEnabled('barcode_in_note')) {
             return;
         }
 
-        $prefix_message = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_BARCODE_IN_NOTE_TITLE);
+        $prefix_message = WCMYPA()->settingCollection->getByName('barcode_in_note_title');
 
         // Select the barcode text of the MyParcel settings
         $prefix_message = $prefix_message ? $prefix_message . ' ' : '';
@@ -231,7 +232,7 @@ class ExportActions
     public function saveShipmentData(WC_Order $order, array $shipment): void
     {
         if (empty($shipment)) {
-            throw new \RuntimeException('save_shipment_data requires a valid shipment');
+            throw new RuntimeException('save_shipment_data requires a valid shipment');
         }
 
         $old_shipments                           = [];
@@ -358,7 +359,7 @@ class ExportActions
         }
 
         $packageTypes = WCMYPA()->settingCollection->getByName(
-            WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES
+            'shipping_methods_package_types'
         );
         foreach ($packageTypes as $packageTypeKey => $packageTypeShippingMethods) {
             if (self::isActiveMethod(
@@ -804,9 +805,9 @@ class ExportActions
             ];
 
             if (! add_post_meta($orderId, WCMYPA_Admin::META_PPS, $value)) {
-                Messages::showAdminNotice(
+                Messages::log(
                     sprintf(__('error_pps_export_feedback', 'woocommerce-myparcel'), $orderId),
-                    Messages::NOTICE_LEVEL_ERROR
+                    MessageLogger::NOTICE_LEVEL_ERROR
                 );
             }
 
@@ -832,11 +833,11 @@ class ExportActions
     private function setFeedbackForClient($return)
     {
         if ($return['success'] ?? null) {
-            Messages::showAdminNotice($return['success'], Messages::NOTICE_LEVEL_SUCCESS);
+            Messages::log($return['success'], MessageLogger::NOTICE_LEVEL_SUCCESS);
         }
 
         if ($return['error'] ?? null) {
-            Messages::showAdminNotice($return['error'], Messages::NOTICE_LEVEL_ERROR);
+            Messages::log($return['error'], MessageLogger::NOTICE_LEVEL_ERROR);
         }
 
         return $return;

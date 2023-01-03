@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MyParcelNL\WooCommerce\includes\admin;
+namespace MyParcelNL\WooCommerce\Admin;
 
 defined('ABSPATH') or die();
 

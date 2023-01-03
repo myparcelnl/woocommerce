@@ -34,7 +34,7 @@ class Boot
                 'platform'      => 'myparcel',
                 'userAgent'     => value([
                     'MyParcelNL-WooCommerce' => $plugin->version,
-                    'Woocommerce'            => WOOCOMMERCE_VERSION,
+                    'Woocommerce'            => defined('WOOCOMMERCE_VERSION') ? WOOCOMMERCE_VERSION : '?',
                 ]),
                 'pluginRootDir' => value($plugin->getPluginPath()),
             ]);

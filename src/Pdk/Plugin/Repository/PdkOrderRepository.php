@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Repository;
 
 use MyParcelNL\Pdk\Base\Service\WeightService;
+use MyParcelNL\Pdk\Facade\DefaultLogger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
@@ -18,10 +19,10 @@ use MyParcelNL\Pdk\Storage\StorageInterface;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\WooCommerce\Helper\LabelDescriptionFormatter;
 use MyParcelNL\WooCommerce\Service\WcRecipientService;
+use Throwable;
 use WC_Order;
 use WC_Order_Item;
 use WC_Product;
-use WCMYPA_Settings;
 
 class PdkOrderRepository extends AbstractPdkOrderRepository
 {
@@ -80,7 +81,19 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         }
 
         return $this->retrieve((string) $order->get_id(), function () use ($order) {
-            return $this->getDataFromOrder($order);
+            try {
+                return $this->getDataFromOrder($order);
+            } catch (Throwable $exception) {
+//                DefaultLogger::error(
+//                    'Could not retrieve order data from WooCommerce order',
+//                    [
+//                        'order_id' => $order->get_id(),
+//                        'error'    => $exception->getMessage(),
+//                    ]
+//                );
+
+                return new PdkOrder();
+            }
         });
     }
 
@@ -172,7 +185,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     public function getLabelDescription(AbstractDeliveryOptionsAdapter $deliveryOptions, WC_Order $order): string
     {
         $defaultValue     = sprintf('Order: %s', $order->get_id());
-        $valueFromSetting = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_LABEL_DESCRIPTION);
+        $valueFromSetting = WCMYPA()->settingCollection->getByName('label_description');
         $valueFromOrder   = $deliveryOptions->getShipmentOptions()
             ->getLabelDescription();
 

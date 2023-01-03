@@ -6,13 +6,12 @@ namespace MyParcelNL\WooCommerce\Helper;
 
 use Data;
 use ErrorException;
+use ExportActions;
 use MyParcelNL\Pdk\Base\Service\CountryService;
 use WC_Order;
 use WC_Order_Item_Product;
 use WC_Product;
-use ExportActions;
 use WCMYPA_Admin;
-use WCMYPA_Settings;
 use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 
 class ExportRow
@@ -41,7 +40,7 @@ class ExportRow
      */
     public function getCountryOfOrigin(): string
     {
-        $defaultCountryOfOrigin   = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_COUNTRY_OF_ORIGIN);
+        $defaultCountryOfOrigin   = WCMYPA()->settingCollection->getByName('country_of_origin');
         $productCountryOfOrigin   = WCX_Product::get_meta($this->product, WCMYPA_Admin::META_COUNTRY_OF_ORIGIN, true);
         $variationCountryOfOrigin = WCX_Product::get_meta(
             $this->product,
@@ -59,7 +58,7 @@ class ExportRow
      */
     public function getHsCode(): int
     {
-        $defaultHsCode   = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_HS_CODE);
+        $defaultHsCode   = WCMYPA()->settingCollection->getByName('hs_code');
         $productHsCode   = WCX_Product::get_meta($this->product, WCMYPA_Admin::META_HS_CODE, true);
         $variationHsCode = WCX_Product::get_meta($this->product, WCMYPA_Admin::META_HS_CODE_VARIATION, true);
 

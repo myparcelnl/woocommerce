@@ -9,7 +9,8 @@ defined('ABSPATH') or die();
 use MyParcelNL\Sdk\src\Services\Web\Webhook\ShopCarrierAccessibilityUpdatedWebhookWebService;
 use MyParcelNL\Sdk\src\Services\Web\Webhook\ShopCarrierConfigurationUpdatedWebhookWebService;
 use MyParcelNL\Sdk\src\Services\Web\Webhook\ShopUpdatedWebhookWebService;
-use MyParcelNL\WooCommerce\includes\admin\Messages;
+use MyParcelNL\WooCommerce\Admin\MessageLogger;
+use MyParcelNL\WooCommerce\Facade\Messages;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettingsService;
 use MyParcelNL\WooCommerce\includes\Webhook\Hooks\AbstractWebhook;
 use WCMYPA_Admin;
@@ -44,9 +45,9 @@ class AccountSettingsWebhook extends AbstractWebhook
     public function validate(): bool
     {
         if (! WCMYPA_Admin::canUseWebhooks()) {
-            Messages::showAdminNotice(
+            Messages::log(
                 __('setting_account_settings_manual_update_hint', 'woocommerce-myparcel'),
-                Messages::NOTICE_LEVEL_WARNING
+                MessageLogger::NOTICE_LEVEL_WARNING
             );
             AccountSettingsService::getInstance()
                 ->setUseManualUpdate(true);

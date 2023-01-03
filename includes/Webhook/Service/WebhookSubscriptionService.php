@@ -18,7 +18,6 @@ use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\AccountSettingsWebhook;
 use WCMP_Log;
 use WCMP_Settings_Data;
 use WCMYPA;
-use WCMYPA_Settings;
 
 class WebhookSubscriptionService
 {
@@ -73,7 +72,7 @@ class WebhookSubscriptionService
         try {
             $service->unsubscribe($subscription->getId());
         } catch (Exception $e) {
-            WCMP_Log::add(sprintf("Error deleting webhook %s:", $subscription->getId()), $e->getMessage());
+            WCMP_Log::add(sprintf('Error deleting webhook %s:', $subscription->getId()), $e->getMessage());
         }
 
         return $this;
@@ -345,12 +344,12 @@ class WebhookSubscriptionService
      */
     public static function shouldRegisterOrderStatusRoute(): bool
     {
-        $isAutomaticStatusActive   = WCMP_Settings_Data::getSetting(WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION);
+        $isAutomaticStatusActive   = WCMP_Settings_Data::getSetting('order_status_automation');
         $changeStatusAfterPrinting = WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING === WCMP_Settings_Data::getSetting(
-                WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER
+                'change_order_status_after'
             );
         $isExportModeActive        = WCMP_Settings_Data::EXPORT_MODE_PPS === WCMP_Settings_Data::getSetting(
-                WCMYPA_Settings::SETTING_EXPORT_MODE
+                'export_mode'
             );
 
         return $isAutomaticStatusActive && $changeStatusAfterPrinting && $isExportModeActive;

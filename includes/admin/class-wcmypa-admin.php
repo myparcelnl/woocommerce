@@ -158,10 +158,10 @@ class WCMYPA_Admin
             <option value=""><?php
                 _e('all_delivery_days', 'woocommerce-myparcel'); ?></option>
               <?php
-              $carrierName       = CarrierPostNL::NAME;
+              $carrierName       = 'postnl';
               $deliveryDayWindow = (int) WCMYPA()->settingCollection->where('carrier', $carrierName)
                   ->getByName(
-                      WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW
+                      'delivery_days_window'
 
                   );
 
@@ -358,7 +358,7 @@ class WCMYPA_Admin
      */
     public function automaticExportOrder($orderId, ?string $oldStatus = null, ?string $newStatus = null): void
     {
-        if (! WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTING_AUTOMATIC_EXPORT)) {
+        if (! WCMYPA()->settingCollection->isEnabled('export_automatic')) {
             return;
         }
 
@@ -371,7 +371,7 @@ class WCMYPA_Admin
 
         $newStatus             = $newStatus ?? WCMP_Settings_Data::NOT_ACTIVE;
         $automaticExportStatus = WCMYPA()->settingCollection->getByName(
-            WCMYPA_Settings::SETTING_AUTOMATIC_EXPORT_STATUS
+            'export_automatic_status'
         );
 
         if ($automaticExportStatus === $newStatus) {
@@ -469,7 +469,7 @@ class WCMYPA_Admin
      */
     public function getMyParcelBulkActions(): array
     {
-        $exportMode  = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
+        $exportMode  = WCMYPA()->settingCollection->getByName('export_mode');
         $returnValue = [
             PdkActions::EXPORT_ORDER => __('myparcel_bulk_action_export', 'woocommerce-myparcel'),
         ];
@@ -548,7 +548,7 @@ class WCMYPA_Admin
      */
     public function renderOffsetDialog(): void
     {
-        if (! WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTING_ASK_FOR_PRINT_POSITION)) {
+        if (! WCMYPA()->settingCollection->isEnabled('ask_for_print_position')) {
             return;
         }
 
@@ -692,7 +692,7 @@ class WCMYPA_Admin
     {
         $shippingCountry = $pdkOrder->recipient->cc;
         $wcOrderId       = $pdkOrder->externalIdentifier;
-        $exportMode      = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
+        $exportMode      = WCMYPA()->settingCollection->getByName('export_mode');
         $consignments    = self::get_order_shipments(wc_get_order($wcOrderId));
         $listingActions  = self::getDefaultListingActions($wcOrderId);
 
@@ -724,7 +724,7 @@ class WCMYPA_Admin
      */
     public static function getListingAttributes(WC_Order $order): array
     {
-        $downloadDisplay = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY);
+        $downloadDisplay = WCMYPA()->settingCollection->getByName('download_display');
         $orderId         = WCX_Order::get_id($order);
         $metaPps         = get_post_meta($orderId, self::META_PPS);
         $attributes      = [];
@@ -940,7 +940,7 @@ class WCMYPA_Admin
         echo '</div>';
 
         $downloadDisplay = WCMYPA()->settingCollection->getByName(
-                WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY
+                'download_display'
             ) === 'display';
 
         $shipmentIds = self::get_order_shipments($order);
@@ -1170,7 +1170,7 @@ class WCMYPA_Admin
     public function renderBarcodes(WC_Order $order): void
     {
         $shipments  = self::get_order_shipments($order, false);
-        $exportMode = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
+        $exportMode = WCMYPA()->settingCollection->getByName('export_mode');
 
         if (WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
             $orderId = WCX_Order::get_id($order);
@@ -1291,7 +1291,7 @@ class WCMYPA_Admin
 
         foreach ($enabledCarriers->all() as $carrier) {
             if (WCMYPA()->settingCollection->where('carrier', $carrier->getName())
-                ->getByName(WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE)) {
+                ->getByName('allow_show_delivery_date')) {
                 return true;
             }
         }
@@ -1335,7 +1335,7 @@ class WCMYPA_Admin
     private function getConfirmationData(DeliveryOptionsAdapter $deliveryOptions): ?array
     {
         $deliveryOptionsEnabled = WCMYPA()->settingCollection->isEnabled(
-            WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED
+            'delivery_options_enabled'
         );
 
         if (! $deliveryOptionsEnabled || ! $deliveryOptions->getCarrier()) {
@@ -1364,7 +1364,7 @@ class WCMYPA_Admin
             __('delivery_type', 'woocommerce-myparcel') => $deliveryType,
         ];
 
-        if (WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY)) {
+        if (WCMYPA()->settingCollection->isEnabled('show_delivery_day')) {
             $confirmationData[__('Date:', 'woocommerce')] = wc_format_datetime(
                 new WC_DateTime($deliveryOptions->getDate())
             );
@@ -1391,20 +1391,20 @@ class WCMYPA_Admin
 
         switch ($deliveryType) {
             case DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME:
-                $deliveryTitle = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_STANDARD_TITLE);
+                $deliveryTitle = WCMP_Checkout::getDeliveryOptionsTitle('standard_title');
                 break;
             case DeliveryOptions::DELIVERY_TYPE_MORNING_NAME:
                 $deliveryTitle = WCMP_Checkout::getDeliveryOptionsTitle(
-                    WCMYPA_Settings::SETTING_MORNING_DELIVERY_TITLE
+                    'morning_title'
                 );
                 break;
             case DeliveryOptions::DELIVERY_TYPE_EVENING_NAME:
                 $deliveryTitle = WCMP_Checkout::getDeliveryOptionsTitle(
-                    WCMYPA_Settings::SETTING_EVENING_DELIVERY_TITLE
+                    'evening_title'
                 );
                 break;
             case DeliveryOptions::DELIVERY_TYPE_PICKUP_NAME:
-                $deliveryTitle = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_PICKUP_TITLE);
+                $deliveryTitle = WCMP_Checkout::getDeliveryOptionsTitle('pickup_title');
                 break;
         }
 
@@ -1426,10 +1426,10 @@ class WCMYPA_Admin
         }
 
         if ($shipmentOptions->hasSignature()) {
-            $returnValue[] = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SIGNATURE_TITLE);
+            $returnValue[] = WCMP_Checkout::getDeliveryOptionsTitle('signature_title');
         }
         if ($shipmentOptions->hasOnlyRecipient()) {
-            $returnValue[] = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE);
+            $returnValue[] = WCMP_Checkout::getDeliveryOptionsTitle('only_recipient_title');
         }
 
         return $returnValue;

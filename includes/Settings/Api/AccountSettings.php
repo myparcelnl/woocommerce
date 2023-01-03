@@ -6,6 +6,7 @@ namespace MyParcelNL\WooCommerce\includes\Settings\Api;
 
 defined('ABSPATH') or die();
 
+use Data;
 use MyParcelNL\Sdk\src\Factory\Account\CarrierConfigurationFactory;
 use MyParcelNL\Sdk\src\Model\Account\Account;
 use MyParcelNL\Sdk\src\Model\Account\CarrierConfiguration;
@@ -13,13 +14,14 @@ use MyParcelNL\Sdk\src\Model\Account\CarrierOptions;
 use MyParcelNL\Sdk\src\Model\Account\Shop;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use MyParcelNL\Sdk\src\Support\Collection;
-use MyParcelNL\WooCommerce\includes\admin\Messages;
+use MyParcelNL\WooCommerce\Admin\MessageLogger;
+use MyParcelNL\WooCommerce\Facade\Messages;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Model\Model;
 use MyParcelNL\WooCommerce\includes\Settings\Listener\ApiKeySettingsListener;
 use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
-use Data;
+use WP_REST_Response;
 
 /**
  * @property null|\MyParcelNL\Sdk\src\Model\Account\Shop                         $shop
@@ -83,7 +85,7 @@ class AccountSettings extends Model
     /**
      * @return \WP_REST_Response
      */
-    public static function restRefreshFromApi(): \WP_REST_Response
+    public static function restRefreshFromApi(): WP_REST_Response
     {
         return AccountSettingsService::getInstance()->restRefreshSettingsFromApi();
     }
@@ -236,9 +238,9 @@ class AccountSettings extends Model
         $carrierConfigurations = $settings->get('carrier_configurations');
 
         if (! isset($shop, $account, $carrierOptions, $carrierConfigurations)) {
-            Messages::showAdminNotice(
+            Messages::log(
                 __('error_settings_account_missing', 'woocommerce-myparcel'),
-                Messages::NOTICE_LEVEL_ERROR
+                MessageLogger::NOTICE_LEVEL_ERROR
             );
 
             return;
@@ -261,9 +263,9 @@ class AccountSettings extends Model
     private function get(string $settingKey)
     {
         if (! $this->isValid()) {
-            Messages::showAdminNotice(
+            Messages::log(
                 __('error_settings_account_missing', 'woocommerce-myparcel'),
-                Messages::NOTICE_LEVEL_WARNING
+                MessageLogger::NOTICE_LEVEL_WARNING
             );
             return null;
         }

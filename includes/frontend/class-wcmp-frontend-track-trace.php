@@ -19,10 +19,10 @@ class WCMP_Frontend_Track_Trace
     public function __construct()
     {
         // Customer Emails
-        add_action("woocommerce_email_before_order_table", [$this, "addTrackTraceToEmail"], 10, 2);
+        add_action('woocommerce_email_before_order_table', [$this, 'addTrackTraceToEmail'], 10, 2);
 
         // Track & Trace in my account
-        add_filter("woocommerce_my_account_my_orders_actions", [$this, "showTrackTraceActionInMyAccount"], 10, 2);
+        add_filter('woocommerce_my_account_my_orders_actions', [$this, 'showTrackTraceActionInMyAccount'], 10, 2);
 
         WCMP_WCPDF_Compatibility::add_filters();
     }
@@ -37,11 +37,11 @@ class WCMP_Frontend_Track_Trace
      */
     public function addTrackTraceToEmail(WC_Order $order, bool $sentToAdmin): void
     {
-        if (! WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTING_TRACK_TRACE_EMAIL)) {
+        if (! WCMYPA()->settingCollection->isEnabled('track_trace_email')) {
             return;
         }
 
-        if ($sentToAdmin || WCX_Order::get_status($order) !== "completed") {
+        if ($sentToAdmin || WCX_Order::get_status($order) !== 'completed') {
             return;
         }
 
@@ -53,14 +53,14 @@ class WCMP_Frontend_Track_Trace
         }
 
         $createLinkCallback = function ($trackTrace) {
-            return sprintf('<a href="%s">%s</a>', $trackTrace["url"], $trackTrace["link"]);
+            return sprintf('<a href="%s">%s</a>', $trackTrace['url'], $trackTrace['link']);
         };
 
         printf(
             '<p>%s %s</p>',
             apply_filters(
-                "wcmyparcel_email_text",
-                __("You can track your order with the following Track & Trace link:", "woocommerce-myparcel"),
+                'wcmyparcel_email_text',
+                __('You can track your order with the following Track & Trace link:', 'woocommerce-myparcel'),
                 $order
             ),
             implode(
@@ -79,7 +79,7 @@ class WCMP_Frontend_Track_Trace
      */
     public function showTrackTraceActionInMyAccount(array $actions, WC_Order $order): array
     {
-        if (! WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTING_TRACK_TRACE_MY_ACCOUNT)) {
+        if (! WCMYPA()->settingCollection->isEnabled('track_trace_my_account')) {
             return $actions;
         }
 

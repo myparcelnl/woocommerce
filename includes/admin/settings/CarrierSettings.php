@@ -6,16 +6,13 @@ namespace MyParcelNL\WooCommerce\includes\admin\settings;
 
 defined('ABSPATH') or die();
 
-use MyParcelNL\Pdk\Base\Service\WeightService;
+use Data;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
-use Data;
-use ExportActions;
 use WCMP_Settings_Callbacks;
 use WCMP_Settings_Data;
-use WCMYPA_Settings;
 use WPO\WC\MyParcel\Collections\SettingsCollection;
 
 class CarrierSettings
@@ -26,17 +23,17 @@ class CarrierSettings
     private const OPTIONS_EXTRA_DELIVERY_DAY_MAP = [
         AbstractConsignment::EXTRA_OPTION_DELIVERY_MONDAY   => [
             'cut_off_time_day'     => 'Saturday',
-            'cut_off_time_setting' => WCMYPA_Settings::SETTING_CARRIER_SATURDAY_CUTOFF_TIME,
+            'cut_off_time_setting' => 'saturday_cutoff_time',
             'day'                  => 'Monday',
-            'setting'              => WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
+            'setting'              => 'monday_delivery_enabled',
         ],
         AbstractConsignment::EXTRA_OPTION_DELIVERY_SATURDAY => [
             'cut_off_time_day'     => 'Friday',
             'cut_off_time_default' => '',
-            'cut_off_time_setting' => WCMYPA_Settings::SETTING_CARRIER_FRIDAY_CUTOFF_TIME,
+            'cut_off_time_setting' => 'friday_cutoff_time',
             'day'                  => 'Saturday',
-            'fee'                  => WCMYPA_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_FEE,
-            'setting'              => WCMYPA_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED,
+            'fee'                  => 'saturday_delivery_fee',
+            'setting'              => 'saturday_delivery_enabled',
         ],
     ];
 
@@ -113,18 +110,18 @@ class CarrierSettings
     {
         if ($consignment->canHaveExtraOption(AbstractConsignment::EXTRA_OPTION_DELIVERY_DATE)) {
             $settings[] = [
-                'name'      => WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE,
-                'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                'name'      => 'allow_show_delivery_date',
+                'condition' => 'delivery_enabled',
                 'label'     => __('feature_allow_show_delivery_date_title', 'woocommerce-myparcel'),
                 'type'      => 'toggle',
                 'default'   => WCMP_Settings_Data::ENABLED,
                 'help_text' => __('feature_allow_show_delivery_date_help_text', 'woocommerce-myparcel'),
             ];
             $settings[] = [
-                'name'      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
+                'name'      => 'delivery_days_window',
                 'condition' => [
-                    WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                    WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE,
+                    'delivery_enabled',
+                    'allow_show_delivery_date',
                 ],
                 'class'     => ['wcmp__child'],
                 'label'     => __('setting_carrier_delivery_days_window_title', 'woocommerce-myparcel'),
@@ -172,7 +169,7 @@ class CarrierSettings
         switch ($option) {
             case AbstractConsignment::SHIPMENT_OPTION_AGE_CHECK:
                 $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK,
+                    'name'      => 'export_age_check',
                     'label'     => __('shipment_options_age_check', 'woocommerce-myparcel'),
                     'type'      => 'toggle',
                     'help_text' => __('shipment_options_age_check_help_text', 'woocommerce-myparcel'),
@@ -180,29 +177,29 @@ class CarrierSettings
                 break;
             case AbstractConsignment::SHIPMENT_OPTION_INSURANCE:
                 $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                    'name'      => 'export_insured',
                     'label'     => __('shipment_options_insured', 'woocommerce-myparcel'),
                     'help_text' => __('shipment_options_insured_help_text', 'woocommerce-myparcel'),
                     'type'      => 'toggle',
                 ];
                 $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE,
-                    'condition' => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                    'name'      => 'export_insured_from_price',
+                    'condition' => 'export_insured',
                     'label'     => __('shipment_options_insured_from_price', 'woocommerce-myparcel'),
                     'help_text' => __('shipment_options_insured_from_price_help_text', 'woocommerce-myparcel'),
                     'type'      => 'number',
                 ];
                 $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
-                    'condition' => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                    'name'      => 'export_insured_amount',
+                    'condition' => 'export_insured',
                     'label'     => __('shipment_options_insured_amount', 'woocommerce-myparcel'),
                     'help_text' => __('shipment_options_insured_amount_help_text', 'woocommerce-myparcel'),
                     'type'      => 'select',
                     'options'   => Data::getInsuranceAmounts(),
                 ];
                 $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FOR_BE,
-                    'condition' => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                    'name'      => 'export_insured_for_be',
+                    'condition' => 'export_insured',
                     'label'     => __('shipment_options_insured_for_be', 'woocommerce-myparcel'),
                     'default'   => WCMP_Settings_Data::ENABLED,
                     'help_text' => __('shipment_options_insured_for_be_help_text', 'woocommerce-myparcel'),
@@ -211,7 +208,7 @@ class CarrierSettings
                 break;
             case AbstractConsignment::SHIPMENT_OPTION_LARGE_FORMAT:
                 $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
+                    'name'      => 'export_large_format',
                     'label'     => __('shipment_options_large_format', 'woocommerce-myparcel'),
                     'help_text' => __('shipment_options_large_format_help_text', 'woocommerce-myparcel'),
                     'type'      => 'toggle',
@@ -219,7 +216,7 @@ class CarrierSettings
                 break;
             case AbstractConsignment::SHIPMENT_OPTION_ONLY_RECIPIENT:
                 $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT,
+                    'name'      => 'export_only_recipient',
                     'label'     => __('shipment_options_only_recipient', 'woocommerce-myparcel'),
                     'help_text' => __('shipment_options_only_recipient_help_text', 'woocommerce-myparcel'),
                     'type'      => 'toggle',
@@ -228,7 +225,7 @@ class CarrierSettings
                 break;
             case AbstractConsignment::SHIPMENT_OPTION_RETURN:
                 $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,
+                    'name'      => 'export_return_shipments',
                     'label'     => __('shipment_options_return', 'woocommerce-myparcel'),
                     'help_text' => __('shipment_options_return_help_text', 'woocommerce-myparcel'),
                     'type'      => 'toggle',
@@ -236,7 +233,7 @@ class CarrierSettings
                 break;
             case AbstractConsignment::SHIPMENT_OPTION_SIGNATURE:
                 $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
+                    'name'      => 'export_signature',
                     'label'     => __('shipment_options_signature', 'woocommerce-myparcel'),
                     'help_text' => __('shipment_options_signature_help_text', 'woocommerce-myparcel'),
                     'type'      => 'toggle',
@@ -244,7 +241,7 @@ class CarrierSettings
                 break;
             case AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY:
                 $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY,
+                    'name'      => 'export_same_day_delivery',
                     'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
                     'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
                     'type'      => 'toggle',
@@ -266,56 +263,56 @@ class CarrierSettings
         switch ($option) {
             case AbstractConsignment::SHIPMENT_OPTION_ONLY_RECIPIENT:
                 $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
-                    'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                    'name'      => 'only_recipient_enabled',
+                    'condition' => 'delivery_enabled',
                     'label'     => __('shipment_options_only_recipient', 'woocommerce-myparcel'),
                     'type'      => 'toggle',
                 ];
                 $settings[] = WCMP_Settings_Data::getFeeField(
-                    WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE,
+                    'only_recipient_fee',
                     [
-                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                        WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
+                        'delivery_enabled',
+                        'only_recipient_enabled',
                     ]
                 );
                 break;
             case AbstractConsignment::SHIPMENT_OPTION_SIGNATURE:
                 $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
-                    'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                    'name'      => 'signature_enabled',
+                    'condition' => 'delivery_enabled',
                     'label'     => __('shipment_options_signature', 'woocommerce-myparcel'),
                     'type'      => 'toggle',
                 ];
                 $settings[] = WCMP_Settings_Data::getFeeField(
-                    WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_FEE,
+                    'signature_fee',
                     [
-                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                        WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
+                        'delivery_enabled',
+                        'signature_enabled',
                     ]
                 );
                 break;
             case AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY:
                 $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY,
-                    'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                    'name'      => 'same_day_delivery',
+                    'condition' => 'delivery_enabled',
                     'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
                     'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
                     'type'      => 'toggle',
                 ];
                 $settings[] = WCMP_Settings_Data::getFeeField(
-                    WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY_FEE,
+                    'same_day_delivery_fee',
                     [
-                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                        WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY,
+                        'delivery_enabled',
+                        'same_day_delivery',
                     ]
                 );
                 $settings[] = [
-                    'name'  => WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY_CUTOFF_TIME,
+                    'name'  => 'same_day_delivery_cutoff_time',
                     'type'  => 'time',
                     'class' => ['wcmp__child'],
                     'condition' => [
-                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                        WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY,
+                        'delivery_enabled',
+                        'same_day_delivery',
                     ],
                     'label'     => __('setting_carrier_cut_off_time_title', 'woocommerce-myparcel'),
                     'help_text' => __('shipment_options_same_day_delivery_cutoff_time_help_text', 'woocommerce-myparcel'),
@@ -341,16 +338,16 @@ class CarrierSettings
         if ($consignment->canHaveDeliveryType(AbstractConsignment::DELIVERY_TYPE_EVENING_NAME)) {
             return [
                 [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
-                    'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                    'name'      => 'delivery_evening_enabled',
+                    'condition' => 'delivery_enabled',
                     'label'     => __('shipment_options_delivery_evening', 'woocommerce-myparcel'),
                     'type'      => 'toggle',
                 ],
                 WCMP_Settings_Data::getFeeField(
-                    WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE,
+                    'delivery_evening_fee',
                     [
-                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
+                        'delivery_enabled',
+                        'delivery_evening_enabled',
                     ]
                 ),
             ];
@@ -375,7 +372,7 @@ class CarrierSettings
 
             $options[] = [
                 'name'      => $settings['setting'],
-                'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                'condition' => 'delivery_enabled',
                 'label'     => sprintf(
                     __('settings_carrier_delivery_day', 'woocommerce-myparcel'),
                     ucfirst(__($settings['day']))
@@ -396,7 +393,7 @@ class CarrierSettings
                 'name'              => $settings['cut_off_time_setting'],
                 'type'              => 'time',
                 'condition'         => [
-                    WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                    'delivery_enabled',
                     $settings['setting'],
                 ],
                 'class'             => ['wcmp__child'],
@@ -416,7 +413,7 @@ class CarrierSettings
                 $options[] = WCMP_Settings_Data::getFeeField(
                     $settings['fee'],
                     [
-                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                        'delivery_enabled',
                         $settings['setting'],
                     ]
                 );
@@ -436,16 +433,16 @@ class CarrierSettings
         if ($consignment->canHaveDeliveryType(AbstractConsignment::DELIVERY_TYPE_MORNING_NAME)) {
             return [
                 [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
-                    'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                    'name'      => 'delivery_morning_enabled',
+                    'condition' => 'delivery_enabled',
                     'label'     => __('shipment_options_delivery_morning', 'woocommerce-myparcel'),
                     'type'      => 'toggle',
                 ],
                 WCMP_Settings_Data::getFeeField(
-                    WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE,
+                    'delivery_morning_fee',
                     [
-                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
+                        'delivery_enabled',
+                        'delivery_morning_enabled',
                     ]
                 ),
             ];
@@ -463,7 +460,7 @@ class CarrierSettings
     private function getCarrierDeliveryOptionsSection(AbstractCarrier $carrier, AbstractConsignment $consignment): array
     {
         $deliveryOptionsEnabled = SettingsCollection::getInstance()
-            ->isEnabled(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED);
+            ->isEnabled('delivery_options_enabled');
 
         if (! $deliveryOptionsEnabled) {
             return [];
@@ -494,7 +491,7 @@ class CarrierSettings
 
         $settings = [
             [
-                'name'  => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                'name'  => 'delivery_enabled',
                 'label' => sprintf(
                     __('setting_carrier_delivery_enabled', 'woocommerce-myparcel'),
                     $carrier->getHuman()
@@ -502,12 +499,12 @@ class CarrierSettings
                 'type'  => 'toggle',
             ],
             WCMP_Settings_Data::getFeeField(
-                WCMYPA_Settings::SETTING_CARRIER_DELIVERY_STANDARD_FEE,
-                [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED]
+                'delivery_standard_fee',
+                ['delivery_enabled']
             ),
             [
-                'name'      => WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
-                'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                'name'      => 'drop_off_days',
+                'condition' => 'delivery_enabled',
                 'label'     => __('setting_carrier_drop_off_days_title', 'woocommerce-myparcel'),
                 'callback'  => [WCMP_Settings_Callbacks::class, 'enhanced_select'],
                 'options'   => WCMP_Settings_Data::getWeekdays(),
@@ -518,24 +515,24 @@ class CarrierSettings
                 ),
             ],
             [
-                'name'      => WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME,
+                'name'      => 'cutoff_time',
                 'type'      => 'time',
-                'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                'condition' => 'delivery_enabled',
                 'label'     => __('setting_carrier_cut_off_time_title', 'woocommerce-myparcel'),
                 'help_text' => __('setting_carrier_cut_off_time_help_text', 'woocommerce-myparcel'),
                 'default'   => '17:00',
             ],
             [
-                'name'      => WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
-                'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                'name'      => 'drop_off_delay',
+                'condition' => 'delivery_enabled',
                 'label'     => __('setting_carrier_drop_off_delay_title', 'woocommerce-myparcel'),
                 'type'      => 'number',
                 'max'       => 14,
                 'help_text' => __('setting_carrier_drop_off_delay_help_text', 'woocommerce-myparcel'),
             ],
             [
-                'name'      => WCMYPA_Settings::SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT,
-                'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                'name'      => 'digital_stamp_default_weight',
+                'condition' => 'delivery_enabled',
                 'label'     => __('setting_carrier_digital_stamp', 'woocommerce-myparcel'),
                 'type'      => 'select',
                 'options'   => [
@@ -603,7 +600,7 @@ class CarrierSettings
     private function getCarrierPickupOptionsSection(AbstractCarrier $carrier, AbstractConsignment $consignment): array
     {
         $deliveryOptionsEnabled = SettingsCollection::getInstance()
-            ->isEnabled(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED);
+            ->isEnabled('delivery_options_enabled');
 
         $carrierHasPickup = $consignment->canHaveDeliveryType(AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME);
 
@@ -630,7 +627,7 @@ class CarrierSettings
     {
         return [
             [
-                'name'  => WCMYPA_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                'name'  => 'pickup_enabled',
                 'label' => sprintf(
                     __('setting_carrier_pickup_enabled', 'woocommerce-myparcel'),
                     $carrier->getHuman()
@@ -638,9 +635,9 @@ class CarrierSettings
                 'type'  => 'toggle',
             ],
             WCMP_Settings_Data::getFeeField(
-                WCMYPA_Settings::SETTING_CARRIER_PICKUP_FEE,
+                'pickup_fee',
                 [
-                    WCMYPA_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                    'pickup_enabled',
                 ]
             ),
         ];

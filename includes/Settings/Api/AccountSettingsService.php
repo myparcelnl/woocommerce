@@ -14,10 +14,9 @@ use MyParcelNL\Sdk\src\Services\Web\AccountWebService;
 use MyParcelNL\Sdk\src\Services\Web\CarrierConfigurationWebService;
 use MyParcelNL\Sdk\src\Services\Web\CarrierOptionsWebService;
 use MyParcelNL\Sdk\src\Support\Collection;
-use MyParcelNL\WooCommerce\includes\admin\Messages;
+use MyParcelNL\WooCommerce\Facade\Messages;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
-use MyParcelNL\WooCommerce\includes\Settings\Listener\ApiKeySettingsListener;
 use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
 use WCMP_Log;
 use WP_REST_Response;
@@ -44,10 +43,7 @@ class AccountSettingsService
         try {
             $settings = $this->fetchFromApi($apiKey);
             $this->saveSettingsToDatabase($settings);
-            Messages::showAdminNotice(
-                __('notice_settings_fetched_from_api', 'woocommerce-myparcel'),
-                Messages::NOTICE_LEVEL_SUCCESS
-            );
+            Messages::info(__('notice_settings_fetched_from_api', 'woocommerce-myparcel'));
 
             return true;
         } catch (Exception $e) {
