@@ -876,11 +876,11 @@ class WCMP_Export
     }
 
     /**
-     * @param string|null $packageType
+     * @param string|int|null $packageType
      *
      * @return string
      */
-    public static function getPackageTypeHuman(?string $packageType): string
+    public static function getPackageTypeHuman($packageType): string
     {
         if ($packageType) {
             $packageType = WCMP_Data::getPackageTypeHuman($packageType);
