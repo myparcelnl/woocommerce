@@ -1,19 +1,19 @@
 <template>
-  <WcTable>
+  <PdkTable>
     <div
       v-if="$slots.header"
-      className="card-header">
+      class="card-header">
       <slot name="header" />
     </div>
-    <div className="card-body">
+    <div class="card-body">
       <slot />
     </div>
     <div
       v-if="$slots.footer"
-      className="card-footer d-flex">
+      class="card-footer d-flex">
       <slot name="footer" />
     </div>
-  </WcTable>
+  </PdkTable>
 </template>
 
 <script lang="ts">

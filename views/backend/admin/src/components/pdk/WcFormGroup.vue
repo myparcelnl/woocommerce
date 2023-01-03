@@ -1,5 +1,5 @@
 <template>
-  <WcTable>
+  <PdkTable>
     <tr>
       <th scope="row">
         <label :class="config?.cssUtilities?.whitespaceNoWrap">
@@ -23,7 +23,7 @@
         </p>
       </td>
     </tr>
-  </WcTable>
+  </PdkTable>
 </template>
 
 <script lang="ts">
@@ -32,8 +32,7 @@ import {PropType, defineComponent} from 'vue';
 import WcTable from './WcTable.vue';
 
 export default defineComponent({
-  name: 'WCFormGroup',
-  components: {WcTable},
+  name: 'WcFormGroup',
   props: {
     /**
      * Label of the form group. Can be used instead of the label slot.

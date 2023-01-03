@@ -6,13 +6,14 @@
       type="checkbox"
       class="myparcel-checkbox">
     <label
-      v-t="label"
+      v-text="translate(label)"
       :for="`checkbox_${value}`" />
 </template>
 
 <script lang="ts">
-import {useVModel} from '@vueuse/core';
 import {defineComponent} from 'vue';
+import {useTranslate} from '@myparcel/pdk-frontend';
+import {useVModel} from '@vueuse/core';
 
 export default defineComponent({
   name: 'WcCheckboxInput',
@@ -40,6 +41,7 @@ export default defineComponent({
   },
 
   setup: (props, ctx) => ({
+    translate: useTranslate(),
     model: useVModel(props, 'modelValue', ctx.emit),
   }),
 });

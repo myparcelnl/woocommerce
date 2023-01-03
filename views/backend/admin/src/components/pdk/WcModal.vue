@@ -15,7 +15,7 @@
         </div>
         <div v-if="context">
 
-          <WcMultiCheckBox
+          <PdkMultiCheckBox
             disabled="false"
             options="{'1';'2'}" />
 
@@ -25,7 +25,7 @@
         </div>
         <div>
           <div>
-            <WcButton
+            <PdkButton
               v-for="(action, index) in actions"
               :key="`action_${action.id}_${index}`"
               :action="action.id"
@@ -39,7 +39,6 @@
 
 <script lang="ts">
 import {
-  ActionButton,
   ModalKey,
   NotificationContainer,
   PdkButtonAction,
@@ -47,14 +46,11 @@ import {
   useTranslate,
 } from '@myparcel/pdk-frontend';
 import {PropType, computed, defineComponent, toRefs} from 'vue';
-import WcButton from './WcButton.vue';
-import WcMultiCheckbox from './WcMultiCheckbox.vue';
 
 export default defineComponent({
-  name: 'WcPdkModal',
+  name: 'WcModal',
   components: {
-    WcButton,
-    WcMultiCheckbox,
+    NotificationContainer,
   },
 
   props: {

@@ -1,6 +1,6 @@
 <template>
   <div class="multicheckbox">
-  <WcCheckboxInput
+  <PdkCheckboxInput
     v-for="(option, index) in options"
     :key="`${option.value}_${index}`"
     :disabled="option.disabled || disabled"
@@ -17,7 +17,6 @@ import WcCheckboxInput from './WcCheckboxInput.vue';
 
 export default defineComponent({
   name: 'WcMultiCheckbox',
-  components: {WcCheckboxInput},
   props: {
     disabled: {
       type: Boolean,

@@ -1,45 +1,34 @@
 import './assets/scss/index.scss';
 import {
-  Bootstrap4Button,
   Bootstrap4ButtonGroup,
-  Bootstrap4Card,
-  Bootstrap4CheckboxInput,
   Bootstrap4Col,
   Bootstrap4DropdownButton,
   Bootstrap4Image,
-  Bootstrap4Notification,
-  Bootstrap4NumberInput,
   Bootstrap4RadioInput,
   Bootstrap4Row,
-  Bootstrap4SelectInput,
-  Bootstrap4Table,
-  Bootstrap4TextInput,
 } from '@myparcel/pdk-preset-bootstrap4';
 import {
   DefaultCurrencyInput,
   DefaultIcon,
   DefaultLink,
-  DefaultMultiCheckbox,
   DefaultMultiRadio,
   DefaultPluginSettingsWrapper,
   DefaultTableCol,
   DefaultTableRow,
-  DefaultToggleInput,
 } from '@myparcel/pdk-components';
 import {LogLevel, createPdkFrontend, useModalStore} from '@myparcel/pdk-frontend';
-import WcFormGroup from './components/pdk/WcFormGroup.vue';
-import WcModal from './components/pdk/WcModal.vue';
 import WcButton from './components/pdk/WcButton.vue';
 import WcCard from './components/pdk/WcCard.vue';
-import WcToggleInput from './components/pdk/WcToggleInput.vue';
-import WcNotification from './components/pdk/WcNotification.vue';
-import WcTable from './components/pdk/WcTable.vue';
 import WcCheckboxInput from './components/pdk/WcCheckboxInput.vue';
+import WcFormGroup from './components/pdk/WcFormGroup.vue';
+import WcModal from './components/pdk/WcModal.vue';
 import WcMultiCheckbox from './components/pdk/WcMultiCheckbox.vue';
-import WcSelectInput from './components/pdk/WcSelectInput.vue';
-// @ts-ignore
-import WcTextInput from './components/pdk/WcTextInput.vue';
+import WcNotification from './components/pdk/WcNotification.vue';
 import WcNumberInput from './components/pdk/WcNumberInput.vue';
+import WcSelectInput from './components/pdk/WcSelectInput.vue';
+import WcTable from './components/pdk/WcTable.vue';
+import WcTextInput from './components/pdk/WcTextInput.vue';
+import WcToggleInput from './components/pdk/WcToggleInput.vue';
 
 createPdkFrontend({
   logLevel: LogLevel.DEBUG,
@@ -67,7 +56,7 @@ createPdkFrontend({
     PdkTable: WcTable,
     PdkTableCol: DefaultTableCol,
     PdkTableRow: DefaultTableRow,
-    PdkTextInput: Bootstrap4TextInput,
+    PdkTextInput: WcTextInput,
     PdkToggleInput: WcToggleInput,
   },
 

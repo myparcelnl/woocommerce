@@ -17,7 +17,6 @@ import {computed, defineComponent, PropType} from 'vue';
 
 export default defineComponent({
   name: 'WcNotification',
-  components: {},
   props: {
     notification: {
       type: Object as PropType<PdkNotification>,
