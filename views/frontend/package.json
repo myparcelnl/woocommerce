@@ -1,0 +1,24 @@
+{
+  "name": "@myparcel/woocommerce-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "@myparcel/pdk-component-tests": "*",
+    "@myparcel/pdk-components": "*",
+    "@myparcel/pdk-frontend": "*",
+    "@myparcel/pdk-preset-bootstrap4": "*",
+    "@tanstack/vue-query": "^4.20.5"
+  },
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "build:dev": "vite build --mode development",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "sass": "^1.57.1",
+    "vite": "^4.0.3",
+    "vitest": "^0.26.2"
+  }
+}
