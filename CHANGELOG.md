@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.16.3](https://github.com/myparcelnl/woocommerce/compare/v4.16.2...v4.16.3) (2023-01-04)
+
+
+### :bug: Bug Fixes
+
+* prevent passing null to datetime ([#940](https://github.com/myparcelnl/woocommerce/issues/940)) ([be004a9](https://github.com/myparcelnl/woocommerce/commit/be004a99f51fccadb1806587666342d3305a6201))
+
 ## [4.16.2](https://github.com/myparcelnl/woocommerce/compare/v4.16.1...v4.16.2) (2023-01-04)
 
 
