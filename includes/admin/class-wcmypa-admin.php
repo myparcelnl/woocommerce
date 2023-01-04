@@ -1603,7 +1603,7 @@ class WCMYPA_Admin
      */
     public static function shipmentIsStatus(array $shipment, int $status): bool
     {
-        return strstr($shipment['status'], (new WCMP_Export())->getShipmentStatusName($status));
+        return (bool) strstr($shipment['status'], (new WCMP_Export())->getShipmentStatusName($status));
     }
 
     /**
