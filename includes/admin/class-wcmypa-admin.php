@@ -1353,7 +1353,7 @@ class WCMYPA_Admin
         ];
 
         if (WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY)) {
-            $confirmationData[__('Date:', 'woocommerce')] = wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()));
+            $confirmationData[__('Date:', 'woocommerce')] = wc_format_datetime(new WC_DateTime($deliveryOptions->getDate() ?? ''));
         }
 
         $extraOptions = $this->getExtraOptions($deliveryOptions->getShipmentOptions());
