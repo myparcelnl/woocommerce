@@ -107,7 +107,9 @@ class SettingsCollection extends Collection
      */
     public function getFloatByName(string $name): float
     {
-        return (float) str_replace(',', '.', $this->getByName($name) ?? '0');
+        $setting = (string) $this->getByName($name);
+
+        return (float) str_replace(',', '.', $setting ?? '0');
     }
 
     /**
