@@ -1,61 +1,43 @@
 <template>
-  <PdkTable>
-    <tr>
-      <th scope="row">
-        <label :class="config?.cssUtilities?.whitespaceNoWrap">
-          <slot name="label">
-            {{ translate(label) }}
-          </slot>
+  <PdkTableRow valign="top">
+    <PdkTableCol component="th" scope="row" class="titledesc">
+      <label :class="config?.cssUtilities?.whitespaceNoWrap">
+        <slot name="label">
+          {{ element.label }}
+        </slot>
 
-          <span
-            v-if="description"
-            class="woocommerce-help-tip"
-            v-text="description" />
-        </label>
-      </th>
-      <td>
-        <p class="form-row">
-          <span class="woocommerce-input-wrapper">
-            <component
-              :is="component"
-              v-bind="{...$attrs, ...$props}" />
-          </span>
-        </p>
-      </td>
-    </tr>
-  </PdkTable>
+        <span
+          v-if="element.props.description"
+          class="woocommerce-help-tip"
+          :data-tip="translate(element.props.description)" />
+      </label>
+    </PdkTableCol>
+
+    <PdkTableCol>
+      <slot />
+    </PdkTableCol>
+  </PdkTableRow>
 </template>
 
 <script lang="ts">
-import {PdkComponentName, usePdkConfig, useTranslate} from '@myparcel/pdk-frontend';
-import {PropType, defineComponent} from 'vue';
-import WcTable from './WcTable.vue';
+import {PropType, UnwrapNestedRefs, defineComponent} from 'vue';
+import {usePdkConfig, useTranslate} from '@myparcel/pdk-frontend';
+import {InteractiveElementInstance} from '@myparcel-vfb/core';
 
 export default defineComponent({
   name: 'WcFormGroup',
   props: {
-    /**
-     * Label of the form group. Can be used instead of the label slot.
-     */
-    label: {
-      type: String,
-      default: null,
-    },
-
-    component: {
-      type: String as PropType<PdkComponentName>,
-      default: null,
-    },
-
-    description: {
-      type: String,
-      default: null,
+    element: {
+      type: Object as PropType<UnwrapNestedRefs<InteractiveElementInstance>>,
+      required: true,
     },
   },
 
-  setup: () => ({
-    config: usePdkConfig(),
-    translate: useTranslate(),
-  }),
+  setup: () => {
+    return {
+      config: usePdkConfig(),
+      translate: useTranslate(),
+    };
+  },
 });
 </script>

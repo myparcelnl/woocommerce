@@ -123,7 +123,8 @@ jQuery(document).ready(($) => {
             }
           }
 
-          if (key !== 'state' &&
+          if (
+            key !== 'state' &&
             (typeof locale.default[key].hidden == 'undefined' || locale.default[key].hidden == false)
           ) {
             field.show();

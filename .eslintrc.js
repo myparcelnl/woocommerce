@@ -1,6 +1,10 @@
 module.exports = {
   root: true,
   extends: ['@myparcel-eslint/eslint-config-esnext', '@myparcel-eslint/eslint-config-prettier'],
+  parserOptions: {
+    dir: __dirname,
+    project: 'tsconfig.json',
+  },
   overrides: [
     {
       files: ['./**/index.ts'],
@@ -12,10 +16,6 @@ module.exports = {
     {
       files: ['./**/*.vue'],
       extends: '@myparcel-eslint/eslint-config-prettier-typescript-vue',
-      parserOptions: {
-        dir: __dirname,
-        project: 'tsconfig.json',
-      },
       rules: {
         '@typescript-eslint/no-misused-promises': 'off',
         'vue/no-undef-components': [
@@ -29,10 +29,6 @@ module.exports = {
     {
       files: ['./**/*.ts', './**/*.tsx'],
       extends: '@myparcel-eslint/eslint-config-prettier-typescript',
-      parserOptions: {
-        dir: __dirname,
-        project: 'tsconfig.json',
-      },
       rules: {
         'class-methods-use-this': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',

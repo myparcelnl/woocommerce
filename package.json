@@ -1,6 +1,7 @@
 {
   "name": "@myparcel/woocommerce",
   "version": "5.0.0-alpha.0",
+  "private": true,
   "homepage": "https://github.com/myparcelnl/woocommerce#readme",
   "bugs": {
     "url": "https://github.com/myparcelnl/woocommerce/issues"
@@ -17,8 +18,20 @@
     "build": "yarn js:build && yarn translations:import && yarn bundle",
     "build:js": "nx run-many --target=build",
     "build:js:dev": "nx run-many --target=build:dev",
+    "build:js:dev:backend": "nx run-many --target=build --projects='backend-*'",
+    "build:js:dev:frontend": "nx run-many --target=build --projects='frontend-*'",
     "bundle": "gulp",
-    "translations:import": "npx -q @edielemoine/google-docs-importer --documentId 1TPE7gwG2GXtX7vlKIaskwMy0Xr4o_ir-lsedWB86xyc -o config/pdk/translations"
+    "test": "nx run-many --target=test --output-style=stream",
+    "test:watch": "nx run-many --target=test:watch --parallel --output-style=stream",
+    "translations:import": "npx -q @edielemoine/google-docs-importer --documentId 1TPE7gwG2GXtX7vlKIaskwMy0Xr4o_ir-lsedWB86xyc -o config/pdk/translations",
+    "watch": "nodemon --watch views --ext ts,vue --exec 'yarn build:js:dev'",
+    "watch:backend": "nodemon --watch views/backend --ext ts,vue --exec 'yarn build:js:dev:backend'",
+    "watch:frontend": "nodemon --watch views/frontend --ext ts --exec 'yarn build:js:dev:frontend'",
+    "ws:build": "vite build",
+    "ws:build:dev": "vite build --mode development",
+    "ws:dev": "vite",
+    "ws:test": "vitest run",
+    "ws:test:watch": "vitest"
   },
   "prettier": "@myparcel/prettier-config",
   "resolutions": {
@@ -28,7 +41,8 @@
     "@myparcel/pdk-component-tests": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-component-tests",
     "@myparcel/pdk-components": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-components",
     "@myparcel/pdk-frontend": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-frontend",
-    "@myparcel/pdk-preset-bootstrap4": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-preset-bootstrap4"
+    "@myparcel/pdk-preset-bootstrap4": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-preset-bootstrap4",
+    "vite-plugin-custom-tsconfig": "portal:/Users/edie/Sites/vite-plugin-custom-tsconfig"
   },
   "dependencies": {
     "@myparcel/delivery-options": "^5.3.0"
@@ -59,10 +73,16 @@
     "husky": "^8.0.3",
     "is-ci": "^3.0.1",
     "lint-staged": "^13.1.0",
-    "nx": "15.4.2",
+    "nodemon": "^2.0.20",
+    "nx": "15.4.4",
     "papaparse": "^5.3.2",
     "prettier": "^2.8.1",
-    "vinyl-buffer": "^1.0.1"
+    "typescript": "^4.9.4",
+    "vinyl-buffer": "^1.0.1",
+    "vite": "^4.0.4",
+    "vite-plugin-custom-tsconfig": "^1.0.3",
+    "vite-plugin-dts": "^1.7.1",
+    "vitest": "^0.26.3"
   },
   "packageManager": "yarn@3.3.1"
 }

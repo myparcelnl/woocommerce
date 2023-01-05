@@ -1,3 +1,4 @@
+import customTsConfig from 'vite-plugin-custom-tsconfig';
 import {defineConfig} from 'vitest/config';
 import vue from '@vitejs/plugin-vue';
 
@@ -11,12 +12,12 @@ export default defineConfig((env) => ({
     },
     minify: env.mode !== 'development',
     outDir: 'lib',
-    sourcemap: env.mode !== 'development',
+    sourcemap: true,
   },
 
   define: {
     'process.env': {},
   },
 
-  plugins: [vue()],
+  plugins: [vue(), customTsConfig()],
 }));

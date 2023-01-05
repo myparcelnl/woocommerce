@@ -53,8 +53,8 @@ class AdminPdkHookService implements WordPressHookServiceInterface
         // Render product settings in product edit page
         add_action('woocommerce_product_options_shipping', [$this, 'renderPdkProductSettings']);
 
-        // Render order card in order edit page
-        add_action('woocommerce_admin_order_data_after_shipping_address', [$this, 'renderPdkOrderCard']);
+        // Render order card in meta box on order edit page
+        add_action('add_meta_boxes', [$this, 'registerSingleOrderPageMetaBox']);
     }
 
     /**
@@ -91,6 +91,18 @@ class AdminPdkHookService implements WordPressHookServiceInterface
         }
 
         return $newColumns;
+    }
+
+    public function registerSingleOrderPageMetaBox(): void
+    {
+        add_meta_box(
+            'myparcelnl_woocommerce_order_data',
+            MyParcelNL::NAME,
+            [$this, 'renderPdkOrderCard'],
+            'shop_order',
+            'advanced',
+            'high'
+        );
     }
 
     /**

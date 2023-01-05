@@ -1,3 +1,4 @@
+import customTsConfig from 'vite-plugin-custom-tsconfig';
 import {defineConfig} from 'vitest/config';
 
 export default defineConfig((env) => ({
@@ -10,6 +11,8 @@ export default defineConfig((env) => ({
     },
     minify: env.mode !== 'development',
     outDir: 'lib',
-    sourcemap: env.mode !== 'development',
+    sourcemap: true,
   },
+
+  plugins: [customTsConfig()],
 }));

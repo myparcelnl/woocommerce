@@ -3,13 +3,11 @@ import {
   Bootstrap4ButtonGroup,
   Bootstrap4Col,
   Bootstrap4DropdownButton,
-  Bootstrap4Image,
   Bootstrap4RadioInput,
   Bootstrap4Row,
 } from '@myparcel/pdk-preset-bootstrap4';
 import {
   DefaultCurrencyInput,
-  DefaultIcon,
   DefaultLink,
   DefaultMultiRadio,
   DefaultPluginSettingsWrapper,
@@ -17,10 +15,13 @@ import {
   DefaultTableRow,
 } from '@myparcel/pdk-components';
 import {LogLevel, createPdkFrontend, useModalStore} from '@myparcel/pdk-frontend';
+import {h, markRaw} from 'vue';
 import WcButton from './components/pdk/WcButton.vue';
 import WcCard from './components/pdk/WcCard.vue';
 import WcCheckboxInput from './components/pdk/WcCheckboxInput.vue';
 import WcFormGroup from './components/pdk/WcFormGroup.vue';
+import WcIcon from './components/pdk/WcIcon.vue';
+import WcImage from './components/pdk/WcImage.vue';
 import WcModal from './components/pdk/WcModal.vue';
 import WcMultiCheckbox from './components/pdk/WcMultiCheckbox.vue';
 import WcNotification from './components/pdk/WcNotification.vue';
@@ -32,6 +33,16 @@ import WcToggleInput from './components/pdk/WcToggleInput.vue';
 
 createPdkFrontend({
   logLevel: LogLevel.DEBUG,
+
+  formConfig: {
+    form: {
+      attributes: {
+        class: 'woocommerce',
+      },
+      wrapper: h('table', {class: 'form-table'}),
+    },
+  },
+
   components: {
     PdkButton: WcButton,
     PdkButtonGroup: Bootstrap4ButtonGroup,
@@ -41,8 +52,8 @@ createPdkFrontend({
     PdkCurrencyInput: DefaultCurrencyInput,
     PdkDropdownButton: Bootstrap4DropdownButton,
     PdkFormGroup: WcFormGroup,
-    PdkIcon: DefaultIcon,
-    PdkImage: Bootstrap4Image,
+    PdkIcon: WcIcon,
+    PdkImage: WcImage,
     PdkLink: DefaultLink,
     PdkModal: WcModal,
     PdkMultiCheckbox: WcMultiCheckbox,
@@ -58,6 +69,11 @@ createPdkFrontend({
     PdkTableRow: DefaultTableRow,
     PdkTextInput: WcTextInput,
     PdkToggleInput: WcToggleInput,
+  },
+
+  cssUtilities: {
+    textCenter: 'text-center',
+    whitespaceNoWrap: 'whitespace-nowrap',
   },
 
   onCreateStore() {

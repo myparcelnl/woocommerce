@@ -1,29 +1,27 @@
 <template>
   <input
     v-model="model"
-    :disabled="disabled"
-    :type="type" />
+    :disabled="element.isDisabled || element.isSuspended"
+    :type="element.props.type ?? 'text'" />
 </template>
 
 <script lang="ts">
+import {PropType, UnwrapNestedRefs, defineComponent} from 'vue';
+import {InteractiveElementInstance} from '@myparcel-vfb/core';
 import {useVModel} from '@vueuse/core';
-import {defineComponent} from 'vue';
 
 export default defineComponent({
   name: 'WcTextInput',
   props: {
+    element: {
+      type: Object as PropType<UnwrapNestedRefs<InteractiveElementInstance>>,
+      required: true,
+    },
+
+    // eslint-disable-next-line vue/no-unused-properties
     modelValue: {
       type: [String, Number],
       default: null,
-    },
-
-    disabled: {
-      type: Boolean,
-    },
-
-    type: {
-      type: String,
-      default: 'text',
     },
   },
 

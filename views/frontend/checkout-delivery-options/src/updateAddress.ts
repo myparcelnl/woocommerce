@@ -22,10 +22,10 @@ export const updateAddress = (): void => {
       new CustomEvent(EVENT_UPDATE_DELIVERY_OPTIONS, {
         detail: {
           address: {
-            cc: getAddressField(FIELD_COUNTRY).value,
-            postalCode: getAddressField(FIELD_POSTCODE).value,
+            cc: getAddressField(FIELD_COUNTRY)?.value,
+            postalCode: getAddressField(FIELD_POSTCODE)?.value,
             number: getHouseNumber(),
-            city: getAddressField(FIELD_CITY).value,
+            city: getAddressField(FIELD_CITY)?.value,
           },
         },
       }),

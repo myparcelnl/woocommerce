@@ -1,7 +1,7 @@
 <template>
   <div
     :class="`notice notice-${notification.variant}`"
-    style="padding:12px 12px">
+    style="padding: 12px 12px">
     <strong>{{ notification.title }}</strong>
     <p
       v-for="(item, index) in contentArray"
@@ -12,8 +12,8 @@
 
 <script lang="ts">
 import {toArray} from '@myparcel/ts-utils';
-import {PdkNotification,usePdkConfig,useTranslate} from '@myparcel/pdk-frontend';
-import {computed, defineComponent, PropType} from 'vue';
+import {PdkNotification, usePdkConfig, useTranslate} from '@myparcel/pdk-frontend';
+import {PropType, computed, defineComponent} from 'vue';
 
 export default defineComponent({
   name: 'WcNotification',
@@ -33,7 +33,5 @@ export default defineComponent({
       }),
     };
   },
-
 });
 </script>
-

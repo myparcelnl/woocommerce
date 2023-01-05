@@ -1,7 +1,7 @@
 <template>
-  <table class="form-table">
+  <table class="fixed striped table-view-list widefat wp-list-table">
     <thead v-if="$slots.header">
-    <slot name="header" />
+      <slot name="header" />
     </thead>
 
     <TransitionGroup
@@ -11,7 +11,7 @@
     </TransitionGroup>
 
     <tfoot v-if="$slots.footer">
-    <slot name="footer" />
+      <slot name="footer" />
     </tfoot>
   </table>
 </template>
@@ -21,7 +21,7 @@ import {defineComponent} from 'vue';
 import {usePdkConfig} from '@myparcel/pdk-frontend';
 
 export default defineComponent({
-  name: 'Bootstrap4Table',
+  name: 'WcTable',
   setup: () => ({
     pdkConfig: usePdkConfig(),
   }),

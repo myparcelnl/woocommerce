@@ -13,16 +13,12 @@
         <div>
           <h4 v-text="translate(title)" />
         </div>
+
         <div v-if="context">
-
-          <PdkMultiCheckBox
-            disabled="false"
-            options="{'1';'2'}" />
-
           <NotificationContainer category="modal" />
-
           <slot :context="context" />
         </div>
+
         <div>
           <div>
             <PdkButton
@@ -38,13 +34,7 @@
 </template>
 
 <script lang="ts">
-import {
-  ModalKey,
-  NotificationContainer,
-  PdkButtonAction,
-  useModalStore,
-  useTranslate,
-} from '@myparcel/pdk-frontend';
+import {ModalKey, NotificationContainer, PdkButtonAction, useModalStore, useTranslate} from '@myparcel/pdk-frontend';
 import {PropType, computed, defineComponent, toRefs} from 'vue';
 
 export default defineComponent({

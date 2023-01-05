@@ -1,23 +1,24 @@
 <template>
-  <a class="wcmp__toggle wcmp__d--inline-block">
+  <a class="wcmp__d--inline-block wcmp__toggle">
     <input
       :id="id"
       v-model="model"
-      :disabled="disabled"
+      :disabled="element.isDisabled || element.isSuspended"
       :value="true"
       type="checkbox"
-      style="display:none" />
+      style="display: none" />
 
     <label
       :for="id"
-      :class="`woocommerce-input-toggle woocommerce-input-toggle--${model?'enabled':'disabled'}`">
-      {{ model ? labelYes : labelNo }}
+      :class="`woocommerce-input-toggle woocommerce-input-toggle--${model ? 'enabled' : 'disabled'}`">
+      {{ model ? element.props.labelYes : element.props.labelNo }}
     </label>
   </a>
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
+import {PropType, UnwrapNestedRefs, defineComponent} from 'vue';
+import {InteractiveElementInstance} from '@myparcel-vfb/core';
 import {generateId} from '@myparcel/pdk-frontend';
 import {useVModel} from '@vueuse/core';
 
@@ -27,32 +28,11 @@ import {useVModel} from '@vueuse/core';
 export default defineComponent({
   name: 'DefaultToggleInput',
   props: {
-    /**
-     * Controls the disabled state.
-     */
-    disabled: {
-      type: Boolean,
+    element: {
+      type: Object as PropType<UnwrapNestedRefs<InteractiveElementInstance>>,
+      required: true,
     },
 
-    /**
-     * Label in the disabled state.
-     */
-    labelNo: {
-      type: String,
-      default: 'no',
-    },
-
-    /**
-     * Label in the enabled state.
-     */
-    labelYes: {
-      type: String,
-      default: 'yes',
-    },
-
-    /**
-     * The value of the model.
-     */
     // eslint-disable-next-line vue/no-unused-properties
     modelValue: {
       type: [String, Boolean],

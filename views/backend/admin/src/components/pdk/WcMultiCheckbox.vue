@@ -1,11 +1,11 @@
 <template>
   <div class="multicheckbox">
-  <PdkCheckboxInput
-    v-for="(option, index) in options"
-    :key="`${option.value}_${index}`"
-    :disabled="option.disabled || disabled"
-    :label="option.label"
-    :value="option.value" />
+    <PdkCheckboxInput
+      v-for="(option, index) in options"
+      :key="`${option.value}_${index}`"
+      :disabled="option.disabled || disabled"
+      :label="option.label"
+      :value="option.value" />
   </div>
 </template>
 

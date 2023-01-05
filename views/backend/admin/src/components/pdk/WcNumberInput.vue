@@ -2,24 +2,25 @@
   <input
     v-model="model"
     type="number"
-    :disabled="disabled" />
+    :disabled="element.isDisabled" />
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
+import {PropType, UnwrapNestedRefs, defineComponent} from 'vue';
+import {InteractiveElementInstance} from '@myparcel-vfb/core';
 import {useVModel} from '@vueuse/core';
+
 /**
  * @see import('@myparcel/pdk-components').DefaultNumberInput
  */
 export default defineComponent({
   name: 'WcNumberInput',
   props: {
-    /**
-     * Controls disabled state.
-     */
-    disabled: {
-      type: Boolean,
+    element: {
+      type: Object as PropType<UnwrapNestedRefs<InteractiveElementInstance>>,
+      required: true,
     },
+
     /**
      * The value of the model.
      */
@@ -29,6 +30,7 @@ export default defineComponent({
       default: null,
     },
   },
+
   emits: ['update:modelValue'],
   setup: (props, ctx) => ({
     model: useVModel(props, 'modelValue', ctx.emit),

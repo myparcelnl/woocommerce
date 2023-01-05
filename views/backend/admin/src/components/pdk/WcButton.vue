@@ -14,8 +14,8 @@
 </template>
 
 <script lang="ts">
-import {PropType, defineComponent} from 'vue';
 import {PdkIcon, useTranslate} from '@myparcel/pdk-frontend';
+import {PropType, defineComponent} from 'vue';
 
 export default defineComponent({
   name: 'WcButton',
@@ -38,11 +38,10 @@ export default defineComponent({
   emits: ['click'],
 
   setup: (props) => {
-    console.log(props)
+    console.log(props);
     return {
       translate: useTranslate(),
     };
   },
 });
 </script>
-

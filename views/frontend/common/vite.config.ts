@@ -1,3 +1,4 @@
+import customTsConfig from 'vite-plugin-custom-tsconfig';
 import {defineConfig} from 'vitest/config';
 import dts from 'vite-plugin-dts';
 
@@ -12,5 +13,5 @@ export default defineConfig((env) => ({
     outDir: 'lib',
   },
 
-  plugins: [dts()],
+  plugins: [dts(), customTsConfig()],
 }));
