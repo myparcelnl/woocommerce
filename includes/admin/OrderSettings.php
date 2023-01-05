@@ -688,7 +688,6 @@ class OrderSettings
             return;
         }
 
-        WCMP_Log::add('Insurance: ' . ($isInsured ? 'yes' : 'no'));
         $this->insured         = $isInsured;
         $this->insuranceAmount = (int) $insuranceAmount;
     }
