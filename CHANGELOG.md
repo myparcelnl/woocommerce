@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.16.4](https://github.com/myparcelnl/woocommerce/compare/v4.16.3...v4.16.4) (2023-01-05)
+
+
+### :bug: Bug Fixes
+
+* convert product dimensions from measurement unit ([#941](https://github.com/myparcelnl/woocommerce/issues/941)) ([f7c1d6d](https://github.com/myparcelnl/woocommerce/commit/f7c1d6d4aed6b9e364440e4cf74257051b56331a))
+
 ## [4.16.3](https://github.com/myparcelnl/woocommerce/compare/v4.16.2...v4.16.3) (2023-01-04)
 
 
