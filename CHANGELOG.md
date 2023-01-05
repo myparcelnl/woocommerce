@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.16.3](https://github.com/myparcelnl/woocommerce/compare/v4.16.2...v4.16.3) (2023-01-04)
+
+
+### :bug: Bug Fixes
+
+* prevent passing null to datetime ([#940](https://github.com/myparcelnl/woocommerce/issues/940)) ([be004a9](https://github.com/myparcelnl/woocommerce/commit/be004a99f51fccadb1806587666342d3305a6201))
+
+## [4.16.2](https://github.com/myparcelnl/woocommerce/compare/v4.16.1...v4.16.2) (2023-01-04)
+
+
+### :bug: Bug Fixes
+
+* fix several type errors ([#939](https://github.com/myparcelnl/woocommerce/issues/939)) ([10ea21e](https://github.com/myparcelnl/woocommerce/commit/10ea21ef6a54410aef03b755b2a2ca1fcaff5197)), closes [#938](https://github.com/myparcelnl/woocommerce/issues/938)
+
+## [4.16.1](https://github.com/myparcelnl/woocommerce/compare/v4.16.0...v4.16.1) (2023-01-03)
+
+
+### :bug: Bug Fixes
+
+* show order detail even when package type is integer ([#935](https://github.com/myparcelnl/woocommerce/issues/935)) ([4e533bd](https://github.com/myparcelnl/woocommerce/commit/4e533bdff894880128e79d87a22e6961cb7109f8))
+
+## [4.16.0](https://github.com/myparcelnl/woocommerce/compare/v4.15.2...v4.16.0) (2023-01-03)
+
+
+### :bug: Bug Fixes
+
+* always load account settings during upgrade ([#916](https://github.com/myparcelnl/woocommerce/issues/916)) ([2d87f4e](https://github.com/myparcelnl/woocommerce/commit/2d87f4e2ed8a0258b411191562e3d4dbf7a53053))
+* fix deprecation warning on belgian shipments ([#929](https://github.com/myparcelnl/woocommerce/issues/929)) ([b80b507](https://github.com/myparcelnl/woocommerce/commit/b80b507d7f6726e2d4737263e752c85afacdebdf))
+* fix exclude billing with digital download ([#930](https://github.com/myparcelnl/woocommerce/issues/930)) ([00d8c3b](https://github.com/myparcelnl/woocommerce/commit/00d8c3bbfb018718ac9585641ec7a26a34e7987e))
+* fix str_replace fatal error during checkout ([#931](https://github.com/myparcelnl/woocommerce/issues/931)) ([152a5b9](https://github.com/myparcelnl/woocommerce/commit/152a5b99e6eef1a09e72083ca71628755b9da757))
+* fix type error on fresh install ([0e229ab](https://github.com/myparcelnl/woocommerce/commit/0e229ab5e6af4222948364992e45f5b6dc0be4bb))
+* prevent error substr expects parameter 1 to be string ([#927](https://github.com/myparcelnl/woocommerce/issues/927)) ([5e03b1f](https://github.com/myparcelnl/woocommerce/commit/5e03b1f9d23a57b1f6526e4c7a2510ee18bddeef))
+
+
+### :sparkles: New Features
+
+* add carrier dhl ([#913](https://github.com/myparcelnl/woocommerce/issues/913)) ([d18e8aa](https://github.com/myparcelnl/woocommerce/commit/d18e8aacb5bdbc4c7ec98d9a56c4a915265100a7))
+* add insurance options for eu shipments ([#922](https://github.com/myparcelnl/woocommerce/issues/922)) ([62bf761](https://github.com/myparcelnl/woocommerce/commit/62bf761feff2113447419ff70ff00abf26e75cc8))
+
 ## [4.16.0-rc.2](https://github.com/myparcelnl/woocommerce/compare/v4.16.0-rc.1...v4.16.0-rc.2) (2022-12-20)
 
 

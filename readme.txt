@@ -3,7 +3,7 @@ Contributors: richardperdaan, edielemoine, joerimyparcel
 Tags: woocommerce, export, delivery, packages, myparcel, flespakket, postnl
 Requires at least: 5.2.0
 Tested up to: 6.1
-Stable tag: 4.16.0-rc.2
+Stable tag: 4.16.3
 Requires PHP: 7.1
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
@@ -102,6 +102,29 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 6. MyParcel pickup delivery options
 
 == Changelog ==
+
+= 4.16.3 (2023-01-04) =
+
+* Fixed bug: prevent passing null to datetime (#940)
+
+= 4.16.2 (2023-01-04) =
+
+* Fixed bug: fix several type errors (#939)
+
+= 4.16.1 (2023-01-03) =
+
+* Fixed bug: show order detail even when package type is integer (#935)
+
+= 4.16.0 (2023-01-03) =
+
+* New: add insurance options for eu shipments (#922)
+* New: add carrier dhl (#913)
+* Fixed bug: fix str_replace fatal error during checkout (#931)
+* Fixed bug: fix type error on fresh install
+* Fixed bug: fix deprecation warning on belgian shipments (#929)
+* Fixed bug: fix exclude billing with digital download (#930)
+* Fixed bug: prevent error substr expects parameter 1 to be string (#927)
+* Fixed bug: always load account settings during upgrade (#916)
 
 = 4.16.0-rc.2 (2022-12-20) =
 

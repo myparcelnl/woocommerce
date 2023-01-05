@@ -99,8 +99,8 @@ class WCMP_Shipping_Methods
             $method      = $zoneShippingMethod;
             $methodTitle = $method->method_title ?? $method->title;
 
-            $this->addShippingMethod($shippingMethodId, $methodTitle);
-            $this->addFlatRateShippingMethods($shippingMethodId, $methodTitle);
+            $this->addShippingMethod((string) $shippingMethodId, $methodTitle);
+            $this->addFlatRateShippingMethods((string) $shippingMethodId, $methodTitle);
         }
 
         $this->addShippingMethodsFromShippingZones();
@@ -258,7 +258,7 @@ class WCMP_Shipping_Methods
         }
 
         foreach ($shippingMethodOption as $item) {
-            $this->addShippingMethod($item['id_for_shipping'], $item['method_title']);
+            $this->addShippingMethod((string) $item['id_for_shipping'], $item['method_title']);
         }
     }
 
@@ -275,6 +275,6 @@ class WCMP_Shipping_Methods
             return;
         }
 
-        $this->addShippingMethod($instance['id_for_shipping'], $instance['method_title']);
+        $this->addShippingMethod((string) $instance['id_for_shipping'], $instance['method_title']);
     }
 }

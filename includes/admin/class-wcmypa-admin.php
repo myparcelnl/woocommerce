@@ -1353,7 +1353,7 @@ class WCMYPA_Admin
         ];
 
         if (WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY)) {
-            $confirmationData[__('Date:', 'woocommerce')] = wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()));
+            $confirmationData[__('Date:', 'woocommerce')] = wc_format_datetime(new WC_DateTime($deliveryOptions->getDate() ?? ''));
         }
 
         $extraOptions = $this->getExtraOptions($deliveryOptions->getShipmentOptions());
@@ -1599,18 +1599,12 @@ class WCMYPA_Admin
         $data['package_type'] = $data['package_type'] ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
         $isHomeCountry        = WCMP_Data::isHomeCountry($country);
         $isEuCountry          = WCMP_Country_Codes::isEuCountry($country);
-        $isBelgium            = AbstractConsignment::CC_BE === $country;
         $isPackage            = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $data['package_type'];
         $isDigitalStamp       = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $data['package_type'];
 
         if (! $isHomeCountry || ! $isPackage) {
             $data['shipment_options']['age_check'] = false;
             $data['shipment_options']['return']    = false;
-
-            if (! $isBelgium) {
-                $data['shipment_options']['insured']        = false;
-                $data['shipment_options']['insured_amount'] = 0;
-            }
         }
 
         if (! $isPackage || (! $isHomeCountry && ! $isEuCountry)) {
