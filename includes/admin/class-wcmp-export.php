@@ -1053,8 +1053,6 @@ class WCMP_Export
         $sizeUnit = get_option('woocommerce_dimension_unit');
         $floatSize = (float) $size;
 
-        WCMP_Log::add('sizeUnit: ' . $sizeUnit);
-
         switch ($sizeUnit) {
             case 'm':
                 $size = $floatSize * 100;
