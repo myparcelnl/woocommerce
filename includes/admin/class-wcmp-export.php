@@ -1044,6 +1044,37 @@ class WCMP_Export
     }
 
     /**
+     * @param  int $size
+     *
+     * @return int
+     */
+    public static function convertSizeToCm(int $size): int
+    {
+        $sizeUnit = get_option('woocommerce_dimension_unit');
+        $floatSize = (float) $size;
+
+        switch ($sizeUnit) {
+            case 'm':
+                $result = $floatSize * 100;
+                break;
+            case 'mm':
+                $result = $floatSize / 10;
+                break;
+            case 'inch':
+                $result = $floatSize * 2.54;
+                break;
+            case 'yd':
+                $result = $floatSize * 91.44;
+                break;
+            default:
+                $result = $floatSize;
+                break;
+        }
+
+        return (int) ceil($result);
+    }
+
+    /**
      * @return array
      */
     public static function getDigitalStampRangeOptions(): array

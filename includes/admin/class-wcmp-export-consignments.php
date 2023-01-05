@@ -2,6 +2,7 @@
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLForYou;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
 use MyParcelNL\WooCommerce\Helper\ExportRow;
@@ -350,14 +351,23 @@ class WCMP_Export_Consignments
             }
         }
 
-        $this->consignment->setPhysicalProperties(
-            [
-                'weight' => $this->orderSettings->getColloWeight(),
-                'length' => $dimensions['length'] ?: 2,
-                'height' => $dimensions['height'] ?: 2,
-                'width'  => $dimensions['width'] ?: 2,
-            ]
-        );
+        if (CarrierDHLForYou::NAME === $this->consignment->getCarrierName()) {
+            $this->consignment->setPhysicalProperties(
+                [
+                    'weight' => $this->orderSettings->getColloWeight(),
+                    'length' => WCMP_Export::convertSizeToCm($dimensions['length']) ?: 2,
+                    'height' => WCMP_Export::convertSizeToCm($dimensions['height']) ?: 2,
+                    'width'  => WCMP_Export::convertSizeToCm($dimensions['width']) ?: 2,
+                ]
+            );
+        } else {
+            $this->consignment->setPhysicalProperties(
+                [
+                    'weight' => $this->orderSettings->getColloWeight(),
+                ]
+            );
+        }
+
     }
 
     /**
