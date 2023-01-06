@@ -19,28 +19,34 @@
           <slot :context="context" />
         </div>
 
-        <div>
-          <div>
-            <PdkButton
-              v-for="(action, index) in actions"
-              :key="`action_${action.id}_${index}`"
-              :action="action.id"
-              :label="action.label" />
-          </div>
-        </div>
+        <PdkButtonGroup>
+          <ActionButton
+            v-for="(action, index) in actions"
+            :key="`action_${action.id}_${index}`"
+            :action="action.id"
+            :label="action.label" />
+        </PdkButtonGroup>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {ModalKey, NotificationContainer, PdkButtonAction, useModalStore, useTranslate} from '@myparcel/pdk-frontend';
+import {
+  ActionButton,
+  ModalKey,
+  NotificationContainer,
+  PdkButtonAction,
+  useModalStore,
+  useTranslate,
+} from '@myparcel/pdk-frontend';
 import {PropType, computed, defineComponent, toRefs} from 'vue';
 
 export default defineComponent({
   name: 'WcModal',
   components: {
     NotificationContainer,
+    ActionButton,
   },
 
   props: {
