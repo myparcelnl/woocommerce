@@ -38,7 +38,7 @@ class RestApiHookService implements WordPressHookServiceInterface
 
             $response = $endpoint->call($this->convertRequest($request));
         } catch (Throwable $e) {
-            DefaultLogger::error($e->getMessage(), []);
+            DefaultLogger::error($e->getMessage());
             return new WP_REST_Response($e->getMessage(), 400);
         }
 

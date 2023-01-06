@@ -69,8 +69,6 @@ class MyParcelNL
     public $version;
 
     /**
-     * Constructor
-     *
      * @throws \Throwable
      */
     public function __construct()
