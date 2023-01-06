@@ -1,5 +1,5 @@
 <template>
-  <table class="fixed striped table-view-list widefat wp-list-table">
+  <table class="striped widefat">
     <thead v-if="$slots.header">
       <slot name="header" />
     </thead>

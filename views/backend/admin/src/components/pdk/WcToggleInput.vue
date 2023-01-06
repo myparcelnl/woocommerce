@@ -1,5 +1,5 @@
 <template>
-  <a class="wcmp__d--inline-block wcmp__toggle">
+  <a class="wcmp__d--inline-block">
     <input
       :id="id"
       v-model="model"

@@ -1,6 +1,7 @@
 <template>
   <input
     v-model="model"
+    style="width: 100%"
     :disabled="element.isDisabled || element.isSuspended"
     :type="element.props.type ?? 'text'" />
 </template>

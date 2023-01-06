@@ -1,17 +1,17 @@
 <template>
   <input
-    :id="`checkbox_${element.props.value}`"
+    :id="`checkbox_${value}`"
     v-model="model"
-    :value="element.props.value"
+    :value="value"
     type="checkbox"
     class="myparcel-checkbox" />
   <label
-    :for="`checkbox_${element.props.value}`"
+    :for="`checkbox_${value}`"
     v-text="element.label" />
 </template>
 
 <script lang="ts">
-import {PropType, UnwrapNestedRefs, defineComponent} from 'vue';
+import {PropType, UnwrapNestedRefs, computed, defineComponent} from 'vue';
 import {InteractiveElementInstance} from '@myparcel-vfb/core';
 import {useTranslate} from '@myparcel/pdk-frontend';
 import {useVModel} from '@vueuse/core';
@@ -35,6 +35,9 @@ export default defineComponent({
   setup: (props, ctx) => ({
     translate: useTranslate(),
     model: useVModel(props, 'modelValue', ctx.emit),
+    value: computed(() => {
+      return props.element.props?.value ?? '';
+    }),
   }),
 });
 </script>

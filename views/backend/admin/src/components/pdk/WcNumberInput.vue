@@ -1,13 +1,14 @@
 <template>
-  <input
+  <WcTextInput
     v-model="model"
-    type="number"
-    :disabled="element.isDisabled" />
+    :element="element"
+    type="number" />
 </template>
 
 <script lang="ts">
 import {PropType, UnwrapNestedRefs, defineComponent} from 'vue';
 import {InteractiveElementInstance} from '@myparcel-vfb/core';
+import WcTextInput from './WcTextInput.vue';
 import {useVModel} from '@vueuse/core';
 
 /**
@@ -15,15 +16,13 @@ import {useVModel} from '@vueuse/core';
  */
 export default defineComponent({
   name: 'WcNumberInput',
+  components: {WcTextInput},
   props: {
     element: {
       type: Object as PropType<UnwrapNestedRefs<InteractiveElementInstance>>,
       required: true,
     },
 
-    /**
-     * The value of the model.
-     */
     // eslint-disable-next-line vue/no-unused-properties
     modelValue: {
       type: [String, Number],

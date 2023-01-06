@@ -1,9 +1,15 @@
-.wcmp__toggle {
-  cursor: pointer;
-}
+// Animate the wc toggle
+.woocommerce-input-toggle {
+  transition: background-color 0.1s ease-in-out;
 
-[data-disabled="true"] .wcmp__toggle,
-[data-readonly="true"] .wcmp__toggle {
-  opacity: 65%;
-  cursor: not-allowed;
+  &:before {
+    transition: transform 0.2s ease-in-out;
+    transform: translateX(100%);
+    right: auto !important;
+    left: auto !important;
+  }
+
+  &--disabled:before {
+    transform: translateX(0%);
+  }
 }

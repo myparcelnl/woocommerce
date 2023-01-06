@@ -3,7 +3,7 @@
     type="button"
     class="button-primary"
     :disabled="disabled"
-    @click="() => $emit('click')">
+    @click="$emit('click')">
     <PdkIcon
       v-if="icon"
       :icon="icon" />
@@ -38,7 +38,6 @@ export default defineComponent({
   emits: ['click'],
 
   setup: (props) => {
-    console.log(props);
     return {
       translate: useTranslate(),
     };

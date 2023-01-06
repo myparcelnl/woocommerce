@@ -1,6 +1,9 @@
 <template>
   <PdkTableRow valign="top">
-    <PdkTableCol component="th" scope="row" class="titledesc">
+    <PdkTableCol
+      component="th"
+      scope="row"
+      class="titledesc">
       <label :class="config?.cssUtilities?.whitespaceNoWrap">
         <slot name="label">
           {{ element.label }}
@@ -14,7 +17,9 @@
     </PdkTableCol>
 
     <PdkTableCol>
-      <slot />
+      <div>
+        <slot />
+      </div>
     </PdkTableCol>
   </PdkTableRow>
 </template>
