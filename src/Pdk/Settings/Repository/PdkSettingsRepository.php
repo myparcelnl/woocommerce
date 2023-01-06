@@ -30,9 +30,18 @@ class PdkSettingsRepository extends AbstractSettingsRepository
      */
     public function store(AbstractSettingsModel $settingsModel): void
     {
-        // TODO: Implement store() method.
+        $id = $settingsModel->getId();
+
+        foreach ($settingsModel->getAttributes() as $key => $value) {
+            update_option($this->getOptionName("$id.$key"), $value);
+        }
     }
 
+    /**
+     * @param  string $key
+     *
+     * @return string
+     */
     private function getOptionName(string $key): string
     {
         return strtr(':plugin_:name', [
