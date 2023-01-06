@@ -643,6 +643,8 @@ __metadata:
     "@myparcel/pdk-frontend": "*"
     "@myparcel/pdk-preset-bootstrap4": "*"
     "@tanstack/vue-query": ^4.20.9
+    "@types/jquery": ^3.5.16
+    "@types/select2": ^4.0.56
     "@vitejs/plugin-vue": ^4.0.0
     "@vue/test-utils": ^2.2.7
     sass: ^1.57.1
@@ -1552,7 +1554,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jquery@npm:^3.5.16":
+"@types/jquery@npm:*, @types/jquery@npm:^3.5.16":
   version: 3.5.16
   resolution: "@types/jquery@npm:3.5.16"
   dependencies:
@@ -1648,6 +1650,15 @@ __metadata:
   version: 0.12.0
   resolution: "@types/retry@npm:0.12.0"
   checksum: 61a072c7639f6e8126588bf1eb1ce8835f2cb9c2aba795c4491cf6310e013267b0c8488039857c261c387e9728c1b43205099223f160bb6a76b4374f741b5603
+  languageName: node
+  linkType: hard
+
+"@types/select2@npm:^4.0.56":
+  version: 4.0.56
+  resolution: "@types/select2@npm:4.0.56"
+  dependencies:
+    "@types/jquery": "*"
+  checksum: 357bdb0f5f8de3ff183cdc1d1a23e08ac7e973d71e777f48a7e22208ff7254f5c36ac6ed3b3ce6229cc8e479cf91c8366be6791f88c4753ec87183b8fb808d6e
   languageName: node
   linkType: hard
 
