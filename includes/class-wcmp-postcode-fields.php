@@ -618,8 +618,8 @@ class WCMP_NL_Postcode_Fields
     public function merge_street_number_suffix($order_id): void
     {
         $order                          = WCX::get_order($order_id);
-        $billingHasCustomAddressFields  = self::isCountryWithSplitAddressFields($this->postedValues['billing_country']);
-        $shippingHasCustomAddressFields = self::isCountryWithSplitAddressFields($this->postedValues['shipping_country']);
+        $billingHasCustomAddressFields  = self::isCountryWithSplitAddressFields($this->postedValues['billing_country'] ?? null);
+        $shippingHasCustomAddressFields = self::isCountryWithSplitAddressFields($this->postedValues['shipping_country'] ?? null);
 
         $shipToDifferentAddress = isset($this->postedValues['ship_to_different_address']);
 
