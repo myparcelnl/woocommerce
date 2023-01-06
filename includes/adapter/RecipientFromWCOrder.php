@@ -129,7 +129,7 @@ class RecipientFromWCOrder extends Recipient
             $streetParts['number_suffix'] = $numberSuffix ?? $streetParts['number_suffix'] ?? null;
         }
 
-        if (is_int($streetParts['number_suffix'])) {
+        if (isset($streetParts['number_suffix']) && is_int($streetParts['number_suffix'])) {
             /** Two dashes results in address errors, 'abs' makes sure there can only be one */
             $streetParts['number_suffix'] = sprintf(' -%d', abs($streetParts['number_suffix']));
         }
