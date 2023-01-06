@@ -7,7 +7,8 @@
     "build:dev": "run ws:build:dev \"$(pwd)\"",
     "dev": "run ws:dev \"$(pwd)\"",
     "test": "run ws:test \"$(pwd)\"",
-    "test:watch": "run ws:test:watch \"$(pwd)\""
+    "test:watch": "run ws:test:watch \"$(pwd)\"",
+    "watch": "run ws:watch \"$(pwd)\""
   },
   "devDependencies": {
     "@myparcel-woocommerce/frontend-common": "workspace:*",

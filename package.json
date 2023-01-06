@@ -15,7 +15,7 @@
     "views/**"
   ],
   "scripts": {
-    "build": "yarn js:build && yarn translations:import && yarn bundle",
+    "build": "yarn build:js && yarn translations:import && yarn bundle",
     "build:js": "nx run-many --target=build",
     "build:js:dev": "nx run-many --target=build:dev",
     "build:js:dev:backend": "nx run-many --target=build --projects='backend-*'",
@@ -24,26 +24,17 @@
     "test": "nx run-many --target=test --output-style=stream",
     "test:watch": "nx run-many --target=test:watch --parallel --output-style=stream",
     "translations:import": "npx -q @edielemoine/google-docs-importer --documentId 1TPE7gwG2GXtX7vlKIaskwMy0Xr4o_ir-lsedWB86xyc -o config/pdk/translations",
-    "watch": "nodemon --watch views --ext ts,vue --exec 'yarn build:js:dev'",
-    "watch:backend": "nodemon --watch views/backend --ext ts,vue --exec 'yarn build:js:dev:backend'",
-    "watch:frontend": "nodemon --watch views/frontend --ext ts --exec 'yarn build:js:dev:frontend'",
+    "watch": "nx run-many --parallel --target=watch --output-style=stream",
+    "watch:backend": "nx run-many --parallel --target=watch --projects='backend-*' --output-style=stream",
+    "watch:frontend": "nx run-many --parallel --target=watch --projects='frontend-*' --output-style=stream",
     "ws:build": "vite build",
     "ws:build:dev": "vite build --mode development",
     "ws:dev": "vite",
     "ws:test": "vitest run",
+    "ws:watch": "vite build --mode development --watch",
     "ws:test:watch": "vitest"
   },
   "prettier": "@myparcel/prettier-config",
-  "resolutions": {
-    "@myparcel-pdk/common": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/common",
-    "@myparcel-pdk/frontend-components": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/components",
-    "@myparcel-pdk/frontend-core": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/core",
-    "@myparcel/pdk-component-tests": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-component-tests",
-    "@myparcel/pdk-components": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-components",
-    "@myparcel/pdk-frontend": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-frontend",
-    "@myparcel/pdk-preset-bootstrap4": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-preset-bootstrap4",
-    "vite-plugin-custom-tsconfig": "portal:/Users/edie/Sites/vite-plugin-custom-tsconfig"
-  },
   "dependencies": {
     "@myparcel/delivery-options": "^5.3.0"
   },
@@ -84,5 +75,14 @@
     "vite-plugin-dts": "^1.7.1",
     "vitest": "^0.26.3"
   },
-  "packageManager": "yarn@3.3.1"
+  "packageManager": "yarn@3.3.1",
+  "resolutions": {
+    "@myparcel/pdk-component-tests": "portal:/Users/joerivanveen/Projects/myparcel/js-pdk/apps/pdk-component-tests",
+    "@myparcel/pdk-components": "portal:/Users/joerivanveen/Projects/myparcel/js-pdk/apps/pdk-components",
+    "@myparcel/pdk-frontend": "portal:/Users/joerivanveen/Projects/myparcel/js-pdk/apps/pdk-frontend",
+    "@myparcel/pdk-preset-bootstrap4": "portal:/Users/joerivanveen/Projects/myparcel/js-pdk/apps/pdk-preset-bootstrap4",
+    "@myparcel-pdk/common": "portal:/Users/joerivanveen/Projects/myparcel/js-pdk/libs/common",
+    "@myparcel-pdk/frontend-components": "portal:/Users/joerivanveen/Projects/myparcel/js-pdk/libs/frontend/components",
+    "@myparcel-pdk/frontend-core": "portal:/Users/joerivanveen/Projects/myparcel/js-pdk/libs/frontend/core"
+  }
 }
