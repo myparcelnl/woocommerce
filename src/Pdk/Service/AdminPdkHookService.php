@@ -93,18 +93,6 @@ class AdminPdkHookService implements WordPressHookServiceInterface
         return $newColumns;
     }
 
-    public function registerSingleOrderPageMetaBox(): void
-    {
-        add_meta_box(
-            'myparcelnl_woocommerce_order_data',
-            MyParcelNL::NAME,
-            [$this, 'renderPdkOrderCard'],
-            'shop_order',
-            'advanced',
-            'high'
-        );
-    }
-
     /**
      * @param  mixed $page
      *
@@ -114,17 +102,33 @@ class AdminPdkHookService implements WordPressHookServiceInterface
     {
         DefaultLogger::debug('registerPdkScripts', compact('page'));
 
+        $select = version_compare(WC()->version, '3.2.0', '>=') ? 'selectWoo' : 'select2';
+
+        wp_enqueue_style('woocommerce_admin_styles');
+
         $this->service->enqueueVue('3.2.45');
         $this->service->enqueueVueDemi('0.13.11');
         $this->service->enqueueScript(
             self::SCRIPT_PDK_FRONTEND,
             sprintf('%s/views/backend/admin/lib/index.iife.js', Pdk::get('pluginUrl')),
-            [ScriptService::HANDLE_JQUERY, ScriptService::HANDLE_VUE, 'vue-demi']
+            [ScriptService::HANDLE_JQUERY, ScriptService::HANDLE_VUE, 'vue-demi', $select]
         );
 
         wp_enqueue_style(
             self::SCRIPT_PDK_FRONTEND,
             sprintf('%s/views/backend/admin/lib/style.css', Pdk::get('pluginUrl'))
+        );
+    }
+
+    public function registerSingleOrderPageMetaBox(): void
+    {
+        add_meta_box(
+            'myparcelnl_woocommerce_order_data',
+            MyParcelNL::NAME,
+            [$this, 'renderPdkOrderCard'],
+            'shop_order',
+            'advanced',
+            'high'
         );
     }
 
