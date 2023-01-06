@@ -1,0 +1,59 @@
+name: '🔸 Release'
+
+on:
+  workflow_call:
+
+jobs:
+  release:
+    name: 'Build and publish 🚀'
+    runs-on: ubuntu-22.04
+    env:
+      ASSETS_DIR: ./.wordpress-assets
+      BUILD_DIR: ./.wordpress-dist
+    steps:
+      - uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            vendor
+            woocommerce-myparcel.zip
+          key: ${{ runner.os }}-cache-${{ hashFiles('**/yarn.lock', '**/composer.lock') }}-${{ hashFiles('**/*.php', 'includes/**', 'src/**', 'templates/**','migration/**') }}
+          restore-keys: |
+            ${{ runner.os }}-cache-${{ hashFiles('**/yarn.lock', '**/composer.lock') }}
+            ${{ runner.os }}-cache
+
+      - uses: actions/checkout@v3
+        if: steps.cache.outputs.cache-hit != 'true'
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: myparcelnl/actions/composer-install@v2
+        if: steps.cache.outputs.cache-hit != 'true'
+        with:
+          php-version: '7.1'
+
+      - uses: myparcelnl/actions/yarn2-install@v2
+        if: steps.cache.outputs.cache-hit != 'true'
+
+      - uses: myparcelnl/actions/semantic-release@v2
+        id: release
+        if: steps.cache.outputs.cache-hit != 'true'
+        with:
+          token: ${{ secrets.GH_REPO_TOKEN }}
+
+      - name: 'Create dist folder'
+        if: steps.release.outputs.released == 'true'
+        run: |
+          bash ./private/bash/createDistFolder.sh ${{ env.BUILD_DIR }}
+
+      - name: 'Deploy using svn'
+        if: steps.release.outputs.released == 'true' && github.ref == 'refs/heads/main'
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          ASSETS_DIR: ${{ env.ASSETS_DIR }}
+          BUILD_DIR: ${{ env.BUILD_DIR }}
+          SLUG: woocommerce-myparcel
+          VERSION: steps.release.outputs.version

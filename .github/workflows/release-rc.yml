@@ -1,0 +1,17 @@
+name: '🚀 Release RC'
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  release:
+    uses: ./.github/workflows/--release.yml
+    secrets: inherit
+
+  rebase-prs:
+    uses: ./.github/workflows/--rebase-prs.yml
+    secrets: inherit
+    needs: release
+    if: always()

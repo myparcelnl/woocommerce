@@ -1,10 +1,15 @@
+/* eslint-disable no-template-curly-in-string */
 const mainConfig = require('@myparcel/semantic-release-config');
-const { addExecPlugin, addGitHubPlugin, addGitPlugin } = require('@myparcel/semantic-release-config/src/plugins');
-const { gitPluginDefaults } = require('@myparcel/semantic-release-config/src/plugins/addGitPlugin');
+const {addExecPlugin, addGitHubPlugin, addGitPlugin} = require('@myparcel/semantic-release-config/src/plugins');
+const {gitPluginDefaults} = require('@myparcel/semantic-release-config/src/plugins/addGitPlugin');
 
 module.exports = {
   ...mainConfig,
   extends: '@myparcel/semantic-release-config',
+  branches: [
+    {name: 'main'},
+    {name: 'develop', prerelease: 'rc', channel: 'rc'},
+  ],
   plugins: [
     ...mainConfig.plugins,
     '@myparcel/semantic-release-wordpress-readme-generator',
@@ -13,7 +18,7 @@ module.exports = {
     }),
     addGitHubPlugin({
       assets: [
-        { path: './woocommerce-myparcel.zip', label: 'Download MyParcel plugin v${nextRelease.version}' },
+        {path: './woocommerce-myparcel.zip', label: 'Download MyParcel plugin v${nextRelease.version}'},
       ],
     }),
     addGitPlugin({
