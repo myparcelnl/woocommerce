@@ -33,6 +33,7 @@ export default defineComponent({
   components: {
     ActionButton: ActionButton,
   },
+
   props: {
     disabled: {
       type: Boolean,
@@ -43,6 +44,7 @@ export default defineComponent({
       default: (): never[] => [],
     },
   },
+
   emits: ['click'],
   setup: (props) => {
     const propRefs = toRefs(props);
@@ -52,6 +54,7 @@ export default defineComponent({
       toggle: () => {
         toggled.value = !toggled.value;
       },
+
       toggled,
       standaloneActions: computed(() => propRefs.actions.value.filter((option) => option.standalone)),
       dropdownActions: computed(() => propRefs.actions.value.filter((option) => !option.standalone)),

@@ -1,55 +1,43 @@
 <template>
   <div class="wc-radio-input">
     <input
-      :id="`radio_${value}`"
+      :id="`radio_${element.props?.value}`"
       v-model="model"
-      :value="value"
+      :value="element.props?.value"
       type="radio"
-      :disabled="disabled"
-      class=""
-    />
+      :disabled="element.isDisabled || element.isSuspended"
+      class="" />
     <label
-      :for="`radio_${value}`"
-      v-text="translate(label)">
-    </label>
+      :for="`radio_${element.props?.value}`"
+      v-text="element.label"></label>
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
-import {useTranslate} from '@myparcel-pdk/frontend-core';
+import {PropType, UnwrapNestedRefs, defineComponent} from 'vue';
+import {InteractiveElementInstance} from '@myparcel-vfb/core';
 import {useVModel} from '@vueuse/core';
 
 export default defineComponent({
   name: 'WcRadioInput',
 
   props: {
-    disabled: {
-      type: Boolean,
+    element: {
+      type: Object as PropType<UnwrapNestedRefs<InteractiveElementInstance>>,
+      required: true,
     },
 
-    label: {
-      type: String,
-      default: '',
-    },
-
+    // eslint-disable-next-line vue/no-unused-properties
     modelValue: {
       type: [String, Number],
       default: null,
-    },
-
-    value: {
-      type: [String, Number],
-      required: true,
     },
   },
 
   emits: ['update:modelValue'],
 
   setup: (props, ctx) => ({
-    translate: useTranslate(),
     model: useVModel(props, 'modelValue', ctx.emit),
   }),
 });
 </script>
-
