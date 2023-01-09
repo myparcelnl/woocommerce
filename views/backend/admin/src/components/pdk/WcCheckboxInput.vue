@@ -6,8 +6,9 @@
     type="checkbox"
     class="myparcel-checkbox" />
   <label
+    v-if="element?.label"
     :for="`checkbox_${value}`"
-    v-text="element.label" />
+    v-text="element?.label" />
 </template>
 
 <script lang="ts">
@@ -22,7 +23,7 @@ export default defineComponent({
   props: {
     element: {
       type: Object as PropType<UnwrapNestedRefs<InteractiveElementInstance>>,
-      required: true,
+      default: null,
     },
 
     // eslint-disable-next-line vue/no-unused-properties
@@ -36,7 +37,8 @@ export default defineComponent({
     translate: useTranslate(),
     model: useVModel(props, 'modelValue', ctx.emit),
     value: computed(() => {
-      return props.element.props?.value ?? '';
+      // @ts-expect-error props are not typed correctly
+      return props.element?.props?.value ?? '1';
     }),
   }),
 });
