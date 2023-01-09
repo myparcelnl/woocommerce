@@ -28,6 +28,8 @@ import WcToggleInput from './components/pdk/WcToggleInput.vue';
 import WcButtonGroup from './components/pdk/WcButtonGroup';
 import WcPluginSettingsWrapper from './components/pdk/WcPluginSettingsWrapper.vue';
 import WcRadioInput from './components/pdk/WcRadioInput.vue';
+import WcTableCol from './components/pdk/WcTableCol.vue';
+import WcTableRow from './components/pdk/WcTableRow.vue';
 import {h} from 'vue';
 
 createPdkFrontend({
@@ -64,8 +66,8 @@ createPdkFrontend({
     PdkRow: WcRow,
     PdkSelectInput: WcSelectInput,
     PdkTable: WcTable,
-    PdkTableCol: DefaultTableCol,
-    PdkTableRow: DefaultTableRow,
+    PdkTableCol: WcTableCol,
+    PdkTableRow: WcTableRow,
     PdkTextInput: WcTextInput,
     PdkToggleInput: WcToggleInput,
   },
