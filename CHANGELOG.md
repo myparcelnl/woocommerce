@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.17.0-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.16.5-rc.1...v4.17.0-rc.1) (2023-01-09)
+
+
+### :sparkles: New Features
+
+* add customizable string for address not found ([#945](https://github.com/myparcelnl/woocommerce/issues/945)) ([8504476](https://github.com/myparcelnl/woocommerce/commit/85044763e0e4ef3f7023a782e7aadd4251c87ec1))
+
+
+### :bug: Bug Fixes
+
+* delete address not found prompt from checkout ([#946](https://github.com/myparcelnl/woocommerce/issues/946)) ([5762755](https://github.com/myparcelnl/woocommerce/commit/57627552a1875b7c7994d1dcffd09a891f6f0ccc))
+
 ## [4.16.5-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.16.4...v4.16.5-rc.1) (2023-01-09)
 
 
