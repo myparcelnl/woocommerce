@@ -12,8 +12,7 @@
 <script lang="ts">
 import {PropType, defineComponent} from 'vue';
 import {SelectOption} from '@myparcel-pdk/common';
-import {usePdkConfig} from '@myparcel/pdk-frontend';
-import WcCheckboxInput from './WcCheckboxInput.vue';
+import {usePdkConfig} from '@myparcel-pdk/frontend-core';
 
 export default defineComponent({
   name: 'WcMultiCheckbox',

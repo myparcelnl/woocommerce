@@ -30,6 +30,7 @@ import WcPluginSettingsWrapper from './components/pdk/WcPluginSettingsWrapper.vu
 import WcRadioInput from './components/pdk/WcRadioInput.vue';
 import WcTableCol from './components/pdk/WcTableCol.vue';
 import WcTableRow from './components/pdk/WcTableRow.vue';
+import WcDropdownButton from './components/pdk/WcDropdownButton.vue';
 import {h} from 'vue';
 
 createPdkFrontend({
@@ -51,7 +52,7 @@ createPdkFrontend({
     PdkCheckboxInput: WcCheckboxInput,
     PdkCol: WcCol,
     PdkCurrencyInput: DefaultCurrencyInput,
-    PdkDropdownButton: Bootstrap4DropdownButton,
+    PdkDropdownButton: WcDropdownButton,
     PdkFormGroup: WcFormGroup,
     PdkIcon: WcIcon,
     PdkImage: WcImage,
