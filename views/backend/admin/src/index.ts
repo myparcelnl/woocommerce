@@ -25,6 +25,9 @@ import WcSelectInput from './components/pdk/WcSelectInput.vue';
 import WcTable from './components/pdk/WcTable.vue';
 import WcTextInput from './components/pdk/WcTextInput.vue';
 import WcToggleInput from './components/pdk/WcToggleInput.vue';
+import WcButtonGroup from './components/pdk/WcButtonGroup';
+import WcPluginSettingsWrapper from './components/pdk/WcPluginSettingsWrapper.vue';
+import WcRadioInput from './components/pdk/WcRadioInput.vue';
 import {h} from 'vue';
 
 createPdkFrontend({
@@ -41,7 +44,7 @@ createPdkFrontend({
 
   components: {
     PdkButton: WcButton,
-    PdkButtonGroup: Bootstrap4ButtonGroup,
+    PdkButtonGroup: WcButtonGroup,
     PdkCard: WcCard,
     PdkCheckboxInput: WcCheckboxInput,
     PdkCol: WcCol,
@@ -56,8 +59,8 @@ createPdkFrontend({
     PdkMultiRadio: DefaultMultiRadio,
     PdkNotification: WcNotification,
     PdkNumberInput: WcNumberInput,
-    PdkPluginSettingsWrapper: DefaultPluginSettingsWrapper,
-    PdkRadioInput: Bootstrap4RadioInput,
+    PdkPluginSettingsWrapper: WcPluginSettingsWrapper,
+    PdkRadioInput: WcRadioInput,
     PdkRow: WcRow,
     PdkSelectInput: WcSelectInput,
     PdkTable: WcTable,
