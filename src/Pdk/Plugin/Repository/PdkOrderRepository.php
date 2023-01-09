@@ -55,18 +55,6 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     }
 
     /**
-     * @param  PdkOrder ...$orders
-     *
-     * @return void
-     */
-    public function add(PdkOrder ...$orders): void
-    {
-        foreach ($orders as $order) {
-            $this->save($order->externalIdentifier, $order);
-        }
-    }
-
-    /**
      * @param  int|string $input
      *
      * @return \MyParcelNL\Pdk\Plugin\Model\PdkOrder
@@ -223,10 +211,28 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      * @param  \MyParcelNL\Pdk\Plugin\Model\PdkOrder $order
      *
      * @return \MyParcelNL\Pdk\Plugin\Model\PdkOrder
+     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
      */
     public function update(PdkOrder $order): PdkOrder
     {
-        $this->save($order->externalIdentifier, $order);
+        $idOrder = $order->externalIdentifier;
+
+        update_post_meta($idOrder, self::WC_ORDER_META_ORDER_DATA, $order->deliveryOptions->toArray());
+
+        $shipments = $order->shipments;
+
+        if (($existing = get_post_meta($idOrder, self::WC_ORDER_META_SHIPMENTS, false))) {
+            $shipments = $order->shipments->merge(... $existing);
+        }
+
+        $shipments = $shipments->reduce(function(array $carry, Shipment $shipment) {
+            $carry[$shipment->getId()] = $shipment->toArray();
+
+            return $carry;
+        }, []);
+
+        update_post_meta($idOrder, self::WC_ORDER_META_SHIPMENTS, $shipments);
+
         return $order;
     }
 
