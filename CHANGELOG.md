@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.16.5-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.16.4...v4.16.5-rc.1) (2023-01-09)
+
+
+### :bug: Bug Fixes
+
+* prevent undefined array keys ([#933](https://github.com/myparcelnl/woocommerce/issues/933)) ([0234c1a](https://github.com/myparcelnl/woocommerce/commit/0234c1aa93e283ca92fce9948b10e493fbbf16d8))
+
 ## [4.16.5-develop.1](https://github.com/myparcelnl/woocommerce/compare/v4.16.4...v4.16.5-develop.1) (2023-01-09)
 
 
