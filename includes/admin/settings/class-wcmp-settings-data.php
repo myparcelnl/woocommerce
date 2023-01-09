@@ -843,6 +843,12 @@ class WCMP_Settings_Data
                 'label'     => __('shipment_options_delivery_pickup_title', 'woocommerce-myparcel'),
                 'default'   => __('shipment_options_delivery_pickup', 'woocommerce-myparcel'),
             ],
+            [
+                'name'      => WCMYPA_Settings::SETTING_ADDRESS_NOT_FOUND_TITLE,
+                'condition' => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                'label'     => __('address_not_found_title', 'woocommerce-myparcel'),
+                'default'   => __('address_not_found', 'woocommerce-myparcel'),
+            ],
         ];
     }
 
