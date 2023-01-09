@@ -247,11 +247,12 @@ class WCMP_Checkout
                 'basePrice'                  => $chosenShippingMethodPrice,
                 'showPriceSurcharge'         => WCMP_Settings_Data::DISPLAY_SURCHARGE_PRICE === $priceFormat,
                 'pickupLocationsDefaultView' => self::getPickupLocationsDefaultView(),
+                'allowRetry'                 => false,
                 'priceStandardDelivery'      => $this->useTotalPrice() ? $chosenShippingMethodPrice : null,
                 'carrierSettings'            => $carrierSettings,
             ],
             'strings' => [
-                'addressNotFound'       => __('Address details are not entered', 'woocommerce-myparcel'),
+                'addressNotFound'       => self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ADDRESS_NOT_FOUND_TITLE),
                 'city'                  => __('City', 'woocommerce-myparcel'),
                 'closed'                => __('Closed', 'woocommerce-myparcel'),
                 'deliveryEveningTitle'  => self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_EVENING_DELIVERY_TITLE),
