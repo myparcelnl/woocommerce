@@ -10917,11 +10917,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-custom-tsconfig@portal:/Users/edie/Sites/vite-plugin-custom-tsconfig::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "vite-plugin-custom-tsconfig@portal:/Users/edie/Sites/vite-plugin-custom-tsconfig::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+"vite-plugin-custom-tsconfig@npm:^1.0.3":
+  version: 1.0.4
+  resolution: "vite-plugin-custom-tsconfig@npm:1.0.4"
+  checksum: 14a4a6e38dcd23c2ab191b148facf3d5ec9b35db6e1a9390f1e423260d12ceeedec8dc491c716a77018a7daa6fa8a71b8034deb0f9d77928e4ecacfca8cbdee1
   languageName: node
-  linkType: soft
+  linkType: hard
 
 "vite-plugin-dts@npm:^1.7.1":
   version: 1.7.1

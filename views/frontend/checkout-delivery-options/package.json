@@ -7,8 +7,7 @@
     "build:dev": "run ws:build:dev \"$(pwd)\"",
     "dev": "run ws:dev \"$(pwd)\"",
     "test": "run ws:test \"$(pwd)\"",
-    "test:watch": "run ws:test:watch \"$(pwd)\"",
-    "watch": "run ws:watch \"$(pwd)\""
+    "test:watch": "run ws:test:watch \"$(pwd)\""
   },
   "dependencies": {
     "@myparcel/delivery-options": "^5.3.0",
