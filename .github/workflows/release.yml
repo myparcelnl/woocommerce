@@ -9,6 +9,7 @@ on:
 
 jobs:
   release:
+    name: 'Release'
     uses: ./.github/workflows/--release.yml
     secrets: inherit
 
@@ -24,6 +25,7 @@ jobs:
       force: true
 
   rebase-prs:
+    name: 'Rebase pull requests'
     uses: ./.github/workflows/--rebase-prs.yml
     needs: rebase-develop
     secrets: inherit
