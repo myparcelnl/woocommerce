@@ -252,7 +252,6 @@ class WCMP_Checkout
                 'carrierSettings'            => $carrierSettings,
             ],
             'strings' => [
-                'addressNotFound'       => self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ADDRESS_NOT_FOUND_TITLE),
                 'city'                  => __('City', 'woocommerce-myparcel'),
                 'closed'                => __('Closed', 'woocommerce-myparcel'),
                 'deliveryEveningTitle'  => self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_EVENING_DELIVERY_TITLE),
