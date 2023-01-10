@@ -324,9 +324,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         $shipmentCollection = new ShipmentCollection();
 
         foreach ($shipments as $shipmentId => $shipmentData) {
-            if (isset($shipmentData['shipment']) && $shipmentData['shipment']) {
-                $shipmentCollection->push(new Shipment($shipmentData['shipment']));
-            }
+            $shipmentCollection->push(new Shipment($shipmentData));
         }
 
         return $shipmentCollection;
