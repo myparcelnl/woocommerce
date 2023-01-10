@@ -117,7 +117,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             self::WC_ORDER_META_SHIPMENTS,
             $order->shipments->map(function (Shipment $shipment) {
                 return $shipment->toStorableArray();
-            })
+            })->toArray()
         );
 
         return $order;
