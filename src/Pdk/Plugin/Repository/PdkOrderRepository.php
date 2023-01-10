@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Repository;
 
-use MyParcelNL\Pdk\Base\Service\WeightService;
 use MyParcelNL\Pdk\Facade\DefaultLogger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
@@ -16,9 +15,7 @@ use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
 use MyParcelNL\Pdk\Shipment\Model\Shipment;
 use MyParcelNL\Pdk\Storage\StorageInterface;
-use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Support\Arr;
-use MyParcelNL\WooCommerce\Helper\LabelDescriptionFormatter;
 use MyParcelNL\WooCommerce\Service\WcRecipientService;
 use Throwable;
 use WC_Order;
@@ -36,22 +33,14 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     private $productRepository;
 
     /**
-     * @var \MyParcelNL\Pdk\Base\Service\WeightService
-     */
-    private $weightService;
-
-    /**
      * @param  \MyParcelNL\Pdk\Storage\StorageInterface                     $storage
-     * @param  \MyParcelNL\Pdk\Base\Service\WeightService                   $weightService
      * @param  \MyParcelNL\Pdk\Product\Repository\AbstractProductRepository $productRepository
      */
     public function __construct(
         StorageInterface          $storage,
-        WeightService             $weightService,
         AbstractProductRepository $productRepository
     ) {
         parent::__construct($storage);
-        $this->weightService     = $weightService;
         $this->productRepository = $productRepository;
     }
 
@@ -95,118 +84,8 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     {
         $meta = $order->get_meta(self::WC_ORDER_META_ORDER_DATA) ?: [];
 
-        // $meta is a json string, create an instance
-        //        if (! empty($meta) && ! $meta instanceof AbstractDeliveryOptionsAdapter) {
-        //            if (is_string($meta)) {
-        //                $meta = json_decode(stripslashes($meta), true);
-        //            }
-        //
-        //            if (! $meta['carrier']
-        //                || ! AccountSettings::getInstance()
-        //                    ->isEnabledCarrier($meta['carrier'])) {
-        //                $meta['carrier'] = (Data::DEFAULT_CARRIER_CLASS)::NAME;
-        //            }
-        //
-        //            $meta['date'] = $meta['date'] ?? '';
-        //
-        //            try {
-        //                // create new instance from known json
-        //                $meta = DeliveryOptionsAdapterFactory::create((array) $meta);
-        //            } catch (BadMethodCallException $e) {
-        //                // create new instance from unknown json data
-        //                $meta = new WCMP_DeliveryOptionsFromOrderAdapter(null, (array) $meta);
-        //            }
-        //        }
-        //
-        //        // Create or update immutable adapter from order with a instanceof DeliveryOptionsAdapter
-        //        if (empty($meta) || ! empty([])) {
-        //            $meta = new WCMP_DeliveryOptionsFromOrderAdapter($meta, []);
-        //        }
-
         return apply_filters('wc_myparcel_order_delivery_options', $meta, $order);
     }
-
-    //    /**
-    //     * @return int
-    //     * @throws \MyParcelNL\Sdk\src\Exception\ValidationException|\JsonException
-    //     * @throws \Exception
-    //     */
-    //    public function getDigitalStampRangeWeight(WC_Order $order): int
-    //    {
-    //        $extraOptions    = $this->getExtraOptions($order);
-    //        $deliveryOptions = $this->getDeliveryOptions($order);
-    //        $savedWeight     = $extraOptions['digital_stamp_weight'] ?? null;
-    //        $orderWeight     = $this->getWeight();
-    //        $defaultWeight   = WCMYPA()->settingCollection->getByName(
-    //            WCMYPA_Settings::SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT
-    //        ) ?: null;
-    //        $weight          = (float) ($savedWeight ?? $defaultWeight ?? $orderWeight);
-    //
-    //        if (DeliveryOptions::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $deliveryOptions->getPackageType()) {
-    //            $weight += (float) WCMYPA()->settingCollection->getByName(
-    //                WCMYPA_Settings::SETTING_EMPTY_DIGITAL_STAMP_WEIGHT
-    //            );
-    //        }
-    //
-    //        return $this->weightService->convertToDigitalStamp((int) $weight);
-    //    }
-
-    //    /**
-    //     * @param  \WC_Order $order
-    //     *
-    //     * @return array
-    //     * @throws \JsonException
-    //     */
-    //    public function getExtraOptions(WC_Order $order): array
-    //    {
-    //        $meta = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA) ?: null;
-    //
-    //        if (empty($meta)) {
-    //            $meta['collo_amount'] = 1;
-    //        }
-    //
-    //        return (array) $meta;
-    //    }
-
-    /**
-     * @return void
-     */
-    public function getLabelDescription(AbstractDeliveryOptionsAdapter $deliveryOptions, WC_Order $order): string
-    {
-        $defaultValue     = sprintf('Order: %s', $order->get_id());
-        $valueFromSetting = WCMYPA()->settingCollection->getByName('label_description');
-        $valueFromOrder   = $deliveryOptions->getShipmentOptions()
-            ->getLabelDescription();
-
-        return (string) ($valueFromOrder ?? $valueFromSetting ?? $defaultValue);
-    }
-
-    //    /**
-    //     * @return void
-    //     * @throws \JsonException
-    //     */
-    //    public function getWeight(): float
-    //    {
-    //        $weight = (WCMYPA_Admin::getExtraOptionsFromOrder($order))['weight'] ?? null;
-    //
-    //        if (null === $weight && $order->meta_exists(WCMYPA_Admin::META_ORDER_WEIGHT)) {
-    //            $weight = $order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
-    //        }
-    //
-    //        return (float) $weight;
-    //    }
-
-    //    /**
-    //     * @return bool
-    //     */
-    //    public function hasLocalPickup(WC_Order $order): bool
-    //    {
-    //        $shippingMethods  = $order->get_shipping_methods();
-    //        $shippingMethod   = array_shift($shippingMethods);
-    //        $shippingMethodId = $shippingMethod ? $shippingMethod->get_method_id() : null;
-    //
-    //        return WCMP_Shipping_Methods::LOCAL_PICKUP === $shippingMethodId;
-    //    }
 
     /**
      * @param  \MyParcelNL\Pdk\Plugin\Model\PdkOrder $order
@@ -266,11 +145,11 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         /** @var \MyParcelNL\WooCommerce\Service\WcRecipientService $recipientService */
         $recipientService = Pdk::get(WcRecipientService::class);
 
-        $wcOrderItems = $order->get_items();
+        $wcOrderItems   = $order->get_items();
+        $wcOrderCreated = $order->get_date_created();
 
         return new PdkOrder([
-            'orderDate'             => $order->get_date_created()
-                ->getTimestamp(),
+            'orderDate'             => $wcOrderCreated ? $wcOrderCreated->getTimestamp() : null,
             'customsDeclaration'    => [
                 'contents' => CustomsDeclaration::CONTENTS_COMMERCIAL_GOODS,
                 'invoice'  => '1234',
@@ -313,26 +192,6 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'shipments'             => $this->getShipments($order),
             'shipmentVat'           => (float) $order->get_shipping_tax(),
         ]);
-    }
-
-    /**
-     * @param  \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter $deliveryOptions
-     *
-     * @return array
-     */
-    private function getShipmentOptions(AbstractDeliveryOptionsAdapter $deliveryOptions, WC_Order $order): array
-    {
-        $shipmentOptions = $deliveryOptions->getShipmentOptions()
-            ? $deliveryOptions->getShipmentOptions()
-                ->toArray()
-            : [];
-
-        $labelDescription                     = $this->getLabelDescription($deliveryOptions, $order);
-        $shipmentOptions['label_description'] = (new LabelDescriptionFormatter(
-            $order, $labelDescription, $deliveryOptions
-        ))->getFormattedLabelDescription();
-
-        return $shipmentOptions;
     }
 
     /**
