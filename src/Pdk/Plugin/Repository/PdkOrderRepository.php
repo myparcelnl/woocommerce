@@ -17,6 +17,7 @@ use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
 use MyParcelNL\Pdk\Shipment\Model\Shipment;
 use MyParcelNL\Pdk\Storage\StorageInterface;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
+use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\WooCommerce\Helper\LabelDescriptionFormatter;
 use MyParcelNL\WooCommerce\Service\WcRecipientService;
 use Throwable;
@@ -215,23 +216,30 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     public function update(PdkOrder $order): PdkOrder
     {
-        $idOrder = $order->externalIdentifier;
+        update_post_meta(
+            $order->externalIdentifier,
+            self::WC_ORDER_META_ORDER_DATA,
+            ['deliveryOptions' => $order->deliveryOptions->toArray()]
+        );
 
-        update_post_meta($idOrder, self::WC_ORDER_META_ORDER_DATA, $order->deliveryOptions->toArray());
+        $existing = get_post_meta($order->externalIdentifier, self::WC_ORDER_META_SHIPMENTS, true);
 
-        $shipments = $order->shipments;
-
-        if (($existing = get_post_meta($idOrder, self::WC_ORDER_META_SHIPMENTS, false))) {
-            $shipments = $order->shipments->merge(... $existing);
+        if ($existing) {
+            $order->shipments = $order->shipments->filter(
+                function (Shipment $shipment) use ($existing) {
+                    return ! in_array($shipment->id, Arr::pluck($existing, 'id'), true);
+                }
+            )
+                ->merge($existing);
         }
 
-        $shipments = $shipments->reduce(function(array $carry, Shipment $shipment) {
-            $carry[$shipment->getId()] = $shipment->toArray();
-
-            return $carry;
-        }, []);
-
-        update_post_meta($idOrder, self::WC_ORDER_META_SHIPMENTS, $shipments);
+        update_post_meta(
+            $order->externalIdentifier,
+            self::WC_ORDER_META_SHIPMENTS,
+            $order->shipments->map(function (Shipment $shipment) {
+                return $shipment->toStorableArray();
+            })
+        );
 
         return $order;
     }
@@ -302,32 +310,9 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'recipient'             => $recipientService->createAddress($order, WcRecipientService::SHIPPING),
             'shipmentPrice'         => (float) $order->get_shipping_total(),
             'shipmentPriceAfterVat' => (float) $order->get_shipping_total(),
-            'shipments'             => $this->getShipment($order),
+            'shipments'             => $this->getShipments($order),
             'shipmentVat'           => (float) $order->get_shipping_tax(),
         ]);
-    }
-
-    /**
-     * @param  \WC_Order $order
-     *
-     * @return null|\MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection
-     * @throws \JsonException
-     */
-    private function getShipment(WC_Order $order): ?ShipmentCollection
-    {
-        $shipments = $order->get_meta(self::WC_ORDER_META_SHIPMENTS);
-
-        if (! $shipments) {
-            return null;
-        }
-
-        $shipmentCollection = new ShipmentCollection();
-
-        foreach ($shipments as $shipmentId => $shipmentData) {
-            $shipmentCollection->push(new Shipment($shipmentData));
-        }
-
-        return $shipmentCollection;
     }
 
     /**
@@ -348,5 +333,17 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         ))->getFormattedLabelDescription();
 
         return $shipmentOptions;
+    }
+
+    /**
+     * @param  \WC_Order $order
+     *
+     * @return null|\MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection
+     */
+    private function getShipments(WC_Order $order): ?ShipmentCollection
+    {
+        $shipments = $order->get_meta(self::WC_ORDER_META_SHIPMENTS) ?: null;
+
+        return new ShipmentCollection($shipments);
     }
 }
