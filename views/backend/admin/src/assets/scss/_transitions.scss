@@ -1,9 +1,9 @@
 .fade-enter-active,
 .fade-leave-active {
-  @apply wcmp-transition wcmp-duration-300 wcmp-ease-in-out;
+  @apply mypa-transition mypa-duration-300 mypa-ease-in-out;
 }
 
 .fade-enter,
 .fade-leave-to {
-  @apply wcmp-translate-y-1 wcmp-opacity-0;
+  @apply mypa-translate-y-1 mypa-opacity-0;
 }

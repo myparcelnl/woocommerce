@@ -2,13 +2,13 @@
   <div
     v-show="isOpen"
     :id="`pdk-modal-${modalKey}`"
-    :class="[...backgroundClasses, 'wcmp-z-[9999]']"
+    :class="[...backgroundClasses, 'mypa-z-[9999]']"
     tabindex="-1"
     role="dialog">
     <Transition :name="pdkConfig.transitions?.modalBackdrop">
       <div
         v-show="isOpen"
-        :class="[...backgroundClasses, 'wcmp-bg-black', 'wcmp-bg-opacity-40']"
+        :class="[...backgroundClasses, 'mypa-bg-black', 'mypa-bg-opacity-40']"
         @click="closeModal" />
     </Transition>
 
@@ -16,24 +16,25 @@
       <div
         v-show="isOpen"
         :class="[
-          'wcmp-bg-white',
-          'wcmp-border',
-          'wcmp-border-gray-400',
-          'wcmp-fixed',
-          'wcmp-left-2',
-          'wcmp-m-auto',
-          'wcmp-max-w-3xl',
-          'wcmp-px-8',
-          'wcmp-py-4',
-          'wcmp-right-2',
-          'wcmp-top-12',
+          'mypa-bg-white',
+          'mypa-border',
+          'mypa-border-gray-400',
+          'mypa-fixed',
+          'mypa-left-2',
+          'mypa-m-auto',
+          'mypa-max-w-3xl',
+          'mypa-px-8',
+          'mypa-py-4',
+          'mypa-right-2',
+          'mypa-top-12',
+
         ]"
         role="document"
         @click.stop>
         <div>
-          <div>
-            <h4 v-text="translate(title)" />
-          </div>
+          <PdkHeading level="2">
+            {{ translate(title) }}
+          </PdkHeading>
 
           <div v-if="context">
             <NotificationContainer category="modal" />
@@ -105,7 +106,7 @@ export default defineComponent({
         return propRefs.modalKey.value === modalStore.opened ? modalStore.context : null;
       }),
 
-      backgroundClasses: ['wcmp-left-0', 'wcmp-top-0', 'wcmp-h-full', 'wcmp-w-full', 'wcmp-fixed'],
+      backgroundClasses: ['mypa-left-0', 'mypa-top-0', 'mypa-h-full', 'mypa-w-full', 'mypa-fixed'],
 
       closeModal() {
         modalStore.close();

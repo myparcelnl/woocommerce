@@ -74,8 +74,8 @@ createPdkFrontend({
   },
 
   cssUtilities: {
-    textCenter: 'wcmp-text-center',
-    whitespaceNoWrap: 'wcmp-whitespace-nowrap',
+    textCenter: 'mypa-text-center',
+    whitespaceNoWrap: 'mypa-whitespace-nowrap',
   },
 
   transitions: {

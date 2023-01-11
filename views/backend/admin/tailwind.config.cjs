@@ -8,5 +8,5 @@ module.exports = {
   corePlugins: {
     preflight: false,
   },
-  prefix: 'wcmp-',
+  prefix: 'mypa-',
 }
