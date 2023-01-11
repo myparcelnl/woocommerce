@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.17.0-rc.2](https://github.com/myparcelnl/woocommerce/compare/v4.17.0-rc.1...v4.17.0-rc.2) (2023-01-11)
+
+
+### :bug: Bug Fixes
+
+* fix belgian number suffix ([#923](https://github.com/myparcelnl/woocommerce/issues/923)) ([0a5f73e](https://github.com/myparcelnl/woocommerce/commit/0a5f73e7104d9a3ed86ac58ec13293bc8fdae840))
+
 ## [4.17.0-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.16.5-rc.1...v4.17.0-rc.1) (2023-01-09)
 
 
