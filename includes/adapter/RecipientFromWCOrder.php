@@ -63,20 +63,29 @@ class RecipientFromWCOrder extends Recipient
      */
     private function createFullStreet(bool $isNL, array $streetParts): string
     {
-        return $isNL
-            ? implode(' ', [
+        if ($isNL) {
+            return implode(' ', [
                     $streetParts['street'] ?? null,
                     $streetParts['number'] ?? null,
                     $streetParts['number_suffix'] ?? null,
                 ]
-            )
-            : implode(' ', [
-                    $streetParts['street'] ?? null,
-                    $streetParts['number'] ?? null,
-                    $streetParts['box_separator'] ?? null,
-                    $streetParts['box_number'] ?? null,
-                ]
             );
+        }
+
+        // In order to keep both box number and number suffix working for Belgian addresses, the
+        // box_separator has to be doubled if present. This is a quick 'ugly' fix.
+        $boxNumber = $streetParts['box_number'] ?? null;
+        $boxString = $boxNumber ? implode(
+            ' ',
+            [$streetParts['box_separator'] ?? null, $streetParts['box_separator'] ?? null, $boxNumber]
+        ) : '';
+
+        return implode(' ', [
+                $streetParts['street'] ?? null,
+                $streetParts['number'] ?? null,
+                $boxString ?: $streetParts['number_suffix'] ?? null
+            ]
+        );
     }
 
     /**
