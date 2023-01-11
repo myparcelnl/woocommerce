@@ -10,8 +10,6 @@ class WooCommerceOrderStatusService implements OrderStatusServiceInterface
 {
     public function all(): array
     {
-        return [
-
-        ];
+        return wc_get_order_statuses();
     }
 }
