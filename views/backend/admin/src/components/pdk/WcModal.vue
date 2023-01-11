@@ -2,33 +2,54 @@
   <div
     v-show="isOpen"
     :id="`pdk-modal-${modalKey}`"
-    class="wcmp-bg-black wcmp-bg-opacity-40 wcmp-fixed wcmp-h-full wcmp-left-0 wcmp-overflow-auto wcmp-p-15 wcmp-top-0 wcmp-w-full wcmp-z-50"
+    :class="[...backgroundClasses, 'wcmp-z-[9999]']"
     tabindex="-1"
-    role="dialog"
-    @click="closeModal">
-    <div
-      class="wcmp-bg-white wcmp-border wcmp-border-gray-400 wcmp-m-15 wcmp-m-auto wcmp-max-w-600 wcmp-p-20 wcmp-w-full"
-      role="document"
-      @click.stop>
-      <div>
+    role="dialog">
+    <Transition :name="pdkConfig.transitions?.modalBackdrop">
+      <div
+        v-show="isOpen"
+        :class="[...backgroundClasses, 'wcmp-bg-black', 'wcmp-bg-opacity-40']"
+        @click="closeModal" />
+    </Transition>
+
+    <Transition :name="pdkConfig.transitions?.modal">
+      <div
+        v-show="isOpen"
+        :class="[
+          'wcmp-bg-white',
+          'wcmp-border',
+          'wcmp-border-gray-400',
+          'wcmp-fixed',
+          'wcmp-left-2',
+          'wcmp-m-auto',
+          'wcmp-max-w-3xl',
+          'wcmp-px-8',
+          'wcmp-py-4',
+          'wcmp-right-2',
+          'wcmp-top-12',
+        ]"
+        role="document"
+        @click.stop>
         <div>
-          <h4 v-text="translate(title)" />
-        </div>
+          <div>
+            <h4 v-text="translate(title)" />
+          </div>
 
-        <div v-if="context">
-          <NotificationContainer category="modal" />
-          <slot :context="context" />
-        </div>
+          <div v-if="context">
+            <NotificationContainer category="modal" />
+            <slot :context="context" />
+          </div>
 
-        <PdkButtonGroup>
-          <ActionButton
-            v-for="(action, index) in actions"
-            :key="`action_${action.id}_${index}`"
-            :action="action.id"
-            :label="action.label" />
-        </PdkButtonGroup>
+          <PdkButtonGroup>
+            <ActionButton
+              v-for="(action, index) in actions"
+              :key="`action_${action.id}_${index}`"
+              :action="action.id"
+              :label="action.label" />
+          </PdkButtonGroup>
+        </div>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 
@@ -42,6 +63,7 @@ import {
   useTranslate,
 } from '@myparcel/pdk-frontend';
 import {PropType, computed, defineComponent, toRefs} from 'vue';
+import {usePdkConfig} from '@myparcel-pdk/frontend-core';
 
 export default defineComponent({
   name: 'WcModal',
@@ -72,6 +94,8 @@ export default defineComponent({
     const modalStore = useModalStore();
 
     return {
+      pdkConfig: usePdkConfig(),
+
       isOpen: computed(() => {
         return modalStore.opened === propRefs.modalKey.value;
       }),
@@ -80,6 +104,8 @@ export default defineComponent({
       context: computed(() => {
         return propRefs.modalKey.value === modalStore.opened ? modalStore.context : null;
       }),
+
+      backgroundClasses: ['wcmp-left-0', 'wcmp-top-0', 'wcmp-h-full', 'wcmp-w-full', 'wcmp-fixed'],
 
       closeModal() {
         modalStore.close();

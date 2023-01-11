@@ -29,6 +29,7 @@ import {
 } from './components/pdk';
 import {h} from 'vue';
 
+const FADE = 'fade';
 createPdkFrontend({
   logLevel: LogLevel.DEBUG,
 
@@ -78,11 +79,13 @@ createPdkFrontend({
   },
 
   transitions: {
-    labelCard: 'fade',
-    notification: 'fade',
-    shipmentRow: 'fade',
-    tabNavigation: 'fade',
-    tableRow: 'fade',
+    labelCard: FADE,
+    modal: FADE,
+    modalBackdrop: FADE,
+    notification: FADE,
+    shipmentRow: FADE,
+    tabNavigation: FADE,
+    tableRow: FADE,
   },
 
   onCreateStore() {

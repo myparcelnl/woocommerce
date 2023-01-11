@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="button-primary"
+    class="button"
     :disabled="disabled"
     @click="$emit('click')">
     <PdkIcon
@@ -37,7 +37,7 @@ export default defineComponent({
 
   emits: ['click'],
 
-  setup: (props) => {
+  setup: () => {
     return {
       translate: useTranslate(),
     };
