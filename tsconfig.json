@@ -1,18 +1,11 @@
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "declarationMap": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "strict": true,
-    "target": "ES2018",
     "paths": {
       "@myparcel-woocommerce/frontend-*": ["./views/frontend/*/src"],
       "@myparcel-woocommerce/backend-*": ["./views/backend/*/src"]
     }
   },
-  "include": ["./**/*"]
+  "include": ["./**/*"],
+  "exclude": []
 }

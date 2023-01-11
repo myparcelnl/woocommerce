@@ -4,7 +4,9 @@
       component="th"
       scope="row"
       class="titledesc">
-      <label :class="config?.cssUtilities?.whitespaceNoWrap">
+      <label
+        :class="config?.cssUtilities?.whitespaceNoWrap"
+        :for="id">
         <slot name="label">
           {{ element.label }}
         </slot>
@@ -25,21 +27,21 @@
 </template>
 
 <script lang="ts">
-import {PropType, UnwrapNestedRefs, defineComponent} from 'vue';
-import {usePdkConfig, useTranslate} from '@myparcel/pdk-frontend';
-import {InteractiveElementInstance} from '@myparcel-vfb/core';
+import {ElementInstance, generateFieldId, usePdkConfig, useTranslate} from '@myparcel/pdk-frontend';
+import {PropType, defineComponent} from 'vue';
 
 export default defineComponent({
   name: 'WcFormGroup',
   props: {
     element: {
-      type: Object as PropType<UnwrapNestedRefs<InteractiveElementInstance>>,
+      type: Object as PropType<ElementInstance>,
       required: true,
     },
   },
 
-  setup: () => {
+  setup: (props) => {
     return {
+      id: generateFieldId(props.element),
       config: usePdkConfig(),
       translate: useTranslate(),
     };

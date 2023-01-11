@@ -10,8 +10,6 @@
     "strict": true,
     "target": "ES2018"
   },
-  "include": [
-    "./**/*.ts",
-    "./**/*.vue",
-  ]
+  "include": ["./**/*.ts", "./**/*.vue"],
+  "exclude": ["../**/__tests__/*", "../**/*.spec.*"]
 }

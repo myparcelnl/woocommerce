@@ -11,15 +11,14 @@
     <label
       :for="id"
       :class="`woocommerce-input-toggle woocommerce-input-toggle--${model ? 'enabled' : 'disabled'}`">
-      {{ model ? element.props.labelYes : element.props.labelNo }}
+      {{ translate(`toggle_${model ? 'yes' : 'no'}`) }}
     </label>
   </a>
 </template>
 
 <script lang="ts">
-import {PropType, UnwrapNestedRefs, defineComponent} from 'vue';
-import {InteractiveElementInstance} from '@myparcel-vfb/core';
-import {generateId} from '@myparcel/pdk-frontend';
+import {ElementInstance, generateFieldId, useTranslate} from '@myparcel/pdk-frontend';
+import {PropType, defineComponent} from 'vue';
 import {useVModel} from '@vueuse/core';
 
 /**
@@ -29,7 +28,7 @@ export default defineComponent({
   name: 'DefaultToggleInput',
   props: {
     element: {
-      type: Object as PropType<UnwrapNestedRefs<InteractiveElementInstance>>,
+      type: Object as PropType<ElementInstance>,
       required: true,
     },
 
@@ -46,8 +45,9 @@ export default defineComponent({
     const model = useVModel(props, 'modelValue', ctx.emit);
 
     return {
-      id: generateId(),
+      id: generateFieldId(props.element),
       model,
+      translate: useTranslate(),
     };
   },
 });

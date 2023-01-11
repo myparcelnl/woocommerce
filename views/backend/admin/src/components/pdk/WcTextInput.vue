@@ -1,5 +1,6 @@
 <template>
   <input
+    :id="id"
     v-model="model"
     style="width: 100%"
     :disabled="element.isDisabled || element.isSuspended"
@@ -7,15 +8,15 @@
 </template>
 
 <script lang="ts">
-import {PropType, UnwrapNestedRefs, defineComponent} from 'vue';
-import {InteractiveElementInstance} from '@myparcel-vfb/core';
+import {ElementInstance, generateFieldId} from '@myparcel/pdk-frontend';
+import {PropType, defineComponent} from 'vue';
 import {useVModel} from '@vueuse/core';
 
 export default defineComponent({
   name: 'WcTextInput',
   props: {
     element: {
-      type: Object as PropType<UnwrapNestedRefs<InteractiveElementInstance>>,
+      type: Object as PropType<ElementInstance>,
       required: true,
     },
 
@@ -26,7 +27,10 @@ export default defineComponent({
     },
   },
 
+  emits: ['update:modelValue'],
+
   setup: (props, ctx) => ({
+    id: generateFieldId(props.element),
     model: useVModel(props, 'modelValue', ctx.emit),
   }),
 });

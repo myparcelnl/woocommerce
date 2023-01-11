@@ -1,21 +1,21 @@
 <template>
   <div class="wc-radio-input">
     <input
-      :id="`radio_${element.props?.value}`"
+      :id="id"
       v-model="model"
       :value="element.props?.value"
       type="radio"
       :disabled="element.isDisabled || element.isSuspended"
       class="" />
     <label
-      :for="`radio_${element.props?.value}`"
+      :for="id"
       v-text="element.label"></label>
   </div>
 </template>
 
 <script lang="ts">
-import {PropType, UnwrapNestedRefs, defineComponent} from 'vue';
-import {InteractiveElementInstance} from '@myparcel-vfb/core';
+import {ElementInstance, generateFieldId} from '@myparcel/pdk-frontend';
+import {PropType, defineComponent} from 'vue';
 import {useVModel} from '@vueuse/core';
 
 export default defineComponent({
@@ -23,7 +23,7 @@ export default defineComponent({
 
   props: {
     element: {
-      type: Object as PropType<UnwrapNestedRefs<InteractiveElementInstance>>,
+      type: Object as PropType<ElementInstance>,
       required: true,
     },
 
@@ -37,6 +37,7 @@ export default defineComponent({
   emits: ['update:modelValue'],
 
   setup: (props, ctx) => ({
+    id: generateFieldId(props.element),
     model: useVModel(props, 'modelValue', ctx.emit),
   }),
 });

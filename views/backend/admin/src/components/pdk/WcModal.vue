@@ -2,11 +2,12 @@
   <div
     v-show="isOpen"
     :id="`pdk-modal-${modalKey}`"
-    class="wcmp-modal"
+    class="wcmp-bg-black wcmp-bg-opacity-40 wcmp-fixed wcmp-h-full wcmp-left-0 wcmp-overflow-auto wcmp-p-15 wcmp-top-0 wcmp-w-full wcmp-z-50"
     tabindex="-1"
     role="dialog"
     @click="closeModal">
     <div
+      class="wcmp-bg-white wcmp-border wcmp-border-gray-400 wcmp-m-15 wcmp-m-auto wcmp-max-w-600 wcmp-p-20 wcmp-w-full"
       role="document"
       @click.stop>
       <div>

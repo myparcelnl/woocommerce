@@ -9,6 +9,9 @@
   background-color: rgba(0, 0, 0, 0.4);
   padding: 15px;
 
+  // above as tailwind @apply
+  @apply wcmp-fixed wcmp-z-9999 wcmp-left-0 wcmp-top-0 wcmp-w-full wcmp-h-full wcmp-overflow-auto wcmp-bg-black wcmp-bg-opacity-40 wcmp-p-15;
+
   > div {
     background-color: #FEFEFE;
     margin: 15% auto;
@@ -16,5 +19,8 @@
     border: 1px solid #888;
     width: 98%;
     max-width: 600px;
+      // above as tailwind @apply
+
+    @apply wcmp-bg-white wcmp-m-15 wcmp-m-auto wcmp-p-20 wcmp-border wcmp-border-gray-400 wcmp-w-98 wcmp-max-w-600;
   }
 }

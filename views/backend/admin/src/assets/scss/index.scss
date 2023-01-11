@@ -1,3 +1,10 @@
-@import '_helpers.scss';
-@import '_modal.scss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import '_toggle.scss';
+@import '_transitions.scss';
+
+.woocommerce table.form-table select {
+  @apply wcmp-w-full;
+}

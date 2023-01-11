@@ -1,6 +1,6 @@
 <template>
   <select
-    :id="element.name"
+    :id="id"
     ref="selectElement"
     v-model="model"
     class="select"
@@ -16,17 +16,21 @@
 </template>
 
 <script lang="ts">
-import {PropType, UnwrapNestedRefs, computed, defineComponent, onMounted, ref, watch} from 'vue';
-import {InteractiveElementInstance} from '@myparcel-vfb/core';
+import {ElementInstance, generateFieldId} from '@myparcel/pdk-frontend';
+import {PropType, computed, defineComponent, onBeforeUnmount, onMounted, ref} from 'vue';
 import {SelectOption} from '@myparcel-pdk/common';
-import {useVModel} from '@vueuse/core';
+
+const CSS = {
+  'min-width': '0 !important',
+  width: '100%',
+};
 
 export default defineComponent({
   name: 'WcSelectInput',
 
   props: {
     element: {
-      type: Object as PropType<UnwrapNestedRefs<InteractiveElementInstance>>,
+      type: Object as PropType<ElementInstance>,
       required: true,
     },
 
@@ -37,45 +41,50 @@ export default defineComponent({
     },
   },
 
+  emits: ['update:modelValue'],
+
   setup: (props, ctx) => {
+    const model = computed({
+      get: () => {
+        return props.modelValue;
+      },
+      set: (value) => {
+        ctx.emit('update:modelValue', value);
+        $select.value?.val(value);
+        $select.value?.trigger('change.select2', {data: {internal: true}});
+      },
+    });
+
     const selectElement = ref<HTMLElement | null>(null);
 
-    const model = useVModel(props, 'modelValue', ctx.emit);
+    const $select = ref<JQuery | null>(null);
+
     const options = computed<SelectOption[]>(() => {
       return props.element.props?.options ?? [];
     });
 
-    watch(options, () => {
-      if (options.value.length === 1 || !model.value) {
+    onMounted(() => {
+      if (!selectElement.value) {
+        return;
+      }
+
+      $select.value = jQuery(selectElement.value);
+
+      $select.value.selectWoo({containerCss: CSS, dropdownCss: CSS}).on('change', (event) => {
+        model.value = event.currentTarget?.value;
+      });
+
+      if (options.value.length === 1 || (!model.value && options.value.length > 0)) {
         model.value = options.value[0].value;
       }
     });
 
-    // todo: fix select2 styling
-    // onMounted(() => {
-    //   if (selectElement.value) {
-    //     const $select = jQuery(selectElement.value);
-    //
-    //     $select
-    //       .selectWoo({
-    //         containerCss: {
-    //           'min-width': '0 !important',
-    //           width: '100%',
-    //         },
-    //
-    //         dropdownCss: {
-    //           'min-width': '0 !important',
-    //           width: '100%',
-    //         },
-    //       })
-    //       .on('change', (event) => {
-    //         console.log(event.target.value);
-    //         model.value = event.target.value;
-    //       });
-    //   }
-    // });
+    onBeforeUnmount(() => {
+      $select.value?.selectWoo('destroy');
+    });
 
     return {
+      id: generateFieldId(props.element),
       model,
       options,
       selectElement,

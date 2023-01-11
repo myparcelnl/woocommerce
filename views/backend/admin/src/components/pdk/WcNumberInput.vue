@@ -6,8 +6,8 @@
 </template>
 
 <script lang="ts">
-import {PropType, UnwrapNestedRefs, defineComponent} from 'vue';
-import {InteractiveElementInstance} from '@myparcel-vfb/core';
+import {PropType, defineComponent} from 'vue';
+import {ElementInstance} from '@myparcel/pdk-frontend';
 import WcTextInput from './WcTextInput.vue';
 import {useVModel} from '@vueuse/core';
 
@@ -19,7 +19,7 @@ export default defineComponent({
   components: {WcTextInput},
   props: {
     element: {
-      type: Object as PropType<UnwrapNestedRefs<InteractiveElementInstance>>,
+      type: Object as PropType<ElementInstance>,
       required: true,
     },
 
@@ -31,6 +31,7 @@ export default defineComponent({
   },
 
   emits: ['update:modelValue'],
+
   setup: (props, ctx) => ({
     model: useVModel(props, 'modelValue', ctx.emit),
   }),

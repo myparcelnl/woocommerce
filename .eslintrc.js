@@ -5,6 +5,10 @@ module.exports = {
     dir: __dirname,
     project: 'tsconfig.json',
   },
+  globals: {
+    jQuery: false,
+    JQuery: false,
+  },
   overrides: [
     {
       files: ['./**/index.ts'],
