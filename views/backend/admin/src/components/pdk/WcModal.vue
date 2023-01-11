@@ -27,7 +27,6 @@
           'mypa-py-4',
           'mypa-right-2',
           'mypa-top-12',
-
         ]"
         role="document"
         @click.stop>

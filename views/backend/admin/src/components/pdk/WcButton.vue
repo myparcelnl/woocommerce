@@ -26,7 +26,7 @@ export default defineComponent({
 
     label: {
       type: String,
-      default: 'save',
+      default: null,
     },
 
     icon: {
