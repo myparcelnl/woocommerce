@@ -169,8 +169,9 @@ class MyParcelWidget
      */
     private function filterOrders(array $orders): array
     {
-        $orderAmount        = get_option('woocommerce_myparcel_dashboard_widget')['items'] ?? self::DEFAULT_ORDER_AMOUNT;
-        $showMyParcelOrders = get_option('woocommerce_myparcel_dashboard_widget')['showMyParcelOrders'];
+        $widgetConfig       = get_option('woocommerce_myparcel_dashboard_widget') ?: $this->getDefaultWidgetConfig();
+        $orderAmount        = $widgetConfig['items'] ?? self::DEFAULT_ORDER_AMOUNT;
+        $showMyParcelOrders = $widgetConfig['showMyParcelOrders'] ?? true;
 
         $filteredOrders = array_filter($orders, static function ($order) use ($showMyParcelOrders) {
             if (! $order instanceof WC_Order) {
