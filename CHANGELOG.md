@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.17.0-rc.3](https://github.com/myparcelnl/woocommerce/compare/v4.17.0-rc.2...v4.17.0-rc.3) (2023-01-12)
+
+
+### :bug: Bug Fixes
+
+* prevent widget config errors ([#947](https://github.com/myparcelnl/woocommerce/issues/947)) ([40f7eb4](https://github.com/myparcelnl/woocommerce/commit/40f7eb41af52a3b6315173a98f6220c79fa3a3ca))
+
 ## [4.17.0-rc.2](https://github.com/myparcelnl/woocommerce/compare/v4.17.0-rc.1...v4.17.0-rc.2) (2023-01-11)
 
 
