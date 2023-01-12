@@ -24,8 +24,8 @@ use WC_Product;
 
 class PdkOrderRepository extends AbstractPdkOrderRepository
 {
-    protected const WC_ORDER_META_ORDER_DATA = 'myparcelnl_order_data';
-    protected const WC_ORDER_META_SHIPMENTS  = 'myparcelnl_order_shipments';
+    public const WC_ORDER_META_ORDER_DATA = 'myparcelnl_order_data';
+    public const WC_ORDER_META_SHIPMENTS  = 'myparcelnl_order_shipments';
 
     /**
      * @var \MyParcelNL\Pdk\Product\Repository\AbstractProductRepository
