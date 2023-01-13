@@ -44,7 +44,7 @@ class Boot
 
                 'userAgent' => value([
                     'MyParcelNL-WooCommerce' => $pluginVersion,
-                    'Woocommerce'            => constant('WOOCOMMERCE_VERSION') ?? '?',
+                    'Woocommerce'            => defined('WOOCOMMERCE_VERSION') ? constant('WOOCOMMERCE_VERSION') : '?',
                     'WordPress'              => get_bloginfo('version'),
                 ]),
             ]);
