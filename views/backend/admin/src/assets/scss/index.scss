@@ -5,6 +5,12 @@
 @import '_toggle.scss';
 @import '_transitions.scss';
 
-.woocommerce table.form-table select {
-  @apply mypa-w-full;
+.woocommerce table.form-table {
+  .select2-container {
+    min-width: 100% !important;
+  }
+
+  select {
+    @apply mypa-w-full;
+  }
 }

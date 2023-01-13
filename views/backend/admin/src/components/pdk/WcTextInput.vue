@@ -2,7 +2,7 @@
   <input
     :id="id"
     v-model="model"
-    class="mypa-w-full mypa-mw-48"
+    class="!mypa-w-full"
     :disabled="element.isDisabled || element.isSuspended"
     :type="element.props.type ?? 'text'" />
 </template>

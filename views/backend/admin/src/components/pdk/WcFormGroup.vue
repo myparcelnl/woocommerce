@@ -19,7 +19,7 @@
     </PdkTableCol>
 
     <PdkTableCol>
-      <div>
+      <div class="mypa-max-w-md">
         <slot />
       </div>
     </PdkTableCol>

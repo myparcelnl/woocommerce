@@ -3,7 +3,7 @@
     :id="id"
     ref="selectElement"
     v-model="model"
-    class="select mypa-w-full mypa-mw-48"
+    class="select"
     :class="{
       disabled: options.length === 1 || element.isDisabled || element.isSuspended,
     }">
@@ -19,11 +19,6 @@
 import {ElementInstance, generateFieldId} from '@myparcel/pdk-frontend';
 import {PropType, computed, defineComponent, onBeforeUnmount, onMounted, ref} from 'vue';
 import {SelectOption} from '@myparcel-pdk/common';
-
-const CSS = {
-  'min-width': '0 !important',
-  width: '100%',
-};
 
 export default defineComponent({
   name: 'WcSelectInput',
@@ -51,7 +46,7 @@ export default defineComponent({
       set: (value) => {
         ctx.emit('update:modelValue', value);
         $select.value?.val(value);
-        $select.value?.trigger('change.select2', {data: {internal: true}});
+        $select.value?.trigger('change.select2', { data: { internal: true } });
       },
     });
 
@@ -70,9 +65,11 @@ export default defineComponent({
 
       $select.value = jQuery(selectElement.value);
 
-      $select.value.selectWoo({containerCss: CSS, dropdownCss: CSS}).on('change', (event) => {
-        model.value = event.currentTarget?.value;
-      });
+      $select.value
+        .selectWoo({ width: 'auto'})
+        .on('change', (event) => {
+          model.value = event.currentTarget?.value;
+        });
 
       if (options.value.length === 1 || (!model.value && options.value.length > 0)) {
         model.value = options.value[0].value;
