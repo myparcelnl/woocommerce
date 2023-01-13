@@ -4,21 +4,20 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration;
 
-use DateTime;
-use WC_Data;
-use WC_Order;
-
 use MyParcelNL\Pdk\Carrier\Model\CarrierOptions;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\CarrierSettings;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\Pdk\Settings\Model\CustomsSettings;
-use MyParcelNL\Pdk\Settings\Model\DropOffPossibilities;
 use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
 use MyParcelNL\Pdk\Settings\Model\LabelSettings;
 use MyParcelNL\Pdk\Settings\Model\OrderSettings;
 use MyParcelNL\Pdk\Shipment\Model\DropOffDay;
 use MyParcelNL\WooCommerce\Pdk\Settings\Repository\PdkSettingsRepository;
+
+use DateTime;
+use WC_Data;
+use WC_Order;
 
 /**
  * The PDK upgrade.
@@ -33,6 +32,12 @@ class Migration5_0_0 extends AbstractUpgradeMigration implements Migration
     public function getVersion(): string
     {
         return '5.0.0';
+    }
+
+    public function up(): void
+    {
+        $this->migrateAllSettings();
+        $this->migrateOrders();
     }
 
     /**
@@ -84,24 +89,9 @@ class Migration5_0_0 extends AbstractUpgradeMigration implements Migration
         fclose($log);
     }
 
-    public function up(): void
-    {
-        $orderIds  = $this->getAllOrderIds();
-        $chunks    = array_chunk($orderIds, 100);
-        $lastChunk = count($chunks);
-
-        add_action('myparcelnl_migrate_order_to_pdk_5_0_0', [$this, 'migrateOrder']);
-
-        foreach ($chunks as $index => $chunk) {
-            $time = time() + $index * 5;
-            wp_schedule_single_event($time, 'myparcelnl_migrate_order_to_pdk_5_0_0', [
-                'orderIds'  => $chunk,
-                'chunk'     => $index,
-                'lastChunk' => $lastChunk,
-            ]);
-        }
-    }
-
+    /**
+     * @return array
+     */
     private function getAllOrderIds(): array
     {
         $date = new DateTime();
@@ -382,7 +372,33 @@ class Migration5_0_0 extends AbstractUpgradeMigration implements Migration
         }
     }
 
-    private function save(array $pdkOrder): void
+    /**
+     * @return void
+     */
+    private function migrateOrders(): void
+    {
+        $orderIds  = $this->getAllOrderIds();
+        $chunks    = array_chunk($orderIds, 100);
+        $lastChunk = count($chunks);
+
+        add_action('myparcelnl_migrate_order_to_pdk_5_0_0', [$this, 'migrateOrder']);
+
+        foreach ($chunks as $index => $chunk) {
+            $time = time() + $index * 5;
+            wp_schedule_single_event($time, 'myparcelnl_migrate_order_to_pdk_5_0_0', [
+                'orderIds'  => $chunk,
+                'chunk'     => $index,
+                'lastChunk' => $lastChunk,
+            ]);
+        }
+    }
+
+    /**
+     * @param  array $pdkOrder
+     *
+     * @return void
+     */
+    private function saveMetaData(array $pdkOrder): void
     {
         update_post_meta(
             $pdkOrder['externalIdentifier'],
@@ -398,6 +414,11 @@ class Migration5_0_0 extends AbstractUpgradeMigration implements Migration
         update_post_meta($pdkOrder['externalIdentifier'], 'myparcelnl_pdk_migrated', true);
     }
 
+    /**
+     * @param  \WC_Order $wcOrder
+     *
+     * @return void
+     */
     private function updatePdkOrder(WC_Order $wcOrder): void
     {
         $houseNumber       = $wcOrder->get_meta('_shipping_house_number');
@@ -415,8 +436,7 @@ class Migration5_0_0 extends AbstractUpgradeMigration implements Migration
             'shipments'          => $this->getShipments($wcOrder),
         ];
 
-        $this->save($pdkOrder);
-        $this->migrateAllSettings();
+        $this->saveMetaData($pdkOrder);
     }
 
     /**
