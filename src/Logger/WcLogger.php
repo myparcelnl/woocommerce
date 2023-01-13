@@ -6,7 +6,7 @@ namespace MyParcelNL\WooCommerce\Logger;
 
 use MyParcelNL\Pdk\Logger\AbstractLogger;
 
-class WooCommerceLogger extends AbstractLogger
+class WcLogger extends AbstractLogger
 {
     /**
      * Log data if the error logging setting is enabled.

@@ -6,7 +6,7 @@ namespace MyParcelNL\WooCommerce\Pdk\Plugin\Service;
 
 use MyParcelNL\Pdk\Plugin\Service\OrderStatusServiceInterface;
 
-class WooCommerceOrderStatusService implements OrderStatusServiceInterface
+class WcStatusService implements OrderStatusServiceInterface
 {
     public function all(): array
     {

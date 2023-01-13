@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
+use MyParcelNL;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
 use MyParcelNL\Pdk\Product\Repository\AbstractProductRepository;
+use MyParcelNL\Sdk\src\Support\Str;
 use MyParcelNL\WooCommerce\Hooks\WordPressHooksInterface;
 
 class PdkProductSettingsHooks implements WordPressHooksInterface
@@ -18,6 +20,9 @@ class PdkProductSettingsHooks implements WordPressHooksInterface
 
         // Render pdk product settings in above custom tab
         add_action('woocommerce_product_data_panels', [$this, 'renderPdkProductSettings']);
+
+        // Save pdk product settings
+        add_action('woocommerce_process_product_meta', [$this, 'savePdkProductSettings']);
     }
 
     /**
@@ -48,10 +53,22 @@ class PdkProductSettingsHooks implements WordPressHooksInterface
         $productRepository = Pdk::get(AbstractProductRepository::class);
         $product           = $productRepository->getProduct(get_the_ID());
 
-        printf(
-            '<div id="%s" class="panel woocommerce_options_panel">%s</div>',
-            Pdk::get('pluginName') . '_product_data',
-            RenderService::renderProductSettings($product)
-        );
+        echo RenderService::renderProductSettings($product);
+    }
+
+    public function savePdkProductSettings(int $productId): void
+    {
+        $post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+        $values = array_filter($post, static function ($key) {
+            return Str::startsWith($key, MyParcelNL::NAME);
+        }, ARRAY_FILTER_USE_KEY);
+
+
+        /** @var \MyParcelNL\Pdk\Product\Repository\AbstractProductRepository $productRepository */
+        $productRepository = Pdk::get(AbstractProductRepository::class);
+        $product           = $productRepository->getProduct($productId);
+
+        $productRepository->store($product);
     }
 }

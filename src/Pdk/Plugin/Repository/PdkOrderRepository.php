@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Repository;
 
+use MyParcelNL\Pdk\Base\Concern\HasAttributes;
 use MyParcelNL\Pdk\Facade\DefaultLogger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
@@ -149,7 +150,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         $wcOrderCreated = $order->get_date_created();
 
         return new PdkOrder([
-            'orderDate'             => $wcOrderCreated ? $wcOrderCreated->getTimestamp() : null,
+            'orderDate'             => $wcOrderCreated ? $wcOrderCreated->format('Y-m-d H:i:s') : null,
             'customsDeclaration'    => [
                 'contents' => CustomsDeclaration::CONTENTS_COMMERCIAL_GOODS,
                 'invoice'  => '1234',
