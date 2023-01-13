@@ -7,6 +7,7 @@ namespace MyParcelNL\WooCommerce\Pdk;
 use GuzzleHttp\Client;
 use MyParcelNL\Pdk\Api\Adapter\ClientAdapterInterface;
 use MyParcelNL\Pdk\Api\Response\ClientResponse;
+use MyParcelNL\Pdk\Api\Response\ClientResponseInterface;
 
 class Guzzle7ClientAdapter implements ClientAdapterInterface
 {
@@ -35,7 +36,7 @@ class Guzzle7ClientAdapter implements ClientAdapterInterface
      * @return \MyParcelNL\Pdk\Api\Response\ClientResponseInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function doRequest(string $httpMethod, string $uri, array $options = []): ClientResponse
+    public function doRequest(string $httpMethod, string $uri, array $options = []): ClientResponseInterface
     {
         $response = $this->client->request(
             $httpMethod,
