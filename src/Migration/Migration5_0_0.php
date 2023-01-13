@@ -370,13 +370,24 @@ class Migration5_0_0 implements Migration
     private function updatePdkOrder(WC_Order $wcOrder): void
     {
         $deliveryOptions = $this->getDeliveryOptions($wcOrder);
-        $pdkOrder        = new PdkOrder([
+        $orderLines      = $this->getPdkOrderLines($wcOrder);
+        $totalWeight     = 0;
+
+        foreach ($orderLines as $orderLine) {
+            $totalWeight += $orderLine['quantity'] * $orderLine['product']['weight'];
+        }
+
+        $pdkOrder = new PdkOrder([
             'externalIdentifier'    => $wcOrder->get_id(),
-            'customsDeclaration'    => [],
+            'customsDeclaration'    => [
+
+            ],
             'deliveryOptions'       => $deliveryOptions,
             'label'                 => null,
-            'lines'                 => $this->getPdkOrderLines($wcOrder),
-            'physicalProperties'    => [],
+            'lines'                 => $orderLines,
+            'physicalProperties'    => [
+                'weight' => $totalWeight,
+            ],
             'recipient'             => [
                 'boxNumber'    => $wcOrder->get_shipping_country(),
                 'cc'           => $wcOrder->get_shipping_country(),
