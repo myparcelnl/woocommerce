@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MyParcelNL\WooCommerce\Pdk\Service;
+namespace MyParcelNL\WooCommerce\Hooks;
 
 use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Facade\Pdk;
@@ -10,9 +10,10 @@ use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Plugin\Model\Context\DeliveryOptionsContext;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+use MyParcelNL\WooCommerce\Service\ScriptService;
 use WC_Product;
 
-class CheckoutHookService implements WordPressHookServiceInterface
+class CheckoutHooks implements WordPressHooksInterface
 {
     public const  META_DELIVERY_OPTIONS            = '_myparcel_delivery_options';
     public const  META_HIGHEST_SHIPPING_CLASS      = '_myparcel_highest_shipping_class';
@@ -23,12 +24,12 @@ class CheckoutHookService implements WordPressHookServiceInterface
     private const SCRIPT_CHECKOUT_DELIVERY_OPTIONS = 'myparcelnl-checkout-delivery-options';
 
     /**
-     * @var \MyParcelNL\WooCommerce\Pdk\Service\ScriptService
+     * @var \MyParcelNL\WooCommerce\Service\ScriptService
      */
     private $service;
 
     /**
-     * @param  \MyParcelNL\WooCommerce\Pdk\Service\ScriptService $service
+     * @param  \MyParcelNL\WooCommerce\Service\ScriptService $service
      */
     public function __construct(ScriptService $service)
     {
@@ -116,7 +117,7 @@ class CheckoutHookService implements WordPressHookServiceInterface
         return (new DeliveryOptionsContext(        ))->toArray();
     }
 
-    public function initialize(): void
+    public function apply(): void
     {
         // Add the checkout scripts
         add_action('wp_enqueue_scripts', [$this, 'enqueueFrontendScripts'], 100);

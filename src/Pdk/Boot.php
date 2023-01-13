@@ -38,12 +38,13 @@ class Boot
                 'platform'      => value('myparcel'),
                 'pluginName'    => value(MyParcelNL::NAME),
                 'pluginPath'    => value($pluginPath),
+                'pluginTitle'   => value('MyParcel'),
                 'pluginUrl'     => value($pluginUrl),
                 'pluginVersion' => value($pluginVersion),
 
                 'userAgent' => value([
                     'MyParcelNL-WooCommerce' => $pluginVersion,
-                    'Woocommerce'            => defined('WOOCOMMERCE_VERSION') ? WOOCOMMERCE_VERSION : '?',
+                    'Woocommerce'            => constant('WOOCOMMERCE_VERSION') ?? '?',
                     'WordPress'              => get_bloginfo('version'),
                 ]),
             ]);

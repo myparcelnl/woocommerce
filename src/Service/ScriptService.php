@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MyParcelNL\WooCommerce\Pdk\Service;
+namespace MyParcelNL\WooCommerce\Service;
 
 use MyParcelNL\Pdk\Facade\Pdk;
 
@@ -46,9 +46,26 @@ class ScriptService
         string $version = null,
         bool   $inFooter = true
     ): void {
-        $version = $version ?? (Pdk::isProduction() ? Pdk::get('pluginVersion') : null);
+        wp_enqueue_script($handle, $src, $deps, $this->getVersion($version), $inFooter);
+    }
 
-        wp_enqueue_script($handle, $src, $deps, $version, $inFooter);
+    /**
+     * @param  string      $handle
+     * @param  string      $src
+     * @param  array       $deps
+     * @param  string|null $version
+     * @param  string      $media
+     *
+     * @return void
+     */
+    public function enqueueStyle(
+        string $handle,
+        string $src,
+        array  $deps = [],
+        string $version = null,
+        string $media = 'all'
+    ): void {
+        wp_enqueue_style($handle, $src, $deps, $this->getVersion($version), $media);
     }
 
     /**
@@ -71,7 +88,8 @@ class ScriptService
             strtr($url, [
                 ':version'  => $version,
                 ':filename' => $isVue3 ? 'vue.global' : 'vue',
-            ]), [],
+            ]),
+            [],
             $version
         );
     }
@@ -95,5 +113,15 @@ class ScriptService
             [self::HANDLE_VUE],
             $version
         );
+    }
+
+    /**
+     * @param  null|string $version
+     *
+     * @return null|string
+     */
+    private function getVersion(?string $version): ?string
+    {
+        return $version ?? (Pdk::isProduction() ? Pdk::get('pluginVersion') : null);
     }
 }

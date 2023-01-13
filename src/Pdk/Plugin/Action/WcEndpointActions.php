@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Action;
 
 use MyParcelNL\Pdk\Plugin\Action\PdkEndpointActions;
-use MyParcelNL\WooCommerce\Pdk\Service\RestApiHookService;
+use MyParcelNL\WooCommerce\Hooks\RestApiHooks;
 
 class WcEndpointActions extends PdkEndpointActions
 {
@@ -22,6 +22,6 @@ class WcEndpointActions extends PdkEndpointActions
      */
     public function getBaseUrl(): string
     {
-        return get_rest_url(null, sprintf('%s/%s', RestApiHookService::NAMESPACE, RestApiHookService::ROUTE_PDK));
+        return get_rest_url(null, sprintf('%s/%s', RestApiHooks::NAMESPACE, RestApiHooks::ROUTE_PDK));
     }
 }

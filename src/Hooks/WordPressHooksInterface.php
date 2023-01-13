@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace MyParcelNL\WooCommerce\Pdk\Service;
+namespace MyParcelNL\WooCommerce\Hooks;
 
-interface WordPressHookServiceInterface
+interface WordPressHooksInterface
 {
     /**
      * Register the necessary actions and filters.
      *
      * @return void
      */
-    public function initialize(): void;
+    public function apply(): void;
 }

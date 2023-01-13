@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MyParcelNL\WooCommerce\Pdk\Service;
+namespace MyParcelNL\WooCommerce\Hooks;
 
 use MyParcelNL\Pdk\Base\PdkEndpoint;
 use MyParcelNL\Pdk\Facade\DefaultLogger;
@@ -14,13 +14,13 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class RestApiHookService implements WordPressHookServiceInterface
+class RestApiHooks implements WordPressHooksInterface
 {
     public const NAMESPACE     = 'myparcelnl/v1';
     public const ROUTE_PDK     = 'pdk';
     public const ROUTE_WEBHOOK = 'webhook';
 
-    public function initialize(): void
+    public function apply(): void
     {
         add_action('rest_api_init', [$this, 'registerApiRoutes']);
     }
