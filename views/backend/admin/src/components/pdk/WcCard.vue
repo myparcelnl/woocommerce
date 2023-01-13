@@ -1,8 +1,10 @@
 <template>
-  <div>
+  <div class="">
     <div>
       <slot name="header">
-        {{ translate(title) }}
+        <PdkHeading level="3">
+          {{ translate(title) }}
+        </PdkHeading>
       </slot>
     </div>
 
@@ -12,11 +14,13 @@
 
     <div class="d-flex">
       <slot name="footer">
-        <ActionButton
-          v-for="(action, index) in actions"
-          :key="`${index}_${action.id}`"
-          :disabled="loading"
-          :action="action" />
+        <PdkButtonGroup>
+          <ActionButton
+            v-for="(action, index) in actions"
+            :key="`${index}_${action.id}`"
+            :disabled="loading"
+            :action="action" />
+        </PdkButtonGroup>
       </slot>
     </div>
   </div>
@@ -41,9 +45,7 @@ export default defineComponent({
       default: null,
     },
 
-    /**
-     * Available actions on the card.
-     */
+
     actions: {
       type: Array as PropType<PdkButtonAction[]>,
       default: () => [],

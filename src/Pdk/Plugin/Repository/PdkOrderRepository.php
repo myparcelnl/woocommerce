@@ -17,7 +17,6 @@ use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
 use MyParcelNL\Pdk\Shipment\Model\Shipment;
 use MyParcelNL\Pdk\Storage\StorageInterface;
-use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\WooCommerce\Service\WcRecipientService;
 use Throwable;
 use WC_Order;
@@ -83,34 +82,39 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      *
      * @return \MyParcelNL\Pdk\Plugin\Model\PdkOrder
      * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
+     * @throws \Exception
      */
     public function update(PdkOrder $order): PdkOrder
     {
-        update_post_meta(
-            $order->externalIdentifier,
-            self::WC_ORDER_META_ORDER_DATA,
-            ['deliveryOptions' => $order->deliveryOptions->toArray()]
-        );
+        $existingOrder = $this->get($order->externalIdentifier);
+        $diff          = array_diff_assoc($order->toArray(), $existingOrder->toArray());
 
-        $existing = get_post_meta($order->externalIdentifier, self::WC_ORDER_META_SHIPMENTS, true);
-
-        if ($existing) {
-            $order->shipments = $order->shipments->filter(
-                function (Shipment $shipment) use ($existing) {
-                    return ! in_array($shipment->id, Arr::pluck($existing, 'id'), true);
-                }
-            )
-                ->merge($existing);
+        if (! empty($diff)) {
+            update_post_meta(
+                $order->externalIdentifier,
+                self::WC_ORDER_META_ORDER_DATA,
+                ['deliveryOptions' => $order->deliveryOptions->toArray()]
+            );
         }
 
-        update_post_meta(
-            $order->externalIdentifier,
-            self::WC_ORDER_META_SHIPMENTS,
-            $order->shipments->map(function (Shipment $shipment) {
-                return $shipment->toStorableArray();
-            })
-                ->toArray()
-        );
+        if ($order->shipments->contains('updated', null)) {
+            $existingShipments = get_post_meta($order->externalIdentifier, self::WC_ORDER_META_SHIPMENTS, true);
+
+            $order->shipments = (new ShipmentCollection($existingShipments))
+                ->filter(function (Shipment $shipment) use ($order) {
+                    return !$order->shipments->contains('id', $shipment->id);
+                })
+                ->merge($order->shipments);
+
+            update_post_meta(
+                $order->externalIdentifier,
+                self::WC_ORDER_META_SHIPMENTS,
+                $order->shipments->map(function (Shipment $shipment) {
+                    return $shipment->toStorableArray();
+                })
+                    ->toArray()
+            );
+        }
 
         return $order;
     }

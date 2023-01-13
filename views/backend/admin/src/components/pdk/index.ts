@@ -24,6 +24,10 @@ export {default as WcNotification} from './WcNotification.vue';
 
 export {default as WcNumberInput} from './WcNumberInput.vue';
 
+export {default as WcOrderCardShipmentsWrapper} from './WcOrderCardShipmentsWrapper.vue';
+
+export {default as WcOrderGridShipmentWrapper} from './WcOrderGridShipmentWrapper.vue';
+
 export {default as WcPluginSettingsWrapper} from './WcPluginSettingsWrapper.vue';
 
 export {default as WcRadioInput} from './WcRadioInput.vue';

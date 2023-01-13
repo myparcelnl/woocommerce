@@ -30,13 +30,13 @@ export default defineComponent({
       type: Boolean,
     },
 
-    label: {
-      type: String,
+    icon: {
+      type: String as PropType<PdkIcon>,
       default: null,
     },
 
-    icon: {
-      type: String as PropType<PdkIcon>,
+    label: {
+      type: String,
       default: null,
     },
   },
