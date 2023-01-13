@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Repository;
 
-use MyParcelNL\Pdk\Base\Concern\HasAttributes;
 use MyParcelNL\Pdk\Facade\DefaultLogger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
@@ -22,6 +21,7 @@ use Throwable;
 use WC_Order;
 use WC_Order_Item;
 use WC_Product;
+use function apply_filters;
 
 class PdkOrderRepository extends AbstractPdkOrderRepository
 {
@@ -77,18 +77,6 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     }
 
     /**
-     * @param  \WC_Order $order
-     *
-     * @return array
-     */
-    public function getDeliveryOptions(WC_Order $order): array
-    {
-        $meta = $order->get_meta(self::WC_ORDER_META_ORDER_DATA) ?: [];
-
-        return apply_filters('wc_myparcel_order_delivery_options', $meta, $order);
-    }
-
-    /**
      * @param  \MyParcelNL\Pdk\Plugin\Model\PdkOrder $order
      *
      * @return \MyParcelNL\Pdk\Plugin\Model\PdkOrder
@@ -118,7 +106,8 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             self::WC_ORDER_META_SHIPMENTS,
             $order->shipments->map(function (Shipment $shipment) {
                 return $shipment->toStorableArray();
-            })->toArray()
+            })
+                ->toArray()
         );
 
         return $order;
@@ -146,11 +135,18 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         /** @var \MyParcelNL\WooCommerce\Service\WcRecipientService $recipientService */
         $recipientService = Pdk::get(WcRecipientService::class);
 
+        $savedOrderData  = $order->get_meta(self::WC_ORDER_META_ORDER_DATA) ?: [];
+        $deliveryOptions = apply_filters(
+            'wc_myparcel_order_delivery_options',
+            $savedOrderData['deliveryOptions'] ?? [],
+            $order
+        );
+
         $wcOrderItems   = $order->get_items();
         $wcOrderCreated = $order->get_date_created();
 
-        return new PdkOrder([
-            'orderDate'             => $wcOrderCreated ? $wcOrderCreated->format('Y-m-d H:i:s') : null,
+        $orderData = [
+            'externalIdentifier'    => $order->get_id(),
             'customsDeclaration'    => [
                 'contents' => CustomsDeclaration::CONTENTS_COMMERCIAL_GOODS,
                 'invoice'  => '1234',
@@ -166,8 +162,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                     $wcOrderItems
                 ),
             ],
-            'deliveryOptions'       => $this->getDeliveryOptions($order),
-            'externalIdentifier'    => $order->get_id(),
+            'deliveryOptions'       => $deliveryOptions,
             'lines'                 => array_map(
                 function (WC_Order_Item $item) {
                     /** @var WC_Product $product */
@@ -192,7 +187,10 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'shipmentPriceAfterVat' => (float) $order->get_shipping_total(),
             'shipments'             => $this->getShipments($order),
             'shipmentVat'           => (float) $order->get_shipping_tax(),
-        ]);
+            'orderDate'             => $wcOrderCreated ? $wcOrderCreated->format('Y-m-d H:i:s') : null,
+        ];
+
+        return new PdkOrder($orderData + $savedOrderData);
     }
 
     /**

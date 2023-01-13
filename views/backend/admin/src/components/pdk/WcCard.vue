@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="$slots.header">
+    <div>
       <slot name="header">
         {{ translate(title) }}
       </slot>
@@ -10,9 +10,7 @@
       <slot />
     </div>
 
-    <div
-      v-if="$slots.footer"
-      class="d-flex">
+    <div class="d-flex">
       <slot name="footer">
         <ActionButton
           v-for="(action, index) in actions"
