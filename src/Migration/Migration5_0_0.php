@@ -23,15 +23,70 @@ class Migration5_0_0 implements Migration
         return '5.0.0';
     }
 
-    public function up(): void
+    /**
+     * @param  array $data
+     *
+     * @return void
+     */
+    public function migrateOrder(array $data): void
     {
-        $orderIds = $this->getAllOrderIds();
+        $orderIds  = $data['orderIds'] ?? [];
+        $chunk     = $data['chunk'] ?? null;
+        $lastChunk = $data['lastChunk'] ?? null;
+
+        $createTimestamp = static function () {
+            return (new DateTime())->format('Y-m-d H:i:s');
+        };
+
+        $log = fopen(sprintf('%s/../../logs/pdk-migration.log', __DIR__), 'wb');
+
+        fwrite(
+            $log,
+            sprintf(
+                '[%s] Start migration for orders %d..%d (chunk %d/%d)',
+                $createTimestamp(),
+                $orderIds[0],
+                $orderIds[count($orderIds) - 1],
+                $chunk,
+                $lastChunk
+            ) . PHP_EOL
+        );
 
         foreach ($orderIds as $orderId) {
             $wcOrder = wc_get_order($orderId);
 
+            if (! $wcOrder instanceof WC_Order) {
+                fwrite(
+                    $log,
+                    sprintf('[%s] Order %s is not an instance of WC_Order', $createTimestamp(), $orderId) . PHP_EOL
+                );
+                continue;
+            }
+
             $this->updatePdkOrder($wcOrder);
             $this->migrateMetaKeys($wcOrder);
+
+            fwrite($log, sprintf('[%s] Order %s migrated', $createTimestamp(), $orderId) . PHP_EOL);
+        }
+
+        fclose($log);
+    }
+
+    public function up(): void
+    {
+        $orderIds  = $this->getAllOrderIds();
+        $chunks    = array_chunk($orderIds, 100);
+        $lastChunk = count($chunks);
+
+        add_action('myparcelnl_migrate_order_to_pdk_5_0_0', [$this, 'migrateOrder']);
+
+        foreach ($chunks as $index => $chunk) {
+            $time = time() + $index * 5;
+            wp_schedule_single_event($time, 'myparcelnl_migrate_order_to_pdk_5_0_0', [
+                'orderIds'  => $chunk,
+                'chunk'     => $index,
+                'lastChunk' => $lastChunk,
+            ]);
         }
     }
 
