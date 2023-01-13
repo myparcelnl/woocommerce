@@ -1,23 +1,24 @@
 <template>
-  <a class="wcmp__d--inline-block">
+  <a>
     <input
       :id="id"
       v-model="model"
       :disabled="element.isDisabled || element.isSuspended"
       :value="true"
       type="checkbox"
-      style="display: none" />
+      class="!mypa-hidden" />
 
     <label
       :for="id"
-      :class="`woocommerce-input-toggle woocommerce-input-toggle--${model ? 'enabled' : 'disabled'}`">
+      :class="`woocommerce-input-toggle woocommerce-input-toggle--${model ? 'enabled' : 'disabled'}`"
+      class="!mypa-w-8 !mypa-float-none !mypa-ml-auto">
       {{ translate(`toggle_${model ? 'yes' : 'no'}`) }}
     </label>
   </a>
 </template>
 
 <script lang="ts">
-import {ElementInstance, generateFieldId, useTranslate} from '@myparcel/pdk-frontend';
+import {ElementInstance, generateFieldId, useLanguage} from '@myparcel/pdk-frontend';
 import {PropType, defineComponent} from 'vue';
 import {useVModel} from '@vueuse/core';
 
@@ -42,12 +43,12 @@ export default defineComponent({
   emits: ['update:modelValue'],
 
   setup: (props, ctx) => {
-    const model = useVModel(props, 'modelValue', ctx.emit);
+    const {translate} = useLanguage();
 
     return {
       id: generateFieldId(props.element),
-      model,
-      translate: useTranslate(),
+      model: useVModel(props, 'modelValue', ctx.emit),
+      translate: translate,
     };
   },
 });

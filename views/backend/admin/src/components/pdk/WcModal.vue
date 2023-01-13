@@ -59,8 +59,8 @@ import {
   ModalKey,
   NotificationContainer,
   PdkButtonAction,
+  useLanguage,
   useModalStore,
-  useTranslate,
 } from '@myparcel/pdk-frontend';
 import {PropType, computed, defineComponent, toRefs} from 'vue';
 import {usePdkConfig} from '@myparcel-pdk/frontend-core';
@@ -92,24 +92,26 @@ export default defineComponent({
   setup: (props) => {
     const propRefs = toRefs(props);
     const modalStore = useModalStore();
+    const {translate} = useLanguage();
 
     return {
-      pdkConfig: usePdkConfig(),
-
-      isOpen: computed(() => {
-        return modalStore.opened === propRefs.modalKey.value;
-      }),
-
-      translate: useTranslate(),
-      context: computed(() => {
-        return propRefs.modalKey.value === modalStore.opened ? modalStore.context : null;
-      }),
-
       backgroundClasses: ['mypa-left-0', 'mypa-top-0', 'mypa-h-full', 'mypa-w-full', 'mypa-fixed'],
 
       closeModal() {
         modalStore.close();
       },
+
+      context: computed(() => {
+        return propRefs.modalKey.value === modalStore.opened ? modalStore.context : null;
+      }),
+
+      isOpen: computed(() => {
+        return modalStore.opened === propRefs.modalKey.value;
+      }),
+
+      pdkConfig: usePdkConfig(),
+
+      translate: translate,
     };
   },
 });

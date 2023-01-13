@@ -3,7 +3,7 @@
     :id="id"
     ref="selectElement"
     v-model="model"
-    class="select"
+    class="select mypa-w-full mypa-mw-48"
     :class="{
       disabled: options.length === 1 || element.isDisabled || element.isSuspended,
     }">

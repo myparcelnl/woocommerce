@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import {ActionButton, PdkButtonAction, useTranslate} from '@myparcel/pdk-frontend';
+import {ActionButton, PdkButtonAction, useLanguage} from '@myparcel/pdk-frontend';
 import {PropType, defineComponent} from 'vue';
 
 export default defineComponent({
@@ -53,8 +53,10 @@ export default defineComponent({
   },
 
   setup: () => {
+    const {translate} = useLanguage();
+
     return {
-      translate: useTranslate(),
+      translate,
     };
   },
 });

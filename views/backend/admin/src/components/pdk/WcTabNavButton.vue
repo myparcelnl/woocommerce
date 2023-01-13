@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import {PdkTab, useTranslate} from '@myparcel/pdk-frontend';
+import {PdkTab, useLanguage} from '@myparcel/pdk-frontend';
 import {PropType, defineComponent} from 'vue';
 
 export default defineComponent({
@@ -33,8 +33,12 @@ export default defineComponent({
 
   emits: ['click'],
 
-  setup: () => ({
-    translate: useTranslate(),
-  }),
+  setup: () => {
+    const {translate} = useLanguage();
+
+    return {
+      translate,
+    };
+  },
 });
 </script>

@@ -28,17 +28,30 @@ import {
   WcToggleInput,
 } from './components/pdk';
 import {h} from 'vue';
+import WcProductSettingFormGroup from './components/pdk/WcProductSettingFormGroup.vue';
 
 const FADE = 'fade';
 createPdkFrontend({
   logLevel: LogLevel.DEBUG,
 
-  formConfig: {
+  formConfigPluginSettings: {
     form: {
       attributes: {
         class: 'woocommerce',
       },
       wrapper: h('table', {class: 'form-table'}),
+    },
+  },
+
+  formConfigProductSettings: {
+    form: {
+      attributes: {
+        tag:'div',
+        class: 'options_group',
+      },
+    },
+    field: {
+      wrapper: WcProductSettingFormGroup,
     },
   },
 

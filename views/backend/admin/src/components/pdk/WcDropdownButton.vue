@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import {ActionButton, PdkDropdownAction, useTranslate} from '@myparcel-pdk/frontend-core';
+import {ActionButton, PdkDropdownAction, useLanguage} from '@myparcel-pdk/frontend-core';
 import {PropType, computed, defineComponent, ref} from 'vue';
 import {PdkIcon} from '@myparcel/pdk-frontend';
 
@@ -58,11 +58,12 @@ export default defineComponent({
   emits: ['click'],
   setup: (props) => {
     const toggled = ref(false);
+    const {translate} = useLanguage();
 
     return {
       icon: PdkIcon.ARROW_DOWN,
 
-      translate: useTranslate(),
+      translate: translate,
       toggle: () => {
         toggled.value = !toggled.value;
       },

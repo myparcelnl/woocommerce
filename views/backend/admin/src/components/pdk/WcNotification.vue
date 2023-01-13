@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import {PdkNotification, usePdkConfig, useTranslate} from '@myparcel/pdk-frontend';
+import {PdkNotification, useLanguage, usePdkConfig} from '@myparcel/pdk-frontend';
 import {PropType, computed, defineComponent} from 'vue';
 import {toArray} from '@myparcel/ts-utils';
 
@@ -25,10 +25,12 @@ export default defineComponent({
   },
 
   setup: (props) => {
+    const {translate} = useLanguage();
+
     return {
       config: usePdkConfig(),
-      translate: useTranslate(),
       contentArray: computed(() => toArray(props.notification.content)),
+      translate: translate,
     };
   },
 });

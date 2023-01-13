@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import {ElementInstance, generateFieldId, useTranslate} from '@myparcel/pdk-frontend';
+import {ElementInstance, generateFieldId, useLanguage} from '@myparcel/pdk-frontend';
 import {PropType, computed, defineComponent} from 'vue';
 import {useVModel} from '@vueuse/core';
 
@@ -33,14 +33,18 @@ export default defineComponent({
 
   emits: ['update:modelValue'],
 
-  setup: (props, ctx) => ({
-    id: generateFieldId(props.element),
-    model: useVModel(props, 'modelValue', ctx.emit),
-    translate: useTranslate(),
-    value: computed(() => {
-      // @ts-expect-error this works
-      return props.element?.props?.value ?? '1';
-    }),
-  }),
+  setup: (props, ctx) => {
+    const {translate} = useLanguage();
+
+    return {
+      id: generateFieldId(props.element),
+      model: useVModel(props, 'modelValue', ctx.emit),
+      translate,
+      value: computed(() => {
+        // @ts-expect-error this works
+        return props.element?.props?.value ?? '1';
+      }),
+    };
+  },
 });
 </script>
