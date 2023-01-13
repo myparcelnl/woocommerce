@@ -4,12 +4,18 @@
     class="button"
     :disabled="disabled"
     @click="$emit('click')">
-    <PdkIcon
-      v-if="icon"
-      :icon="icon" />
-    <slot>
-      {{ translate(label) }}
-    </slot>
+    <span class="mypa-h-full mypa-inline-flex">
+      <PdkIcon
+        v-if="icon"
+        class="mypa-mr-1 mypa-my-auto"
+        :icon="icon" />
+
+      <slot>
+        <span class="mypa-mt-0.5">
+          {{ translate(label) }}
+        </span>
+      </slot>
+    </span>
   </button>
 </template>
 
