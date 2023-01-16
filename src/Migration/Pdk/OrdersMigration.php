@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use DateTime;
+use Exception;
 use WC_Data;
 use WC_Order;
 
@@ -35,6 +36,7 @@ class OrdersMigration
      * @param  array $data
      *
      * @return void
+     * @throws \Exception
      */
     public function migrateOrder(array $data): void
     {
@@ -46,10 +48,7 @@ class OrdersMigration
             return (new DateTime())->format('Y-m-d H:i:s');
         };
 
-        $log = fopen(sprintf('%s/../../../logs/pdk-migration.log', __DIR__), 'wb');
-
-        fwrite(
-            $log,
+        (wc_get_logger())->debug(
             sprintf(
                 '[%s] Start migration for orders %d..%d (chunk %d/%d)',
                 $createTimestamp(),
@@ -57,27 +56,21 @@ class OrdersMigration
                 $orderIds[count($orderIds) - 1],
                 $chunk,
                 $lastChunk
-            ) . PHP_EOL
+            ) . PHP_EOL,
+            ['source' => 'wc-myparcel']
         );
 
         foreach ($orderIds as $orderId) {
             $wcOrder = wc_get_order($orderId);
 
-            if (! $wcOrder instanceof WC_Order) {
-                fwrite(
-                    $log,
-                    sprintf('[%s] Order %s is not an instance of WC_Order', $createTimestamp(), $orderId) . PHP_EOL
-                );
-                continue;
-            }
-
             $this->updatePdkOrder($wcOrder);
             $this->migrateMetaKeys($wcOrder);
 
-            fwrite($log, sprintf('[%s] Order %s migrated', $createTimestamp(), $orderId) . PHP_EOL);
+            (wc_get_logger())->debug(
+                sprintf('[%s] Order %s migrated', $createTimestamp(), $orderId) . PHP_EOL,
+                ['source' => 'wc-myparcel']
+            );
         }
-
-        fclose($log);
     }
 
     /**
