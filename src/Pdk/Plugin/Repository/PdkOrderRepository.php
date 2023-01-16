@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Repository;
 
+use MyParcelNL\Pdk\Base\Service\WeightService;
 use MyParcelNL\Pdk\Facade\DefaultLogger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
@@ -144,22 +145,36 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
 
         $wcOrderItems   = $order->get_items();
         $wcOrderCreated = $order->get_date_created();
+        $weightService  = Pdk::get(WeightService::class);
+        $weightUnit     = get_option('woocommerce_weight_unit');
 
         $orderData = [
             'externalIdentifier'    => $order->get_id(),
             'customsDeclaration'    => [
                 'contents' => CustomsDeclaration::CONTENTS_COMMERCIAL_GOODS,
-                'invoice'  => '1234',
-                'weight'   => 1,
-                'items'    => array_map(
-                    function (WC_Order_Item $item) {
+                'invoice'  => $order->get_id(),
+                'weight'   => array_reduce(
+                    $wcOrderItems,
+                    static function (int $carry, WC_Order_Item $item) use ($weightService, $weightUnit) {
+                        /** @var WC_Product $product */
+                        $product = $item->get_product();
+                        $weight  = $weightService->convertToGrams($product->get_weight(), $weightUnit);
+
+                        return $carry + $item->get_quantity() * $weight;
+                    },
+                    0
+                ),
+                'items'    => array_reduce(
+                    $wcOrderItems,
+                    function (array $carry, WC_Order_Item $item) {
                         /** @var WC_Product $product */
                         $product    = $item->get_product();
                         $pdkProduct = $this->productRepository->getProduct($product);
+                        $carry[]    = CustomsDeclarationItem::fromProduct($pdkProduct);
 
-                        return CustomsDeclarationItem::fromProduct($pdkProduct);
+                        return $carry;
                     },
-                    $wcOrderItems
+                    []
                 ),
             ],
             'deliveryOptions'       => $deliveryOptions,
@@ -170,10 +185,10 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                     $pdkProduct = $this->productRepository->getProduct($product);
 
                     return [
-                        'quantity'      => $item['quantity'],
-                        'price'         => 0,
-                        'vat'           => 0,
-                        'priceAfterVat' => 0,
+                        'quantity'      => $item->get_quantity(),
+                        'price'         => $item->get_total(),
+                        'vat'           => $item->get_total_tax(),
+                        'priceAfterVat' => $item->get_total() + $item->get_total_tax(),
                         'product'       => $pdkProduct,
                     ];
                 },
