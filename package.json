@@ -77,12 +77,12 @@
   },
   "packageManager": "yarn@3.3.1",
   "resolutions": {
-    "@myparcel/pdk-component-tests": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-component-tests",
-    "@myparcel/pdk-components": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-components",
-    "@myparcel/pdk-frontend": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-frontend",
-    "@myparcel/pdk-preset-bootstrap4": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-preset-bootstrap4",
-    "@myparcel-pdk/common": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/common",
-    "@myparcel-pdk/frontend-components": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/components",
-    "@myparcel-pdk/frontend-core": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/core"
+    "@myparcel/pdk-component-tests": "portal:/Users/joerivanveen/Projects/myparcel/js-pdk/apps/pdk-component-tests",
+    "@myparcel/pdk-components": "portal:/Users/joerivanveen/Projects/myparcel/js-pdk/apps/pdk-components",
+    "@myparcel/pdk-frontend": "portal:/Users/joerivanveen/Projects/myparcel/js-pdk/apps/pdk-frontend",
+    "@myparcel/pdk-preset-bootstrap4": "portal:/Users/joerivanveen/Projects/myparcel/js-pdk/apps/pdk-preset-bootstrap4",
+    "@myparcel-pdk/common": "portal:/Users/joerivanveen/Projects/myparcel/js-pdk/libs/common",
+    "@myparcel-pdk/frontend-components": "portal:/Users/joerivanveen/Projects/myparcel/js-pdk/libs/frontend/components",
+    "@myparcel-pdk/frontend-core": "portal:/Users/joerivanveen/Projects/myparcel/js-pdk/libs/frontend/core"
   }
 }

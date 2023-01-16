@@ -126,7 +126,7 @@ class MyParcelNL
             $migrator->migrate($installedVersion);
 
             // new version number
-            // update_option($versionSetting, $this->version);
+            update_option($versionSetting, $this->version);
         }
     }
 

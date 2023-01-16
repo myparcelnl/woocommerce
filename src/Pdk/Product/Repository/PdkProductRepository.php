@@ -45,7 +45,11 @@ class PdkProductRepository extends AbstractProductRepository
                 'externalIdentifier' => (string) $product->get_id(),
                 'sku'                => $product->get_sku(),
                 'name'               => $product->get_name(),
-                'weight'             => $this->weightService->convertToGrams((int) $product->get_weight()),
+                'price'              => [
+                    'amount'   => (float) $product->get_price() * 100,
+                    'currency' => get_woocommerce_currency(),
+                ],
+                'weight'             => $this->weightService->convertToGrams((float) $product->get_weight()),
                 'settings'           => $this->getProductSettings($product),
             ]);
         });

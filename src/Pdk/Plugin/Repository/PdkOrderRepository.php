@@ -9,6 +9,7 @@ use MyParcelNL\Pdk\Facade\DefaultLogger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
+use MyParcelNL\Pdk\Plugin\Model\PdkOrderLine;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
 use MyParcelNL\Pdk\Product\Repository\AbstractProductRepository;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
@@ -130,6 +131,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      * @return \MyParcelNL\Pdk\Plugin\Model\PdkOrder
      * @throws \ErrorException
      * @throws \JsonException
+     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
      */
     private function getDataFromOrder(WC_Order $order): PdkOrder
     {
@@ -178,21 +180,21 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                 ),
             ],
             'deliveryOptions'       => $deliveryOptions,
-            'lines'                 => array_map(
-                function (WC_Order_Item $item) {
+            'lines'                 => array_reduce(
+                $wcOrderItems,
+                function (array $carry, WC_Order_Item $item) {
                     /** @var WC_Product $product */
                     $product    = $item->get_product();
                     $pdkProduct = $this->productRepository->getProduct($product);
-
-                    return [
+                    $carry[]    = new PdkOrderLine([
                         'quantity'      => $item->get_quantity(),
-                        'price'         => $item->get_total(),
-                        'vat'           => $item->get_total_tax(),
-                        'priceAfterVat' => $item->get_total() + $item->get_total_tax(),
+                        'price'         => (int) ((float) $item->get_total() * 100),
+                        'vat'           => (int) ((float) $item->get_total_tax() * 100),
+//                        'priceAfterVat' => $item->get_total() + $item->get_total_tax(),
                         'product'       => $pdkProduct,
-                    ];
-                },
-                $wcOrderItems
+                    ]);
+                    return $carry;
+                }, []
             ),
             'orderPrice'            => $order->get_total(),
             'orderPriceAfterVat'    => $order->get_total() + $order->get_cart_tax(),
