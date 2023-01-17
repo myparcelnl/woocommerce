@@ -173,8 +173,16 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                 'items'    => array_reduce(
                     $wcOrderItems,
                     function (array $carry, WC_Order_Item $item) {
+                        if (! method_exists($item, 'get_product')) {
+                            return $carry;
+                        }
+
                         /** @var WC_Product $product */
-                        $product    = $item->get_product();
+                        $product = $item->get_product();
+                        if (! $product || $product->is_virtual()) {
+                            return $carry;
+                        }
+
                         $pdkProduct = $this->productRepository->getProduct($product);
                         $carry[]    = CustomsDeclarationItem::fromProduct($pdkProduct);
 
