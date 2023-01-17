@@ -97,7 +97,7 @@ class Migration4_1_0 extends AbstractUpgradeMigration implements Migration
 
     public function down(): void
     {
-        // TODO: Implement down() method.
+        // Implement down() method.
     }
 
     public function getVersion(): string

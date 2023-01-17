@@ -202,21 +202,6 @@ class WebhookSubscriptionService
         }
 
         return $existingWebhook;
-
-        // TODO MY-31304 validation could fail erroneously (10 jan 2022), investigate and fix
-        /*
-        $callback       = $existingWebhook->getCallback();
-        $webhookSiteUrl = str_replace("/{$callback->getHash()}", '', $callback->getFullUrl());
-
-        // Remove the hash and check if the rest of the url matches
-        if ($webhookSiteUrl === $this->getFullRestUrl($service, $version)) {
-            return $existingWebhook;
-        }
-
-        $this->delete($service);
-
-        return null;
-        */
     }
 
     /**

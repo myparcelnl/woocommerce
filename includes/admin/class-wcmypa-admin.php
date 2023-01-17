@@ -1695,7 +1695,7 @@ class WCMYPA_Admin
             $validator->report();
             return true;
         } catch (Exception $e) {
-            // TODO: improve this when validator has a way to check if there are errors without throwing.
+            // return false implies exception.
         }
 
         return false;

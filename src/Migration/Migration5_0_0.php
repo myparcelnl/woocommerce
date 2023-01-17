@@ -14,7 +14,7 @@ class Migration5_0_0 implements Migration
 {
     public function down(): void
     {
-        // TODO: Implement down() method.
+        // Implement down() method.
     }
 
     public function getVersion(): string
