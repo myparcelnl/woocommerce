@@ -200,6 +200,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'orderPriceAfterVat'    => $order->get_total() + $order->get_cart_tax(),
             'orderVat'              => $order->get_total_tax(),
             'recipient'             => $recipientService->createAddress($order, WcRecipientService::SHIPPING),
+            'billingAddress'        => $recipientService->createAddress($order, WcRecipientService::BILLING),
             'shipmentPrice'         => (float) $order->get_shipping_total(),
             'shipmentPriceAfterVat' => (float) $order->get_shipping_total(),
             'shipments'             => $this->getShipments($order),
