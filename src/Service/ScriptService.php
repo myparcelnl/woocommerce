@@ -11,8 +11,9 @@ class ScriptService
     public const HANDLE_DELIVERY_OPTIONS = 'myparcelnl-delivery-options';
     public const HANDLE_VUE              = 'vue';
     // Scripts that are already present in WooCommerce
-    public const HANDLE_WC_CHECKOUT = 'wc-checkout';
-    public const HANDLE_JQUERY      = 'jquery';
+    public const HANDLE_WOOCOMMERCE_ADMIN = 'woocommerce_admin';
+    public const HANDLE_WC_CHECKOUT       = 'wc-checkout';
+    public const HANDLE_JQUERY            = 'jquery';
 
     /**
      * @return void
@@ -31,6 +32,27 @@ class ScriptService
     }
 
     /**
+     * @param  string $handle
+     * @param  string $src
+     * @param  array  $deps
+     * @param  bool   $inFooter
+     *
+     * @return void
+     */
+    public function enqueueLocalScript(
+        string $handle,
+        string $src,
+        array  $deps = [],
+        bool   $inFooter = true
+    ): void {
+        $appInfo = Pdk::getAppInfo();
+
+        $this->enqueueScript($handle, sprintf('%s/%s', $appInfo['url'], $src), $deps, $appInfo['version'], $inFooter);
+    }
+
+    /**
+     * Enqueue a script.
+     *
      * @param  string      $handle
      * @param  string      $src
      * @param  array       $deps
@@ -50,6 +72,8 @@ class ScriptService
     }
 
     /**
+     * Enqueue a style.
+     *
      * @param  string      $handle
      * @param  string      $src
      * @param  array       $deps
@@ -122,6 +146,6 @@ class ScriptService
      */
     private function getVersion(?string $version): ?string
     {
-        return $version ?? (Pdk::isProduction() ? Pdk::get('pluginVersion') : null);
+        return $version ?? (Pdk::isProduction() ? Pdk::getAppInfo()['version'] : null);
     }
 }

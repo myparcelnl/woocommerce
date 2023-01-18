@@ -113,6 +113,9 @@ class RestApiHooks implements WordPressHooksInterface
             $content = $response->getContent();
         }
 
-        return new WP_REST_Response($content, $response->getStatusCode());
+        $wpResponse = new WP_REST_Response($content, $response->getStatusCode());
+        $wpResponse->header('Content-Type', $response->headers->get('Content-Type'));
+
+        return $wpResponse;
     }
 }

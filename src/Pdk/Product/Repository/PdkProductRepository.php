@@ -59,11 +59,15 @@ class PdkProductRepository extends AbstractProductRepository
     {
         $product = $this->getWcProduct($identifier);
 
-        return $this->retrieve('product_settings_' . $product->get_id(), function () use ($product) {
+        /** @var array $appInfo */
+        $appInfo = Pdk::get('appInfo');
+        $key     = sprintf('product_settings_%s', $product->get_id());
+
+        return $this->retrieve($key, function () use ($appInfo, $product) {
             $productSettings = new ProductSettings();
 
             foreach ($productSettings->getAttributes() as $key => $value) {
-                $metaKey = sprintf('%s_product_%s', Pdk::get('pluginName'), Str::snake($key));
+                $metaKey = sprintf('%s_product_%s', $appInfo['name'], Str::snake($key));
                 $value   = $product->get_meta($metaKey) ?: null;
 
                 if (! $value) {

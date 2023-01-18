@@ -44,8 +44,10 @@ class PdkSettingsRepository extends AbstractSettingsRepository
      */
     private function getOptionName(string $key): string
     {
+        $appInfo = Pdk::getAppInfo();
+
         return strtr('_:plugin_:name', [
-            ':plugin' => Pdk::get('pluginName'),
+            ':plugin' => $appInfo['name'],
             ':name'   => Str::snake($key),
         ]);
     }

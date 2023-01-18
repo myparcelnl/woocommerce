@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
 use MyParcelNL;
+use MyParcelNL\Pdk\Base\PdkActions;
+use MyParcelNL\Pdk\Facade\LanguageService;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
+use MyParcelNL\Sdk\src\Support\Str;
 use MyParcelNL\WooCommerce\Hooks\WordPressHooksInterface;
 
 class PdkOrderListHooks implements WordPressHooksInterface
@@ -19,6 +22,34 @@ class PdkOrderListHooks implements WordPressHooksInterface
 
         // Render pdk order list column in our custom order grid column
         add_action('manage_shop_order_posts_custom_column', [$this, 'renderPdkOrderListColumn']);
+
+        // add bulk actions to order list
+        add_filter('bulk_actions-edit-shop_order', [$this, 'registerBulkActions']);
+    }
+
+    /**
+     * @param  array $actions
+     *
+     * @return mixed
+     */
+    public function registerBulkActions(array $actions): array
+    {
+        $customActions = [
+            PdkActions::EXPORT_ORDERS,
+            PdkActions::PRINT_ORDERS,
+            'exportPrintOrders',
+        ];
+
+        $appInfo    = Pdk::getAppInfo();
+        $pluginName = $appInfo['name'];
+
+        foreach ($customActions as $action) {
+            $string = Str::snake("bulk_action_$action");
+
+            $actions["$pluginName.$action"] = LanguageService::translate($string);
+        }
+
+        return $actions;
     }
 
     /**

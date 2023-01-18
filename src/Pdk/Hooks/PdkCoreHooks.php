@@ -48,23 +48,31 @@ class PdkCoreHooks implements WordPressHooksInterface
     {
         DefaultLogger::debug('registerPdkScripts', compact('page'));
 
-        $select = version_compare(WC()->version, '3.2.0', '>=') ? 'selectWoo' : 'select2';
+        $appInfo = Pdk::getAppInfo();
 
         wp_enqueue_style('woocommerce_admin_styles');
 
         $this->service->enqueueVue('3.2.45');
         $this->service->enqueueVueDemi('0.13.11');
-        $this->service->enqueueScript(
+
+        $select = version_compare(WC()->version, '3.2.0', '>=') ? 'selectWoo' : 'select2';
+        $this->service->enqueueLocalScript(
             self::SCRIPT_PDK_FRONTEND,
-            sprintf('%s/views/backend/admin/lib/index.iife.js', Pdk::get('pluginUrl')),
-            [ScriptService::HANDLE_JQUERY, ScriptService::HANDLE_VUE, 'vue-demi', $select]
+            ('views/backend/admin/lib/index.iife.js'),
+            [
+                ScriptService::HANDLE_JQUERY,
+                ScriptService::HANDLE_WOOCOMMERCE_ADMIN,
+                ScriptService::HANDLE_VUE,
+                'vue-demi',
+                $select,
+            ]
         );
 
         $this->service->enqueueStyle(
             self::SCRIPT_PDK_FRONTEND,
-            sprintf('%s/views/backend/admin/lib/style.css', Pdk::get('pluginUrl')),
+            sprintf('%s/views/backend/admin/lib/style.css', $appInfo['url']),
             [],
-            Pdk::get('pluginVersion')
+            $appInfo['version']
         );
     }
 

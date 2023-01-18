@@ -100,11 +100,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         if ($order->shipments->contains('updated', null)) {
             $existingShipments = get_post_meta($order->externalIdentifier, self::WC_ORDER_META_SHIPMENTS, true);
 
-            $order->shipments = (new ShipmentCollection($existingShipments))
-                ->filter(function (Shipment $shipment) use ($order) {
-                    return !$order->shipments->contains('id', $shipment->id);
-                })
-                ->merge($order->shipments);
+            $order->shipments = (new ShipmentCollection($existingShipments))->mergeByKey($order->shipments, 'externalIdentifier');
 
             update_post_meta(
                 $order->externalIdentifier,

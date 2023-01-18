@@ -34,17 +34,21 @@ class Boot
             $pluginUrl     = untrailingslashit(plugins_url('/', MyParcelNL::ROOT_FILE));
             $pluginVersion = $plugin->version;
 
-            self::$pdk = PdkFactory::create($pluginPath . '/config/pdk.php', [
-                'platform'      => value('myparcel'),
-                'pluginName'    => value(MyParcelNL::NAME),
-                'pluginPath'    => value($pluginPath),
-                'pluginTitle'   => value('MyParcel'),
-                'pluginUrl'     => value($pluginUrl),
-                'pluginVersion' => value($pluginVersion),
+            self::$pdk = PdkFactory::create("$pluginPath/config/pdk.php", [
+                'appInfo' => value([
+                    'name'    => MyParcelNL::NAME,
+                    'title'   => 'MyParcel',
+                    'path'    => $pluginPath,
+                    'url'     => $pluginUrl,
+                    'version' => $pluginVersion,
+                ]),
+
+                // todo: support myparcel be
+                'platform' => value('myparcel'),
 
                 'userAgent' => value([
                     'MyParcelNL-WooCommerce' => $pluginVersion,
-                    'Woocommerce'            => defined('WOOCOMMERCE_VERSION') ? constant('WOOCOMMERCE_VERSION') : '?',
+                    'WooCommerce'            => defined('WOOCOMMERCE_VERSION') ? constant('WOOCOMMERCE_VERSION') : '?',
                     'WordPress'              => get_bloginfo('version'),
                 ]),
             ]);

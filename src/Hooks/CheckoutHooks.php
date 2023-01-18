@@ -36,6 +36,12 @@ class CheckoutHooks implements WordPressHooksInterface
         $this->service = $service;
     }
 
+    public function apply(): void
+    {
+        // Add the checkout scripts
+        add_action('wp_enqueue_scripts', [$this, 'enqueueFrontendScripts'], 100);
+    }
+
     /**
      * Load styles & scripts on the checkout page.
      *
@@ -49,9 +55,9 @@ class CheckoutHooks implements WordPressHooksInterface
         }
 
         if ($this->useSeparateAddressFields()) {
-            $this->service->enqueueScript(
+            $this->service->enqueueLocalScript(
                 self::SCRIPT_SPLIT_ADDRESS_FIELDS,
-                sprintf('%s/views/checkout-split-address-fields/lib/index.js', Pdk::get('pluginUrl')),
+                'views/checkout-split-address-fields/lib/index.js',
                 [ScriptService::HANDLE_WC_CHECKOUT]
             );
         }
@@ -114,13 +120,7 @@ class CheckoutHooks implements WordPressHooksInterface
         //            }
         //        }
 
-        return (new DeliveryOptionsContext(        ))->toArray();
-    }
-
-    public function apply(): void
-    {
-        // Add the checkout scripts
-        add_action('wp_enqueue_scripts', [$this, 'enqueueFrontendScripts'], 100);
+        return (new DeliveryOptionsContext())->toArray();
     }
 
     /**
@@ -203,9 +203,9 @@ class CheckoutHooks implements WordPressHooksInterface
 
         $this->service->enqueueDeliveryOptions();
 
-        $this->service->enqueueScript(
+        $this->service->enqueueLocalScript(
             self::SCRIPT_CHECKOUT_DELIVERY_OPTIONS,
-            sprintf('%s/views/frontend/checkout-delivery-options/lib/index.iife.js', Pdk::get('pluginUrl')),
+            'views/frontend/checkout-delivery-options/lib/index.iife.js',
             $dependencies + [ScriptService::HANDLE_DELIVERY_OPTIONS, ScriptService::HANDLE_JQUERY]
         );
 

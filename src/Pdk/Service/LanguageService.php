@@ -10,6 +10,16 @@ use MyParcelNL\Pdk\Language\Service\AbstractLanguageService;
 class LanguageService extends AbstractLanguageService
 {
     /**
+     * @param  string|null $language
+     *
+     * @return string
+     */
+    public function getIso2(string $language = null): string
+    {
+        return substr($language ?? $this->getLanguage(), 0, 2);
+    }
+
+    /**
      * @return string
      */
     public function getLanguage(): string
@@ -24,9 +34,8 @@ class LanguageService extends AbstractLanguageService
      */
     protected function getFilePath(?string $language = null): string
     {
-        $lang = $language ?? $this->getLanguage();
-        $iso2 = substr($lang, 0, 2);
+        $appInfo = Pdk::getAppInfo();
 
-        return sprintf('%s/config/pdk/translations/%s.json', Pdk::get('pluginPath'), $iso2);
+        return sprintf('%s/config/pdk/translations/%s.json', $appInfo['path'], $this->getIso2($language));
     }
 }

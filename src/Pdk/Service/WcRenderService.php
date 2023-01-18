@@ -25,16 +25,17 @@ class WcRenderService extends RenderService
     public function renderProductSettings(PdkProduct $product): string
     {
         try {
-            $view = Pdk::get(ProductSettingsView::class);
+            $appInfo = Pdk::getAppInfo();
+            $view    = Pdk::get(ProductSettingsView::class);
 
             ob_start();
 
-            $pluginName = Pdk::get('pluginName');
+            $pluginName = $appInfo['name'];
 
             printf('<div id="%s" class="panel woocommerce_options_panel">', "{$pluginName}_product_data");
 
             foreach ($view->toArray()['fields'] as $field) {
-                $key    = Str::snake(sprintf('%s_product_%s', Pdk::get('pluginName'), $field['name']));
+                $key    = Str::snake(sprintf('%s_product_%s', $appInfo['name'], $field['name']));
                 $method = Str::snake('woocommerce_wp' . $field['$component']);
 
                 $options = [

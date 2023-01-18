@@ -14,6 +14,9 @@ class PdkPluginSettingsHooks implements WordPressHooksInterface
     {
         // Add MyParcel menu item
         add_action('admin_menu', [$this, 'registerMenuItem']);
+
+        // Add WooCommerce body classes to plugin settings page
+        add_filter('body_class', [$this, 'setWooCommerceBodyClasses']);
     }
 
     /**
@@ -37,5 +40,20 @@ class PdkPluginSettingsHooks implements WordPressHooksInterface
     public function renderPdkPluginSettings(): void
     {
         echo RenderService::renderPluginSettings();
+    }
+
+    /**
+     * @param  array $classes
+     *
+     * @return array
+     */
+    public function setWooCommerceBodyClasses(array $classes): array
+    {
+        if (isset($_GET['page']) && $_GET['page'] === MyParcelNL::SETTINGS_MENU_SLUG) {
+            $classes[] = 'woocommerce';
+            $classes[] = 'woocommerce-page';
+        }
+
+        return $classes;
     }
 }

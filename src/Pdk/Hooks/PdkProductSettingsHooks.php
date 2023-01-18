@@ -32,11 +32,12 @@ class PdkProductSettingsHooks implements WordPressHooksInterface
      */
     public function registerProductSettingsTab(array $tabs): array
     {
-        $pluginName = Pdk::get('pluginName');
+        $appInfo    = Pdk::getAppInfo();
+        $pluginName = $appInfo['name'];
 
         $tabs[$pluginName] = [
             'title'  => $pluginName,
-            'label'  => Pdk::get('pluginTitle'),
+            'label'  => $appInfo['title'],
             'target' => "{$pluginName}_product_data",
             'class'  => ['show_if_simple', 'show_if_variable', 'show_if_grouped', 'show_if_external'],
         ];
@@ -63,7 +64,6 @@ class PdkProductSettingsHooks implements WordPressHooksInterface
         $values = array_filter($post, static function ($key) {
             return Str::startsWith($key, MyParcelNL::NAME);
         }, ARRAY_FILTER_USE_KEY);
-
 
         /** @var \MyParcelNL\Pdk\Product\Repository\AbstractProductRepository $productRepository */
         $productRepository = Pdk::get(AbstractProductRepository::class);
