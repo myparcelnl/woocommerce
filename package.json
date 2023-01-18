@@ -15,6 +15,10 @@
     "views/**"
   ],
   "scripts": {
+    "docker:build": "docker build -t myparcelnl/woocommerce --target=prod .",
+    "docker:build:dev": "docker build -t myparcelnl/woocommerce:dev --target=dev .",
+    "docker:run": "docker run -it --rm myparcelnl/woocommerce",
+    "docker:run:dev": "docker run -it --rm myparcelnl/woocommerce:dev",
     "build": "yarn build:js && yarn translations:import && yarn bundle",
     "build:js": "nx run-many --target=build --output-style=stream",
     "build:js:dev": "nx run-many --target=build:dev --output-style=stream",
@@ -45,6 +49,9 @@
     "@myparcel-eslint/eslint-config-prettier-typescript-vue": "^1.2.0",
     "@myparcel/semantic-release-config": "^4.1.0",
     "@myparcel/semantic-release-wordpress-readme-generator": "^1.1.0",
+    "@types/gulp": "^4.0.10",
+    "@types/gulp-zip": "^4.0.2",
+    "@types/node": "^18.11.18",
     "@types/papaparse": "^5.3.7",
     "autoprefixer": "^10.4.13",
     "eslint": "^8.31.0",
@@ -68,6 +75,8 @@
     "nx": "15.4.5",
     "papaparse": "^5.3.2",
     "prettier": "^2.8.2",
+    "terser": "^5.16.1",
+    "ts-node": "^10.9.1",
     "typescript": "^4.9.4",
     "vinyl-buffer": "^1.0.1",
     "vite": "^4.0.4",
@@ -77,12 +86,12 @@
   },
   "packageManager": "yarn@3.3.1",
   "resolutions": {
-    "@myparcel/pdk-component-tests": "portal:/Users/joerivanveen/Projects/myparcel/js-pdk/apps/pdk-component-tests",
-    "@myparcel/pdk-components": "portal:/Users/joerivanveen/Projects/myparcel/js-pdk/apps/pdk-components",
-    "@myparcel/pdk-frontend": "portal:/Users/joerivanveen/Projects/myparcel/js-pdk/apps/pdk-frontend",
-    "@myparcel/pdk-preset-bootstrap4": "portal:/Users/joerivanveen/Projects/myparcel/js-pdk/apps/pdk-preset-bootstrap4",
-    "@myparcel-pdk/common": "portal:/Users/joerivanveen/Projects/myparcel/js-pdk/libs/common",
-    "@myparcel-pdk/frontend-components": "portal:/Users/joerivanveen/Projects/myparcel/js-pdk/libs/frontend/components",
-    "@myparcel-pdk/frontend-core": "portal:/Users/joerivanveen/Projects/myparcel/js-pdk/libs/frontend/core"
+    "@myparcel/pdk-component-tests": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-component-tests",
+    "@myparcel/pdk-components": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-components",
+    "@myparcel/pdk-frontend": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-frontend",
+    "@myparcel/pdk-preset-bootstrap4": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-preset-bootstrap4",
+    "@myparcel-pdk/common": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/common",
+    "@myparcel-pdk/frontend-components": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/components",
+    "@myparcel-pdk/frontend-core": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/core"
   }
 }

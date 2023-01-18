@@ -7,5 +7,10 @@
     }
   },
   "include": ["./**/*"],
-  "exclude": []
+  "exclude": [],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
 }

@@ -6,9 +6,6 @@
     "guzzlehttp/guzzle": "~7.5.0",
     "psr/log": "*"
   },
-  "require-dev": {
-    "roave/security-advisories": "dev-latest"
-  },
   "autoload": {
     "psr-4": {
       "MyParcelNL\\WooCommerce\\": "src"
@@ -20,7 +17,7 @@
   "repositories": [
     {
       "type": "path",
-      "url": "/Users/joerivanveen/Projects/myparcel/pdk"
+      "url": "/Users/edie/Sites/myparcel/pdk"
     }
   ]
 }

@@ -15,8 +15,8 @@
 ### Build and run the image
 
 ```shell
-docker build . -t myparcelnl/woocommerce
-docker run -it --rm -v $(pwd):/app myparcelnl/woocommerce
+docker build -t myparcelnl/woocommerce:dev --target=dev .
+docker run --rm myparcelnl/woocommerce:dev
 ```
 
 This will install Node and Composer dependencies and build the plugin. The

@@ -20,6 +20,7 @@
     "@tanstack/vue-query": "^4.20.9"
   },
   "devDependencies": {
+    "@myparcel-eslint/eslint-config-tailwindcss": "^1.2.0",
     "@types/jquery": "^3.5.16",
     "@types/select2": "^4.0.56",
     "@vitejs/plugin-vue": "^4.0.0",

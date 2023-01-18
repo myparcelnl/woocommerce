@@ -12,7 +12,16 @@ export default defineConfig((env) => ({
     },
     minify: env.mode !== 'development',
     outDir: 'lib',
-    sourcemap: true,
+    sourcemap: env.mode === 'development',
+    rollupOptions: {
+      external: ['vue', 'vue-demi'],
+      output: {
+        globals: {
+          vue: 'Vue',
+          'vue-demi': 'VueDemi',
+        },
+      },
+    },
   },
 
   define: {

@@ -2,6 +2,7 @@
 node_modules/
 vendor/
 lib/
+dist/
 
 *.zip
 .DS_Store
