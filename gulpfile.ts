@@ -22,9 +22,7 @@ PLUGINS.forEach((name) => {
     return gulp.src(SOURCE_FILES, {base: '.', read: false}).pipe(gulp.dest(`./dist/${name}`));
   });
 
-  gulp.task(`transform:${name}`, () => {
-    return gulp.src(`./dist/${name}/**/*`).pipe(gulp.dest(`./dist/${name}`));
-  });
+  // TODO: transform plugin name to create myparcelbe
 
   gulp.task(`zip:${name}`, () => {
     return gulp
@@ -35,12 +33,11 @@ PLUGINS.forEach((name) => {
 });
 
 gulp.task(`copy`, gulp.parallel(PLUGINS.map((name) => `copy:${name}`)));
-gulp.task(`transform`, gulp.parallel(PLUGINS.map((name) => `transform:${name}`)));
 gulp.task(`zip`, gulp.parallel(PLUGINS.map((name) => `zip:${name}`)));
 
 const defaultTask = gulp.parallel(
   ...PLUGINS.map((name) => {
-    return gulp.series(`copy:${name}`, `transform:${name}`, `zip:${name}`);
+    return gulp.series(`copy:${name}`, `zip:${name}`);
   }),
 );
 
