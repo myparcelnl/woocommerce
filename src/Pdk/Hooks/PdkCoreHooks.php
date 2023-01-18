@@ -40,14 +40,10 @@ class PdkCoreHooks implements WordPressHooksInterface
     }
 
     /**
-     * @param  mixed $page
-     *
      * @return void
      */
-    public function registerPdkScripts($page): void
+    public function registerPdkScripts(): void
     {
-        DefaultLogger::debug('registerPdkScripts', compact('page'));
-
         $appInfo = Pdk::getAppInfo();
 
         wp_enqueue_style('woocommerce_admin_styles');
