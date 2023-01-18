@@ -546,17 +546,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel-eslint/eslint-config-tailwindcss@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "@myparcel-eslint/eslint-config-tailwindcss@npm:1.2.0"
-  dependencies:
-    "@myparcel-eslint/utils": ^1.2.0
-    eslint: "*"
-    eslint-plugin-tailwindcss: "*"
-  checksum: 8c842a9da03748e4cb43f5052d0b244c701f1b6cabd4c426bfcd3bbdc2c7ba2b3360fe8237c1bb6ac83fe10ca7ffafd75f0a0241c9b090d2176d5a811154ae17
-  languageName: node
-  linkType: hard
-
 "@myparcel-eslint/eslint-config-typescript-vue@npm:^1.2.0":
   version: 1.2.0
   resolution: "@myparcel-eslint/eslint-config-typescript-vue@npm:1.2.0"
@@ -709,7 +698,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/backend-admin@workspace:views/backend/admin"
   dependencies:
-    "@myparcel-eslint/eslint-config-tailwindcss": ^1.2.0
     "@myparcel/pdk-component-tests": "*"
     "@myparcel/pdk-components": "*"
     "@myparcel/pdk-frontend": "*"
@@ -4472,17 +4460,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-tailwindcss@npm:*":
-  version: 3.8.0
-  resolution: "eslint-plugin-tailwindcss@npm:3.8.0"
-  dependencies:
-    fast-glob: ^3.2.5
-    postcss: ^8.4.4
-    tailwindcss: ^3.2.2
-  checksum: d1b6411520a3589139a5277b9378dcd0ace22b4910b8c93962c4ea4b105efee7aa4cea243e3db4d87e6d6dba10f1e9ad9c91e3abdbb3e8fa3347d018d81748a3
-  languageName: node
-  linkType: hard
-
 "eslint-plugin-vue@npm:*":
   version: 9.8.0
   resolution: "eslint-plugin-vue@npm:9.8.0"
@@ -4851,7 +4828,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.2.11, fast-glob@npm:^3.2.12, fast-glob@npm:^3.2.5, fast-glob@npm:^3.2.9":
+"fast-glob@npm:^3.2.11, fast-glob@npm:^3.2.12, fast-glob@npm:^3.2.9":
   version: 3.2.12
   resolution: "fast-glob@npm:3.2.12"
   dependencies:
@@ -9065,7 +9042,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.4.18, postcss@npm:^8.4.21, postcss@npm:^8.4.4":
+"postcss@npm:^8.4.18, postcss@npm:^8.4.21":
   version: 8.4.21
   resolution: "postcss@npm:8.4.21"
   dependencies:
@@ -10558,7 +10535,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwindcss@npm:^3.2.2, tailwindcss@npm:^3.2.4":
+"tailwindcss@npm:^3.2.4":
   version: 3.2.4
   resolution: "tailwindcss@npm:3.2.4"
   dependencies:
