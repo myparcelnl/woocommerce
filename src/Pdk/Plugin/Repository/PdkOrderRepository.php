@@ -7,7 +7,6 @@ namespace MyParcelNL\WooCommerce\Pdk\Plugin\Repository;
 use MyParcelNL\Pdk\Base\Service\WeightService;
 use MyParcelNL\Pdk\Facade\DefaultLogger;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrderLine;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
@@ -15,7 +14,6 @@ use MyParcelNL\Pdk\Product\Repository\AbstractProductRepository;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
-use MyParcelNL\Pdk\Shipment\Model\Shipment;
 use MyParcelNL\Pdk\Storage\StorageInterface;
 use MyParcelNL\WooCommerce\Service\WcRecipientService;
 use Throwable;
@@ -90,39 +88,25 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         $diff          = array_diff_assoc($order->toArray(), $existingOrder->toArray());
 
         if (! empty($diff)) {
-            update_post_meta(
-                $order->externalIdentifier,
-                self::WC_ORDER_META_ORDER_DATA,
-                ['deliveryOptions' => $order->deliveryOptions->toArray()]
-            );
+            update_post_meta($order->externalIdentifier, self::WC_ORDER_META_ORDER_DATA, $order->toStorableArray());
         }
 
         if ($order->shipments->contains('updated', null)) {
             $existingShipments = get_post_meta($order->externalIdentifier, self::WC_ORDER_META_SHIPMENTS, true);
 
-            $order->shipments = (new ShipmentCollection($existingShipments))->mergeByKey($order->shipments, 'externalIdentifier');
+            $order->shipments = (new ShipmentCollection($existingShipments))->mergeByKey(
+                $order->shipments,
+                'externalIdentifier'
+            );
 
             update_post_meta(
                 $order->externalIdentifier,
                 self::WC_ORDER_META_SHIPMENTS,
-                $order->shipments->map(function (Shipment $shipment) {
-                    return $shipment->toStorableArray();
-                })
-                    ->toArray()
+                $order->shipments->toStorableArray()
             );
         }
 
-        return $order;
-    }
-
-    /**
-     * @param  PdkOrderCollection $collection
-     *
-     * @return \MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection
-     */
-    public function updateMany(PdkOrderCollection $collection): PdkOrderCollection
-    {
-        return $collection->map([$this, 'update']);
+        return $this->save($order->externalIdentifier, $order);
     }
 
     /**
@@ -195,11 +179,11 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                     $product    = $item->get_product();
                     $pdkProduct = $this->productRepository->getProduct($product);
                     $carry[]    = new PdkOrderLine([
-                        'quantity'      => $item->get_quantity(),
-                        'price'         => (int) ((float) $item->get_total() * 100),
-                        'vat'           => (int) ((float) $item->get_total_tax() * 100),
-//                        'priceAfterVat' => $item->get_total() + $item->get_total_tax(),
-                        'product'       => $pdkProduct,
+                        'quantity' => $item->get_quantity(),
+                        'price'    => (int) ((float) $item->get_total() * 100),
+                        'vat'      => (int) ((float) $item->get_total_tax() * 100),
+                        //                        'priceAfterVat' => $item->get_total() + $item->get_total_tax(),
+                        'product'  => $pdkProduct,
                     ]);
                     return $carry;
                 }, []
