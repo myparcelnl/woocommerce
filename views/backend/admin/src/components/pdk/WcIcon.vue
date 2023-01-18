@@ -1,5 +1,6 @@
 <template>
   <span
+    role="none"
     class="dashicons"
     :class="`dashicons-${mappedIcon}`"></span>
 </template>

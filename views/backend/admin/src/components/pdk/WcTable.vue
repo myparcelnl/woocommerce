@@ -5,7 +5,7 @@
     </thead>
 
     <TransitionGroup
-      :name="pdkConfig?.transitions.tableRow"
+      :name="config?.transitions.tableRow"
       tag="tbody">
       <slot />
     </TransitionGroup>
@@ -18,12 +18,12 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue';
-import {usePdkConfig} from '@myparcel-pdk/frontend-core';
+import {usePdkConfig} from '@myparcel/pdk-frontend';
 
 export default defineComponent({
   name: 'WcTable',
   setup: () => ({
-    pdkConfig: usePdkConfig(),
+    config: usePdkConfig(),
   }),
 });
 </script>

@@ -34,9 +34,8 @@
 </template>
 
 <script lang="ts">
-import {ActionButton, PdkDropdownAction, useLanguage} from '@myparcel-pdk/frontend-core';
+import {ActionButton, PdkDropdownAction, PdkIcon, useLanguage} from '@myparcel/pdk-frontend';
 import {PropType, computed, defineComponent, ref} from 'vue';
-import {PdkIcon} from '@myparcel/pdk-frontend';
 
 export default defineComponent({
   name: 'WcDropdownButton',

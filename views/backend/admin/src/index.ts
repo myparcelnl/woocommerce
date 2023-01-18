@@ -32,13 +32,14 @@ import {
 import {h} from 'vue';
 
 const FADE = 'fade';
+
 createPdkFrontend({
   logLevel: LogLevel.DEBUG,
 
   formConfig: {
     form: {
       attributes: {
-        class: 'woocommerce',
+        class: 'wrap woocommerce',
       },
       wrapper: h('table', {class: 'form-table'}),
     },
@@ -83,10 +84,10 @@ createPdkFrontend({
   },
 
   transitions: {
-    labelCard: FADE,
     modal: FADE,
     modalBackdrop: FADE,
     notification: FADE,
+    shipmentCard: FADE,
     shipmentRow: FADE,
     tabNavigation: FADE,
     tableRow: FADE,
@@ -107,6 +108,18 @@ createPdkFrontend({
 
     modalStore.onClose(() => {
       document.removeEventListener('keydown', closeOnEscape);
+    });
+  },
+
+  onCreated() {
+    jQuery('#doaction').on('click', (event) => {
+      const bulkSelect = jQuery('#bulk-action-selector-top');
+      const value = bulkSelect.val();
+      const action: string | null = value ? String(value) : null;
+
+      if (action?.startsWith('myparcelnl')) {
+        event.preventDefault();
+      }
     });
   },
 });

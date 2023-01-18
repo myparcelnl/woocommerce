@@ -4,9 +4,7 @@
       component="th"
       scope="row"
       class="titledesc">
-      <label
-        :class="config?.cssUtilities?.whitespaceNoWrap"
-        :for="id">
+      <label :for="id">
         <slot name="label">
           {{ element.label }}
         </slot>

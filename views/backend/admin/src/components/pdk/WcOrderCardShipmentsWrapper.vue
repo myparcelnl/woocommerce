@@ -2,24 +2,18 @@
   <div>
     <slot />
 
-    <PdkButtonGroup>
-      <ActionButton
-        v-for="(action, index) in actions"
-        :key="`${index}_${action.id}`"
-        :disabled="loading"
-        :action="action" />
-    </PdkButtonGroup>
+    <WcSpinner v-if="loading" />
   </div>
 </template>
 
 <script lang="ts">
-import {ActionButton, PdkButtonAction, useLanguage} from '@myparcel/pdk-frontend';
+import {PdkButtonAction, useLanguage} from '@myparcel/pdk-frontend';
 import {PropType, defineComponent} from 'vue';
+import WcSpinner from '../WcSpinner.vue';
 
 export default defineComponent({
   name: 'WcOrderCardShipmentsWrapper',
-
-  components: {ActionButton},
+  components: {WcSpinner},
 
   props: {
     loading: {

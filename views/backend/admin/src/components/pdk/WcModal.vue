@@ -1,7 +1,7 @@
 <template>
   <div
     v-show="isOpen"
-    :id="`pdk-modal-${modalKey}`"
+    :id="modalKey ? `pdk-modal-${modalKey}` : null"
     :class="[...backgroundClasses, 'mypa-z-[9999]']"
     tabindex="-1"
     role="dialog">
@@ -30,7 +30,15 @@
         ]"
         role="document"
         @click.stop>
-        <div>
+        <div class="mypa-relative">
+          <span
+            class="mypa--m-4 mypa-absolute mypa-cursor-pointer mypa-right-0 mypa-top-0"
+            role="button"
+            :aria-label="translate('action_cancel')"
+            @click="closeModal">
+            <PdkIcon icon="close" />
+          </span>
+
           <PdkHeading level="2">
             {{ translate(title) }}
           </PdkHeading>
@@ -61,9 +69,9 @@ import {
   PdkButtonAction,
   useLanguage,
   useModalStore,
+  usePdkConfig,
 } from '@myparcel/pdk-frontend';
-import {PropType, computed, defineComponent, toRefs} from 'vue';
-import {usePdkConfig} from '@myparcel-pdk/frontend-core';
+import {PropType, computed, defineComponent} from 'vue';
 
 export default defineComponent({
   name: 'WcModal',
@@ -90,9 +98,12 @@ export default defineComponent({
   },
 
   setup: (props) => {
-    const propRefs = toRefs(props);
     const modalStore = useModalStore();
     const {translate} = useLanguage();
+
+    const isOpen = computed(() => {
+      return props.modalKey && modalStore.opened === props.modalKey;
+    });
 
     return {
       backgroundClasses: ['mypa-left-0', 'mypa-top-0', 'mypa-h-full', 'mypa-w-full', 'mypa-fixed'],
@@ -102,12 +113,10 @@ export default defineComponent({
       },
 
       context: computed(() => {
-        return propRefs.modalKey.value === modalStore.opened ? modalStore.context : null;
+        return isOpen.value ? modalStore.context : null;
       }),
 
-      isOpen: computed(() => {
-        return modalStore.opened === propRefs.modalKey.value;
-      }),
+      isOpen,
 
       pdkConfig: usePdkConfig(),
 

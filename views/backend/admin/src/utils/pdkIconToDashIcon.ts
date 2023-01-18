@@ -11,7 +11,7 @@ const PDK_DASH_ICON_MAP: Record<PdkIcon, string> = {
   [PdkIcon.DELETE]: 'trash',
   [PdkIcon.DOWNLOAD]: 'download',
   [PdkIcon.EDIT]: 'edit',
-  [PdkIcon.EXPORT]: 'plus',
+  [PdkIcon.EXPORT]: 'share-alt2',
   [PdkIcon.EXTERNAL]: 'external',
   [PdkIcon.PRINT]: 'printer',
   [PdkIcon.REFRESH]: 'update',

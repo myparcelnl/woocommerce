@@ -2,12 +2,16 @@
   <button
     type="button"
     class="button"
-    :disabled="disabled"
+    :disabled="loading || disabled"
+    :class="{
+      'mypa-animate-pulse': loading,
+    }"
     @click="$emit('click')">
     <span class="mypa-h-full mypa-inline-flex">
       <PdkIcon
         v-if="icon"
-        class="mypa-mr-1 mypa-my-auto"
+        class="mypa-m-auto"
+        :class="label || $slots ? 'mypa-mr-1' : null"
         :icon="icon" />
 
       <slot>
@@ -38,6 +42,10 @@ export default defineComponent({
     label: {
       type: String,
       default: null,
+    },
+
+    loading: {
+      type: Boolean,
     },
   },
 

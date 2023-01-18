@@ -2,7 +2,25 @@ import {defineComponent, h} from 'vue';
 
 export default defineComponent({
   name: 'WcRow',
+  props: {
+    collapseGutters: {
+      type: Boolean,
+    },
+    columns: {
+      type: Number,
+      default: 'auto',
+    },
+  },
+
   render() {
-    return h('div', {class: 'row'}, this.$slots);
+    const classes = ['mypa-grid', 'mypa-grid-flow-col', 'mypa-cols-auto', this.collapseGutters ? '' : 'mypa-gap-4'];
+
+    return h(
+      'div',
+      {
+        class: classes,
+      },
+      this.$slots,
+    );
   },
 });

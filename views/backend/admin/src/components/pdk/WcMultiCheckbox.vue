@@ -12,7 +12,6 @@
 <script lang="ts">
 import {PropType, defineComponent} from 'vue';
 import {SelectOption} from '@myparcel-pdk/common';
-import {usePdkConfig} from '@myparcel-pdk/frontend-core';
 
 export default defineComponent({
   name: 'WcMultiCheckbox',
@@ -23,19 +22,14 @@ export default defineComponent({
 
     options: {
       type: Array as PropType<SelectOption[]>,
-      default: () => ['1', '2'],
+      default: () => [],
     },
 
+    // eslint-disable-next-line vue/no-unused-properties
     modelValue: {
       type: String,
       default: null,
     },
-  },
-
-  setup: (props) => {
-    return {
-      pdkConfig: usePdkConfig(),
-    };
   },
 });
 </script>
