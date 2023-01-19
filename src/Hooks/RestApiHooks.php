@@ -58,6 +58,7 @@ class RestApiHooks implements WordPressHooksInterface
      */
     public function registerApiRoutes(): void
     {
+        if (! isset($_SERVER['HTTP_X_WP_NONCE'])) $_SERVER['HTTP_X_WP_NONCE'] = $_SERVER['HTTP_XWPNONCE']; // todo find out where in js the headers are broken
         register_rest_route(self::NAMESPACE, self::ROUTE_PDK, [
             'methods'             => WP_REST_Server::ALLMETHODS,
             'callback'            => [$this, 'processPdkRequest'],
