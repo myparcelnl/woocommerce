@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
-use MyParcelNL\Pdk\Facade\DefaultLogger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
+use MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface;
 use MyParcelNL\WooCommerce\Hooks\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Service\ScriptService;
 
@@ -44,7 +44,13 @@ class PdkCoreHooks implements WordPressHooksInterface
      */
     public function registerPdkScripts(): void
     {
-        $appInfo = Pdk::getAppInfo();
+        /** @var \MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface $viewService */
+        $viewService = Pdk::get(ViewServiceInterface::class);
+
+
+        if (! $viewService->isAnyPdkPage()) {
+            return;
+        }
 
         wp_enqueue_style('woocommerce_admin_styles');
 
@@ -63,6 +69,8 @@ class PdkCoreHooks implements WordPressHooksInterface
                 $select,
             ]
         );
+
+        $appInfo = Pdk::getAppInfo();
 
         $this->service->enqueueStyle(
             self::SCRIPT_PDK_FRONTEND,

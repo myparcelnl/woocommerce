@@ -12,6 +12,7 @@ use MyParcelNL\Pdk\Plugin\Action\EndpointActionsInterface;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
 use MyParcelNL\Pdk\Plugin\Service\OrderStatusServiceInterface;
 use MyParcelNL\Pdk\Plugin\Service\RenderServiceInterface;
+use MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface;
 use MyParcelNL\Pdk\Product\Repository\AbstractProductRepository;
 use MyParcelNL\Pdk\Settings\Repository\AbstractSettingsRepository;
 use MyParcelNL\WooCommerce\Logger\WcLogger;
@@ -22,6 +23,7 @@ use MyParcelNL\WooCommerce\Pdk\Plugin\Service\WcStatusService;
 use MyParcelNL\WooCommerce\Pdk\Product\Repository\PdkProductRepository;
 use MyParcelNL\WooCommerce\Pdk\Service\LanguageService;
 use MyParcelNL\WooCommerce\Pdk\Service\WcRenderService;
+use MyParcelNL\WooCommerce\Pdk\Service\WcViewService;
 use MyParcelNL\WooCommerce\Pdk\Service\WcWeightService;
 use MyParcelNL\WooCommerce\Pdk\Settings\Repository\PdkSettingsRepository;
 use Psr\Log\LoggerInterface;
@@ -51,5 +53,6 @@ return [
     LoggerInterface::class             => autowire(WcLogger::class),
     OrderStatusServiceInterface::class => autowire(WcStatusService::class),
     RenderServiceInterface::class      => autowire(WcRenderService::class),
+    ViewServiceInterface::class        => autowire(WcViewService::class),
     WeightServiceInterface::class      => autowire(WcWeightService::class),
 ];

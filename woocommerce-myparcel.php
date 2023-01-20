@@ -36,7 +36,6 @@ class MyParcelNL
     public const  PHP_VERSION_MINIMUM    = '7.1';
     public const  NAME                   = 'myparcelnl';
     public const  CUSTOM_ORDER_COLUMN_ID = 'myparcelnl';
-    public const  SETTINGS_MENU_SLUG     = 'myparcelnl_settings';
     /**
      * @var class-string<\MyParcelNL\WooCommerce\Hooks\WordPressHooksInterface>[]
      */
