@@ -976,7 +976,7 @@ class WCMYPA_Admin
      *
      * @return array
      */
-    private function flatten($array): array
+    private function flatten(array $array): array
     {
         $return = [];
 
