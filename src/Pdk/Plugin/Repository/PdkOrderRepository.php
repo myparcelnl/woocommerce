@@ -106,6 +106,15 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             );
         }
 
+        $wcOrder = wc_get_order($order->externalIdentifier);
+        $trackTraces = $order->shipments->pluck('barcode')->toArrayWithoutNull();
+
+        if ($trackTraces) {
+            // TODO: Use setting for note prefix
+            $prefix = '';
+            $wcOrder->add_order_note($prefix . implode(', ', $trackTraces));
+        }
+
         return $this->save($order->externalIdentifier, $order);
     }
 
