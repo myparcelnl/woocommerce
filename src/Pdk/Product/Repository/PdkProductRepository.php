@@ -55,6 +55,11 @@ class PdkProductRepository extends AbstractProductRepository
         });
     }
 
+    /**
+     * @param $identifier
+     *
+     * @return \MyParcelNL\Pdk\Settings\Model\ProductSettings
+     */
     public function getProductSettings($identifier): ProductSettings
     {
         $product = $this->getWcProduct($identifier);
@@ -81,6 +86,11 @@ class PdkProductRepository extends AbstractProductRepository
         });
     }
 
+    /**
+     * @param  array $identifiers
+     *
+     * @return \MyParcelNL\Pdk\Plugin\Collection\PdkProductCollection
+     */
     public function getProducts(array $identifiers = []): PdkProductCollection
     {
         return new PdkProductCollection(array_map([$this, 'getProduct'], $identifiers));
@@ -93,8 +103,16 @@ class PdkProductRepository extends AbstractProductRepository
      */
     public function store(PdkProduct $product): void
     {
+        $wcProduct = wc_get_product($product->externalIdentifier);
+
+        /** @var array $appInfo */
+        $appInfo = Pdk::get('appInfo');
+
         foreach ($product->settings->getAttributes() as $key => $value) {
-            update_meta($product->externalIdentifier, $key, $value);
+            $metaKey = sprintf('%s_product_%s', $appInfo['name'], Str::snake($key));
+            update_post_meta($product->externalIdentifier, $metaKey, $value);
+            $wcProduct->update_meta_data($key, $value);
+            $wcProduct->save_meta_data();
         }
     }
 

@@ -65,9 +65,10 @@ class PdkProductSettingsHooks implements WordPressHooksInterface
             return Str::startsWith($key, MyParcelNL::NAME);
         }, ARRAY_FILTER_USE_KEY);
 
-        /** @var \MyParcelNL\Pdk\Product\Repository\AbstractProductRepository $productRepository */
+        /** @var \MyParcelNL\WooCommerce\Pdk\Product\Repository\PdkProductRepository $productRepository */
         $productRepository = Pdk::get(AbstractProductRepository::class);
         $product           = $productRepository->getProduct($productId);
+        $product->settings = $product->settings->convertDbValuesToProductSettings($values);
 
         $productRepository->store($product);
     }
