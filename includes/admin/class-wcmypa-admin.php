@@ -999,10 +999,13 @@ class WCMYPA_Admin
      */
     public function showShipmentConfirmation(WC_Order $order, bool $isEmail): void
     {
-        $deliveryOptions  = self::getDeliveryOptionsFromOrder($order);
-        $confirmationData = $this->getConfirmationData($deliveryOptions);
-        $packageTypes     = $this->flatten(WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES));
-        $shippingMethod   = WC()->session->get('chosen_shipping_methods')[0] ?? false;
+        $deliveryOptions   = self::getDeliveryOptionsFromOrder($order);
+        $confirmationData  = $this->getConfirmationData($deliveryOptions);
+        $packageTypesArray = WCMYPA()->setting_collection->getByName(
+            WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES
+        );
+        $packageTypes      = $this->flatten($packageTypesArray);
+        $shippingMethod    = WC()->session->get('chosen_shipping_methods')[0] ?? false;
 
         if (! in_array($shippingMethod, $packageTypes, true)) {
             return;
