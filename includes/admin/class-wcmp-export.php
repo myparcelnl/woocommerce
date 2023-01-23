@@ -1152,27 +1152,30 @@ class WCMP_Export
         $highest_class      = null;
         foreach ($found_shipping_classes as $shipping_class => $products) {
             // Also handles BW compatibility when slugs were used instead of ids
-            $shipping_class_term    = get_term_by("slug", $shipping_class, "product_shipping_class");
-            $shipping_class_term_id = "";
+            $shipping_class_term    = get_term_by('slug', $shipping_class, 'product_shipping_class');
+            $shipping_class_term_id = '';
 
-            if ($shipping_class_term != null) {
+            if (null !== $shipping_class_term) {
                 $shipping_class_term_id = $shipping_class_term->term_id;
             }
 
-            $class_cost_string = $shipping_class_term && $shipping_class_term_id ? $shipping_method->get_option(
-                "class_cost_" . $shipping_class_term_id,
-                $shipping_method->get_option("class_cost_" . $shipping_class, "")
-            ) : $shipping_method->get_option("no_class_cost", "");
+            $class_cost_string = $shipping_class_term && $shipping_class_term_id ?
+                $shipping_method->get_option(
+                "class_cost_$shipping_class_term_id",
+                $shipping_method->get_option("class_cost_$shipping_class", '')
+            ) : $shipping_method->get_option('no_class_cost', '');
 
-            if ($class_cost_string === "") {
+            $class_cost_string = (string) $class_cost_string;
+
+            if ('' === $class_cost_string) {
                 continue;
             }
 
             $class_cost = $this->wc_flat_rate_evaluate_cost(
                 $class_cost_string,
                 [
-                    "qty"  => array_sum(wp_list_pluck($products, "quantity")),
-                    "cost" => array_sum(wp_list_pluck($products, "line_total")),
+                    'qty'  => array_sum(wp_list_pluck($products, 'quantity')),
+                    'cost' => array_sum(wp_list_pluck($products, 'line_total')),
                 ],
                 $shipping_method
             );
