@@ -40,6 +40,24 @@ class CheckoutHooks implements WordPressHooksInterface
     {
         // Add the checkout scripts
         add_action('wp_enqueue_scripts', [$this, 'enqueueFrontendScripts'], 100);
+        add_action('woocommerce_payment_complete', [$this, 'automaticExportOrder'], 1000);
+        add_action('woocommerce_order_status_changed', [$this, 'automaticExportOrder'], 1000, 3);
+    }
+
+    /**
+     * @param  int $orderId
+     *
+     * @return void
+     */
+    public function automaticExportOrder(int $orderId): void
+    {
+        if (false) {
+            return;
+        }
+
+        Actions::execute(PdkActions::EXPORT_ORDERS, [
+            'orderIds' => [$orderId],
+        ]);
     }
 
     /**
