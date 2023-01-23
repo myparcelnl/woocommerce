@@ -1159,11 +1159,13 @@ class WCMP_Export
                 $shipping_class_term_id = $shipping_class_term->term_id;
             }
 
-            $class_cost_string = (string) $shipping_class_term && $shipping_class_term_id ?
+            $class_cost_string = $shipping_class_term && $shipping_class_term_id ?
                 $shipping_method->get_option(
                 "class_cost_$shipping_class_term_id",
                 $shipping_method->get_option("class_cost_$shipping_class", '')
             ) : $shipping_method->get_option('no_class_cost', '');
+
+            $class_cost_string = (string) $class_cost_string;
 
             if ('' === $class_cost_string) {
                 continue;
