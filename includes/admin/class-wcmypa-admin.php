@@ -972,6 +972,26 @@ class WCMYPA_Admin
     }
 
     /**
+     * @param $array
+     *
+     * @return array
+     */
+    private function flatten($array): array
+    {
+        $return = [];
+
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $return = array_merge($return, $this->flatten($value));
+            }
+            else {
+                $return[$key] = $value;
+            }
+        }
+        return $return;
+    }
+
+    /**
      * @param \WC_Order $order
      * @param bool      $isEmail
      *
@@ -981,6 +1001,13 @@ class WCMYPA_Admin
     {
         $deliveryOptions  = self::getDeliveryOptionsFromOrder($order);
         $confirmationData = $this->getConfirmationData($deliveryOptions);
+        $packageTypes     = $this->flatten(WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES));
+        $shippingMethod   = WC()->session->get('chosen_shipping_methods')[0] ?? false;
+
+        if (! in_array($shippingMethod, $packageTypes, true)) {
+            return;
+        }
+
         $isEmail
             ? $this->printEmailConfirmation($confirmationData)
             : $this->printThankYouConfirmation($confirmationData);
