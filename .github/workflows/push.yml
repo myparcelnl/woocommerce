@@ -58,6 +58,7 @@ jobs:
           token: ${{ steps.credentials.outputs.token }}
 
       - name: 'Upload composer artifact'
+        if: steps.release.outputs.released == 'true'
         uses: actions/upload-artifact@v3
         with:
           name: composer
