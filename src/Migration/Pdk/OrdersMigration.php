@@ -20,14 +20,14 @@ class OrdersMigration
         $chunks    = array_chunk($orderIds, 100);
         $lastChunk = count($chunks);
 
-        add_action('myparcelnl_migrate_order_to_pdk_5_0_0', [$this, 'migrateOrder']);
-
         foreach ($chunks as $index => $chunk) {
             $time = time() + $index * 5;
             wp_schedule_single_event($time, 'myparcelnl_migrate_order_to_pdk_5_0_0', [
-                'orderIds'  => $chunk,
-                'chunk'     => $index,
-                'lastChunk' => $lastChunk,
+                [
+                    'orderIds'  => $chunk,
+                    'chunk'     => $index,
+                    'lastChunk' => $lastChunk,
+                ],
             ]);
         }
     }

@@ -19,6 +19,7 @@ use MyParcelNL\WooCommerce\Facade\Messages;
 use MyParcelNL\WooCommerce\Hooks\CheckoutHooks;
 use MyParcelNL\WooCommerce\Hooks\RestApiHooks;
 use MyParcelNL\WooCommerce\Migration\Migrator;
+use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
 use MyParcelNL\WooCommerce\Pdk\Boot;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkCoreHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkOrderHooks;
@@ -111,6 +112,11 @@ class MyParcelNL
             $instance = Pdk::get($service);
             $instance->apply();
         }
+
+        /**
+         * Note: this hook is fired by the wp-cron system, you need to catch it outside the migrations.
+         */
+        add_action('myparcelnl_migrate_order_to_pdk_5_0_0', [new OrdersMigration(), 'migrateOrder']);
     }
 
     public function upgrade(): void
