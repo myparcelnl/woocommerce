@@ -6,6 +6,8 @@ on:
       - main
       - develop
 
+  workflow_dispatch:
+
 concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: true
