@@ -97,7 +97,7 @@ jobs:
     uses: ./.github/workflows/rebase.yml
     secrets: inherit
     needs: release
-    if: needs.release.outputs.released == 'true'
+    if: always() && github.ref == 'refs/heads/main'
     with:
       base: 'main'
       target: 'develop'
