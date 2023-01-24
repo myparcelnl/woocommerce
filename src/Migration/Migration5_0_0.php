@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration;
 
+use MyParcelNL\WooCommerce\Migration\Pdk\ProductSettingsMigration;
 use MyParcelNL\WooCommerce\Migration\Pdk\SettingsMigration;
 use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
 
@@ -29,5 +30,8 @@ class Migration5_0_0 implements Migration
 
         $ordersMigration = new OrdersMigration();
         $ordersMigration->run();
+
+        $productSettingsMigration = new ProductSettingsMigration();
+        $productSettingsMigration->run();
     }
 }
