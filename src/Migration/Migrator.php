@@ -16,7 +16,7 @@ class Migrator
         $migrations = $this->getMigrations();
 
         foreach ($migrations as $migration) {
-            if ($migration->getVersion() >= $version) {
+            if (version_compare($migration->getVersion(), $version, '>')) {
                 $migration->up();
             }
         }

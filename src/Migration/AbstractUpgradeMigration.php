@@ -11,14 +11,6 @@ abstract class AbstractUpgradeMigration
      */
     protected $optionSettingsMap = [];
 
-    public function __construct()
-    {
-        $this->import();
-        $this->migrate();
-        $this->setOptionSettingsMap();
-        $this->save();
-    }
-
     /**
      * Get settings array. Falls back to empty array of get_option returns a falsy value. Not compatible with
      * non-array settings.
