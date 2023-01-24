@@ -117,11 +117,12 @@ class PdkProductRepository extends AbstractProductRepository
     }
 
     /**
-     * @param  array $productSettings
+     * @param  \MyParcelNL\Pdk\Plugin\Model\PdkProduct $product
+     * @param  array                                   $productSettings
      *
      * @return void
      */
-    public function convertDbValuesToProductSettings(array $productSettings): array
+    public function convertDbValuesToProductSettings(PdkProduct $product, array $productSettings): PdkProduct
     {
         $appInfo = Pdk::getAppInfo();
         $result  = [];
@@ -132,7 +133,8 @@ class PdkProductRepository extends AbstractProductRepository
             $result[$camelCaseKey] = $value;
         }
 
-        return $result;
+        $product->settings = new ProductSettings($result);
+        return $product;
     }
 
     /**
