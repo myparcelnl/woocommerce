@@ -110,10 +110,29 @@ class PdkProductRepository extends AbstractProductRepository
 
         foreach ($product->settings->getAttributes() as $key => $value) {
             $metaKey = sprintf('%s_product_%s', $appInfo['name'], Str::snake($key));
-            update_post_meta($product->externalIdentifier, $metaKey, $value);
-            $wcProduct->update_meta_data($key, $value);
-            $wcProduct->save_meta_data();
+            $wcProduct->update_meta_data($metaKey, $value);
         }
+
+        $wcProduct->save_meta_data();
+    }
+
+    /**
+     * @param  array $productSettings
+     *
+     * @return void
+     */
+    public function convertDbValuesToProductSettings(array $productSettings): array
+    {
+        $appInfo = Pdk::getAppInfo();
+        $result  = [];
+
+        foreach ($productSettings as $setting => $value) {
+            $key                   = str_replace(sprintf('%s_product_', $appInfo['name']), '', $setting);
+            $camelCaseKey          = Str::camel($key);
+            $result[$camelCaseKey] = $value;
+        }
+
+        return $result;
     }
 
     /**
