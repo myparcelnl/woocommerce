@@ -1714,9 +1714,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel/semantic-release-config@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "@myparcel/semantic-release-config@npm:4.1.0"
+"@myparcel/semantic-release-config@npm:^4.2.1":
+  version: 4.2.1
+  resolution: "@myparcel/semantic-release-config@npm:4.2.1"
   dependencies:
     "@iwavesmedia/semantic-release-composer": ^1.0.0
     "@semantic-release/changelog": ^6.0.1
@@ -1728,7 +1728,7 @@ __metadata:
     "@semantic-release/release-notes-generator": ^10.0.3
     conventional-changelog-conventionalcommits: ^4.0.0 || ^5.0.0
     semantic-release: ^19.0.3
-  checksum: 0b15a167e4b5565eca7ec63f418ec7d813a24fb57886c573bfa30cde2a1fa4afce3842441f5f484dd816af3678ef39df309f2d779356d14b16acad343841fa22
+  checksum: 64ebb67055927b3e560a712a9c9f4ea56084e40f357f5ceb02153f11d1420b14189149da129fe807d8be4b87b4792c0b28db1cd9d3391126c5cd324c1d2fbd3b
   languageName: node
   linkType: hard
 
@@ -1751,7 +1751,7 @@ __metadata:
     "@babel/preset-env": ^7.13.10
     "@myparcel/delivery-options": ^5.3.0
     "@myparcel/eslint-config": ^3.0.2
-    "@myparcel/semantic-release-config": ^4.1.0
+    "@myparcel/semantic-release-config": ^4.2.1
     "@myparcel/semantic-release-wordpress-readme-generator": ^1.1.0
     "@types/papaparse": ^5.2.5
     autoprefixer: ^10.2.5
