@@ -23,6 +23,11 @@ jobs:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
 
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ steps.credentials.outputs.token }}
+
       - uses: actions/cache@v3
         id: cache
         with:
@@ -34,12 +39,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cache-${{ hashFiles('**/yarn.lock', '**/composer.lock') }}
             ${{ runner.os }}-cache
-
-      - uses: actions/checkout@v3
-        if: steps.cache.outputs.cache-hit != 'true'
-        with:
-          fetch-depth: 0
-          token: ${{ steps.credentials.outputs.token }}
 
       - uses: myparcelnl/actions/composer-install@v3
         if: steps.cache.outputs.cache-hit != 'true'
@@ -53,7 +52,6 @@ jobs:
 
       - uses: myparcelnl/actions/semantic-release@v3
         id: release
-        if: steps.cache.outputs.cache-hit != 'true'
         with:
           token: ${{ steps.credentials.outputs.token }}
 
