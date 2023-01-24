@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.17.0-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.16.4...v4.17.0-rc.1) (2023-01-24)
+
+
+### :sparkles: New Features
+
+* add customizable string for address not found ([#945](https://github.com/myparcelnl/woocommerce/issues/945)) ([e23f0eb](https://github.com/myparcelnl/woocommerce/commit/e23f0eb09d6bea302e585ea9c0ca9e54bb5a09d4))
+
+
+### :bug: Bug Fixes
+
+* delete address not found prompt from checkout ([#946](https://github.com/myparcelnl/woocommerce/issues/946)) ([e73b2d1](https://github.com/myparcelnl/woocommerce/commit/e73b2d14eaf70eaafa6c9587673534676dcdcab4))
+* fix belgian number suffix ([#923](https://github.com/myparcelnl/woocommerce/issues/923)) ([1600120](https://github.com/myparcelnl/woocommerce/commit/16001206b5cbfec817fa7a8e3f1e15f2c31c58dc))
+* prevent type error in flat rate evaluate cost ([#949](https://github.com/myparcelnl/woocommerce/issues/949)) ([06fd767](https://github.com/myparcelnl/woocommerce/commit/06fd7672b932e4f5480d27d1934cf39f0f51ecc1))
+* prevent undefined array keys ([#933](https://github.com/myparcelnl/woocommerce/issues/933)) ([7dc3ed9](https://github.com/myparcelnl/woocommerce/commit/7dc3ed9a89ea68fe2e9a54d0bff9d31d38b1644d))
+* prevent widget config errors ([#947](https://github.com/myparcelnl/woocommerce/issues/947)) ([654fba5](https://github.com/myparcelnl/woocommerce/commit/654fba5afc6c1e375bd3223d9f60308dea56b59a))
+
 ## [4.17.0-rc.3](https://github.com/myparcelnl/woocommerce/compare/v4.17.0-rc.2...v4.17.0-rc.3) (2023-01-12)
 
 

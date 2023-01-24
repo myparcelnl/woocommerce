@@ -3,7 +3,7 @@ Contributors: richardperdaan, edielemoine, joerimyparcel
 Tags: woocommerce, export, delivery, packages, myparcel, flespakket, postnl
 Requires at least: 5.2.0
 Tested up to: 6.1
-Stable tag: 4.17.0-rc.3
+Stable tag: 4.17.0-rc.1
 Requires PHP: 7.1
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
@@ -102,6 +102,15 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 6. MyParcel pickup delivery options
 
 == Changelog ==
+
+= 4.17.0-rc.1 (2023-01-24) =
+
+* New: add customizable string for address not found (#945)
+* Fixed bug: prevent type error in flat rate evaluate cost (#949)
+* Fixed bug: prevent widget config errors (#947)
+* Fixed bug: fix belgian number suffix (#923)
+* Fixed bug: delete address not found prompt from checkout (#946)
+* Fixed bug: prevent undefined array keys (#933)
 
 = 4.17.0-rc.3 (2023-01-12) =
 
