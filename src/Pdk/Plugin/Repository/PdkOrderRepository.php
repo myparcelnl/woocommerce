@@ -91,22 +91,16 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             update_post_meta($order->externalIdentifier, self::WC_ORDER_META_ORDER_DATA, $order->toStorableArray());
         }
 
-        if ($order->shipments->contains('updated', null)) {
-            $existingShipments = get_post_meta($order->externalIdentifier, self::WC_ORDER_META_SHIPMENTS, true);
+        $wcOrder           = wc_get_order($order->externalIdentifier);
+        $existingShipments = $wcOrder->get_meta(self::WC_ORDER_META_SHIPMENTS);
+        $order->shipments  = (new ShipmentCollection($existingShipments))->mergeByKey(
+            $order->shipments,
+            'externalIdentifier'
+        );
 
-            $order->shipments = (new ShipmentCollection($existingShipments))->mergeByKey(
-                $order->shipments,
-                'externalIdentifier'
-            );
+        $wcOrder->update_meta_data(self::WC_ORDER_META_SHIPMENTS, $order->shipments->toStorableArray());
+        $wcOrder->save_meta_data();
 
-            update_post_meta(
-                $order->externalIdentifier,
-                self::WC_ORDER_META_SHIPMENTS,
-                $order->shipments->toStorableArray()
-            );
-        }
-
-        $wcOrder = wc_get_order($order->externalIdentifier);
         $trackTraces = $order->shipments->pluck('barcode')->toArrayWithoutNull();
 
         if ($trackTraces) {
