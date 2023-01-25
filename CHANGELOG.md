@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.17.0-rc.4](https://github.com/myparcelnl/woocommerce/compare/v4.17.0-rc.3...v4.17.0-rc.4) (2023-01-25)
+
+
+### :bug: Bug Fixes
+
+* prevent type error in flat rate evaluate cost ([#949](https://github.com/myparcelnl/woocommerce/issues/949)) ([307c140](https://github.com/myparcelnl/woocommerce/commit/307c1407fdbac40a0e474c46ef4c0960c5b99eec))
+
 ## [4.17.0-rc.3](https://github.com/myparcelnl/woocommerce/compare/v4.17.0-rc.2...v4.17.0-rc.3) (2023-01-12)
 
 
