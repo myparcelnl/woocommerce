@@ -40,16 +40,21 @@ class TrackTraceHooks implements WordPressHooksInterface
      *
      * @return array
      */
-    public function getTrackTraceLinks(PdkOrder $pdkOrder): array
+    public function getTrackTraceLink(PdkOrder $pdkOrder): array
     {
-        $result = [];
-
-        foreach ($pdkOrder->shipments->toArray() as $shipmentArray) {
-            $shipment = new Shipment($shipmentArray);
-            $result[] = $shipment->getTrackTraceLink();
+        if ($pdkOrder->shipments->isEmpty()) {
+            return [];
         }
 
-        return $result;
+        /** @var \MyParcelNL\Pdk\Shipment\Model\Shipment $lastShipment */
+        $lastShipment = $pdkOrder->shipments->last();
+        $url          = $lastShipment->getTrackTraceUrl();
+
+        return [
+            'url'     => $url,
+            'link'    => sprintf('<a href="%s">%s</a>', $url, $lastShipment->barcode),
+            'barcode' => $lastShipment->barcode,
+        ];
     }
 
     /**
@@ -60,15 +65,15 @@ class TrackTraceHooks implements WordPressHooksInterface
      */
     public function addTrackTraceToEmail(WC_Order $order, bool $sentToAdmin): void
     {
-        if ($sentToAdmin
-            || ! Settings::get('general.trackTraceInEmail')
-            || 'completed' !== $order->get_status()
-            || $order->get_refunds()) {
-            return;
-        }
+        //        if ($sentToAdmin
+        //            || ! Settings::get('general.trackTraceInEmail')
+        //            || 'completed' !== $order->get_status()
+        //            || $order->get_refunds()) {
+        //            return;
+        //        }
 
         $pdkOrder        = $this->orderRepository->get($order->get_id());
-        $trackTraceLinks = $this->getTrackTraceLinks($pdkOrder);
+        $trackTraceLinks = $this->getTrackTraceLink($pdkOrder);
 
         if (empty($trackTraceLinks)) {
             return;
@@ -82,7 +87,7 @@ class TrackTraceHooks implements WordPressHooksInterface
                 'You can track your order with the following Track & Trace link:',
                 $order
             ),
-            implode(',', $trackTraceLinks['link'])
+            $trackTraceLinks['link']
         );
     }
 
@@ -99,18 +104,16 @@ class TrackTraceHooks implements WordPressHooksInterface
             return $actions;
         }
 
-        $pdkOrder  = $this->orderRepository->get($order->get_id());
-        $shipments = $this->getTrackTraceLinks($pdkOrder);
+        $pdkOrder        = $this->orderRepository->get($order->get_id());
+        $trackTraceArray = $this->getTrackTraceLink($pdkOrder);
 
-        foreach ($shipments as $key => $shipment) {
-            $actions['myparcel_tracktrace_' . $shipment['link']] = [
-                'url'  => $shipment['url'],
-                'name' => apply_filters(
-                    'wcmyparcel_myaccount_tracktrace_button',
-                    __('Track & Trace', 'woocommerce-myparcel')
-                ),
-            ];
-        }
+        $actions['myparcel_tracktrace_' . $trackTraceArray['url']] = [
+            'url'  => $trackTraceArray['url'],
+            'name' => apply_filters(
+                'wcmyparcel_myaccount_tracktrace_button',
+                'Track & Trace'
+            ),
+        ];
 
         return $actions;
     }
