@@ -41,7 +41,6 @@ export default defineComponent({
       model: useVModel(props, 'modelValue', ctx.emit),
       translate,
       value: computed(() => {
-        // @ts-expect-error this works
         return props.element?.props?.value ?? '1';
       }),
     };

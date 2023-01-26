@@ -2,6 +2,7 @@ import './assets/scss/index.scss';
 import {DefaultCurrencyInput, DefaultHeading, DefaultLink, DefaultMultiRadio} from '@myparcel/pdk-components';
 import {LogLevel, createPdkFrontend, useModalStore} from '@myparcel/pdk-frontend';
 import {
+  PdkShipmentLabelWrapper,
   WcButton,
   WcButtonGroup,
   WcCard,
@@ -15,8 +16,6 @@ import {
   WcMultiCheckbox,
   WcNotification,
   WcNumberInput,
-  WcOrderCardShipmentsWrapper,
-  WcOrderGridShipmentWrapper,
   WcPluginSettingsWrapper,
   WcRadioInput,
   WcRow,
@@ -63,8 +62,8 @@ createPdkFrontend({
     PdkMultiRadio: DefaultMultiRadio,
     PdkNotification: WcNotification,
     PdkNumberInput: WcNumberInput,
-    PdkOrderCardShipmentsWrapper: WcOrderCardShipmentsWrapper,
-    PdkOrderGridShipmentWrapper: WcOrderGridShipmentWrapper,
+    PdkShipmentLabelWrapper: PdkShipmentLabelWrapper,
+    // PdkOrderGridShipmentWrapper: WcOrderGridShipmentWrapper,
     PdkPluginSettingsWrapper: WcPluginSettingsWrapper,
     PdkRadioInput: WcRadioInput,
     PdkRow: WcRow,

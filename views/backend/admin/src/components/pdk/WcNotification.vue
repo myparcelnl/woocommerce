@@ -1,7 +1,12 @@
 <template>
   <div
-    :class="`notice notice-${notification.variant}`"
-    style="padding: 12px 12px">
+    class="mypa-relative notice"
+    :class="[
+      `notice-${notification.variant}`,
+      {
+        'is-dismissible': !notification.timeout,
+      },
+    ]">
     <strong v-text="notification.title"></strong>
     <p
       v-for="(item, index) in contentArray"
@@ -30,7 +35,7 @@ export default defineComponent({
     return {
       config: usePdkConfig(),
       contentArray: computed(() => toArray(props.notification.content)),
-      translate: translate,
+      translate,
     };
   },
 });

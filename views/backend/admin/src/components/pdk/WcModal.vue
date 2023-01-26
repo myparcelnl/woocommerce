@@ -43,9 +43,11 @@
             {{ translate(title) }}
           </PdkHeading>
 
-          <div v-if="context">
-            <NotificationContainer category="modal" />
-            <slot :context="context" />
+          <div v-if="isOpen">
+            <KeepAlive>
+              <NotificationContainer category="modal" />
+              <slot :context="context" />
+            </KeepAlive>
           </div>
 
           <PdkButtonGroup>
@@ -66,7 +68,7 @@ import {
   ActionButton,
   ModalKey,
   NotificationContainer,
-  PdkButtonAction,
+  PdkAction,
   useLanguage,
   useModalStore,
   usePdkConfig,
@@ -92,7 +94,7 @@ export default defineComponent({
     },
 
     actions: {
-      type: Array as PropType<PdkButtonAction[]>,
+      type: Array as PropType<PdkAction[]>,
       required: true,
     },
   },

@@ -1,25 +1,35 @@
 <template>
-  <div>
+  <div class="mypa-flex">
     <ActionButton
-      v-for="action in standaloneActions"
+      v-for="(action, index) in standaloneActions"
       :key="action.id"
+      size="sm"
+      :class="{
+        '!mypa-rounded-r-none': index === standaloneActions.length - 1,
+      }"
+      :hide-text="hideText"
       :action="action" />
 
     <PdkButton
-      :aria-expanded="toggled"
+      v-if="dropdownActions.length > 0"
+      :aria-expanded="clickToggled || hoverToggled"
       :disabled="disabled"
       aria-haspopup="true"
       :aria-label="translate('toggle_dropdown')"
       class="mypa-relative"
-      @focus="toggled = true"
-      @focusout="toggled = false"
-      @click="toggled = !toggled"
-      @mouseout="toggled = false"
-      @mouseover="toggled = true">
-      <PdkIcon :icon="icon" />
-
+      :class="{
+        '!mypa-rounded-l-none': standaloneActions.length > 1,
+      }"
+      size="sm"
+      :icon="dropdownIcon"
+      @focus="hoverToggled = true"
+      @focusout="hoverToggled = false"
+      @keydown.enter="clickToggled = !clickToggled"
+      @click="clickToggled = !clickToggled"
+      @mouseout="hoverToggled = false"
+      @mouseover="hoverToggled = true">
       <div
-        v-show="toggled"
+        v-show="clickToggled || hoverToggled"
         class="mypa-absolute mypa-bg-white mypa-border mypa-border-solid mypa-flex mypa-flex-col mypa-right-0 mypa-top-full mypa-z-50">
         <ActionButton
           v-for="(action, index) in dropdownActions"
@@ -44,32 +54,38 @@ export default defineComponent({
   },
 
   props: {
+    actions: {
+      type: Array as PropType<PdkDropdownAction[]>,
+      default: () => [],
+    },
+
     disabled: {
       type: Boolean,
     },
 
-    actions: {
-      type: Array as PropType<PdkDropdownAction[]>,
-      default: (): never[] => [],
+    hideText: {
+      type: Boolean,
     },
   },
 
   emits: ['click'],
   setup: (props) => {
-    const toggled = ref(false);
+    const hoverToggled = ref(false);
+    const clickToggled = ref(false);
     const {translate} = useLanguage();
 
     return {
-      icon: PdkIcon.ARROW_DOWN,
+      clickToggled,
+      hoverToggled,
 
-      translate: translate,
-      toggle: () => {
-        toggled.value = !toggled.value;
-      },
+      dropdownIcon: computed(() => {
+        return hoverToggled.value ? PdkIcon.ARROW_UP : PdkIcon.ARROW_DOWN;
+      }),
 
-      toggled,
-      standaloneActions: computed(() => props.actions.filter((option) => option.standalone)),
       dropdownActions: computed(() => props.actions.filter((option) => !option.standalone)),
+      standaloneActions: computed(() => props.actions.filter((option) => option.standalone)),
+
+      translate,
     };
   },
 });

@@ -5,13 +5,15 @@
     :disabled="loading || disabled"
     :class="{
       'mypa-animate-pulse': loading,
+      'button-small': size === 'sm',
+      'button-large': size === 'lg',
     }"
     @click="$emit('click')">
     <span class="mypa-h-full mypa-inline-flex">
       <PdkIcon
         v-if="icon"
         class="mypa-m-auto"
-        :class="label || $slots ? 'mypa-mr-1' : null"
+        :class="label || $slots.default ? 'mypa-mr-1' : null"
         :icon="icon" />
 
       <slot>
@@ -24,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import {PdkIcon, useLanguage} from '@myparcel/pdk-frontend';
+import {PdkButtonSize, PdkIcon, useLanguage} from '@myparcel/pdk-frontend';
 import {PropType, defineComponent} from 'vue';
 
 export default defineComponent({
@@ -37,6 +39,11 @@ export default defineComponent({
     icon: {
       type: String as PropType<PdkIcon>,
       default: null,
+    },
+
+    size: {
+      type: String as PropType<PdkButtonSize>,
+      default: 'md',
     },
 
     label: {
