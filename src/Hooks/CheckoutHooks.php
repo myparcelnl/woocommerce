@@ -51,9 +51,10 @@ class CheckoutHooks implements WordPressHooksInterface
      */
     public function automaticExportOrder(int $orderId): void
     {
-        if (false) {
-            return;
-        }
+        // TODO: Get automatic export setting
+//        if (! Settings::get('')) {
+//            return;
+//        }
 
         Actions::execute(PdkActions::EXPORT_ORDERS, [
             'orderIds' => [$orderId],

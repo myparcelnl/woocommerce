@@ -18,6 +18,7 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Facade\Messages;
 use MyParcelNL\WooCommerce\Hooks\CheckoutHooks;
 use MyParcelNL\WooCommerce\Hooks\RestApiHooks;
+use MyParcelNL\WooCommerce\Hooks\TrackTraceHooks;
 use MyParcelNL\WooCommerce\Migration\Migrator;
 use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
 use MyParcelNL\WooCommerce\Pdk\Boot;
@@ -48,6 +49,7 @@ class MyParcelNL
         PdkOrderListHooks::class,
         PdkPluginSettingsHooks::class,
         PdkProductSettingsHooks::class,
+        TrackTraceHooks::class,
     ];
 
     /**
@@ -141,7 +143,7 @@ class MyParcelNL
     private function checkPrerequisites(): bool
     {
         return $this->isWoocommerceActivated()
-            && $this->phpVersionMeets(self::PHP_VERSION_MINIMUM);
+            && $this->phpVersionMeets();
     }
 
     /**
@@ -167,13 +169,11 @@ class MyParcelNL
     }
 
     /**
-     * @param  string $version
-     *
      * @return bool
      */
-    private function phpVersionMeets(string $version): bool
+    private function phpVersionMeets(): bool
     {
-        if (version_compare(PHP_VERSION, $version, '>=')) {
+        if (version_compare(PHP_VERSION, self::PHP_VERSION_MINIMUM, '>=')) {
             return true;
         }
 
