@@ -51,9 +51,13 @@ class WcRenderService extends RenderService
                         break;
 
                     case Components::INPUT_SELECT:
+                        $newOptions         = $this->transformSelectOptions($field['options'] ?? []);
                         $method             = 'woocommerce_wp_select';
-                        $options['options'] = $field['options'] ?? [];
+                        $options['options'] = $newOptions;
                         break;
+                    case Components::INPUT_NUMBER:
+                        $method          = 'woocommerce_wp_text_input';
+                        $options['type'] = 'number';
                 }
 
                 if (isset($field['description']) && LanguageService::hasTranslation($field['description'])) {
@@ -74,5 +78,21 @@ class WcRenderService extends RenderService
 
             return '';
         }
+    }
+
+    /**
+     * @param  array $options
+     *
+     * @return array
+     */
+    private function transformSelectOptions(array $options): array
+    {
+        $newOptions = [];
+
+        foreach ($options as $option) {
+            $newOptions[$option['label']] = $option['value'];
+        }
+
+        return $newOptions;
     }
 }
