@@ -45,16 +45,8 @@ class TrackTraceHooks implements WordPressHooksInterface
         $result = [];
 
         foreach ($pdkOrder->shipments->toArray() as $shipmentArray) {
-            $shipment      = new Shipment($shipmentArray);
-            $trackTraceUrl = $shipment->getTrackTraceLink();
-            $result[]      = [
-                'url'  => $trackTraceUrl,
-                'link' => sprintf(
-                    '<a href="%s">%s</a>',
-                    $trackTraceUrl,
-                    $shipment->barcode
-                ),
-            ];
+            $shipment = new Shipment($shipmentArray);
+            $result[] = $shipment->getTrackTraceLink();
         }
 
         return $result;
@@ -82,23 +74,15 @@ class TrackTraceHooks implements WordPressHooksInterface
             return;
         }
 
-        $createLinkCallback = static function ($trackTrace) {
-            return sprintf('<a href="%s">%s</a>', $trackTrace['url'], $trackTrace['link']);
-        };
-
-        echo wp_kses_post(
-            sprintf(
-                '<p>%s %s</p>',
-                apply_filters(
-                    'wcmyparcel_email_text',
-                    __('You can track your order with the following Track & Trace link:', 'woocommerce-myparcel'),
-                    $order
-                ),
-                implode(
-                    '<br />',
-                    array_map($createLinkCallback, $trackTraceLinks)
-                )
-            )
+        echo
+        sprintf(
+            '<p>%s %s</p>',
+            apply_filters(
+                'wcmyparcel_email_text',
+                'You can track your order with the following Track & Trace link:',
+                $order
+            ),
+            implode(',', $trackTraceLinks['link'])
         );
     }
 
