@@ -34,7 +34,7 @@ class WcRenderService extends RenderService
 
             printf('<div id="%s" class="panel woocommerce_options_panel">', "{$pluginName}_product_data");
 
-            foreach ($view->toArray()['fields'] as $field) {
+            foreach ($view->toArray()['elements'] as $field) {
                 $key    = Str::snake(sprintf('%s_product_%s', $appInfo['name'], $field['name']));
                 $method = Str::snake('woocommerce_wp' . $field['$component']);
 
@@ -51,9 +51,8 @@ class WcRenderService extends RenderService
                         break;
 
                     case Components::INPUT_SELECT:
-                        $newOptions         = $this->transformSelectOptions($field['options'] ?? []);
                         $method             = 'woocommerce_wp_select';
-                        $options['options'] = $newOptions;
+                        $options['options'] = $this->transformSelectOptions($field['options'] ?? []);
                         break;
                     case Components::INPUT_NUMBER:
                         $method          = 'woocommerce_wp_text_input';
