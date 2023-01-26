@@ -8,6 +8,7 @@ use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Plugin\Model\Context\DeliveryOptionsContext;
+use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\WooCommerce\Service\ScriptService;
@@ -98,9 +99,10 @@ class CheckoutHooks implements WordPressHooksInterface
      */
     public function getDeliveryOptionsConfig(): array
     {
+        $cartTotals                = WC()->session->get('cart_totals');
+        $chosenShippingMethodPrice = (float) $cartTotals['shipping_total'];
+
         //        $settings                  = WCMYPA()->settingCollection;
-        //        $cartTotals                = WC()->session->get('cart_totals');
-        //        $chosenShippingMethodPrice = (float) $cartTotals['shipping_total'];
         //        $displayIncludingTax       = WC()->cart->display_prices_including_tax();
         //        $priceFormat               = self::getDeliveryOptionsTitle('delivery_options_price_format');
         //        $shippingMethod            = WC()->session->get('chosen_shipping_methods')[0] ?? false;
@@ -139,7 +141,14 @@ class CheckoutHooks implements WordPressHooksInterface
         //            }
         //        }
 
-        return (new DeliveryOptionsContext())->toArray();
+        $order = new PdkOrder([
+            'deliveryOptions' => [
+                'packageType' => 'package',
+            ],
+            'shipmentPriceAfterVat' => $chosenShippingMethodPrice,
+        ]);
+
+        return (new DeliveryOptionsContext(['order' => $order]))->toArray();
     }
 
     /**
@@ -233,9 +242,9 @@ class CheckoutHooks implements WordPressHooksInterface
             'MyParcelNLData',
             [
                 'ajaxUrl'                     => admin_url('admin-ajax.php'),
-                'allowedShippingMethods'      => json_encode($this->getShippingMethodsAllowingDeliveryOptions()),
+                'allowedShippingMethods'      => $this->getShippingMethodsAllowingDeliveryOptions(),
                 'alwaysShow'                  => Settings::get('checkout.deliveryOptionsDisplay') === 'always',
-                'disallowedShippingMethods'   => json_encode(self::DISALLOWED_SHIPPING_METHODS),
+                'disallowedShippingMethods'   => self::DISALLOWED_SHIPPING_METHODS,
                 'hiddenInputName'             => self::META_DELIVERY_OPTIONS,
                 'isUsingSplitAddressFields'   => (int) Settings::get('checkout.useSeparateAddressFields'),
                 'splitAddressFieldsCountries' => [CountryService::CC_NL, CountryService::CC_BE],

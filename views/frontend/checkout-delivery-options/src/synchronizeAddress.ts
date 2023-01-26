@@ -12,7 +12,7 @@ import {updateAddress} from './updateAddress';
  * @param {String} newCountry
  */
 export const synchronizeAddress = (event, newCountry) => {
-  if (!isUsingSplitAddressFields) {
+  if (!window.MyParcelNLData.isUsingSplitAddressFields) {
     return;
   }
 

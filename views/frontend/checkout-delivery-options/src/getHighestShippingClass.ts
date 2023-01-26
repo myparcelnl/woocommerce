@@ -10,7 +10,7 @@ export function getHighestShippingClass() {
 
   jQuery.ajax({
     type: 'POST',
-    url: wcmp.ajax_url,
+    url: MyParcelNLData.ajaxUrl,
     async: false,
     data: {
       action: 'get_highest_shipping_class',
