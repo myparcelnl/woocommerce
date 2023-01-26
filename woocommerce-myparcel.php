@@ -21,6 +21,7 @@ use MyParcelNL\WooCommerce\Hooks\RestApiHooks;
 use MyParcelNL\WooCommerce\Hooks\TrackTraceHooks;
 use MyParcelNL\WooCommerce\Migration\Migrator;
 use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
+use MyParcelNL\WooCommerce\Migration\Pdk\ProductSettingsMigration;
 use MyParcelNL\WooCommerce\Pdk\Boot;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkCoreHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkOrderHooks;
@@ -116,9 +117,10 @@ class MyParcelNL
         }
 
         /**
-         * Note: this hook is fired by the wp-cron system, you need to catch it outside the migrations.
+         * Note: these hooks are fired by the wp-cron system, you need to catch them outside the migrations.
          */
         add_action('myparcelnl_migrate_order_to_pdk_5_0_0', [new OrdersMigration(), 'migrateOrder']);
+        add_action('myparcelnl_migrate_product_settings_to_pdk_5_0_0', [new ProductSettingsMigration(), 'migrateProductSettings']);
     }
 
     public function upgrade(): void
