@@ -39,7 +39,7 @@
   },
   "prettier": "@myparcel/prettier-config",
   "dependencies": {
-    "@myparcel/delivery-options": "^5.3.0"
+    "@myparcel/delivery-options": "^5.3.1"
   },
   "devDependencies": {
     "@edielemoine/google-docs-importer": "^1.0.2",
@@ -47,18 +47,18 @@
     "@myparcel-eslint/eslint-config-prettier": "^1.2.0",
     "@myparcel-eslint/eslint-config-prettier-typescript": "^1.2.0",
     "@myparcel-eslint/eslint-config-prettier-typescript-vue": "^1.2.0",
-    "@myparcel/semantic-release-config": "^4.1.0",
+    "@myparcel/semantic-release-config": "^4.2.2",
     "@myparcel/semantic-release-wordpress-readme-generator": "^1.1.0",
     "@types/gulp": "^4.0.10",
     "@types/gulp-zip": "^4.0.2",
     "@types/node": "^18.11.18",
     "@types/papaparse": "^5.3.7",
     "autoprefixer": "^10.4.13",
-    "eslint": "^8.31.0",
+    "eslint": "^8.32.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-sort-exports": "^0.8.0",
     "gettext-parser": "^6.0.0",
-    "glob": "^8.0.3",
+    "glob": "^8.1.0",
     "gulp": "^4.0.2",
     "gulp-clean": "^0.4.0",
     "gulp-load-plugins": "^2.0.8",
@@ -72,9 +72,9 @@
     "is-ci": "^3.0.1",
     "lint-staged": "^13.1.0",
     "nodemon": "^2.0.20",
-    "nx": "15.4.5",
+    "nx": "15.6.2",
     "papaparse": "^5.3.2",
-    "prettier": "^2.8.2",
+    "prettier": "^2.8.3",
     "terser": "^5.16.1",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.4",
@@ -82,7 +82,7 @@
     "vite": "^4.0.4",
     "vite-plugin-custom-tsconfig": "^1.0.4",
     "vite-plugin-dts": "^1.7.1",
-    "vitest": "^0.27.0"
+    "vitest": "^0.28.3"
   },
   "packageManager": "yarn@3.3.1",
   "resolutions": {
