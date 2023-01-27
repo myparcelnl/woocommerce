@@ -13,7 +13,7 @@ class ProductSettingsMigration extends AbstractUpgradeMigration
     private const OPTION_TRANSLATIONS = [
         '_myparcel_hs_code'           => ['name' => 'customsCode'],
         '_myparcel_country_of_origin' => ['name' => 'countryOfOrigin'],
-        '_myparcel_age_check'         => ['name' => 'exportAgeCheck', 'values' => ['no' => false, 'yes' => true]],
+        '_myparcel_age_check'         => ['name' => 'exportAgeCheck', 'values' => ['no' => 0, 'yes' => 1]], // null = -1, the default
     ];
     private const CHUNK_SIZE          = 10;
     private const SECONDS_APART       = 30;

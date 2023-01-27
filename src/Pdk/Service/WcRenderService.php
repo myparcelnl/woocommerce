@@ -45,6 +45,14 @@ class WcRenderService extends RenderService
                 ];
 
                 switch ($field['$component']) {
+                    case Components::INPUT_TRISTATE:
+                        $method             = 'woocommerce_wp_select';
+                        $options['options'] = [
+                            1  => LanguageService::translate('Yes'),
+                            0  => LanguageService::translate('No'),
+                            -1 => LanguageService::translate('Default'),
+                        ];
+                        break;
                     case Components::INPUT_TOGGLE:
                         $method             = 'woocommerce_wp_checkbox';
                         $options['cbvalue'] = 1;
@@ -89,7 +97,7 @@ class WcRenderService extends RenderService
         $newOptions = [];
 
         foreach ($options as $option) {
-            $newOptions[$option['label']] = $option['value'];
+            $newOptions[$option['value']] = LanguageService::translate($option['label']);
         }
 
         return $newOptions;
