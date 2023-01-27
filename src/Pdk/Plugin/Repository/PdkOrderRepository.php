@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Repository;
 
-use DateTime;
 use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\DefaultLogger;
@@ -16,6 +15,7 @@ use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
 use MyParcelNL\Pdk\Storage\StorageInterface;
+use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\WooCommerce\Service\WcRecipientService;
 use Throwable;
 use WC_Order;
@@ -61,18 +61,14 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     }
 
     /**
-     * @param  int|string $input
+     * @param  int|string|WC_Order $input
      *
      * @return \MyParcelNL\Pdk\Plugin\Model\PdkOrder
      * @throws \Exception
      */
     public function get($input): PdkOrder
     {
-        $order = $input;
-
-        if (! is_a($input, WC_Order::class)) {
-            $order = new WC_Order($input);
-        }
+        $order = $this->getWcOrder($input);
 
         return $this->retrieve((string) $order->get_id(), function () use ($order) {
             try {
@@ -92,26 +88,6 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     }
 
     /**
-     * @param  \WC_Order $order
-     *
-     * @return \MyParcelNL\Pdk\Base\Support\Collection
-     */
-    public function getWcOrderItems(WC_Order $order): Collection
-    {
-        return (new Collection(
-            array_map(function ($item) {
-                $product = $item instanceof WC_Order_Item_Product ? $item->get_product() : null;
-
-                return [
-                    'item'       => $item,
-                    'product'    => $product,
-                    'pdkProduct' => $product ? $this->productRepository->getProduct($product) : null,
-                ];
-            }, $order->get_items())
-        ));
-    }
-
-    /**
      * @param  \MyParcelNL\Pdk\Plugin\Model\PdkOrder $order
      *
      * @return \MyParcelNL\Pdk\Plugin\Model\PdkOrder
@@ -120,16 +96,19 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     public function update(PdkOrder $order): PdkOrder
     {
+        $wcOrder       = $this->getWcOrder($order->externalIdentifier);
         $existingOrder = $this->get($order->externalIdentifier);
         $diff          = array_diff_assoc($order->toArray(), $existingOrder->toArray());
 
         if (! empty($diff)) {
-            $this->updateOrder($order);
+            $wcOrder->update_meta_data(self::WC_ORDER_META_ORDER_DATA, $order->toStorableArray());
         }
 
         if ($order->shipments->contains('updated', null)) {
-            $this->saveShipments($order);
+            $this->saveShipments($wcOrder, $order);
         }
+
+        $wcOrder->save_meta_data();
 
         return $this->save($order->externalIdentifier, $order);
     }
@@ -232,58 +211,69 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     }
 
     /**
-     * @param  \MyParcelNL\Pdk\Plugin\Model\PdkOrder $order
+     * @param  int|string|WC_Order $input
      *
-     * @return void
+     * @return \WC_Order
      */
-    private function saveShipments(PdkOrder $order): void
+    private function getWcOrder($input): WC_Order
     {
-        $existingShipments = get_post_meta($order->externalIdentifier, self::WC_ORDER_META_SHIPMENTS, true);
+        $order = $input;
 
-        $order->shipments = (new ShipmentCollection($existingShipments))
-            ->mergeByKey($order->shipments, 'externalIdentifier')
-            ->each(function ($shipment) {
-                $shipment->updated = new DateTime();
+        if (! is_a($input, WC_Order::class)) {
+            return $this->retrieve("wc_order_$input", function () use ($input) {
+                return new WC_Order($input);
             });
-
-        update_post_meta(
-            $order->externalIdentifier,
-            self::WC_ORDER_META_SHIPMENTS,
-            $order->shipments->toStorableArray()
-        );
-
-        $order->shipments  = (new ShipmentCollection($existingShipments))->mergeByKey(
-            $order->shipments,
-            'externalIdentifier'
-        );
-
-        $wcOrder           = wc_get_order($order->externalIdentifier);
-        $existingShipments = $wcOrder->get_meta(self::WC_ORDER_META_SHIPMENTS);
-        $order->shipments  = (new ShipmentCollection($existingShipments))->mergeByKey(
-            $order->shipments,
-            'externalIdentifier'
-        );
-
-        $wcOrder->update_meta_data(self::WC_ORDER_META_SHIPMENTS, $order->shipments->toStorableArray());
-        $wcOrder->save_meta_data();
-
-        $trackTraces = $order->shipments->pluck('barcode')->toArrayWithoutNull();
-
-        if ($trackTraces) {
-            // TODO: Use setting for note prefix
-            $prefix = '';
-            $wcOrder->add_order_note($prefix . implode(', ', $trackTraces));
         }
+
+        return $this->save("wc_order_{$order->get_id()}", $order);
     }
 
     /**
+     * @param  \WC_Order $order
+     *
+     * @return \MyParcelNL\Pdk\Base\Support\Collection
+     */
+    private function getWcOrderItems(WC_Order $order): Collection
+    {
+        return (new Collection(
+            array_map(function ($item) {
+                $product = $item instanceof WC_Order_Item_Product ? $item->get_product() : null;
+
+                return [
+                    'item'       => $item,
+                    'product'    => $product,
+                    'pdkProduct' => $product ? $this->productRepository->getProduct($product) : null,
+                ];
+            }, $order->get_items())
+        ));
+    }
+
+    /**
+     * @param  \WC_Order                             $wcOrder
      * @param  \MyParcelNL\Pdk\Plugin\Model\PdkOrder $order
      *
      * @return void
-     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
      */
-    private function updateOrder(PdkOrder $order): void
+    private function saveShipments(WC_Order $wcOrder, PdkOrder $order): void
     {
-        update_post_meta($order->externalIdentifier, self::WC_ORDER_META_ORDER_DATA, $order->toStorableArray());
+        $existingShipments = $wcOrder->get_meta(self::WC_ORDER_META_SHIPMENTS);
+
+        $order->shipments = (new ShipmentCollection($existingShipments))->mergeByKey(
+            $order->shipments,
+            'id'
+        );
+
+        $shipmentsArray = $order->shipments->toStorableArray();
+
+        $wcOrder->update_meta_data(self::WC_ORDER_META_SHIPMENTS, $shipmentsArray);
+
+        $barcodes = Arr::pluck($shipmentsArray, 'barcode');
+
+        if (! empty($barcodes)) {
+            // TODO: Use setting for note prefix
+            $prefix = '';
+
+            $wcOrder->add_order_note($prefix . implode(', ', $barcodes));
+        }
     }
 }
