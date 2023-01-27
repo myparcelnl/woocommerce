@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
+use MyParcelNL\Pdk\Base\PdkActions;
 use MyParcelNL\Pdk\Base\Service\CountryService;
+use MyParcelNL\Pdk\Facade\Actions;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Plugin\Model\Context\DeliveryOptionsContext;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
+use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\WooCommerce\Service\ScriptService;
 use WC_Product;
@@ -52,10 +55,9 @@ class CheckoutHooks implements WordPressHooksInterface
      */
     public function automaticExportOrder(int $orderId): void
     {
-        // TODO: Get automatic export setting
-//        if (! Settings::get('')) {
-//            return;
-//        }
+        if (! Settings::get(GeneralSettings::ORDER_MODE, GeneralSettings::ID)) {
+            return;
+        }
 
         Actions::execute(PdkActions::EXPORT_ORDERS, [
             'orderIds' => [$orderId],
