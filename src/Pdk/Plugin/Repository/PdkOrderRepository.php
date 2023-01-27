@@ -7,6 +7,7 @@ namespace MyParcelNL\WooCommerce\Pdk\Plugin\Repository;
 use MyParcelNL\Pdk\Base\Service\WeightService;
 use MyParcelNL\Pdk\Facade\DefaultLogger;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrderLine;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
@@ -14,6 +15,7 @@ use MyParcelNL\Pdk\Product\Repository\AbstractProductRepository;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
+use MyParcelNL\Pdk\Shipment\Model\Shipment;
 use MyParcelNL\Pdk\Storage\StorageInterface;
 use MyParcelNL\WooCommerce\Service\WcRecipientService;
 use Throwable;
@@ -101,7 +103,14 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         $wcOrder->update_meta_data(self::WC_ORDER_META_SHIPMENTS, $order->shipments->toStorableArray());
         $wcOrder->save_meta_data();
 
-        $trackTraces = $order->shipments->pluck('barcode')->toArrayWithoutNull();
+        $trackTraces = [];
+
+        /** @var Shipment $shipment */
+        foreach ($order->shipments->toArray() as $shipment) {
+            if ($shipment->barcode) {
+                $trackTraces[] = $shipment->barcode;
+            }
+        }
 
         if ($trackTraces) {
             // TODO: Use setting for note prefix
@@ -136,23 +145,25 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         $wcOrderCreated = $order->get_date_created();
         $weightService  = Pdk::get(WeightService::class);
         $weightUnit     = get_option('woocommerce_weight_unit');
+        $weightOfItems  = array_reduce(
+            $wcOrderItems,
+            static function (int $carry, WC_Order_Item $item) use ($weightService, $weightUnit) {
+                /** @var WC_Product $product */
+                $product = $item->get_product();
+                $weight  = $weightService->convertToGrams($product->get_weight(), $weightUnit);
+
+                return $carry + $item->get_quantity() * $weight;
+            },
+            0
+        );
 
         $orderData = [
             'externalIdentifier'    => $order->get_id(),
             'customsDeclaration'    => [
                 'contents' => CustomsDeclaration::CONTENTS_COMMERCIAL_GOODS,
                 'invoice'  => $order->get_id(),
-                'weight'   => array_reduce(
-                    $wcOrderItems,
-                    static function (int $carry, WC_Order_Item $item) use ($weightService, $weightUnit) {
-                        /** @var WC_Product $product */
-                        $product = $item->get_product();
-                        $weight  = $weightService->convertToGrams($product->get_weight(), $weightUnit);
-
-                        return $carry + $item->get_quantity() * $weight;
-                    },
-                    0
-                ),
+                // TODO: Check if weight unit conversion is necessary
+                'weight'   => $weightOfItems + Settings::get('order.emptyParcelWeight'),
                 'items'    => array_reduce(
                     $wcOrderItems,
                     function (array $carry, WC_Order_Item $item) {
