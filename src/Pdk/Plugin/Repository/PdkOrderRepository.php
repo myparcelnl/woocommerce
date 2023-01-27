@@ -105,10 +105,9 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
 
         $trackTraces = [];
 
-        /** @var Shipment $shipment */
         foreach ($order->shipments->toArray() as $shipment) {
-            if ($shipment->barcode) {
-                $trackTraces[] = $shipment->barcode;
+            if ($shipment['barcode']) {
+                $trackTraces[] = $shipment['barcode'];
             }
         }
 
