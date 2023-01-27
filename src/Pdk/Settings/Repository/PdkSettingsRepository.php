@@ -18,23 +18,24 @@ class PdkSettingsRepository extends AbstractSettingsRepository
      */
     public function get(string $name)
     {
-        return $this->retrieve($name, function () use ($name) {
-            return get_option($this->getOptionName($name), null);
+        [$id, $key] = explode('.', $name);
+
+        $group = $this->retrieve($id, function () use ($id) {
+            return get_option($this->getOptionName($id), null);
         });
+
+        return $group[$key] ?? null;
     }
 
     /**
      * @param  \MyParcelNL\Pdk\Settings\Model\AbstractSettingsModel $settingsModel
      *
      * @return void
+     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
      */
     public function store(AbstractSettingsModel $settingsModel): void
     {
-        $id = $settingsModel->getId();
-
-        foreach ($settingsModel->getAttributes() as $key => $value) {
-            update_option($this->getOptionName("$id.$key"), $value);
-        }
+        update_option($this->getOptionName($settingsModel->getId()), $settingsModel->toArrayWithoutNull());
     }
 
     /**
