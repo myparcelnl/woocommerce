@@ -18,6 +18,12 @@ use MyParcelNL\WooCommerce\Pdk\Settings\Repository\PdkSettingsRepository;
 
 class SettingsMigration extends AbstractUpgradeMigration
 {
+    private const GENERAL = 'general';
+    private const CHECKOUT = 'checkout';
+    private const LABEL = 'label';
+    private const ORDER = 'order';
+    private const CUSTOMS = 'customs';
+
     /**
      * @return void
      */
@@ -190,58 +196,73 @@ class SettingsMigration extends AbstractUpgradeMigration
     private function mapSettingKeys(): array
     {
         return [
+            self::GENERAL => [
+                'api_key'                                 => 'apiKey',
+                'error_logging'                           => 'apiLogging',
+                'connect_email'                           => 'shareCustomerInformation',
+                'process_directly'                        => 'conceptShipments',
+                'export_mode'                             => 'orderMode',
+                'track_trace_email'                       => 'trackTraceInEmail',
+                'track_trace_my_account'                  => 'trackTraceInAccount',
+                'barcode_in_note'                         => 'barcodeInNote',
+                'export_automatic'                        => 'processDirectly',
+            ],
+            self::ORDER => [
+
+                'save_customer_address'                   => 'saveCustomerAddress',
+                'empty_parcel_weight'                     => 'emptyParcelWeight',
+            ],
+            self::LABEL => [
+                'label_description'                       => 'description',
+                'label_format'                            => 'format',
+                'download_display'                        => '', // EMPTY
+                'ask_for_print_position'                  => 'prompt',
+            ],
+            self::CUSTOMS => [
+                'package_contents'                        => 'packageContents',
+                'hs_code'                                 => 'customsCode',
+                'country_of_origin'                       => 'countryOfOrigin',
+            ],
+            self::CHECKOUT => [
+                'use_split_address_fields'                => '', // EMPTY
+                // price type
+                'show_delivery_day'                       => '', // EMPTY
+                'header_delivery_options_title'           => '', // EMPTY
+
+                'delivery_options_enabled_for_backorders' => '', // EMPTY
+                'delivery_options_enabled'                => '', // EMPTY
+                'delivery_options_display'                => 'deliveryOptionsDisplay',
+                'delivery_options_position'               => 'deliveryOptionsPosition',
+                'delivery_options_price_format'           => 'priceType',
+                'pickup_locations_default_view'           => 'pickupLocationsDefaultView',
+                'delivery_options_custom_css'             => 'deliveryOptionsCustomCss',
+                'delivery_title'                          => 'stringDelivery',
+                'morning_title'                           => 'stringMorningDelivery',
+                'standard_title'                          => 'stringStandardDelivery',
+                'evening_title'                           => 'stringEveningDelivery',
+                'same_day_title'                          => '', // EMPTY
+                'only_recipient_title'                    => 'stringOnlyRecipient',
+                'signature_title'                         => 'stringSignature',
+                'pickup_title'                            => 'stringPickup',
+                'address_not_found_title'                 => 'stringAddressNotFound',
+            ],
+
+
             // General & label mixed
-            'api_key'                                 => 'apiKey',
-            'trigger_manual_update'                   => '', // EMPTY
-            'export_mode'                             => 'orderMode',
-            'download_display'                        => '', // EMPTY
-            'label_format'                            => 'format',
-            'ask_for_print_position'                  => 'position',
-            'track_trace_email'                       => 'trackTraceInEmail',
-            'track_trace_my_account'                  => 'trackTraceInAccount',
-            'show_delivery_day'                       => '', // EMPTY
-            'process_directly'                        => 'processDirectly',
-            'order_status_automation'                 => 'exportWithAutomaticStatus',
-            'change_order_status_after'               => '', // EMPTY
-            'automatic_order_status'                  => '', // EMPTY
-            'barcode_in_note'                         => 'barcodeInNote',
-            'barcode_in_note_title'                   => '', // EMPTY
-            'error_logging'                           => 'apiLogging',
-
-            // Export
-            'shipping_methods_package_types'          => '', // EMPTY
-            'connect_email'                           => 'shareCustomerInformation',
-            'connect_phone'                           => 'shareCustomerInformation',
-            'save_customer_address'                   => 'saveCustomerAddress',
-            'label_description'                       => 'description',
-            'empty_parcel_weight'                     => 'emptyParcelWeight',
-            'empty_digital_stamp_weight'              => 'emptyDigitalStampWeight',
-            'hs_code'                                 => 'customsCode',
-            'package_contents'                        => 'packageContents',
-            'country_of_origin'                       => 'countryOfOrigin',
-            'export_automatic'                        => '', // EMPTY
-            'export_automatic_status'                 => 'exportWithAutomaticStatus',
-            'return_in_the_box'                       => '', // EMPTY
-
-            // Checkout
-            'use_split_address_fields'                => '', // EMPTY
-            'delivery_options_enabled_for_backorders' => '', // EMPTY
-            'delivery_options_enabled'                => '', // EMPTY
-            'delivery_options_display'                => 'deliveryOptionsDisplay',
-            'delivery_options_position'               => 'deliveryOptionsPosition',
-            'delivery_options_price_format'           => 'priceType',
-            'pickup_locations_default_view'           => 'pickupLocationsDefaultView',
-            'delivery_options_custom_css'             => 'deliveryOptionsCustomCss',
-            'header_delivery_options_title'           => '', // EMPTY
-            'delivery_title'                          => 'stringDelivery',
-            'morning_title'                           => 'stringMorningDelivery',
-            'standard_title'                          => 'stringStandardDelivery',
-            'evening_title'                           => 'stringEveningDelivery',
-            'same_day_title'                          => '', // EMPTY
-            'only_recipient_title'                    => 'stringOnlyRecipient',
-            'signature_title'                         => 'stringSignature',
-            'pickup_title'                            => 'stringPickup',
-            'address_not_found_title'                 => 'stringAddressNotFound',
+//            'trigger_manual_update'                   => '', // EMPTY
+//            'order_status_automation'                 => 'exportWithAutomaticStatus',
+//            'change_order_status_after'               => '', // EMPTY
+//            'automatic_order_status'                  => '', // EMPTY
+//            'barcode_in_note_title'                   => '', // EMPTY
+//
+//            // Export
+//            'shipping_methods_package_types'          => '', // EMPTY
+//            'connect_phone'                           => 'shareCustomerInformation',
+//
+//            'empty_digital_stamp_weight'              => 'emptyDigitalStampWeight',
+//            'export_automatic'                        => '', // EMPTY
+//            'export_automatic_status'                 => 'exportWithAutomaticStatus',
+//            'return_in_the_box'                       => '', // EMPTY
         ];
     }
 
@@ -277,17 +298,33 @@ class SettingsMigration extends AbstractUpgradeMigration
         $wcSettings = array_merge(
             $this->getSettings('woocommerce_myparcel_general_settings'),
             $this->getSettings('woocommerce_myparcel_export_defaults_settings'),
-            $this->getSettings('woocommerce_myparcel_checkout_settings'),
+            $this->getSettings('woocommerce_myparcel_checkout_settings')
         );
 
         $mapped      = $this->mapSettingKeys();
         $transformed = [];
 
         foreach ($wcSettings as $key => $value) {
-            $newKey               = $mapped[$key] ?? $key;
+            $search               = $this->searchParentKey($key, $mapped);
+            $newKey               = $mapped[$search][$key] ?? $key;
             $transformed[$newKey] = $value;
         }
 
         return $transformed;
+    }
+
+    /**
+     * @param $needle
+     * @param $haystack
+     *
+     * @return int|string|void
+     */
+    private function searchParentKey($needle, $haystack)
+    {
+        foreach ($haystack as $key => $value) {
+            if ($needle === $value || (is_array($value) && $this->searchParentKey($needle, $value) !== false)) {
+                return $key;
+            }
+        }
     }
 }
