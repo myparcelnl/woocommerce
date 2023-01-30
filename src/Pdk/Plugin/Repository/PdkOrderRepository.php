@@ -101,14 +101,12 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         $diff          = array_diff_assoc($order->toArray(), $existingOrder->toArray());
 
         if (! empty($diff)) {
-            $wcOrder->update_meta_data(self::WC_ORDER_META_ORDER_DATA, $order->toStorableArray());
+            update_post_meta($wcOrder->get_id(), self::WC_ORDER_META_ORDER_DATA, $order->toStorableArray());
         }
 
         if ($order->shipments->contains('updated', null)) {
             $this->saveShipments($wcOrder, $order);
         }
-
-        $wcOrder->save_meta_data();
 
         return $this->save($order->externalIdentifier, $order);
     }
@@ -256,16 +254,13 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     private function saveShipments(WC_Order $wcOrder, PdkOrder $order): void
     {
-        $existingShipments = $wcOrder->get_meta(self::WC_ORDER_META_SHIPMENTS);
+        $existingShipments = get_post_meta($wcOrder->get_id(), self::WC_ORDER_META_SHIPMENTS, true);
 
-        $order->shipments = (new ShipmentCollection($existingShipments))->mergeByKey(
-            $order->shipments,
-            'id'
-        );
+        $order->shipments = (new ShipmentCollection($existingShipments))->mergeByKey($order->shipments, 'id');
 
         $shipmentsArray = $order->shipments->toStorableArray();
 
-        $wcOrder->update_meta_data(self::WC_ORDER_META_SHIPMENTS, $shipmentsArray);
+        update_post_meta($wcOrder->get_id(), self::WC_ORDER_META_SHIPMENTS, $shipmentsArray);
 
         $barcodes = Arr::pluck($shipmentsArray, 'barcode');
 
