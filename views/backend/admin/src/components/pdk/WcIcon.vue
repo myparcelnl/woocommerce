@@ -1,5 +1,6 @@
 <template>
   <span
+    v-test
     role="none"
     class="dashicons"
     :class="`dashicons-${mappedIcon}`"></span>

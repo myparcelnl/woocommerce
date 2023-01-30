@@ -1,5 +1,5 @@
 <template>
-  <div class="is-active spinner">
+  <div class="is-active spinner" v-test>
     <svg
       class="spinner__svg"
       viewBox="0 0 66 66"

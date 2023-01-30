@@ -1,5 +1,7 @@
 <template>
-  <component :is="component">
+  <component
+    :is="component"
+    v-test>
     <slot />
   </component>
 </template>

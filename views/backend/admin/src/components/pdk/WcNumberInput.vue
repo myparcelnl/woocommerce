@@ -1,6 +1,7 @@
 <template>
   <WcTextInput
     v-model="model"
+    v-test
     :element="element"
     type="number" />
 </template>

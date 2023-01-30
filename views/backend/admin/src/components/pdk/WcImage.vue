@@ -1,5 +1,6 @@
 <template>
   <img
+    v-test
     :src="src"
     :alt="alt" />
 </template>

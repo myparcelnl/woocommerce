@@ -3,6 +3,7 @@
     :id="id"
     ref="selectElement"
     v-model="model"
+    v-test="'select'"
     class="select"
     :class="{
       disabled: options.length === 1 || element.isDisabled || element.isSuspended,
@@ -10,6 +11,7 @@
     <option
       v-for="(item, index) in options"
       :key="index"
+      v-test="'option'"
       :value="item.value"
       v-text="item.label" />
   </select>
@@ -46,7 +48,7 @@ export default defineComponent({
       set: (value) => {
         ctx.emit('update:modelValue', value);
         $select.value?.val(value);
-        $select.value?.trigger('change.select2', { data: { internal: true } });
+        $select.value?.trigger('change.select2', {data: {internal: true}});
       },
     });
 
@@ -65,11 +67,9 @@ export default defineComponent({
 
       $select.value = jQuery(selectElement.value);
 
-      $select.value
-        .selectWoo({ width: 'auto'})
-        .on('change', (event) => {
-          model.value = event.currentTarget?.value;
-        });
+      $select.value.selectWoo({width: 'auto'}).on('change', (event) => {
+        model.value = event.currentTarget?.value;
+      });
 
       if (options.value.length === 1 || (!model.value && options.value.length > 0)) {
         model.value = options.value[0].value;

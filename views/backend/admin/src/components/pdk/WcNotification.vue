@@ -1,5 +1,6 @@
 <template>
   <div
+    v-test
     class="mypa-relative notice"
     :class="[
       `notice-${notification.variant}`,

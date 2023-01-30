@@ -2,6 +2,7 @@
   <div
     v-show="isOpen"
     :id="modalKey ? `pdk-modal-${modalKey}` : null"
+    v-test="{key: modalKey}"
     :class="[...backgroundClasses, 'mypa-z-[9999]']"
     tabindex="-1"
     role="dialog">

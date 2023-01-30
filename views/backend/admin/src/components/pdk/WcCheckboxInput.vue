@@ -2,10 +2,12 @@
   <input
     :id="id"
     v-model="model"
+    v-test="'input'"
     :value="value"
     type="checkbox" />
   <label
     v-if="element?.label"
+    v-test="'label'"
     :for="id"
     v-text="element?.label" />
 </template>

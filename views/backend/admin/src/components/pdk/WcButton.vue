@@ -1,5 +1,6 @@
 <template>
   <button
+    v-test
     type="button"
     class="button"
     :disabled="loading || disabled"
@@ -17,7 +18,9 @@
         :icon="icon" />
 
       <slot>
-        <span class="mypa-mt-0.5">
+        <span
+          v-test="'content'"
+          class="mypa-mt-0.5">
           {{ translate(label) }}
         </span>
       </slot>

@@ -1,6 +1,7 @@
 <template>
   <PdkTableRow
     v-show="element.isVisible"
+    v-test
     valign="top">
     <PdkTableCol
       component="th"

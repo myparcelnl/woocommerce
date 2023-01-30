@@ -1,5 +1,7 @@
 <template>
-  <div class="mypa-flex">
+  <div
+    v-test
+    class="mypa-flex">
     <ActionButton
       v-for="(action, index) in dropdownActions.standalone"
       :key="action.id"
@@ -32,6 +34,7 @@
         <ActionButton
           v-for="(action, index) in dropdownActions.hidden"
           :key="`${index}_${action.id}`"
+          v-test="'HiddenDropdownAction'"
           class="!mypa-border-none"
           :action="action">
           {{ translate(action.label) }}

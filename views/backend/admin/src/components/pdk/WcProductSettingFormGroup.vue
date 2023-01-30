@@ -12,8 +12,8 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, PropType} from 'vue';
-import {ElementInstance, useLanguage, generateFieldId, usePdkConfig} from '@myparcel/pdk-frontend';
+import {PropType, defineComponent} from 'vue';
+import {ElementInstance, generateFieldId, useLanguage, usePdkConfig} from '@myparcel/pdk-frontend';
 
 export default defineComponent({
   name: 'WcProductSettingFormGroup',
@@ -25,7 +25,7 @@ export default defineComponent({
   },
 
   setup: (props) => {
-    const { translate } = useLanguage();
+    const {translate} = useLanguage();
 
     return {
       id: generateFieldId(props.element),

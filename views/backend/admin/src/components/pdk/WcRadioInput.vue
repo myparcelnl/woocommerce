@@ -1,13 +1,17 @@
 <template>
-  <div class="wc-radio-input">
+  <div
+    v-test="'wrapper'"
+    class="wc-radio-input">
     <input
       :id="id"
       v-model="model"
+      v-test="'input'"
       :value="element.props?.value"
       type="radio"
       :disabled="element.isDisabled || element.isSuspended"
       class="" />
     <label
+      v-test="'label'"
       :for="id"
       v-text="element.label"></label>
   </div>

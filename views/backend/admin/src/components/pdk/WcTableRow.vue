@@ -1,5 +1,8 @@
 <template>
-  <component :is="component">
+  <component
+    :is="component"
+    v-test
+    data-test-id="TableRow">
     <slot />
   </component>
 </template>

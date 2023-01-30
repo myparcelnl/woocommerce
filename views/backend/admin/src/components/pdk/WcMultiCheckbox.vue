@@ -4,6 +4,7 @@
       v-for="(option, index) in options"
       :key="`${option.value}_${index}`"
       v-model="model"
+      v-test
       :element="elements[index]" />
   </div>
 </template>

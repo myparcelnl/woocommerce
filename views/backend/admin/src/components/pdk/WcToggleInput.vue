@@ -3,15 +3,18 @@
     <input
       :id="id"
       v-model="model"
+      v-test="'input'"
+      :data-test-id="`ToggleInput-${id}`"
       :disabled="element.isDisabled || element.isSuspended"
       :value="true"
       type="checkbox"
       class="!mypa-hidden" />
 
     <label
+      v-test="'label'"
       :for="id"
       :class="`woocommerce-input-toggle woocommerce-input-toggle--${model ? 'enabled' : 'disabled'}`"
-      class="!mypa-w-8 !mypa-float-none !mypa-ml-auto">
+      class="!mypa-float-none !mypa-ml-auto !mypa-w-8">
       {{ translate(`toggle_${model ? 'yes' : 'no'}`) }}
     </label>
   </a>

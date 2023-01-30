@@ -1,5 +1,7 @@
 <template>
-  <div class="">
+  <div
+    v-test
+    class="">
     <div>
       <slot name="header">
         <PdkHeading level="3">
@@ -44,7 +46,6 @@ export default defineComponent({
       type: String,
       default: null,
     },
-
 
     actions: {
       type: Array as PropType<PdkAction[]>,

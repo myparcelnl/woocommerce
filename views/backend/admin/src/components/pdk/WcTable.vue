@@ -1,5 +1,7 @@
 <template>
-  <table class="striped widefat">
+  <table
+    v-test
+    class="striped widefat">
     <thead v-if="$slots.header">
       <slot name="header" />
     </thead>
