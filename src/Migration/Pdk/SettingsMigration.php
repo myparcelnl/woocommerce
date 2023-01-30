@@ -317,7 +317,7 @@ class SettingsMigration extends AbstractUpgradeMigration
      * @param $needle
      * @param $haystack
      *
-     * @return int|string|void
+     * @return false|int|string
      */
     private function searchParentKey($needle, $haystack)
     {
@@ -326,5 +326,7 @@ class SettingsMigration extends AbstractUpgradeMigration
                 return $key;
             }
         }
+
+        return false;
     }
 }
