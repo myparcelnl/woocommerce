@@ -1,5 +1,7 @@
 <template>
-  <p class="form-field">
+  <p
+    v-test="id"
+    class="form-field">
     <label :for="id">{{ translate(element.label) }}</label>
 
     <span
@@ -12,8 +14,8 @@
 </template>
 
 <script lang="ts">
-import {PropType, defineComponent} from 'vue';
 import {ElementInstance, generateFieldId, useLanguage, usePdkConfig} from '@myparcel/pdk-frontend';
+import {PropType, defineComponent} from 'vue';
 
 export default defineComponent({
   name: 'WcProductSettingFormGroup',

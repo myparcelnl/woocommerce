@@ -1,19 +1,22 @@
 <template>
   <PdkTableRow
     v-show="element.isVisible"
-    v-test
+    v-test="{id}"
     valign="top">
     <PdkTableCol
       component="th"
       scope="row"
       class="titledesc">
-      <label :for="id">
+      <label
+        v-test="{type: 'label'}"
+        :for="id">
         <slot name="label">
           {{ element.label }}
         </slot>
 
         <span
           v-if="element.props.description"
+          v-test="{type: 'description'}"
           class="woocommerce-help-tip"
           :data-tip="translate(element.props.description)" />
       </label>

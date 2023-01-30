@@ -3,7 +3,7 @@
     :id="id"
     ref="selectElement"
     v-model="model"
-    v-test="'select'"
+    v-test="{type: 'select', id}"
     class="select"
     :class="{
       disabled: options.length === 1 || element.isDisabled || element.isSuspended,
@@ -11,7 +11,7 @@
     <option
       v-for="(item, index) in options"
       :key="index"
-      v-test="'option'"
+      v-test="{type: 'option', id, value: item.value}"
       :value="item.value"
       v-text="item.label" />
   </select>

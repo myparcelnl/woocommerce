@@ -1,9 +1,8 @@
 <template>
   <a
-    v-test
+    v-test="tab.name"
     href="#"
     class="nav-tab"
-    :data-test-id="`TabNavButton-${tab.name}`"
     :class="{
       'nav-tab-active': active,
     }"

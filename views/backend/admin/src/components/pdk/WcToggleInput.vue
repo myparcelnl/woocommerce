@@ -1,17 +1,16 @@
 <template>
-  <a>
+  <a v-test="{type: 'wrapper', id}">
     <input
       :id="id"
       v-model="model"
-      v-test="'input'"
-      :data-test-id="`ToggleInput-${id}`"
+      v-test="{type: 'input', id}"
       :disabled="element.isDisabled || element.isSuspended"
       :value="true"
       type="checkbox"
       class="!mypa-hidden" />
 
     <label
-      v-test="'label'"
+      v-test="{type: 'label', id}"
       :for="id"
       :class="`woocommerce-input-toggle woocommerce-input-toggle--${model ? 'enabled' : 'disabled'}`"
       class="!mypa-float-none !mypa-ml-auto !mypa-w-8">

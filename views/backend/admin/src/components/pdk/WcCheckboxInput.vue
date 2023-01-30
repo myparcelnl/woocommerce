@@ -2,12 +2,12 @@
   <input
     :id="id"
     v-model="model"
-    v-test="'input'"
+    v-test="{type: 'input', id}"
     :value="value"
     type="checkbox" />
   <label
     v-if="element?.label"
-    v-test="'label'"
+    v-test="{type: 'label', id}"
     :for="id"
     v-text="element?.label" />
 </template>
