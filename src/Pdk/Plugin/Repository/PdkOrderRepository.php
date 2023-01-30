@@ -254,7 +254,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     private function saveShipments(WC_Order $wcOrder, PdkOrder $order): void
     {
-        $existingShipments = get_post_meta($wcOrder->get_id(), self::WC_ORDER_META_SHIPMENTS, true);
+        $existingShipments = get_post_meta($wcOrder->get_id(), self::WC_ORDER_META_SHIPMENTS, true) ?: [];
 
         $order->shipments = (new ShipmentCollection($existingShipments))->mergeByKey($order->shipments, 'id');
 
@@ -262,9 +262,12 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
 
         update_post_meta($wcOrder->get_id(), self::WC_ORDER_META_SHIPMENTS, $shipmentsArray);
 
-        $barcodes = Arr::pluck($shipmentsArray, 'barcode');
+        $barcodes = array_filter(
+            Arr::pluck($shipmentsArray, 'barcode'),
+            static function ($item) { return null !== $item; }
+        );
 
-        if (! empty($barcodes)) {
+        if ($barcodes) {
             // TODO: Use setting for note prefix
             $prefix = '';
 
