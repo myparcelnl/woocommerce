@@ -18,11 +18,11 @@ use MyParcelNL\WooCommerce\Pdk\Settings\Repository\PdkSettingsRepository;
 
 class SettingsMigration extends AbstractUpgradeMigration
 {
-    private const GENERAL = 'general';
+    private const GENERAL  = 'general';
     private const CHECKOUT = 'checkout';
-    private const LABEL = 'label';
-    private const ORDER = 'order';
-    private const CUSTOMS = 'customs';
+    private const LABEL    = 'label';
+    private const ORDER    = 'order';
+    private const CUSTOMS  = 'customs';
 
     /**
      * @return void
@@ -196,39 +196,38 @@ class SettingsMigration extends AbstractUpgradeMigration
     private function mapSettingKeys(): array
     {
         return [
-            self::GENERAL => [
-                'api_key'                                 => 'apiKey',
-                'error_logging'                           => 'apiLogging',
-                'connect_email'                           => 'shareCustomerInformation',
-                'process_directly'                        => 'conceptShipments',
-                'export_mode'                             => 'orderMode',
-                'track_trace_email'                       => 'trackTraceInEmail',
-                'track_trace_my_account'                  => 'trackTraceInAccount',
-                'barcode_in_note'                         => 'barcodeInNote',
-                'export_automatic'                        => 'processDirectly',
+            self::GENERAL  => [
+                'api_key'                => 'apiKey',
+                'error_logging'          => 'apiLogging',
+                'connect_email'          => 'shareCustomerInformation',
+                'process_directly'       => 'conceptShipments',
+                'export_mode'            => 'orderMode',
+                'track_trace_email'      => 'trackTraceInEmail',
+                'track_trace_my_account' => 'trackTraceInAccount',
+                'barcode_in_note'        => 'barcodeInNote',
+                'export_automatic'       => 'processDirectly',
             ],
-            self::ORDER => [
+            self::ORDER    => [
 
-                'save_customer_address'                   => 'saveCustomerAddress',
-                'empty_parcel_weight'                     => 'emptyParcelWeight',
+                'save_customer_address' => 'saveCustomerAddress',
+                'empty_parcel_weight'   => 'emptyParcelWeight',
             ],
-            self::LABEL => [
-                'label_description'                       => 'description',
-                'label_format'                            => 'format',
-                'download_display'                        => '', // EMPTY
-                'ask_for_print_position'                  => 'prompt',
+            self::LABEL    => [
+                'label_description'      => 'description',
+                'label_format'           => 'format',
+                'download_display'       => '', // EMPTY
+                'ask_for_print_position' => 'prompt',
             ],
-            self::CUSTOMS => [
-                'package_contents'                        => 'packageContents',
-                'hs_code'                                 => 'customsCode',
-                'country_of_origin'                       => 'countryOfOrigin',
+            self::CUSTOMS  => [
+                'package_contents'  => 'packageContents',
+                'hs_code'           => 'customsCode',
+                'country_of_origin' => 'countryOfOrigin',
             ],
             self::CHECKOUT => [
                 'use_split_address_fields'                => '', // EMPTY
                 // price type
                 'show_delivery_day'                       => '', // EMPTY
                 'header_delivery_options_title'           => '', // EMPTY
-
                 'delivery_options_enabled_for_backorders' => '', // EMPTY
                 'delivery_options_enabled'                => '', // EMPTY
                 'delivery_options_display'                => 'deliveryOptionsDisplay',
@@ -247,22 +246,21 @@ class SettingsMigration extends AbstractUpgradeMigration
                 'address_not_found_title'                 => 'stringAddressNotFound',
             ],
 
-
             // General & label mixed
-//            'trigger_manual_update'                   => '', // EMPTY
-//            'order_status_automation'                 => 'exportWithAutomaticStatus',
-//            'change_order_status_after'               => '', // EMPTY
-//            'automatic_order_status'                  => '', // EMPTY
-//            'barcode_in_note_title'                   => '', // EMPTY
-//
-//            // Export
-//            'shipping_methods_package_types'          => '', // EMPTY
-//            'connect_phone'                           => 'shareCustomerInformation',
-//
-//            'empty_digital_stamp_weight'              => 'emptyDigitalStampWeight',
-//            'export_automatic'                        => '', // EMPTY
-//            'export_automatic_status'                 => 'exportWithAutomaticStatus',
-//            'return_in_the_box'                       => '', // EMPTY
+            //            'trigger_manual_update'                   => '', // EMPTY
+            //            'order_status_automation'                 => 'exportWithAutomaticStatus',
+            //            'change_order_status_after'               => '', // EMPTY
+            //            'automatic_order_status'                  => '', // EMPTY
+            //            'barcode_in_note_title'                   => '', // EMPTY
+            //
+            //            // Export
+            //            'shipping_methods_package_types'          => '', // EMPTY
+            //            'connect_phone'                           => 'shareCustomerInformation',
+            //
+            //            'empty_digital_stamp_weight'              => 'emptyDigitalStampWeight',
+            //            'export_automatic'                        => '', // EMPTY
+            //            'export_automatic_status'                 => 'exportWithAutomaticStatus',
+            //            'return_in_the_box'                       => '', // EMPTY
         ];
     }
 
