@@ -48,9 +48,9 @@ class WcRenderService extends RenderService
                     case Components::INPUT_TRISTATE:
                         $method             = 'woocommerce_wp_select';
                         $options['options'] = [
-                            1  => LanguageService::translate('Yes'),
-                            0  => LanguageService::translate('No'),
                             -1 => LanguageService::translate('Default'),
+                            0  => LanguageService::translate('No'),
+                            1  => LanguageService::translate('Yes'),
                         ];
                         break;
                     case Components::INPUT_TOGGLE:
