@@ -633,11 +633,11 @@ __metadata:
   dependencies:
     "@myparcel-pdk/common": "workspace:^"
     "@myparcel/sdk": ^2.10.1
-    "@myparcel/ts-utils": ^1.3.1
-    "@myparcel/vue-form-builder": ^1.0.0-alpha.29
+    "@myparcel/ts-utils": ^1.4.0
+    "@myparcel/vue-form-builder": ^1.0.0-alpha.1
     "@tanstack/vue-query": ^4.22.4
     "@types/lodash-es": ^4.17.6
-    "@vueuse/core": ^9.11.1
+    "@vueuse/core": ^9.12.0
     lodash: ^4.17.21
     lodash-es: ^4.17.21
     lodash-unified: ^1.0.3
@@ -721,7 +721,7 @@ __metadata:
   dependencies:
     "@myparcel-woocommerce/frontend-common": "workspace:*"
     "@myparcel/delivery-options": ^5.3.1
-    "@myparcel/ts-utils": ^1.3.1
+    "@myparcel/ts-utils": ^1.4.0
     "@types/jquery": ^3.5.16
     sass: ^1.57.1
   languageName: unknown
@@ -793,8 +793,8 @@ __metadata:
   resolution: "@myparcel/pdk-components@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-components::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   dependencies:
     "@myparcel/pdk-frontend": "workspace:^"
-    "@myparcel/ts-utils": ^1.3.1
-    "@vueuse/core": ^9.11.1
+    "@myparcel/ts-utils": ^1.4.0
+    "@vueuse/core": ^9.12.0
     vue: ^3.2.45
   languageName: node
   linkType: soft
@@ -812,8 +812,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel/pdk-preset-bootstrap4@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-preset-bootstrap4::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   dependencies:
-    "@myparcel/pdk-frontend": "workspace:*"
-    "@myparcel/ts-utils": ^1.3.1
+    "@myparcel/pdk-frontend": "workspace:^"
+    "@myparcel/ts-utils": ^1.4.0
     vue: ^3.2.45
   languageName: node
   linkType: soft
@@ -863,14 +863,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel/ts-utils@npm:^1.3.1":
-  version: 1.3.1
-  resolution: "@myparcel/ts-utils@npm:1.3.1"
-  checksum: 9413665677cbc4e342c1b22221237ffc417b40a4b3ad26534be7d0edb179863c904be8514c8bfffe203193ade86aff76d2f0b5d2fd73af70665e682213930695
+"@myparcel/ts-utils@npm:^1.3.1, @myparcel/ts-utils@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "@myparcel/ts-utils@npm:1.4.0"
+  checksum: f6edfe97861bdf3f69f53c1c1472eafbf5ed03286ef9793293a7b5f4c77ee0bf6b1563b9135e14ffe71d552ac5cdca98c976cd305ac700521d73e73824dbbb83
   languageName: node
   linkType: hard
 
-"@myparcel/vue-form-builder@npm:^1.0.0-alpha.29":
+"@myparcel/vue-form-builder@npm:^1.0.0-alpha.1":
   version: 1.0.0-alpha.31
   resolution: "@myparcel/vue-form-builder@npm:1.0.0-alpha.31"
   dependencies:
@@ -900,7 +900,7 @@ __metadata:
     "@types/node": ^18.11.18
     "@types/papaparse": ^5.3.7
     autoprefixer: ^10.4.13
-    eslint: ^8.32.0
+    eslint: ^8.33.0
     eslint-plugin-prettier: ^4.2.1
     eslint-plugin-sort-exports: ^0.8.0
     gettext-parser: ^6.0.0
@@ -918,7 +918,7 @@ __metadata:
     is-ci: ^3.0.1
     lint-staged: ^13.1.0
     nodemon: ^2.0.20
-    nx: 15.6.2
+    nx: 15.6.3
     papaparse: ^5.3.2
     prettier: ^2.8.3
     terser: ^5.16.1
@@ -1167,23 +1167,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nrwl/cli@npm:15.6.2":
-  version: 15.6.2
-  resolution: "@nrwl/cli@npm:15.6.2"
+"@nrwl/cli@npm:15.6.3":
+  version: 15.6.3
+  resolution: "@nrwl/cli@npm:15.6.3"
   dependencies:
-    nx: 15.6.2
-  checksum: 9165f7f11c906be50bc75009be5f180c9469f5b594a28034caac7a11e8adadafe79ed44f90b1cca77fdfd60ba14c96baa1bc917c82524f27dcfda74a6eca3660
+    nx: 15.6.3
+  checksum: 66219cbf0a99d7cc4bb8bcf1c56f42e088e825b862d0df44710c4aa2466ce3d2c7286e0d208327e8325e5e370c3a0bad205df52ac311774f9d7a960e8a41c7c5
   languageName: node
   linkType: hard
 
-"@nrwl/tao@npm:15.6.2":
-  version: 15.6.2
-  resolution: "@nrwl/tao@npm:15.6.2"
+"@nrwl/tao@npm:15.6.3":
+  version: 15.6.3
+  resolution: "@nrwl/tao@npm:15.6.3"
   dependencies:
-    nx: 15.6.2
+    nx: 15.6.3
   bin:
     tao: index.js
-  checksum: 0b9b7b1c43f682638fcf413d520d8626b427f68fe7d6807eb6931b9120273126dac8d10d3602ea6591140dd9ff6e6421eb5231f9a2b25360d3d3bd1141f44605
+  checksum: ff56f21c7a2063a7719ed192e7997121dae42135bbff504f4847af86bede9db34fbd6c5d9573cd5368d594c44dd68c4e8d9ab5d57b346113e86015b2f4db47bc
   languageName: node
   linkType: hard
 
@@ -2226,31 +2226,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vueuse/core@npm:^9.11.1":
-  version: 9.11.1
-  resolution: "@vueuse/core@npm:9.11.1"
+"@vueuse/core@npm:^9.12.0":
+  version: 9.12.0
+  resolution: "@vueuse/core@npm:9.12.0"
   dependencies:
     "@types/web-bluetooth": ^0.0.16
-    "@vueuse/metadata": 9.11.1
-    "@vueuse/shared": 9.11.1
+    "@vueuse/metadata": 9.12.0
+    "@vueuse/shared": 9.12.0
     vue-demi: "*"
-  checksum: c9b4d65d50441d19d452dfebe4e13c8b56a8ea296b31b9cd93b5a52ee1b461c40ebc530415d3869083852eb874c99d5742311fd8bf750d405f4d52a768aebaa3
+  checksum: bbbbd0a60f3cbda8e116c721f67319af42247af607d997e58d1f860660148ecbf58f90b8b3f38c6ecf87bc37a1a330b280050d883d79579ed72abf3b286b88cb
   languageName: node
   linkType: hard
 
-"@vueuse/metadata@npm:9.11.1":
-  version: 9.11.1
-  resolution: "@vueuse/metadata@npm:9.11.1"
-  checksum: d4025257dc891b4ae3712a68b881409e7a58517f7b96f8949a74a99cec5e46f202fc2c326765eed9bffc8fbde6417ee737d3c2ac650799dd9e99fa5a7f9c2363
+"@vueuse/metadata@npm:9.12.0":
+  version: 9.12.0
+  resolution: "@vueuse/metadata@npm:9.12.0"
+  checksum: ce732fbf313e3a3ed4ebddcace4cca05907c297103a20bc7e3e25cfb58dbce4b8e6b5d6a68a41922a821e07fa627321534068f9d494190d0bc5b95f1c29e8dcf
   languageName: node
   linkType: hard
 
-"@vueuse/shared@npm:9.11.1":
-  version: 9.11.1
-  resolution: "@vueuse/shared@npm:9.11.1"
+"@vueuse/shared@npm:9.12.0":
+  version: 9.12.0
+  resolution: "@vueuse/shared@npm:9.12.0"
   dependencies:
     vue-demi: "*"
-  checksum: 373a725ba87dd84eec3882cef4dc92706f28b53256f1c23a800444c12de675c71c1773c254def5d9c3096e54b9830154d13540264c1f017770395f04b07d789f
+  checksum: b359e78dddef960c7456c0bad7427ad255239740ae02485ac64ed5df3f58387253647cf243a0839f9eb014e91f315db850745ab5930e22a0c52434d1619bc04e
   languageName: node
   linkType: hard
 
@@ -2262,12 +2262,12 @@ __metadata:
   linkType: hard
 
 "@yarnpkg/parsers@npm:^3.0.0-rc.18":
-  version: 3.0.0-rc.36
-  resolution: "@yarnpkg/parsers@npm:3.0.0-rc.36"
+  version: 3.0.0-rc.37
+  resolution: "@yarnpkg/parsers@npm:3.0.0-rc.37"
   dependencies:
     js-yaml: ^3.10.0
     tslib: ^2.4.0
-  checksum: cfaf0d13589f0e8b11d8474dac053a5490c4339f6bda1f45f531afd47d1da6dbb58f98eb4829802eec21da823d63bb6d8d5966ce3e7c181ea18e58b853756ddc
+  checksum: a6d351fbfd6f14c46f48779594b1015709605310629fae9fdeaf2e58ba87b48222a668c4b656926c2c960495491d6e465d25de7d076fa3dfe3f7f321013d80c1
   languageName: node
   linkType: hard
 
@@ -2816,9 +2816,9 @@ __metadata:
   linkType: hard
 
 "async-each@npm:^1.0.1":
-  version: 1.0.3
-  resolution: "async-each@npm:1.0.3"
-  checksum: 868651cfeb209970b367fbb96df1e1c8dc0b22c681cda7238417005ab2a5fbd944ee524b43f2692977259a57b7cc2547e03ff68f2b5113dbdf953d48cc078dc3
+  version: 1.0.5
+  resolution: "async-each@npm:1.0.5"
+  checksum: 7bd386248c76eb180983d16e912f1b6f5623428c9910200f6a54e3bcc69b6539a6ccf69a026cdaa40060b8112669cc608814acb8fb009e3fa81d736a5a14ea95
   languageName: node
   linkType: hard
 
@@ -2866,13 +2866,13 @@ __metadata:
   linkType: hard
 
 "axios@npm:^1.0.0":
-  version: 1.2.5
-  resolution: "axios@npm:1.2.5"
+  version: 1.2.6
+  resolution: "axios@npm:1.2.6"
   dependencies:
     follow-redirects: ^1.15.0
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
-  checksum: 3d7a3b029b9f46fb296bcecf84fbe4be32b09511aba2256d44fc5c1a75824f364d2ce22fd0ea61adfd564e1c353c6d2000b4cc340c65b27102528101557dd9db
+  checksum: cbd19be3e07d2fbb6a0b126e49880cecdd44c1f68496ae0e7d21e7dc1c31fd59703a8eec51c9fd69034344f519cc1cdc22c22153131063657c4cef50195f0c00
   languageName: node
   linkType: hard
 
@@ -3694,9 +3694,9 @@ __metadata:
   linkType: hard
 
 "content-type@npm:^1.0.4":
-  version: 1.0.4
-  resolution: "content-type@npm:1.0.4"
-  checksum: 3d93585fda985d1554eca5ebd251994327608d2e200978fdbfba21c0c679914d5faf266d17027de44b34a72c7b0745b18584ecccaa7e1fdfb6a68ac7114f12e0
+  version: 1.0.5
+  resolution: "content-type@npm:1.0.5"
+  checksum: 566271e0a251642254cde0f845f9dd4f9856e52d988f4eb0d0dcffbb7a1f8ec98de7a5215fc628f3bce30fe2fb6fd2bc064b562d721658c59b544e2d34ea2766
   languageName: node
   linkType: hard
 
@@ -4609,9 +4609,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:*, eslint@npm:^8.20.0, eslint@npm:^8.32.0":
-  version: 8.32.0
-  resolution: "eslint@npm:8.32.0"
+"eslint@npm:*, eslint@npm:^8.20.0, eslint@npm:^8.33.0":
+  version: 8.33.0
+  resolution: "eslint@npm:8.33.0"
   dependencies:
     "@eslint/eslintrc": ^1.4.1
     "@humanwhocodes/config-array": ^0.11.8
@@ -4654,7 +4654,7 @@ __metadata:
     text-table: ^0.2.0
   bin:
     eslint: bin/eslint.js
-  checksum: 23c8fb3c57291eecd9c1448faf603226a8f885022a2cd96e303459bf72e39b7f54987c6fb948f0f9eecaf7085600e6eb0663482a35ea83da12e9f9141a22b91e
+  checksum: 727e63ab8b7acf281442323c5971f6afdd5b656fbcebc4476cf54e35af51b2f180617433fc5e1952f0449ca3f43a905527f9407ea4b8a7ea7562fc9c3f278d4c
   languageName: node
   linkType: hard
 
@@ -5586,11 +5586,11 @@ __metadata:
   linkType: hard
 
 "globals@npm:^13.19.0":
-  version: 13.19.0
-  resolution: "globals@npm:13.19.0"
+  version: 13.20.0
+  resolution: "globals@npm:13.20.0"
   dependencies:
     type-fest: ^0.20.2
-  checksum: a000dbd00bcf28f0941d8a29c3522b1c3b8e4bfe4e60e262c477a550c3cbbe8dbe2925a6905f037acd40f9a93c039242e1f7079c76b0fd184bc41dcc3b5c8e2e
+  checksum: ad1ecf914bd051325faad281d02ea2c0b1df5d01bd94d368dcc5513340eac41d14b3c61af325768e3c7f8d44576e72780ec0b6f2d366121f8eec6e03c3a3b97a
   languageName: node
   linkType: hard
 
@@ -8327,12 +8327,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nx@npm:15.6.2":
-  version: 15.6.2
-  resolution: "nx@npm:15.6.2"
+"nx@npm:15.6.3":
+  version: 15.6.3
+  resolution: "nx@npm:15.6.3"
   dependencies:
-    "@nrwl/cli": 15.6.2
-    "@nrwl/tao": 15.6.2
+    "@nrwl/cli": 15.6.3
+    "@nrwl/tao": 15.6.3
     "@parcel/watcher": 2.0.4
     "@yarnpkg/lockfile": ^1.1.0
     "@yarnpkg/parsers": ^3.0.0-rc.18
@@ -8376,7 +8376,7 @@ __metadata:
       optional: true
   bin:
     nx: bin/nx.js
-  checksum: 823deaf544d50311ae04123b214d9e1e179003724208ebfb9e1bd3b25bcd91e1508a8f27dd2f31f34e1d4e23e71afac2fd9d857676c9b33ea7c2d51da01b8be0
+  checksum: 09fe9a8f75a0e8e656930c1eaa9ab1eb39f4ffb9e964e7f3381920bf71cf75f8b3c0e0845b303c30e5818eb1c1eac9aa728e6f1d94d59743298b4bdf8f4d70ab
   languageName: node
   linkType: hard
 
@@ -9879,8 +9879,8 @@ __metadata:
   linkType: hard
 
 "rollup@npm:^3.7.0":
-  version: 3.11.0
-  resolution: "rollup@npm:3.11.0"
+  version: 3.12.0
+  resolution: "rollup@npm:3.12.0"
   dependencies:
     fsevents: ~2.3.2
   dependenciesMeta:
@@ -9888,7 +9888,7 @@ __metadata:
       optional: true
   bin:
     rollup: dist/bin/rollup
-  checksum: ba9fe9ec8926195c6d4c91c08888fd1be01651dd79db4cff1c3fe8514f3e65be06beb8c6b087ea4145edb2542743fff20e99b4e919f4e2fa45438ee09498ad21
+  checksum: 66182947ea74bd4777e1a02514124f49eacc6b123e23738cf31342f8e73b79e43da05671aebe6d5f55b5830ebf3dd11f2eaba1b98b8fc6a9e6d96fd4c3ecc534
   languageName: node
   linkType: hard
 
