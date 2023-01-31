@@ -3,7 +3,7 @@
     <div class="woocommerce-layout">
       <div class="woocommerce-layout__header">
         <div class="woocommerce-layout__header-wrapper">
-          <PdkHeading level="1">MyParcel</PdkHeading>
+          <PdkHeading level="1">{{ title }}</PdkHeading>
         </div>
       </div>
     </div>
@@ -14,10 +14,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import {defineComponent} from 'vue';
+<script lang="ts" setup>
+import {useAppInfo} from '@myparcel/pdk-frontend';
 
-export default defineComponent({
-  name: 'WcPluginSettingsWrapper',
-});
+const {title} = useAppInfo();
 </script>
