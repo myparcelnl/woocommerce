@@ -122,14 +122,15 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         return [
             'contents' => CustomsDeclaration::CONTENTS_COMMERCIAL_GOODS,
             'invoice'  => $order->get_id(),
-            'items'    => $items
-                ->filter(function ($item) {
+            'items'    => array_values(
+                $items->filter(function ($item) {
                     return $item['product'] && ! $item['product']->is_virtual();
                 })
-                ->map(function ($item) {
-                    return CustomsDeclarationItem::fromProduct($item['pdkProduct']);
-                })
-                ->toArray(),
+                    ->map(function ($item) {
+                        return CustomsDeclarationItem::fromProduct($item['pdkProduct']);
+                    })
+                    ->toArray()
+            ),
         ];
     }
 
