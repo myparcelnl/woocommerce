@@ -48,6 +48,6 @@ class PdkAccountRepository extends AbstractAccountRepository
     {
         $appInfo = Pdk::getAppInfo();
 
-        return sprintf('%s_account', $appInfo['name']);
+        return sprintf('_%s_data_account', $appInfo['name']);
     }
 }
