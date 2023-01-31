@@ -2,7 +2,7 @@
   <span
     v-test
     role="none"
-    class="dashicons"
+    class="dashicons mypa-w-auto mypa-h-auto"
     :class="`dashicons-${mappedIcon}`"></span>
 </template>
 

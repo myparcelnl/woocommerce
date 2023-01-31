@@ -13,8 +13,8 @@
     <span class="mypa-h-full mypa-inline-flex">
       <PdkIcon
         v-if="icon"
-        class="mypa-m-auto"
-        :class="label || $slots.default ? 'mypa-mr-1' : null"
+        class="mypa-m-auto mypa-text-sm"
+        :class="label ? 'mypa-mr-1' : null"
         :icon="icon" />
 
       <slot>

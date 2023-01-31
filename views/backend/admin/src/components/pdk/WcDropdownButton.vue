@@ -20,7 +20,7 @@
       :aria-label="translate('toggle_dropdown')"
       class="mypa-relative"
       :class="{
-        '!mypa-rounded-l-none': dropdownActions.hidden.length > 1,
+        '!mypa-rounded-l-none !mypa-border-l-0': dropdownActions.standalone.length > 0,
       }"
       size="sm"
       :icon="dropdownIcon"
@@ -30,7 +30,7 @@
       @mouseover="toggled = true">
       <div
         v-show="toggled"
-        class="mypa-absolute mypa-bg-white mypa-border mypa-border-solid mypa-flex mypa-flex-col mypa-right-0 mypa-top-full mypa-z-50">
+        class="mypa-absolute mypa-bg-white mypa-border mypa-border-solid mypa-flex mypa-flex-col mypa-right-0 mypa-top-full mypa-z-50 mypa-rounded">
         <ActionButton
           v-for="(action, index) in dropdownActions.hidden"
           :key="`${index}_${action.id}`"
