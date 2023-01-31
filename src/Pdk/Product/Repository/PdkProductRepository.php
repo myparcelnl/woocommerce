@@ -101,7 +101,7 @@ class PdkProductRepository extends AbstractProductRepository
      *
      * @return void
      */
-    public function store(PdkProduct $product): void
+    public function update(PdkProduct $product): void
     {
         $wcProduct = wc_get_product($product->externalIdentifier);
 

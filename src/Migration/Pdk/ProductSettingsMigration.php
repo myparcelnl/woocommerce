@@ -42,7 +42,7 @@ class ProductSettingsMigration extends AbstractUpgradeMigration
     private function migrateTheseWcProducts($wcProducts): void
     {
         /** @var \MyParcelNL\WooCommerce\Pdk\Product\Repository\PdkProductRepository $productRepository */
-        $productRepository = Pdk::get(AbstractProductRepository::class);
+        $productRepository = Pdk::get(\MyParcelNL\Pdk\Product\Repository\ProductRepositoryInterface::class);
 
         foreach ($wcProducts as $wcProduct) {
             if (! $wcProduct instanceof \WC_Product) {

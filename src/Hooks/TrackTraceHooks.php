@@ -7,21 +7,20 @@ namespace MyParcelNL\WooCommerce\Hooks;
 use Exception;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
-use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
-use MyParcelNL\Pdk\Shipment\Model\Shipment;
+use MyParcelNL\Pdk\Plugin\Repository\PdkOrderRepositoryInterface;
 use WC_Order;
 
 class TrackTraceHooks implements WordPressHooksInterface
 {
     /**
-     * @var \MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository
+     * @var \MyParcelNL\Pdk\Plugin\Repository\PdkOrderRepositoryInterface
      */
     private $orderRepository;
 
     /**
-     * @param  \MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository $pdkOrderRepository
+     * @param  \MyParcelNL\Pdk\Plugin\Repository\PdkOrderRepositoryInterface $pdkOrderRepository
      */
-    public function __construct(AbstractPdkOrderRepository $pdkOrderRepository)
+    public function __construct(PdkOrderRepositoryInterface $pdkOrderRepository)
     {
         $this->orderRepository = $pdkOrderRepository;
     }

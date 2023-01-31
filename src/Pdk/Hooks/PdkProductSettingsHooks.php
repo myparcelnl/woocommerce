@@ -7,7 +7,7 @@ namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 use MyParcelNL;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
-use MyParcelNL\Pdk\Product\Repository\AbstractProductRepository;
+use MyParcelNL\Pdk\Product\Repository\ProductRepositoryInterface;
 use MyParcelNL\Sdk\src\Support\Str;
 use MyParcelNL\WooCommerce\Hooks\WordPressHooksInterface;
 
@@ -50,13 +50,18 @@ class PdkProductSettingsHooks implements WordPressHooksInterface
      */
     public function renderPdkProductSettings(): void
     {
-        /** @var \MyParcelNL\Pdk\Product\Repository\AbstractProductRepository $productRepository */
-        $productRepository = Pdk::get(AbstractProductRepository::class);
+        /** @var \MyParcelNL\Pdk\Product\Repository\ProductRepositoryInterface $productRepository */
+        $productRepository = Pdk::get(ProductRepositoryInterface::class);
         $product           = $productRepository->getProduct(get_the_ID());
 
         echo RenderService::renderProductSettings($product);
     }
 
+    /**
+     * @param  int $productId
+     *
+     * @return void
+     */
     public function savePdkProductSettings(int $productId): void
     {
         $post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -66,8 +71,8 @@ class PdkProductSettingsHooks implements WordPressHooksInterface
         }, ARRAY_FILTER_USE_KEY);
 
         /** @var \MyParcelNL\WooCommerce\Pdk\Product\Repository\PdkProductRepository $productRepository */
-        $productRepository = Pdk::get(AbstractProductRepository::class);
+        $productRepository = Pdk::get(ProductRepositoryInterface::class);
         $product           = $productRepository->getProduct($productId);
-        $productRepository->store($productRepository->convertDbValuesToProductSettings($product, $values));
+        $productRepository->update($productRepository->convertDbValuesToProductSettings($product, $values));
     }
 }

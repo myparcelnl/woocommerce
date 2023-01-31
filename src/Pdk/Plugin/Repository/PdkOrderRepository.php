@@ -10,7 +10,7 @@ use MyParcelNL\Pdk\Facade\DefaultLogger;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrderLine;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
-use MyParcelNL\Pdk\Product\Repository\AbstractProductRepository;
+use MyParcelNL\Pdk\Product\Repository\ProductRepositoryInterface;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
@@ -33,7 +33,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     private $countryService;
 
     /**
-     * @var \MyParcelNL\Pdk\Product\Repository\AbstractProductRepository
+     * @var \MyParcelNL\Pdk\Product\Repository\ProductRepositoryInterface
      */
     private $productRepository;
 
@@ -43,16 +43,16 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     private $recipientService;
 
     /**
-     * @param  \MyParcelNL\Pdk\Storage\StorageInterface                     $storage
-     * @param  \MyParcelNL\Pdk\Product\Repository\AbstractProductRepository $productRepository
-     * @param  \MyParcelNL\WooCommerce\Service\WcRecipientService           $recipientService
-     * @param  \MyParcelNL\Pdk\Base\Service\CountryService                  $countryService
+     * @param  \MyParcelNL\Pdk\Storage\StorageInterface                      $storage
+     * @param  \MyParcelNL\Pdk\Product\Repository\ProductRepositoryInterface $productRepository
+     * @param  \MyParcelNL\WooCommerce\Service\WcRecipientService            $recipientService
+     * @param  \MyParcelNL\Pdk\Base\Service\CountryService                   $countryService
      */
     public function __construct(
-        StorageInterface          $storage,
-        AbstractProductRepository $productRepository,
-        WcRecipientService        $recipientService,
-        CountryService            $countryService
+        StorageInterface           $storage,
+        ProductRepositoryInterface $productRepository,
+        WcRecipientService         $recipientService,
+        CountryService             $countryService
     ) {
         parent::__construct($storage);
         $this->productRepository = $productRepository;
