@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import {ActionButton, PdkDropdownAction, PdkIcon, useDropdownData, useLanguage} from '@myparcel/pdk-frontend';
+import {ActionButton, ResolvedAction, PdkIcon, useDropdownData, useLanguage} from '@myparcel/pdk-frontend';
 import {PropType, computed, defineComponent} from 'vue';
 
 export default defineComponent({
@@ -56,7 +56,7 @@ export default defineComponent({
 
   props: {
     actions: {
-      type: Array as PropType<PdkDropdownAction[]>,
+      type: Array as PropType<ResolvedAction[]>,
       default: () => [],
     },
 

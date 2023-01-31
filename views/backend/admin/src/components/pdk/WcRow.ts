@@ -7,8 +7,8 @@ export default defineComponent({
       type: Boolean,
     },
     columns: {
-      type: Number,
-      default: 'auto',
+      type: [Number, String],
+      default: null,
     },
   },
 
