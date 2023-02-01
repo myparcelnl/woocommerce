@@ -17,7 +17,7 @@ class PdkAccountRepository extends AbstractAccountRepository
     {
         $account = get_option($this->getSettingKey(), null);
 
-        return new Account($account);
+        return $account ? new Account($account) : null;
     }
 
     /**

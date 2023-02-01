@@ -22,7 +22,8 @@ class RestApiHooks implements WordPressHooksInterface
 
     public function apply(): void
     {
-        add_action('rest_api_init', [$this, 'registerApiRoutes']);
+        add_action('rest_api_init', [$this, 'registerPdkRoutes']);
+        add_action('rest_api_init', [$this, 'registerWebhookRoutes']);
     }
 
     /**
@@ -56,9 +57,8 @@ class RestApiHooks implements WordPressHooksInterface
     /**
      * @return void
      */
-    public function registerApiRoutes(): void
+    public function registerPdkRoutes(): void
     {
-        if (! isset($_SERVER['HTTP_X_WP_NONCE'])) $_SERVER['HTTP_X_WP_NONCE'] = $_SERVER['HTTP_XWPNONCE']; // todo find out where in js the headers are broken
         register_rest_route(self::NAMESPACE, self::ROUTE_PDK, [
             'methods'             => WP_REST_Server::ALLMETHODS,
             'callback'            => [$this, 'processPdkRequest'],
@@ -66,7 +66,13 @@ class RestApiHooks implements WordPressHooksInterface
                 return current_user_can('manage_options');
             },
         ]);
+    }
 
+    /**
+     * @return void
+     */
+    public function registerWebhookRoutes(): void
+    {
         register_rest_route(self::NAMESPACE, self::ROUTE_WEBHOOK . '/(?P<hash>.+)', [
             'methods'             => WP_REST_Server::CREATABLE,
             'callback'            => [$this, 'processWebhookRequest'],
