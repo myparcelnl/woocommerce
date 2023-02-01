@@ -14,7 +14,9 @@
       <slot />
     </div>
 
-    <div class="d-flex">
+    <div
+      v-if="actions.length || $slots.footer"
+      class="d-flex">
       <slot name="footer">
         <PdkButtonGroup>
           <ActionButton
