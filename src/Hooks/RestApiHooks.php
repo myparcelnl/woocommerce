@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
-use MyParcelNL\Pdk\Base\PdkEndpoint;
 use MyParcelNL\Pdk\Facade\DefaultLogger;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Plugin\Api\PdkEndpoint;
 use MyParcelNL\Pdk\Plugin\Api\PdkWebhook;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,7 +35,7 @@ class RestApiHooks implements WordPressHooksInterface
     public function processPdkRequest(WP_REST_Request $request): WP_REST_Response
     {
         try {
-            /** @var \MyParcelNL\Pdk\Base\PdkEndpoint $endpoint */
+            /** @var \MyParcelNL\Pdk\Plugin\Api\ $endpoint */
             $endpoint = Pdk::get(PdkEndpoint::class);
 
             $response = $endpoint->call($this->convertRequest($request));
