@@ -10,7 +10,6 @@ use MyParcelNL\Pdk\Plugin\Api\PdkEndpoint;
 use MyParcelNL\Pdk\Plugin\Api\PdkWebhook;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Throwable;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -34,21 +33,12 @@ class RestApiHooks implements WordPressHooksInterface
      */
     public function processPdkRequest(WP_REST_Request $request): WP_REST_Response
     {
-        try {
-            /** @var \MyParcelNL\Pdk\Plugin\Api\ $endpoint */
-            $endpoint = Pdk::get(PdkEndpoint::class);
+        /** @var \MyParcelNL\Pdk\Plugin\Api\PdkEndpoint $endpoint */
+        $endpoint = Pdk::get(PdkEndpoint::class);
 
-            $response = $endpoint->call($this->convertRequest($request));
-        } catch (Throwable $e) {
-            DefaultLogger::error($e->getMessage());
-            return new WP_REST_Response($e->getMessage(), 400);
-        }
+        $response = $endpoint->call($this->convertRequest($request));
 
         return $this->convertResponse($response);
-    }
-
-    public function processWebhook()
-    {
     }
 
     /**

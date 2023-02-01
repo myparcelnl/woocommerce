@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
-use MyParcelNL\Pdk\Carrier\Model\CarrierOptions;
+use MyParcelNL\Pdk\Carrier\Model\Carrier;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\CarrierSettings;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
@@ -45,7 +45,7 @@ class SettingsMigration extends AbstractUpgradeMigration
             $pdkSettingsRepository->store($modelInstance);
         }
 
-        $carriers = [CarrierOptions::CARRIER_POSTNL_NAME, 'dhlforyou'];
+        $carriers = [Carrier::CARRIER_POSTNL_NAME, 'dhlforyou'];
         foreach ($carriers as $carrier) {
             $data                         = $this->getWcCarrierSettings($carrier) + $transformedWcSettingsData;
             $data['dropOffPossibilities'] = $this->getDropOffPossibilities($data);
@@ -271,7 +271,7 @@ class SettingsMigration extends AbstractUpgradeMigration
      */
     public function getWcCarrierSettings(string $carrierName): array
     {
-        if (! in_array($carrierName, [CarrierOptions::CARRIER_POSTNL_NAME, 'dhlforyou'], true)) {
+        if (! in_array($carrierName, [Carrier::CARRIER_POSTNL_NAME, 'dhlforyou'], true)) {
             return [];
         }
 
