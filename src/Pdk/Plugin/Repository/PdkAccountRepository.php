@@ -26,7 +26,7 @@ class PdkAccountRepository extends AbstractAccountRepository
      * @return \MyParcelNL\Pdk\Account\Model\Account
      * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
      */
-    public function store(?Account $account): Account
+    public function store(?Account $account): ?Account
     {
         $settingKey = $this->getSettingKey();
 
