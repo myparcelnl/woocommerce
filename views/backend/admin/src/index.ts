@@ -78,7 +78,10 @@ createPdkFrontend({
   },
 
   cssUtilities: {
+    animationSpin: 'mypa-animate-spin',
     textCenter: 'mypa-text-center',
+    textColorError: 'mypa-text-red-500',
+    textColorSuccess: 'mypa-text-green-500',
     whitespaceNoWrap: 'mypa-whitespace-nowrap',
   },
 

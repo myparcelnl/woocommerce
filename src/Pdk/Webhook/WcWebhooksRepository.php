@@ -6,23 +6,33 @@ namespace MyParcelNL\WooCommerce\Pdk\Webhook;
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Webhook\Repository\AbstractPdkWebhooksRepository;
+use MyParcelNL\Pdk\Webhook\Collection\WebhookSubscriptionCollection;
 
 class WcWebhooksRepository extends AbstractPdkWebhooksRepository
 {
+    private const KEY_WEBHOOKS     = 'webhooks';
+    private const KEY_WEBHOOK_HASH = 'webhook_hash';
+
     /**
-     * @param  string $hook
-     *
-     * @return null|int
+     * @return \MyParcelNL\Pdk\Webhook\Collection\WebhookSubscriptionCollection
      */
-    public function getId(string $hook): ?int
+    public function getAll(): WebhookSubscriptionCollection
     {
-        $id = get_option($this->getKey($hook), null);
+        $key = $this->getKey(self::KEY_WEBHOOKS);
 
-        if ($id === null) {
-            return null;
-        }
+        return $this->retrieve($key, function () use ($key) {
+            $items = get_option($key, null);
 
-        return (int) $id;
+            return new WebhookSubscriptionCollection($items);
+        });
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getHashedUrl(): ?string
+    {
+        return get_option($this->getKey(self::KEY_WEBHOOK_HASH), null);
     }
 
     /**
@@ -36,14 +46,23 @@ class WcWebhooksRepository extends AbstractPdkWebhooksRepository
     }
 
     /**
-     * @param  string $hook
-     * @param  int    $id
+     * @param  \MyParcelNL\Pdk\Webhook\Collection\WebhookSubscriptionCollection $subscriptions
      *
      * @return void
      */
-    public function store(string $hook, int $id): void
+    public function store(WebhookSubscriptionCollection $subscriptions): void
     {
-        update_option($this->getKey($hook), $id);
+        update_option($this->getKey(self::KEY_WEBHOOKS), $subscriptions->toArray());
+    }
+
+    /**
+     * @param  string $url
+     *
+     * @return void
+     */
+    public function storeHashedUrl(string $url): void
+    {
+        update_option($this->getKey(self::KEY_WEBHOOK_HASH), $url);
     }
 
     /**

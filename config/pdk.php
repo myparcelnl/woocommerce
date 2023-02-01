@@ -14,14 +14,14 @@ use MyParcelNL\Pdk\Plugin\Repository\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\Plugin\Service\OrderStatusServiceInterface;
 use MyParcelNL\Pdk\Plugin\Service\RenderServiceInterface;
 use MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface;
-use MyParcelNL\Pdk\Plugin\Webhook\PdkWebhookActionsInterface;
+use MyParcelNL\Pdk\Plugin\Webhook\PdkWebhookServiceInterface;
 use MyParcelNL\Pdk\Plugin\Webhook\Repository\PdkWebhooksRepositoryInterface;
 use MyParcelNL\Pdk\Product\Repository\ProductRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Repository\SettingsRepositoryInterface;
 use MyParcelNL\WooCommerce\Logger\WcLogger;
 use MyParcelNL\WooCommerce\Pdk\Guzzle7ClientAdapter;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcEndpointActions;
-use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcWebhookActions;
+use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcWebhookService;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkAccountRepository;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Service\WcStatusService;
@@ -75,7 +75,7 @@ return [
     /**
      * Webhooks
      */
-    PdkWebhookActionsInterface::class     => autowire(WcWebhookActions::class),
+    PdkWebhookServiceInterface::class     => autowire(WcWebhookService::class),
     PdkWebhooksRepositoryInterface::class => autowire(WcWebhooksRepository::class),
 
     /**

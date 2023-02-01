@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Action;
 
-use MyParcelNL\Pdk\Plugin\Webhook\AbstractPdkWebhookActions;
+use MyParcelNL\Pdk\Plugin\Webhook\AbstractPdkWebhookService;
 use MyParcelNL\WooCommerce\Hooks\RestApiHooks;
 
-class WcWebhookActions extends AbstractPdkWebhookActions
+class WcWebhookService extends AbstractPdkWebhookService
 {
     /**
      * @return string
