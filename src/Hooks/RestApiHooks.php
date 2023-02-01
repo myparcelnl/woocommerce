@@ -7,6 +7,7 @@ namespace MyParcelNL\WooCommerce\Hooks;
 use MyParcelNL\Pdk\Base\PdkEndpoint;
 use MyParcelNL\Pdk\Facade\DefaultLogger;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Plugin\Api\PdkWebhook;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -46,12 +47,24 @@ class RestApiHooks implements WordPressHooksInterface
         return $this->convertResponse($response);
     }
 
+    public function processWebhook()
+    {
+    }
+
     /**
      * @return void
      */
-    public function processWebhookRequest(): void
+    public function processWebhookRequest(WP_REST_Request $request): WP_REST_Response
     {
-        DefaultLogger::info('Webhook received', ['values' => $_POST]);
+        DefaultLogger::info('Webhook received', ['request' => $request->get_params()]);
+
+        /** @var \MyParcelNL\Pdk\Plugin\Api\PdkWebhook $webhooks */
+        $webhooks = Pdk::get(PdkWebhook::class);
+        $webhooks->call($this->convertRequest($request));
+
+        $response = new WP_REST_Response();
+        $response->set_status(202);
+        return $response;
     }
 
     /**

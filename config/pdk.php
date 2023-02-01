@@ -7,9 +7,10 @@ use MyParcelNL\Pdk\Api\Adapter\ClientAdapterInterface;
 use MyParcelNL\Pdk\Api\Service\ApiServiceInterface;
 use MyParcelNL\Pdk\Api\Service\MyParcelApiService;
 use MyParcelNL\Pdk\Base\Concern\WeightServiceInterface;
+use MyParcelNL\Pdk\Base\CronServiceInterface;
 use MyParcelNL\Pdk\Base\Pdk;
 use MyParcelNL\Pdk\Language\Service\LanguageServiceInterface;
-use MyParcelNL\Pdk\Plugin\Action\EndpointActionsInterface;
+use MyParcelNL\Pdk\Plugin\Api\EndpointActionsInterface;
 use MyParcelNL\Pdk\Plugin\Repository\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\Plugin\Service\OrderStatusServiceInterface;
 use MyParcelNL\Pdk\Plugin\Service\RenderServiceInterface;
@@ -32,6 +33,7 @@ use MyParcelNL\WooCommerce\Pdk\Service\WcViewService;
 use MyParcelNL\WooCommerce\Pdk\Service\WcWeightService;
 use MyParcelNL\WooCommerce\Pdk\Settings\Repository\PdkSettingsRepository;
 use MyParcelNL\WooCommerce\Pdk\Webhook\WcWebhooksRepository;
+use MyParcelNL\WooCommerce\Service\WpCronService;
 use Psr\Log\LoggerInterface;
 use function DI\autowire;
 use function DI\value;
@@ -61,6 +63,7 @@ return [
      * Services
      */
     ApiServiceInterface::class            => autowire(MyParcelApiService::class),
+    CronServiceInterface::class           => autowire(WpCronService::class),
     LanguageServiceInterface::class       => autowire(LanguageService::class),
     OrderStatusServiceInterface::class    => autowire(WcStatusService::class),
     RenderServiceInterface::class         => autowire(WcRenderService::class),

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
 use MyParcelNL;
-use MyParcelNL\Pdk\Base\PdkActions;
 use MyParcelNL\Pdk\Facade\LanguageService;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
+use MyParcelNL\Pdk\Plugin\Api\PdkActions;
 use MyParcelNL\Pdk\Plugin\Repository\PdkOrderRepositoryInterface;
 use MyParcelNL\Sdk\src\Support\Str;
 use MyParcelNL\WooCommerce\Hooks\WordPressHooksInterface;

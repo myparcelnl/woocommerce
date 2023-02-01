@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Action;
 
-use MyParcelNL\Pdk\Plugin\Action\PdkEndpointActions;
+use MyParcelNL\Pdk\Plugin\Api\PdkEndpointActions;
 use MyParcelNL\WooCommerce\Hooks\RestApiHooks;
 
 class WcEndpointActions extends PdkEndpointActions

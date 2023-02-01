@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
-use MyParcelNL\Pdk\Base\PdkActions;
 use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Facade\Actions;
-use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
+use MyParcelNL\Pdk\Plugin\Api\PdkActions;
 use MyParcelNL\Pdk\Plugin\Model\Context\DeliveryOptionsContext;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
