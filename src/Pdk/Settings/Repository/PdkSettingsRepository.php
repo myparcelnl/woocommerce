@@ -6,6 +6,7 @@ namespace MyParcelNL\WooCommerce\Pdk\Settings\Repository;
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\AbstractSettingsModel;
+use MyParcelNL\Pdk\Settings\Model\CarrierSettings;
 use MyParcelNL\Pdk\Settings\Repository\AbstractSettingsRepository;
 use MyParcelNL\Sdk\src\Support\Str;
 
@@ -35,7 +36,13 @@ class PdkSettingsRepository extends AbstractSettingsRepository
      */
     public function store(AbstractSettingsModel $settingsModel): void
     {
-        update_option($this->getOptionName($settingsModel->getId()), $settingsModel->toArrayWithoutNull());
+        $key = $settingsModel->getId();
+
+        if ($settingsModel instanceof CarrierSettings) {
+            $key .= '_' . $settingsModel->carrierName;
+        }
+
+        update_option($this->getOptionName($key), $settingsModel->toArrayWithoutNull());
     }
 
     /**
