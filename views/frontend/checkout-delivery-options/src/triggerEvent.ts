@@ -1,13 +1,22 @@
 /**
  * Trigger an event on a given element. Defaults to body.
  */
-export const triggerEvent = (eventName: string, element: string | HTMLElement | Document = 'body'): void => {
+export const triggerEvent = (
+  eventName: string,
+  detail: Record<string, unknown> | null = null,
+  element: string | HTMLElement | Document = document,
+): void => {
   let eventSource: HTMLElement | Document;
 
   if (typeof element === 'string') {
     eventSource = document.querySelector(element) as HTMLElement;
   } else {
     eventSource = element;
+  }
+
+  if (detail) {
+    eventSource?.dispatchEvent(new CustomEvent(eventName, {detail}));
+    return;
   }
 
   eventSource?.dispatchEvent(new Event(eventName));

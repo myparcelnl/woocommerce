@@ -6,10 +6,14 @@ namespace MyParcelNL\WooCommerce\Hooks;
 
 use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Facade\Actions;
+use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Facade\RenderService;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Plugin\Api\PdkActions;
 use MyParcelNL\Pdk\Plugin\Model\Context\DeliveryOptionsContext;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
+use MyParcelNL\Pdk\Plugin\Repository\PdkCartRepositoryInterface;
+use MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
@@ -49,17 +53,6 @@ class CheckoutHooks implements WordPressHooksInterface
     }
 
     /**
-     * Echoes the delivery options config as a JSON string for use with AJAX.
-     *
-     * @throws \Exception
-     */
-    public function getDeliveryOptionsConfigAjax(): void
-    {
-        echo json_encode($this->getDeliveryOptionsConfig(), JSON_UNESCAPED_SLASHES);
-        die();
-    }
-
-    /**
      * @param  int $orderId
      *
      * @return void
@@ -82,8 +75,10 @@ class CheckoutHooks implements WordPressHooksInterface
      */
     public function enqueueFrontendScripts(): void
     {
-        // The order received page has the same page id as the checkout so `is_checkout()` returns true on both.
-        if (! is_checkout() || is_order_received_page()) {
+        /** @var \MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface $viewService */
+        $viewService = Pdk::get(ViewServiceInterface::class);
+
+        if ($viewService->isCheckoutPage()) {
             return;
         }
 
@@ -100,7 +95,6 @@ class CheckoutHooks implements WordPressHooksInterface
         add_action($this->getDeliveryOptionsPosition(), [$this, 'renderDeliveryOptions']);
 
         $this->loadDeliveryOptionsScripts();
-
         //        }
     }
 
@@ -156,7 +150,7 @@ class CheckoutHooks implements WordPressHooksInterface
         //        }
 
         $order = new PdkOrder([
-            'deliveryOptions' => [
+            'deliveryOptions'       => [
                 'packageType' => 'package',
             ],
             'shipmentPriceAfterVat' => $chosenShippingMethodPrice,
@@ -166,20 +160,33 @@ class CheckoutHooks implements WordPressHooksInterface
     }
 
     /**
+     * Echoes the delivery options config as a JSON string for use with AJAX.
+     *
+     * @throws \Exception
+     */
+    public function getDeliveryOptionsConfigAjax(): void
+    {
+        echo json_encode($this->getDeliveryOptionsConfig(), JSON_UNESCAPED_SLASHES);
+        die();
+    }
+
+    /**
      * Output the delivery options template.
+     *
+     * @throws \Exception
      */
     public function renderDeliveryOptions(): void
     {
-        do_action('woocommerce_myparcel_before_delivery_options');
+        $wcCart = WC()->cart;
 
-        $customCss = Settings::get(CheckoutSettings::DELIVERY_OPTIONS_CUSTOM_CSS, CheckoutSettings::ID);
+        if (! $wcCart || ! $wcCart->needs_shipping()) {
+            return;
+        }
 
-        echo sprintf(
-            '<div class="woocommerce-myparcel__delivery-options">%s<div id="myparcel-delivery-options"></div></div>',
-            $customCss ? sprintf('<style>%s</style>', $customCss) : ''
-        );
+        /** @var \MyParcelNL\Pdk\Plugin\Repository\PdkCartRepositoryInterface $repository */
+        $repository = Pdk::get(PdkCartRepositoryInterface::class);
 
-        do_action('woocommerce_myparcel_after_delivery_options');
+        echo RenderService::renderDeliveryOptions($repository->get($wcCart));
     }
 
     /**
@@ -258,15 +265,12 @@ class CheckoutHooks implements WordPressHooksInterface
                 'alwaysShow'                  => true,
                 'disallowedShippingMethods'   => self::DISALLOWED_SHIPPING_METHODS,
                 'hiddenInputName'             => self::META_DELIVERY_OPTIONS,
-                'isUsingSplitAddressFields'   => (int) Settings::get('checkout.useSeparateAddressFields'),
+                'isUsingSplitAddressFields'   => (int) Settings::get(
+                    CheckoutSettings::USE_SEPARATE_ADDRESS_FIELDS,
+                    CheckoutSettings::ID
+                ),
                 'splitAddressFieldsCountries' => [CountryService::CC_NL, CountryService::CC_BE],
             ]
-        );
-
-        wp_localize_script(
-            self::SCRIPT_CHECKOUT_DELIVERY_OPTIONS,
-            'MyParcelConfig',
-            $this->getDeliveryOptionsConfig()
         );
 
         $this->service->enqueueDeliveryOptions();

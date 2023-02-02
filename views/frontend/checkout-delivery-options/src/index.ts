@@ -2,6 +2,7 @@ import './assets/scss/index.scss';
 import {
   EVENT_UPDATED_ADDRESS,
   EVENT_UPDATED_DELIVERY_OPTIONS,
+  EVENT_UPDATE_DELIVERY_OPTIONS,
   EVENT_WOOCOMMERCE_COUNTRY_TO_STATE_CHANGED,
   EVENT_WOOCOMMERCE_UPDATED_CHECKOUT,
   FIELD_SHIP_TO_DIFFERENT_ADDRESS,
@@ -13,8 +14,34 @@ import {synchronizeAddress} from './synchronizeAddress';
 import {updateAddress} from './updateAddress';
 import {updateShippingMethod} from './updateShippingMethod';
 import {initializeStore} from './store';
+import {getElement, hasUnrenderedDeliveryOptions} from './delivery-options/createDeliveryOptions';
+import {triggerEvent} from './triggerEvent';
+import {MyParcelDeliveryOptions} from '@myparcel/delivery-options';
+import {getAddress} from './getAddress';
 
 (() => {
+  [
+    'myparcel_update_config',
+    'myparcel_update_delivery_options',
+    'myparcel_updated_address',
+    'myparcel_updated_delivery_options',
+    'myparcel_disable_delivery_options',
+    'myparcel_show_delivery_options',
+    'myparcel_hide_delivery_options',
+    'myparcel_render_delivery_options',
+  ].forEach((event) => {
+    document.addEventListener(event, (e) => {
+      console.log(event, e.detail);
+    });
+  });
+
+  const $wrapper = getElement('#mypa-delivery-options-wrapper');
+
+  if (!$wrapper) {
+    console.warn('No delivery options wrapper found.');
+    return;
+  }
+
   //
   //   /**
   //  * Whether the delivery options are currently shown or not. Defaults to true and can be set to false depending on
@@ -98,5 +125,13 @@ import {initializeStore} from './store';
 
   jQuery(document.body).on('myparcelnl-woocommerce:updateAddress', updateAddress);
 
+  const data = $wrapper.data('delivery-options-context');
+
+  const config: MyParcelDeliveryOptions.Configuration = {
+    ...data.deliveryOptions,
+    address: getAddress(),
+  };
+
+  triggerEvent(EVENT_UPDATE_DELIVERY_OPTIONS, config);
   updateShippingMethod();
 })();

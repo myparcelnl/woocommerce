@@ -1,9 +1,11 @@
 import {AddressType} from './types';
+import {stringToBoolean} from './stringToBoolean';
 
 type Store = {
   shippingMethod: string | null;
   addressType: AddressType | null;
   hasDeliveryOptions: boolean;
+  hasSplitAddressFields: boolean;
 };
 
 let store: Store;
@@ -13,6 +15,7 @@ export function initializeStore(): void {
     addressType: null,
     hasDeliveryOptions: false,
     shippingMethod: null,
+    hasSplitAddressFields: stringToBoolean(window.MyParcelNLData.isUsingSplitAddressFields),
   };
 }
 

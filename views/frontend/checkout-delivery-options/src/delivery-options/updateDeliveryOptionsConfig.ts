@@ -7,7 +7,6 @@ import {validateMyParcelConfig} from './validateMyParcelConfig';
  *  changes the prices of delivery and any extra options.
  */
 export const updateDeliveryOptionsConfig = () => {
-  validateMyParcelConfig();
   jQuery.ajax({
     type: 'GET',
     url: MyParcelNLData.ajaxUrl,
@@ -19,8 +18,8 @@ export const updateDeliveryOptionsConfig = () => {
       console.log(data);
       console.log(JSON.parse(data));
       const {config} = JSON.parse(data);
-      window.MyParcelConfig.config = config;
-      triggerEvent(EVENT_UPDATE_CONFIG);
+
+      triggerEvent(EVENT_UPDATE_CONFIG, {config});
     },
   });
 };

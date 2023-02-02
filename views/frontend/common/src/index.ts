@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 declare global {
+  type StringBoolean = '0' | '1';
+
   interface Window {
     woocommerce_params: {
       locale: string;
@@ -9,10 +11,10 @@ declare global {
     MyParcelNLData: {
       ajaxUrl: string;
       allowedShippingMethods: string[];
-      alwaysShow: 0 | 1;
+      alwaysShow: StringBoolean;
       disallowedShippingMethods: string[];
       hiddenInputName: string;
-      isUsingSplitAddressFields: 0 | 1;
+      isUsingSplitAddressFields: StringBoolean;
       splitAddressFieldsCountries: string[];
     };
   }

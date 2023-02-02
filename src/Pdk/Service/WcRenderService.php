@@ -7,15 +7,45 @@ namespace MyParcelNL\WooCommerce\Pdk\Service;
 use MyParcelNL\Pdk\Facade\DefaultLogger;
 use MyParcelNL\Pdk\Facade\LanguageService;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Frontend\Form\Components;
 use MyParcelNL\Pdk\Frontend\Settings\View\ProductSettingsView;
+use MyParcelNL\Pdk\Plugin\Context;
+use MyParcelNL\Pdk\Plugin\Model\PdkCart;
 use MyParcelNL\Pdk\Plugin\Model\PdkProduct;
 use MyParcelNL\Pdk\Plugin\Service\RenderService;
+use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\Sdk\src\Support\Str;
 use Throwable;
 
 class WcRenderService extends RenderService
 {
+    /**
+     * @param  \MyParcelNL\Pdk\Plugin\Model\PdkCart $cart
+     *
+     * @return string
+     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
+     */
+    public function renderDeliveryOptions(PdkCart $cart): string
+    {
+        ob_start();
+
+        do_action('woocommerce_myparcel_before_delivery_options');
+
+        $customCss = Settings::get(CheckoutSettings::DELIVERY_OPTIONS_CUSTOM_CSS, CheckoutSettings::ID);
+        $context   = $this->contextService->createContexts([Context::ID_DELIVERY_OPTIONS], ['cart' => $cart]);
+
+        printf(
+            '<div id="mypa-delivery-options-wrapper" class="woocommerce-myparcel__delivery-options" data-delivery-options-context="%s">%s<div id="myparcel-delivery-options-wrapper"></div></div>',
+            $this->encodeContext($context),
+            $customCss ? sprintf('<style>%s</style>', $customCss) : ''
+        );
+
+        do_action('woocommerce_myparcel_after_delivery_options');
+
+        return ob_get_clean();
+    }
+
     /**
      * @param  \MyParcelNL\Pdk\Plugin\Model\PdkProduct $product
      *

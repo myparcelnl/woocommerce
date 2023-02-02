@@ -13,7 +13,7 @@ export const setHouseNumber = (number: number | string): void => {
 
   const houseNumber = number.toString();
 
-  if (hasSplitAddressFields() && addressField) {
+  if (!hasSplitAddressFields() && addressField) {
     if (oldHouseNumber) {
       addressField.value = address?.replace(oldHouseNumber, houseNumber) ?? '';
     } else {

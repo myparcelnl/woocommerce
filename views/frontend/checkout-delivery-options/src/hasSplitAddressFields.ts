@@ -1,5 +1,6 @@
 import {FIELD_COUNTRY} from './data';
 import {getAddressField} from './utils';
+import {getStoreValue} from './store';
 
 export const hasSplitAddressFields = (country?: string): boolean => {
   if (!country) {
@@ -8,7 +9,9 @@ export const hasSplitAddressFields = (country?: string): boolean => {
     country = countryField?.value;
   }
 
-  if (!window.MyParcelNLData.isUsingSplitAddressFields) {
+  const hasSplitAddressFields = getStoreValue('hasSplitAddressFields');
+
+  if (!hasSplitAddressFields) {
     return false;
   }
 

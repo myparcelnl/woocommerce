@@ -30,7 +30,7 @@
       @mouseover="toggled = true">
       <div
         v-show="toggled"
-        class="mypa-absolute mypa-bg-white mypa-border mypa-border-solid mypa-flex mypa-flex-col mypa-right-0 mypa-top-full mypa-z-50 mypa-rounded">
+        class="mypa-absolute mypa-bg-white mypa-border mypa-border-solid mypa-flex mypa-flex-col mypa-right-0 mypa-rounded mypa-top-full mypa-z-50">
         <ActionButton
           v-for="(action, index) in dropdownActions.hidden"
           :key="`${index}_${action.id}`"
@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import {ActionButton, ResolvedAction, PdkIcon, useDropdownData, useLanguage} from '@myparcel/pdk-frontend';
+import {ActionButton, PdkIcon, ResolvedAction, useDropdownData, useLanguage} from '@myparcel/pdk-frontend';
 import {PropType, computed, defineComponent} from 'vue';
 
 export default defineComponent({

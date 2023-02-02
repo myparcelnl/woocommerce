@@ -20,6 +20,16 @@ class WcViewService extends AbstractViewService
     }
 
     /**
+     * The order received page has the same page id as the checkout so `is_checkout()` returns true on both.
+     *
+     * @return bool
+     */
+    public function isCheckoutPage(): bool
+    {
+        return ! is_checkout() || is_order_received_page();
+    }
+
+    /**
      * @return bool
      */
     public function isOrderListPage(): bool
@@ -38,17 +48,17 @@ class WcViewService extends AbstractViewService
     /**
      * @return bool
      */
-    public function isProductPage(): bool
+    public function isPluginSettingsPage(): bool
     {
-        return 'product' === $this->getScreen();
+        return sprintf('woocommerce_page_%s', $this->getSettingsPageSlug()) === $this->getScreen();
     }
 
     /**
      * @return bool
      */
-    public function isPluginSettingsPage(): bool
+    public function isProductPage(): bool
     {
-        return sprintf('woocommerce_page_%s', $this->getSettingsPageSlug()) === $this->getScreen();
+        return 'product' === $this->getScreen();
     }
 
     /**

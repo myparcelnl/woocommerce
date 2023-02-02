@@ -641,8 +641,8 @@ __metadata:
     lodash: ^4.17.21
     lodash-es: ^4.17.21
     lodash-unified: ^1.0.3
-    pinia: ^2.0.30
-    vue: ^3.2.47
+    pinia: ^2.0.29
+    vue: ^3.2.45
   languageName: node
   linkType: soft
 
@@ -783,8 +783,8 @@ __metadata:
   dependencies:
     "@myparcel-pdk/common": "workspace:*"
     "@myparcel-pdk/frontend-core": "workspace:*"
-    "@vue/test-utils": ^2.2.9
-    vue: ^3.2.47
+    "@vue/test-utils": ^2.2.8
+    vue: ^3.2.45
   languageName: node
   linkType: soft
 
@@ -795,7 +795,7 @@ __metadata:
     "@myparcel/pdk-frontend": "workspace:^"
     "@myparcel/ts-utils": ^1.4.0
     "@vueuse/core": ^9.12.0
-    vue: ^3.2.47
+    vue: ^3.2.45
   languageName: node
   linkType: soft
 
@@ -814,7 +814,7 @@ __metadata:
   dependencies:
     "@myparcel/pdk-frontend": "workspace:^"
     "@myparcel/ts-utils": ^1.4.0
-    vue: ^3.2.47
+    vue: ^3.2.45
   languageName: node
   linkType: soft
 
@@ -2212,7 +2212,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/test-utils@npm:^2.2.9":
+"@vue/test-utils@npm:^2.2.8, @vue/test-utils@npm:^2.2.9":
   version: 2.2.9
   resolution: "@vue/test-utils@npm:2.2.9"
   dependencies:
@@ -8985,7 +8985,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pinia@npm:^2.0.30":
+"pinia@npm:^2.0.29":
   version: 2.0.30
   resolution: "pinia@npm:2.0.30"
   dependencies:
@@ -11740,7 +11740,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue@npm:^3.2.47":
+"vue@npm:^3.2.45, vue@npm:^3.2.47":
   version: 3.2.47
   resolution: "vue@npm:3.2.47"
   dependencies:

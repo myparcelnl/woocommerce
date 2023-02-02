@@ -11,10 +11,10 @@ import {updateDeliveryOptionsConfig} from './updateDeliveryOptionsConfig';
 export const toggleDeliveryOptions = (shippingMethod: null | string): void => {
   if (shippingMethodHasDeliveryOptions(shippingMethod)) {
     setStoreValue('hasDeliveryOptions', true);
-    triggerEvent(EVENT_SHOW_DELIVERY_OPTIONS, document);
+    triggerEvent(EVENT_SHOW_DELIVERY_OPTIONS, null, document);
     updateDeliveryOptionsConfig();
   } else {
     setStoreValue('hasDeliveryOptions', false);
-    triggerEvent(EVENT_HIDE_DELIVERY_OPTIONS, document);
+    triggerEvent(EVENT_HIDE_DELIVERY_OPTIONS, null, document);
   }
 };
