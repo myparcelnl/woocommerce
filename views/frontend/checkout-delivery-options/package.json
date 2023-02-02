@@ -16,6 +16,6 @@
   "devDependencies": {
     "@myparcel-woocommerce/frontend-common": "workspace:*",
     "@types/jquery": "^3.5.16",
-    "sass": "^1.57.1"
+    "sass": "^1.58.0"
   }
 }
