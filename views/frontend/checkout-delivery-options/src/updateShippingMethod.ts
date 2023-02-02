@@ -28,7 +28,8 @@ export const updateShippingMethod = (): void => {
      * All variants of flat_rate (including shipping classes) do already have their suffix set properly.
      */
     if (shippingMethod.indexOf('flat_rate') === 0) {
-      const shippingClass = getHighestShippingClass();
+      // const shippingClass = getHighestShippingClass();
+      const shippingClass = '1';
 
       if (shippingClass) {
         shippingMethod = `flat_rate:${shippingClass}`;

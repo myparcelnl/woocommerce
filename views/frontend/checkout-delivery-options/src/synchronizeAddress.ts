@@ -4,6 +4,7 @@ import {hasAddressType} from './hasAddressType';
 import {fillCheckoutFields} from './fillCheckoutFields';
 import {getAddressParts} from './getAddressParts';
 import {updateAddress} from './updateAddress';
+import {AddressType} from './types';
 
 /**
  * Sync addresses between split and non-split address fields.
@@ -12,28 +13,28 @@ import {updateAddress} from './updateAddress';
  * @param {String} newCountry
  */
 export const synchronizeAddress = (event, newCountry) => {
-  if (!window.MyParcelNLData.isUsingSplitAddressFields) {
+  if (window.MyParcelNLData.isUsingSplitAddressFields) {
     return;
   }
 
   const data = jQuery('form').serializeArray();
 
-  ['shipping', 'billing'].forEach((addressType) => {
+  ['shipping', 'billing'].forEach((addressType: string) => {
     if (!hasAddressType(addressType)) {
       return;
     }
 
-    const typeCountry = data.find((item) => item.name === `${addressType}_country`);
-    const hasAddressTypeCountry = previousCountry.hasOwnProperty(addressType);
-    const countryChanged = previousCountry[addressType] !== newCountry;
+    // const typeCountry = data.find((item) => item.name === `${addressType}_country`);
+    // const hasAddressTypeCountry = previousCountry.hasOwnProperty(addressType);
+    // const countryChanged = previousCountry[addressType] !== newCountry;
+    //
+    // if (!hasAddressTypeCountry || countryChanged) {
+    //   previousCountry[addressType] = typeCountry?.value;
+    // }
 
-    if (!hasAddressTypeCountry || countryChanged) {
-      previousCountry[addressType] = typeCountry.value;
-    }
-
-    if (!countryChanged) {
-      return;
-    }
+    // if (!countryChanged) {
+    //   return;
+    // }
 
     if (hasSplitAddressFields(newCountry)) {
       const parts = getAddressParts();

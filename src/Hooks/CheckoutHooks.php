@@ -45,6 +45,18 @@ class CheckoutHooks implements WordPressHooksInterface
         add_action('wp_enqueue_scripts', [$this, 'enqueueFrontendScripts'], 100);
         add_action('woocommerce_payment_complete', [$this, 'automaticExportOrder'], 1000);
         add_action('woocommerce_order_status_changed', [$this, 'automaticExportOrder'], 1000, 3);
+        add_action('wp_ajax_myparcelnl_get_delivery_options_config', [$this, 'getDeliveryOptionsConfigAjax']);
+    }
+
+    /**
+     * Echoes the delivery options config as a JSON string for use with AJAX.
+     *
+     * @throws \Exception
+     */
+    public function getDeliveryOptionsConfigAjax(): void
+    {
+        echo json_encode($this->getDeliveryOptionsConfig(), JSON_UNESCAPED_SLASHES);
+        die();
     }
 
     /**
@@ -85,9 +97,10 @@ class CheckoutHooks implements WordPressHooksInterface
 
         // Don't load the delivery options scripts if it's disabled
         //        if (Settings::get(CheckoutSettings::DELIVERY_OPTIONS_DISPLAY, CheckoutSettings::ID)) {
+        add_action($this->getDeliveryOptionsPosition(), [$this, 'renderDeliveryOptions']);
+
         $this->loadDeliveryOptionsScripts();
 
-        add_action($this->getDeliveryOptionsPosition(), [$this, 'renderDeliveryOptions']);
         //        }
     }
 
@@ -230,8 +243,6 @@ class CheckoutHooks implements WordPressHooksInterface
             return;
         }
 
-        $this->service->enqueueDeliveryOptions();
-
         $this->service->enqueueLocalScript(
             self::SCRIPT_CHECKOUT_DELIVERY_OPTIONS,
             'views/frontend/checkout-delivery-options/lib/index.iife.js',
@@ -244,7 +255,7 @@ class CheckoutHooks implements WordPressHooksInterface
             [
                 'ajaxUrl'                     => admin_url('admin-ajax.php'),
                 'allowedShippingMethods'      => $this->getShippingMethodsAllowingDeliveryOptions(),
-                'alwaysShow'                  => Settings::get('checkout.deliveryOptionsDisplay') === 'always',
+                'alwaysShow'                  => true,
                 'disallowedShippingMethods'   => self::DISALLOWED_SHIPPING_METHODS,
                 'hiddenInputName'             => self::META_DELIVERY_OPTIONS,
                 'isUsingSplitAddressFields'   => (int) Settings::get('checkout.useSeparateAddressFields'),
@@ -257,6 +268,8 @@ class CheckoutHooks implements WordPressHooksInterface
             'MyParcelConfig',
             $this->getDeliveryOptionsConfig()
         );
+
+        $this->service->enqueueDeliveryOptions();
     }
 
     /**

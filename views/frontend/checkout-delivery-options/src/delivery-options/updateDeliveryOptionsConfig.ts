@@ -10,12 +10,14 @@ export const updateDeliveryOptionsConfig = () => {
   validateMyParcelConfig();
   jQuery.ajax({
     type: 'GET',
-    url: wcmp.ajax_url,
+    url: MyParcelNLData.ajaxUrl,
     async: false,
     data: {
-      action: 'wcmp_get_delivery_options_config',
+      action: 'myparcelnl_get_delivery_options_config',
     },
     success(data) {
+      console.log(data);
+      console.log(JSON.parse(data));
       const {config} = JSON.parse(data);
       window.MyParcelConfig.config = config;
       triggerEvent(EVENT_UPDATE_CONFIG);

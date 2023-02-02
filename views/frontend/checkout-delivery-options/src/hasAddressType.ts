@@ -6,7 +6,7 @@ import {AddressType} from './types';
  * Does not check the outer div (.woocommerce-shipping-fields) because when the shipping form does not exist, it's
  *  still rendered on the page.
  */
-export const hasAddressType = (addressType: AddressType): boolean => {
+export const hasAddressType = (addressType: string): boolean => {
   const formWrapper = document.querySelector(`.woocommerce-${addressType}-fields__field-wrapper`);
 
   return Boolean(formWrapper);
