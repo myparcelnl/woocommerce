@@ -1155,8 +1155,11 @@ class WCMP_Export
             $shipping_class_term    = get_term_by('slug', $shipping_class, 'product_shipping_class');
             $shipping_class_term_id = '';
 
-            if (null !== $shipping_class_term) {
+            if ($shipping_class_term instanceof WP_Term) {
                 $shipping_class_term_id = $shipping_class_term->term_id;
+            }
+            if (is_array($shipping_class_term)) {
+                $shipping_class_term_id = $shipping_class_term['term_id'] ?? '';
             }
 
             $class_cost_string = $shipping_class_term && $shipping_class_term_id ?
@@ -1181,7 +1184,7 @@ class WCMP_Export
             );
             if ($class_cost > $highest_class_cost && ! empty($shipping_class_term_id)) {
                 $highest_class_cost = $class_cost;
-                $highest_class      = $shipping_class_term->term_id;
+                $highest_class      = $shipping_class_term_id;
             }
         }
 
