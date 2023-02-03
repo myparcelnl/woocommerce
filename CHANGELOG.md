@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.17.0-rc.5](https://github.com/myparcelnl/woocommerce/compare/v4.17.0-rc.4...v4.17.0-rc.5) (2023-02-03)
+
+
+### :bug: Bug Fixes
+
+* only read shipping class term when available ([#951](https://github.com/myparcelnl/woocommerce/issues/951)) ([ff9792b](https://github.com/myparcelnl/woocommerce/commit/ff9792b43da0addd99f4f863d091b2f4ea51cb63))
+
 ## [4.17.0-rc.4](https://github.com/myparcelnl/woocommerce/compare/v4.17.0-rc.3...v4.17.0-rc.4) (2023-01-25)
 
 
