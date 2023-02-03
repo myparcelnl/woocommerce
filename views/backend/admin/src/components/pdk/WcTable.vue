@@ -3,7 +3,7 @@
     v-test
     class="striped widefat">
     <thead v-if="$slots.header">
-    <slot name="header" />
+      <slot name="header" />
     </thead>
 
     <TransitionGroup
@@ -13,7 +13,7 @@
     </TransitionGroup>
 
     <tfoot v-if="$slots.footer">
-    <slot name="footer" />
+      <slot name="footer" />
     </tfoot>
   </table>
 </template>

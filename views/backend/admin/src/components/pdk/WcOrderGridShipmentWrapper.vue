@@ -19,7 +19,7 @@ import {PropType, defineComponent} from 'vue';
 export default defineComponent({
   name: 'WcOrderGridShipmentWrapper',
 
-  components: { ActionButton },
+  components: {ActionButton},
 
   props: {
     loading: {
@@ -33,7 +33,7 @@ export default defineComponent({
   },
 
   setup: () => {
-    const { translate } = useLanguage();
+    const {translate} = useLanguage();
 
     return {
       translate,

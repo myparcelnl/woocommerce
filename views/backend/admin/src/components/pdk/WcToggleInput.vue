@@ -45,7 +45,7 @@ export default defineComponent({
   emits: ['update:modelValue'],
 
   setup: (props, ctx) => {
-    const { translate } = useLanguage();
+    const {translate} = useLanguage();
 
     return {
       id: generateFieldId(props.element),

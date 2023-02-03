@@ -18,7 +18,7 @@ export default defineComponent({
   },
 
   setup: () => {
-    const { translate } = useLanguage();
+    const {translate} = useLanguage();
 
     return {
       translate,

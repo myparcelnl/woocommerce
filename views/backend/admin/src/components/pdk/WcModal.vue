@@ -102,7 +102,7 @@ export default defineComponent({
 
   setup: (props) => {
     const modalStore = useModalStore();
-    const { translate } = useLanguage();
+    const {translate} = useLanguage();
 
     const isOpen = computed(() => {
       return props.modalKey && modalStore.opened === props.modalKey;

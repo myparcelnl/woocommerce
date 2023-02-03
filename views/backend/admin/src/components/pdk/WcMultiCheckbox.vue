@@ -33,7 +33,7 @@ export default defineComponent({
   emits: ['update:modelValue'],
 
   setup: (props, ctx) => {
-    const { translate } = useLanguage();
+    const {translate} = useLanguage();
 
     const options: ComputedRef<SelectOption[]> = computed(() => props.element.props.options ?? []);
 

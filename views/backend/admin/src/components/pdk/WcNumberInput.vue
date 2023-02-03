@@ -17,7 +17,7 @@ import {useVModel} from '@vueuse/core';
  */
 export default defineComponent({
   name: 'WcNumberInput',
-  components: { WcTextInput },
+  components: {WcTextInput},
   props: {
     element: {
       type: Object as PropType<ElementInstance>,

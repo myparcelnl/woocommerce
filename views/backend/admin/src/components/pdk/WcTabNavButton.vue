@@ -35,7 +35,7 @@ export default defineComponent({
   emits: ['click'],
 
   setup: () => {
-    const { translate } = useLanguage();
+    const {translate} = useLanguage();
 
     return {
       translate,

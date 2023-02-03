@@ -44,7 +44,7 @@ export default defineComponent({
   },
 
   setup: (props) => {
-    const { translate } = useLanguage();
+    const {translate} = useLanguage();
 
     return {
       id: generateFieldId(props.element),

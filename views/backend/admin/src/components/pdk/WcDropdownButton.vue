@@ -71,7 +71,7 @@ export default defineComponent({
 
   emits: ['click'],
   setup: (props) => {
-    const { translate } = useLanguage();
+    const {translate} = useLanguage();
     const dropdownData = useDropdownData(props.actions);
 
     return {
