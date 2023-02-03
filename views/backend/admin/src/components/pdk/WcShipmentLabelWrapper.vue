@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue';
-import {useLanguage} from '@myparcel/pdk-frontend';
+import {useLanguage} from '@myparcel-pdk/admin';
 
 export default defineComponent({
   name: 'WcShipmentLabelWrapper',
@@ -18,7 +18,7 @@ export default defineComponent({
   },
 
   setup: () => {
-    const {translate} = useLanguage();
+    const { translate } = useLanguage();
 
     return {
       translate,

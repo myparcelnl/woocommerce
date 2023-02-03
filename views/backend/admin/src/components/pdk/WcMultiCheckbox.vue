@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import {ComputedRef, PropType, computed, defineComponent, ref} from 'vue';
-import {ElementInstance, useLanguage} from '@myparcel/pdk-frontend';
+import {ElementInstance, useLanguage} from '@myparcel-pdk/admin';
 import {SelectOption} from '@myparcel-pdk/common';
 import {useVModel} from '@vueuse/core';
 
@@ -33,7 +33,7 @@ export default defineComponent({
   emits: ['update:modelValue'],
 
   setup: (props, ctx) => {
-    const {translate} = useLanguage();
+    const { translate } = useLanguage();
 
     const options: ComputedRef<SelectOption[]> = computed(() => props.element.props.options ?? []);
 

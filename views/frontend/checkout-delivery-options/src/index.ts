@@ -8,16 +8,38 @@ import {
   FIELD_SHIP_TO_DIFFERENT_ADDRESS,
 } from './data';
 import {onDeliveryOptionsAddressUpdate, onDeliveryOptionsUpdate} from './listeners';
+import {AddressType} from './types';
+import {MyParcelDeliveryOptions} from '@myparcel/delivery-options';
 import {addAddressListeners} from './addAddressListeners';
 import {injectHiddenInput} from './injectHiddenInput';
 import {synchronizeAddress} from './synchronizeAddress';
+import {triggerEvent} from './triggerEvent';
 import {updateAddress} from './updateAddress';
 import {updateShippingMethod} from './updateShippingMethod';
-import {initializeStore} from './store';
-import {getElement, hasUnrenderedDeliveryOptions} from './delivery-options/createDeliveryOptions';
-import {triggerEvent} from './triggerEvent';
-import {MyParcelDeliveryOptions} from '@myparcel/delivery-options';
-import {getAddress} from './getAddress';
+import {useDeliveryOptionsStore} from './store/useDeliveryOptionsStore';
+import {initializeStores} from './init/initializeStores';
+
+export interface FrontendAppContext {
+  deliveryOptions: {
+    config: MyParcelDeliveryOptions.Config;
+    strings: MyParcelDeliveryOptions.Strings;
+    settings: FrontendSettings;
+  };
+}
+
+export type FrontendSettings = {
+  addressType: AddressType | null;
+  ajaxHookGetConfig: string;
+  ajaxUrl: string;
+  allowedShippingMethods: string[];
+  alwaysShow: boolean;
+  disallowedShippingMethods: string[];
+  hasDeliveryOptions: boolean;
+  hasSplitAddressFields: boolean;
+  hiddenInputName: string;
+  shippingMethod: string | null;
+  splitAddressFieldsCountries: string[];
+};
 
 (() => {
   [
@@ -35,73 +57,7 @@ import {getAddress} from './getAddress';
     });
   });
 
-  const $wrapper = getElement('#mypa-delivery-options-wrapper');
-
-  if (!$wrapper) {
-    console.warn('No delivery options wrapper found.');
-    return;
-  }
-
-  //
-  //   /**
-  //  * Whether the delivery options are currently shown or not. Defaults to true and can be set to false depending on
-  //  *  shipping methods.
-  //  *
-  //  * @type {Boolean}
-  //  */
-  // export const hasDeliveryOptions = true;
-  //
-  // /**
-  //  * @type {RegExp}
-  //  */
-  // export const splitStreetRegex = /(.*?)\s?(\d{1,4})[/\s-]{0,2}([A-z]\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[A-z][A-z\s]{0,3})?$/;
-  //
-  // /**
-  //  * @type {Boolean}
-  //  */
-  // export const isUsingSplitAddressFields = Boolean(Number(MyParcelDisplaySettings.isUsingSplitAddressFields));
-  //
-  // /**
-  //  * @type {String[]}
-  //  */
-  // export const {splitAddressFieldsCountries} = MyParcelDisplaySettings;
-  //
-  // /**
-  //  * @type {Array}
-  //  */
-  // export const allowedShippingMethods = JSON.parse(MyParcelDeliveryOptions.allowedShippingMethods);
-  //
-  // /**
-  //  * @type {Array}
-  //  */
-  // export const disallowedShippingMethods = JSON.parse(MyParcelDeliveryOptions.disallowedShippingMethods);
-  //
-  // /**
-  //  * @type {Boolean}
-  //  */
-  // export const alwaysShow = Boolean(parseInt(MyParcelDeliveryOptions.alwaysShow));
-  //
-  // /**
-  //  * @type {Object<String, String>}
-  //  */
-  // export const previousCountry = {};
-  //
-  // /**
-  //  * @type {?String}
-  //  */
-  // export const selectedShippingMethod = null;
-  //
-  // /**
-  //  * @type {Element}
-  //  */
-  // export const hiddenDataInput = null;
-  //
-  // /**
-  //  * @type {String}
-  //  */
-  // export const addressType = null;
-
-  initializeStore();
+  initializeStores();
 
   injectHiddenInput();
   addAddressListeners();
@@ -123,15 +79,9 @@ import {getAddress} from './getAddress';
   jQuery(document.body).on(EVENT_WOOCOMMERCE_COUNTRY_TO_STATE_CHANGED, updateAddress);
   jQuery(document.body).on(EVENT_WOOCOMMERCE_UPDATED_CHECKOUT, updateShippingMethod);
 
-  jQuery(document.body).on('myparcelnl-woocommerce:updateAddress', updateAddress);
+  const deliveryOptions = useDeliveryOptionsStore();
 
-  const data = $wrapper.data('delivery-options-context');
+  triggerEvent(EVENT_UPDATE_DELIVERY_OPTIONS, deliveryOptions.state);
 
-  const config: MyParcelDeliveryOptions.Configuration = {
-    ...data.deliveryOptions,
-    address: getAddress(),
-  };
-
-  triggerEvent(EVENT_UPDATE_DELIVERY_OPTIONS, config);
   updateShippingMethod();
 })();

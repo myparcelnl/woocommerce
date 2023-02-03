@@ -6,10 +6,10 @@
       :id="id"
       v-model="model"
       v-test="{type: 'input', id}"
-      :value="element.props?.value"
-      type="radio"
       :disabled="element.isDisabled || element.isSuspended"
-      class="" />
+      :value="element.props?.value"
+      class=""
+      type="radio" />
     <label
       v-test="{type: 'label', id}"
       :for="id"
@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import {ElementInstance, generateFieldId} from '@myparcel/pdk-frontend';
+import {ElementInstance, generateFieldId} from '@myparcel-pdk/admin';
 import {PropType, defineComponent} from 'vue';
 import {useVModel} from '@vueuse/core';
 

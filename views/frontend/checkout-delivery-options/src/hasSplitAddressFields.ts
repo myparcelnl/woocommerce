@@ -1,6 +1,6 @@
 import {FIELD_COUNTRY} from './data';
 import {getAddressField} from './utils';
-import {getStoreValue} from './store';
+import {useSettingsStore} from './store';
 
 export const hasSplitAddressFields = (country?: string): boolean => {
   if (!country) {
@@ -9,11 +9,11 @@ export const hasSplitAddressFields = (country?: string): boolean => {
     country = countryField?.value;
   }
 
-  const hasSplitAddressFields = getStoreValue('hasSplitAddressFields');
+  const settings = useSettingsStore();
 
-  if (!hasSplitAddressFields) {
+  if (!settings.hasSplitAddressFields) {
     return false;
   }
 
-  return window.MyParcelNLData.splitAddressFieldsCountries.includes(country?.toUpperCase());
+  return !!country && settings.splitAddressFieldsCountries.includes(country.toUpperCase());
 };

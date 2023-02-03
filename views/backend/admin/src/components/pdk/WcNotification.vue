@@ -1,13 +1,13 @@
 <template>
   <div
     v-test
-    class="mypa-relative notice"
     :class="[
       `notice-${notification.variant}`,
       {
         'is-dismissible': !notification.timeout,
       },
-    ]">
+    ]"
+    class="mypa-relative notice">
     <strong v-text="notification.title"></strong>
     <p
       v-for="(item, index) in contentArray"
@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import {PdkNotification, useLanguage, usePdkConfig} from '@myparcel/pdk-frontend';
+import {PdkNotification, useLanguage, usePdkConfig} from '@myparcel-pdk/admin';
 import {PropType, computed, defineComponent} from 'vue';
 import {toArray} from '@myparcel/ts-utils';
 
@@ -31,7 +31,7 @@ export default defineComponent({
   },
 
   setup: (props) => {
-    const {translate} = useLanguage();
+    const { translate } = useLanguage();
 
     return {
       config: usePdkConfig(),

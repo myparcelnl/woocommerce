@@ -1,4 +1,7 @@
 import {getSelectedShippingMethod} from '../getSelectedShippingMethod';
+import {useSettingsStore} from '../store';
+
+export const METHOD_FREE_SHIPPING = 'free_shipping';
 
 /**
  * Check if the given shipping method is allowed to have delivery options by checking if the name starts with any
@@ -10,38 +13,28 @@ import {getSelectedShippingMethod} from '../getSelectedShippingMethod';
  * @param {?String} shippingMethod
  * @returns {Boolean}
  */
-export const shippingMethodHasDeliveryOptions = (shippingMethod: null | string) => {
+export const shippingMethodHasDeliveryOptions = (shippingMethod: null | string): boolean => {
   shippingMethod ??= getSelectedShippingMethod();
-
-  let display = false;
 
   if (!shippingMethod) {
     return false;
   }
 
-  if (shippingMethod.startsWith('free_shipping')) {
-    shippingMethod = 'free_shipping';
+  if (shippingMethod.startsWith(METHOD_FREE_SHIPPING)) {
+    shippingMethod = METHOD_FREE_SHIPPING;
   }
+
+  const settings = useSettingsStore();
 
   /**
    * If "all" is selected for allowed shipping methods check if the current method is NOT in the
    *  disallowedShippingMethods array.
    */
-  const list = window.MyParcelNLData.alwaysShow
-    ? window.MyParcelNLData.disallowedShippingMethods
-    : window.MyParcelNLData.allowedShippingMethods;
+  const list = settings.state.alwaysShow
+    ? settings.state.disallowedShippingMethods
+    : settings.state.allowedShippingMethods;
 
-  list.forEach((method) => {
-    const currentMethodIsAllowed = shippingMethod.includes(method);
+  const comparison = settings.state.alwaysShow ? 'every' : 'some';
 
-    if (currentMethodIsAllowed) {
-      display = true;
-    }
-  });
-
-  if (window.MyParcelNLData.alwaysShow) {
-    display = !display;
-  }
-
-  return display;
+  return list[comparison]((method) => shippingMethod?.includes(method));
 };

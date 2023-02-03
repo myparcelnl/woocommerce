@@ -24,7 +24,7 @@ import {
   WcTextInput,
   WcToggleInput,
 } from '../components/pdk';
-import {executePdkComponentTests} from '@myparcel/pdk-component-tests';
+import {executePdkComponentTests} from '@myparcel-pdk/component-tests';
 
 executePdkComponentTests({
   PdkButtonGroup: WcButtonGroup,

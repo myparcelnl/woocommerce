@@ -8,16 +8,16 @@
 
 <script lang="ts">
 import {PropType, defineComponent} from 'vue';
-import {ElementInstance} from '@myparcel/pdk-frontend';
+import {ElementInstance} from '@myparcel-pdk/admin';
 import WcTextInput from './WcTextInput.vue';
 import {useVModel} from '@vueuse/core';
 
 /**
- * @see import('@myparcel/pdk-components').DefaultNumberInput
+ * @see import('@myparcel-pdk/admin-components').DefaultNumberInput
  */
 export default defineComponent({
   name: 'WcNumberInput',
-  components: {WcTextInput},
+  components: { WcTextInput },
   props: {
     element: {
       type: Object as PropType<ElementInstance>,

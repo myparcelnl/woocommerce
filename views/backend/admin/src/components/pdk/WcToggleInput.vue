@@ -6,13 +6,13 @@
       v-test="{type: 'input', id}"
       :disabled="element.isDisabled || element.isSuspended"
       :value="true"
-      type="checkbox"
-      class="!mypa-hidden" />
+      class="!mypa-hidden"
+      type="checkbox" />
 
     <label
       v-test="{type: 'label', id}"
-      :for="id"
       :class="`woocommerce-input-toggle woocommerce-input-toggle--${model ? 'enabled' : 'disabled'}`"
+      :for="id"
       class="!mypa-float-none !mypa-ml-auto !mypa-w-8">
       {{ translate(`toggle_${model ? 'yes' : 'no'}`) }}
     </label>
@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import {ElementInstance, generateFieldId, useLanguage} from '@myparcel/pdk-frontend';
+import {ElementInstance, generateFieldId, useLanguage} from '@myparcel-pdk/admin';
 import {PropType, defineComponent} from 'vue';
 import {useVModel} from '@vueuse/core';
 
@@ -45,7 +45,7 @@ export default defineComponent({
   emits: ['update:modelValue'],
 
   setup: (props, ctx) => {
-    const {translate} = useLanguage();
+    const { translate } = useLanguage();
 
     return {
       id: generateFieldId(props.element),

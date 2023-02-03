@@ -621,6 +621,47 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@myparcel-pdk/admin-component-tests@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-component-tests::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@myparcel-pdk/admin-component-tests@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-component-tests::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+  dependencies:
+    "@myparcel-pdk/common": "workspace:*"
+    "@myparcel-pdk/frontend-core": "workspace:*"
+    "@vue/test-utils": ^2.2.9
+    vue: ^3.2.47
+  languageName: node
+  linkType: soft
+
+"@myparcel-pdk/admin-components@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-components::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@myparcel-pdk/admin-components@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-components::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+  dependencies:
+    "@myparcel-pdk/admin": "workspace:^"
+    "@myparcel/ts-utils": ^1.4.0
+    "@vueuse/core": ^9.12.0
+    vue: ^3.2.47
+  languageName: node
+  linkType: soft
+
+"@myparcel-pdk/admin-preset-bootstrap4@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-preset-bootstrap4::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@myparcel-pdk/admin-preset-bootstrap4@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-preset-bootstrap4::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+  dependencies:
+    "@myparcel-pdk/admin": "workspace:^"
+    "@myparcel/ts-utils": ^1.4.0
+    vue: ^3.2.47
+  languageName: node
+  linkType: soft
+
+"@myparcel-pdk/admin@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@myparcel-pdk/admin@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+  dependencies:
+    "@myparcel-pdk/common": "workspace:^"
+    "@myparcel-pdk/frontend-core": "workspace:^"
+  languageName: node
+  linkType: soft
+
 "@myparcel-pdk/common@portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/common::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
   version: 0.0.0-use.local
   resolution: "@myparcel-pdk/common@portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/common::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
@@ -641,8 +682,8 @@ __metadata:
     lodash: ^4.17.21
     lodash-es: ^4.17.21
     lodash-unified: ^1.0.3
-    pinia: ^2.0.29
-    vue: ^3.2.45
+    pinia: ^2.0.30
+    vue: ^3.2.47
   languageName: node
   linkType: soft
 
@@ -698,10 +739,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/backend-admin@workspace:views/backend/admin"
   dependencies:
-    "@myparcel/pdk-component-tests": "*"
-    "@myparcel/pdk-components": "*"
-    "@myparcel/pdk-frontend": "*"
-    "@myparcel/pdk-preset-bootstrap4": "*"
+    "@myparcel-pdk/admin": "*"
+    "@myparcel-pdk/admin-component-tests": "*"
+    "@myparcel-pdk/admin-components": "*"
+    "@myparcel-pdk/admin-preset-bootstrap4": "*"
     "@tanstack/vue-query": ^4.24.4
     "@types/jquery": ^3.5.16
     "@types/select2": ^4.0.56
@@ -776,47 +817,6 @@ __metadata:
   checksum: 4d6e2845b4a3738ac4364d3a9896ef85131e993810ca481eaa402edaaacac44f2f399b8250abed3ee7808d254c80f79f0291a4ecd33004167bea8439ac3aa929
   languageName: node
   linkType: hard
-
-"@myparcel/pdk-component-tests@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-component-tests::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@myparcel/pdk-component-tests@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-component-tests::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
-  dependencies:
-    "@myparcel-pdk/common": "workspace:*"
-    "@myparcel-pdk/frontend-core": "workspace:*"
-    "@vue/test-utils": ^2.2.8
-    vue: ^3.2.45
-  languageName: node
-  linkType: soft
-
-"@myparcel/pdk-components@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-components::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@myparcel/pdk-components@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-components::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
-  dependencies:
-    "@myparcel/pdk-frontend": "workspace:^"
-    "@myparcel/ts-utils": ^1.4.0
-    "@vueuse/core": ^9.12.0
-    vue: ^3.2.45
-  languageName: node
-  linkType: soft
-
-"@myparcel/pdk-frontend@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-frontend::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@myparcel/pdk-frontend@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-frontend::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
-  dependencies:
-    "@myparcel-pdk/common": "workspace:^"
-    "@myparcel-pdk/frontend-core": "workspace:^"
-  languageName: node
-  linkType: soft
-
-"@myparcel/pdk-preset-bootstrap4@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-preset-bootstrap4::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@myparcel/pdk-preset-bootstrap4@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-preset-bootstrap4::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
-  dependencies:
-    "@myparcel/pdk-frontend": "workspace:^"
-    "@myparcel/ts-utils": ^1.4.0
-    vue: ^3.2.45
-  languageName: node
-  linkType: soft
 
 "@myparcel/prettier-config@npm:*":
   version: 1.1.0
@@ -2212,7 +2212,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/test-utils@npm:^2.2.8, @vue/test-utils@npm:^2.2.9":
+"@vue/test-utils@npm:^2.2.9":
   version: 2.2.9
   resolution: "@vue/test-utils@npm:2.2.9"
   dependencies:
@@ -8985,7 +8985,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pinia@npm:^2.0.29":
+"pinia@npm:^2.0.30":
   version: 2.0.30
   resolution: "pinia@npm:2.0.30"
   dependencies:
@@ -11740,7 +11740,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue@npm:^3.2.45, vue@npm:^3.2.47":
+"vue@npm:^3.2.47":
   version: 3.2.47
   resolution: "vue@npm:3.2.47"
   dependencies:

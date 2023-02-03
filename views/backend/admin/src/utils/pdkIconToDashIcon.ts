@@ -1,4 +1,4 @@
-import {PdkIcon} from '@myparcel/pdk-frontend';
+import {PdkIcon} from '@myparcel-pdk/admin';
 import {memoize} from 'lodash-es';
 
 const PDK_DASH_ICON_MAP: Record<PdkIcon, string> = {

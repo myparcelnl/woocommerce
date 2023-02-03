@@ -1,11 +1,11 @@
 <template>
   <a
     v-test="tab.name"
-    href="#"
-    class="nav-tab"
     :class="{
       'nav-tab-active': active,
     }"
+    class="nav-tab"
+    href="#"
     @click.prevent="$emit('click')">
     <PdkIcon
       v-if="tab.icon"
@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import {PdkTab, useLanguage} from '@myparcel/pdk-frontend';
+import {PdkTab, useLanguage} from '@myparcel-pdk/admin';
 import {PropType, defineComponent} from 'vue';
 
 export default defineComponent({
@@ -35,7 +35,7 @@ export default defineComponent({
   emits: ['click'],
 
   setup: () => {
-    const {translate} = useLanguage();
+    const { translate } = useLanguage();
 
     return {
       translate,

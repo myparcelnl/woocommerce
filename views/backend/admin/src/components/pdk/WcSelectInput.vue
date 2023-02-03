@@ -4,10 +4,10 @@
     ref="selectElement"
     v-model="model"
     v-test="{type: 'select', id}"
-    class="select"
     :class="{
       disabled: options.length === 1 || element.isDisabled || element.isSuspended,
-    }">
+    }"
+    class="select">
     <option
       v-for="(item, index) in options"
       :key="index"
@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import {ElementInstance, generateFieldId} from '@myparcel/pdk-frontend';
+import {ElementInstance, generateFieldId} from '@myparcel-pdk/admin';
 import {PropType, computed, defineComponent, onBeforeUnmount, onMounted, ref} from 'vue';
 import {SelectOption} from '@myparcel-pdk/common';
 

@@ -5,25 +5,25 @@
     <ActionButton
       v-for="(action, index) in dropdownActions.standalone"
       :key="action.id"
-      size="sm"
+      :action="action"
       :class="{
         '!mypa-rounded-r-none': index === dropdownActions.standalone.length - 1,
       }"
       :hide-text="hideText"
-      :action="action" />
+      size="sm" />
 
     <PdkButton
       v-if="dropdownActions.hidden.length > 0"
       :aria-expanded="toggled"
-      :disabled="disabled"
-      aria-haspopup="true"
       :aria-label="translate('toggle_dropdown')"
-      class="mypa-relative"
       :class="{
         '!mypa-rounded-l-none !mypa-border-l-0': dropdownActions.standalone.length > 0,
       }"
-      size="sm"
+      :disabled="disabled"
       :icon="dropdownIcon"
+      aria-haspopup="true"
+      class="mypa-relative"
+      size="sm"
       @focus="toggled = true"
       @focusout="toggled = false"
       @mouseout="toggled = false"
@@ -35,8 +35,8 @@
           v-for="(action, index) in dropdownActions.hidden"
           :key="`${index}_${action.id}`"
           v-test="'HiddenDropdownAction'"
-          class="!mypa-border-none"
-          :action="action">
+          :action="action"
+          class="!mypa-border-none">
           {{ translate(action.label) }}
         </ActionButton>
       </div>
@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import {ActionButton, PdkIcon, ResolvedAction, useDropdownData, useLanguage} from '@myparcel/pdk-frontend';
+import {ActionButton, PdkIcon, ResolvedAction, useDropdownData, useLanguage} from '@myparcel-pdk/admin';
 import {PropType, computed, defineComponent} from 'vue';
 
 export default defineComponent({
@@ -71,7 +71,7 @@ export default defineComponent({
 
   emits: ['click'],
   setup: (props) => {
-    const {translate} = useLanguage();
+    const { translate } = useLanguage();
     const dropdownData = useDropdownData(props.actions);
 
     return {

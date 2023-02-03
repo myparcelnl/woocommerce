@@ -4,9 +4,9 @@
     v-test="{id}"
     valign="top">
     <PdkTableCol
+      class="titledesc"
       component="th"
-      scope="row"
-      class="titledesc">
+      scope="row">
       <label
         v-test="{type: 'label'}"
         :for="id">
@@ -17,8 +17,8 @@
         <span
           v-if="element.props.description"
           v-test="{type: 'description'}"
-          class="woocommerce-help-tip"
-          :data-tip="translate(element.props.description)" />
+          :data-tip="translate(element.props.description)"
+          class="woocommerce-help-tip" />
       </label>
     </PdkTableCol>
 
@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import {ElementInstance, generateFieldId, useLanguage, usePdkConfig} from '@myparcel/pdk-frontend';
+import {ElementInstance, generateFieldId, useLanguage, usePdkConfig} from '@myparcel-pdk/admin';
 import {PropType, defineComponent} from 'vue';
 
 export default defineComponent({
@@ -44,7 +44,7 @@ export default defineComponent({
   },
 
   setup: (props) => {
-    const {translate} = useLanguage();
+    const { translate } = useLanguage();
 
     return {
       id: generateFieldId(props.element),

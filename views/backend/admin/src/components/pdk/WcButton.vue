@@ -1,21 +1,21 @@
 <template>
   <button
     v-test
-    type="button"
-    class="button"
-    :disabled="loading || disabled"
     :class="{
       'mypa-animate-pulse': loading,
       'button-small': size === 'sm',
       'button-large': size === 'lg',
     }"
+    :disabled="loading || disabled"
+    class="button"
+    type="button"
     @click="$emit('click')">
     <span class="mypa-h-full mypa-inline-flex">
       <PdkIcon
         v-if="icon"
-        class="mypa-m-auto mypa-text-sm"
         :class="label ? 'mypa-mr-1' : null"
-        :icon="icon" />
+        :icon="icon"
+        class="mypa-m-auto mypa-text-sm" />
 
       <slot>
         <span
@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import {PdkButtonSize, PdkIcon, useLanguage} from '@myparcel/pdk-frontend';
+import {PdkButtonSize, PdkIcon, useLanguage} from '@myparcel-pdk/admin';
 import {PropType, defineComponent} from 'vue';
 
 export default defineComponent({
@@ -62,7 +62,7 @@ export default defineComponent({
   emits: ['click'],
 
   setup: () => {
-    const {translate} = useLanguage();
+    const { translate } = useLanguage();
 
     return {
       translate,

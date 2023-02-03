@@ -4,8 +4,8 @@
     :id="modalKey ? `pdk-modal-${modalKey}` : null"
     v-test="{key: modalKey}"
     :class="[...backgroundClasses, 'mypa-z-[9999]']"
-    tabindex="-1"
-    role="dialog">
+    role="dialog"
+    tabindex="-1">
     <Transition :name="pdkConfig.transitions?.modalBackdrop">
       <div
         v-show="isOpen"
@@ -33,9 +33,9 @@
         @click.stop>
         <div class="mypa-relative">
           <span
+            :aria-label="translate('action_cancel')"
             class="mypa--m-4 mypa-absolute mypa-cursor-pointer mypa-right-0 mypa-top-0"
             role="button"
-            :aria-label="translate('action_cancel')"
             @click="closeModal">
             <PdkIcon icon="close" />
           </span>
@@ -73,7 +73,7 @@ import {
   useLanguage,
   useModalStore,
   usePdkConfig,
-} from '@myparcel/pdk-frontend';
+} from '@myparcel-pdk/admin';
 import {PropType, computed, defineComponent} from 'vue';
 
 export default defineComponent({
@@ -102,7 +102,7 @@ export default defineComponent({
 
   setup: (props) => {
     const modalStore = useModalStore();
-    const {translate} = useLanguage();
+    const { translate } = useLanguage();
 
     const isOpen = computed(() => {
       return props.modalKey && modalStore.opened === props.modalKey;

@@ -13,10 +13,10 @@
     "test:watch": "run ws:test:watch \"$(pwd)\""
   },
   "dependencies": {
-    "@myparcel/pdk-component-tests": "*",
-    "@myparcel/pdk-components": "*",
-    "@myparcel/pdk-frontend": "*",
-    "@myparcel/pdk-preset-bootstrap4": "*",
+    "@myparcel-pdk/admin": "*",
+    "@myparcel-pdk/admin-component-tests": "*",
+    "@myparcel-pdk/admin-components": "*",
+    "@myparcel-pdk/admin-preset-bootstrap4": "*",
     "@tanstack/vue-query": "^4.24.4"
   },
   "devDependencies": {

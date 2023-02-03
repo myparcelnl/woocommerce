@@ -1,23 +1,16 @@
 /** @type {import('eslint').Linter.Config} */
 module.exports = {
   root: true,
-  extends: ['@myparcel-eslint/eslint-config-esnext', '@myparcel-eslint/eslint-config-prettier'],
   parserOptions: {
     dir: __dirname,
     project: 'tsconfig.json',
+    extraFileExtensions: ['.vue'],
   },
   globals: {
     jQuery: false,
     JQuery: false,
   },
   overrides: [
-    {
-      files: ['./**/index.ts'],
-      plugins: ['sort-exports'],
-      rules: {
-        'sort-exports/sort-exports': ['warn', {sortDir: 'asc', sortExportKindFirst: 'type'}],
-      },
-    },
     {
       files: ['./**/*.vue'],
       extends: '@myparcel-eslint/eslint-config-prettier-typescript-vue',
@@ -41,8 +34,19 @@ module.exports = {
       },
     },
     {
+      files: ['./**/index.ts'],
+      plugins: ['sort-exports'],
+      rules: {
+        'sort-exports/sort-exports': ['warn', {sortDir: 'asc', sortExportKindFirst: 'type'}],
+      },
+    },
+    {
       files: ['./**/*.js', './**/*.cjs', './**/*.mjs'],
-      extends: '@myparcel-eslint/eslint-config-node',
+      extends: [
+        '@myparcel-eslint/eslint-config-node',
+        '@myparcel-eslint/eslint-config-esnext',
+        '@myparcel-eslint/eslint-config-prettier',
+      ],
     },
     {
       files: ['./**/*.spec.*', './**/*.test.*', './**/__tests__/**'],

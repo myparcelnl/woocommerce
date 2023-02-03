@@ -28,9 +28,9 @@
     "test": "nx run-many --target=test --output-style=stream",
     "test:watch": "nx run-many --target=test:watch --output-style=stream",
     "translations:import": "npx -q @edielemoine/google-docs-importer --documentId 1TPE7gwG2GXtX7vlKIaskwMy0Xr4o_ir-lsedWB86xyc -o config/pdk/translations",
-    "watch": "run build:js:dev && echo 'Waiting for changes...' && nx watch --includeDependencies --all -- run build:js:dev --sourcemap=false",
-    "watch:backend": "run build:js:dev:backend && echo 'Waiting for changes...' && nx watch --includeDependencies --projects='backend-*' -- run build:js:dev:backend --sourcemap=false",
-    "watch:frontend": "run build:js:dev:frontend && echo 'Waiting for changes...' && nx watch --includeDependencies --projects='frontend-*' -- run build:js:dev:frontend --sourcemap=false",
+    "watch": "nx run-many --output-style=stream --target=build:dev -- --watch --sourcemap=false",
+    "watch:backend": "nx run-many --output-style=stream --projects='backend-*' --target=build:dev -- --watch --sourcemap=false",
+    "watch:frontend": "nx run-many --output-style=stream --projects='frontend-*' --target=build:dev -- --watch --sourcemap=false",
     "ws:build": "vite build",
     "ws:build:dev": "vite build --mode development",
     "ws:dev": "vite",
@@ -86,12 +86,11 @@
   },
   "packageManager": "yarn@3.3.1",
   "resolutions": {
-    "@myparcel/pdk-component-tests": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-component-tests",
-    "@myparcel/pdk-components": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-components",
-    "@myparcel/pdk-frontend": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-frontend",
-    "@myparcel/pdk-preset-bootstrap4": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-preset-bootstrap4",
+    "@myparcel-pdk/admin": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin",
+    "@myparcel-pdk/admin-component-tests": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-component-tests",
+    "@myparcel-pdk/admin-components": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-components",
+    "@myparcel-pdk/admin-preset-bootstrap4": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-preset-bootstrap4",
     "@myparcel-pdk/common": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/common",
-    "@myparcel-pdk/frontend-components": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/components",
     "@myparcel-pdk/frontend-core": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/core"
   }
 }

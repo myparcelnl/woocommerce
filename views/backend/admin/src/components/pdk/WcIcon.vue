@@ -1,14 +1,14 @@
 <template>
   <span
     v-test
-    role="none"
-    class="dashicons mypa-w-auto mypa-h-auto"
-    :class="`dashicons-${mappedIcon}`"></span>
+    :class="`dashicons-${mappedIcon}`"
+    class="dashicons mypa-h-auto mypa-w-auto"
+    role="none"></span>
 </template>
 
 <script lang="ts">
 import {PropType, computed, defineComponent} from 'vue';
-import {PdkIcon} from '@myparcel/pdk-frontend';
+import {PdkIcon} from '@myparcel-pdk/admin';
 import {pdkIconToDashIcon} from '../../utils/pdkIconToDashIcon';
 
 export default defineComponent({

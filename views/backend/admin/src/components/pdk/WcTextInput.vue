@@ -3,13 +3,13 @@
     :id="id"
     v-model="model"
     v-test="{type: 'input', id}"
-    class="!mypa-w-full"
     :disabled="element.isDisabled || element.isSuspended"
-    :type="element.props.type ?? 'text'" />
+    :type="element.props.type ?? 'text'"
+    class="!mypa-w-full" />
 </template>
 
 <script lang="ts">
-import {ElementInstance, generateFieldId} from '@myparcel/pdk-frontend';
+import {ElementInstance, generateFieldId} from '@myparcel-pdk/admin';
 import {PropType, defineComponent} from 'vue';
 import {useVModel} from '@vueuse/core';
 

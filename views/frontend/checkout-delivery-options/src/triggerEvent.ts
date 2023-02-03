@@ -3,7 +3,7 @@
  */
 export const triggerEvent = (
   eventName: string,
-  detail: Record<string, unknown> | null = null,
+  detail: unknown = null,
   element: string | HTMLElement | Document = document,
 ): void => {
   let eventSource: HTMLElement | Document;

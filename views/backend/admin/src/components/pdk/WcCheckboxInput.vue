@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import {ElementInstance, generateFieldId, useLanguage} from '@myparcel/pdk-frontend';
+import {ElementInstance, generateFieldId, useLanguage} from '@myparcel-pdk/admin';
 import {PropType, computed, defineComponent} from 'vue';
 import {useVModel} from '@vueuse/core';
 
@@ -36,7 +36,7 @@ export default defineComponent({
   emits: ['update:modelValue'],
 
   setup: (props, ctx) => {
-    const {translate} = useLanguage();
+    const { translate } = useLanguage();
 
     return {
       id: generateFieldId(props.element),

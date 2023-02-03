@@ -1,5 +1,5 @@
-import {getAddressField} from './utils/getAddressField';
-import {FIELD_ADDRESS, FIELD_HOUSE_NUMBER, FIELD_HOUSE_NUMBER_SUFFIX, FIELD_STREET_NAME} from './data/fields';
+import {FIELD_ADDRESS, FIELD_HOUSE_NUMBER, FIELD_HOUSE_NUMBER_SUFFIX, FIELD_STREET_NAME} from './data';
+import {getAddressField} from './utils';
 
 export interface AddressParts {
   house_number: string | null;

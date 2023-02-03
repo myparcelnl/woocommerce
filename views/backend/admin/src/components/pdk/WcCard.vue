@@ -22,8 +22,8 @@
           <ActionButton
             v-for="(action, index) in actions"
             :key="`${index}_${action.id}`"
-            :disabled="loading"
-            :action="action" />
+            :action="action"
+            :disabled="loading" />
         </PdkButtonGroup>
       </slot>
     </div>
@@ -31,13 +31,13 @@
 </template>
 
 <script lang="ts">
-import {ActionButton, PdkAction, useLanguage} from '@myparcel/pdk-frontend';
+import {ActionButton, PdkAction, useLanguage} from '@myparcel-pdk/admin';
 import {PropType, defineComponent} from 'vue';
 
 export default defineComponent({
   name: 'WcCard',
 
-  components: {ActionButton},
+  components: { ActionButton },
 
   props: {
     loading: {
@@ -56,7 +56,7 @@ export default defineComponent({
   },
 
   setup: () => {
-    const {translate} = useLanguage();
+    const { translate } = useLanguage();
 
     return {
       translate,

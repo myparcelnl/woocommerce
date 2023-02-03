@@ -1,6 +1,6 @@
 import './assets/scss/index.scss';
-import {DefaultCurrencyInput, DefaultHeading, DefaultLink, DefaultMultiRadio} from '@myparcel/pdk-components';
-import {LogLevel, createPdkFrontend, useModalStore} from '@myparcel/pdk-frontend';
+import {DefaultCurrencyInput, DefaultHeading, DefaultLink, DefaultMultiRadio} from '@myparcel-pdk/admin-components';
+import {LogLevel, createPdkFrontend, useModalStore} from '@myparcel-pdk/admin';
 import {
   PdkShipmentLabelWrapper,
   WcButton,

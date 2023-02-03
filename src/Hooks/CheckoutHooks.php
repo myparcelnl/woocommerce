@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
-use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Facade\Actions;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
@@ -22,8 +21,6 @@ use WC_Product;
 
 class CheckoutHooks implements WordPressHooksInterface
 {
-    public const  META_DELIVERY_OPTIONS            = '_myparcel_delivery_options';
-    public const  META_HIGHEST_SHIPPING_CLASS      = '_myparcel_highest_shipping_class';
     private const DISALLOWED_SHIPPING_METHODS      = [
         'local_pickup',
     ];
@@ -254,23 +251,6 @@ class CheckoutHooks implements WordPressHooksInterface
             self::SCRIPT_CHECKOUT_DELIVERY_OPTIONS,
             'views/frontend/checkout-delivery-options/lib/index.iife.js',
             $dependencies + [ScriptService::HANDLE_DELIVERY_OPTIONS, ScriptService::HANDLE_JQUERY]
-        );
-
-        wp_localize_script(
-            self::SCRIPT_CHECKOUT_DELIVERY_OPTIONS,
-            'MyParcelNLData',
-            [
-                'ajaxUrl'                     => admin_url('admin-ajax.php'),
-                'allowedShippingMethods'      => $this->getShippingMethodsAllowingDeliveryOptions(),
-                'alwaysShow'                  => true,
-                'disallowedShippingMethods'   => self::DISALLOWED_SHIPPING_METHODS,
-                'hiddenInputName'             => self::META_DELIVERY_OPTIONS,
-                'isUsingSplitAddressFields'   => (int) Settings::get(
-                    CheckoutSettings::USE_SEPARATE_ADDRESS_FIELDS,
-                    CheckoutSettings::ID
-                ),
-                'splitAddressFieldsCountries' => [CountryService::CC_NL, CountryService::CC_BE],
-            ]
         );
 
         $this->service->enqueueDeliveryOptions();
