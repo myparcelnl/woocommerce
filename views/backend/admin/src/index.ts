@@ -1,6 +1,6 @@
 import './assets/scss/index.scss';
 import {DefaultCurrencyInput, DefaultHeading, DefaultLink, DefaultMultiRadio} from '@myparcel-pdk/admin-components';
-import {LogLevel, createPdkFrontend, useModalStore} from '@myparcel-pdk/admin';
+import {LogLevel, createPdkAdmin, useModalStore} from '@myparcel-pdk/admin';
 import {
   PdkShipmentLabelWrapper,
   WcButton,
@@ -32,7 +32,7 @@ import {h} from 'vue';
 
 const FADE = 'fade';
 
-createPdkFrontend({
+createPdkAdmin({
   logLevel: LogLevel.DEBUG,
 
   formConfig: {
