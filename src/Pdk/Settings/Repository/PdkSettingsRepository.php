@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Settings\Repository;
 
+use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\AbstractSettingsModel;
-use MyParcelNL\Pdk\Settings\Model\CarrierSettings;
 use MyParcelNL\Pdk\Settings\Repository\AbstractSettingsRepository;
 use MyParcelNL\Sdk\src\Support\Str;
 
@@ -19,13 +19,19 @@ class PdkSettingsRepository extends AbstractSettingsRepository
      */
     public function get(string $name)
     {
-        [$id, $key] = explode('.', $name);
+        $parts = explode('.', $name);
 
-        $group = $this->retrieve($id, function () use ($id) {
-            return get_option($this->getOptionName($id), null);
+        if (count($parts) < 3) {
+            $key = $parts[0];
+        } else {
+            $key = implode('_', array_slice($parts, 0, 2));
+        }
+
+        $group = $this->retrieve(sprintf('settings_%s', $key), function () use ($key) {
+            return get_option($this->getOptionName($key), null);
         });
 
-        return $group[$key] ?? null;
+        return Arr::get($group, end($parts));
     }
 
     /**
@@ -36,13 +42,7 @@ class PdkSettingsRepository extends AbstractSettingsRepository
      */
     public function store(AbstractSettingsModel $settingsModel): void
     {
-        $key = $settingsModel->getId();
-
-        if ($settingsModel instanceof CarrierSettings) {
-            $key .= '_' . $settingsModel->carrierName;
-        }
-
-        update_option($this->getOptionName($key), $settingsModel->toArrayWithoutNull());
+        update_option($this->getOptionName($settingsModel->id), $settingsModel->toStorableArray());
     }
 
     /**
