@@ -10,7 +10,7 @@ use MyParcelNL\Pdk\Facade\RenderService;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Plugin\Api\PdkActions;
 use MyParcelNL\Pdk\Plugin\Model\Context\DeliveryOptionsContext;
-use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
+use MyParcelNL\Pdk\Plugin\Model\PdkCart;
 use MyParcelNL\Pdk\Plugin\Repository\PdkCartRepositoryInterface;
 use MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
@@ -104,56 +104,9 @@ class CheckoutHooks implements WordPressHooksInterface
      */
     public function getDeliveryOptionsConfig(): array
     {
-        $cartTotals                = WC()->session->get('cart_totals');
-        $chosenShippingMethodPrice = (float) $cartTotals['shipping_total'];
+        $cart = Pdk::get(PdkCartRepositoryInterface::class)->get(WC()->cart);
 
-        //        $settings                  = WCMYPA()->settingCollection;
-        //        $displayIncludingTax       = WC()->cart->display_prices_including_tax();
-        //        $priceFormat               = self::getDeliveryOptionsTitle('delivery_options_price_format');
-        //        $shippingMethod            = WC()->session->get('chosen_shipping_methods')[0] ?? false;
-        //        $shippingClass             = WCMP_Frontend::get_cart_shipping_class();
-        //
-        //        $packageType = ($shippingMethod)
-        //            ? ExportActions::getPackageTypeFromShippingMethod($shippingMethod, $shippingClass)
-        //            : null;
-        //
-        //        if ($displayIncludingTax) {
-        //            $chosenShippingMethodPrice += (float) $cartTotals['shipping_tax'];
-        //        }
-        //
-        //        $carrierSettings = [];
-        //
-        //        foreach ($this->getCarriersForDeliveryOptions() as $carrier) {
-        //            $carrierName = $carrier->getName();
-        //
-        //            if (! AccountSettings::getInstance()
-        //                ->isEnabledCarrier($carrierName)) {
-        //                continue;
-        //            }
-        //
-        //            $settingsByCarrier = $settings->where('carrier', $carrierName);
-        //
-        //            foreach ($this->getDeliveryOptionsConfigMap() as $key => $setting) {
-        //                [$settingName, $function, $addBasePrice] = $setting;
-        //
-        //                $value = $settingsByCarrier->{$function}($settingName);
-        //
-        //                if ($addBasePrice && is_numeric($value) && $this->useTotalPrice()) {
-        //                    $value += $chosenShippingMethodPrice;
-        //                }
-        //
-        //                Arr::set($carrierSettings, "$carrierName.$key", $value);
-        //            }
-        //        }
-
-        $order = new PdkOrder([
-            'deliveryOptions'       => [
-                'packageType' => 'package',
-            ],
-            'shipmentPriceAfterVat' => $chosenShippingMethodPrice,
-        ]);
-
-        return (new DeliveryOptionsContext(['order' => $order]))->toArray();
+        return (new DeliveryOptionsContext(['cart' => $cart]))->toArray();
     }
 
     /**
