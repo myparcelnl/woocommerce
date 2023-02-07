@@ -10,7 +10,6 @@ use MyParcelNL\Pdk\Facade\RenderService;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Plugin\Api\PdkActions;
 use MyParcelNL\Pdk\Plugin\Model\Context\DeliveryOptionsContext;
-use MyParcelNL\Pdk\Plugin\Model\PdkCart;
 use MyParcelNL\Pdk\Plugin\Repository\PdkCartRepositoryInterface;
 use MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
@@ -104,9 +103,11 @@ class CheckoutHooks implements WordPressHooksInterface
      */
     public function getDeliveryOptionsConfig(): array
     {
-        $cart = Pdk::get(PdkCartRepositoryInterface::class)->get(WC()->cart);
+        /** @var PdkCartRepositoryInterface $repository */
+        $repository = Pdk::get(PdkCartRepositoryInterface::class);
+        $pdkCart    = $repository->get(WC()->cart);
 
-        return (new DeliveryOptionsContext(['cart' => $cart]))->toArray();
+        return (new DeliveryOptionsContext(['cart' => $pdkCart]))->toArray();
     }
 
     /**

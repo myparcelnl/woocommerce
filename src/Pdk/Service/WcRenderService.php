@@ -36,7 +36,7 @@ class WcRenderService extends RenderService
         $context   = $this->contextService->createContexts([Context::ID_DELIVERY_OPTIONS], ['cart' => $cart]);
 
         printf(
-            '<div id="mypa-delivery-options-wrapper" class="woocommerce-myparcel__delivery-options" data-context="%s">%s<div id="myparcel-delivery-options-wrapper"></div></div>',
+            '<div id="mypa-delivery-options-wrapper" class="woocommerce-myparcel__delivery-options" data-context="%s">%s<div id="myparcel-delivery-options"></div></div>',
             $this->encodeContext($context),
             $customCss ? sprintf('<style>%s</style>', $customCss) : ''
         );

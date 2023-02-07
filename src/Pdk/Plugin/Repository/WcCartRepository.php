@@ -42,14 +42,13 @@ class WcCartRepository extends AbstractPdkCartRepository
         return $this->retrieve($input->get_cart_hash(), function () use ($input): PdkCart {
             $data = [
                 'externalIdentifier'    => $input->get_cart_hash(),
-                'shipmentPrice'         => $input->get_shipping_total(),
-                'shipmentPriceAfterVat' => $input->get_shipping_total() + $input->get_shipping_tax(),
-                'shipmentVat'           => $input->get_shipping_tax(),
-                'orderPrice'            => $input->get_cart_contents_total(),
-                'orderPriceAfterVat'    => $input->get_cart_contents_total() + $input->get_cart_contents_tax(),
-                'orderVat'              => $input->get_cart_contents_tax(),
+                'shipmentPrice'         => (int) (100 * $input->get_shipping_total()),
+                'shipmentPriceAfterVat' => (int) (100 * ($input->get_shipping_total() + $input->get_shipping_tax())),
+                'shipmentVat'           => (int) (100 * $input->get_shipping_tax()),
+                'orderPrice'            => (int) (100 * $input->get_cart_contents_total()),
+                'orderPriceAfterVat'    => (int) (100 * ($input->get_cart_contents_total() + $input->get_cart_contents_tax())),
+                'orderVat'              => (int) (100 * $input->get_cart_contents_tax()),
                 'shippingMethod'        => [
-                    'packageType'     => 'package',
                     'shippingAddress' => [
                         'cc'         => WC()->customer->get_shipping_country(),
                         'postalCode' => WC()->customer->get_shipping_postcode(),
@@ -59,11 +58,12 @@ class WcCartRepository extends AbstractPdkCartRepository
                 'lines'                 => array_map(function ($item) {
                     $product = $this->productRepository->getProduct($item['data']);
 
+                    /** @noinspection UnnecessaryCastingInspection <- because it is definitely necessary */
                     return [
-                        'quantity'      => $item['quantity'],
-                        'price'         => $item['line_subtotal'],
-                        'vat'           => $item['line_subtotal_tax'],
-                        'priceAfterVat' => $item['line_subtotal'] + $item['line_subtotal_tax'],
+                        'quantity'      => (int) $item['quantity'],
+                        'price'         => (int) (100 * $item['line_subtotal']),
+                        'vat'           => (int) (100 * $item['line_subtotal_tax']),
+                        'priceAfterVat' => (int) (100 * ($item['line_subtotal'] + $item['line_subtotal_tax'])),
                         'product'       => $product,
                     ];
                 }, array_values($input->cart_contents)),
