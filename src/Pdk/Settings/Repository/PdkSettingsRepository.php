@@ -13,9 +13,9 @@ class PdkSettingsRepository extends AbstractSettingsRepository
     /**
      * @param  string $namespace
      *
-     * @return array
+     * @return mixed
      */
-    public function getGroup(string $namespace): array
+    public function getGroup(string $namespace)
     {
         return $this->retrieve($namespace, function () use ($namespace) {
             return get_option($this->getOptionName($namespace), null);
