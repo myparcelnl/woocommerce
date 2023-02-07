@@ -50,7 +50,7 @@ export default defineComponent({
     return {
       id: generateFieldId(props.element),
       model: useVModel(props, 'modelValue', ctx.emit),
-      translate: translate,
+      translate,
     };
   },
 });

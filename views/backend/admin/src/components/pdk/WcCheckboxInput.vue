@@ -3,7 +3,7 @@
     :id="id"
     v-model="model"
     v-test="{type: 'input', id}"
-    :value="value"
+    :value="element?.props?.value ?? '1'"
     type="checkbox" />
   <label
     v-if="element?.label"
@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import {ElementInstance, generateFieldId, useLanguage} from '@myparcel-pdk/admin';
-import {PropType, computed, defineComponent} from 'vue';
+import {PropType, defineComponent} from 'vue';
 import {useVModel} from '@vueuse/core';
 
 export default defineComponent({
@@ -42,9 +42,6 @@ export default defineComponent({
       id: generateFieldId(props.element),
       model: useVModel(props, 'modelValue', ctx.emit),
       translate,
-      value: computed(() => {
-        return props.element?.props?.value ?? '1';
-      }),
     };
   },
 });
