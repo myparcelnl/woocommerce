@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import {PdkTab, useLanguage} from '@myparcel-pdk/admin';
+import {PdkTab, useLanguage} from '@myparcel-pdk/admin/src';
 import {PropType, defineComponent} from 'vue';
 
 export default defineComponent({

@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue';
-import {useLanguage} from '@myparcel-pdk/admin';
+import {useLanguage} from '@myparcel-pdk/admin/src';
 
 export default defineComponent({
   name: 'WcShipmentLabelWrapper',

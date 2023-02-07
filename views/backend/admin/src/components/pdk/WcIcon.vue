@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import {PropType, computed, defineComponent} from 'vue';
-import {PdkIcon} from '@myparcel-pdk/admin';
+import {PdkIcon} from '@myparcel-pdk/admin/src';
 import {pdkIconToDashIcon} from '../../utils/pdkIconToDashIcon';
 
 export default defineComponent({

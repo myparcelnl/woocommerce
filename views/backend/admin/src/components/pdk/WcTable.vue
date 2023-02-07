@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue';
-import {usePdkConfig} from '@myparcel-pdk/admin';
+import {usePdkConfig} from '@myparcel-pdk/admin/src';
 
 export default defineComponent({
   name: 'WcTable',

@@ -31,8 +31,8 @@
 </template>
 
 <script lang="ts">
-import {ElementInstance, generateFieldId, useLanguage, usePdkConfig} from '@myparcel-pdk/admin';
-import {PropType, defineComponent} from 'vue';
+import {ElementInstance, generateFieldId, useLanguage, usePdkConfig} from '@myparcel-pdk/admin/src';
+import {PropType, defineComponent, onRenderTracked, onRenderTriggered} from 'vue';
 
 export default defineComponent({
   name: 'WcFormGroup',
@@ -45,6 +45,14 @@ export default defineComponent({
 
   setup: (props) => {
     const {translate} = useLanguage();
+
+    onRenderTracked((event) => {
+      console.warn('WcFormGroup: onRenderTracked', event);
+    });
+
+    onRenderTriggered((event) => {
+      console.warn('WcFormGroup: onRenderTriggered', event);
+    });
 
     return {
       id: generateFieldId(props.element),

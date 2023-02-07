@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import {ComputedRef, PropType, computed, defineComponent, ref} from 'vue';
-import {ElementInstance, useLanguage} from '@myparcel-pdk/admin';
+import {ElementInstance, useLanguage} from '@myparcel-pdk/admin/src';
 import {SelectOption} from '@myparcel-pdk/common';
 import {useVModel} from '@vueuse/core';
 

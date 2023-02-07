@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import {ElementInstance, generateFieldId} from '@myparcel-pdk/admin';
+import {ElementInstance, generateFieldId} from '@myparcel-pdk/admin/src';
 import {PropType, defineComponent} from 'vue';
 import {useVModel} from '@vueuse/core';
 

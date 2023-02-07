@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import {PropType, defineComponent} from 'vue';
-import {ElementInstance} from '@myparcel-pdk/admin';
+import {ElementInstance} from '@myparcel-pdk/admin/src';
 import WcTextInput from './WcTextInput.vue';
 import {useVModel} from '@vueuse/core';
 

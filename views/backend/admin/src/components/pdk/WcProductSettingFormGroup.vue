@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import {ElementInstance, generateFieldId, useLanguage, usePdkConfig} from '@myparcel-pdk/admin';
+import {ElementInstance, generateFieldId, useLanguage, usePdkConfig} from '@myparcel-pdk/admin/src';
 import {PropType, defineComponent} from 'vue';
 
 export default defineComponent({

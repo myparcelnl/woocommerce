@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import {useAppInfo} from '@myparcel-pdk/admin';
+import {useAppInfo} from '@myparcel-pdk/admin/src';
 
 const {title} = useAppInfo();
 </script>

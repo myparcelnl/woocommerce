@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import {ElementInstance, generateFieldId} from '@myparcel-pdk/admin';
+import {ElementInstance, generateFieldId} from '@myparcel-pdk/admin/src';
 import {PropType, computed, defineComponent, onBeforeUnmount, onMounted, ref} from 'vue';
 import {SelectOption} from '@myparcel-pdk/common';
 

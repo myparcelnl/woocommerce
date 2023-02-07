@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import {ActionButton, PdkAction, useLanguage} from '@myparcel-pdk/admin';
+import {ActionButton, PdkAction, useLanguage} from '@myparcel-pdk/admin/src';
 import {PropType, defineComponent} from 'vue';
 
 export default defineComponent({

@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import {PdkNotification, useLanguage, usePdkConfig} from '@myparcel-pdk/admin';
+import {PdkNotification, useLanguage, usePdkConfig} from '@myparcel-pdk/admin/src';
 import {PropType, computed, defineComponent} from 'vue';
 import {toArray} from '@myparcel/ts-utils';
 

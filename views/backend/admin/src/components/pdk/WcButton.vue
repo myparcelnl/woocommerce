@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import {PdkButtonSize, PdkIcon, useLanguage} from '@myparcel-pdk/admin';
+import {PdkButtonSize, PdkIcon, useLanguage} from '@myparcel-pdk/admin/src';
 import {PropType, defineComponent} from 'vue';
 
 export default defineComponent({

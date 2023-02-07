@@ -73,7 +73,7 @@ import {
   useLanguage,
   useModalStore,
   usePdkConfig,
-} from '@myparcel-pdk/admin';
+} from '@myparcel-pdk/admin/src';
 import {PropType, computed, defineComponent} from 'vue';
 
 export default defineComponent({

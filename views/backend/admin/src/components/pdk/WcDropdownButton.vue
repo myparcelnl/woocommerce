@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import {ActionButton, PdkIcon, ResolvedAction, useDropdownData, useLanguage} from '@myparcel-pdk/admin';
+import {ActionButton, PdkIcon, ResolvedAction, useDropdownData, useLanguage} from '@myparcel-pdk/admin/src';
 import {PropType, computed, defineComponent} from 'vue';
 
 export default defineComponent({
