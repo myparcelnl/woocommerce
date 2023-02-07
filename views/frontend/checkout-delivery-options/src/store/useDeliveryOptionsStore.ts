@@ -17,7 +17,12 @@ export const useDeliveryOptionsStore = createStore<DeliveryOptionsContext>('deli
     },
 
     onUpdate: (newState: DeliveryOptionsContext, oldState: DeliveryOptionsContext) => {
-      console.log('%cDELIVERY OPTIONS', 'color: #4dc', 'deliveryOptions', {newState, oldState});
+      console.log('%cDELIVERY OPTIONS', 'color: #4dc', 'deliveryOptions', { newState, oldState });
+
+      if (document.querySelector('#myparcel-delivery-options')) {
+        triggerEvent(EVENT_UPDATE_DELIVERY_OPTIONS, newState);
+        return;
+      }
 
       if (objectDiffers(newState.config, oldState.config)) {
         triggerEvent(EVENT_UPDATE_CONFIG, newState);

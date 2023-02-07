@@ -41,7 +41,7 @@ export type FrontendSettings = {
   splitAddressFieldsCountries: string[];
 };
 
-(() => {
+jQuery(() => {
   [
     'myparcel_update_config',
     'myparcel_update_delivery_options',
@@ -84,4 +84,4 @@ export type FrontendSettings = {
   triggerEvent(EVENT_UPDATE_DELIVERY_OPTIONS, deliveryOptions.state);
 
   updateShippingMethod();
-})();
+});

@@ -5,6 +5,7 @@ import {fillCheckoutFields} from './fillCheckoutFields';
 import {getAddressParts} from './getAddressParts';
 import {updateAddress} from './updateAddress';
 import {AddressType} from './types';
+import {useCheckoutStore, useSettingsStore} from './store';
 
 /**
  * Sync addresses between split and non-split address fields.
@@ -13,7 +14,9 @@ import {AddressType} from './types';
  * @param {String} newCountry
  */
 export const synchronizeAddress = (event, newCountry) => {
-  if (window.MyParcelNLData.isUsingSplitAddressFields) {
+  const settings = useSettingsStore();
+
+  if (settings.state.hasSplitAddressFields) {
     return;
   }
 

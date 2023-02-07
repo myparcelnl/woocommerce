@@ -1,6 +1,6 @@
 import {EVENT_UPDATE_CONFIG} from '../data';
 import {triggerEvent} from '../triggerEvent';
-import {useSettingsStore} from '../store';
+import {useSettingsStore, useCheckoutStore} from '../store';
 
 /**
  * Fetch and update the delivery options config. For use with changing shipping methods, for example, as doing so
@@ -8,12 +8,14 @@ import {useSettingsStore} from '../store';
  */
 export const updateDeliveryOptionsConfig = (): void => {
   const settings = useSettingsStore();
+  // const checkout = useCheckoutStore();
 
   void jQuery.ajax({
     type: 'GET',
     url: settings.state.ajaxUrl,
     data: {
       action: settings.state.ajaxHookGetConfig,
+      // shippingMethod: checkout.state.shippingMethod,
     },
     success(data) {
       const {config} = JSON.parse(data);
