@@ -13,7 +13,7 @@ use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\WooCommerce\Service\ScriptService;
 use WC_Product;
 
-final class CheckoutHooks implements WordPressHooksInterface
+final class CheckoutScriptHooks implements WordPressHooksInterface
 {
     /**
      * @var \MyParcelNL\WooCommerce\Service\ScriptService
