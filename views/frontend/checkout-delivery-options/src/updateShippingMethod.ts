@@ -1,13 +1,11 @@
-import {FIELD_SHIPPING_METHOD} from './data';
-import {getElement} from './dom/getElement';
+import {FIELD_SHIPPING_METHOD, getElement} from '@myparcel-woocommerce/frontend-common';
 import {onChangeShippingMethod} from './listeners';
-import {useCheckoutStore} from './store';
 
 /**
  * Update the shipping method to the new selections. Triggers hiding/showing of the delivery options.
  */
 export const updateShippingMethod = (): void => {
-  let shippingMethod;
+  let shippingMethod: string | undefined;
 
   const shippingMethodField = getElement<HTMLInputElement>(FIELD_SHIPPING_METHOD);
   const selectedShippingMethodField = getElement<HTMLInputElement>(`${FIELD_SHIPPING_METHOD}:checked`);
@@ -35,17 +33,7 @@ export const updateShippingMethod = (): void => {
         shippingMethod = `flat_rate:${shippingClass}`;
       }
     }
-  } else {
-    shippingMethod = null;
   }
 
-  const checkout = useCheckoutStore();
-
-  const selectedShippingMethod = checkout.state.shippingMethod;
-
-  if (shippingMethod !== selectedShippingMethod) {
-    onChangeShippingMethod(selectedShippingMethod, shippingMethod);
-
-    checkout.set({shippingMethod});
-  }
+  onChangeShippingMethod(shippingMethod);
 };

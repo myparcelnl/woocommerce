@@ -1,8 +1,11 @@
-import {FIELD_ADDRESS, FIELD_HOUSE_NUMBER} from './data';
-import {getAddressField} from './utils';
-import {getHouseNumber} from './getHouseNumber';
-import {hasSplitAddressFields} from './hasSplitAddressFields';
-import {setFieldValue} from './dom/setFieldValue';
+import {
+  FIELD_ADDRESS,
+  FIELD_HOUSE_NUMBER,
+  getAddressField,
+  getHouseNumber,
+  hasSplitAddressFields,
+  setFieldValue,
+} from '@myparcel-woocommerce/frontend-common';
 
 /**
  * Set the house number.

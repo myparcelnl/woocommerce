@@ -1,26 +1,30 @@
 import customTsConfig from 'vite-plugin-custom-tsconfig';
 import {defineConfig} from 'vitest/config';
 
-export default defineConfig((env) => ({
-  build: {
-    lib: {
-      entry: 'src/index.ts',
-      fileName: 'index',
-      formats: ['iife'],
-      name: 'MyParcelWooCommerceDeliveryOptions',
-    },
-    minify: env.mode !== 'development',
-    outDir: 'lib',
-    sourcemap: true,
+export default defineConfig((env) => {
+  const isDev = env.mode === 'development';
 
-    rollupOptions: {
-      external: ['@myparcel/delivery-options'],
-      output: {
-        globals: {
-          '@myparcel/delivery-options': 'MyParcelDeliveryOptions',
+  return {
+    plugins: [customTsConfig()],
+
+    build: {
+      lib: {
+        name: 'MyParcelWooCommerceDeliveryOptions',
+        fileName: 'delivery-options',
+        entry: 'src/main.ts',
+        formats: ['iife'],
+      },
+      minify: !isDev,
+      outDir: 'lib',
+      rollupOptions: {
+        external: ['@myparcel/delivery-options'],
+        output: {
+          globals: {
+            '@myparcel/delivery-options': 'MyParcelDeliveryOptions',
+          },
         },
       },
+      sourcemap: isDev,
     },
-  },
-  plugins: [customTsConfig()],
-}));
+  };
+});

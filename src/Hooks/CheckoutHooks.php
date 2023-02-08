@@ -5,13 +5,18 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Hooks;
 
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Facade\RenderService;
+use MyParcelNL\Pdk\Facade\Settings;
+use MyParcelNL\Pdk\Plugin\Model\Context\CheckoutContext;
+use MyParcelNL\Pdk\Plugin\Repository\PdkCartRepositoryInterface;
 use MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface;
+use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\WooCommerce\Service\ScriptService;
+use WC_Product;
 
 final class CheckoutHooks implements WordPressHooksInterface
 {
-    private const SCRIPT_SPLIT_ADDRESS_FIELDS = 'myparcelnl-checkout-split-address-fields';
-    private const SCRIPT_CHECKOUT_DELIVERY_OPTIONS = 'myparcelnl-checkout-delivery-options';
+    public const GET_CONTEXT_HOOK = 'myparcelnl_get_checkout_context';
 
     /**
      * @var \MyParcelNL\WooCommerce\Service\ScriptService
@@ -28,12 +33,9 @@ final class CheckoutHooks implements WordPressHooksInterface
 
     public function apply(): void
     {
-        // Add the checkout scripts
         add_action('wp_enqueue_scripts', [$this, 'enqueueFrontendScripts'], 100);
 
-        add_action('wp_ajax_myparcelnl_get_delivery_options_config', [$this, 'getDeliveryOptionsConfigAjax']);
-
-        add_action('woocommerce_cart_calculate_fees', [$this, 'get_delivery_options_fees'], 20);
+        add_action('wp_ajax_' . self::GET_CONTEXT_HOOK, [$this, 'getCheckoutContextAjax']);
     }
 
     /**
@@ -52,7 +54,7 @@ final class CheckoutHooks implements WordPressHooksInterface
 
         if ($this->useSeparateAddressFields()) {
             $this->service->enqueueLocalScript(
-                self::SCRIPT_SPLIT_ADDRESS_FIELDS,
+                ScriptService::HANDLE_SPLIT_ADDRESS_FIELDS,
                 'views/checkout-split-address-fields/lib/split-fields',
                 [ScriptService::HANDLE_WC_CHECKOUT]
             );
@@ -71,25 +73,25 @@ final class CheckoutHooks implements WordPressHooksInterface
      *
      * @return array
      * @throws \Exception
-     * @todo
      */
-    public function getDeliveryOptionsConfig(): array
+    public function getCheckoutContext(): array
     {
         /** @var PdkCartRepositoryInterface $repository */
         $repository = Pdk::get(PdkCartRepositoryInterface::class);
         $pdkCart    = $repository->get(WC()->cart);
 
-        return (new DeliveryOptionsContext(['cart' => $pdkCart]))->toArray();
+        return (new CheckoutContext(['cart' => $pdkCart]))->toArray();
     }
 
     /**
      * Echoes the delivery options config as a JSON string for use with AJAX.
      *
      * @throws \Exception
+     * @todo make proper action
      */
-    public function getDeliveryOptionsConfigAjax(): void
+    public function getCheckoutContextAjax(): void
     {
-        echo json_encode($this->getDeliveryOptionsConfig(), JSON_UNESCAPED_SLASHES);
+        echo json_encode($this->getCheckoutContext(), JSON_UNESCAPED_SLASHES);
         die();
     }
 
@@ -144,8 +146,8 @@ final class CheckoutHooks implements WordPressHooksInterface
         }
 
         $this->service->enqueueLocalScript(
-            self::SCRIPT_CHECKOUT_DELIVERY_OPTIONS,
-            'views / frontend / checkout - delivery - options / lib / delivery - options',
+            ScriptService::HANDLE_CHECKOUT_DELIVERY_OPTIONS,
+            'views/frontend/checkout-delivery-options/lib/delivery-options',
             $dependencies + [ScriptService::HANDLE_DELIVERY_OPTIONS, ScriptService::HANDLE_JQUERY]
         );
 

@@ -1,14 +1,11 @@
 {
+  "extends": "@vue/tsconfig/tsconfig.web.json",
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "declarationMap": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
+    "importsNotUsedAsValues": "remove",
+    "incremental": true,
+    "preserveValueImports": false,
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "strict": true,
-    "target": "ES2018"
+    "types": ["node", "vite/client"]
   },
   "include": ["./**/*.ts", "./**/*.vue"],
   "exclude": ["../**/__tests__/*", "../**/*.spec.*"]

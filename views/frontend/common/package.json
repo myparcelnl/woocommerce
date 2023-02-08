@@ -2,13 +2,8 @@
   "name": "@myparcel-woocommerce/frontend-common",
   "version": "1.0.0",
   "private": true,
-  "main": "lib/index.js",
-  "module": "lib/index.mjs",
-  "types": "lib/index.d.ts",
+  "main": "src/index.ts",
   "scripts": {
-    "build": "run ws:build \"$(pwd)\"",
-    "build:dev": "run ws:build:dev \"$(pwd)\"",
-    "dev": "run ws:dev \"$(pwd)\"",
     "test": "run ws:test \"$(pwd)\"",
     "test:watch": "run ws:test:watch \"$(pwd)\""
   },

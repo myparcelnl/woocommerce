@@ -1,5 +1,3 @@
-export * from './setAddressFromDeliveryOptions';
+export * from './fetchContext';
 export * from './shippingMethodHasDeliveryOptions';
 export * from './toggleDeliveryOptions';
-export * from './updateDeliveryOptionsConfig';
-export * from './validateMyParcelConfig';

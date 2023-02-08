@@ -1,5 +1,5 @@
-import {getSelectedShippingMethod} from '../getSelectedShippingMethod';
-import {useSettingsStore} from '../store';
+import {useSettingsStore} from '@myparcel-woocommerce/frontend-common';
+import {getSelectedShippingMethod} from '../../../common/src/utils/getSelectedShippingMethod';
 
 export const METHOD_FREE_SHIPPING = 'free_shipping';
 
@@ -13,7 +13,7 @@ export const METHOD_FREE_SHIPPING = 'free_shipping';
  * @param {?String} shippingMethod
  * @returns {Boolean}
  */
-export const shippingMethodHasDeliveryOptions = (shippingMethod: null | string): boolean => {
+export const shippingMethodHasDeliveryOptions = (shippingMethod?: string): boolean => {
   shippingMethod ??= getSelectedShippingMethod();
 
   if (!shippingMethod) {

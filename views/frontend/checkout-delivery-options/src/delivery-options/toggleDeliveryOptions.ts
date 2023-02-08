@@ -1,5 +1,5 @@
 import {shippingMethodHasDeliveryOptions} from './shippingMethodHasDeliveryOptions';
-import {useCheckoutStore} from '../store';
+import {useCheckoutStore} from '@myparcel-woocommerce/frontend-common';
 
 /**
  * Hides/shows the delivery options based on the current shipping method. Makes sure to not update the checkout

@@ -1,5 +1,4 @@
-import {FIELD_COUNTRY} from './data';
-import {getAddressField} from './utils';
+import {FIELD_COUNTRY, getAddressField, useDeliveryOptionsStore} from '@myparcel-woocommerce/frontend-common';
 
 /**
  * Check if the country changed by comparing the old value with the new value before overwriting the MyParcelConfig
@@ -8,8 +7,10 @@ import {getAddressField} from './utils';
  * @returns {Boolean}
  */
 export const countryHasChanged = (): boolean => {
-  if (window.MyParcelConfig.address && window.MyParcelConfig.address.hasOwnProperty('cc')) {
-    return window.MyParcelConfig.address.cc !== getAddressField(FIELD_COUNTRY).value;
+  const deliveryOptions = useDeliveryOptionsStore();
+
+  if (deliveryOptions.state.address?.hasOwnProperty('cc')) {
+    return deliveryOptions.state.address.cc !== getAddressField(FIELD_COUNTRY)?.value;
   }
 
   return true;

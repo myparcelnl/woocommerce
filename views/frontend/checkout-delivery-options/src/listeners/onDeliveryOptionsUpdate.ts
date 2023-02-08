@@ -1,6 +1,8 @@
-import {EVENT_WOOCOMMERCE_UPDATED_CHECKOUT, EVENT_WOOCOMMERCE_UPDATE_CHECKOUT} from '../data';
-import {isOfType} from '@myparcel/ts-utils';
-import {triggerEvent} from '../triggerEvent';
+import {
+  EVENT_WOOCOMMERCE_UPDATED_CHECKOUT,
+  EVENT_WOOCOMMERCE_UPDATE_CHECKOUT,
+  useCheckoutStore,
+} from '@myparcel-woocommerce/frontend-common';
 import {updateShippingMethod} from '../updateShippingMethod';
 
 /**
@@ -10,13 +12,18 @@ import {updateShippingMethod} from '../updateShippingMethod';
  * @param {CustomEvent} event - The update event.
  */
 export const onDeliveryOptionsUpdate: EventListener = (event): void => {
-  hiddenDataInput.value = isOfType<CustomEvent>(event, 'detail') ? JSON.stringify(event.detail) : '';
+  const checkout = useCheckoutStore();
+
+  if (checkout.state.hiddenInput /* && isOfType<CustomEvent>(event, 'detail') */) {
+    checkout.state.hiddenInput.value = JSON.stringify(event.detail);
+  }
 
   /**
    * Remove this event before triggering and re-add it after because it will cause an infinite loop otherwise.
    */
   jQuery(document.body).off(EVENT_WOOCOMMERCE_UPDATED_CHECKOUT, updateShippingMethod);
-  triggerEvent(EVENT_WOOCOMMERCE_UPDATE_CHECKOUT);
+
+  jQuery(document.body).trigger(EVENT_WOOCOMMERCE_UPDATE_CHECKOUT);
 
   const restoreEventListener = () => {
     jQuery(document.body).on(EVENT_WOOCOMMERCE_UPDATED_CHECKOUT, updateShippingMethod);

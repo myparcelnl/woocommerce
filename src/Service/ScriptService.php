@@ -9,7 +9,9 @@ use MyParcelNL\Pdk\Facade\Pdk;
 class ScriptService
 {
     // Our local scripts
-    public const HANDLE_PDK_FRONTEND = 'myparcelnl-pdk-frontend';
+    public const HANDLE_PDK_FRONTEND              = 'myparcelnl-pdk-frontend';
+    public const HANDLE_SPLIT_ADDRESS_FIELDS      = 'myparcelnl-checkout-split-address-fields';
+    public const HANDLE_CHECKOUT_DELIVERY_OPTIONS = 'myparcelnl-checkout-delivery-options';
     // External dependencies
     public const HANDLE_DELIVERY_OPTIONS = 'myparcelnl-delivery-options';
     public const HANDLE_VUE              = 'vue';

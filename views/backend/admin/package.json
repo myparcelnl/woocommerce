@@ -17,6 +17,7 @@
     "@myparcel-pdk/admin-component-tests": "*",
     "@myparcel-pdk/admin-components": "*",
     "@myparcel-pdk/admin-preset-bootstrap4": "*",
+    "@myparcel/ts-utils": "^1.5.1",
     "@tanstack/vue-query": "^4.24.4"
   },
   "devDependencies": {
