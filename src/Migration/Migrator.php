@@ -11,7 +11,7 @@ class Migrator
      *
      * @return void
      */
-    public function migrate(string $version)
+    public function migrate(string $version): void
     {
         $migrations = $this->getMigrations();
 

@@ -7,7 +7,7 @@ namespace MyParcelNL\WooCommerce\Migration;
 /**
  * Migrates pre v4.2.1 settings
  */
-class Migration4_2_1 extends AbstractUpgradeMigration implements Migration
+class Migration4_2_1 extends AbstractUpgradeMigration implements MigrationInterface
 {
     /**
      * @var array

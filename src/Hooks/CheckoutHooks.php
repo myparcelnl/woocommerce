@@ -4,26 +4,13 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
-use MyParcelNL\Pdk\Facade\Actions;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Facade\RenderService;
-use MyParcelNL\Pdk\Facade\Settings;
-use MyParcelNL\Pdk\Plugin\Api\PdkActions;
-use MyParcelNL\Pdk\Plugin\Model\Context\DeliveryOptionsContext;
-use MyParcelNL\Pdk\Plugin\Repository\PdkCartRepositoryInterface;
 use MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface;
-use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
-use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
-use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\WooCommerce\Service\ScriptService;
-use WC_Product;
 
-class CheckoutHooks implements WordPressHooksInterface
+final class CheckoutHooks implements WordPressHooksInterface
 {
-    private const DISALLOWED_SHIPPING_METHODS      = [
-        'local_pickup',
-    ];
-    private const SCRIPT_SPLIT_ADDRESS_FIELDS      = 'myparcelnl-checkout-split-address-fields';
+    private const SCRIPT_SPLIT_ADDRESS_FIELDS = 'myparcelnl-checkout-split-address-fields';
     private const SCRIPT_CHECKOUT_DELIVERY_OPTIONS = 'myparcelnl-checkout-delivery-options';
 
     /**
@@ -43,25 +30,10 @@ class CheckoutHooks implements WordPressHooksInterface
     {
         // Add the checkout scripts
         add_action('wp_enqueue_scripts', [$this, 'enqueueFrontendScripts'], 100);
-        add_action('woocommerce_payment_complete', [$this, 'automaticExportOrder'], 1000);
-        add_action('woocommerce_order_status_changed', [$this, 'automaticExportOrder'], 1000, 3);
+
         add_action('wp_ajax_myparcelnl_get_delivery_options_config', [$this, 'getDeliveryOptionsConfigAjax']);
-    }
 
-    /**
-     * @param  int $orderId
-     *
-     * @return void
-     */
-    public function automaticExportOrder(int $orderId): void
-    {
-        if (! Settings::get(GeneralSettings::ORDER_MODE, GeneralSettings::ID)) {
-            return;
-        }
-
-        Actions::execute(PdkActions::EXPORT_ORDERS, [
-            'orderIds' => [$orderId],
-        ]);
+        add_action('woocommerce_cart_calculate_fees', [$this, 'get_delivery_options_fees'], 20);
     }
 
     /**
@@ -81,7 +53,7 @@ class CheckoutHooks implements WordPressHooksInterface
         if ($this->useSeparateAddressFields()) {
             $this->service->enqueueLocalScript(
                 self::SCRIPT_SPLIT_ADDRESS_FIELDS,
-                'views/checkout-split-address-fields/lib/index.js',
+                'views/checkout-split-address-fields/lib/split-fields',
                 [ScriptService::HANDLE_WC_CHECKOUT]
             );
         }
@@ -149,38 +121,8 @@ class CheckoutHooks implements WordPressHooksInterface
 
         return apply_filters(
             'wc_wcmp_delivery_options_location',
-            $position ?? 'woocommerce_checkout_after_customer_details'
+            $position ?? 'woocommerce_after_checkout_billing_form'
         );
-    }
-
-    /**
-     * Return the names of shipping methods that will show delivery options. If DISPLAY_FOR_ALL_METHODS is enabled it'll
-     * return an empty array and the frontend will allow any shipping except any that are specifically disallowed.
-     *
-     * @return string[]
-     * @see ExportActions::DISALLOWED_SHIPPING_METHODS
-     */
-    private function getShippingMethodsAllowingDeliveryOptions(): array
-    {
-        $allowedMethods               = [];
-        $displayFor                   = Settings::get(CheckoutSettings::DELIVERY_OPTIONS_DISPLAY, CheckoutSettings::ID);
-        $shippingMethodsByPackageType = []; // todo
-
-        if ('always' === $displayFor || ! $shippingMethodsByPackageType) {
-            return $allowedMethods;
-        }
-
-        $shippingMethodsForPackage = $shippingMethodsByPackageType[AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME];
-
-        foreach ($shippingMethodsForPackage as $shippingMethod) {
-            [$methodId] = $this->splitShippingMethodString($shippingMethod);
-
-            if (! in_array($methodId, self::DISALLOWED_SHIPPING_METHODS, true)) {
-                $allowedMethods[] = $shippingMethod;
-            }
-        }
-
-        return $allowedMethods;
     }
 
     /**
@@ -194,7 +136,7 @@ class CheckoutHooks implements WordPressHooksInterface
          * If split address fields are enabled add the checkout fields script as an additional dependency.
          */
         if ($this->useSeparateAddressFields()) {
-            $dependencies[] = 'wcmp-checkout-fields';
+            $dependencies[] = 'wcmp - checkout - fields';
         }
 
         if (! $this->shouldShowDeliveryOptions()) {
@@ -203,7 +145,7 @@ class CheckoutHooks implements WordPressHooksInterface
 
         $this->service->enqueueLocalScript(
             self::SCRIPT_CHECKOUT_DELIVERY_OPTIONS,
-            'views/frontend/checkout-delivery-options/lib/index.iife.js',
+            'views / frontend / checkout - delivery - options / lib / delivery - options',
             $dependencies + [ScriptService::HANDLE_DELIVERY_OPTIONS, ScriptService::HANDLE_JQUERY]
         );
 
@@ -230,25 +172,6 @@ class CheckoutHooks implements WordPressHooksInterface
         }
 
         return apply_filters('wc_myparcel_show_delivery_options', $showDeliveryOptions);
-    }
-
-    /**
-     * Split a <rateId>:<instanceId> string into an array. If there is no instanceId, the second array element will be
-     * null.
-     *
-     * @param  string $shippingMethod
-     *
-     * @return array
-     */
-    private function splitShippingMethodString(string $shippingMethod): array
-    {
-        $split = explode(':', $shippingMethod, 2);
-
-        if (count($split) === 1) {
-            $split[] = null;
-        }
-
-        return $split;
     }
 
     /**

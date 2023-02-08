@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration;
 
+use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
 use MyParcelNL\WooCommerce\Migration\Pdk\ProductSettingsMigration;
 use MyParcelNL\WooCommerce\Migration\Pdk\SettingsMigration;
-use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
 
 /**
  * The PDK upgrade.
  */
-class Migration5_0_0 implements Migration
+class Migration5_0_0 implements MigrationInterface
 {
     public function down(): void
     {
-        // Implement down() method.
+        // todo: Implement down() method.
     }
 
     public function getVersion(): string

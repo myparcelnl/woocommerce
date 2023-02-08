@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration;
 
-interface Migration
+interface MigrationInterface
 {
     public function down(): void;
 

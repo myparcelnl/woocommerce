@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Action;
 
+use MyParcelNL;
 use MyParcelNL\Pdk\Plugin\Api\PdkEndpointActions;
-use MyParcelNL\WooCommerce\Hooks\RestApiHooks;
 
 class WcEndpointActions extends PdkEndpointActions
 {
+    public const ROUTE = 'pdk';
+
     /**
      * Add a nonce to the request to authenticate the user.
      */
@@ -22,6 +24,6 @@ class WcEndpointActions extends PdkEndpointActions
      */
     public function getBaseUrl(): string
     {
-        return get_rest_url(null, sprintf('%s/%s', RestApiHooks::NAMESPACE, RestApiHooks::ROUTE_PDK));
+        return get_rest_url(null, sprintf('%s/%s', MyParcelNL::REST_ROUTE, self::ROUTE));
     }
 }

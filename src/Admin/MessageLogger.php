@@ -6,8 +6,6 @@ namespace MyParcelNL\WooCommerce\Admin;
 
 use MyParcelNL\Pdk\Logger\AbstractLogger;
 
-defined('ABSPATH') or die();
-
 class MessageLogger extends AbstractLogger
 {
     /**

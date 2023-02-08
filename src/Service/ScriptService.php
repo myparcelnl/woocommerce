@@ -8,6 +8,9 @@ use MyParcelNL\Pdk\Facade\Pdk;
 
 class ScriptService
 {
+    // Our local scripts
+    public const HANDLE_PDK_FRONTEND = 'myparcelnl-pdk-frontend';
+    // External dependencies
     public const HANDLE_DELIVERY_OPTIONS = 'myparcelnl-delivery-options';
     public const HANDLE_VUE              = 'vue';
     // Scripts that are already present in WooCommerce
@@ -39,15 +42,12 @@ class ScriptService
      *
      * @return void
      */
-    public function enqueueLocalScript(
-        string $handle,
-        string $src,
-        array  $deps = [],
-        bool   $inFooter = true
-    ): void {
+    public function enqueueLocalScript(string $handle, string $src, array $deps = [], bool $inFooter = true): void
+    {
         $appInfo = Pdk::getAppInfo();
+        $url     = sprintf('%s/%s.%s', $appInfo['url'], $src, $this->getLocalFileExtension());
 
-        $this->enqueueScript($handle, sprintf('%s/%s', $appInfo['url'], $src), $deps, $appInfo['version'], $inFooter);
+        $this->enqueueScript($handle, $url, $deps, $appInfo['version'], $inFooter);
     }
 
     /**
@@ -137,6 +137,24 @@ class ScriptService
             [self::HANDLE_VUE],
             $version
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function getEsmHandles(): array
+    {
+        // TODO: support esm in development
+        return [];
+    }
+
+    /**
+     * @return string
+     */
+    private function getLocalFileExtension(): string
+    {
+        // TODO: support esm in development
+        return 'iife.js';
     }
 
     /**

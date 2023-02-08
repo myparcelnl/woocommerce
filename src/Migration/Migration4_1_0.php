@@ -7,7 +7,7 @@ namespace MyParcelNL\WooCommerce\Migration;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 
-class Migration4_1_0 extends AbstractUpgradeMigration implements Migration
+class Migration4_1_0 extends AbstractUpgradeMigration implements MigrationInterface
 {
     /**
      * @var array

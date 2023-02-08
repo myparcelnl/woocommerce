@@ -7,7 +7,7 @@ namespace MyParcelNL\WooCommerce\Migration;
 /**
  * Migrates pre v2.0 settings. Pre-2.0.0 did not store a version number.
  */
-class Migration2_0_0 implements Migration
+class Migration2_0_0 implements MigrationInterface
 {
     public function down(): void
     {

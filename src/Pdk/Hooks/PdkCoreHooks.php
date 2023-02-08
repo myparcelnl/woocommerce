@@ -12,8 +12,6 @@ use MyParcelNL\WooCommerce\Service\ScriptService;
 
 class PdkCoreHooks implements WordPressHooksInterface
 {
-    private const SCRIPT_PDK_FRONTEND = 'myparcelnl-pdk-frontend';
-
     /**
      * @var \MyParcelNL\WooCommerce\Service\ScriptService
      */
@@ -37,6 +35,24 @@ class PdkCoreHooks implements WordPressHooksInterface
 
         // Render main notification container in admin notices area
         add_action('admin_notices', [$this, 'renderPdkNotifications']);
+
+        // change script tags to script type=module for esm scripts
+        add_filter('script_loader_tag', [$this, 'changeScriptTag'], 10, 2);
+    }
+
+    /**
+     * @param  string $tag
+     * @param  string $handle
+     *
+     * @return string
+     */
+    public function changeScriptTag(string $tag, string $handle): string
+    {
+        if (Pdk::isDevelopment() && in_array($handle, $this->service->getEsmHandles(), true)) {
+            $tag = str_replace(' src', ' type="module" src', $tag);
+        }
+
+        return $tag;
     }
 
     /**
@@ -46,7 +62,6 @@ class PdkCoreHooks implements WordPressHooksInterface
     {
         /** @var \MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface $viewService */
         $viewService = Pdk::get(ViewServiceInterface::class);
-
 
         if (! $viewService->isAnyPdkPage()) {
             return;
@@ -59,8 +74,8 @@ class PdkCoreHooks implements WordPressHooksInterface
 
         $select = version_compare(WC()->version, '3.2.0', '>=') ? 'selectWoo' : 'select2';
         $this->service->enqueueLocalScript(
-            self::SCRIPT_PDK_FRONTEND,
-            ('views/backend/admin/lib/index.iife.js'),
+            ScriptService::HANDLE_PDK_FRONTEND,
+            'views/backend/admin/lib/admin',
             [
                 ScriptService::HANDLE_JQUERY,
                 ScriptService::HANDLE_WOOCOMMERCE_ADMIN,
@@ -73,7 +88,7 @@ class PdkCoreHooks implements WordPressHooksInterface
         $appInfo = Pdk::getAppInfo();
 
         $this->service->enqueueStyle(
-            self::SCRIPT_PDK_FRONTEND,
+            ScriptService::HANDLE_PDK_FRONTEND,
             sprintf('%s/views/backend/admin/lib/style.css', $appInfo['url']),
             [],
             $appInfo['version']

@@ -14,6 +14,7 @@ use MyParcelNL\Pdk\Plugin\Api\EndpointActionsInterface;
 use MyParcelNL\Pdk\Plugin\Repository\PdkCartRepositoryInterface;
 use MyParcelNL\Pdk\Plugin\Repository\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\Plugin\Repository\PdkShippingMethodRepositoryInterface;
+use MyParcelNL\Pdk\Plugin\Service\DeliveryOptionsServiceInterface;
 use MyParcelNL\Pdk\Plugin\Service\OrderStatusServiceInterface;
 use MyParcelNL\Pdk\Plugin\Service\RenderServiceInterface;
 use MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface;
@@ -28,6 +29,7 @@ use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcWebhookService;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkAccountRepository;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\WcCartRepository;
+use MyParcelNL\WooCommerce\Pdk\Plugin\Service\WcDeliveryOptionsService;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Service\WcStatusService;
 use MyParcelNL\WooCommerce\Pdk\Plugin\WcShippingMethodRepository;
 use MyParcelNL\WooCommerce\Pdk\Product\Repository\PdkProductRepository;
@@ -92,4 +94,6 @@ return [
      */
     ClientAdapterInterface::class               => autowire(Guzzle7ClientAdapter::class),
     LoggerInterface::class                      => autowire(WcLogger::class),
+
+    DeliveryOptionsServiceInterface::class => autowire(WcDeliveryOptionsService::class),
 ];

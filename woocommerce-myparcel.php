@@ -1,6 +1,8 @@
 <?php
 /** @noinspection AutoloadingIssuesInspection */
 
+declare(strict_types=1);
+
 /*
 Plugin Name: MyParcel
 Plugin URI: https://myparcel.nl/
@@ -16,78 +18,33 @@ License URI: http://www.opensource.org/licenses/mit-license.php
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Facade\Messages;
-use MyParcelNL\WooCommerce\Hooks\CheckoutHooks;
-use MyParcelNL\WooCommerce\Hooks\RestApiHooks;
-use MyParcelNL\WooCommerce\Hooks\TrackTraceHooks;
 use MyParcelNL\WooCommerce\Migration\Migrator;
-use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
-use MyParcelNL\WooCommerce\Migration\Pdk\ProductSettingsMigration;
 use MyParcelNL\WooCommerce\Pdk\Boot;
-use MyParcelNL\WooCommerce\Pdk\Hooks\PdkCoreHooks;
-use MyParcelNL\WooCommerce\Pdk\Hooks\PdkOrderHooks;
-use MyParcelNL\WooCommerce\Pdk\Hooks\PdkOrderListHooks;
-use MyParcelNL\WooCommerce\Pdk\Hooks\PdkPluginSettingsHooks;
-use MyParcelNL\WooCommerce\Pdk\Hooks\PdkProductSettingsHooks;
-
-defined('ABSPATH') or die();
+use MyParcelNL\WooCommerce\Service\WordPressHookService;
 
 require(plugin_dir_path(__FILE__) . 'vendor/autoload.php');
 
 class MyParcelNL
 {
-    public const  ROOT_FILE              = __FILE__;
-    public const  PHP_VERSION_MINIMUM    = '7.1';
-    public const  NAME                   = 'myparcelnl';
-    public const  CUSTOM_ORDER_COLUMN_ID = 'myparcelnl';
-    /**
-     * @var class-string<\MyParcelNL\WooCommerce\Hooks\WordPressHooksInterface>[]
-     */
-    private const HOOK_SERVICES = [
-        CheckoutHooks::class,
-        RestApiHooks::class,
-        PdkCoreHooks::class,
-        PdkOrderHooks::class,
-        PdkOrderListHooks::class,
-        PdkPluginSettingsHooks::class,
-        PdkProductSettingsHooks::class,
-        TrackTraceHooks::class,
-    ];
-
-    /**
-     * @var WCMYPA_Admin
-     */
-    public $admin;
-
-    /**
-     * @var ExportActions
-     */
-    public $export;
+    public const ROOT_FILE              = __FILE__;
+    public const PHP_VERSION_MINIMUM    = '7.1';
+    public const NAME                   = 'myparcelnl';
+    public const CUSTOM_ORDER_COLUMN_ID = 'myparcelnl';
+    public const REST_ROUTE             = self::NAME . '/v1';
 
     /**
      * @var string
      */
-    public $includes;
-
-    /**
-     * @var string
-     */
-    public $pluginBasename;
-
-    /**
-     * @var string
-     */
-    public $version;
+    private $version;
 
     /**
      * @throws \Throwable
      */
     public function __construct()
     {
-        $this->version        = $this->getVersion();
-        $this->pluginBasename = plugin_basename(self::ROOT_FILE);
+        $this->version = $this->getVersion();
 
-        Boot::setupPdk($this);
-
+        Boot::setupPdk($this->version);
         define('MYPARCELNL_WC_VERSION', $this->version);
 
         if (! defined('DOING_AJAX') && is_admin()) {
@@ -110,17 +67,9 @@ class MyParcelNL
 
         $this->useStagingEnvironment();
 
-        foreach (self::HOOK_SERVICES as $service) {
-            /** @var \MyParcelNL\WooCommerce\Hooks\WordPressHooksInterface $instance */
-            $instance = Pdk::get($service);
-            $instance->apply();
-        }
-
-        /**
-         * Note: these hooks are fired by the wp-cron system, you need to catch them outside the migrations.
-         */
-        add_action('myparcelnl_migrate_order_to_pdk_5_0_0', [new OrdersMigration(), 'migrateOrder']);
-        add_action('myparcelnl_migrate_product_settings_to_pdk_5_0_0', [new ProductSettingsMigration(), 'migrateProductSettings']);
+        /** @var WordPressHookService $hookService */
+        $hookService = Pdk::get(WordPressHookService::class);
+        $hookService->applyAll();
     }
 
     public function upgrade(): void

@@ -25,29 +25,28 @@ class Boot
      * @return void
      * @throws \Throwable
      */
-    public static function setupPdk(MyParcelNL $plugin): ?Pdk
+    public static function setupPdk(string $version): ?Pdk
     {
         if (! self::$initialized) {
             self::$initialized = true;
 
-            $pluginPath    = untrailingslashit(plugin_dir_path(MyParcelNL::ROOT_FILE));
-            $pluginUrl     = untrailingslashit(plugins_url('/', MyParcelNL::ROOT_FILE));
-            $pluginVersion = $plugin->version;
+            $pluginPath = untrailingslashit(plugin_dir_path(MyParcelNL::ROOT_FILE));
+            $pluginUrl  = untrailingslashit(plugins_url('/', MyParcelNL::ROOT_FILE));
 
             self::$pdk = PdkFactory::create("$pluginPath/config/pdk.php", [
-                'appInfo' => value([
+                'appInfo'  => value([
                     'name'    => MyParcelNL::NAME,
                     'title'   => 'MyParcel',
                     'path'    => $pluginPath,
                     'url'     => $pluginUrl,
-                    'version' => $pluginVersion,
+                    'version' => $version,
                 ]),
 
                 // todo: support myparcel be
                 'platform' => value('myparcel'),
 
                 'userAgent' => value([
-                    'MyParcelNL-WooCommerce' => $pluginVersion,
+                    'MyParcelNL-WooCommerce' => $version,
                     'WooCommerce'            => defined('WOOCOMMERCE_VERSION') ? constant('WOOCOMMERCE_VERSION') : '?',
                     'WordPress'              => get_bloginfo('version'),
                 ]),

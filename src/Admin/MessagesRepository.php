@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Admin;
 
-defined('ABSPATH') or die();
-
 class MessagesRepository
 {
     public const  SETTINGS_PAGE           = 'woocommerce_page_wcmp_settings';

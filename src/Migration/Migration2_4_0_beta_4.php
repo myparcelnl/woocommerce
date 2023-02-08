@@ -7,7 +7,7 @@ namespace MyParcelNL\WooCommerce\Migration;
 /**
  * - remove log file (now uses WC logger)
  */
-class Migration2_4_0_beta_4 implements Migration
+class Migration2_4_0_beta_4 implements MigrationInterface
 {
     public function down(): void
     {
