@@ -100,6 +100,8 @@
     "@myparcel-vfb/hook-manager": "portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/hook-manager",
     "@myparcel-vfb/plugin": "portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/plugin",
     "@myparcel-vfb/utils": "portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/utils",
-    "@myparcel/ts-utils": "portal:/Users/edie/Sites/myparcel/ts-utils"
+    "@myparcel/ts-utils": "portal:/Users/edie/Sites/myparcel/ts-utils",
+    "@myparcel-pdk/frontend": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin",
+    "@myparcel-pdk/checkout": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/checkout"
   }
 }

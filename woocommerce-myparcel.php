@@ -30,7 +30,8 @@ class MyParcelNL
     public const PHP_VERSION_MINIMUM    = '7.1';
     public const NAME                   = 'myparcelnl';
     public const CUSTOM_ORDER_COLUMN_ID = 'myparcelnl';
-    public const REST_ROUTE             = self::NAME . '/v1';
+    public const BACKEND_REST_ROUTE     = self::NAME . '/backend/v1';
+    public const FRONTEND_REST_ROUTE    = self::NAME . '/frontend/v1';
 
     /**
      * @var string

@@ -1,3 +1,4 @@
+import {FrontendPdkEndpointObject} from '@myparcel-pdk/checkout/src';
 import {MyParcelDeliveryOptions} from '@myparcel/delivery-options';
 
 export enum AddressType {
@@ -15,8 +16,6 @@ export interface FrontendAppContext {
 
 export type FrontendSettings = {
   addressType: AddressType | null;
-  ajaxHookFetchContext: string;
-  ajaxUrl: string;
   allowedShippingMethods: string[];
   alwaysShow: boolean;
   disallowedShippingMethods: string[];
@@ -25,4 +24,9 @@ export type FrontendSettings = {
   hiddenInputName: string;
   shippingMethod: string | null;
   splitAddressFieldsCountries: string[];
+
+  actions: {
+    baseUrl: string;
+    endpoints: FrontendPdkEndpointObject;
+  };
 };

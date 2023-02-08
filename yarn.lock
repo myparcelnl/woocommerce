@@ -625,8 +625,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-pdk/admin-component-tests@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-component-tests::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   dependencies:
-    "@myparcel-pdk/common": "workspace:^"
-    "@myparcel-pdk/frontend-core": "workspace:^"
+    "@myparcel-pdk/common": "workspace:*"
+    "@myparcel-pdk/frontend-core": "workspace:*"
     "@vue/test-utils": ^2.2.10
     vue: ^3.2.47
   languageName: node
@@ -636,7 +636,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-pdk/admin-components@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-components::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   dependencies:
-    "@myparcel-pdk/frontend-core": "workspace:^"
+    "@myparcel-pdk/frontend-core": "workspace:*"
     "@myparcel/ts-utils": ^1.5.1
     "@vueuse/core": ^9.12.0
     vue: ^3.2.47
@@ -647,7 +647,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-pdk/admin-preset-bootstrap4@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-preset-bootstrap4::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   dependencies:
-    "@myparcel-pdk/frontend-core": "workspace:^"
+    "@myparcel-pdk/frontend-core": "workspace:*"
     "@myparcel/ts-utils": ^1.5.1
     vue: ^3.2.47
   languageName: node
@@ -657,8 +657,16 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-pdk/admin@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   dependencies:
-    "@myparcel-pdk/common": "workspace:^"
-    "@myparcel-pdk/frontend-core": "workspace:^"
+    "@myparcel-pdk/common": "workspace:*"
+    "@myparcel-pdk/frontend-core": "workspace:*"
+  languageName: node
+  linkType: soft
+
+"@myparcel-pdk/checkout@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/checkout::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@myparcel-pdk/checkout@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/checkout::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+  dependencies:
+    "@myparcel-pdk/common": "workspace:*"
   languageName: node
   linkType: soft
 
@@ -672,7 +680,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-pdk/frontend-core@portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/core::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   dependencies:
-    "@myparcel-pdk/common": "workspace:^"
+    "@myparcel-pdk/common": "workspace:*"
     "@myparcel/sdk": ^2.10.1
     "@myparcel/ts-utils": ^1.5.1
     "@myparcel/vue-form-builder": ^1.0.0-alpha.1
@@ -756,6 +764,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/frontend-checkout-delivery-options@workspace:views/frontend/checkout-delivery-options"
   dependencies:
+    "@myparcel-pdk/checkout": "*"
     "@myparcel-woocommerce/frontend-common": "workspace:*"
     "@myparcel/delivery-options": ^5.3.1
     "@myparcel/ts-utils": ^1.5.1

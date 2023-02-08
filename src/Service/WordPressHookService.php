@@ -7,7 +7,7 @@ namespace MyParcelNL\WooCommerce\Service;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Hooks\AutomaticOrderExportHooks;
 use MyParcelNL\WooCommerce\Hooks\CheckoutHooks;
-use MyParcelNL\WooCommerce\Hooks\PdkApiHooks;
+use MyParcelNL\WooCommerce\Hooks\PdkAdminEndpointHooks;
 use MyParcelNL\WooCommerce\Hooks\PdkWebhookHooks;
 use MyParcelNL\WooCommerce\Hooks\ScheduledMigrationHooks;
 use MyParcelNL\WooCommerce\Hooks\TrackTraceHooks;
@@ -46,7 +46,7 @@ final class WordPressHookService
         return [
             AutomaticOrderExportHooks::class,
             CheckoutHooks::class,
-            PdkApiHooks::class,
+            PdkAdminEndpointHooks::class,
             PdkCoreHooks::class,
             PdkOrderHooks::class,
             PdkOrderListHooks::class,

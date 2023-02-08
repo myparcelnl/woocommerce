@@ -45,7 +45,7 @@ final class PdkWebhookHooks implements WordPressHooksInterface
     public function registerWebhookRoutes(): void
     {
         register_rest_route(
-            MyParcelNL::REST_ROUTE, WcWebhookService::ROUTE . '/(?P<hash>.+)',
+            MyParcelNL::BACKEND_REST_ROUTE, WcWebhookService::ROUTE . '/(?P<hash>.+)',
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [$this, 'processWebhookRequest'],

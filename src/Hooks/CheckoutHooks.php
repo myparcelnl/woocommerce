@@ -7,7 +7,6 @@ namespace MyParcelNL\WooCommerce\Hooks;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
 use MyParcelNL\Pdk\Facade\Settings;
-use MyParcelNL\Pdk\Plugin\Model\Context\CheckoutContext;
 use MyParcelNL\Pdk\Plugin\Repository\PdkCartRepositoryInterface;
 use MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
@@ -16,8 +15,6 @@ use WC_Product;
 
 final class CheckoutHooks implements WordPressHooksInterface
 {
-    public const GET_CONTEXT_HOOK = 'myparcelnl_get_checkout_context';
-
     /**
      * @var \MyParcelNL\WooCommerce\Service\ScriptService
      */
@@ -34,8 +31,6 @@ final class CheckoutHooks implements WordPressHooksInterface
     public function apply(): void
     {
         add_action('wp_enqueue_scripts', [$this, 'enqueueFrontendScripts'], 100);
-
-        add_action('wp_ajax_' . self::GET_CONTEXT_HOOK, [$this, 'getCheckoutContextAjax']);
     }
 
     /**
@@ -66,33 +61,6 @@ final class CheckoutHooks implements WordPressHooksInterface
 
         $this->loadDeliveryOptionsScripts();
         //        }
-    }
-
-    /**
-     * Get the delivery options config in JSON for passing to JavaScript.
-     *
-     * @return array
-     * @throws \Exception
-     */
-    public function getCheckoutContext(): array
-    {
-        /** @var PdkCartRepositoryInterface $repository */
-        $repository = Pdk::get(PdkCartRepositoryInterface::class);
-        $pdkCart    = $repository->get(WC()->cart);
-
-        return (new CheckoutContext(['cart' => $pdkCart]))->toArray();
-    }
-
-    /**
-     * Echoes the delivery options config as a JSON string for use with AJAX.
-     *
-     * @throws \Exception
-     * @todo make proper action
-     */
-    public function getCheckoutContextAjax(): void
-    {
-        echo json_encode($this->getCheckoutContext(), JSON_UNESCAPED_SLASHES);
-        die();
     }
 
     /**

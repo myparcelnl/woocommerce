@@ -1,5 +1,5 @@
 import {EVENT_UPDATE_CONFIG, EVENT_UPDATE_DELIVERY_OPTIONS} from '../data';
-import {objectDiffers, triggerEvent} from '../';
+import {StoreListener, objectDiffers, triggerEvent} from '../';
 import {MyParcelDeliveryOptions} from '@myparcel/delivery-options';
 import {createStore} from './createStore';
 
@@ -15,19 +15,23 @@ export const useDeliveryOptionsStore = createStore<DeliveryOptionsStore>('delive
       address: {},
     },
 
-    onUpdate: (newState: DeliveryOptionsStore, oldState: DeliveryOptionsStore) => {
-      console.log('%cDELIVERY OPTIONS', 'color: #4dc', 'deliveryOptions', {newState, oldState});
+    listeners: {
+      [StoreListener.UPDATE]: [
+        (newState, oldState) => {
+          console.log('%cDELIVERY OPTIONS', 'color: #4dc', 'deliveryOptions', {newState, oldState});
 
-      if (document.querySelector('#myparcel-delivery-options')) {
-        triggerEvent(EVENT_UPDATE_DELIVERY_OPTIONS, newState);
-        return;
-      }
+          if (document.querySelector('#myparcel-delivery-options')) {
+            triggerEvent(EVENT_UPDATE_DELIVERY_OPTIONS, newState);
+            return;
+          }
 
-      if (objectDiffers(newState.config, oldState.config)) {
-        triggerEvent(EVENT_UPDATE_CONFIG, newState);
-      } else if (objectDiffers(newState.address, oldState.address)) {
-        triggerEvent(EVENT_UPDATE_DELIVERY_OPTIONS, newState);
-      }
+          if (objectDiffers(newState.config, oldState.config)) {
+            triggerEvent(EVENT_UPDATE_CONFIG, newState);
+          } else if (objectDiffers(newState.address, oldState.address)) {
+            triggerEvent(EVENT_UPDATE_DELIVERY_OPTIONS, newState);
+          }
+        },
+      ],
     },
   };
 });

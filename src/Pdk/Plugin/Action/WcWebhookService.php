@@ -16,6 +16,6 @@ class WcWebhookService extends AbstractPdkWebhookService
      */
     public function getBaseUrl(): string
     {
-        return get_rest_url(null, sprintf('%s/%s', MyParcelNL::REST_ROUTE, self::ROUTE));
+        return get_rest_url(null, sprintf('%s/%s', MyParcelNL::BACKEND_REST_ROUTE, self::ROUTE));
     }
 }

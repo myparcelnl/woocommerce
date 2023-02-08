@@ -6,7 +6,7 @@ namespace MyParcelNL\WooCommerce\Hooks;
 
 use MyParcelNL\Pdk\Facade\Actions;
 use MyParcelNL\Pdk\Facade\Settings;
-use MyParcelNL\Pdk\Plugin\Api\PdkActions;
+use MyParcelNL\Pdk\Plugin\Api\Backend\PdkBackendActions;
 use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
 
 final class AutomaticOrderExportHooks implements WordPressHooksInterface
@@ -28,7 +28,7 @@ final class AutomaticOrderExportHooks implements WordPressHooksInterface
             return;
         }
 
-        Actions::execute(PdkActions::EXPORT_ORDERS, [
+        Actions::execute(PdkBackendActions::EXPORT_ORDERS, [
             'orderIds' => [$orderId],
         ]);
     }

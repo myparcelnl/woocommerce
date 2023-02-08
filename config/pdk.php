@@ -10,7 +10,8 @@ use MyParcelNL\Pdk\Base\Concern\WeightServiceInterface;
 use MyParcelNL\Pdk\Base\CronServiceInterface;
 use MyParcelNL\Pdk\Base\Pdk;
 use MyParcelNL\Pdk\Language\Service\LanguageServiceInterface;
-use MyParcelNL\Pdk\Plugin\Api\EndpointActionsInterface;
+use MyParcelNL\Pdk\Plugin\Api\Backend\BackendEndpointServiceInterface;
+use MyParcelNL\Pdk\Plugin\Api\Frontend\FrontendEndpointServiceInterface;
 use MyParcelNL\Pdk\Plugin\Repository\PdkCartRepositoryInterface;
 use MyParcelNL\Pdk\Plugin\Repository\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\Plugin\Repository\PdkShippingMethodRepositoryInterface;
@@ -24,7 +25,8 @@ use MyParcelNL\Pdk\Product\Repository\ProductRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Repository\SettingsRepositoryInterface;
 use MyParcelNL\WooCommerce\Logger\WcLogger;
 use MyParcelNL\WooCommerce\Pdk\Guzzle7ClientAdapter;
-use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcEndpointActions;
+use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcBackendEndpointService;
+use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcFrontendEndpointService;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcWebhookService;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkAccountRepository;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
@@ -71,23 +73,24 @@ return [
      * Services
      */
     ApiServiceInterface::class                  => autowire(MyParcelApiService::class),
-    CronServiceInterface::class                 => autowire(WpCronService::class),
-    LanguageServiceInterface::class             => autowire(LanguageService::class),
-    OrderStatusServiceInterface::class          => autowire(WcStatusService::class),
-    RenderServiceInterface::class               => autowire(WcRenderService::class),
-    ViewServiceInterface::class                 => autowire(WcViewService::class),
-    WeightServiceInterface::class               => autowire(WcWeightService::class),
+    CronServiceInterface::class               => autowire(WpCronService::class),
+    LanguageServiceInterface::class         => autowire(LanguageService::class),
+    OrderStatusServiceInterface::class      => autowire(WcStatusService::class),
+    RenderServiceInterface::class           => autowire(WcRenderService::class),
+    ViewServiceInterface::class             => autowire(WcViewService::class),
+    WeightServiceInterface::class           => autowire(WcWeightService::class),
 
     /**
      * Endpoints
      */
-    EndpointActionsInterface::class             => autowire(WcEndpointActions::class),
+    FrontendEndpointServiceInterface::class => autowire(WcFrontendEndpointService::class),
+    BackendEndpointServiceInterface::class  => autowire(WcBackendEndpointService::class),
 
     /**
      * Webhooks
      */
-    PdkWebhookServiceInterface::class           => autowire(WcWebhookService::class),
-    PdkWebhooksRepositoryInterface::class       => autowire(WcWebhooksRepository::class),
+    PdkWebhookServiceInterface::class       => autowire(WcWebhookService::class),
+    PdkWebhooksRepositoryInterface::class   => autowire(WcWebhooksRepository::class),
 
     /**
      * Miscellaneous

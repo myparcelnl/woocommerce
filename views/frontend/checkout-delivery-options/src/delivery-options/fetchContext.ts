@@ -8,13 +8,14 @@ export const fetchContext = (): void => {
   const deliveryOptions = useDeliveryOptionsStore();
   const settings = useSettingsStore();
 
+  const {baseUrl, endpoints} = settings.state.actions;
+
+  const endpoint = endpoints.fetchCheckoutContext;
+
   void jQuery.ajax({
     type: 'GET',
-    url: settings.state.ajaxUrl,
-    data: {
-      action: settings.state.ajaxHookFetchContext,
-      // shippingMethod: checkout.state.shippingMethod,
-    },
+    url: `${baseUrl}/${endpoint.path}`,
+    data: endpoint.parameters,
     success(data) {
       deliveryOptions.set({config: JSON.parse(data).config});
     },

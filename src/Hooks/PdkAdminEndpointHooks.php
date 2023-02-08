@@ -8,12 +8,12 @@ use MyParcelNL;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Api\PdkEndpoint;
 use MyParcelNL\WooCommerce\Hooks\Concern\UsesPdkRequestConverter;
-use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcEndpointActions;
+use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcBackendEndpointService;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
-final class PdkApiHooks implements WordPressHooksInterface
+final class PdkAdminEndpointHooks implements WordPressHooksInterface
 {
     use UsesPdkRequestConverter;
 
@@ -32,7 +32,7 @@ final class PdkApiHooks implements WordPressHooksInterface
         /** @var \MyParcelNL\Pdk\Plugin\Api\PdkEndpoint $endpoint */
         $endpoint = Pdk::get(PdkEndpoint::class);
 
-        $response = $endpoint->call($this->convertRequest($request));
+        $response = $endpoint->call($this->convertRequest($request), PdkEndpoint::CONTEXT_BACKEND);
 
         return $this->convertResponse($response);
     }
@@ -42,7 +42,7 @@ final class PdkApiHooks implements WordPressHooksInterface
      */
     public function registerPdkRoutes(): void
     {
-        register_rest_route(MyParcelNL::REST_ROUTE, WcEndpointActions::ROUTE, [
+        register_rest_route(MyParcelNL::BACKEND_REST_ROUTE, WcBackendEndpointService::ROUTE, [
             'methods'             => WP_REST_Server::ALLMETHODS,
             'callback'            => [$this, 'processPdkRequest'],
             'permission_callback' => function () {
