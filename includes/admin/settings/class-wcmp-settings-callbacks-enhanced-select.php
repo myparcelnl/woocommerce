@@ -45,7 +45,7 @@ class WCMP_Settings_Callbacks_Enhanced_Select
             $value       = null;
             $newClass    = clone $class;
             $optionId    = self::getOptionId($newClass);
-            $optionValue = get_option($optionId)[$newClass->getId()] ?? [];
+            $optionValue = get_option($optionId)[$newClass->getId()] ?: [];
 
             printf('<h4 class="title">%s:</h4>', esc_html($human));
 
