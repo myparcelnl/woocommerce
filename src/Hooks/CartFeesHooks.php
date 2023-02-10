@@ -11,10 +11,16 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Model\PdkCartFee;
 use MyParcelNL\Pdk\Plugin\Service\DeliveryOptionsFeesService;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
+use MyParcelNL\WooCommerce\Pdk\Service\WcTaxService;
 use WC_Cart;
 
 final class CartFeesHooks implements WordPressHooksInterface
 {
+    /** @var WcTaxService */
+    private $taxService;
+
+    public function __construct(WcTaxService $taxService) { $this->taxService = $taxService; }
+
     public function apply(): void
     {
         add_action('woocommerce_cart_calculate_fees', [$this, 'calculateDeliveryOptionsFees'], 20);
@@ -66,11 +72,10 @@ final class CartFeesHooks implements WordPressHooksInterface
             return;
         }
 
-        // TODO: add tax support
-        $tax = 0;
+        $tax = $this->taxService->getShippingTaxClass();
 
         $fees->each(function (PdkCartFee $fee) use ($tax, $cart) {
-            $cart->add_fee(LanguageService::translate($fee->translation), $fee->amount, (bool) $tax, $tax ?: '');
+            $cart->add_fee(LanguageService::translate($fee->translation), $fee->amount, (bool) $tax, $tax);
         });
     }
 }
