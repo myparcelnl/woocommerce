@@ -98,9 +98,8 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     {
         $wcOrder       = $this->getWcOrder($order->externalIdentifier);
         $existingOrder = $this->get($order->externalIdentifier);
-        $diff          = array_diff_assoc($order->toArray(), $existingOrder->toArray());
 
-        if (! empty($diff)) {
+        if (serialize($order) !== serialize($existingOrder)) {
             update_post_meta($wcOrder->get_id(), self::WC_ORDER_META_ORDER_DATA, $order->toStorableArray());
         }
 

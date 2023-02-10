@@ -16,6 +16,7 @@ use MyParcelNL\WooCommerce\Hooks\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkCoreHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkOrderHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkOrderListHooks;
+use MyParcelNL\WooCommerce\Pdk\Hooks\PdkPlaceOrderHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkPluginSettingsHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkProductSettingsHooks;
 use RuntimeException;
@@ -51,6 +52,7 @@ final class WordPressHookService
             PdkAdminEndpointHooks::class,
             PdkCoreHooks::class,
             PdkOrderHooks::class,
+            PdkPlaceOrderHooks::class,
             PdkOrderListHooks::class,
             PdkPluginSettingsHooks::class,
             PdkProductSettingsHooks::class,
