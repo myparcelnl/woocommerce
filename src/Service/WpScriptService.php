@@ -5,16 +5,18 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Service;
 
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Frontend\Service\ScriptService;
 
-class ScriptService
+class WpScriptService extends ScriptService
 {
     // Our local scripts
-    public const HANDLE_PDK_FRONTEND              = 'myparcelnl-pdk-frontend';
+    public const HANDLE_PDK_ADMIN                 = 'myparcelnl-pdk-admin';
     public const HANDLE_SPLIT_ADDRESS_FIELDS      = 'myparcelnl-checkout-split-address-fields';
     public const HANDLE_CHECKOUT_DELIVERY_OPTIONS = 'myparcelnl-checkout-delivery-options';
     // External dependencies
     public const HANDLE_DELIVERY_OPTIONS = 'myparcelnl-delivery-options';
     public const HANDLE_VUE              = 'vue';
+    public const HANDLE_VUE_DEMI         = 'vue-demi';
     // Scripts that are already present in WooCommerce
     public const HANDLE_WOOCOMMERCE_ADMIN = 'woocommerce_admin';
     public const HANDLE_WC_CHECKOUT       = 'wc-checkout';
@@ -36,7 +38,7 @@ class ScriptService
         );
     }
 
-    /**
+    /**`
      * @param  string $handle
      * @param  string $src
      * @param  array  $deps
@@ -101,23 +103,11 @@ class ScriptService
      */
     public function enqueueVue(string $version): void
     {
-        $isVue3 = version_compare($version, '3.0.0', '>=');
+        $isVue3   = version_compare($version, '3.0.0', '>=');
+        $file     = $isVue3 ? 'vue.global' : 'vue';
+        $filename = Pdk::isDevelopment() ? "$file.js" : "$file.min.js";
 
-        if (Pdk::isDevelopment()) {
-            $url = 'https://cdn.jsdelivr.net/npm/vue@:version/dist/:filename.js';
-        } else {
-            $url = 'https://cdn.jsdelivr.net/npm/vue@:version/dist/:filename.min.js';
-        }
-
-        $this->enqueueScript(
-            self::HANDLE_VUE,
-            strtr($url, [
-                ':version'  => $version,
-                ':filename' => $isVue3 ? 'vue.global' : 'vue',
-            ]),
-            [],
-            $version
-        );
+        $this->enqueueScript(self::HANDLE_VUE, $this->createCdnUrl('vue', $version, $filename), [], $version);
     }
 
     /**
@@ -127,15 +117,11 @@ class ScriptService
      */
     public function enqueueVueDemi(string $version): void
     {
-        if (Pdk::isDevelopment()) {
-            $url = 'https://cdnjs.cloudflare.com/ajax/libs/vue-demi/:version/index.iife.js';
-        } else {
-            $url = 'https://cdnjs.cloudflare.com/ajax/libs/vue-demi/:version/index.iife.min.js';
-        }
+        $filename = Pdk::isDevelopment() ? 'index.iife.js' : 'index.iife.min.js';
 
         $this->enqueueScript(
-            'vue-demi',
-            strtr($url, [':version' => $version]),
+            self::HANDLE_VUE_DEMI,
+            $this->createCdnUrl('vue-demi', $version, $filename),
             [self::HANDLE_VUE],
             $version
         );

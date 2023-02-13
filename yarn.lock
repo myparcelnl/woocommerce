@@ -695,48 +695,53 @@ __metadata:
   languageName: node
   linkType: soft
 
-"@myparcel-vfb/build-vite@portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/build/vite::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@myparcel-vfb/build-vite@portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/build/vite::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+"@myparcel-vfb/build-vite@npm:^1.0.0-alpha.14":
+  version: 1.0.0-alpha.14
+  resolution: "@myparcel-vfb/build-vite@npm:1.0.0-alpha.14"
+  checksum: 6efd057760a2467f3f48dcd347190cbf087cf3718492a02e551af0f4c29039240bb77a5bf429a2283dceff011cd2f5d705f5deb923e0b0150800a6bed1f01bef
   languageName: node
-  linkType: soft
+  linkType: hard
 
-"@myparcel-vfb/core@portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/core::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@myparcel-vfb/core@portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/core::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+"@myparcel-vfb/core@npm:^1.0.0-alpha.11":
+  version: 1.0.0-alpha.11
+  resolution: "@myparcel-vfb/core@npm:1.0.0-alpha.11"
   dependencies:
-    "@myparcel-vfb/build-vite": "workspace:^1.0.0-alpha.13"
-    "@myparcel-vfb/hook-manager": "workspace:^1.0.0-alpha.14"
-    "@myparcel-vfb/utils": "workspace:^1.0.0-alpha.13"
+    "@myparcel-vfb/build-vite": ^1.0.0-alpha.14
+    "@myparcel-vfb/hook-manager": ^1.0.0-alpha.15
+    "@myparcel-vfb/utils": ^1.0.0-alpha.14
     "@myparcel/ts-utils": ^1.5.1
+  checksum: 23e1c15d201d1900021f72365b613499beebb3b32ac9d3d17ce3eb698e057a21c6671cb6685d132e13b72d5bcaf80108711303ce594b697bf086e650106db14e
   languageName: node
-  linkType: soft
+  linkType: hard
 
-"@myparcel-vfb/hook-manager@portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/hook-manager::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@myparcel-vfb/hook-manager@portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/hook-manager::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+"@myparcel-vfb/hook-manager@npm:^1.0.0-alpha.15":
+  version: 1.0.0-alpha.15
+  resolution: "@myparcel-vfb/hook-manager@npm:1.0.0-alpha.15"
   dependencies:
     "@myparcel/ts-utils": ^1.5.1
+  checksum: 3a105755cf6e16a4e963c0309720b84d60bcda40db105e9abbbb516eb7edf4f5b448a9dc835509c563238902152a81701510db8558741bce9c3b51cff781ead1
   languageName: node
-  linkType: soft
+  linkType: hard
 
-"@myparcel-vfb/plugin@portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/plugin::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@myparcel-vfb/plugin@portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/plugin::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+"@myparcel-vfb/plugin@npm:^1.0.0-alpha.11":
+  version: 1.0.0-alpha.11
+  resolution: "@myparcel-vfb/plugin@npm:1.0.0-alpha.11"
   dependencies:
-    "@myparcel-vfb/core": "workspace:^1.0.0-alpha.10"
+    "@myparcel-vfb/core": ^1.0.0-alpha.11
     "@myparcel/ts-utils": ^1.5.1
     "@vue/devtools-api": ^6.5.0
+  checksum: d105faf7e991fbaeb6913c241860b57001d013f67d87028ca892b2cebe0452a532d4745a9daa8814a765ee5b276bc3055f0750d19766ec3ea7c4292aa31a9b28
   languageName: node
-  linkType: soft
+  linkType: hard
 
-"@myparcel-vfb/utils@portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/utils::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@myparcel-vfb/utils@portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/utils::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+"@myparcel-vfb/utils@npm:^1.0.0-alpha.14":
+  version: 1.0.0-alpha.14
+  resolution: "@myparcel-vfb/utils@npm:1.0.0-alpha.14"
   dependencies:
     "@myparcel/ts-utils": ^1.5.1
+  checksum: 1b839131fb74fe4a416c47fef9732f9b175fca1635671453e14aaa49bd2c29f8c9f7bb0667012c8a74a3ed3d89030a3afeb2f5decf5b86aa355f5d2582160889
   languageName: node
-  linkType: soft
+  linkType: hard
 
 "@myparcel-woocommerce/backend-admin@workspace:views/backend/admin":
   version: 0.0.0-use.local
@@ -875,17 +880,18 @@ __metadata:
   languageName: node
   linkType: soft
 
-"@myparcel/vue-form-builder@portal:/Users/edie/Sites/myparcel/vue-form-builder/apps/vue-form-builder::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@myparcel/vue-form-builder@portal:/Users/edie/Sites/myparcel/vue-form-builder/apps/vue-form-builder::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+"@myparcel/vue-form-builder@npm:^1.0.0-alpha.1":
+  version: 1.0.0-alpha.33
+  resolution: "@myparcel/vue-form-builder@npm:1.0.0-alpha.33"
   dependencies:
-    "@myparcel-vfb/core": "workspace:^1.0.0-alpha.10"
-    "@myparcel-vfb/hook-manager": "workspace:^1.0.0-alpha.14"
-    "@myparcel-vfb/plugin": "workspace:^1.0.0-alpha.10"
-    "@myparcel-vfb/utils": "workspace:^1.0.0-alpha.13"
+    "@myparcel-vfb/core": ^1.0.0-alpha.11
+    "@myparcel-vfb/hook-manager": ^1.0.0-alpha.15
+    "@myparcel-vfb/plugin": ^1.0.0-alpha.11
+    "@myparcel-vfb/utils": ^1.0.0-alpha.14
     "@myparcel/ts-utils": ^1.5.1
+  checksum: ab7f72cc517184aeb40afce544ce237ddc2a19a8998610c99622c179fc242be2bb71fbf03b272449bf3a9596187c64442962fc6b5060da78dfa8b6705a708a4d
   languageName: node
-  linkType: soft
+  linkType: hard
 
 "@myparcel/woocommerce@workspace:.":
   version: 0.0.0-use.local

@@ -8,26 +8,26 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
 use MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface;
 use MyParcelNL\WooCommerce\Hooks\WordPressHooksInterface;
-use MyParcelNL\WooCommerce\Service\ScriptService;
+use MyParcelNL\WooCommerce\Service\WpScriptService;
 
 class PdkCoreHooks implements WordPressHooksInterface
 {
     /**
-     * @var \MyParcelNL\WooCommerce\Service\ScriptService
+     * @var \MyParcelNL\WooCommerce\Service\WpScriptService
      */
     private $service;
 
     /**
-     * @param  \MyParcelNL\WooCommerce\Service\ScriptService $service
+     * @param  \MyParcelNL\WooCommerce\Service\WpScriptService $service
      */
-    public function __construct(ScriptService $service)
+    public function __construct(WpScriptService $service)
     {
         $this->service = $service;
     }
 
     public function apply(): void
     {
-        // Load the js necessary to run the pdk frontend in the entire admin
+        // Load the js necessary to run the pdk admin component
         add_action('admin_enqueue_scripts', [$this, 'registerPdkScripts']);
 
         // Render pdk init scripts in the footer
@@ -73,14 +73,15 @@ class PdkCoreHooks implements WordPressHooksInterface
         $this->service->enqueueVueDemi('0.13.11');
 
         $select = version_compare(WC()->version, '3.2.0', '>=') ? 'selectWoo' : 'select2';
+
         $this->service->enqueueLocalScript(
-            ScriptService::HANDLE_PDK_FRONTEND,
+            WpScriptService::HANDLE_PDK_ADMIN,
             'views/backend/admin/lib/admin',
             [
-                ScriptService::HANDLE_JQUERY,
-                ScriptService::HANDLE_WOOCOMMERCE_ADMIN,
-                ScriptService::HANDLE_VUE,
-                'vue-demi',
+                WpScriptService::HANDLE_JQUERY,
+                WpScriptService::HANDLE_WOOCOMMERCE_ADMIN,
+                WpScriptService::HANDLE_VUE,
+                WpScriptService::HANDLE_VUE_DEMI,
                 $select,
             ]
         );
@@ -88,7 +89,7 @@ class PdkCoreHooks implements WordPressHooksInterface
         $appInfo = Pdk::getAppInfo();
 
         $this->service->enqueueStyle(
-            ScriptService::HANDLE_PDK_FRONTEND,
+            WpScriptService::HANDLE_PDK_ADMIN,
             sprintf('%s/views/backend/admin/lib/style.css', $appInfo['url']),
             [],
             $appInfo['version']

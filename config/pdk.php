@@ -9,6 +9,7 @@ use MyParcelNL\Pdk\Api\Service\MyParcelApiService;
 use MyParcelNL\Pdk\Base\Concern\WeightServiceInterface;
 use MyParcelNL\Pdk\Base\CronServiceInterface;
 use MyParcelNL\Pdk\Base\Pdk;
+use MyParcelNL\Pdk\Frontend\Service\ScriptServiceInterface;
 use MyParcelNL\Pdk\Language\Service\LanguageServiceInterface;
 use MyParcelNL\Pdk\Plugin\Api\Backend\BackendEndpointServiceInterface;
 use MyParcelNL\Pdk\Plugin\Api\Frontend\FrontendEndpointServiceInterface;
@@ -44,6 +45,7 @@ use MyParcelNL\WooCommerce\Pdk\Service\WcWeightService;
 use MyParcelNL\WooCommerce\Pdk\Settings\Repository\PdkSettingsRepository;
 use MyParcelNL\WooCommerce\Pdk\Webhook\WcWebhooksRepository;
 use MyParcelNL\WooCommerce\Service\WpCronService;
+use MyParcelNL\WooCommerce\Service\WpScriptService;
 use Psr\Log\LoggerInterface;
 use function DI\autowire;
 use function DI\value;
@@ -102,4 +104,6 @@ return [
     LoggerInterface::class                      => autowire(WcLogger::class),
 
     DeliveryOptionsServiceInterface::class => autowire(WcDeliveryOptionsService::class),
+
+    ScriptServiceInterface::class => autowire(WpScriptService::class),
 ];

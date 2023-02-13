@@ -7,13 +7,16 @@
       :disabled="element.isDisabled || element.isSuspended"
       :value="true"
       class="!mypa-hidden"
+      tabindex="-1"
       type="checkbox" />
 
     <label
       v-test="{type: 'label', id}"
       :class="`woocommerce-input-toggle woocommerce-input-toggle--${model ? 'enabled' : 'disabled'}`"
       :for="id"
-      class="!mypa-float-none !mypa-ml-auto !mypa-w-8">
+      class="!mypa-float-none !mypa-ml-auto !mypa-w-8"
+      role="switch"
+      tabindex="0">
       {{ translate(`toggle_${model ? 'yes' : 'no'}`) }}
     </label>
   </a>

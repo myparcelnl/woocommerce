@@ -10,20 +10,20 @@ use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Plugin\Repository\PdkCartRepositoryInterface;
 use MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
-use MyParcelNL\WooCommerce\Service\ScriptService;
+use MyParcelNL\WooCommerce\Service\WpScriptService;
 use WC_Product;
 
 final class CheckoutScriptHooks implements WordPressHooksInterface
 {
     /**
-     * @var \MyParcelNL\WooCommerce\Service\ScriptService
+     * @var \MyParcelNL\WooCommerce\Service\WpScriptService
      */
     private $service;
 
     /**
-     * @param  \MyParcelNL\WooCommerce\Service\ScriptService $service
+     * @param  \MyParcelNL\WooCommerce\Service\WpScriptService $service
      */
-    public function __construct(ScriptService $service)
+    public function __construct(WpScriptService $service)
     {
         $this->service = $service;
     }
@@ -49,9 +49,9 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
 
         if ($this->useSeparateAddressFields()) {
             $this->service->enqueueLocalScript(
-                ScriptService::HANDLE_SPLIT_ADDRESS_FIELDS,
-                'views/checkout-split-address-fields/lib/split-fields',
-                [ScriptService::HANDLE_WC_CHECKOUT]
+                WpScriptService::HANDLE_SPLIT_ADDRESS_FIELDS,
+                'views/checkout-split-address-fields/lib/split-fields.iife.js',
+                [WpScriptService::HANDLE_WC_CHECKOUT]
             );
         }
 
@@ -100,7 +100,7 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
      */
     private function loadDeliveryOptionsScripts(): void
     {
-        $dependencies = [ScriptService::HANDLE_WC_CHECKOUT];
+        $dependencies = [WpScriptService::HANDLE_WC_CHECKOUT];
 
         /**
          * If split address fields are enabled add the checkout fields script as an additional dependency.
@@ -114,9 +114,9 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
         }
 
         $this->service->enqueueLocalScript(
-            ScriptService::HANDLE_CHECKOUT_DELIVERY_OPTIONS,
-            'views/frontend/checkout-delivery-options/lib/delivery-options',
-            $dependencies + [ScriptService::HANDLE_DELIVERY_OPTIONS, ScriptService::HANDLE_JQUERY]
+            WpScriptService::HANDLE_CHECKOUT_DELIVERY_OPTIONS,
+            'views/frontend/checkout-delivery-options/lib/delivery-options.iife.js',
+            $dependencies + [WpScriptService::HANDLE_DELIVERY_OPTIONS, WpScriptService::HANDLE_JQUERY]
         );
 
         $this->service->enqueueDeliveryOptions();
