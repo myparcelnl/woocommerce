@@ -2,10 +2,10 @@
 
 namespace MyParcelNL\WooCommerce\Pdk\Service;
 
-use MyParcelNL\WooCommerce\Hooks\CartFeesHooks;
+use MyParcelNL\Pdk\Plugin\Service\TaxService;
 use WC_Tax;
 
-class WcTaxService
+class WcTaxService extends TaxService
 {
     public const WC_TAX_CLASS_STANDARD = 'standard';
     public const WC_TAX_CLASS_INHERIT  = 'inherit';
