@@ -32,35 +32,18 @@
   </PdkTableRow>
 </template>
 
-<script lang="ts">
-import {ElementInstance, generateFieldId, useLanguage, usePdkConfig} from '@myparcel-pdk/admin/src';
-import {PropType, defineComponent, onRenderTracked, onRenderTriggered} from 'vue';
+<script lang="ts" setup>
+import {ElementInstance, generateFieldId, useLanguage} from '@myparcel-pdk/admin/src';
+import {PropType} from 'vue';
 
-export default defineComponent({
-  name: 'WcFormGroup',
-  props: {
-    element: {
-      type: Object as PropType<ElementInstance>,
-      required: true,
-    },
-  },
-
-  setup: (props) => {
-    const {translate} = useLanguage();
-
-    onRenderTracked((event) => {
-      console.warn('WcFormGroup: onRenderTracked', event);
-    });
-
-    onRenderTriggered((event) => {
-      console.warn('WcFormGroup: onRenderTriggered', event);
-    });
-
-    return {
-      id: generateFieldId(props.element),
-      config: usePdkConfig(),
-      translate,
-    };
+const props = defineProps({
+  element: {
+    type: Object as PropType<ElementInstance>,
+    required: true,
   },
 });
+
+const {translate} = useLanguage();
+
+const id = generateFieldId(props.element);
 </script>

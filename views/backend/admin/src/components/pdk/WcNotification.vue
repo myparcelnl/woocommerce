@@ -17,28 +17,17 @@
   </div>
 </template>
 
-<script lang="ts">
-import {PdkNotification, useLanguage, usePdkConfig} from '@myparcel-pdk/admin/src';
-import {PropType, computed, defineComponent} from 'vue';
+<script lang="ts" setup>
+import {PropType, computed} from 'vue';
+import {PdkNotification} from '@myparcel-pdk/admin/src';
 import {toArray} from '@myparcel/ts-utils';
 
-export default defineComponent({
-  name: 'WcNotification',
-  props: {
-    notification: {
-      type: Object as PropType<PdkNotification>,
-      required: true,
-    },
-  },
-
-  setup: (props) => {
-    const {translate} = useLanguage();
-
-    return {
-      config: usePdkConfig(),
-      contentArray: computed(() => toArray(props.notification.content)),
-      translate,
-    };
+const props = defineProps({
+  notification: {
+    type: Object as PropType<PdkNotification>,
+    required: true,
   },
 });
+
+const contentArray = computed(() => toArray(props.notification.content));
 </script>

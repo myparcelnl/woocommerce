@@ -6,8 +6,9 @@
 
 <script lang="ts" setup>
 defineProps({
-  loading: {
-    type: Boolean,
+  span: {
+    type: Number,
+    default: null,
   },
 });
 </script>

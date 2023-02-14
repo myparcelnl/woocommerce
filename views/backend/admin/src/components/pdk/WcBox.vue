@@ -30,37 +30,25 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import {ActionButton, PdkAction, useLanguage} from '@myparcel-pdk/admin/src';
-import {PropType, defineComponent} from 'vue';
+import {PropType} from 'vue';
 
-export default defineComponent({
-  name: 'WcCard',
-
-  components: {ActionButton},
-
-  props: {
-    loading: {
-      type: Boolean,
-    },
-
-    title: {
-      type: String,
-      default: null,
-    },
-
-    actions: {
-      type: Array as PropType<PdkAction[]>,
-      default: () => [],
-    },
+defineProps({
+  loading: {
+    type: Boolean,
   },
 
-  setup: () => {
-    const {translate} = useLanguage();
+  title: {
+    type: String,
+    default: null,
+  },
 
-    return {
-      translate,
-    };
+  actions: {
+    type: Array as PropType<PdkAction[]>,
+    default: () => [],
   },
 });
+
+const {translate} = useLanguage();
 </script>

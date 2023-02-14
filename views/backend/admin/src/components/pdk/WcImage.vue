@@ -5,22 +5,16 @@
     :src="src" />
 </template>
 
-<script lang="ts">
-import {defineComponent} from 'vue';
+<script lang="ts" setup>
+defineProps({
+  alt: {
+    type: String,
+    required: true,
+  },
 
-export default defineComponent({
-  name: 'WcIcon',
-
-  props: {
-    alt: {
-      type: String,
-      required: true,
-    },
-
-    src: {
-      type: String,
-      required: true,
-    },
+  src: {
+    type: String,
+    required: true,
   },
 });
 </script>

@@ -4,16 +4,11 @@
   </component>
 </template>
 
-<script lang="ts">
-import {defineComponent} from 'vue';
-
-export default defineComponent({
-  name: 'WcTableRow',
-  props: {
-    component: {
-      type: String,
-      default: 'tr',
-    },
+<script lang="ts" setup>
+defineProps({
+  component: {
+    type: String,
+    default: 'tr',
   },
 });
 </script>

@@ -44,43 +44,30 @@
   </div>
 </template>
 
-<script lang="ts">
-import {ActionButton, PdkIcon, ResolvedAction, useDropdownData, useLanguage} from '@myparcel-pdk/admin/src';
-import {PropType, computed, defineComponent} from 'vue';
+<script lang="ts" setup>
+import {ActionButton, AdminIcon, ResolvedAction, useDropdownData, useLanguage} from '@myparcel-pdk/admin/src';
+import {PropType, computed} from 'vue';
 
-export default defineComponent({
-  name: 'WcDropdownButton',
-  components: {
-    ActionButton: ActionButton,
+const props = defineProps({
+  actions: {
+    type: Array as PropType<ResolvedAction[]>,
+    default: () => [],
   },
 
-  props: {
-    actions: {
-      type: Array as PropType<ResolvedAction[]>,
-      default: () => [],
-    },
-
-    disabled: {
-      type: Boolean,
-    },
-
-    hideText: {
-      type: Boolean,
-    },
+  disabled: {
+    type: Boolean,
   },
 
-  emits: ['click'],
-  setup: (props) => {
-    const {translate} = useLanguage();
-    const {dropdownActions, toggled, toggle} = useDropdownData(props.actions);
-
-    return {
-      dropdownActions,
-      dropdownIcon: computed(() => (toggled.value ? PdkIcon.ARROW_UP : PdkIcon.ARROW_DOWN)),
-      toggle,
-      toggled,
-      translate,
-    };
+  hideText: {
+    type: Boolean,
   },
 });
+
+defineEmits(['click']);
+
+const {dropdownActions, toggled} = useDropdownData(props.actions);
+
+const dropdownIcon = computed(() => (toggled.value ? AdminIcon.ARROW_UP : AdminIcon.ARROW_DOWN));
+
+const {translate} = useLanguage();
 </script>

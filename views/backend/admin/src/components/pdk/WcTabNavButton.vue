@@ -16,31 +16,23 @@
   </a>
 </template>
 
-<script lang="ts">
-import {PdkTab, useLanguage} from '@myparcel-pdk/admin/src';
-import {PropType, defineComponent} from 'vue';
+<script lang="ts" setup>
+import {PdkTab} from '@myparcel-pdk/admin/src';
+import {PropType} from 'vue';
+import {useLanguage} from '@myparcel-pdk/frontend-core/src';
 
-export default defineComponent({
-  name: 'WcTabNavButton',
-  props: {
-    active: {
-      type: Boolean,
-    },
-
-    tab: {
-      type: Object as PropType<PdkTab>,
-      required: true,
-    },
+defineProps({
+  active: {
+    type: Boolean,
   },
 
-  emits: ['click'],
-
-  setup: () => {
-    const {translate} = useLanguage();
-
-    return {
-      translate,
-    };
+  tab: {
+    type: Object as PropType<PdkTab>,
+    required: true,
   },
 });
+
+defineEmits(['click']);
+
+const {translate} = useLanguage();
 </script>

@@ -9,48 +9,36 @@
   </div>
 </template>
 
-<script lang="ts">
-import {ComputedRef, PropType, computed, defineComponent, ref} from 'vue';
-import {ElementInstance, useLanguage} from '@myparcel-pdk/admin/src';
-import {SelectOption} from '@myparcel-pdk/common';
+<script lang="ts" setup>
+import {ComputedRef, PropType, computed, ref} from 'vue';
+import {ElementInstance} from '@myparcel-pdk/admin/src';
+import {SelectOption} from '@myparcel-pdk/common/src';
 import {useVModel} from '@vueuse/core';
 
-export default defineComponent({
-  name: 'WcMultiCheckbox',
-  props: {
-    element: {
-      type: Object as PropType<ElementInstance>,
-      required: true,
-    },
+const emit = defineEmits(['update:modelValue']);
 
-    // eslint-disable-next-line vue/no-unused-properties
-    modelValue: {
-      type: [String, Boolean],
-      default: null,
-    },
+const props = defineProps({
+  element: {
+    type: Object as PropType<ElementInstance>,
+    required: true,
   },
 
-  emits: ['update:modelValue'],
-
-  setup: (props, ctx) => {
-    const {translate} = useLanguage();
-
-    const options: ComputedRef<SelectOption[]> = computed(() => props.element.props.options ?? []);
-
-    const elements: ComputedRef<ElementInstance[]> = computed(() => {
-      return options.value.map((option) => ({
-        ...props.element,
-        label: option.label,
-        ref: ref(props.modelValue === option.value),
-      }));
-    });
-
-    return {
-      options,
-      model: useVModel(props, 'modelValue', ctx.emit),
-      elements,
-      translate,
-    };
+  // eslint-disable-next-line vue/no-unused-properties
+  modelValue: {
+    type: [String, Boolean],
+    default: null,
   },
 });
+
+const options: ComputedRef<SelectOption[]> = computed(() => props.element.props.options ?? []);
+
+const elements: ComputedRef<ElementInstance[]> = computed(() => {
+  return options.value.map((option) => ({
+    ...props.element,
+    label: option.label,
+    ref: ref(props.modelValue === option.value),
+  }));
+});
+
+const model = useVModel(props, 'modelValue', emit);
 </script>

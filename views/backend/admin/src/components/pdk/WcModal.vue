@@ -66,7 +66,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import {
   ActionButton,
   ModalKey,
@@ -76,55 +76,40 @@ import {
   useModalStore,
   usePdkConfig,
 } from '@myparcel-pdk/admin/src';
-import {PropType, computed, defineComponent} from 'vue';
+import {PropType, computed} from 'vue';
 
-export default defineComponent({
-  name: 'WcModal',
-  components: {
-    NotificationContainer,
-    ActionButton,
+const props = defineProps({
+  modalKey: {
+    type: String as PropType<ModalKey>,
+    default: null,
   },
 
-  props: {
-    modalKey: {
-      type: String as PropType<ModalKey>,
-      default: null,
-    },
-
-    title: {
-      type: String,
-      required: true,
-    },
-
-    actions: {
-      type: Array as PropType<PdkAction[]>,
-      required: true,
-    },
+  title: {
+    type: String,
+    required: true,
   },
 
-  setup: (props) => {
-    const modalStore = useModalStore();
-    const {translate} = useLanguage();
-
-    const isOpen = computed(() => {
-      return props.modalKey && modalStore.opened === props.modalKey;
-    });
-
-    return {
-      backgroundClasses: ['mypa-left-0', 'mypa-top-0', 'mypa-h-full', 'mypa-w-full', 'mypa-fixed'],
-
-      closeModal() {
-        modalStore.close();
-      },
-
-      context: computed(() => (isOpen.value ? modalStore.context : null)),
-
-      isOpen,
-
-      pdkConfig: usePdkConfig(),
-
-      translate: translate,
-    };
+  actions: {
+    type: Array as PropType<PdkAction[]>,
+    required: true,
   },
 });
+
+const modalStore = useModalStore();
+
+const {translate} = useLanguage();
+
+const isOpen = computed(() => {
+  return props.modalKey && modalStore.opened === props.modalKey;
+});
+
+const closeModal = () => {
+  modalStore.close();
+};
+
+const context = computed(() => (isOpen.value ? modalStore.context : null));
+
+const pdkConfig = usePdkConfig();
+
+const backgroundClasses = ['mypa-left-0', 'mypa-top-0', 'mypa-h-full', 'mypa-w-full', 'mypa-fixed'];
 </script>

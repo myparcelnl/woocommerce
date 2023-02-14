@@ -23,14 +23,8 @@
   </table>
 </template>
 
-<script lang="ts">
-import {defineComponent} from 'vue';
+<script lang="ts" setup>
 import {usePdkConfig} from '@myparcel-pdk/admin/src';
 
-export default defineComponent({
-  name: 'WcTable',
-  setup: () => ({
-    config: usePdkConfig(),
-  }),
-});
+const config = usePdkConfig();
 </script>

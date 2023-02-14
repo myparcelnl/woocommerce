@@ -4,11 +4,11 @@ export {default as WcBox} from './WcBox.vue';
 
 export {default as WcButton} from './WcButton.vue';
 
-export {default as WcButtonGroup} from './WcButtonGroup';
+export {default as WcButtonGroup} from './WcButtonGroup.vue';
 
 export {default as WcCheckboxInput} from './WcCheckboxInput.vue';
 
-export {default as WcCol} from './WcCol';
+export {default as WcCol} from './WcCol.vue';
 
 export {default as WcDropdownButton} from './WcDropdownButton.vue';
 
@@ -26,19 +26,17 @@ export {default as WcNotification} from './WcNotification.vue';
 
 export {default as WcNumberInput} from './WcNumberInput.vue';
 
-export {default as WcOrderGridShipmentWrapper} from './WcOrderGridShipmentWrapper.vue';
-
 export {default as WcPluginSettingsWrapper} from './WcPluginSettingsWrapper.vue';
 
 export {default as WcRadioInput} from './WcRadioInput.vue';
 
-export {default as WcRow} from './WcRow';
+export {default as WcRow} from './WcRow.vue';
 
 export {default as WcSelectInput} from './WcSelectInput.vue';
 
 export {default as WcTabNavButton} from './WcTabNavButton.vue';
 
-export {default as WcTabNavButtonWrapper} from './WcTabNavButtonWrapper';
+export {default as WcTabNavButtonWrapper} from './WcTabNavButtonWrapper.vue';
 
 export {default as WcTable} from './WcTable.vue';
 

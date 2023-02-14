@@ -27,45 +27,36 @@
   </button>
 </template>
 
-<script lang="ts">
-import {PdkButtonSize, PdkIcon, useLanguage} from '@myparcel-pdk/admin/src';
-import {PropType, defineComponent} from 'vue';
+<script lang="ts" setup>
+import {AdminIcon, PdkButtonSize, useLanguage} from '@myparcel-pdk/admin/src';
+import {PropType} from 'vue';
 
-export default defineComponent({
-  name: 'WcButton',
-  props: {
-    disabled: {
-      type: Boolean,
-    },
-
-    icon: {
-      type: String as PropType<PdkIcon>,
-      default: null,
-    },
-
-    size: {
-      type: String as PropType<PdkButtonSize>,
-      default: 'md',
-    },
-
-    label: {
-      type: String,
-      default: null,
-    },
-
-    loading: {
-      type: Boolean,
-    },
+defineProps({
+  disabled: {
+    type: Boolean,
   },
 
-  emits: ['click'],
+  icon: {
+    type: String as PropType<AdminIcon>,
+    default: null,
+  },
 
-  setup: () => {
-    const {translate} = useLanguage();
+  size: {
+    type: String as PropType<PdkButtonSize>,
+    default: 'md',
+  },
 
-    return {
-      translate,
-    };
+  label: {
+    type: String,
+    default: null,
+  },
+
+  loading: {
+    type: Boolean,
   },
 });
+
+defineEmits(['click']);
+
+const {translate} = useLanguage();
 </script>

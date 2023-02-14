@@ -6,35 +6,26 @@
     type="number" />
 </template>
 
-<script lang="ts">
-import {PropType, defineComponent} from 'vue';
+<script lang="ts" setup>
 import {ElementInstance} from '@myparcel-pdk/admin/src';
+import {PropType} from 'vue';
 import WcTextInput from './WcTextInput.vue';
 import {useVModel} from '@vueuse/core';
 
-/**
- * @see import('@myparcel-pdk/admin-components').DefaultNumberInput
- */
-export default defineComponent({
-  name: 'WcNumberInput',
-  components: {WcTextInput},
-  props: {
-    element: {
-      type: Object as PropType<ElementInstance>,
-      required: true,
-    },
-
-    // eslint-disable-next-line vue/no-unused-properties
-    modelValue: {
-      type: [String, Number],
-      default: null,
-    },
+const props = defineProps({
+  element: {
+    type: Object as PropType<ElementInstance>,
+    default: null,
   },
 
-  emits: ['update:modelValue'],
-
-  setup: (props, ctx) => ({
-    model: useVModel(props, 'modelValue', ctx.emit),
-  }),
+  // eslint-disable-next-line vue/no-unused-properties
+  modelValue: {
+    type: [String, Number],
+    default: null,
+  },
 });
+
+const emit = defineEmits(['update:modelValue']);
+
+const model = useVModel(props, 'modelValue', emit);
 </script>

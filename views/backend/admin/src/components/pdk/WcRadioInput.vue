@@ -14,32 +14,27 @@
   </div>
 </template>
 
-<script lang="ts">
-import {ElementInstance, generateFieldId} from '@myparcel-pdk/admin/src';
-import {PropType, defineComponent} from 'vue';
+<script lang="ts" setup>
+import {ElementInstance} from '@myparcel-pdk/admin/src';
+import {PropType} from 'vue';
+import {generateFieldId} from '@myparcel-pdk/frontend-core/src';
 import {useVModel} from '@vueuse/core';
 
-export default defineComponent({
-  name: 'WcRadioInput',
-
-  props: {
-    element: {
-      type: Object as PropType<ElementInstance>,
-      required: true,
-    },
-
-    // eslint-disable-next-line vue/no-unused-properties
-    modelValue: {
-      type: [String, Number],
-      default: null,
-    },
+const props = defineProps({
+  element: {
+    type: Object as PropType<ElementInstance>,
+    default: null,
   },
 
-  emits: ['update:modelValue'],
-
-  setup: (props, ctx) => ({
-    id: generateFieldId(props.element),
-    model: useVModel(props, 'modelValue', ctx.emit),
-  }),
+  // eslint-disable-next-line vue/no-unused-properties
+  modelValue: {
+    type: [String, Number],
+    default: null,
+  },
 });
+
+const emit = defineEmits(['update:modelValue']);
+
+const model = useVModel(props, 'modelValue', emit);
+const id = generateFieldId(props.element);
 </script>

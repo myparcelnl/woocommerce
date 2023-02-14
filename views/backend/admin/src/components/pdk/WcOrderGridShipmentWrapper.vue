@@ -12,32 +12,18 @@
   </div>
 </template>
 
-<script lang="ts">
-import {ActionButton, PdkAction, useLanguage} from '@myparcel-pdk/admin/src';
-import {PropType, defineComponent} from 'vue';
+<script lang="ts" setup>
+import {ActionButton, PdkAction} from '@myparcel-pdk/admin/src';
+import {PropType} from 'vue';
 
-export default defineComponent({
-  name: 'WcOrderGridShipmentWrapper',
-
-  components: {ActionButton},
-
-  props: {
-    loading: {
-      type: Boolean,
-    },
-
-    actions: {
-      type: Array as PropType<PdkAction[]>,
-      default: () => [],
-    },
+defineProps({
+  loading: {
+    type: Boolean,
   },
 
-  setup: () => {
-    const {translate} = useLanguage();
-
-    return {
-      translate,
-    };
+  actions: {
+    type: Array as PropType<PdkAction[]>,
+    default: () => [],
   },
 });
 </script>
