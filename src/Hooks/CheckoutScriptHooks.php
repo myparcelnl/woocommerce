@@ -115,7 +115,7 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
 
         $this->service->enqueueLocalScript(
             WpScriptService::HANDLE_CHECKOUT_DELIVERY_OPTIONS,
-            'views/frontend/checkout-delivery-options/lib/delivery-options.iife.js',
+            'views/frontend/checkout-delivery-options/lib/delivery-options',
             $dependencies + [WpScriptService::HANDLE_DELIVERY_OPTIONS, WpScriptService::HANDLE_JQUERY]
         );
 
