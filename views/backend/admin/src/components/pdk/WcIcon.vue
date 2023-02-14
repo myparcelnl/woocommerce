@@ -6,25 +6,17 @@
     role="none" />
 </template>
 
-<script lang="ts">
-import {PropType, computed, defineComponent} from 'vue';
-import {PdkIcon} from '@myparcel-pdk/admin/src';
+<script lang="ts" setup>
+import {PropType, computed} from 'vue';
+import {PdkIcon} from '@myparcel-pdk/frontend-core/src';
 import {pdkIconToDashIcon} from '../../utils/pdkIconToDashIcon';
 
-export default defineComponent({
-  name: 'WcIcon',
-
-  props: {
-    icon: {
-      type: String as PropType<PdkIcon>,
-      required: true,
-    },
-  },
-
-  setup: (props) => {
-    return {
-      mappedIcon: computed(() => pdkIconToDashIcon(props.icon)),
-    };
+const props = defineProps({
+  icon: {
+    type: String as PropType<PdkIcon>,
+    required: true,
   },
 });
+
+const mappedIcon = computed(() => pdkIconToDashIcon(props.icon));
 </script>
