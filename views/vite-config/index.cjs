@@ -10,7 +10,6 @@ const createDefaultConfig = (env) => {
     build: {
       minify: !isDev,
       outDir: 'lib',
-      sourcemap: isDev,
     },
   };
 };
