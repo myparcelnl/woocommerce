@@ -1,9 +1,9 @@
 <template>
   <span
-    v-test
+    v-test="'Icon'"
     :class="`dashicons-${mappedIcon}`"
     class="dashicons mypa-h-auto mypa-w-auto"
-    role="none"></span>
+    role="none" />
 </template>
 
 <script lang="ts">

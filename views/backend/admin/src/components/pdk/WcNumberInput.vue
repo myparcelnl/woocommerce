@@ -1,7 +1,7 @@
 <template>
   <WcTextInput
     v-model="model"
-    v-test
+    v-test="'NumberInput'"
     :element="element"
     type="number" />
 </template>

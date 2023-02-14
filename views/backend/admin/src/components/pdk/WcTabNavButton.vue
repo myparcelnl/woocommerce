@@ -1,6 +1,6 @@
 <template>
   <a
-    v-test="tab.name"
+    v-test="'TabNavButton'"
     :class="{
       'nav-tab-active': active,
     }"
@@ -9,6 +9,7 @@
     @click.prevent="$emit('click')">
     <PdkIcon
       v-if="tab.icon"
+      v-test="'TabNavButton__icon'"
       :icon="tab.icon" />
 
     {{ translate(tab.label) }}

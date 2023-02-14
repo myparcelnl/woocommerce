@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div v-test="'MultiCheckbox'">
     <PdkCheckboxInput
       v-for="(option, index) in options"
       :key="`${option.value}_${index}`"
       v-model="model"
-      v-test
+      v-test="'MultiCheckbox__option'"
       :element="elements[index]" />
   </div>
 </template>

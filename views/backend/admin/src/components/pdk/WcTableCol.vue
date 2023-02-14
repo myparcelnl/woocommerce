@@ -1,7 +1,7 @@
 <template>
   <component
     :is="component"
-    v-test>
+    v-test="'TableCol'">
     <slot />
   </component>
 </template>

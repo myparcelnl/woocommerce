@@ -1,13 +1,14 @@
 <template>
   <div
-    v-test
+    v-test="'Notification'"
     :class="[
       `notice-${notification.variant}`,
       {
         'is-dismissible': !notification.timeout,
       },
     ]"
-    class="mypa-relative notice">
+    class="mypa-relative notice"
+    role="alert">
     <strong v-text="notification.title"></strong>
     <p
       v-for="(item, index) in contentArray"

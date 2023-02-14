@@ -2,7 +2,7 @@
   <input
     :id="id"
     v-model="model"
-    v-test="{type: 'input', id}"
+    v-test="'TextInput'"
     :disabled="element.isDisabled || element.isSuspended"
     :type="element.props.type ?? 'text'"
     class="!mypa-w-full" />

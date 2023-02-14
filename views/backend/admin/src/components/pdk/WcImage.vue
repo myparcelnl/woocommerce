@@ -1,8 +1,8 @@
 <template>
   <img
-    v-test
-    :src="src"
-    :alt="alt" />
+    v-test="'Image'"
+    :alt="alt"
+    :src="src" />
 </template>
 
 <script lang="ts">

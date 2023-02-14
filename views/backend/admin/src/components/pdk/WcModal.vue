@@ -2,14 +2,16 @@
   <div
     v-show="isOpen"
     :id="modalKey ? `pdk-modal-${modalKey}` : null"
-    v-test="{key: modalKey}"
+    v-test="'Modal'"
     :class="[...backgroundClasses, 'mypa-z-[9999]']"
     role="dialog"
     tabindex="-1">
     <Transition :name="pdkConfig.transitions?.modalBackdrop">
       <div
         v-show="isOpen"
+        v-test="'Modal__backdrop'"
         :class="[...backgroundClasses, 'mypa-bg-black', 'mypa-bg-opacity-40']"
+        role="none"
         @click="closeModal" />
     </Transition>
 
@@ -115,9 +117,7 @@ export default defineComponent({
         modalStore.close();
       },
 
-      context: computed(() => {
-        return isOpen.value ? modalStore.context : null;
-      }),
+      context: computed(() => (isOpen.value ? modalStore.context : null)),
 
       isOpen,
 
