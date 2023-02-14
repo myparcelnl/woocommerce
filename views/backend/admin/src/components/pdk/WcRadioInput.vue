@@ -15,9 +15,8 @@
 </template>
 
 <script lang="ts" setup>
-import {ElementInstance} from '@myparcel-pdk/admin/src';
+import {ElementInstance, generateFieldId} from '@myparcel-pdk/admin/src';
 import {PropType} from 'vue';
-import {generateFieldId} from '@myparcel-pdk/frontend-core/src';
 import {useVModel} from '@vueuse/core';
 
 const props = defineProps({

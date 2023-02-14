@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts" setup>
-import {ActionButton, PdkAction, useLanguage} from '@myparcel-pdk/admin/src';
+import {ActionButton, AnyAdminAction, useLanguage} from '@myparcel-pdk/admin/src';
 import {PropType} from 'vue';
 
 defineProps({
@@ -45,7 +45,7 @@ defineProps({
   },
 
   actions: {
-    type: Array as PropType<PdkAction[]>,
+    type: Array as PropType<AnyAdminAction[]>,
     default: () => [],
   },
 });

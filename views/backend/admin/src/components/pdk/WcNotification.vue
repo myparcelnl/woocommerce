@@ -19,12 +19,12 @@
 
 <script lang="ts" setup>
 import {PropType, computed} from 'vue';
-import {PdkNotification} from '@myparcel-pdk/admin/src';
+import {Notification} from '@myparcel-pdk/admin/src';
 import {toArray} from '@myparcel/ts-utils';
 
 const props = defineProps({
   notification: {
-    type: Object as PropType<PdkNotification>,
+    type: Object as PropType<Notification>,
     required: true,
   },
 });

@@ -8,7 +8,7 @@
 
 <script lang="ts" setup>
 import {PropType, computed} from 'vue';
-import {AdminIcon} from '@myparcel-pdk/frontend-core/src';
+import {AdminIcon} from '@myparcel-pdk/admin/src';
 import {createDashIcon} from '../../utils/createDashIcon';
 
 const props = defineProps({

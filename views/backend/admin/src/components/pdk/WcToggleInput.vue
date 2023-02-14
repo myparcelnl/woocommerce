@@ -21,8 +21,7 @@
 </template>
 
 <script lang="ts" setup>
-import {generateFieldId, useLanguage} from '@myparcel-pdk/frontend-core/src';
-import {ElementInstance} from '@myparcel-pdk/admin/src';
+import {ElementInstance, generateFieldId, useLanguage} from '@myparcel-pdk/admin/src';
 import {PropType} from 'vue';
 import {useVModel} from '@vueuse/core';
 

@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-import {AdminIcon, PdkButtonSize, useLanguage} from '@myparcel-pdk/admin/src';
+import {AdminIcon, Size, useLanguage} from '@myparcel-pdk/admin/src';
 import {PropType} from 'vue';
 
 defineProps({
@@ -42,7 +42,7 @@ defineProps({
   },
 
   size: {
-    type: String as PropType<PdkButtonSize>,
+    type: String as PropType<Size>,
     default: 'md',
   },
 

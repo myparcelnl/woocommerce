@@ -17,9 +17,8 @@
 </template>
 
 <script lang="ts" setup>
-import {PdkTab} from '@myparcel-pdk/admin/src';
+import {TabDefinition, useLanguage} from '@myparcel-pdk/admin/src';
 import {PropType} from 'vue';
-import {useLanguage} from '@myparcel-pdk/frontend-core/src';
 
 defineProps({
   active: {
@@ -27,7 +26,7 @@ defineProps({
   },
 
   tab: {
-    type: Object as PropType<PdkTab>,
+    type: Object as PropType<TabDefinition>,
     required: true,
   },
 });

@@ -6,7 +6,7 @@
     :class="[...backgroundClasses, 'mypa-z-[9999]']"
     role="dialog"
     tabindex="-1">
-    <Transition :name="pdkConfig.transitions?.modalBackdrop">
+    <Transition :name="config.transitions?.modalBackdrop">
       <div
         v-show="isOpen"
         v-test="'Modal__backdrop'"
@@ -15,7 +15,7 @@
         @click="closeModal" />
     </Transition>
 
-    <Transition :name="pdkConfig.transitions?.modal">
+    <Transition :name="config.transitions?.modal">
       <div
         v-show="isOpen"
         :class="[
@@ -69,18 +69,18 @@
 <script lang="ts" setup>
 import {
   ActionButton,
-  ModalKey,
+  AdminModalKey,
+  AnyAdminAction,
   NotificationContainer,
-  PdkAction,
+  useAdminConfig,
   useLanguage,
   useModalStore,
-  usePdkConfig,
 } from '@myparcel-pdk/admin/src';
 import {PropType, computed} from 'vue';
 
 const props = defineProps({
   modalKey: {
-    type: String as PropType<ModalKey>,
+    type: String as PropType<AdminModalKey>,
     default: null,
   },
 
@@ -90,7 +90,7 @@ const props = defineProps({
   },
 
   actions: {
-    type: Array as PropType<PdkAction[]>,
+    type: Array as PropType<AnyAdminAction[]>,
     required: true,
   },
 });
@@ -109,7 +109,7 @@ const closeModal = () => {
 
 const context = computed(() => (isOpen.value ? modalStore.context : null));
 
-const pdkConfig = usePdkConfig();
+const config = useAdminConfig();
 
 const backgroundClasses = ['mypa-left-0', 'mypa-top-0', 'mypa-h-full', 'mypa-w-full', 'mypa-fixed'];
 </script>
