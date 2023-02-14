@@ -1,10 +1,10 @@
 export {default as PdkShipmentLabelWrapper} from './WcShipmentLabelWrapper.vue';
 
+export {default as WcBox} from './WcBox.vue';
+
 export {default as WcButton} from './WcButton.vue';
 
 export {default as WcButtonGroup} from './WcButtonGroup';
-
-export {default as WcCard} from './WcCard.vue';
 
 export {default as WcCheckboxInput} from './WcCheckboxInput.vue';
 

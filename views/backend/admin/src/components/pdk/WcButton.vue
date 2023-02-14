@@ -1,6 +1,5 @@
 <template>
   <button
-    v-test
     :class="{
       'mypa-animate-pulse': loading,
       'button-small': size === 'sm',

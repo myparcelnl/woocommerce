@@ -1,6 +1,6 @@
 <template>
   <div
-    v-test
+    v-test="'DropdownButton'"
     class="mypa-flex">
     <ActionButton
       v-for="(action, index) in dropdownActions.standalone"
@@ -72,15 +72,13 @@ export default defineComponent({
   emits: ['click'],
   setup: (props) => {
     const {translate} = useLanguage();
-    const dropdownData = useDropdownData(props.actions);
+    const {dropdownActions, toggled, toggle} = useDropdownData(props.actions);
 
     return {
-      ...dropdownData,
-
-      dropdownIcon: computed(() => {
-        return dropdownData.toggled.value ? PdkIcon.ARROW_UP : PdkIcon.ARROW_DOWN;
-      }),
-
+      dropdownActions,
+      dropdownIcon: computed(() => (toggled.value ? PdkIcon.ARROW_UP : PdkIcon.ARROW_DOWN)),
+      toggle,
+      toggled,
       translate,
     };
   },

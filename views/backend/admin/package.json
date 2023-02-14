@@ -21,6 +21,7 @@
     "@tanstack/vue-query": "^4.24.4"
   },
   "devDependencies": {
+    "@myparcel-woocommerce/vite-config": "workspace:*",
     "@types/jquery": "^3.5.16",
     "@types/select2": "^4.0.56",
     "@vitejs/plugin-vue": "^4.0.0",

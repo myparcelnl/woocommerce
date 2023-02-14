@@ -1,7 +1,7 @@
 <template>
   <div
-    v-test
-    class="is-active spinner">
+    class="is-active spinner"
+    role="none">
     <svg
       class="spinner__svg"
       viewBox="0 0 66 66"

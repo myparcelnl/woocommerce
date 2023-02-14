@@ -1,7 +1,7 @@
 import {
+  WcBox,
   WcButton,
   WcButtonGroup,
-  WcCard,
   WcCheckboxInput,
   WcCol,
   WcDropdownButton,
@@ -24,17 +24,14 @@ import {
   WcTextInput,
   WcToggleInput,
 } from '../components/pdk';
-import {executePdkComponentTests} from '@myparcel-pdk/component-tests';
+import {executePdkComponentTests} from '@myparcel-pdk/admin-component-tests';
 
 executePdkComponentTests({
-  PdkButtonGroup: WcButtonGroup,
-  PdkCol: WcCol,
-  PdkPluginSettingsWrapper: WcPluginSettingsWrapper,
-  PdkRow: WcRow,
-  PdkTabNavButtonWrapper: WcTabNavButtonWrapper,
+  PdkBox: WcBox,
   PdkButton: WcButton,
-  PdkCard: WcCard,
+  PdkButtonGroup: WcButtonGroup,
   PdkCheckboxInput: WcCheckboxInput,
+  PdkCol: WcCol,
   PdkDropdownButton: WcDropdownButton,
   PdkFormGroup: WcFormGroup,
   PdkIcon: WcIcon,
@@ -43,12 +40,15 @@ executePdkComponentTests({
   PdkMultiCheckbox: WcMultiCheckbox,
   PdkNotification: WcNotification,
   PdkNumberInput: WcNumberInput,
+  PdkPluginSettingsWrapper: WcPluginSettingsWrapper,
   PdkRadioInput: WcRadioInput,
+  PdkRow: WcRow,
   PdkSelectInput: WcSelectInput,
+  PdkTabNavButton: WcTabNavButton,
+  PdkTabNavButtonWrapper: WcTabNavButtonWrapper,
   PdkTable: WcTable,
   PdkTableCol: WcTableCol,
   PdkTableRow: WcTableRow,
-  PdkTabNavButton: WcTabNavButton,
   PdkTextInput: WcTextInput,
   PdkToggleInput: WcToggleInput,
 });

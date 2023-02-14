@@ -1,22 +1,12 @@
-import customTsConfig from 'vite-plugin-custom-tsconfig';
-import {defineConfig} from 'vitest/config';
+import {createViteConfig} from '@myparcel-woocommerce/vite-config';
 
-export default defineConfig((env) => {
-  const isDev = env.mode === 'development';
-
-  return {
-    plugins: [customTsConfig()],
-
-    build: {
-      lib: {
-        name: 'MyParcelWooCommerceSplitAddressFields',
-        fileName: 'split-address-fields',
-        entry: 'src/main.ts',
-        formats: ['iife'],
-      },
-      minify: !isDev,
-      outDir: 'lib',
-      sourcemap: isDev,
+export default createViteConfig({
+  build: {
+    lib: {
+      name: 'MyParcelWooCommerceSplitAddressFields',
+      fileName: 'split-address-fields',
+      entry: 'src/main.ts',
+      formats: ['iife'],
     },
-  };
+  },
 });
