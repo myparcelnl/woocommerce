@@ -26,7 +26,7 @@ class PdkOrderHooks implements WordPressHooksInterface
         add_meta_box(
             'myparcelnl_woocommerce_order_data',
             MyParcelNL::NAME,
-            [$this, 'renderPdkOrderCard'],
+            [$this, 'renderPdkOrderBox'],
             'shop_order',
             'advanced',
             'high'
@@ -36,7 +36,7 @@ class PdkOrderHooks implements WordPressHooksInterface
     /**
      * @return void
      */
-    public function renderPdkOrderCard(): void
+    public function renderPdkOrderBox(): void
     {
         global $post;
 
@@ -44,6 +44,6 @@ class PdkOrderHooks implements WordPressHooksInterface
         $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
         $order           = $orderRepository->get($post->ID);
 
-        echo RenderService::renderOrderCard($order);
+        echo RenderService::renderOrderBox($order);
     }
 }
