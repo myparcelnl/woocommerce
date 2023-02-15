@@ -1,4 +1,4 @@
-import {AddressType, FIELD_HOUSE_NUMBER, getAddressField, getAddressParts, getFieldValue} from '../';
+import {AddressType, FIELD_HOUSE_NUMBER, getAddressFieldValue, getAddressParts} from '../';
 import {hasSplitAddressFields} from './hasSplitAddressFields';
 
 /**
@@ -9,16 +9,11 @@ import {hasSplitAddressFields} from './hasSplitAddressFields';
  */
 export const getHouseNumber = (type?: AddressType): undefined | string => {
   if (hasSplitAddressFields()) {
-    const billingNumber = getAddressField(FIELD_HOUSE_NUMBER, AddressType.BILLING);
-    const shippingNumber = getAddressField(FIELD_HOUSE_NUMBER, AddressType.SHIPPING);
+    const billingNumber = getAddressFieldValue(FIELD_HOUSE_NUMBER, AddressType.BILLING);
+    const shippingNumber = getAddressFieldValue(FIELD_HOUSE_NUMBER, AddressType.SHIPPING);
 
-    const hasBillingNumber = billingNumber?.value !== '';
-    const hasShippingNumber = shippingNumber?.value !== '';
-
-    const hasNumber = hasBillingNumber || hasShippingNumber;
-
-    if (hasNumber) {
-      return getFieldValue(FIELD_HOUSE_NUMBER, type);
+    if (billingNumber || shippingNumber) {
+      return getAddressFieldValue(FIELD_HOUSE_NUMBER, type);
     }
   }
 

@@ -1,5 +1,4 @@
 import {useSettingsStore} from '@myparcel-woocommerce/frontend-common';
-import {getSelectedShippingMethod} from '../../../common/src/utils/getSelectedShippingMethod';
 
 export const METHOD_FREE_SHIPPING = 'free_shipping';
 
@@ -9,17 +8,8 @@ export const METHOD_FREE_SHIPPING = 'free_shipping';
  *
  * Most of the values in this list will be full shipping method names, with an instance id, but some can't have one.
  * That's the reason we're checking if it starts with this value instead of whether it's equal.
- *
- * @param {?String} shippingMethod
- * @returns {Boolean}
  */
-export const shippingMethodHasDeliveryOptions = (shippingMethod?: string): boolean => {
-  shippingMethod ??= getSelectedShippingMethod();
-
-  if (!shippingMethod) {
-    return false;
-  }
-
+export const shippingMethodHasDeliveryOptions = (shippingMethod: string): boolean => {
   if (shippingMethod.startsWith(METHOD_FREE_SHIPPING)) {
     shippingMethod = METHOD_FREE_SHIPPING;
   }
@@ -31,8 +21,8 @@ export const shippingMethodHasDeliveryOptions = (shippingMethod?: string): boole
    *  disallowedShippingMethods array.
    */
   const list = settings.state.alwaysShow
-    ? settings.state.disallowedShippingMethods
-    : settings.state.allowedShippingMethods;
+    ? settings.state.disallowedShippingMethods ?? []
+    : settings.state.allowedShippingMethods ?? [];
 
   const comparison = settings.state.alwaysShow ? 'every' : 'some';
 

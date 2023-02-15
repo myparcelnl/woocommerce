@@ -5,7 +5,7 @@
  *
  * @returns {String|null}
  */
-export const getHighestShippingClass = () => {
+export const fetchHighestShippingClass = () => {
   let shippingClass = null;
 
   jQuery.ajax({

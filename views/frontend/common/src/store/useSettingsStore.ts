@@ -1,8 +1,11 @@
-import {createStore} from './createStore';
 import {FrontendSettings} from '../';
+import {createStore} from './createStore';
 
 export const useSettingsStore = createStore<FrontendSettings>('settings', () => {
   return {
-    state: {} as FrontendSettings,
+    state: {
+      allowedShippingMethods: [],
+      disallowedShippingMethods: [],
+    } as FrontendSettings,
   };
 });

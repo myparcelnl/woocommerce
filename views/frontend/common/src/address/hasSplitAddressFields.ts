@@ -1,11 +1,7 @@
-import {FIELD_COUNTRY, getAddressField, useSettingsStore} from '../';
+import {FIELD_COUNTRY, getAddressFieldValue, useSettingsStore} from '../';
 
 export const hasSplitAddressFields = (country?: string): boolean => {
-  if (!country) {
-    const countryField = getAddressField(FIELD_COUNTRY);
-
-    country = countryField?.value;
-  }
+  country ??= getAddressFieldValue(FIELD_COUNTRY);
 
   const settings = useSettingsStore();
 

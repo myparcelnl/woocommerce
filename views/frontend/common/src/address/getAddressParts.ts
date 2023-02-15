@@ -1,4 +1,4 @@
-import {AddressType, FIELD_ADDRESS, getFieldValue, splitAddress} from '../';
+import {AddressType, FIELD_ADDRESS, getAddressFieldValue, splitAddress} from '../';
 
 export type AddressParts = {
   street?: string;
@@ -7,7 +7,7 @@ export type AddressParts = {
 };
 
 export const getAddressParts = (type?: AddressType): AddressParts => {
-  const address = getFieldValue(FIELD_ADDRESS, type);
+  const address = getAddressFieldValue(FIELD_ADDRESS, type) as string;
 
   return splitAddress(address);
 };

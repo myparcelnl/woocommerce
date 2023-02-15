@@ -1,4 +1,5 @@
-import {useDeliveryOptionsStore, useSettingsStore} from '@myparcel-woocommerce/frontend-common';
+import {useDeliveryOptionsStore} from '../store';
+import {useSettingsStore} from '@myparcel-woocommerce/frontend-common';
 
 /**
  * Fetch and update the delivery options config. For use with changing shipping methods, for example, as doing so

@@ -2,38 +2,41 @@ import {StoreListener} from './types';
 
 type State = Record<string, unknown>;
 
-type ListenerObject = {
-  [L in StoreListener]?: Listeners[L][];
+type ListenerObject<S extends State> = {
+  [L in StoreListener]?: Listeners<S>[L][];
 };
 
-type InitialData<T extends State> = {
-  state: T;
-  listeners?: ListenerObject;
+type InitialData<S extends State = State> = {
+  state: S;
+  listeners?: ListenerObject<S>;
 };
 
-type Store<T extends State> = {
-  set: (newState: Partial<T>) => void;
-  state: T;
-  listeners: ListenerObject;
-  on: <L extends StoreListener>(listener: L, callback: Listeners[L]) => void;
+type Store<S extends State = State> = {
+  set: (newState: Partial<S>) => void;
+  state: S;
+  listeners: ListenerObject<S>;
+  on: <L extends StoreListener>(listener: L, callback: Listeners<S>[L]) => void;
 };
 
-type StoreData<T extends State, N extends string> = Record<N, Store<T>>;
+type StoreData<S extends State = State, N extends string = string> = Record<N, Store<S>>;
 
-const storedState: StoreData<State, string> = {};
+const storedState: StoreData = {};
 
-type Listeners = {
-  [StoreListener.UPDATE]: (newState: State, oldState: State) => void;
+type Listeners<T extends State> = {
+  [StoreListener.UPDATE]: (newState: T, oldState: T) => void | T;
 };
 
-export const createStore = <T extends State, N extends string = string>(
+export const createStore = <S extends State = State, N extends string = string>(
   name: N,
-  initialData: () => InitialData<T>,
-): (() => StoreData<T, N>[N]) => {
+  initialData: () => InitialData<S>,
+): (() => StoreData<S, N>[N]) => {
   if (!storedState[name]) {
+    const resolvedData: InitialData<S> = initialData();
+
     storedState[name] = {
-      listeners: {},
-      ...initialData(),
+      ...resolvedData,
+
+      listeners: resolvedData.listeners ?? {},
 
       on: (listener, callback) => {
         storedState[name].listeners[listener] ??= [];
@@ -47,12 +50,20 @@ export const createStore = <T extends State, N extends string = string>(
         // eslint-disable-next-line no-console
         console.log('%cSET', 'color: #0f0', name, {newState, oldState});
 
-        storedState[name].listeners?.update?.map((listener) => listener({...state}, oldState));
+        const updates = storedState[name].listeners?.update?.map((listener) => listener({...state}, oldState));
+
+        if (updates?.length) {
+          const additionalUpdate = updates.reduce((state, update) => {
+            return {...state, ...update};
+          }, {});
+
+          Object.assign(storedState[name].state, additionalUpdate);
+        }
       },
     };
   }
 
   return () => {
-    return storedState[name] as Store<T>;
+    return storedState[name];
   };
 };

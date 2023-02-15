@@ -1,3 +1,4 @@
+export * from './getAddressFieldValue';
 export * from './getElement';
 export * from './getFieldValue';
 export * from './getSelectedShippingMethod';

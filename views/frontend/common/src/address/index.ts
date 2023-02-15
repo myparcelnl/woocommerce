@@ -1,5 +1,4 @@
 export * from './fillSplitAddressFields';
-export * from './getAddress';
 export * from './getAddressField';
 export * from './getAddressParts';
 export * from './getAddressType';

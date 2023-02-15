@@ -1,6 +1,6 @@
 import {FrontendAppContext, getElement} from '../';
 
-export const getFrontendContext = (): FrontendAppContext['deliveryOptions'] => {
+export const getFrontendContext = (): FrontendAppContext['checkout'] => {
   const wrapper = getElement('#mypa-delivery-options-wrapper');
   const context = wrapper?.getAttribute('data-context');
 

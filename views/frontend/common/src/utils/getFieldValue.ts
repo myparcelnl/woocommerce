@@ -1,7 +1,7 @@
-import {AddressType, getAddressField} from '../';
+import {useCheckoutStore} from '../';
 
-export const getFieldValue = (name: string, addressType?: AddressType): undefined | string => {
-  const field = getAddressField(name, addressType);
+export const getFieldValue = (name: string): undefined | string => {
+  const checkout = useCheckoutStore();
 
-  return field?.value;
+  return checkout.state.form[name]?.trim();
 };
