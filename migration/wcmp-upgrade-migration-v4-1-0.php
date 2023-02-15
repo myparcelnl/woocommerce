@@ -2,6 +2,7 @@
 
 use migration\WCMP_Upgrade_Migration;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
+use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -189,12 +190,14 @@ class WCMP_Upgrade_Migration_v4_1_0 extends WCMP_Upgrade_Migration
 
     /**
      * In case the current amount is not valid, choose the closest value from the allowed values (rounded up).
+     *
+     * @throws \Exception
      */
     private function correctPostNlInsurance(): void
     {
         $postnl           = CarrierPostNL::NAME;
         $key              = "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT;
-        $availableAmounts = WCMP_Data::getInsuranceAmounts();
+        $availableAmounts = WCMP_Data::getInsuranceAmounts(AbstractConsignment::CC_NL);
         $insuranceAmount  = $this->newPostNlSettings[$key] ?? 0;
 
         if (! in_array($insuranceAmount, $availableAmounts)) {
