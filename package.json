@@ -40,7 +40,7 @@
   },
   "prettier": "@myparcel/prettier-config",
   "dependencies": {
-    "@myparcel/delivery-options": "^5.3.1"
+    "@myparcel/delivery-options": "^5.4.0"
   },
   "devDependencies": {
     "@edielemoine/google-docs-importer": "^1.0.2",
@@ -56,7 +56,7 @@
     "@types/papaparse": "^5.3.7",
     "@vue/tsconfig": "^0.1.3",
     "autoprefixer": "^10.4.13",
-    "eslint": "^8.33.0",
+    "eslint": "^8.34.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-sort-exports": "^0.8.0",
     "gettext-parser": "^6.0.0",
@@ -72,19 +72,19 @@
     "gulp-zip": "^5.1.0",
     "husky": "^8.0.3",
     "is-ci": "^3.0.1",
-    "lint-staged": "^13.1.1",
+    "lint-staged": "^13.1.2",
     "nodemon": "^2.0.20",
-    "nx": "15.6.3",
+    "nx": "15.7.0",
     "papaparse": "^5.3.2",
-    "prettier": "^2.8.3",
+    "prettier": "^2.8.4",
     "terser": "^5.16.3",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.5",
     "vinyl-buffer": "^1.0.1",
     "vite": "^4.1.1",
     "vite-plugin-custom-tsconfig": "^1.0.4",
-    "vite-plugin-dts": "^1.7.2",
-    "vitest": "^0.28.4"
+    "vite-plugin-dts": "^1.7.3",
+    "vitest": "^0.28.5"
   },
   "packageManager": "yarn@3.3.1",
   "resolutions": {
@@ -96,6 +96,7 @@
     "@myparcel-pdk/frontend-core": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/core",
     "@myparcel/ts-utils": "portal:/Users/edie/Sites/myparcel/ts-utils",
     "@myparcel-pdk/frontend": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin",
-    "@myparcel-pdk/checkout": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/checkout"
+    "@myparcel-pdk/checkout": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/checkout",
+    "@myparcel-pdk/frontend-delivery-options": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/delivery-options"
   }
 }
