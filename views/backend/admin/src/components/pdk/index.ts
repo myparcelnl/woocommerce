@@ -10,6 +10,8 @@ export {default as WcCheckboxInput} from './WcCheckboxInput.vue';
 
 export {default as WcCol} from './WcCol.vue';
 
+export {default as WcDropOffInput} from './WcDropOffInput.vue';
+
 export {default as WcDropdownButton} from './WcDropdownButton.vue';
 
 export {default as WcFormGroup} from './WcFormGroup.vue';

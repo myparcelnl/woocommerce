@@ -8,6 +8,7 @@ import {
   WcButtonGroup,
   WcCheckboxInput,
   WcCol,
+  WcDropOffInput,
   WcDropdownButton,
   WcFormGroup,
   WcIcon,
@@ -51,6 +52,7 @@ createPdkAdmin({
     PdkCheckboxInput: WcCheckboxInput,
     PdkCol: WcCol,
     PdkCurrencyInput: DefaultCurrencyInput,
+    PdkDropOffInput: WcDropOffInput,
     PdkDropdownButton: WcDropdownButton,
     PdkFormGroup: WcFormGroup,
     PdkHeading: DefaultHeading,
@@ -73,6 +75,8 @@ createPdkAdmin({
     PdkTableCol: WcTableCol,
     PdkTableRow: WcTableRow,
     PdkTextInput: WcTextInput,
+    // todo
+    PdkTimeInput: WcTimeInput,
     PdkToggleInput: WcToggleInput,
   },
 
