@@ -13,10 +13,10 @@ use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
 use MyParcelNL\Pdk\Settings\Model\LabelSettings;
 use MyParcelNL\Pdk\Settings\Model\OrderSettings;
 use MyParcelNL\Pdk\Shipment\Model\DropOffDay;
-use MyParcelNL\WooCommerce\Migration\AbstractUpgradeMigration;
+use MyParcelNL\WooCommerce\Migration\MigrationInterface;
 use MyParcelNL\WooCommerce\Pdk\Settings\Repository\PdkSettingsRepository;
 
-class SettingsMigration extends AbstractUpgradeMigration
+class SettingsMigration implements MigrationInterface
 {
     private const GENERAL  = 'general';
     private const CHECKOUT = 'checkout';
@@ -27,7 +27,7 @@ class SettingsMigration extends AbstractUpgradeMigration
     /**
      * @return void
      */
-    public function run(): void
+    public function up(): void
     {
         $pdkSettingsRepository = Pdk::get(PdkSettingsRepository::class);
 
@@ -153,10 +153,10 @@ class SettingsMigration extends AbstractUpgradeMigration
         return [
             'export_age_check'              => 'exportAgeCheck',
             'export_insured'                => 'exportInsurance',
-            'export_insured_from_price'     => 'priceInsurance',
-            'export_insured_amount'         => 'exportInsuranceAmount',
-            'export_insured_eu_amount'      => '', // EMPTY
-            'export_insured_for_be'         => '', // EMPTY
+            'export_insured_from_price'     => 'exportInsuranceFromAmount',
+            'export_insured_amount'         => 'exportInsuranceUpTo',
+            'export_insured_eu_amount'      => 'exportInsuranceUpToEu',
+            'export_insured_for_be'         => 'exportInsuranceUpToBe',
             'export_hide_sender'            => 'exportHideSender',
             'export_extra_assurance'        => 'exportExtraAssurance',
             'export_large_format'           => 'exportLargeFormat',
@@ -169,7 +169,7 @@ class SettingsMigration extends AbstractUpgradeMigration
             'drop_off_days'                 => 'dropOffDays',
             'cutoff_time'                   => 'cutoffTime',
             'delivery_days_window'          => 'featureShowDeliveryDate',
-            'digital_stamp_default_weight'  => '', // EMPTY
+            'digital_stamp_default_weight'  => '',
             'drop_off_delay'                => 'dropOffDelay',
             'monday_delivery_enabled'       => 'allowMondayDelivery',
             'saturday_cutoff_time'          => 'saturdayCutoffTime',
@@ -177,7 +177,7 @@ class SettingsMigration extends AbstractUpgradeMigration
             'delivery_morning_fee'          => 'priceMorningDelivery',
             'delivery_evening_enabled'      => 'allowEveningDelivery',
             'delivery_evening_fee'          => 'priceEveningDelivery',
-            'allow_show_delivery_date'      => '', // EMPTY
+            'allow_show_delivery_date'      => 'showDeliveryDay',
             'only_recipient_enabled'        => 'allowOnlyRecipient',
             'only_recipient_fee'            => 'priceOnlyRecipient',
             'same_day_delivery'             => 'allowSameDayDelivery',
@@ -197,25 +197,28 @@ class SettingsMigration extends AbstractUpgradeMigration
     {
         return [
             self::GENERAL  => [
-                'api_key'                => 'apiKey',
-                'error_logging'          => 'apiLogging',
-                'connect_email'          => 'shareCustomerInformation',
-                'process_directly'       => 'conceptShipments',
-                'export_mode'            => 'orderMode',
-                'track_trace_email'      => 'trackTraceInEmail',
-                'track_trace_my_account' => 'trackTraceInAccount',
-                'barcode_in_note'        => 'barcodeInNote',
-                'export_automatic'       => 'processDirectly',
+                'api_key'                 => 'apiKey',
+                'error_logging'           => 'apiLogging',
+                'connect_email'           => 'shareCustomerInformation',
+                'process_directly'        => 'conceptShipments',
+                'export_mode'             => 'orderMode',
+                'track_trace_email'       => 'trackTraceInEmail',
+                'track_trace_my_account'  => 'trackTraceInAccount',
+                'barcode_in_note'         => 'barcodeInNote',
+                'barcode_in_note_title'   => 'barcodeInNoteTitle',
+                'export_automatic'        => 'processDirectly',
+                'export_automatic_status' => 'exportWithAutomaticStatus',
+                'automatic_order_status'  => 'orderStatusOnLabelCreate',
             ],
             self::ORDER    => [
-
-                'save_customer_address' => 'saveCustomerAddress',
-                'empty_parcel_weight'   => 'emptyParcelWeight',
+                'save_customer_address'      => 'saveCustomerAddress',
+                'empty_parcel_weight'        => 'emptyParcelWeight',
+                'empty_digital_stamp_weight' => 'emptyDigitalStampWeight',
             ],
             self::LABEL    => [
                 'label_description'      => 'description',
                 'label_format'           => 'format',
-                'download_display'       => '', // EMPTY
+                'download_display'       => 'output',
                 'ask_for_print_position' => 'prompt',
             ],
             self::CUSTOMS  => [
@@ -224,43 +227,25 @@ class SettingsMigration extends AbstractUpgradeMigration
                 'country_of_origin' => 'countryOfOrigin',
             ],
             self::CHECKOUT => [
-                'use_split_address_fields'                => '', // EMPTY
-                // price type
-                'show_delivery_day'                       => '', // EMPTY
-                'header_delivery_options_title'           => '', // EMPTY
-                'delivery_options_enabled_for_backorders' => '', // EMPTY
-                'delivery_options_enabled'                => '', // EMPTY
+                'use_split_address_fields'                => 'useSeparateAddressFields',
+                'delivery_options_enabled'                => 'enableDeliveryOptions',
+                'header_delivery_options_title'           => 'deliveryOptionsHeader',
+                'delivery_options_enabled_for_backorders' => '',
                 'delivery_options_display'                => 'deliveryOptionsDisplay',
                 'delivery_options_position'               => 'deliveryOptionsPosition',
                 'delivery_options_price_format'           => 'priceType',
                 'pickup_locations_default_view'           => 'pickupLocationsDefaultView',
                 'delivery_options_custom_css'             => 'deliveryOptionsCustomCss',
-                'delivery_title'                          => 'stringDelivery',
-                'morning_title'                           => 'stringMorningDelivery',
-                'standard_title'                          => 'stringStandardDelivery',
-                'evening_title'                           => 'stringEveningDelivery',
-                'same_day_title'                          => '', // EMPTY
-                'only_recipient_title'                    => 'stringOnlyRecipient',
-                'signature_title'                         => 'stringSignature',
-                'pickup_title'                            => 'stringPickup',
-                'address_not_found_title'                 => 'stringAddressNotFound',
+//                'delivery_title'                          => 'stringDelivery',
+//                'morning_title'                           => 'stringMorningDelivery',
+//                'standard_title'                          => 'stringStandardDelivery',
+//                'evening_title'                           => 'stringEveningDelivery',
+//                'same_day_title'                          => '',
+//                'only_recipient_title'                    => 'stringOnlyRecipient',
+//                'signature_title'                         => 'stringSignature',
+//                'pickup_title'                            => 'stringPickup',
+//                'address_not_found_title'                 => 'stringAddressNotFound',
             ],
-
-            // General & label mixed
-            //            'trigger_manual_update'                   => '', // EMPTY
-            //            'order_status_automation'                 => 'exportWithAutomaticStatus',
-            //            'change_order_status_after'               => '', // EMPTY
-            //            'automatic_order_status'                  => '', // EMPTY
-            //            'barcode_in_note_title'                   => '', // EMPTY
-            //
-            //            // Export
-            //            'shipping_methods_package_types'          => '', // EMPTY
-            //            'connect_phone'                           => 'shareCustomerInformation',
-            //
-            //            'empty_digital_stamp_weight'              => 'emptyDigitalStampWeight',
-            //            'export_automatic'                        => '', // EMPTY
-            //            'export_automatic_status'                 => 'exportWithAutomaticStatus',
-            //            'return_in_the_box'                       => '', // EMPTY
         ];
     }
 
@@ -303,8 +288,18 @@ class SettingsMigration extends AbstractUpgradeMigration
         $transformed = [];
 
         foreach ($wcSettings as $key => $value) {
-            $search               = $this->searchParentKey($key, $mapped);
-            $newKey               = $mapped[$search][$key] ?? $key;
+            $search = $this->searchParentKey($key, $mapped);
+            $newKey = $mapped[$search][$key] ?? $key;
+
+            switch ($key) {
+                case 'export_automatic':
+                    $value = $value === 'yes' ? '1' : '0';
+                    break;
+                case 'export_insured_for_be':
+                    $value = 50000;
+                    break;
+            }
+
             $transformed[$newKey] = $value;
         }
 
@@ -326,5 +321,33 @@ class SettingsMigration extends AbstractUpgradeMigration
         }
 
         return false;
+    }
+
+    /**
+     * @param  string $key
+     *
+     * @return array
+     */
+    private function getSettings(string $key): array
+    {
+        $value = get_option($key);
+
+        if (! is_array($value)) {
+            return [];
+        }
+
+        return $value;
+    }
+
+    public function down(): void
+    {
+        /**
+         * Nothing to do here.
+         */
+    }
+
+    public function getVersion(): string
+    {
+        return '5.0.0';
     }
 }

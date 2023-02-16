@@ -26,12 +26,12 @@ class Migration5_0_0 implements MigrationInterface
     public function up(): void
     {
         $settingsMigration = new SettingsMigration();
-        $settingsMigration->run();
+        $settingsMigration->up();
 
         $ordersMigration = new OrdersMigration();
         $ordersMigration->run();
 
         $productSettingsMigration = new ProductSettingsMigration();
-        $productSettingsMigration->run();
+        $productSettingsMigration->up();
     }
 }

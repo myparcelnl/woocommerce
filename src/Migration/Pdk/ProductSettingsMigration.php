@@ -7,18 +7,32 @@ namespace MyParcelNL\WooCommerce\Migration\Pdk;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Product\Repository\AbstractProductRepository;
 use MyParcelNL\WooCommerce\Migration\AbstractUpgradeMigration;
+use MyParcelNL\WooCommerce\Migration\MigrationInterface;
+use MyParcelNL\WooCommerce\Service\WpCronService;
 
-class ProductSettingsMigration extends AbstractUpgradeMigration
+class ProductSettingsMigration implements MigrationInterface
 {
     private const OPTION_TRANSLATIONS = [
         '_myparcel_hs_code'           => ['name' => 'customsCode'],
         '_myparcel_country_of_origin' => ['name' => 'countryOfOrigin'],
-        '_myparcel_age_check'         => ['name' => 'exportAgeCheck', 'values' => ['no' => 0, 'yes' => 1]], // null = -1, the default
+        '_myparcel_age_check'         => ['name' => 'exportAgeCheck', 'values' => ['no' => 0, 'yes' => 1]],
     ];
     private const CHUNK_SIZE          = 10;
     private const SECONDS_APART       = 30;
 
-    public function run(): void
+    public function getVersion(): string
+    {
+        return '5.0.0';
+    }
+
+    public function down(): void
+    {
+        /**
+         * No need to downgrade, original data is still there.
+         */
+    }
+
+    public function up(): void
     {
         $this->migrateProductSettings();
     }
@@ -75,7 +89,7 @@ class ProductSettingsMigration extends AbstractUpgradeMigration
             }
 
             if ($changed) {
-                $productRepository->store($product);
+                $productRepository->update($product);
             }
 
             (wc_get_logger())->debug(
