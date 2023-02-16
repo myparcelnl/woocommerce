@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration;
 
+/**
+ * @deprecated Do not use for new migrations. Use the interface instead.
+ * @see \MyParcelNL\WooCommerce\Migration\MigrationInterface
+ */
 abstract class AbstractUpgradeMigration
 {
     /**
