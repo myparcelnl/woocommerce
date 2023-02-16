@@ -5,17 +5,37 @@
         v-for="[day, human] in Object.entries(weekdaysObject)"
         :key="day">
         <li>
-          <span>{{ human }}</span>
+          <PdkTableRow>
 
-          <PdkToggleInput
-            v-model="toggleRefs[day]"
-            :element="toggleElements[day]" />
+            <PdkTableCol
+              class="titledesc"
+              component="th"
+              scope="row">
+              <label>{{ human }}</label>
+            </PdkTableCol>
 
-          <div v-if="toggleRefs[day]">
-            <PdkTimeInput
-              v-model="cutoffRefs[day]"
-              :element="cutoffElements[day]" />
-          </div>
+            <PdkTableCol>
+              <PdkToggleInput
+                v-model="toggleRefs[day]"
+                :element="toggleElements[day]" />
+            </PdkTableCol>
+
+          </PdkTableRow>
+
+          <PdkTableRow
+            v-if="toggleRefs[day]">
+
+            <PdkTableCol>
+              <label class="titledesc">Cutoff Time:</label>
+            </PdkTableCol>
+
+            <PdkTableCol>
+              <PdkTimeInput
+                v-model="cutoffRefs[day]"
+                :element="cutoffElements[day]" />
+            </PdkTableCol>
+
+          </PdkTableRow>
         </li>
       </template>
     </ul>

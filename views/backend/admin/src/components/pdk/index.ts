@@ -48,4 +48,6 @@ export {default as WcTableRow} from './WcTableRow.vue';
 
 export {default as WcTextInput} from './WcTextInput.vue';
 
+export {default as WcTimeInput} from './WcTimeInput.vue';
+
 export {default as WcToggleInput} from './WcToggleInput.vue';

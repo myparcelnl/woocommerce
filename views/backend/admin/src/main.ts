@@ -4,7 +4,6 @@ import {
   DefaultHeading,
   DefaultLink,
   DefaultMultiRadio,
-  DefaultTimeInput,
 } from '@myparcel-pdk/admin-components/src';
 import {LogLevel, createPdkAdmin, useModalStore} from '@myparcel-pdk/admin/src';
 import {
@@ -33,6 +32,7 @@ import {
   WcTableCol,
   WcTableRow,
   WcTextInput,
+  WcTimeInput,
   WcToggleInput,
 } from './components/pdk';
 import {h} from 'vue';
@@ -81,7 +81,7 @@ createPdkAdmin({
     PdkTableCol: WcTableCol,
     PdkTableRow: WcTableRow,
     PdkTextInput: WcTextInput,
-    PdkTimeInput: DefaultTimeInput,
+    PdkTimeInput: WcTimeInput,
     PdkToggleInput: WcToggleInput,
   },
 
