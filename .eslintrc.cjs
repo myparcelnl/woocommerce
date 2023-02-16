@@ -16,6 +16,7 @@ module.exports = {
       extends: '@myparcel-eslint/eslint-config-prettier-typescript-vue',
       rules: {
         '@typescript-eslint/no-misused-promises': 'off',
+        'vue/no-empty-component-block': 'off',
         'vue/no-undef-components': [
           'error',
           {

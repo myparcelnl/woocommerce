@@ -14,7 +14,12 @@
   "workspaces": [
     "views/**"
   ],
+  "lint-staged": {
+    "*.{ts,vue}": "eslint --fix",
+    "*.{md,json,yml,css,scss,html}": "prettier --write"
+  },
   "scripts": {
+    "prepare": "is-ci || husky install",
     "build": "yarn build:js && yarn translations:import && yarn bundle",
     "build:js": "nx run-many --target=build --output-style=stream",
     "build:js:dev": "nx run-many --target=build:dev --output-style=stream",
