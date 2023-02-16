@@ -36,7 +36,7 @@
           :key="`${index}_${action.id}`"
           v-test="'HiddenDropdownAction'"
           :action="action"
-          class="!mypa-border-none">
+          class="!mypa-border-none !mypa-text-left">
           {{ translate(action.label) }}
         </ActionButton>
       </div>
