@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.17.0-rc.6](https://github.com/myparcelnl/woocommerce/compare/v4.17.0-rc.5...v4.17.0-rc.6) (2023-02-16)
+
+
+### :bug: Bug Fixes
+
+* fix type error in getting value of option ([#952](https://github.com/myparcelnl/woocommerce/issues/952)) ([fa618d4](https://github.com/myparcelnl/woocommerce/commit/fa618d461a7c48742cc3e10e48f146cc1bd8afcd))
+
 ## [4.17.0-rc.5](https://github.com/myparcelnl/woocommerce/compare/v4.17.0-rc.4...v4.17.0-rc.5) (2023-02-03)
 
 
