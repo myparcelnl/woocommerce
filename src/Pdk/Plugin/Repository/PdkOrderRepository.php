@@ -233,7 +233,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     private function getWcOrderItems(WC_Order $order): Collection
     {
-        return (new Collection(
+        return new Collection(
             array_map(function ($item) {
                 $product = $item instanceof WC_Order_Item_Product ? $item->get_product() : null;
 
@@ -242,8 +242,8 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                     'product'    => $product,
                     'pdkProduct' => $product ? $this->productRepository->getProduct($product) : null,
                 ];
-            }, $order->get_items())
-        ));
+            }, array_values($order->get_items()))
+        );
     }
 
     /**
