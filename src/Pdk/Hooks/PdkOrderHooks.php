@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
-use MyParcelNL;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
 use MyParcelNL\Pdk\Plugin\Repository\PdkOrderRepositoryInterface;
@@ -23,9 +22,11 @@ class PdkOrderHooks implements WordPressHooksInterface
      */
     public function registerSingleOrderPageMetaBox(): void
     {
+        $appInfo = Pdk::getAppInfo();
+
         add_meta_box(
             'myparcelnl_woocommerce_order_data',
-            MyParcelNL::NAME,
+            $appInfo['title'],
             [$this, 'renderPdkOrderBox'],
             'shop_order',
             'advanced',
