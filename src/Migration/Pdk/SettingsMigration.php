@@ -229,22 +229,13 @@ class SettingsMigration implements MigrationInterface
             self::CHECKOUT => [
                 'use_split_address_fields'                => 'useSeparateAddressFields',
                 'delivery_options_enabled'                => 'enableDeliveryOptions',
+                'delivery_options_enabled_for_backorders' => 'enableDeliveryOptionsWhenNotInStock',
                 'header_delivery_options_title'           => 'deliveryOptionsHeader',
-                'delivery_options_enabled_for_backorders' => '',
                 'delivery_options_display'                => 'deliveryOptionsDisplay',
                 'delivery_options_position'               => 'deliveryOptionsPosition',
                 'delivery_options_price_format'           => 'priceType',
                 'pickup_locations_default_view'           => 'pickupLocationsDefaultView',
                 'delivery_options_custom_css'             => 'deliveryOptionsCustomCss',
-//                'delivery_title'                          => 'stringDelivery',
-//                'morning_title'                           => 'stringMorningDelivery',
-//                'standard_title'                          => 'stringStandardDelivery',
-//                'evening_title'                           => 'stringEveningDelivery',
-//                'same_day_title'                          => '',
-//                'only_recipient_title'                    => 'stringOnlyRecipient',
-//                'signature_title'                         => 'stringSignature',
-//                'pickup_title'                            => 'stringPickup',
-//                'address_not_found_title'                 => 'stringAddressNotFound',
             ],
         ];
     }

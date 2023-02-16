@@ -6,9 +6,11 @@ namespace MyParcelNL\WooCommerce\Pdk\Product\Repository;
 
 use MyParcelNL\Pdk\Base\Concern\WeightServiceInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Plugin\Collection\PdkProductCollection;
 use MyParcelNL\Pdk\Plugin\Model\PdkProduct;
 use MyParcelNL\Pdk\Product\Repository\AbstractProductRepository;
+use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\Pdk\Settings\Model\ProductSettings;
 use MyParcelNL\Pdk\Storage\StorageInterface;
 use MyParcelNL\Sdk\src\Support\Str;
@@ -44,6 +46,7 @@ class PdkProductRepository extends AbstractProductRepository
             return new PdkProduct([
                 'externalIdentifier' => (string) $product->get_id(),
                 'sku'                => $product->get_sku(),
+                'isDeliverable'      => $product->needs_shipping(),
                 'name'               => $product->get_name(),
                 'price'              => [
                     'amount'   => (float) $product->get_price() * 100,
