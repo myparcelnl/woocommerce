@@ -1,5 +1,11 @@
 import './assets/scss/index.scss';
-import {DefaultCurrencyInput, DefaultHeading, DefaultLink, DefaultMultiRadio} from '@myparcel-pdk/admin-components/src';
+import {
+  DefaultCurrencyInput,
+  DefaultHeading,
+  DefaultLink,
+  DefaultMultiRadio,
+  DefaultTimeInput,
+} from '@myparcel-pdk/admin-components/src';
 import {LogLevel, createPdkAdmin, useModalStore} from '@myparcel-pdk/admin/src';
 import {
   PdkShipmentLabelWrapper,
@@ -75,8 +81,7 @@ createPdkAdmin({
     PdkTableCol: WcTableCol,
     PdkTableRow: WcTableRow,
     PdkTextInput: WcTextInput,
-    // todo
-    PdkTimeInput: WcTimeInput,
+    PdkTimeInput: DefaultTimeInput,
     PdkToggleInput: WcToggleInput,
   },
 
