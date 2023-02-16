@@ -4,13 +4,10 @@
 
 @import '_toggle.scss';
 @import '_transitions.scss';
+@import '_woocommerce.scss';
 
-.woocommerce table.form-table {
-  .select2-container {
-    min-width: 100% !important;
-  }
-
-  select {
-    @apply mypa-w-full;
+@layer components {
+  .mypa-loading-overlay {
+    @apply mypa-absolute mypa-animate-pulse mypa-bg-white mypa-h-full mypa-opacity-50 mypa-w-full mypa-z-50 mypa-inset-0;
   }
 }

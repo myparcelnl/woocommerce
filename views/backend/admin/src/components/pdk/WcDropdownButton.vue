@@ -10,7 +10,7 @@
         '!mypa-rounded-r-none': index === dropdownActions.standalone.length - 1,
       }"
       :hide-text="hideText"
-      size="sm" />
+      :size="size" />
 
     <PdkButton
       v-if="dropdownActions.hidden.length > 0"
@@ -21,9 +21,9 @@
       }"
       :disabled="disabled"
       :icon="dropdownIcon"
+      :size="size"
       aria-haspopup="true"
       class="mypa-relative"
-      size="sm"
       @focus="toggled = true"
       @focusout="toggled = false"
       @mouseout="toggled = false"
@@ -45,13 +45,18 @@
 </template>
 
 <script lang="ts" setup>
-import {ActionButton, AdminIcon, ResolvedAction, useDropdownData, useLanguage} from '@myparcel-pdk/admin/src';
+import {ActionButton, AdminIcon, ResolvedAction, Size, useDropdownData, useLanguage} from '@myparcel-pdk/admin/src';
 import {PropType, computed} from 'vue';
 
 const props = defineProps({
   actions: {
     type: Array as PropType<ResolvedAction[]>,
     default: () => [],
+  },
+
+  size: {
+    type: String as PropType<Size>,
+    default: 'sm',
   },
 
   disabled: {

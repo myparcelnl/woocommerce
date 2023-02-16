@@ -1,0 +1,15 @@
+// Fix the width of the select2 dropdowns in WooCommerce settings
+.woocommerce table.form-table {
+  .select2-container {
+    min-width: 100% !important;
+  }
+
+  select {
+    @apply mypa-w-full;
+  }
+}
+
+// Increase the width of the MyParcel column in the orders list. Default is 12ch and causes the shipment buttons to float outside the column.
+.post-type-shop_order .wp-list-table .column-myparcelnl {
+  width: 15ch;
+}

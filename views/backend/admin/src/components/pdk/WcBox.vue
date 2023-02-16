@@ -1,13 +1,13 @@
 <template>
   <div
-    v-test="'Card'"
-    class="">
-    <div>
-      <slot name="header">
-        <PdkHeading level="3">
-          {{ translate(title) }}
-        </PdkHeading>
-      </slot>
+    v-test="'Box'"
+    class="mypa-relative">
+    <WcLoadingOverlay v-show="loading" />
+
+    <div v-if="$slots.header">
+      <PdkHeading level="3">
+        <slot name="header" />
+      </PdkHeading>
     </div>
 
     <div>
@@ -31,17 +31,13 @@
 </template>
 
 <script lang="ts" setup>
-import {ActionButton, AnyAdminAction, useLanguage} from '@myparcel-pdk/admin/src';
+import {ActionButton, AnyAdminAction} from '@myparcel-pdk/admin/src';
 import {PropType} from 'vue';
+import WcLoadingOverlay from '../WcLoadingOverlay.vue';
 
 defineProps({
   loading: {
     type: Boolean,
-  },
-
-  title: {
-    type: String,
-    default: null,
   },
 
   actions: {
@@ -49,6 +45,4 @@ defineProps({
     default: () => [],
   },
 });
-
-const {translate} = useLanguage();
 </script>

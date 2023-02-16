@@ -1,10 +1,11 @@
 <template>
   <button
-    :class="{
-      'mypa-animate-pulse': loading,
-      'button-small': size === 'sm',
-      'button-large': size === 'lg',
-    }"
+    :class="[
+      sizeClasses,
+      {
+        'mypa-animate-pulse': loading,
+      },
+    ]"
     :disabled="loading || disabled"
     class="button"
     type="button"
@@ -29,9 +30,9 @@
 
 <script lang="ts" setup>
 import {AdminIcon, Size, useLanguage} from '@myparcel-pdk/admin/src';
-import {PropType} from 'vue';
+import {PropType, computed} from 'vue';
 
-defineProps({
+const props = defineProps({
   disabled: {
     type: Boolean,
   },
@@ -59,4 +60,12 @@ defineProps({
 defineEmits(['click']);
 
 const {translate} = useLanguage();
+
+const sizeClasses = computed((): string[] => {
+  return [
+    ...(props.size === Size.EXTRA_SMALL ? ['!mypa-min-h-0', '!mypa-leading-normal', '!mypa-px-1'] : []),
+    ...([Size.SMALL, Size.EXTRA_SMALL].includes(props.size) ? ['button-small'] : []),
+    ...([Size.LARGE, Size.EXTRA_LARGE].includes(props.size) ? ['button-large'] : []),
+  ];
+});
 </script>

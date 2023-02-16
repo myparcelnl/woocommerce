@@ -1,10 +1,5 @@
 import './assets/scss/index.scss';
-import {
-  DefaultCurrencyInput,
-  DefaultHeading,
-  DefaultLink,
-  DefaultMultiRadio,
-} from '@myparcel-pdk/admin-components/src';
+import {DefaultCurrencyInput, DefaultHeading, DefaultLink, DefaultMultiRadio} from '@myparcel-pdk/admin-components/src';
 import {LogLevel, createPdkAdmin, useModalStore} from '@myparcel-pdk/admin/src';
 import {
   PdkShipmentLabelWrapper,
@@ -87,6 +82,9 @@ createPdkAdmin({
 
   cssUtilities: {
     animationSpin: 'mypa-animate-spin',
+    displayFlex: 'mypa-flex',
+    marginLAuto: 'mypa-ml-auto',
+    marginYAuto: 'mypa-my-auto',
     textCenter: 'mypa-text-center',
     textColorError: 'mypa-text-red-500',
     textColorSuccess: 'mypa-text-green-500',
