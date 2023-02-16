@@ -1,7 +1,7 @@
 import {AdminIcon} from '@myparcel-pdk/admin/src';
 import {memoize} from 'lodash-es';
 
-const PDK_DASH_ICON_MAP: Record<AdminIcon, string> = {
+const PDK_DASH_ICON_MAP: Partial<Record<AdminIcon, string>> = {
   [AdminIcon.ADD]: 'plus',
   [AdminIcon.ARROW_DOWN]: 'arrow-down',
   [AdminIcon.ARROW_UP]: 'arrow-up',
@@ -20,6 +20,6 @@ const PDK_DASH_ICON_MAP: Record<AdminIcon, string> = {
   [AdminIcon.YES]: 'yes',
 };
 
-export const createDashIcon = memoize((icon: AdminIcon): string => {
-  return PDK_DASH_ICON_MAP[icon] ?? '';
+export const createDashIcon = memoize((icon: AdminIcon): string | undefined => {
+  return PDK_DASH_ICON_MAP[icon];
 });

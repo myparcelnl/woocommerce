@@ -1,5 +1,6 @@
 <template>
   <span
+    v-if="dashIcon"
     v-test="'Icon'"
     :class="`dashicons-${dashIcon}`"
     class="dashicons mypa-h-auto mypa-w-auto"
