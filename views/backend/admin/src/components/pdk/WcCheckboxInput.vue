@@ -1,15 +1,17 @@
 <template>
-  <input
-    :id="id"
-    v-model="model"
-    v-test="'CheckboxInput'"
-    :value="element?.props?.value ?? '1'"
-    type="checkbox" />
-  <label
-    v-if="element?.label"
-    v-test="'CheckboxInput__label'"
-    :for="id"
-    v-text="element?.label" />
+  <div>
+    <input
+      :id="id"
+      v-model="model"
+      v-test="'CheckboxInput'"
+      :value="element?.props?.value ?? '1'"
+      type="checkbox" />
+    <label
+      v-if="element?.label"
+      v-test="'CheckboxInput__label'"
+      :for="id"
+      v-text="element?.label" />
+  </div>
 </template>
 
 <script lang="ts" setup>
