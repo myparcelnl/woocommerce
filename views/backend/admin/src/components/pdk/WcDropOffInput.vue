@@ -6,7 +6,6 @@
         :key="day">
         <li>
           <PdkTableRow>
-
             <PdkTableCol
               class="titledesc"
               component="th"
@@ -19,12 +18,9 @@
                 v-model="toggleRefs[day]"
                 :element="toggleElements[day]" />
             </PdkTableCol>
-
           </PdkTableRow>
 
-          <PdkTableRow
-            v-if="toggleRefs[day]">
-
+          <PdkTableRow v-if="toggleRefs[day]">
             <PdkTableCol>
               <label class="titledesc">Cutoff Time:</label>
             </PdkTableCol>
@@ -34,7 +30,6 @@
                 v-model="cutoffRefs[day]"
                 :element="cutoffElements[day]" />
             </PdkTableCol>
-
           </PdkTableRow>
         </li>
       </template>
