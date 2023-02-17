@@ -27,7 +27,7 @@ const props = defineProps({
 
   // eslint-disable-next-line vue/no-unused-properties
   modelValue: {
-    type: [String, Number],
+    type: [String, Number, Object, Array, Boolean],
     default: null,
   },
 });
