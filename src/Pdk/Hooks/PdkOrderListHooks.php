@@ -17,10 +17,10 @@ class PdkOrderListHooks implements WordPressHooksInterface
     public function apply(): void
     {
         // Render custom column in order grid
-        add_filter('manage_edit-shop_order_columns', [$this, 'registerMyParcelOrderListColumn'], 20);
+        add_filter('manage_edit-shop_order_columns', [$this, 'registerMyParcelOrderListItem'], 20);
 
         // Render pdk order list column in our custom order grid column
-        add_action('manage_shop_order_posts_custom_column', [$this, 'renderPdkOrderListColumn']);
+        add_action('manage_shop_order_posts_custom_column', [$this, 'renderPdkOrderListItem']);
 
         // add bulk actions to order list
         add_filter('bulk_actions-edit-shop_order', [$this, 'registerBulkActions']);
@@ -56,7 +56,7 @@ class PdkOrderListHooks implements WordPressHooksInterface
      *
      * @return array
      */
-    public function registerMyParcelOrderListColumn(array $columns): array
+    public function registerMyParcelOrderListItem(array $columns): array
     {
         $newColumns = [];
 
@@ -77,7 +77,7 @@ class PdkOrderListHooks implements WordPressHooksInterface
      *
      * @return void
      */
-    public function renderPdkOrderListColumn($column): void
+    public function renderPdkOrderListItem($column): void
     {
         global $post;
 
@@ -87,7 +87,7 @@ class PdkOrderListHooks implements WordPressHooksInterface
 
             $pdkOrder = $orderRepository->get($post->ID);
 
-            echo RenderService::renderOrderListColumn($pdkOrder);
+            echo RenderService::renderOrderListItem($pdkOrder);
         }
     }
 }
