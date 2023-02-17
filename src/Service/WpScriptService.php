@@ -33,8 +33,7 @@ class WpScriptService extends ScriptService
         $this->enqueueScript(
             self::HANDLE_DELIVERY_OPTIONS,
             sprintf('https://unpkg.com/@myparcel/delivery-options@%s/dist/myparcel.lib.js', $version),
-            [self::HANDLE_VUE],
-            $version
+            [self::HANDLE_VUE]
         );
     }
 
@@ -107,7 +106,7 @@ class WpScriptService extends ScriptService
         $file     = $isVue3 ? 'vue.global' : 'vue';
         $filename = Pdk::isDevelopment() ? "$file.js" : "$file.min.js";
 
-        $this->enqueueScript(self::HANDLE_VUE, $this->createCdnUrl('vue', $version, $filename), [], $version);
+        $this->enqueueScript(self::HANDLE_VUE, $this->createCdnUrl('vue', $version, $filename));
     }
 
     /**
@@ -122,8 +121,7 @@ class WpScriptService extends ScriptService
         $this->enqueueScript(
             self::HANDLE_VUE_DEMI,
             $this->createCdnUrl('vue-demi', $version, $filename),
-            [self::HANDLE_VUE],
-            $version
+            [self::HANDLE_VUE]
         );
     }
 
