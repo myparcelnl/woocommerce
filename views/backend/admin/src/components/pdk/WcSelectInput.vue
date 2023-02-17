@@ -19,7 +19,7 @@
 
 <script lang="ts" setup>
 import {ElementInstance, generateFieldId} from '@myparcel-pdk/admin/src';
-import {PropType, computed, onBeforeUnmount, onMounted, ref} from 'vue';
+import {PropType, computed, onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import {SelectOption} from '@myparcel-pdk/common';
 import {useVModel} from '@vueuse/core';
 
@@ -61,9 +61,17 @@ onMounted(() => {
     model.value = event.currentTarget?.value;
   });
 
-  if (options.value.length === 1 || (!model.value && options.value.length > 0)) {
-    model.value = options.value[0].value;
-  }
+  watch(
+    options,
+    (value) => {
+      if ((model.value && options.value.some((option) => option.value === model.value)) || value.length === 0) {
+        return;
+      }
+
+      model.value = value[0].value;
+    },
+    {immediate: options.value.length > 0},
+  );
 });
 
 onBeforeUnmount(() => {
