@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use MyParcelNL\Pdk\Carrier\Model\Carrier;
+use MyParcelNL\Pdk\Facade\Actions;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Plugin\Action\Backend\Account\UpdateAccountAction;
+use MyParcelNL\Pdk\Plugin\Api\Frontend\PdkFrontendActions;
+use MyParcelNL\Pdk\Plugin\Api\PdkActions;
 use MyParcelNL\Pdk\Settings\Model\AccountSettings;
 use MyParcelNL\Pdk\Settings\Model\CarrierSettings;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
@@ -15,6 +19,7 @@ use MyParcelNL\Pdk\Settings\Model\LabelSettings;
 use MyParcelNL\Pdk\Settings\Model\OrderSettings;
 use MyParcelNL\Pdk\Shipment\Model\DropOffDay;
 use MyParcelNL\WooCommerce\Migration\MigrationInterface;
+use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkAccountRepository;
 use MyParcelNL\WooCommerce\Pdk\Settings\Repository\PdkSettingsRepository;
 
 class SettingsMigration implements MigrationInterface
@@ -35,7 +40,6 @@ class SettingsMigration implements MigrationInterface
         $pdkSettingsRepository = Pdk::get(PdkSettingsRepository::class);
 
         $pdkSettingsModel = [
-            AccountSettings::class,
             GeneralSettings::class,
             CheckoutSettings::class,
             LabelSettings::class,
@@ -47,6 +51,15 @@ class SettingsMigration implements MigrationInterface
         foreach ($pdkSettingsModel as $model) {
             $modelInstance = new $model($transformedWcSettingsData);
             $pdkSettingsRepository->storeSettings($modelInstance);
+        }
+
+        $accountSettings = new AccountSettings($transformedWcSettingsData);
+        if ($accountSettings->apiKey) {
+            $pdkSettingsRepository->storeSettings($accountSettings);
+            $accountRepository = Pdk::get(PdkAccountRepository::class);
+            $accountUpdate     = Pdk::get(UpdateAccountAction::class);
+            $account           = $accountRepository->getAccount(true);
+            $accountUpdate->updateAndSaveAccount($account);
         }
 
         $carriers = [Carrier::CARRIER_POSTNL_NAME, 'dhlforyou'];
