@@ -6,6 +6,7 @@ namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use MyParcelNL\Pdk\Carrier\Model\Carrier;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Settings\Model\AccountSettings;
 use MyParcelNL\Pdk\Settings\Model\CarrierSettings;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\Pdk\Settings\Model\CustomsSettings;
@@ -26,12 +27,15 @@ class SettingsMigration implements MigrationInterface
 
     /**
      * @return void
+     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
      */
     public function up(): void
     {
+        /** @var  PdkSettingsRepository $pdkSettingsRepository */
         $pdkSettingsRepository = Pdk::get(PdkSettingsRepository::class);
 
         $pdkSettingsModel = [
+            AccountSettings::class,
             GeneralSettings::class,
             CheckoutSettings::class,
             LabelSettings::class,
@@ -42,7 +46,7 @@ class SettingsMigration implements MigrationInterface
         $transformedWcSettingsData = $this->getWcSettings();
         foreach ($pdkSettingsModel as $model) {
             $modelInstance = new $model($transformedWcSettingsData);
-            $pdkSettingsRepository->store($modelInstance);
+            $pdkSettingsRepository->storeSettings($modelInstance);
         }
 
         $carriers = [Carrier::CARRIER_POSTNL_NAME, 'dhlforyou'];
@@ -51,7 +55,8 @@ class SettingsMigration implements MigrationInterface
             $data['dropOffPossibilities'] = $this->getDropOffPossibilities($data);
 
             $carrierModel = new CarrierSettings($data);
-            $pdkSettingsRepository->store($carrierModel);
+            $carrierModel->id = "carrier_$carrier"; // todo not like this
+            $pdkSettingsRepository->storeSettings($carrierModel);
         }
     }
 
