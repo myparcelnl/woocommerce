@@ -76,7 +76,7 @@ class MyParcelNL
     public function upgrade(): void
     {
         $versionSetting   = 'woocommerce_myparcel_version';
-        $installedVersion = get_option($versionSetting);
+        $installedVersion = get_option($versionSetting) ?: '0';
 
         if (version_compare($installedVersion, $this->version, '<')) {
             /** @var \MyParcelNL\WooCommerce\Migration\Migrator $migrator */
