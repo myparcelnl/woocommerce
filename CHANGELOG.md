@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.17.0-rc.7](https://github.com/myparcelnl/woocommerce/compare/v4.17.0-rc.6...v4.17.0-rc.7) (2023-02-20)
+
+
+### :bug: Bug Fixes
+
+* **migration:** pass cc argument to insurance function ([#953](https://github.com/myparcelnl/woocommerce/issues/953)) ([afb59d5](https://github.com/myparcelnl/woocommerce/commit/afb59d5cd718da0840bb615cd8114b5874ece57e))
+
 ## [4.17.0-rc.6](https://github.com/myparcelnl/woocommerce/compare/v4.17.0-rc.5...v4.17.0-rc.6) (2023-02-16)
 
 
