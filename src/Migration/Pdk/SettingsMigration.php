@@ -10,6 +10,7 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Action\Backend\Account\UpdateAccountAction;
 use MyParcelNL\Pdk\Plugin\Api\Frontend\PdkFrontendActions;
 use MyParcelNL\Pdk\Plugin\Api\PdkActions;
+use MyParcelNL\Pdk\Settings\Collection\SettingsModelCollection;
 use MyParcelNL\Pdk\Settings\Model\AccountSettings;
 use MyParcelNL\Pdk\Settings\Model\CarrierSettings;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
@@ -63,14 +64,15 @@ class SettingsMigration implements MigrationInterface
         }
 
         $carriers = [Carrier::CARRIER_POSTNL_NAME, 'dhlforyou'];
+        $collection = new SettingsModelCollection();
         foreach ($carriers as $carrier) {
             $data                         = $this->getWcCarrierSettings($carrier) + $transformedWcSettingsData;
             $data['dropOffPossibilities'] = $this->getDropOffPossibilities($data);
 
             $carrierModel = new CarrierSettings($data);
-            $carrierModel->id = "carrier_$carrier"; // todo not like this
-            $pdkSettingsRepository->storeSettings($carrierModel);
+            $collection->push($carrierModel);
         }
+        $pdkSettingsRepository->storeSettings($collection);
     }
 
     /**
@@ -301,7 +303,7 @@ class SettingsMigration implements MigrationInterface
             $newKey = $mapped[$search][$key] ?? $key;
 
             switch ($key) {
-                case 'export_automatic':
+                case 'nothing_yet':
                     $value = $value === 'yes' ? '1' : '0';
                     break;
                 case 'export_insured_for_be':
