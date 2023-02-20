@@ -16,6 +16,10 @@ class OrdersMigration
      */
     public function run(): void
     {
+        if (! function_exists('wc_get_orders')) {
+            return;
+        }
+
         $orderIds  = $this->getAllOrderIds();
         $chunks    = array_chunk($orderIds, 100);
         $lastChunk = count($chunks);

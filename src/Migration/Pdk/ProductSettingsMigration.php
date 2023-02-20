@@ -34,6 +34,10 @@ class ProductSettingsMigration implements MigrationInterface
 
     public function up(): void
     {
+        if (! function_exists('wc_get_products')) {
+            return;
+        }
+
         $this->migrateProductSettings();
     }
 
