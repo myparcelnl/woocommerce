@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.17.0](https://github.com/myparcelnl/woocommerce/compare/v4.16.4...v4.17.0) (2023-02-21)
+
+
+### :sparkles: New Features
+
+* add customizable string for address not found ([#945](https://github.com/myparcelnl/woocommerce/issues/945)) ([1622340](https://github.com/myparcelnl/woocommerce/commit/162234017e70e05df2faabdd4d86d53ea76259dd))
+
+
+### :bug: Bug Fixes
+
+* delete address not found prompt from checkout ([#946](https://github.com/myparcelnl/woocommerce/issues/946)) ([42184e2](https://github.com/myparcelnl/woocommerce/commit/42184e2a2c306e377027aa4af1e3bae6fee91c9f))
+* fix belgian number suffix ([#923](https://github.com/myparcelnl/woocommerce/issues/923)) ([be54ad3](https://github.com/myparcelnl/woocommerce/commit/be54ad38cb8dd0644ab3f86a4973ef9e9051af01))
+* fix type error in getting value of option ([#952](https://github.com/myparcelnl/woocommerce/issues/952)) ([fa618d4](https://github.com/myparcelnl/woocommerce/commit/fa618d461a7c48742cc3e10e48f146cc1bd8afcd))
+* **migration:** pass cc argument to insurance function ([#953](https://github.com/myparcelnl/woocommerce/issues/953)) ([afb59d5](https://github.com/myparcelnl/woocommerce/commit/afb59d5cd718da0840bb615cd8114b5874ece57e))
+* only read shipping class term when available ([#951](https://github.com/myparcelnl/woocommerce/issues/951)) ([ff9792b](https://github.com/myparcelnl/woocommerce/commit/ff9792b43da0addd99f4f863d091b2f4ea51cb63))
+* prevent type error in flat rate evaluate cost ([#949](https://github.com/myparcelnl/woocommerce/issues/949)) ([307c140](https://github.com/myparcelnl/woocommerce/commit/307c1407fdbac40a0e474c46ef4c0960c5b99eec))
+* prevent undefined array keys ([#933](https://github.com/myparcelnl/woocommerce/issues/933)) ([5398153](https://github.com/myparcelnl/woocommerce/commit/5398153fdec92d7fe3ef07b38543ae44c393ff89))
+* prevent widget config errors ([#947](https://github.com/myparcelnl/woocommerce/issues/947)) ([b26639b](https://github.com/myparcelnl/woocommerce/commit/b26639b5b179a366d896a6e081988f490e40f472))
+
 ## [4.17.0-rc.7](https://github.com/myparcelnl/woocommerce/compare/v4.17.0-rc.6...v4.17.0-rc.7) (2023-02-20)
 
 
