@@ -5,12 +5,8 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use MyParcelNL\Pdk\Carrier\Model\Carrier;
-use MyParcelNL\Pdk\Facade\Actions;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Action\Backend\Account\UpdateAccountAction;
-use MyParcelNL\Pdk\Plugin\Api\Frontend\PdkFrontendActions;
-use MyParcelNL\Pdk\Plugin\Api\PdkActions;
-use MyParcelNL\Pdk\Settings\Collection\SettingsModelCollection;
 use MyParcelNL\Pdk\Settings\Model\AccountSettings;
 use MyParcelNL\Pdk\Settings\Model\CarrierSettings;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
@@ -18,6 +14,7 @@ use MyParcelNL\Pdk\Settings\Model\CustomsSettings;
 use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
 use MyParcelNL\Pdk\Settings\Model\LabelSettings;
 use MyParcelNL\Pdk\Settings\Model\OrderSettings;
+use MyParcelNL\Pdk\Settings\Model\Settings;
 use MyParcelNL\Pdk\Shipment\Model\DropOffDay;
 use MyParcelNL\WooCommerce\Migration\MigrationInterface;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkAccountRepository;
@@ -63,16 +60,20 @@ class SettingsMigration implements MigrationInterface
             $accountUpdate->updateAndSaveAccount($account);
         }
 
-        $carriers = [Carrier::CARRIER_POSTNL_NAME, 'dhlforyou'];
-        $collection = new SettingsModelCollection();
+        $carriers  = [Carrier::CARRIER_POSTNL_NAME, 'dhlforyou'];
+        $aggregate = [CarrierSettings::ID => []];
         foreach ($carriers as $carrier) {
             $data                         = $this->getWcCarrierSettings($carrier) + $transformedWcSettingsData;
             $data['dropOffPossibilities'] = $this->getDropOffPossibilities($data);
+            $data['allowDeliveryOptions'] = true;
 
-            $carrierModel = new CarrierSettings($data);
-            $collection->push($carrierModel);
+            $carrierModel                             = new CarrierSettings($data);
+            $aggregate[CarrierSettings::ID][$carrier] = $carrierModel->toStorableArray();
         }
-        $pdkSettingsRepository->storeSettings($collection);
+
+        $settings = new Settings($aggregate);
+
+        $pdkSettingsRepository->storeSettings($settings->getAttribute(CarrierSettings::ID));
     }
 
     /**
