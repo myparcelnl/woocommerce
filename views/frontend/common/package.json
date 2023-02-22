@@ -1,0 +1,10 @@
+{
+  "name": "@myparcel-woocommerce/frontend-common",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "run ws:test \"$(pwd)\"",
+    "test:watch": "run ws:test:watch \"$(pwd)\""
+  }
+}

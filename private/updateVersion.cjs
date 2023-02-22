@@ -5,11 +5,7 @@ const [, , version] = process.argv;
 
 const rootDir = path.resolve(__dirname, '..');
 
-[
-  'composer.json',
-  'package.json',
-  'woocommerce-myparcel.php',
-].forEach((file) => {
+['composer.json', 'package.json', 'woocommerce-myparcel.php'].forEach((file) => {
   const filePath = path.resolve(rootDir, file);
   const relativeFilePath = path.relative(rootDir, filePath);
   const extension = file.split('.').pop();
@@ -35,5 +31,7 @@ const rootDir = path.resolve(__dirname, '..');
   }
 
   fs.writeFileSync(filePath, `${contentsAsString.trim()}\n`);
-  console.log(`Changed version from \u{1b}[33m${oldVersion}\u{1b}[0m to \u{1b}[32m${version}\u{1b}[0m in ${relativeFilePath}`);
+  console.log(
+    `Changed version from \u{1b}[33m${oldVersion}\u{1b}[0m to \u{1b}[32m${version}\u{1b}[0m in ${relativeFilePath}`,
+  );
 });

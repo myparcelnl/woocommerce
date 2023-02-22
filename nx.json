@@ -1,0 +1,26 @@
+{
+  "defaultBase": "main",
+  "npmScope": "myparcel-woocommerce",
+  "workspaceLayout": {
+    "appsDir": "views",
+    "libsDir": "views"
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["{projectRoot}/lib"]
+    },
+    "build:dev": {
+      "dependsOn": ["^build:dev"],
+      "outputs": ["{projectRoot}/lib"]
+    }
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "build:dev"]
+      }
+    }
+  }
+}
