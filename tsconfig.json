@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@myparcel-woocommerce/frontend-*": ["./views/frontend/*/src"],
+      "@myparcel-woocommerce/backend-*": ["./views/backend/*/src"]
+    }
+  },
+  "include": ["./**/*"],
+  "exclude": [],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
+}

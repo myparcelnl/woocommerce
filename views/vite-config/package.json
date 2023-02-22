@@ -1,0 +1,12 @@
+{
+  "name": "@myparcel-woocommerce/vite-config",
+  "version": "1.0.0",
+  "types": "index.d.ts",
+  "main": "index.cjs",
+  "private": true,
+  "dependencies": {
+    "vite": "^4.1.3",
+    "vite-plugin-custom-tsconfig": "^1.0.4",
+    "vitest": "^0.28.5"
+  }
+}

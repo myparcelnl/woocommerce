@@ -1,13 +1,19 @@
 {
   "name": "myparcelnl/woocommerce",
-  "version": "4.17.0",
+  "version": "5.0.0-alpha.0",
   "require": {
-    "myparcelnl/sdk": "~7.6.1"
+    "myparcelnl/pdk": "dev-alpha",
+    "guzzlehttp/guzzle": "~7.5.0",
+    "psr/log": "*"
   },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "autoload": {
     "psr-4": {
-      "MyParcelNL\\WooCommerce\\includes\\": "includes",
-      "MyParcelNL\\WooCommerce\\": "includes"
+      "MyParcelNL\\WooCommerce\\": "src"
     }
+  },
+  "config": {
+    "prepend-autoloader": false
   }
 }

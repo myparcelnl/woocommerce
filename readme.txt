@@ -5,8 +5,8 @@ Requires at least: 5.2.0
 Tested up to: 6.1
 Stable tag: 4.17.0
 Requires PHP: 7.1
-License: GPLv3 or later
-License URI: http://www.opensource.org/licenses/gpl-license.php
+License: MIT
+License URI: http://www.opensource.org/licenses/mit-license.php
 
 Export your WooCommerce orders to MyParcel (www.myparcel.nl) or to Flespakket (www.flespakket.nl) and print labels directly from the WooCommerce admin
 

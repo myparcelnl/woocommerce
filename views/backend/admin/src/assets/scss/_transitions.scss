@@ -1,0 +1,9 @@
+.fade-enter-active,
+.fade-leave-active {
+  @apply mypa-transition mypa-duration-100 mypa-ease-in-out;
+}
+
+.fade-enter,
+.fade-leave-to {
+  @apply mypa-translate-y-1 mypa-opacity-0;
+}

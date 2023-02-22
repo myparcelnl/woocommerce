@@ -1,0 +1,7 @@
+{
+  "extends": "../tsconfig.build.json",
+  "compilerOptions": {
+    "types": ["@myparcel-woocommerce/frontend-common"]
+  },
+  "include": ["src"]
+}

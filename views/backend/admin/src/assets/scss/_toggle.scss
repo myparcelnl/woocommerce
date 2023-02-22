@@ -1,0 +1,15 @@
+// Animate the wc toggle
+.woocommerce-input-toggle {
+  transition: background-color 0.1s ease-in-out;
+
+  &:before {
+    transition: transform 0.2s ease-in-out;
+    transform: translateX(100%);
+    right: auto !important;
+    left: auto !important;
+  }
+
+  &--disabled:before {
+    transform: translateX(0%);
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "@myparcel-woocommerce/frontend-checkout-split-address-fields",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "run ws:build \"$(pwd)\"",
+    "build:dev": "run ws:build:dev \"$(pwd)\"",
+    "dev": "run ws:dev \"$(pwd)\"",
+    "test": "run ws:test \"$(pwd)\"",
+    "test:watch": "run ws:test:watch \"$(pwd)\""
+  },
+  "devDependencies": {
+    "@myparcel-woocommerce/frontend-common": "workspace:*",
+    "@myparcel-woocommerce/vite-config": "workspace:*",
+    "@types/jquery": "^3.5.16",
+    "sass": "^1.58.3"
+  },
+  "dependencies": {
+    "@myparcel/ts-utils": "^1.6.0"
+  }
+}

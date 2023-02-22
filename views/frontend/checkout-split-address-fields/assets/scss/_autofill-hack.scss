@@ -1,0 +1,18 @@
+/* Hack to disable yellow bg color on filled fields and allow js to listen for it */
+@-webkit-keyframes onAutoFillStart {
+  0% {}
+  100% {}
+}
+
+@keyframes onAutoFillStart {
+  0% {}
+  100% {}
+}
+
+input:-webkit-autofill {
+  -webkit-animation-name: onAutoFillStart;
+  animation-name: onAutoFillStart;
+  -webkit-transition: background-color 50000s ease-in-out 0s;
+  -o-transition: background-color 50000s ease-in-out 0s;
+  transition: background-color 50000s ease-in-out 0s;
+}
