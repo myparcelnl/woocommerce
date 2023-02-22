@@ -13,12 +13,12 @@
     "test:watch": "run ws:test:watch \"$(pwd)\""
   },
   "dependencies": {
-    "@myparcel-pdk/admin": "*",
-    "@myparcel-pdk/admin-component-tests": "*",
-    "@myparcel-pdk/admin-components": "*",
-    "@myparcel-pdk/admin-preset-bootstrap4": "*",
+    "@myparcel-pdk/admin": "^1.0.0-alpha.1",
+    "@myparcel-pdk/admin-component-tests": "^1.0.0-alpha.1",
+    "@myparcel-pdk/admin-components": "^1.0.0-alpha.1",
+    "@myparcel-pdk/admin-preset-bootstrap4": "^1.0.0-alpha.1",
     "@myparcel/ts-utils": "^1.6.0",
-    "@tanstack/vue-query": "^4.24.9"
+    "@tanstack/vue-query": "^4.24.10"
   },
   "devDependencies": {
     "@myparcel-woocommerce/vite-config": "workspace:*",
@@ -30,6 +30,10 @@
     "postcss": "^8.4.21",
     "sass": "^1.58.3",
     "tailwindcss": "^3.2.7",
+    "vite": "^4.1.4",
+    "vite-plugin-custom-tsconfig": "^1.0.4",
+    "vite-plugin-dts": "^1.7.1",
+    "vitest": "^0.28.5",
     "vue": "^3.2.47"
   }
 }

@@ -2,25 +2,21 @@
   "name": "myparcelnl/woocommerce",
   "version": "5.0.0-alpha.0",
   "require": {
-    "myparcelnl/pdk": "dev-frontend-wip",
+    "myparcelnl/pdk": "dev-alpha",
     "guzzlehttp/guzzle": "~7.5.0",
     "psr/log": "*"
   },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "autoload": {
     "psr-4": {
       "MyParcelNL\\WooCommerce\\": "src"
     }
   },
   "config": {
-    "prepend-autoloader": false,
-    "platform": {
-      "php": "7.4.21"
-    }
+    "prepend-autoloader": false
   },
-  "repositories": [
-    {
-      "type": "git",
-      "url": "https://github.com/myparcelnl/pdk"
-    }
-  ]
+  "require-dev": {
+    "phpunit/phpunit": "^9.6"
+  }
 }

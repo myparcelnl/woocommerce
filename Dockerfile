@@ -9,20 +9,8 @@ RUN apk update \
    && apk add --no-cache \
       nodejs>${NODE_VERSION} \
       npm \
-    && npm install -g yarn  \
-    && mkdir -p /tmp/.cache/yarn \
-    && mkdir -p /tmp/.cache/composer \
-    && yarn config set --home enableGlobalCache true \
-    && yarn config set --home enableTelemetry 0 \
-    && yarn config set --home globalFolder /tmp/.cache/yarn/cache \
-    && composer config --global cache-dir /tmp/.cache/composer
+  && npm install -g yarn
 
-VOLUME /tmp/.cache/yarn/cache
+COPY ./private/entrypoint.sh /entrypoint.sh
 
-VOLUME /tmp/.cache/composer/cache
-
-VOLUME /app/vendor
-
-VOLUME /app/node_modules
-
-CMD [ "make", "build" ]
+CMD [ "/entrypoint.sh" ]

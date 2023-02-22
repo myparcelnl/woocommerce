@@ -7,6 +7,5 @@
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "types": ["node", "vite/client"]
   },
-  "include": ["./**/*.ts", "./**/*.vue"],
   "exclude": ["../**/__tests__/*", "../**/*.spec.*"]
 }

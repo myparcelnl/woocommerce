@@ -1,0 +1,71 @@
+name: '🚀 Release'
+
+on:
+  # TODO: SOON
+  #  push:
+  #    branches:
+  #      - alpha
+
+  repository_dispatch:
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    name: 'Build and publish 🚀'
+    runs-on: ubuntu-22.04
+    outputs:
+      released: ${{ steps.release.outputs.released }}
+    steps:
+      - uses: myparcelnl/actions/setup-git-credentials@v3
+        id: credentials
+        with:
+          app-id: ${{ secrets.MYPARCEL_APP_ID }}
+          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
+
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: 'Cache build'
+        uses: actions/cache@v3
+        id: cache-build
+        with:
+          path: dist
+          key: ${{ runner.os }}-cache-build-${{ hashFiles('**/yarn.lock', '**/composer.lock', '**/*.php', 'includes/**', 'src/**', 'views/**') }}
+
+      - uses: myparcelnl/actions/composer-install@v3
+        with:
+          php-version: '7.1'
+
+      - uses: myparcelnl/actions/yarn-install@v3
+        with:
+          node-version: '18'
+
+      - uses: myparcelnl/actions/semantic-release@v3
+        id: release
+        with:
+          # TODO: Switch to app token when apps can bypass status checks
+          token: ${{ SECRETS.GH_REPO_TOKEN }}
+
+  rebase-prs:
+    needs:
+      - release
+    if: always()
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: myparcelnl/actions/setup-app-credentials@v3
+        id: credentials
+        with:
+          app-id: ${{ secrets.MYPARCEL_APP_ID }}
+          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
+
+      - uses: peter-evans/rebase@v2
+        with:
+          token: ${{ steps.credentials.outputs.token }}
+          base: ${{ github.base_ref }}
+          exclude-drafts: true
+          exclude-labels: 'hotfix'

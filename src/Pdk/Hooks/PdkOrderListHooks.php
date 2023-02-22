@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
-use MyParcelNL;
 use MyParcelNL\Pdk\Facade\LanguageService;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
+use MyParcelNL\Pdk\Plugin\Api\Backend\PdkBackendActions;
 use MyParcelNL\Pdk\Plugin\Repository\PdkOrderRepositoryInterface;
 use MyParcelNL\Sdk\src\Support\Str;
 use MyParcelNL\WooCommerce\Hooks\WordPressHooksInterface;
 
 class PdkOrderListHooks implements WordPressHooksInterface
 {
+    private const CUSTOM_ORDER_COLUMN_ID = 'myparcelnl';
+
     public function apply(): void
     {
         // Render custom column in order grid
@@ -34,8 +36,8 @@ class PdkOrderListHooks implements WordPressHooksInterface
     public function registerBulkActions(array $actions): array
     {
         $customActions = [
-            MyParcelNL\Pdk\Plugin\Api\Backend\PdkBackendActions::EXPORT_ORDERS,
-            MyParcelNL\Pdk\Plugin\Api\Backend\PdkBackendActions::PRINT_ORDERS,
+            PdkBackendActions::EXPORT_ORDERS,
+            PdkBackendActions::PRINT_ORDERS,
             'exportPrintOrders',
         ];
 
@@ -65,7 +67,7 @@ class PdkOrderListHooks implements WordPressHooksInterface
             $newColumns[$name] = $data;
 
             if ('shipping_address' === $name) {
-                $newColumns[MyParcelNL::CUSTOM_ORDER_COLUMN_ID] = __('MyParcel', 'my-textdomain');
+                $newColumns[self::CUSTOM_ORDER_COLUMN_ID] = __('MyParcel', 'my-textdomain');
             }
         }
 
@@ -81,7 +83,7 @@ class PdkOrderListHooks implements WordPressHooksInterface
     {
         global $post;
 
-        if (MyParcelNL::CUSTOM_ORDER_COLUMN_ID === $column) {
+        if (self::CUSTOM_ORDER_COLUMN_ID === $column) {
             /** @var \MyParcelNL\Pdk\Plugin\Repository\PdkOrderRepositoryInterface $orderRepository */
             $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
 

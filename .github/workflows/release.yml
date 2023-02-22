@@ -36,7 +36,6 @@ jobs:
           path: |
             node_modules
             vendor
-            woocommerce-myparcel.zip
           key: ${{ runner.os }}-cache-${{ hashFiles('**/yarn.lock', '**/composer.lock') }}-${{ hashFiles('**/*.php', 'includes/**', 'src/**', 'templates/**','migration/**') }}
           restore-keys: |
             ${{ runner.os }}-cache-${{ hashFiles('**/yarn.lock', '**/composer.lock') }}

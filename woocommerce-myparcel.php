@@ -4,13 +4,12 @@
 declare(strict_types=1);
 
 /*
-Plugin Name: MyParcel
+Plugin Name: MyParcel WooCommerce
 Plugin URI: https://myparcel.nl/
-Description: Export your WooCommerce orders to MyParcel (https://myparcel.nl/) and print labels directly from the WooCommerce admin
+Description: Export your WooCommerce orders to MyParcel and print labels directly from the WooCommerce admin
 Author: MyParcel
 Author URI: https://myparcel.nl
 Version: 5.0.0-alpha.0
-Text Domain: woocommerce-myparcel
 
 License: MIT
 License URI: http://www.opensource.org/licenses/mit-license.php
@@ -29,7 +28,6 @@ class MyParcelNL
     public const ROOT_FILE              = __FILE__;
     public const PHP_VERSION_MINIMUM    = '7.1';
     public const NAME                   = 'myparcelnl';
-    public const CUSTOM_ORDER_COLUMN_ID = 'myparcelnl';
     public const BACKEND_REST_ROUTE     = self::NAME . '/backend/v1';
     public const FRONTEND_REST_ROUTE    = self::NAME . '/frontend/v1';
 
