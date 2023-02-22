@@ -28,8 +28,8 @@
     "bundle": "gulp",
     "dev": "nx run-many --target=dev --parallel --output-style=stream",
     "docker:build": "docker build -t myparcelnl/woocommerce .",
-    "docker:run": "docker run -it --rm -v $(pwd):/app myparcelnl/woocommerce",
-    "docker:run:dev": "docker run -it --rm -v $(pwd):/app myparcelnl/woocommerce:dev",
+    "docker:run": "docker run -it --rm myparcelnl/woocommerce",
+    "docker:run:dev": "docker run -it --rm myparcelnl/woocommerce:dev",
     "test": "nx run-many --target=test --output-style=stream",
     "test:watch": "nx run-many --target=test:watch --output-style=stream",
     "translations:import": "npx -q @edielemoine/google-docs-importer --documentId 1TPE7gwG2GXtX7vlKIaskwMy0Xr4o_ir-lsedWB86xyc -o config/pdk/translations",
@@ -92,14 +92,13 @@
   },
   "packageManager": "yarn@3.3.1",
   "resolutions": {
-    "@myparcel-pdk/admin": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin",
-    "@myparcel-pdk/admin-component-tests": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-component-tests",
-    "@myparcel-pdk/admin-components": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-components",
-    "@myparcel-pdk/admin-preset-bootstrap4": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-preset-bootstrap4",
-    "@myparcel-pdk/checkout": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/checkout",
-    "@myparcel-pdk/common": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/common",
-    "@myparcel-pdk/frontend-core": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/core",
-    "@myparcel-pdk/frontend-delivery-options": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/delivery-options",
-    "@myparcel-pdk/app-builder": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/app-builder"
+    "@myparcel-pdk/admin": "portal:/Users/Mark/Projects/js-pdk/apps/admin",
+    "@myparcel-pdk/admin-component-tests": "portal:/Users/Mark/Projects/js-pdk/apps/admin-component-tests",
+    "@myparcel-pdk/admin-components": "portal:/Users/Mark/Projects/js-pdk/apps/admin-components",
+    "@myparcel-pdk/admin-preset-bootstrap4": "portal:/Users/Mark/Projects/js-pdk/apps/admin-preset-bootstrap4",
+    "@myparcel-pdk/checkout": "portal:/Users/Mark/Projects/js-pdk/apps/checkout",
+    "@myparcel-pdk/common": "portal:/Users/Mark/Projects/js-pdk/libs/common",
+    "@myparcel-pdk/frontend-core": "portal:/Users/Mark/Projects/js-pdk/libs/frontend/core",
+    "@myparcel-pdk/frontend-delivery-options": "portal:/Users/Mark/Projects/js-pdk/libs/frontend/delivery-options"
   }
 }

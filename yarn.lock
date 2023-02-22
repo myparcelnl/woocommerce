@@ -621,9 +621,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/admin-component-tests@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-component-tests::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
+"@myparcel-pdk/admin-component-tests@portal:/Users/Mark/Projects/js-pdk/apps/admin-component-tests::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
   version: 0.0.0-use.local
-  resolution: "@myparcel-pdk/admin-component-tests@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-component-tests::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+  resolution: "@myparcel-pdk/admin-component-tests@portal:/Users/Mark/Projects/js-pdk/apps/admin-component-tests::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   dependencies:
     "@myparcel-pdk/common": "workspace:*"
     "@myparcel-pdk/frontend-core": "workspace:*"
@@ -632,9 +632,9 @@ __metadata:
   languageName: node
   linkType: soft
 
-"@myparcel-pdk/admin-components@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-components::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
+"@myparcel-pdk/admin-components@portal:/Users/Mark/Projects/js-pdk/apps/admin-components::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
   version: 0.0.0-use.local
-  resolution: "@myparcel-pdk/admin-components@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-components::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+  resolution: "@myparcel-pdk/admin-components@portal:/Users/Mark/Projects/js-pdk/apps/admin-components::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   dependencies:
     "@myparcel-pdk/frontend-core": "workspace:*"
     "@myparcel/ts-utils": ^1.6.0
@@ -643,9 +643,9 @@ __metadata:
   languageName: node
   linkType: soft
 
-"@myparcel-pdk/admin-preset-bootstrap4@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-preset-bootstrap4::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
+"@myparcel-pdk/admin-preset-bootstrap4@portal:/Users/Mark/Projects/js-pdk/apps/admin-preset-bootstrap4::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
   version: 0.0.0-use.local
-  resolution: "@myparcel-pdk/admin-preset-bootstrap4@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-preset-bootstrap4::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+  resolution: "@myparcel-pdk/admin-preset-bootstrap4@portal:/Users/Mark/Projects/js-pdk/apps/admin-preset-bootstrap4::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   dependencies:
     "@myparcel-pdk/frontend-core": "workspace:*"
     "@myparcel/ts-utils": ^1.6.0
@@ -653,33 +653,33 @@ __metadata:
   languageName: node
   linkType: soft
 
-"@myparcel-pdk/admin@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
+"@myparcel-pdk/admin@portal:/Users/Mark/Projects/js-pdk/apps/admin::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
   version: 0.0.0-use.local
-  resolution: "@myparcel-pdk/admin@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+  resolution: "@myparcel-pdk/admin@portal:/Users/Mark/Projects/js-pdk/apps/admin::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   dependencies:
     "@myparcel-pdk/common": "workspace:*"
     "@myparcel-pdk/frontend-core": "workspace:*"
   languageName: node
   linkType: soft
 
-"@myparcel-pdk/checkout@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/checkout::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
+"@myparcel-pdk/checkout@portal:/Users/Mark/Projects/js-pdk/apps/checkout::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
   version: 0.0.0-use.local
-  resolution: "@myparcel-pdk/checkout@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/checkout::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+  resolution: "@myparcel-pdk/checkout@portal:/Users/Mark/Projects/js-pdk/apps/checkout::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   dependencies:
     "@myparcel-pdk/common": "workspace:*"
     "@myparcel-pdk/frontend-delivery-options": "workspace:*"
   languageName: node
   linkType: soft
 
-"@myparcel-pdk/common@portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/common::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
+"@myparcel-pdk/common@portal:/Users/Mark/Projects/js-pdk/libs/common::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
   version: 0.0.0-use.local
-  resolution: "@myparcel-pdk/common@portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/common::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+  resolution: "@myparcel-pdk/common@portal:/Users/Mark/Projects/js-pdk/libs/common::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   languageName: node
   linkType: soft
 
-"@myparcel-pdk/frontend-core@portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/core::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
+"@myparcel-pdk/frontend-core@portal:/Users/Mark/Projects/js-pdk/libs/frontend/core::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
   version: 0.0.0-use.local
-  resolution: "@myparcel-pdk/frontend-core@portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/core::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+  resolution: "@myparcel-pdk/frontend-core@portal:/Users/Mark/Projects/js-pdk/libs/frontend/core::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   dependencies:
     "@myparcel-pdk/common": "workspace:^"
     "@myparcel/sdk": ^2.11.0
@@ -695,9 +695,9 @@ __metadata:
   languageName: node
   linkType: soft
 
-"@myparcel-pdk/frontend-delivery-options@portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/delivery-options::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
+"@myparcel-pdk/frontend-delivery-options@portal:/Users/Mark/Projects/js-pdk/libs/frontend/delivery-options::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
   version: 0.0.0-use.local
-  resolution: "@myparcel-pdk/frontend-delivery-options@portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/delivery-options::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+  resolution: "@myparcel-pdk/frontend-delivery-options@portal:/Users/Mark/Projects/js-pdk/libs/frontend/delivery-options::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   languageName: node
   linkType: soft
 
