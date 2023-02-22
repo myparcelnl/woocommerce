@@ -21,25 +21,17 @@
 </template>
 
 <script lang="ts" setup>
-import {ElementInstance, generateFieldId, useLanguage} from '@myparcel-pdk/admin/src';
-import {PropType} from 'vue';
+import {generateFieldId, useElement, useLanguage} from '@myparcel-pdk/admin/src';
 import {useVModel} from '@vueuse/core';
 
-const props = defineProps({
-  element: {
-    type: Object as PropType<ElementInstance>,
-    default: null,
-  },
-
-  // eslint-disable-next-line vue/no-unused-properties
-  modelValue: {
-    type: Boolean,
-  },
-});
-
+// eslint-disable-next-line vue/no-unused-properties
+const props = defineProps({modelValue: {type: Boolean}});
 const emit = defineEmits(['update:modelValue']);
 
-const model = useVModel(props, 'modelValue', emit);
-const id = generateFieldId(props.element);
+const model = useVModel(props, undefined, emit);
+
+const id = generateFieldId();
+const element = useElement();
+
 const {translate} = useLanguage();
 </script>

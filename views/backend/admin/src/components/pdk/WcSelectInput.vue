@@ -18,17 +18,12 @@
 </template>
 
 <script lang="ts" setup>
-import {ElementInstance, generateFieldId} from '@myparcel-pdk/admin/src';
-import {PropType, computed, onBeforeUnmount, onMounted, ref, watch} from 'vue';
-import {SelectOption} from '@myparcel-pdk/common';
+import {computed, onBeforeUnmount, onMounted, ref, watch} from 'vue';
+import {generateFieldId, useElement} from '@myparcel-pdk/admin/src';
+import {SelectOption} from '@myparcel-pdk/common/src';
 import {useVModel} from '@vueuse/core';
 
 const props = defineProps({
-  element: {
-    type: Object as PropType<ElementInstance>,
-    required: true,
-  },
-
   // eslint-disable-next-line vue/no-unused-properties
   modelValue: {
     type: [String, Number],
@@ -38,13 +33,15 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 
-const model = useVModel(props, 'modelValue', emit);
+const element = useElement();
+
+const model = useVModel(props, undefined, emit);
 
 const options = computed<SelectOption[]>(() => {
-  return props.element.props?.options ?? [];
+  return element.props?.options ?? [];
 });
 
-const id = generateFieldId(props.element);
+const id = generateFieldId();
 
 const selectElement = ref<HTMLElement | null>(null);
 

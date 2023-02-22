@@ -26,8 +26,6 @@ export {default as WcMultiCheckbox} from './WcMultiCheckbox.vue';
 
 export {default as WcNotification} from './WcNotification.vue';
 
-export {default as WcNumberInput} from './WcNumberInput.vue';
-
 export {default as WcPluginSettingsWrapper} from './WcPluginSettingsWrapper.vue';
 
 export {default as WcRadioInput} from './WcRadioInput.vue';
@@ -47,7 +45,5 @@ export {default as WcTableCol} from './WcTableCol.vue';
 export {default as WcTableRow} from './WcTableRow.vue';
 
 export {default as WcTextInput} from './WcTextInput.vue';
-
-export {default as WcTimeInput} from './WcTimeInput.vue';
 
 export {default as WcToggleInput} from './WcToggleInput.vue';

@@ -33,17 +33,10 @@
 </template>
 
 <script lang="ts" setup>
-import {ElementInstance, generateFieldId, useLanguage} from '@myparcel-pdk/admin/src';
-import {PropType} from 'vue';
-
-const props = defineProps({
-  element: {
-    type: Object as PropType<ElementInstance>,
-    required: true,
-  },
-});
+import {generateFieldId, useElement, useLanguage} from '@myparcel-pdk/admin/src';
 
 const {translate} = useLanguage();
 
-const id = generateFieldId(props.element);
+const id = generateFieldId();
+const element = useElement();
 </script>

@@ -10,35 +10,32 @@
 </template>
 
 <script lang="ts" setup>
-import {ComputedRef, PropType, computed, ref} from 'vue';
-import {ElementInstance} from '@myparcel-pdk/admin/src';
+import {ComputedRef, computed, ref} from 'vue';
+import {ElementInstance, useElement} from '@myparcel-pdk/admin/src';
 import {SelectOption} from '@myparcel-pdk/common/src';
 import {useVModel} from '@vueuse/core';
 
-const emit = defineEmits(['update:modelValue']);
-
 const props = defineProps({
-  element: {
-    type: Object as PropType<ElementInstance>,
-    required: true,
-  },
-
   // eslint-disable-next-line vue/no-unused-properties
   modelValue: {
-    type: [String, Boolean],
+    type: [String, Boolean, Array, Object],
     default: null,
   },
 });
 
-const options: ComputedRef<SelectOption[]> = computed(() => props.element.props.options ?? []);
+const emit = defineEmits(['update:modelValue']);
+
+const element = useElement();
+
+const options: ComputedRef<SelectOption[]> = computed(() => element.props?.options ?? []);
 
 const elements: ComputedRef<ElementInstance[]> = computed(() => {
   return options.value.map((option) => ({
-    ...props.element,
+    ...element,
     label: option.label,
     ref: ref(props.modelValue === option.value),
   }));
 });
 
-const model = useVModel(props, 'modelValue', emit);
+const model = useVModel(props, undefined, emit);
 </script>

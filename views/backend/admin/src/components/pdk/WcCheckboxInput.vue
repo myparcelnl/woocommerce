@@ -15,25 +15,20 @@
 </template>
 
 <script lang="ts" setup>
-import {ElementInstance, generateFieldId} from '@myparcel-pdk/admin/src';
-import {PropType} from 'vue';
+import {generateFieldId, useElement} from '@myparcel-pdk/admin/src';
 import {useVModel} from '@vueuse/core';
 
 const props = defineProps({
-  element: {
-    type: Object as PropType<ElementInstance>,
-    default: null,
-  },
-
   // eslint-disable-next-line vue/no-unused-properties
   modelValue: {
-    type: [String, Number, Object, Array, Boolean],
+    type: [String, Boolean, Number, Object, Array],
     default: null,
   },
 });
 
 const emit = defineEmits(['update:modelValue']);
 
-const model = useVModel(props, 'modelValue', emit);
-const id = generateFieldId(props.element);
+const model = useVModel(props, undefined, emit);
+const id = generateFieldId();
+const element = useElement();
 </script>

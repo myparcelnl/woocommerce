@@ -38,19 +38,13 @@
 </template>
 
 <script lang="ts" setup>
-import {ElementInstance, Settings, useDropOffInputContext} from '@myparcel-pdk/admin/src';
+import {Settings, useDropOffInputContext} from '@myparcel-pdk/admin/src';
 import {PropType} from 'vue';
 
 const props = defineProps({
-  // eslint-disable-next-line vue/no-unused-properties
-  element: {
-    type: Object as PropType<ElementInstance>,
-    required: true,
-  },
-
   modelValue: {
     type: Object as PropType<Settings.ModelDropOffPossibilities>,
-    required: true,
+    default: null,
   },
 });
 

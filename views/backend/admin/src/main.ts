@@ -1,5 +1,12 @@
 import './assets/scss/index.scss';
-import {DefaultCurrencyInput, DefaultHeading, DefaultLink, DefaultMultiRadio} from '@myparcel-pdk/admin-components/src';
+import {
+  DefaultCurrencyInput,
+  DefaultHeading,
+  DefaultLink,
+  DefaultMultiRadio,
+  DefaultNumberInput,
+  DefaultTimeInput,
+} from '@myparcel-pdk/admin-components/src';
 import {LogLevel, createPdkAdmin, useModalStore} from '@myparcel-pdk/admin/src';
 import {
   PdkShipmentLabelWrapper,
@@ -16,7 +23,6 @@ import {
   WcModal,
   WcMultiCheckbox,
   WcNotification,
-  WcNumberInput,
   WcPluginSettingsWrapper,
   WcRadioInput,
   WcRow,
@@ -27,7 +33,6 @@ import {
   WcTableCol,
   WcTableRow,
   WcTextInput,
-  WcTimeInput,
   WcToggleInput,
 } from './components/pdk';
 import {h} from 'vue';
@@ -38,6 +43,10 @@ createPdkAdmin({
   logLevel: LogLevel.DEBUG,
 
   formConfig: {
+    field: {
+      elementProp: false,
+    },
+
     form: {
       attributes: {
         class: 'wrap woocommerce',
@@ -64,7 +73,7 @@ createPdkAdmin({
     PdkMultiCheckbox: WcMultiCheckbox,
     PdkMultiRadio: DefaultMultiRadio,
     PdkNotification: WcNotification,
-    PdkNumberInput: WcNumberInput,
+    PdkNumberInput: DefaultNumberInput,
     PdkPluginSettingsWrapper: WcPluginSettingsWrapper,
     PdkRadioInput: WcRadioInput,
     PdkRow: WcRow,
@@ -76,7 +85,7 @@ createPdkAdmin({
     PdkTableCol: WcTableCol,
     PdkTableRow: WcTableRow,
     PdkTextInput: WcTextInput,
-    PdkTimeInput: WcTimeInput,
+    PdkTimeInput: DefaultTimeInput,
     PdkToggleInput: WcToggleInput,
   },
 
