@@ -1,0 +1,11 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.web.json",
+  "compilerOptions": {
+    "importsNotUsedAsValues": "remove",
+    "incremental": true,
+    "preserveValueImports": false,
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "types": ["node", "vite/client"]
+  },
+  "exclude": ["../**/__tests__/*", "../**/*.spec.*"]
+}
