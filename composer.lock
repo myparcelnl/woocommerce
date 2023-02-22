@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "740999abdb3674778157141d3bfe8a06",
+    "content-hash": "8864d46b0a9e0fb283a99437f45198f9",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -469,11 +469,17 @@
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "1.34.0",
+            "version": "dev-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/myparcelnl/pdk.git",
+                "reference": "40a730eae188546faae619d37272df35c588afc0"
+            },
             "dist": {
-                "type": "path",
-                "url": "/Users/edie/Sites/myparcel/pdk",
-                "reference": "2481aada1994303402948056d8130b133327f266"
+                "type": "zip",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/40a730eae188546faae619d37272df35c588afc0",
+                "reference": "40a730eae188546faae619d37272df35c588afc0",
+                "shasum": ""
             },
             "require": {
                 "justinrainbow/json-schema": "^5.2",
@@ -495,17 +501,7 @@
                     "MyParcelNL\\Pdk\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "MyParcelNL\\Pdk\\Tests\\": "tests/",
-                    "MyParcelNL\\Pdk\\Helper\\": "helper/"
-                }
-            },
-            "scripts": {
-                "post-autoload-dump": [
-                    "php helper/generate.php"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -517,22 +513,24 @@
             ],
             "description": "MyParcel Plugin Development Kit",
             "homepage": "https://myparcel.nl",
-            "transport-options": {
-                "relative": false
-            }
+            "support": {
+                "issues": "https://github.com/myparcelnl/pdk/issues",
+                "source": "https://github.com/myparcelnl/pdk/tree/alpha"
+            },
+            "time": "2023-02-22T09:44:05+00:00"
         },
         {
             "name": "myparcelnl/sdk",
-            "version": "7.6.1",
+            "version": "7.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/sdk.git",
-                "reference": "2cace877d79f253ec320563fb68fb5e733cb76e9"
+                "reference": "1f0445d87d3ef6538d51cd93e466a6ad28c8dda2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/2cace877d79f253ec320563fb68fb5e733cb76e9",
-                "reference": "2cace877d79f253ec320563fb68fb5e733cb76e9",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/1f0445d87d3ef6538d51cd93e466a6ad28c8dda2",
+                "reference": "1f0445d87d3ef6538d51cd93e466a6ad28c8dda2",
                 "shasum": ""
             },
             "require": {
@@ -581,9 +579,9 @@
             ],
             "support": {
                 "issues": "https://github.com/myparcelnl/sdk/issues",
-                "source": "https://github.com/myparcelnl/sdk/tree/v7.6.1"
+                "source": "https://github.com/myparcelnl/sdk/tree/v7.6.2"
             },
-            "time": "2023-01-02T12:28:21+00:00"
+            "time": "2023-02-20T09:15:26+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -1372,9 +1370,11 @@
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": [],
-    "prefer-stable": false,
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "myparcelnl/pdk": 20
+    },
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],

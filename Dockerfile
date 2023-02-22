@@ -21,28 +21,8 @@ VOLUME /tmp/.cache/yarn/cache
 
 VOLUME /tmp/.cache/composer/cache
 
-COPY ./src     ./src
-COPY ./config  ./config
-COPY ./views   ./views
-COPY ./private ./private
-COPY ./.yarn   ./.yarn
+VOLUME /app/vendor
 
-COPY [ "composer.json", "composer.lock", "package.json", "yarn.lock", ".yarnrc.yml",  "./" ]
+VOLUME /app/node_modules
 
-
-###
-# Production
-###
-FROM build as prod
-
-RUN yarn install && \
-    composer install --no-dev --optimize-autoloader && \
-    yarn build
-
-
-###
-# Development.
-###
-FROM build AS dev
-
-CMD [ "sh", "-c", "yarn install && composer install" ]
+CMD [ "make", "build" ]

@@ -625,8 +625,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-pdk/admin-component-tests@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-component-tests::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   dependencies:
-    "@myparcel-pdk/common": "workspace:^"
-    "@myparcel-pdk/frontend-core": "workspace:^"
+    "@myparcel-pdk/common": "workspace:*"
+    "@myparcel-pdk/frontend-core": "workspace:*"
     "@vue/test-utils": ^2.3.0
     vue: ^3.2.47
   languageName: node
@@ -636,7 +636,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-pdk/admin-components@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-components::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   dependencies:
-    "@myparcel-pdk/frontend-core": "workspace:^"
+    "@myparcel-pdk/frontend-core": "workspace:*"
     "@myparcel/ts-utils": ^1.6.0
     "@vueuse/core": ^9.13.0
     vue: ^3.2.47
@@ -647,7 +647,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-pdk/admin-preset-bootstrap4@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin-preset-bootstrap4::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   dependencies:
-    "@myparcel-pdk/frontend-core": "workspace:^"
+    "@myparcel-pdk/frontend-core": "workspace:*"
     "@myparcel/ts-utils": ^1.6.0
     vue: ^3.2.47
   languageName: node
@@ -657,8 +657,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-pdk/admin@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/admin::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   dependencies:
-    "@myparcel-pdk/common": "workspace:^"
-    "@myparcel-pdk/frontend-core": "workspace:^"
+    "@myparcel-pdk/common": "workspace:*"
+    "@myparcel-pdk/frontend-core": "workspace:*"
   languageName: node
   linkType: soft
 
@@ -666,8 +666,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-pdk/checkout@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/checkout::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   dependencies:
-    "@myparcel-pdk/common": "workspace:^"
-    "@myparcel-pdk/frontend-delivery-options": "workspace:^"
+    "@myparcel-pdk/common": "workspace:*"
+    "@myparcel-pdk/frontend-delivery-options": "workspace:*"
   languageName: node
   linkType: soft
 
@@ -701,53 +701,53 @@ __metadata:
   languageName: node
   linkType: soft
 
-"@myparcel-vfb/build-vite@portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/build-vite::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@myparcel-vfb/build-vite@portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/build-vite::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
-  dependencies:
-    rollup-plugin-visualizer: ^5.9.0
-    vite: ^4.1.4
-    vite-plugin-custom-tsconfig: ^1.0.4
-    vite-plugin-dts: 1.7.3
+"@myparcel-vfb/build-vite@npm:1.0.0-alpha.15":
+  version: 1.0.0-alpha.15
+  resolution: "@myparcel-vfb/build-vite@npm:1.0.0-alpha.15"
+  checksum: 8271d9ec4ef2c8dfee18586f0db4c97914d7f729b99bd03cf024b830ab24d3eb8f08345e5c3f83d15f38292425cebd1f7d192c971188d4ff9553e54efeef04e2
   languageName: node
-  linkType: soft
+  linkType: hard
 
-"@myparcel-vfb/core@portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/core::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@myparcel-vfb/core@portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/core::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+"@myparcel-vfb/core@npm:^1.0.0-alpha.16":
+  version: 1.0.0-alpha.16
+  resolution: "@myparcel-vfb/core@npm:1.0.0-alpha.16"
   dependencies:
-    "@myparcel-vfb/build-vite": "workspace:*"
-    "@myparcel-vfb/hook-manager": "workspace:^1.0.0-alpha.16"
-    "@myparcel-vfb/utils": "workspace:^1.0.0-alpha.16"
+    "@myparcel-vfb/build-vite": 1.0.0-alpha.15
+    "@myparcel-vfb/hook-manager": ^1.0.0-alpha.17
+    "@myparcel-vfb/utils": ^1.0.0-alpha.17
     "@myparcel/ts-utils": ^1.6.0
+  checksum: 4455bb09c6c99b60cea347032c13876b898cb1086a5edd55fb778af054ca79ff9f755da9a837c0a502ac10d19a4a1357e7843648f3cf842815310e0710a36028
   languageName: node
-  linkType: soft
+  linkType: hard
 
-"@myparcel-vfb/hook-manager@portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/hook-manager::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@myparcel-vfb/hook-manager@portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/hook-manager::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+"@myparcel-vfb/hook-manager@npm:^1.0.0-alpha.17":
+  version: 1.0.0-alpha.17
+  resolution: "@myparcel-vfb/hook-manager@npm:1.0.0-alpha.17"
   dependencies:
     "@myparcel/ts-utils": ^1.6.0
+  checksum: 040d37ba4e93e1ca8dcba4c13f31f004699b4a024a669da1aa0ff554a869cb16cce9c6a53f72ad22bfa6f8023e6d9c30864c86c77f571a99aeddc3ae1bad4bf3
   languageName: node
-  linkType: soft
+  linkType: hard
 
-"@myparcel-vfb/plugin@portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/plugin::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@myparcel-vfb/plugin@portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/plugin::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+"@myparcel-vfb/plugin@npm:^1.0.0-alpha.16":
+  version: 1.0.0-alpha.16
+  resolution: "@myparcel-vfb/plugin@npm:1.0.0-alpha.16"
   dependencies:
-    "@myparcel-vfb/core": "workspace:^1.0.0-alpha.14"
+    "@myparcel-vfb/core": ^1.0.0-alpha.16
     "@myparcel/ts-utils": ^1.6.0
     "@vue/devtools-api": ^6.5.0
+  checksum: 72de4ae388c4293d76e24b8a8724704ba377dd5a2c71b3c25f8497c4f07b9df321d2e41b63ab81d3585a2a9f1e15b3ba50e8d778cdcff972f2e2cd487e1adfa8
   languageName: node
-  linkType: soft
+  linkType: hard
 
-"@myparcel-vfb/utils@portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/utils::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@myparcel-vfb/utils@portal:/Users/edie/Sites/myparcel/vue-form-builder/libs/utils::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+"@myparcel-vfb/utils@npm:^1.0.0-alpha.17":
+  version: 1.0.0-alpha.17
+  resolution: "@myparcel-vfb/utils@npm:1.0.0-alpha.17"
   dependencies:
     "@myparcel/ts-utils": ^1.6.0
+  checksum: d523ff3059755c7adeaeb41417341f4be5523bf6a998076280e0702004cefdeccd173c36958b579c333774c00b7b7ee08135b7d8603dd2a4da786a758b553c81
   languageName: node
-  linkType: soft
+  linkType: hard
 
 "@myparcel-woocommerce/backend-admin@workspace:views/backend/admin":
   version: 0.0.0-use.local
@@ -900,17 +900,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel/vue-form-builder@portal:/Users/edie/Sites/myparcel/vue-form-builder/apps/vue-form-builder::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@myparcel/vue-form-builder@portal:/Users/edie/Sites/myparcel/vue-form-builder/apps/vue-form-builder::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+"@myparcel/vue-form-builder@npm:^1.0.0-alpha.1":
+  version: 1.0.0-alpha.38
+  resolution: "@myparcel/vue-form-builder@npm:1.0.0-alpha.38"
   dependencies:
-    "@myparcel-vfb/core": "workspace:^1.0.0-alpha.14"
-    "@myparcel-vfb/hook-manager": "workspace:^1.0.0-alpha.16"
-    "@myparcel-vfb/plugin": "workspace:^1.0.0-alpha.14"
-    "@myparcel-vfb/utils": "workspace:^1.0.0-alpha.16"
+    "@myparcel-vfb/core": ^1.0.0-alpha.16
+    "@myparcel-vfb/hook-manager": ^1.0.0-alpha.17
+    "@myparcel-vfb/plugin": ^1.0.0-alpha.16
+    "@myparcel-vfb/utils": ^1.0.0-alpha.17
     "@myparcel/ts-utils": ^1.6.0
+  checksum: 226ab17a5eb297756d2da3ac6896678396c95101e68d07c30601b22b942dcbd1011323cde7f97a61e3cc23e82db50b40cf7a750093e6a69b702f570ea6d1edb4
   languageName: node
-  linkType: soft
+  linkType: hard
 
 "@myparcel/woocommerce@workspace:.":
   version: 0.0.0-use.local
@@ -9992,25 +9993,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-visualizer@npm:^5.9.0":
-  version: 5.9.0
-  resolution: "rollup-plugin-visualizer@npm:5.9.0"
-  dependencies:
-    open: ^8.4.0
-    picomatch: ^2.3.1
-    source-map: ^0.7.4
-    yargs: ^17.5.1
-  peerDependencies:
-    rollup: 2.x || 3.x
-  peerDependenciesMeta:
-    rollup:
-      optional: true
-  bin:
-    rollup-plugin-visualizer: dist/bin/cli.js
-  checksum: 362d4fac0295c14bd205dbc85c20c31f4b6c47604868da21d9565ed47e0333759f08b9fe0acb82f78221f5173ea01e4eb70d47351eb6012216afe71b5492ed5f
-  languageName: node
-  linkType: hard
-
 "rollup@npm:^3.10.0":
   version: 3.17.2
   resolution: "rollup@npm:3.17.2"
@@ -10446,13 +10428,6 @@ __metadata:
   version: 0.6.1
   resolution: "source-map@npm:0.6.1"
   checksum: 59ce8640cf3f3124f64ac289012c2b8bd377c238e316fb323ea22fbfe83da07d81e000071d7242cad7a23cd91c7de98e4df8830ec3f133cb6133a5f6e9f67bc2
-  languageName: node
-  linkType: hard
-
-"source-map@npm:^0.7.4":
-  version: 0.7.4
-  resolution: "source-map@npm:0.7.4"
-  checksum: 01cc5a74b1f0e1d626a58d36ad6898ea820567e87f18dfc9d24a9843a351aaa2ec09b87422589906d6ff1deed29693e176194dc88bcae7c9a852dc74b311dbf5
   languageName: node
   linkType: hard
 
@@ -11717,7 +11692,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-dts@npm:1.7.3, vite-plugin-dts@npm:^1.7.3":
+"vite-plugin-dts@npm:^1.7.3":
   version: 1.7.3
   resolution: "vite-plugin-dts@npm:1.7.3"
   dependencies:
@@ -11770,44 +11745,6 @@ __metadata:
   bin:
     vite: bin/vite.js
   checksum: 0877e1fd52e9939e8cab85ed42c19a16a5df162a003e8f4f3f8538bf572ae647fa6151a84d052e527e4a51636cac7ee9f05c81b50f428bd3e930591471b1427a
-  languageName: node
-  linkType: hard
-
-"vite@npm:^4.1.4":
-  version: 4.1.4
-  resolution: "vite@npm:4.1.4"
-  dependencies:
-    esbuild: ^0.16.14
-    fsevents: ~2.3.2
-    postcss: ^8.4.21
-    resolve: ^1.22.1
-    rollup: ^3.10.0
-  peerDependencies:
-    "@types/node": ">= 14"
-    less: "*"
-    sass: "*"
-    stylus: "*"
-    sugarss: "*"
-    terser: ^5.4.0
-  dependenciesMeta:
-    fsevents:
-      optional: true
-  peerDependenciesMeta:
-    "@types/node":
-      optional: true
-    less:
-      optional: true
-    sass:
-      optional: true
-    stylus:
-      optional: true
-    sugarss:
-      optional: true
-    terser:
-      optional: true
-  bin:
-    vite: bin/vite.js
-  checksum: 50a9a1f2e29e0ee8fefdec60314d38fb9b746df0bb6ae5a8114014b5bfd95e0fc9b29c0d5e73939361ba53af7eb66c7d20c5656bbe53a783e96540bd3b907c47
   languageName: node
   linkType: hard
 

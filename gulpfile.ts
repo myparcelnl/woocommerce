@@ -4,31 +4,32 @@ import zip from 'gulp-zip';
 const PLUGINS = ['myparcelnl', 'myparcelbe'];
 
 const SOURCE_FILES = [
-  './woocommerce-myparcel.php',
-  './readme.txt',
-  './LICENSE.txt',
-  './config/**/*',
-  './src/**/*',
-  './vendor/**/*',
-  './views/**/lib/**/*',
-  '!./**/node_modules/**/*',
-  '!./**/.yarn/**/*',
+  'woocommerce-myparcel.php',
+  'readme.txt',
+  'composer.json',
+  'LICENSE.txt',
+  'config/**/*',
+  'src/**/*',
+  'vendor/**/*',
+  'views/**/lib/**/*',
+  '!**/node_modules/**',
 ];
 
-const ZIP_FILE_NAME = ':name-:version.zip';
+const ZIP_FILE_NAME = ':name-:version-:timestamp.zip';
 
 PLUGINS.forEach((name) => {
   gulp.task(`copy:${name}`, () => {
-    return gulp.src(SOURCE_FILES, {base: '.', read: false}).pipe(gulp.dest(`./dist/${name}`));
+    return gulp.src(SOURCE_FILES, {base: '.'}).pipe(gulp.dest(`dist/${name}/`));
   });
 
   // TODO: transform plugin name to create myparcelbe
 
   gulp.task(`zip:${name}`, () => {
-    return gulp
-      .src(`./dist/${name}/**/*`, {base: './dist', read: false})
-      .pipe(zip(ZIP_FILE_NAME.replace(':name', name).replace(':version', process.env.npm_package_version ?? '?')))
-      .pipe(gulp.dest('./dist'));
+    const filename: string = ZIP_FILE_NAME.replace(':name', name)
+      .replace(':version', process.env.npm_package_version ?? '?')
+      .replace(':timestamp', Date.now().toString());
+
+    return gulp.src(`./dist/${name}/**/*`, {base: './dist'}).pipe(zip(filename)).pipe(gulp.dest('./dist'));
   });
 });
 
