@@ -69,6 +69,8 @@ return [
     'allowedCarriers' => value([
         'dhlforyou',
         'postnl',
+        'dhlparcelconnect',
+        'dhleuroplus',
     ]),
 
     /**
