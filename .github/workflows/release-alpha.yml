@@ -41,10 +41,12 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
+          name: 'MyParcelNL plugin'
           path: dist/myparcelnl-*.zip
 
       - uses: actions/upload-artifact@v3
         with:
+          name: 'MyParcelBE plugin'
           path: dist/myparcelbe-*.zip
 ########################
 #      - uses: myparcelnl/actions/semantic-release@v3
