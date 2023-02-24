@@ -8,6 +8,7 @@ use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLForYou;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DropOffPoint;
@@ -1691,6 +1692,10 @@ class WCMP_Export
         AbstractConsignment $consignment
     ): void {
         $colloAmount = $orderSettings->getColloAmount();
+
+        if (CarrierDHLForYou::NAME === $consignment->getCarrier()->getName() && ! AccountSettings::getInstance()->isDhlForYouPilotUser()) {
+            $consignment->setSameDayDelivery(true);
+        }
 
         if ($colloAmount > 1) {
             $this->addMultiCollo($orderSettings, $collection, $consignment);

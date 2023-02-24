@@ -247,6 +247,14 @@ class OrderSettings
     /**
      * @return bool
      */
+    public function hasSameDayDelivery(): bool
+    {
+        return $this->sameDayDelivery ?? false;
+    }
+
+    /**
+     * @return bool
+     */
     public function hasExtraAssurance(): bool
     {
         return $this->extraAssurance ?? false;

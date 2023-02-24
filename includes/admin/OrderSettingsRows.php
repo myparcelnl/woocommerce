@@ -23,7 +23,7 @@ use WCMP_Settings_Data;
 
 class OrderSettingsRows
 {
-    private const HOME_COUNTRY_ONLY_ROWS = [
+    private const HOME_COUNTRY_ONLY_ROWS                 = [
         self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
         self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT,
         self::OPTION_SHIPMENT_OPTIONS_SIGNATURE,
@@ -92,6 +92,21 @@ class OrderSettingsRows
         'type'         => 'disable',
         'parent_value'    => WCMP_Settings_Data::ENABLED,
     ];
+    private const CONDITION_FORCE_DISABLED_ON_ONLY_RECIPIENT = [
+        'parent_name'  => self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT,
+        'type'         => 'disable',
+        'set_value'    => WCMP_Settings_Data::ENABLED,
+        'parent_value' => WCMP_Settings_Data::DISABLED,
+    ];
+
+    private const DHL_PARCEL_CONNECT_FORBIDDEN_COUNTRIES = [
+        AbstractConsignment::CC_NL,
+        'SE',
+        'FR',
+        'DK',
+    ];
+
+
 
     /**
      * @var \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter
@@ -248,6 +263,8 @@ class OrderSettingsRows
      */
     private function getAdditionalOptionsRows(OrderSettings $orderSettings): array
     {
+        $isDhlForYouPilotUser = AccountSettings::getInstance()->isDhlForYouPilotUser();
+
         return [
             [
                 'name'        => self::OPTION_EXTRA_OPTIONS_DIGITAL_STAMP_WEIGHT,
@@ -299,7 +316,11 @@ class OrderSettingsRows
                 'label'     => __('shipment_options_age_check', 'woocommerce-myparcel'),
                 'help_text' => __('shipment_options_age_check_help_text', 'woocommerce-myparcel'),
                 'value'     => $orderSettings->hasAgeCheck(),
-                'condition' => [
+                'condition' => CarrierDHLForYou::NAME === $orderSettings->getDeliveryOptions()->getCarrier() ? [
+                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK),
+//                    self::CONDITION_FORCE_ENABLED_SAME_DAY
+                ] : [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK),
                 ],
@@ -350,8 +371,10 @@ class OrderSettingsRows
                 'type'      => 'toggle',
                 'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
                 'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
-                'value'     => true,
-                'condition' => [
+                'value'     => $orderSettings->hasSameDayDelivery(),
+                'condition' => $isDhlForYouPilotUser ? [
+                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY),
+                ] : [
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY),
                     self::CONDITION_FORCE_ENABLED_SAME_DAY,
                 ],
@@ -371,8 +394,25 @@ class OrderSettingsRows
         $carriersOptions = [];
 
         foreach ($carriers as $carrier) {
-            if (CarrierDHLForYou::ID === $carrier->getId() && ! WCMP_Data::isHomeCountry($country)) {
-                continue;
+            if (CarrierDHLForYou::ID === $carrier->getId()) {
+                if ($accountSettings->isDhlForYouPilotUser() && ! in_array(
+                        $country,
+                        [AbstractConsignment::CC_BE, AbstractConsignment::CC_NL],
+                        true
+                    )) {
+                    continue;
+                }
+
+                if (! $accountSettings->isDhlForYouPilotUser() && AbstractConsignment::CC_NL !== $country) {
+                    continue;
+                }
+            }
+
+            if (CarrierDHLParcelConnect::ID === $carrier->getId()) {
+                if (in_array($country, self::DHL_PARCEL_CONNECT_FORBIDDEN_COUNTRIES, true)
+                || ! in_array($country, AbstractConsignment::EURO_COUNTRIES)) {
+                    continue;
+                }
             }
 
             $carriersOptions[$carrier->getName()] = $carrier->getHuman();
