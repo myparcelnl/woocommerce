@@ -1,8 +1,11 @@
 <template>
   <input
     :id="id"
-    v-model="model"
+    v-model.trim="model"
     v-test="'TextInput'"
+    :class="{
+      'form-required': !element.isValid,
+    }"
     :disabled="element.isDisabled || element.isSuspended"
     :type="element.props.type ?? 'text'"
     class="!mypa-w-full" />
