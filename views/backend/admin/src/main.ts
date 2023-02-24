@@ -20,6 +20,7 @@ import {
   WcFormGroup,
   WcIcon,
   WcImage,
+  WcLoader,
   WcModal,
   WcMultiCheckbox,
   WcNotification,
@@ -35,6 +36,7 @@ import {
   WcTextInput,
   WcToggleInput,
 } from './components/pdk';
+import {get} from '@vueuse/core';
 import {h} from 'vue';
 
 const FADE = 'fade';
@@ -45,6 +47,16 @@ createPdkAdmin({
   formConfig: {
     field: {
       elementProp: false,
+    },
+
+    fieldDefaults: {
+      afterValidate(field) {
+        const valid = get(field.isValid);
+
+        console.log(valid);
+
+        field.form.element.classList.toggle('form-invalid', !valid);
+      },
     },
 
     form: {
@@ -69,6 +81,7 @@ createPdkAdmin({
     PdkIcon: WcIcon,
     PdkImage: WcImage,
     PdkLink: DefaultLink,
+    PdkLoader: WcLoader,
     PdkModal: WcModal,
     PdkMultiCheckbox: WcMultiCheckbox,
     PdkMultiRadio: DefaultMultiRadio,

@@ -20,6 +20,8 @@ export {default as WcIcon} from './WcIcon.vue';
 
 export {default as WcImage} from './WcImage.vue';
 
+export {default as WcLoader} from './WcLoader.vue';
+
 export {default as WcModal} from './WcModal.vue';
 
 export {default as WcMultiCheckbox} from './WcMultiCheckbox.vue';

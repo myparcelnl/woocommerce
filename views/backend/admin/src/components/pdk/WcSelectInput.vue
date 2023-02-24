@@ -6,6 +6,7 @@
     v-test="'SelectInput'"
     :class="{
       disabled: options.length === 1 || element.isDisabled || element.isSuspended,
+      'form-required': !element.isValid,
     }"
     class="select">
     <option

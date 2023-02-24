@@ -1,12 +1,13 @@
 <template>
-  <div class="mypa-border mypa-border-gray-300 mypa-border-solid mypa-mb-1 mypa-p-1 mypa-relative mypa-rounded">
+  <PdkBox :size="Size.SMALL">
     <WcLoadingOverlay v-show="loading" />
 
     <slot />
-  </div>
+  </PdkBox>
 </template>
 
 <script lang="ts" setup>
+import {Size} from '@myparcel-pdk/admin/src';
 import WcLoadingOverlay from '../WcLoadingOverlay.vue';
 
 defineProps({
