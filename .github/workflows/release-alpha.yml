@@ -1,12 +1,9 @@
 name: '🚀 Release'
 
 on:
-  # TODO: SOON
-  #  push:
-  #    branches:
-  #      - alpha
-
-  repository_dispatch:
+  push:
+    branches:
+      - alpha
 
 concurrency:
   group: release-${{ github.ref }}
@@ -19,12 +16,6 @@ jobs:
     outputs:
       released: ${{ steps.release.outputs.released }}
     steps:
-      - uses: myparcelnl/actions/setup-git-credentials@v3
-        id: credentials
-        with:
-          app-id: ${{ secrets.MYPARCEL_APP_ID }}
-          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
-
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -39,33 +30,43 @@ jobs:
 
       - uses: myparcelnl/actions/composer-install@v3
         with:
-          php-version: '7.1'
+          php-version: '7.4'
 
       - uses: myparcelnl/actions/yarn-install@v3
         with:
           node-version: '18'
 
-      - uses: myparcelnl/actions/semantic-release@v3
-        id: release
-        with:
-          # TODO: Switch to app token when apps can bypass status checks
-          token: ${{ SECRETS.GH_REPO_TOKEN }}
+      # TODO: Remove the following steps and uncomment the block below when we want to release
+      - run: yarn build
 
-  rebase-prs:
-    needs:
-      - release
-    if: always()
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: myparcelnl/actions/setup-app-credentials@v3
-        id: credentials
+      - uses: actions/upload-artifact@v3
         with:
-          app-id: ${{ secrets.MYPARCEL_APP_ID }}
-          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
+          path: dist/myparcelnl-*.zip
 
-      - uses: peter-evans/rebase@v2
+      - uses: actions/upload-artifact@v3
         with:
-          token: ${{ steps.credentials.outputs.token }}
-          base: ${{ github.base_ref }}
-          exclude-drafts: true
-          exclude-labels: 'hotfix'
+          path: dist/myparcelbe-*.zip
+########################
+#      - uses: myparcelnl/actions/semantic-release@v3
+#        id: release
+#        with:
+#          # TODO: Switch to app token when apps can bypass status checks
+#          token: ${{ SECRETS.GH_REPO_TOKEN }}
+#  rebase-prs:
+#    needs:
+#      - release
+#    if: always()
+#    runs-on: ubuntu-22.04
+#    steps:
+#      - uses: myparcelnl/actions/setup-app-credentials@v3
+#        id: credentials
+#        with:
+#          app-id: ${{ secrets.MYPARCEL_APP_ID }}
+#          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
+#
+#      - uses: peter-evans/rebase@v2
+#        with:
+#          token: ${{ steps.credentials.outputs.token }}
+#          base: ${{ github.base_ref }}
+#          exclude-drafts: true
+#          exclude-labels: 'hotfix'
