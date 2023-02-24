@@ -186,7 +186,7 @@ class OrderSettingsRows
 
         // Only add the required extra options for DHL Carriers
         if (in_array($this->deliveryOptions->getCarrier(), self::DHL_CARRIERS, true)) {
-            $rows = array_merge($rows, $this->getAdditionalOptionsRows($orderSettings));
+            $rows = array_merge($rows, $this->getRequiredOptionsRows($orderSettings));
         }
 
         $rows[] = [
@@ -496,6 +496,27 @@ class OrderSettingsRows
                     })
                     ->getIterator(),
             'set_value' => AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME,
+        ];
+    }
+
+    /**
+     * @param  \MyParcelNL\WooCommerce\includes\admin\OrderSettings $orderSettings
+     *
+     * @return array
+     */
+    private function getRequiredOptionsRows(OrderSettings $orderSettings): array
+    {
+        return [
+            'name'      => self::OPTION_SHIPMENT_OPTIONS_SIGNATURE,
+            'type'      => 'toggle',
+            'label'     => __('shipment_options_signature', 'woocommerce-myparcel'),
+            'help_text' => __('shipment_options_signature_help_text', 'woocommerce-myparcel'),
+            'value'     => 1,
+            'condition' => [
+                self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                self::CONDITION_DELIVERY_TYPE_DELIVERY,
+                //$this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_SIGNATURE),
+            ],
         ];
     }
 }
