@@ -9,7 +9,9 @@ defined('ABSPATH') or die();
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLEuroplus;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLForYou;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLParcelConnect;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
@@ -25,6 +27,12 @@ class OrderSettingsRows
         self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
         self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT,
         self::OPTION_SHIPMENT_OPTIONS_SIGNATURE,
+    ];
+
+    private const DHL_CARRIERS = [
+        CarrierDHLForYou::NAME,
+        CarrierDHLParcelConnect::NAME,
+        CarrierDHLEuroplus::NAME,
     ];
 
     private const OPTION_CARRIER                                 = '[carrier]';
@@ -117,6 +125,7 @@ class OrderSettingsRows
         if (! $isHomeCountry) {
             unset($packageTypeOptions['mailbox'], $packageTypeOptions['digital_stamp']);
         }
+
         $rows = [
             [
                 'name'    => self::OPTION_CARRIER,
@@ -157,6 +166,11 @@ class OrderSettingsRows
 
         // Only add extra options and shipment options to home country shipments.
         if ($isHomeCountry) {
+            $rows = array_merge($rows, $this->getAdditionalOptionsRows($orderSettings));
+        }
+
+        // Only add the required extra options for DHL Carriers
+        if (in_array($this->deliveryOptions->getCarrier(), self::DHL_CARRIERS, true)) {
             $rows = array_merge($rows, $this->getAdditionalOptionsRows($orderSettings));
         }
 
