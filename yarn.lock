@@ -39,12 +39,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/parser@npm:^7.16.4":
-  version: 7.21.1
-  resolution: "@babel/parser@npm:7.21.1"
+"@babel/parser@npm:^7.16.4, @babel/parser@npm:^7.20.15":
+  version: 7.21.2
+  resolution: "@babel/parser@npm:7.21.2"
   bin:
     parser: ./bin/babel-parser.js
-  checksum: a564cff6dec4201a611d1f2ae5af8d7436ce80550e75a77ee72dca6b094df6188b5a4ccfae6a98c85991b56a51e6c48159e466cc5a374c7a37af706fcb5a6bc2
+  checksum: e2b89de2c63d4cdd2cafeaea34f389bba729727eec7a8728f736bc472a59396059e3e9fe322c9bed8fd126d201fb609712949dc8783f4cae4806acd9a73da6ff
   languageName: node
   linkType: hard
 
@@ -58,13 +58,13 @@ __metadata:
   linkType: hard
 
 "@babel/types@npm:^7.8.3":
-  version: 7.21.0
-  resolution: "@babel/types@npm:7.21.0"
+  version: 7.21.2
+  resolution: "@babel/types@npm:7.21.2"
   dependencies:
     "@babel/helper-string-parser": ^7.19.4
     "@babel/helper-validator-identifier": ^7.19.1
     to-fast-properties: ^2.0.0
-  checksum: dbcdda202b3a2bfd59e4de880ce38652f1f8957893a9751be069ac86e47ad751222070fe6cd92220214d77973f1474e4e1111c16dc48199dfca1489c0ee8c0c5
+  checksum: a45a52acde139e575502c6de42c994bdbe262bafcb92ae9381fb54cdf1a3672149086843fda655c7683ce9806e998fd002bbe878fa44984498d0fdc7935ce7ff
   languageName: node
   linkType: hard
 
@@ -330,6 +330,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jridgewell/sourcemap-codec@npm:^1.4.13":
+  version: 1.4.14
+  resolution: "@jridgewell/sourcemap-codec@npm:1.4.14"
+  checksum: 61100637b6d173d3ba786a5dff019e1a74b1f394f323c1fee337ff390239f053b87266c7a948777f4b1ee68c01a8ad0ab61e5ff4abb5a012a0b091bec391ab97
+  languageName: node
+  linkType: hard
+
 "@microsoft/api-extractor-model@npm:7.26.4":
   version: 7.26.4
   resolution: "@microsoft/api-extractor-model@npm:7.26.4"
@@ -528,47 +535,47 @@ __metadata:
   linkType: hard
 
 "@myparcel-pdk/admin-component-tests@npm:^1.0.0-alpha.1":
-  version: 1.0.0-alpha.2
-  resolution: "@myparcel-pdk/admin-component-tests@npm:1.0.0-alpha.2"
+  version: 1.0.0-alpha.5
+  resolution: "@myparcel-pdk/admin-component-tests@npm:1.0.0-alpha.5"
   dependencies:
-    "@myparcel-pdk/common": ^1.0.0-alpha.2
-    "@myparcel-pdk/frontend-core": ^1.0.0-alpha.2
+    "@myparcel-pdk/common": ^1.0.0-alpha.4
+    "@myparcel-pdk/frontend-core": ^1.0.0-alpha.5
     "@vue/test-utils": ^2.3.0
     vue: ^3.2.47
-  checksum: 3afa78914ee920152edbd6257e9a362ce791f58e23bbcc0b443dccd74fff98ddb7e73da32e634a50d69d16d1f4d628065fdf1710fefba019998afc6cf141d266
+  checksum: 8d50d9b2c8379df74d02cebf18998b47c99eed41e99ceefb2d597173d7527f8d19d4700165d7d33f2ab281f8584f207f6d863fd535898ddee2b3c1cd6756bc27
   languageName: node
   linkType: hard
 
 "@myparcel-pdk/admin-components@npm:^1.0.0-alpha.1":
-  version: 1.0.0-alpha.2
-  resolution: "@myparcel-pdk/admin-components@npm:1.0.0-alpha.2"
+  version: 1.0.0-alpha.5
+  resolution: "@myparcel-pdk/admin-components@npm:1.0.0-alpha.5"
   dependencies:
-    "@myparcel-pdk/frontend-core": ^1.0.0-alpha.2
+    "@myparcel-pdk/frontend-core": ^1.0.0-alpha.5
     "@myparcel/ts-utils": ^1.6.0
     "@vueuse/core": ^9.13.0
     vue: ^3.2.47
-  checksum: e6f019a3974811ca43020869a772100ab04844899f123f3e4efa69bc72fcd2c58eaa89da03123afc2d78c958a68c033138fb011a891127f9e63adf9cdfd2d5cf
+  checksum: 7701f65c967aa9c6ef7603c9f98bcba34c35fcda059e3147b7ab91c402879993faabf2fe262e479be94997bc0759c789e82fb8d65d1b2126ab64a18c07c5a713
   languageName: node
   linkType: hard
 
 "@myparcel-pdk/admin-preset-bootstrap4@npm:^1.0.0-alpha.1":
-  version: 1.0.0-alpha.2
-  resolution: "@myparcel-pdk/admin-preset-bootstrap4@npm:1.0.0-alpha.2"
+  version: 1.0.0-alpha.5
+  resolution: "@myparcel-pdk/admin-preset-bootstrap4@npm:1.0.0-alpha.5"
   dependencies:
-    "@myparcel-pdk/frontend-core": ^1.0.0-alpha.2
+    "@myparcel-pdk/frontend-core": ^1.0.0-alpha.5
     "@myparcel/ts-utils": ^1.6.0
     vue: ^3.2.47
-  checksum: aa707e2b44db4159d62c4f63071203592dfe83a39fc93edb4b3f78fa0442a0affb7946ee2d7c4b3a62dae70adb3d8c4b7aa4e2db640a925b8d7d005bc45c2211
+  checksum: 61e200ecd1b930d0e9e0d5949d413ec18dfbf4e8beb9d673f050a512f707365ea02ca06206c8ed1b99c4f8dcab09252c5df47e615ea8275b3b1f571da2e61572
   languageName: node
   linkType: hard
 
 "@myparcel-pdk/admin@npm:^1.0.0-alpha.1":
-  version: 1.0.0-alpha.1
-  resolution: "@myparcel-pdk/admin@npm:1.0.0-alpha.1"
+  version: 1.0.0-alpha.4
+  resolution: "@myparcel-pdk/admin@npm:1.0.0-alpha.4"
   dependencies:
-    "@myparcel-pdk/common": ^1.0.0-alpha.2
-    "@myparcel-pdk/frontend-core": ^1.0.0-alpha.2
-  checksum: fb0db1dce3d739d55949c5ef64b8053463af4113584645b77604e4022d9a48b47d8ca07dc2f21f0a71bace4ef18b894cf49d2c9006f3ea7645b61c7084f05c1d
+    "@myparcel-pdk/common": ^1.0.0-alpha.4
+    "@myparcel-pdk/frontend-core": ^1.0.0-alpha.5
+  checksum: 1c95cacb4238d104f319fc33805333102837d1904a23c8dd93cd16e5b22719b84813e9517bdc5a6ebe115b89357c1010c6b8e7bac696c343038f974c0edbce74
   languageName: node
   linkType: hard
 
@@ -591,27 +598,27 @@ __metadata:
   linkType: hard
 
 "@myparcel-pdk/checkout@npm:^1.0.0-alpha.1":
-  version: 1.0.0-alpha.1
-  resolution: "@myparcel-pdk/checkout@npm:1.0.0-alpha.1"
+  version: 1.0.0-alpha.3
+  resolution: "@myparcel-pdk/checkout@npm:1.0.0-alpha.3"
   dependencies:
-    "@myparcel-pdk/common": ^1.0.0-alpha.2
+    "@myparcel-pdk/common": ^1.0.0-alpha.4
     "@myparcel-pdk/frontend-delivery-options": ^1.0.0-alpha.2
-  checksum: 552f949680b0b2f701b1de112e6b15d90236443608945d5dc7b423d70e8327045bdda10a1514c7c47cff1bddfbc1e686a733d8eab1929a8f6dc607f7c3ddf3f8
+  checksum: 90704bb94246971fc83c922fb3247090328a0df16b56e5744d43c88191a6e97be88d80f47d7101c468b2693af0eef2e44de823e66d228d2e4ed51ad2182f6036
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/common@npm:^1.0.0-alpha.2":
-  version: 1.0.0-alpha.2
-  resolution: "@myparcel-pdk/common@npm:1.0.0-alpha.2"
-  checksum: 82feba64d7823baef6c1b931abbed0a74fe7e09bc2eb6be62b14e779fe7162a750c8eb4a63bdf69cf2b385e68743743503fdc343e472c549306d1cd80e2ff201
+"@myparcel-pdk/common@npm:^1.0.0-alpha.4":
+  version: 1.0.0-alpha.4
+  resolution: "@myparcel-pdk/common@npm:1.0.0-alpha.4"
+  checksum: 98e74fbf8c2595396bfbd2c8aca75cae2c62c4d2560a5376cb766d6520542728f32a63af8db53042710ecabe335930dad622e05b9aa4605bee5c3b37b9cee6fc
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/frontend-core@npm:^1.0.0-alpha.2":
-  version: 1.0.0-alpha.2
-  resolution: "@myparcel-pdk/frontend-core@npm:1.0.0-alpha.2"
+"@myparcel-pdk/frontend-core@npm:^1.0.0-alpha.5":
+  version: 1.0.0-alpha.5
+  resolution: "@myparcel-pdk/frontend-core@npm:1.0.0-alpha.5"
   dependencies:
-    "@myparcel-pdk/common": ^1.0.0-alpha.2
+    "@myparcel-pdk/common": ^1.0.0-alpha.4
     "@myparcel/sdk": ^2.11.0
     "@myparcel/ts-utils": ^1.6.0
     "@myparcel/vue-form-builder": ^1.0.0-alpha.1
@@ -622,7 +629,7 @@ __metadata:
     lodash-unified: ^1.0.3
     pinia: ^2.0.32
     vue: ^3.2.47
-  checksum: 3720ad19a9e9cd57259c9e5bf992249b84edba892642da2f4a81b0b393a1fc78657c89e86f433399998ab193544a286ace4a2fa92bf321b1e25eb374f8a0149e
+  checksum: cac6f4f937ad0c48f06858c2aa7d9c5822144827c1134c2f151a4c598a2b1c8298a9fbdaa2f3578d9096ab4ab1eccf6f517b716191f3ff46b6cec64e491acae4
   languageName: node
   linkType: hard
 
@@ -640,35 +647,35 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel-vfb/core@npm:^1.0.0-alpha.16":
-  version: 1.0.0-alpha.16
-  resolution: "@myparcel-vfb/core@npm:1.0.0-alpha.16"
+"@myparcel-vfb/core@npm:^1.0.0-alpha.17":
+  version: 1.0.0-alpha.17
+  resolution: "@myparcel-vfb/core@npm:1.0.0-alpha.17"
   dependencies:
     "@myparcel-vfb/build-vite": 1.0.0-alpha.15
-    "@myparcel-vfb/hook-manager": ^1.0.0-alpha.17
+    "@myparcel-vfb/hook-manager": ^1.0.0-alpha.18
     "@myparcel-vfb/utils": ^1.0.0-alpha.17
     "@myparcel/ts-utils": ^1.6.0
-  checksum: 4455bb09c6c99b60cea347032c13876b898cb1086a5edd55fb778af054ca79ff9f755da9a837c0a502ac10d19a4a1357e7843648f3cf842815310e0710a36028
+  checksum: 9239c77f2fc8d3fbc5b884f184a90ab3419033e632013347331d12c128cad1dc401a870c4f34f2869b9bbc9fe9028582cdef547d41b79974807c542d5f1601a1
   languageName: node
   linkType: hard
 
-"@myparcel-vfb/hook-manager@npm:^1.0.0-alpha.17":
-  version: 1.0.0-alpha.17
-  resolution: "@myparcel-vfb/hook-manager@npm:1.0.0-alpha.17"
+"@myparcel-vfb/hook-manager@npm:^1.0.0-alpha.18":
+  version: 1.0.0-alpha.18
+  resolution: "@myparcel-vfb/hook-manager@npm:1.0.0-alpha.18"
   dependencies:
     "@myparcel/ts-utils": ^1.6.0
-  checksum: 040d37ba4e93e1ca8dcba4c13f31f004699b4a024a669da1aa0ff554a869cb16cce9c6a53f72ad22bfa6f8023e6d9c30864c86c77f571a99aeddc3ae1bad4bf3
+  checksum: d88d49cc861570c2518f6546d342da95869b79c74dbb9332e4162210a9630e0872545dde88088d437ac4ac79b78cba1455bf73267e58cd2c53910c4a7894dc4a
   languageName: node
   linkType: hard
 
-"@myparcel-vfb/plugin@npm:^1.0.0-alpha.16":
-  version: 1.0.0-alpha.16
-  resolution: "@myparcel-vfb/plugin@npm:1.0.0-alpha.16"
+"@myparcel-vfb/plugin@npm:^1.0.0-alpha.17":
+  version: 1.0.0-alpha.17
+  resolution: "@myparcel-vfb/plugin@npm:1.0.0-alpha.17"
   dependencies:
-    "@myparcel-vfb/core": ^1.0.0-alpha.16
+    "@myparcel-vfb/core": ^1.0.0-alpha.17
     "@myparcel/ts-utils": ^1.6.0
     "@vue/devtools-api": ^6.5.0
-  checksum: 72de4ae388c4293d76e24b8a8724704ba377dd5a2c71b3c25f8497c4f07b9df321d2e41b63ab81d3585a2a9f1e15b3ba50e8d778cdcff972f2e2cd487e1adfa8
+  checksum: a11f72c8f8e71a9adc2c1e0505812575e822d61f0ef8c7ab0e4fb821fdcf25d1f9894c6fa484589296a610d465ab8f9c7782366d893f952d2377b84d41ca3994
   languageName: node
   linkType: hard
 
@@ -702,7 +709,7 @@ __metadata:
     tailwindcss: ^3.2.7
     vite: ^4.1.4
     vite-plugin-custom-tsconfig: ^1.0.4
-    vite-plugin-dts: ^1.7.1
+    vite-plugin-dts: ^2.0.2
     vitest: ^0.28.5
     vue: ^3.2.47
   languageName: unknown
@@ -721,7 +728,7 @@ __metadata:
     sass: ^1.58.3
     vite: ^4.1.4
     vite-plugin-custom-tsconfig: ^1.0.4
-    vite-plugin-dts: ^1.7.1
+    vite-plugin-dts: ^2.0.2
     vitest: ^0.28.5
   languageName: unknown
   linkType: soft
@@ -737,7 +744,7 @@ __metadata:
     sass: ^1.58.3
     vite: ^4.1.4
     vite-plugin-custom-tsconfig: ^1.0.4
-    vite-plugin-dts: ^1.7.1
+    vite-plugin-dts: ^2.0.2
     vitest: ^0.28.5
   languageName: unknown
   linkType: soft
@@ -842,15 +849,15 @@ __metadata:
   linkType: hard
 
 "@myparcel/vue-form-builder@npm:^1.0.0-alpha.1":
-  version: 1.0.0-alpha.38
-  resolution: "@myparcel/vue-form-builder@npm:1.0.0-alpha.38"
+  version: 1.0.0-alpha.39
+  resolution: "@myparcel/vue-form-builder@npm:1.0.0-alpha.39"
   dependencies:
-    "@myparcel-vfb/core": ^1.0.0-alpha.16
-    "@myparcel-vfb/hook-manager": ^1.0.0-alpha.17
-    "@myparcel-vfb/plugin": ^1.0.0-alpha.16
+    "@myparcel-vfb/core": ^1.0.0-alpha.17
+    "@myparcel-vfb/hook-manager": ^1.0.0-alpha.18
+    "@myparcel-vfb/plugin": ^1.0.0-alpha.17
     "@myparcel-vfb/utils": ^1.0.0-alpha.17
     "@myparcel/ts-utils": ^1.6.0
-  checksum: 226ab17a5eb297756d2da3ac6896678396c95101e68d07c30601b22b942dcbd1011323cde7f97a61e3cc23e82db50b40cf7a750093e6a69b702f570ea6d1edb4
+  checksum: afb8adde3a24f83b58ab4d6270a62d26b53a92aeec17caeb841f1a4534c72d824430920879a7c475701ab73a2c17f75b6a17e17e477f30b5e8b9382d75d92c66
   languageName: node
   linkType: hard
 
@@ -1613,15 +1620,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ts-morph/common@npm:~0.17.0":
-  version: 0.17.0
-  resolution: "@ts-morph/common@npm:0.17.0"
+"@ts-morph/common@npm:~0.18.0":
+  version: 0.18.1
+  resolution: "@ts-morph/common@npm:0.18.1"
   dependencies:
-    fast-glob: ^3.2.11
+    fast-glob: ^3.2.12
     minimatch: ^5.1.0
     mkdirp: ^1.0.4
     path-browserify: ^1.0.1
-  checksum: f588c0acabcc6ca9463ac09b343d67a73f6e7bf47f674aaff11542b95b58342556b05241610b9e6dffc2966db529e7261b6860577786f919a835c22488ec9260
+  checksum: 848fff5f7a6428d7c2f055de20cf8df864a967aac0cc03adc558d853442085a8fd9dec70429da24d67d263794b315edb0791c46d23ad9ae513251a7702df8031
   languageName: node
   linkType: hard
 
@@ -1688,9 +1695,9 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:^18.14.0":
-  version: 18.14.0
-  resolution: "@types/node@npm:18.14.0"
-  checksum: d83fcf5e4ed544755dd9028f5cbb6b9d46235043159111bb2ad62223729aee581c0144a9f6df8ba73d74011db9ed4ebd7af2fd5e0996714e3beb508a5da8ac5c
+  version: 18.14.1
+  resolution: "@types/node@npm:18.14.1"
+  checksum: 58556bbdb0050e44a4934742c1da2530812782c06d266a758e669e44c5aa196166c5fce45fdb03f016876717e3840478b3220129bb77367f979607564047f0a3
   languageName: node
   linkType: hard
 
@@ -2560,13 +2567,13 @@ __metadata:
   linkType: hard
 
 "axios@npm:^1.0.0":
-  version: 1.3.3
-  resolution: "axios@npm:1.3.3"
+  version: 1.3.4
+  resolution: "axios@npm:1.3.4"
   dependencies:
     follow-redirects: ^1.15.0
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
-  checksum: b734a4bc348e2fa27150a7d4289d783fa405feb3f79f8daf28fd05813a12c8525ae9d3854aafe7ba041b005a4a751a0ba3b923331ceed41296ae14c7e54e2f26
+  checksum: 7440edefcf8498bc3cdf39de00443e8101f249972c83b739c6e880d9d669fea9486372dbe8739e88b3bf8bb1ad15f6106693f206f078f4516fe8fd47b1c3093c
   languageName: node
   linkType: hard
 
@@ -3628,9 +3635,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.284":
-  version: 1.4.305
-  resolution: "electron-to-chromium@npm:1.4.305"
-  checksum: 574599461f7a5283026fc55727f9396b92f4d67952d3d333fc8dbb89e3b7f1ff646588c027fe8822b13227018d870405aeda2648a7324169871bab77108c4f40
+  version: 1.4.310
+  resolution: "electron-to-chromium@npm:1.4.310"
+  checksum: f7d070b36c2cf8e085a2aaca85a92f451657d39cd9e1e779f9e37e40c65039abd10807836e017b0ce813e0bb2e9f125a6401181f80182acd0b265734c857266a
   languageName: node
   linkType: hard
 
@@ -4122,7 +4129,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.2.11, fast-glob@npm:^3.2.12, fast-glob@npm:^3.2.9":
+"fast-glob@npm:^3.2.12, fast-glob@npm:^3.2.9":
   version: 3.2.12
   resolution: "fast-glob@npm:3.2.12"
   dependencies:
@@ -5878,6 +5885,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"magic-string@npm:^0.29.0":
+  version: 0.29.0
+  resolution: "magic-string@npm:0.29.0"
+  dependencies:
+    "@jridgewell/sourcemap-codec": ^1.4.13
+  checksum: 19e5398fcfc44804917127c72ad622c68a19a0a10cbdb8d4f9f9417584a087fe9e117140bfb2463d86743cf1ed9cf4182ae0b0ad1a7536f7fdda257ee4449ffb
+  languageName: node
+  linkType: hard
+
 "make-fetch-happen@npm:^10.0.3, make-fetch-happen@npm:^10.0.6, make-fetch-happen@npm:^10.2.0":
   version: 10.2.1
   resolution: "make-fetch-happen@npm:10.2.1"
@@ -6162,9 +6178,9 @@ __metadata:
   linkType: hard
 
 "minipass@npm:^4.0.0":
-  version: 4.2.0
-  resolution: "minipass@npm:4.2.0"
-  checksum: 3c3ce269eacdcecb56b5dfe4bb4ab905d60fea1af4c967c7ed54baadfdd4af03e4d926567fb655957504fb4c9e2e7adbb2dc636927dfb56c829f2b25f1b2b3dd
+  version: 4.2.1
+  resolution: "minipass@npm:4.2.1"
+  checksum: 727641018e2b2dcd8fb6239b9220b4f0ef1b43d279dcb7f53840f7c43d005a36f0cdcfe2ffbc18ce32fae2ea484d3e7d3cb29cbe99c9274b0365bbb74661266c
   languageName: node
   linkType: hard
 
@@ -7601,19 +7617,19 @@ __metadata:
   linkType: hard
 
 "readable-stream@npm:3, readable-stream@npm:^3.0.0, readable-stream@npm:^3.1.1, readable-stream@npm:^3.4.0, readable-stream@npm:^3.6.0":
-  version: 3.6.0
-  resolution: "readable-stream@npm:3.6.0"
+  version: 3.6.1
+  resolution: "readable-stream@npm:3.6.1"
   dependencies:
     inherits: ^2.0.3
     string_decoder: ^1.1.1
     util-deprecate: ^1.0.1
-  checksum: d4ea81502d3799439bb955a3a5d1d808592cf3133350ed352aeaa499647858b27b1c4013984900238b0873ec8d0d8defce72469fb7a83e61d53f5ad61cb80dc8
+  checksum: b7ab0508dba3c37277b9e43c0a970ea27635375698859a687f558c3c9393154b6c4f39c3aa5689641de183fffa26771bc1a45878ddde0236ad18fc8fdfde50ea
   languageName: node
   linkType: hard
 
 "readable-stream@npm:^2.0.0, readable-stream@npm:^2.0.2, readable-stream@npm:^2.0.5, readable-stream@npm:~2.3.6":
-  version: 2.3.7
-  resolution: "readable-stream@npm:2.3.7"
+  version: 2.3.8
+  resolution: "readable-stream@npm:2.3.8"
   dependencies:
     core-util-is: ~1.0.0
     inherits: ~2.0.3
@@ -7622,7 +7638,7 @@ __metadata:
     safe-buffer: ~5.1.1
     string_decoder: ~1.1.1
     util-deprecate: ~1.0.1
-  checksum: e4920cf7549a60f8aaf694d483a0e61b2a878b969d224f89b3bc788b8d920075132c4b55a7494ee944c7b6a9a0eada28a7f6220d80b0312ece70bbf08eeca755
+  checksum: 65645467038704f0c8aaf026a72fbb588a9e2ef7a75cd57a01702ee9db1c4a1e4b03aaad36861a6a0926546a74d174149c8c207527963e0c2d3eee2f37678a42
   languageName: node
   linkType: hard
 
@@ -8675,13 +8691,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-morph@npm:^16.0.0":
-  version: 16.0.0
-  resolution: "ts-morph@npm:16.0.0"
+"ts-morph@npm:17.0.1":
+  version: 17.0.1
+  resolution: "ts-morph@npm:17.0.1"
   dependencies:
-    "@ts-morph/common": ~0.17.0
+    "@ts-morph/common": ~0.18.0
     code-block-writer: ^11.0.3
-  checksum: a45ee1a2da09b06ac45a468c1cb9b00cc1b335224afddb22c30e4ad8a747b71c8a7c6cea29a6309ebf68d69f5dc8d3650d381891b77da5e2ad3e301dc3de40d5
+  checksum: 4748ab45d0fb0be235f69399ea217cf1c5984ad2ef3ff9eba5a417571f73098c6f1f765fc011eaadc48179471b977f1e44f72eb993932e5c74c5031ab6c60f3a
   languageName: node
   linkType: hard
 
@@ -9006,10 +9022,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-dts@npm:1.7.1":
-  version: 1.7.1
-  resolution: "vite-plugin-dts@npm:1.7.1"
+"vite-plugin-dts@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "vite-plugin-dts@npm:2.0.2"
   dependencies:
+    "@babel/parser": ^7.20.15
     "@microsoft/api-extractor": ^7.33.5
     "@rollup/pluginutils": ^5.0.2
     "@rushstack/node-core-library": ^3.53.2
@@ -9017,10 +9034,11 @@ __metadata:
     fast-glob: ^3.2.12
     fs-extra: ^10.1.0
     kolorist: ^1.6.0
-    ts-morph: ^16.0.0
+    magic-string: ^0.29.0
+    ts-morph: 17.0.1
   peerDependencies:
     vite: ">=2.9.0"
-  checksum: e2714a9e1727860cb217308b000d7306f98ba626998893a72d8b0e5db577d989457827033c76125a87491ace453325726da3795f17c3fea3e8af0d5e81820e89
+  checksum: d8bf9a8066d6db088f967379139bc54f78aef495a7827f0680a5c261e9b62b17cfc7b4f8cc4ad94cf3ef08b1aa4740040d471d6557641fbab2174ce4ad059430
   languageName: node
   linkType: hard
 

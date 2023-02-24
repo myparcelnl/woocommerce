@@ -9,6 +9,9 @@
     "test": "run ws:test \"$(pwd)\"",
     "test:watch": "run ws:test:watch \"$(pwd)\""
   },
+  "dependencies": {
+    "@myparcel/ts-utils": "^1.6.0"
+  },
   "devDependencies": {
     "@myparcel-woocommerce/frontend-common": "workspace:*",
     "@myparcel-woocommerce/vite-config": "workspace:*",
@@ -16,10 +19,7 @@
     "sass": "^1.58.3",
     "vite": "^4.1.4",
     "vite-plugin-custom-tsconfig": "^1.0.4",
-    "vite-plugin-dts": "^1.7.1",
+    "vite-plugin-dts": "^2.0.2",
     "vitest": "^0.28.5"
-  },
-  "dependencies": {
-    "@myparcel/ts-utils": "^1.6.0"
   }
 }
