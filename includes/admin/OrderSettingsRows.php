@@ -330,7 +330,7 @@ class OrderSettingsRows
                         'parent_value' => WCMP_Settings_Data::DISABLED,
                     ],
                 ],
-           ],
+            ],
             [
                 'name'      => self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY,
                 'type'      => 'toggle',
@@ -339,7 +339,7 @@ class OrderSettingsRows
                 'value'     => true,
                 'condition' => [
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY),
-                    self::CONDITION_FORCE_ENABLED_SAME_DAY
+                    self::CONDITION_FORCE_ENABLED_SAME_DAY,
                 ],
             ],
         ];

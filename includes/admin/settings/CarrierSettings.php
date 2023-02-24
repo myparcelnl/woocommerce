@@ -154,7 +154,7 @@ class CarrierSettings
         $settings = [];
 
         foreach ($options as $option) {
-            $settings[] = $callback($option);
+            $settings[] = $callback($option, $consignment->getCarrier());
         }
 
         return array_merge(...$settings);
@@ -166,7 +166,7 @@ class CarrierSettings
      * @return array
      * @throws \Exception
      */
-    private function createDefaultExportSettingsArray(string $option): array
+    private function createDefaultExportSettingsArray(string $option, AbstractCarrier $carrier): array
     {
         $settings           = [];
         $euInsuranceAmounts = [0  => __('no_insurance', 'woocommerce-myparcel')] + WCMP_Data::getInsuranceAmounts('FR');
@@ -252,14 +252,18 @@ class CarrierSettings
                     'type'      => 'toggle',
                 ];
                 break;
-//            case AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY:
-//                $settings[] = [
-//                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY,
-//                    'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
-//                    'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
-//                    'type'      => 'toggle',
-//                ];
-//                break;
+            case AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY:
+                if (! AccountSettings::getInstance()->isDhlForYouPilotUser()) {
+                    break;
+                }
+
+                $settings[] = [
+                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY,
+                    'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
+                    'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
+                    'type'      => 'toggle',
+                ];
+                break;
             case AbstractConsignment::SHIPMENT_OPTION_HIDE_SENDER:
                 $settings[] = [
                     'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_HIDE_SENDER,

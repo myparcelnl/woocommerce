@@ -12,6 +12,7 @@ use MyParcelNL\Sdk\src\Model\Account\CarrierConfiguration;
 use MyParcelNL\Sdk\src\Model\Account\CarrierOptions;
 use MyParcelNL\Sdk\src\Model\Account\Shop;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLForYou;
 use MyParcelNL\Sdk\src\Support\Collection;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
@@ -266,5 +267,22 @@ class AccountSettings extends Model
         }
 
         return $this->settings->get($settingKey);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDhlForYouPilotUser(): bool
+    {
+        $carrierOptions = $this->carrier_options;
+        $result         = false;
+
+        foreach ($carrierOptions as $carrierOption) {
+            if (CarrierDHLForYou::NAME === $carrierOption->getCarrier()->getName() && 'dhl_for_you_complete_access' === $carrierOption->getLabel()) {
+                $result = true;
+            }
+        }
+
+        return $result;
     }
 }
