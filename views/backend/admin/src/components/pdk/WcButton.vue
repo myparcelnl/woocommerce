@@ -24,6 +24,10 @@
           {{ translate(label) }}
         </span>
       </slot>
+
+      <WcSpinner
+        v-show="loading"
+        class="mypa-m-auto mypa-ml-1" />
     </span>
   </button>
 </template>
@@ -31,6 +35,7 @@
 <script lang="ts" setup>
 import {AdminIcon, Size, useLanguage} from '@myparcel-pdk/admin/src';
 import {PropType, computed} from 'vue';
+import WcSpinner from '../WcSpinner.vue';
 
 const props = defineProps({
   disabled: {

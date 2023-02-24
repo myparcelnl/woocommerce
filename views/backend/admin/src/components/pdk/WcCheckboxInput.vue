@@ -4,6 +4,9 @@
       :id="id"
       v-model="model"
       v-test="'CheckboxInput'"
+      :class="{
+        'form-required': !element.isValid,
+      }"
       :value="element?.props?.value ?? '1'"
       type="checkbox" />
     <label

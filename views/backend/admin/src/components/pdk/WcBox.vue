@@ -1,7 +1,8 @@
 <template>
   <div
     v-test="'Box'"
-    class="mypa-relative">
+    :class="cssClasses"
+    class="mypa-border mypa-border-gray-300 mypa-border-solid mypa-relative">
     <WcLoadingOverlay v-show="loading" />
 
     <div v-if="$slots.header">
@@ -15,34 +16,34 @@
     </div>
 
     <div
-      v-if="actions.length || $slots.footer"
+      v-if="$slots.footer"
       class="d-flex">
-      <slot name="footer">
-        <PdkButtonGroup>
-          <ActionButton
-            v-for="(action, index) in actions"
-            :key="`${index}_${action.id}`"
-            :action="action"
-            :disabled="loading" />
-        </PdkButtonGroup>
-      </slot>
+      <slot name="footer" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {ActionButton, AnyAdminAction} from '@myparcel-pdk/admin/src';
-import {PropType} from 'vue';
+import {PropType, computed} from 'vue';
+import {Size} from '@myparcel-pdk/admin/src';
 import WcLoadingOverlay from '../WcLoadingOverlay.vue';
 
-defineProps({
+const props = defineProps({
   loading: {
     type: Boolean,
   },
 
-  actions: {
-    type: Array as PropType<AnyAdminAction[]>,
-    default: () => [],
+  size: {
+    type: String as PropType<Size>,
+    default: Size.MEDIUM,
   },
 });
+
+const cssClasses = computed(() => ({
+  'mypa-px-2 mypa-pb-2 mypa-pt-1 mypa-mb-1 mypa-rounded': [Size.SMALL, Size.EXTRA_SMALL].includes(props.size),
+  'mypa-px-4 mypa-pb-4 mypa-pt-3 mypa-mb-3': [Size.MEDIUM].includes(props.size),
+  'mypa-px-5 mypa-pb-5 mypa-pt-4 mypa-mb-4': [Size.LARGE].includes(props.size),
+  'mypa-px-6 mypa-pb-6 mypa-pt-5 mypa-mb-5': [Size.EXTRA_LARGE].includes(props.size),
+  'mypa-rounded-xl': [Size.MEDIUM, Size.LARGE, Size.EXTRA_LARGE].includes(props.size),
+}));
 </script>

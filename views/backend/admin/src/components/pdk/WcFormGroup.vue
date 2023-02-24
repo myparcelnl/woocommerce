@@ -35,6 +35,8 @@
 <script lang="ts" setup>
 import {generateFieldId, useElement, useLanguage} from '@myparcel-pdk/admin/src';
 
+defineProps<{element: any}>();
+
 const {translate} = useLanguage();
 
 const id = generateFieldId();

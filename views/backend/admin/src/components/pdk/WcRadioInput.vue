@@ -5,6 +5,9 @@
     <input
       :id="id"
       v-model="model"
+      :class="{
+        'form-required': !element.isValid,
+      }"
       :disabled="element.isDisabled || element.isSuspended"
       :value="element.props?.value"
       type="radio" />
