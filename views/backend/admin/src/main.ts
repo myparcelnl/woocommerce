@@ -45,15 +45,9 @@ createPdkAdmin({
   logLevel: LogLevel.DEBUG,
 
   formConfig: {
-    field: {
-      elementProp: false,
-    },
-
     fieldDefaults: {
       afterValidate(field) {
         const valid = get(field.isValid);
-
-        console.log(valid);
 
         field.form.element.classList.toggle('form-invalid', !valid);
       },
