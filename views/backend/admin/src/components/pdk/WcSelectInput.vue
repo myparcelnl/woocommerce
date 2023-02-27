@@ -4,10 +4,6 @@
     ref="selectElement"
     v-model="model"
     v-test="'SelectInput'"
-    :class="{
-      disabled: options.length === 1 || element.isDisabled || element.isSuspended,
-      'form-required': !element.isValid,
-    }"
     class="select">
     <option
       v-for="(item, index) in options"
@@ -19,10 +15,11 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, onBeforeUnmount, onMounted, ref, watch} from 'vue';
+import {computed, onBeforeUnmount, onMounted, ref, watch, watchEffect} from 'vue';
 import {generateFieldId, useElement} from '@myparcel-pdk/admin/src';
 import {SelectOption} from '@myparcel-pdk/common/src';
-import {useVModel} from '@vueuse/core';
+import {isOfType} from '@myparcel/ts-utils';
+import {get} from '@vueuse/core';
 
 const props = defineProps({
   // eslint-disable-next-line vue/no-unused-properties
@@ -34,19 +31,27 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 
-const element = useElement();
-
-const model = useVModel(props, undefined, emit);
-
-const options = computed<SelectOption[]>(() => {
-  return element.props?.options ?? [];
+const model = computed({
+  get: () => props.modelValue,
+  set: (value) => {
+    $select.value?.val(value).trigger('change');
+    emit('update:modelValue', value);
+  },
 });
 
+const element = useElement();
 const id = generateFieldId();
 
-const selectElement = ref<HTMLElement | null>(null);
+// @ts-expect-error props are not typed
+const options = computed<SelectOption[]>(() => element.props?.options ?? []);
 
+const selectElement = ref<HTMLElement | null>(null);
 const $select = ref<JQuery | null>(null);
+
+watchEffect(() => {
+  $select.value?.toggleClass('form-required', get(element.isValid));
+  $select.value?.attr('disabled', get(element.isDisabled) || get(element.isSuspended));
+});
 
 onMounted(() => {
   if (!selectElement.value) {
@@ -55,18 +60,26 @@ onMounted(() => {
 
   $select.value = jQuery(selectElement.value);
 
-  $select.value.selectWoo({width: 'auto'}).on('change', (event) => {
-    model.value = event.currentTarget?.value;
+  const selectWoo = $select.value.selectWoo({width: 'auto'});
+
+  selectWoo.on('change', (event) => {
+    if (!isOfType<HTMLSelectElement>(event.target, 'value')) {
+      return;
+    }
+
+    emit('update:modelValue', event.target.value);
   });
 
   watch(
     options,
-    (value) => {
-      if ((model.value && options.value.some((option) => option.value === model.value)) || value.length === 0) {
+    (newOptions) => {
+      const hasExistingValue = model.value && newOptions.some((option) => option.value === model.value);
+
+      if (hasExistingValue || newOptions.length === 0) {
         return;
       }
 
-      model.value = value[0].value;
+      model.value = newOptions[0].value;
     },
     {immediate: options.value.length > 0},
   );
