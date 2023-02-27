@@ -15,21 +15,17 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, onBeforeUnmount, onMounted, ref, watch, watchEffect} from 'vue';
-import {generateFieldId, useElement} from '@myparcel-pdk/admin/src';
-import {SelectOption} from '@myparcel-pdk/common/src';
-import {isOfType} from '@myparcel/ts-utils';
+import {ElementInstance, generateFieldId, useSelectInputContext} from '@myparcel-pdk/admin/src';
+import {computed, onBeforeUnmount, onMounted, ref, watchEffect} from 'vue';
+import {InteractiveElementInstance} from '@myparcel/vue-form-builder/src';
 import {get} from '@vueuse/core';
+import {isOfType} from '@myparcel/ts-utils';
 
-const props = defineProps({
-  // eslint-disable-next-line vue/no-unused-properties
-  modelValue: {
-    type: [String, Number],
-    default: null,
-  },
-});
+// eslint-disable-next-line vue/no-unused-properties
+const props = defineProps<{modelValue: string | number; element: InteractiveElementInstance}>();
+const emit = defineEmits<(e: 'update:modelValue', value: string | number) => void>();
 
-const emit = defineEmits(['update:modelValue']);
+const id = generateFieldId(props.element as ElementInstance);
 
 const model = computed({
   get: () => props.modelValue,
@@ -39,18 +35,16 @@ const model = computed({
   },
 });
 
-const element = useElement();
-const id = generateFieldId();
-
 // @ts-expect-error props are not typed
-const options = computed<SelectOption[]>(() => element.props?.options ?? []);
+const {options} = useSelectInputContext(model, props.element.props?.options ?? []);
 
 const selectElement = ref<HTMLElement | null>(null);
 const $select = ref<JQuery | null>(null);
 
 watchEffect(() => {
-  $select.value?.toggleClass('form-required', get(element.isValid));
-  $select.value?.attr('disabled', get(element.isDisabled) || get(element.isSuspended));
+  $select.value?.toggleClass('form-required', get(props.element.isValid));
+  // @ts-expect-error typescript doesn't get it
+  $select.value?.attr('disabled', get(props.element.isDisabled) || get(props.element.isSuspended));
 });
 
 onMounted(() => {
@@ -69,20 +63,6 @@ onMounted(() => {
 
     emit('update:modelValue', event.target.value);
   });
-
-  watch(
-    options,
-    (newOptions) => {
-      const hasExistingValue = model.value && newOptions.some((option) => option.value === model.value);
-
-      if (hasExistingValue || newOptions.length === 0) {
-        return;
-      }
-
-      model.value = newOptions[0].value;
-    },
-    {immediate: options.value.length > 0},
-  );
 });
 
 onBeforeUnmount(() => {

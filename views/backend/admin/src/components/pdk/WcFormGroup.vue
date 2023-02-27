@@ -15,9 +15,9 @@
         </slot>
 
         <span
-          v-if="element.props.description"
+          v-if="element.props?.description"
           v-test="'FormGroup__description'"
-          :data-tip="translate(element.props.description)"
+          :data-tip="translate(element.props?.description)"
           class="woocommerce-help-tip" />
       </label>
     </PdkTableCol>
@@ -33,12 +33,13 @@
 </template>
 
 <script lang="ts" setup>
-import {generateFieldId, useElement, useLanguage} from '@myparcel-pdk/admin/src';
+import {ElementInstance, generateFieldId, useLanguage} from '@myparcel-pdk/admin/src';
+import {InteractiveElementInstance} from '@myparcel/vue-form-builder/src';
 
-defineProps<{element: any}>();
+// eslint-disable-next-line vue/no-unused-properties
+const props = defineProps<{modelValue: boolean; element: InteractiveElementInstance}>();
+
+const id = generateFieldId(props.element as ElementInstance);
 
 const {translate} = useLanguage();
-
-const id = generateFieldId();
-const element = useElement();
 </script>

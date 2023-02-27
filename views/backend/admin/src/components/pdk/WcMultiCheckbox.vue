@@ -11,31 +11,28 @@
 
 <script lang="ts" setup>
 import {ComputedRef, computed, ref} from 'vue';
-import {ElementInstance, useElement} from '@myparcel-pdk/admin/src';
+import {InteractiveElementInstance} from '@myparcel/vue-form-builder/src';
 import {SelectOption} from '@myparcel-pdk/common/src';
 import {useVModel} from '@vueuse/core';
 
-const props = defineProps({
-  // eslint-disable-next-line vue/no-unused-properties
-  modelValue: {
-    type: [String, Boolean, Array, Object],
-    default: null,
-  },
-});
+// eslint-disable-next-line vue/no-unused-properties
+const props = defineProps<{
+  modelValue: string | boolean | unknown[] | Record<string, unknown>;
+  element: InteractiveElementInstance;
+}>();
+const emit =
+  defineEmits<(e: 'update:modelValue', value: string | boolean | unknown[] | Record<string, unknown>) => void>();
 
-const emit = defineEmits(['update:modelValue']);
+const model = useVModel(props, undefined, emit);
 
-const element = useElement();
+// @ts-expect-error props are not typed
+const options: ComputedRef<SelectOption[]> = computed(() => props.element.props?.options ?? []);
 
-const options: ComputedRef<SelectOption[]> = computed(() => element.props?.options ?? []);
-
-const elements: ComputedRef<ElementInstance[]> = computed(() => {
+const elements: ComputedRef<InteractiveElementInstance[]> = computed(() => {
   return options.value.map((option) => ({
-    ...element,
+    ...props.element,
     label: option.label,
     ref: ref(props.modelValue === option.value),
   }));
 });
-
-const model = useVModel(props, undefined, emit);
 </script>
