@@ -567,6 +567,7 @@ class WCMP_Export
     {
         $order           = WCX::get_order($order_id);
         $deliveryOptions = json_decode($order->get_meta('_myparcel_delivery_options'), true);
+        $lastShipmentIds = json_decode($order->get_meta('_myparcel_last_shipment_ids'), true);
         $carrier         = CarrierFactory::createFromName($deliveryOptions['carrier']);
         $shipping_name   =
             method_exists($order, 'get_formatted_shipping_full_name') ? $order->get_formatted_shipping_full_name()
@@ -574,7 +575,7 @@ class WCMP_Export
 
         // set name & email
         $return_shipment_data = [
-            'parent'  => (int) $order->get_order_number(),
+            'parent'  => (int) array_pop($lastShipmentIds),
             'name'    => $shipping_name,
             'email'   => WCX_Order::get_prop($order, 'billing_email'),
             'carrier' => $carrier->getId(),
