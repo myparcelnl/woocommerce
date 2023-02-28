@@ -26,7 +26,7 @@ try {
 
     $orderSettingsRows = new OrderSettingsRows($deliveryOptions, $order);
     $optionRows        = $orderSettingsRows->getOptionsRows();
-    $optionRows        = $orderSettingsRows->filterRowsByCountry($order->get_shipping_country(), $optionRows);
+    $optionRows        = $orderSettingsRows->filterRowsByCountry($order->get_shipping_country(), $optionRows, $deliveryOptions->getCarrier());
 
     $namePrefix = WCMYPA_Admin::SHIPMENT_OPTIONS_FORM_NAME . "[{$order->get_id()}]";
 

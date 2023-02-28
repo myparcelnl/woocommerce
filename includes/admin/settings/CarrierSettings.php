@@ -161,7 +161,8 @@ class CarrierSettings
     }
 
     /**
-     * @param  string $option
+     * @param  string                                            $option
+     * @param  \MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier $carrier
      *
      * @return array
      * @throws \Exception
@@ -169,7 +170,7 @@ class CarrierSettings
     private function createDefaultExportSettingsArray(string $option, AbstractCarrier $carrier): array
     {
         $settings           = [];
-        $euInsuranceAmounts = [0  => __('no_insurance', 'woocommerce-myparcel')] + WCMP_Data::getInsuranceAmounts('FR');
+        $euInsuranceAmounts = [0  => __('no_insurance', 'woocommerce-myparcel')] + WCMP_Data::getInsuranceAmounts('FR', $carrier->getName());
 
         switch ($option) {
             case AbstractConsignment::SHIPMENT_OPTION_AGE_CHECK:
@@ -200,7 +201,7 @@ class CarrierSettings
                     'label'     => __('shipment_options_insured_amount', 'woocommerce-myparcel'),
                     'help_text' => __('shipment_options_insured_amount_help_text', 'woocommerce-myparcel'),
                     'type'      => 'select',
-                    'options'   => WCMP_Data::getInsuranceAmounts(AbstractConsignment::CC_NL),
+                    'options'   => WCMP_Data::getInsuranceAmounts(AbstractConsignment::CC_NL, $carrier->getName()),
                 ];
                 $settings[] = [
                     'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_EU_AMOUNT,

@@ -328,6 +328,9 @@ jQuery(($) => {
         postalCode: MyParcelFrontend.getField(MyParcelFrontend.postcodeField).value,
         number: MyParcelFrontend.getHouseNumber(),
         city: MyParcelFrontend.getField(MyParcelFrontend.cityField).value,
+        street: this.isUsingSplitAddressFields
+          ? MyParcelFrontend.getField(MyParcelFrontend.streetNameField).value
+          : MyParcelFrontend.getField(MyParcelFrontend.addressField).value
       };
 
       if (MyParcelFrontend.hasDeliveryOptions) {
