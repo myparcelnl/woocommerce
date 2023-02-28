@@ -565,9 +565,10 @@ class WCMP_Export
      */
     public function prepareReturnShipmentData($order_id, ?array $options = []): array
     {
-        $order = WCX::get_order($order_id);
-
-        $shipping_name =
+        $order           = WCX::get_order($order_id);
+        $deliveryOptions = json_decode($order->get_meta('_myparcel_delivery_options'), true);
+        $carrier         = CarrierFactory::createFromName($deliveryOptions['carrier']);
+        $shipping_name   =
             method_exists($order, 'get_formatted_shipping_full_name') ? $order->get_formatted_shipping_full_name()
                 : trim($order->get_shipping_first_name() . ' ' . $order->get_shipping_last_name());
 
@@ -576,7 +577,7 @@ class WCMP_Export
             'parent'  => (int) $order->get_order_number(),
             'name'    => $shipping_name,
             'email'   => WCX_Order::get_prop($order, 'billing_email'),
-            'carrier' => PostNLConsignment::CARRIER_ID, // default to PostNL for now
+            'carrier' => $carrier->getId(),
         ];
 
         if (! Arr::get($return_shipment_data, 'email')) {

@@ -92,12 +92,6 @@ class OrderSettingsRows
         'type'         => 'disable',
         'parent_value'    => WCMP_Settings_Data::ENABLED,
     ];
-    private const CONDITION_FORCE_DISABLED_ON_ONLY_RECIPIENT = [
-        'parent_name'  => self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT,
-        'type'         => 'disable',
-        'set_value'    => WCMP_Settings_Data::ENABLED,
-        'parent_value' => WCMP_Settings_Data::DISABLED,
-    ];
 
     private const DHL_PARCEL_CONNECT_FORBIDDEN_COUNTRIES = [
         AbstractConsignment::CC_NL,
@@ -285,8 +279,9 @@ class OrderSettingsRows
     private function getAdditionalOptionsRows(OrderSettings $orderSettings): array
     {
         $isDhlForYouPilotUser = AccountSettings::getInstance()->isDhlForYouPilotUser();
+        $carrier = $orderSettings->getDeliveryOptions()->getCarrier();
 
-        return [
+        $rows = [
             [
                 'name'        => self::OPTION_EXTRA_OPTIONS_DIGITAL_STAMP_WEIGHT,
                 'type'        => 'select',
@@ -311,32 +306,16 @@ class OrderSettingsRows
                 'label'     => __('shipment_options_only_recipient', 'woocommerce-myparcel'),
                 'help_text' => __('shipment_options_only_recipient_help_text', 'woocommerce-myparcel'),
                 'value'     => $orderSettings->hasOnlyRecipient(),
-                'condition' => [
-                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
-                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
-                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT),
-                    self::CONDITION_FORCE_ENABLED_ON_AGE_CHECK,
-                ],
-            ],
-            [
-                'name'      => self::OPTION_SHIPMENT_OPTIONS_SIGNATURE,
-                'type'      => 'toggle',
-                'label'     => __('shipment_options_signature', 'woocommerce-myparcel'),
-                'help_text' => __('shipment_options_signature_help_text', 'woocommerce-myparcel'),
-                'value'     => $orderSettings->hasSignature(),
-//                'condition' => in_array(
-//                    $orderSettings->getDeliveryOptions()
-//                        ->getCarrier(), [CarrierDHLParcelConnect::NAME, CarrierDHLEuroplus::NAME],
-//                    true
-//                ) ? [
-//                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
-//                    self::CONDITION_FORCE_ENABLED_SIGNATURE,
-//                ] : [
-//                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
-//                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
-//                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_SIGNATURE),
-//                    self::CONDITION_FORCE_ENABLED_ON_AGE_CHECK,
-//                ] ,
+                'condition' => CarrierPostNL::NAME === $carrier
+                    ? [self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                       self::CONDITION_DELIVERY_TYPE_DELIVERY,
+                       $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT),
+                       self::CONDITION_FORCE_ENABLED_ON_AGE_CHECK,
+                      ] : [
+                        self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                        self::CONDITION_DELIVERY_TYPE_DELIVERY,
+                        $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT),
+                    ],
             ],
             [
                 'name'      => self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
@@ -344,11 +323,7 @@ class OrderSettingsRows
                 'label'     => __('shipment_options_age_check', 'woocommerce-myparcel'),
                 'help_text' => __('shipment_options_age_check_help_text', 'woocommerce-myparcel'),
                 'value'     => $orderSettings->hasAgeCheck(),
-                'condition' => CarrierDHLForYou::NAME === $orderSettings->getDeliveryOptions()->getCarrier() ? [
-                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
-                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK),
-//                    self::CONDITION_FORCE_ENABLED_SAME_DAY
-                ] : [
+                'condition' => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK),
                 ],
@@ -408,6 +383,18 @@ class OrderSettingsRows
                 ],
             ],
         ];
+
+        if (in_array($carrier, [CarrierPostNL::NAME, CarrierDHLForYou::NAME])) {
+            $rows[] = [
+                'name'      => self::OPTION_SHIPMENT_OPTIONS_SIGNATURE,
+                'type'      => 'toggle',
+                'label'     => __('shipment_options_signature', 'woocommerce-myparcel'),
+                'help_text' => __('shipment_options_signature_help_text', 'woocommerce-myparcel'),
+                'value'     => $orderSettings->hasSignature(),
+            ];
+        }
+
+        return $rows;
     }
 
     /**
