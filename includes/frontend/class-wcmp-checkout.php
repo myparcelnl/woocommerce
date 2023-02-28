@@ -9,7 +9,6 @@ use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\MyParcelRequest;
 use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\Sdk\src\Support\Collection;
-use MyParcelNL\WooCommerce\includes\admin\settings\SameDayDeliveryService;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
@@ -211,6 +210,7 @@ class WCMP_Checkout
             $chosenShippingMethodPrice += (float) $cartTotals['shipping_tax'];
         }
         $carrierSettings = [];
+
         foreach ($this->getSortedCarriersForDeliveryOptions() as $carrier) {
             $carrierName = $carrier->getName();
 
@@ -501,6 +501,7 @@ class WCMP_Checkout
      */
     private function adjustDHLDeliverySettings(array $dhlForYouSettings): array
     {
+        $accountSettings                           = AccountSettings::getInstance();
         $weekDay                                   = date('N', strtotime(date('Y-m-d')));
         $timezone                                  = new DateTimeZone('Europe/Amsterdam');
         $now                                       = new DateTime('now', $timezone);
@@ -509,7 +510,9 @@ class WCMP_Checkout
         $weekDay                                   = ($weekDay + $dhlForYouSettings['dropOffDelay']) % 7;
         $todayIsDropOffDay                         = in_array((string) $weekDay, $dhlForYouSettings['dropOffDays'], true);
         $dhlForYouSettings['allowDeliveryOptions'] = $todayIsDropOffDay;
-        $dhlForYouSettings['allowSameDayDelivery'] = true;
+        $dhlForYouSettings['allowSameDayDelivery'] = $accountSettings->isDhlForYouPilotUser()
+            ? (bool) WCMYPA()->setting_collection->where('carrier', CarrierDHLForYou::NAME)->getByName(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY)
+            : true;
 
         return $dhlForYouSettings;
     }

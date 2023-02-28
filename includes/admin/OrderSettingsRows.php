@@ -217,7 +217,7 @@ class OrderSettingsRows
         }
 
         if (in_array(
-            $orderSettings->getDeliveryOptions()
+            $this->deliveryOptions
                 ->getCarrier(), [CarrierDHLEuroplus::NAME, CarrierDHLParcelConnect::NAME],
             true
         )) {
@@ -230,6 +230,7 @@ class OrderSettingsRows
                 'condition' => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     self::CONDITION_FORCE_ENABLED,
+                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_SIGNATURE),
                 ],
             ];
         }
@@ -450,8 +451,10 @@ class OrderSettingsRows
         $carriersWithFeature = [];
 
         foreach ($carriers as $carrier) {
-            $shipmentOptions = ConsignmentFactory::createFromCarrier($carrier)
-                ->getAllowedShipmentOptions();
+            $carrierClass = ConsignmentFactory::createFromCarrier($carrier);
+            $shipmentOptions = $this->deliveryOptions->isPickup()
+                ? $carrierClass->getAllowedShipmentOptionsForPickup()
+                : $carrierClass->getAllowedShipmentOptions();
 
             if (in_array($shipmentOption, $shipmentOptions, true)) {
                 $carriersWithFeature[] = $carrier->getName();
