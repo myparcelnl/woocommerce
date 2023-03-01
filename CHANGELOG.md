@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.18.0](https://github.com/myparcelnl/woocommerce/compare/v4.17.0...v4.18.0) (2023-03-01)
+
+
+### :bug: Bug Fixes
+
+* close inline style properly ([#954](https://github.com/myparcelnl/woocommerce/issues/954)) ([32b80fb](https://github.com/myparcelnl/woocommerce/commit/32b80fbf2758faad0d7780da59558422c787da71)), closes [#950](https://github.com/myparcelnl/woocommerce/issues/950)
+
+
+### :sparkles: New Features
+
+* add carrier dhl europlus and dhl parcelconnect ([#955](https://github.com/myparcelnl/woocommerce/issues/955)) ([6b7b89b](https://github.com/myparcelnl/woocommerce/commit/6b7b89b1a2d740649afe3da11233f254aaec7196))
+
 ## [4.17.1-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.17.0...v4.17.1-rc.1) (2023-02-21)
 
 
