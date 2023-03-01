@@ -54,24 +54,7 @@ use function DI\value;
  * @see \MyParcelNL\WooCommerce\Pdk\Boot::setupPdk() for configuration based on the plugin itself.
  */
 return [
-    'mode'                   => value(WP_DEBUG ? Pdk::MODE_DEVELOPMENT : Pdk::MODE_PRODUCTION),
-
-    /**
-     * The version of the delivery options in the checkout.
-     *
-     * @see https://github.com/myparcelnl/delivery-options/releases
-     */
-    'deliveryOptionsVersion' => value('5.3.0'),
-
-    /**
-     * Only use carriers that we tested and we have a schema for, at the moment
-     */
-    'allowedCarriers' => value([
-        'dhlforyou',
-        'postnl',
-        'dhlparcelconnect',
-        'dhleuroplus',
-    ]),
+    'mode'                                      => value(WP_DEBUG ? Pdk::MODE_DEVELOPMENT : Pdk::MODE_PRODUCTION),
 
     /**
      * Repositories
