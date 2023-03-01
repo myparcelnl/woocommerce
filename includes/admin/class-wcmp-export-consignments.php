@@ -2,7 +2,9 @@
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLEuroplus;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLForYou;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLParcelConnect;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
 use MyParcelNL\WooCommerce\Helper\ExportRow;
@@ -306,7 +308,14 @@ class WCMP_Export_Consignments
             ->setOnlyRecipient($this->orderSettings->hasOnlyRecipient())
             ->setReturn($this->orderSettings->hasReturnShipment())
             ->setSameDayDelivery($this->orderSettings->isSameDayDelivery())
-            ->setSignature($this->orderSettings->hasSignature())
+            ->setSignature(
+                in_array(
+                    $this->deliveryOptions->getCarrier(),
+                    [CarrierDHLEuroplus::NAME, CarrierDHLParcelConnect::NAME],
+                    true
+                )
+                || $this->orderSettings->hasSignature()
+            )
             ->setContents($this->getContents())
             ->setExtraAssurance($this->orderSettings->hasExtraAssurance())
             ->setHideSender($this->orderSettings->hasHideSender())

@@ -323,11 +323,14 @@ jQuery(($) => {
     updateAddress() {
       MyParcelFrontend.validateMyParcelConfig();
 
+      const streetField = MyParcelFrontend.getField(MyParcelFrontend.streetNameField).value ?? MyParcelFrontend.getField(MyParcelFrontend.addressField).value
+
       window.MyParcelConfig.address = {
         cc: MyParcelFrontend.getField(MyParcelFrontend.countryField).value,
         postalCode: MyParcelFrontend.getField(MyParcelFrontend.postcodeField).value,
         number: MyParcelFrontend.getHouseNumber(),
         city: MyParcelFrontend.getField(MyParcelFrontend.cityField).value,
+        street: streetField,
       };
 
       if (MyParcelFrontend.hasDeliveryOptions) {

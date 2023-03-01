@@ -9,7 +9,9 @@ defined('ABSPATH') or die();
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLEuroplus;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLForYou;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLParcelConnect;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
@@ -25,6 +27,10 @@ class OrderSettingsRows
         self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
         self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT,
         self::OPTION_SHIPMENT_OPTIONS_SIGNATURE,
+    ];
+    private const DHL_ONLY_ROWS          = [
+        self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
+        self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT,
     ];
 
     private const OPTION_CARRIER                                 = '[carrier]';
@@ -73,16 +79,23 @@ class OrderSettingsRows
         'type'         => 'show',
         'parent_value' => AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME,
     ];
-    private const CONDITION_FORCE_ENABLED_ON_AGE_CHECK = [
+    private const CONDITION_FORCE_ENABLED_ON_AGE_CHECK       = [
         'parent_name'  => self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
         'type'         => 'disable',
         'set_value'    => WCMP_Settings_Data::ENABLED,
         'parent_value' => WCMP_Settings_Data::DISABLED,
     ];
-    private const CONDITION_FORCE_ENABLED_SAME_DAY = [
+    private const CONDITION_FORCE_ENABLED                    = [
         'parent_name'  => self::OPTION_CARRIER,
         'type'         => 'disable',
         'parent_value'    => WCMP_Settings_Data::ENABLED,
+    ];
+    private const DHL_PARCEL_CONNECT_FORBIDDEN_COUNTRIES = [
+        AbstractConsignment::CC_NL,
+        AbstractConsignment::CC_BE,
+        'DK',
+        'FR',
+        'SE',
     ];
 
     /**
@@ -117,6 +130,7 @@ class OrderSettingsRows
         if (! $isHomeCountry) {
             unset($packageTypeOptions['mailbox'], $packageTypeOptions['digital_stamp']);
         }
+
         $rows = [
             [
                 'name'    => self::OPTION_CARRIER,
@@ -174,7 +188,7 @@ class OrderSettingsRows
             'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED_AMOUNT,
             'type'      => 'select',
             'label'     => __('insured_amount', 'woocommerce-myparcel'),
-            'options'   => WCMP_Data::getInsuranceAmounts($shippingCountry),
+            'options'   => WCMP_Data::getInsuranceAmounts($shippingCountry, $orderSettings->getDeliveryOptions()->getCarrier()),
             'value'     => $orderSettings->getInsuranceAmount(),
             'condition' => [
                 self::CONDITION_PACKAGE_TYPE_PACKAGE,
@@ -197,6 +211,25 @@ class OrderSettingsRows
             ];
         }
 
+        if (in_array(
+            $this->deliveryOptions
+                ->getCarrier(), [CarrierDHLEuroplus::NAME, CarrierDHLParcelConnect::NAME],
+            true
+        )) {
+            $rows[] = [
+                'name'      => self::OPTION_SHIPMENT_OPTIONS_SIGNATURE,
+                'type'      => 'toggle',
+                'label'     => __('shipment_options_signature', 'woocommerce-myparcel'),
+                'help_text' => __('shipment_options_signature_help_text', 'woocommerce-myparcel'),
+                'value'     => true,
+                'condition' => [
+                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                    self::CONDITION_FORCE_ENABLED,
+                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_SIGNATURE),
+                ],
+            ];
+        }
+
         $rows[] = [
             'name'  => self::OPTION_SHIPMENT_OPTIONS_LABEL_DESCRIPTION,
             'type'  => 'text',
@@ -215,14 +248,20 @@ class OrderSettingsRows
      *
      * @return array
      */
-    public function filterRowsByCountry(string $cc, array $rows): array
+    public function filterRowsByCountry(string $cc, array $rows, string $carrier): array
     {
         if (WCMP_Data::DEFAULT_COUNTRY_CODE === $cc) {
             return $rows;
         }
 
-        return array_filter($rows, static function ($row) {
-            return ! in_array($row['name'], self::HOME_COUNTRY_ONLY_ROWS, true);
+        $shipmentOptions = self::HOME_COUNTRY_ONLY_ROWS;
+
+        if (in_array($carrier, [CarrierDHLEuroplus::NAME, CarrierDHLParcelConnect::NAME], true)) {
+            $shipmentOptions = self::DHL_ONLY_ROWS;
+        }
+
+        return array_filter($rows, static function ($row) use ($shipmentOptions) {
+            return ! in_array($row['name'], $shipmentOptions, true);
         });
     }
 
@@ -234,7 +273,10 @@ class OrderSettingsRows
      */
     private function getAdditionalOptionsRows(OrderSettings $orderSettings): array
     {
-        return [
+        $isDhlForYouPilotUser = AccountSettings::getInstance()->isDhlForYouPilotUser();
+        $carrier = $orderSettings->getDeliveryOptions()->getCarrier();
+
+        $rows = [
             [
                 'name'        => self::OPTION_EXTRA_OPTIONS_DIGITAL_STAMP_WEIGHT,
                 'type'        => 'select',
@@ -259,25 +301,16 @@ class OrderSettingsRows
                 'label'     => __('shipment_options_only_recipient', 'woocommerce-myparcel'),
                 'help_text' => __('shipment_options_only_recipient_help_text', 'woocommerce-myparcel'),
                 'value'     => $orderSettings->hasOnlyRecipient(),
-                'condition' => [
-                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
-                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
-                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT),
-                    self::CONDITION_FORCE_ENABLED_ON_AGE_CHECK,
-                ],
-            ],
-            [
-                'name'      => self::OPTION_SHIPMENT_OPTIONS_SIGNATURE,
-                'type'      => 'toggle',
-                'label'     => __('shipment_options_signature', 'woocommerce-myparcel'),
-                'help_text' => __('shipment_options_signature_help_text', 'woocommerce-myparcel'),
-                'value'     => $orderSettings->hasSignature(),
-                'condition' => [
-                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
-                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
-                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_SIGNATURE),
-                    self::CONDITION_FORCE_ENABLED_ON_AGE_CHECK,
-                ],
+                'condition' => CarrierPostNL::NAME === $carrier
+                    ? [self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                       self::CONDITION_DELIVERY_TYPE_DELIVERY,
+                       $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT),
+                       self::CONDITION_FORCE_ENABLED_ON_AGE_CHECK,
+                      ] : [
+                        self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                        self::CONDITION_DELIVERY_TYPE_DELIVERY,
+                        $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT),
+                    ],
             ],
             [
                 'name'      => self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
@@ -330,19 +363,33 @@ class OrderSettingsRows
                         'parent_value' => WCMP_Settings_Data::DISABLED,
                     ],
                 ],
-           ],
+            ],
             [
                 'name'      => self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY,
                 'type'      => 'toggle',
                 'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
                 'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
-                'value'     => true,
-                'condition' => [
+                'value'     => $orderSettings->hasSameDayDelivery(),
+                'condition' => $isDhlForYouPilotUser ? [
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY),
-                    self::CONDITION_FORCE_ENABLED_SAME_DAY
+                ] : [
+                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY),
+                    self::CONDITION_FORCE_ENABLED,
                 ],
             ],
         ];
+
+        if (in_array($carrier, [CarrierPostNL::NAME, CarrierDHLForYou::NAME])) {
+            $rows[] = [
+                'name'      => self::OPTION_SHIPMENT_OPTIONS_SIGNATURE,
+                'type'      => 'toggle',
+                'label'     => __('shipment_options_signature', 'woocommerce-myparcel'),
+                'help_text' => __('shipment_options_signature_help_text', 'woocommerce-myparcel'),
+                'value'     => $orderSettings->hasSignature(),
+            ];
+        }
+
+        return $rows;
     }
 
     /**
@@ -357,8 +404,25 @@ class OrderSettingsRows
         $carriersOptions = [];
 
         foreach ($carriers as $carrier) {
-            if (CarrierDHLForYou::ID === $carrier->getId() && ! WCMP_Data::isHomeCountry($country)) {
-                continue;
+            if (CarrierDHLForYou::ID === $carrier->getId()) {
+                if ($accountSettings->isDhlForYouPilotUser() && ! in_array(
+                        $country,
+                        [AbstractConsignment::CC_BE, AbstractConsignment::CC_NL],
+                        true
+                    )) {
+                    continue;
+                }
+
+                if (! $accountSettings->isDhlForYouPilotUser() && AbstractConsignment::CC_NL !== $country) {
+                    continue;
+                }
+            }
+
+            if (CarrierDHLParcelConnect::ID === $carrier->getId()) {
+                if (in_array($country, self::DHL_PARCEL_CONNECT_FORBIDDEN_COUNTRIES, true)
+                || ! in_array($country, AbstractConsignment::EURO_COUNTRIES)) {
+                    continue;
+                }
             }
 
             $carriersOptions[$carrier->getName()] = $carrier->getHuman();
@@ -381,8 +445,10 @@ class OrderSettingsRows
         $carriersWithFeature = [];
 
         foreach ($carriers as $carrier) {
-            $shipmentOptions = ConsignmentFactory::createFromCarrier($carrier)
-                ->getAllowedShipmentOptions();
+            $carrierClass    = ConsignmentFactory::createFromCarrier($carrier);
+            $shipmentOptions = $this->deliveryOptions->isPickup()
+                ? $carrierClass->getAllowedShipmentOptionsForPickup()
+                : $carrierClass->getAllowedShipmentOptions();
 
             if (in_array($shipmentOption, $shipmentOptions, true)) {
                 $carriersWithFeature[] = $carrier->getName();
@@ -394,32 +460,6 @@ class OrderSettingsRows
             'type'         => 'show',
             'parent_value' => $carriersWithFeature,
             'set_value'    => WCMP_Settings_Data::DISABLED,
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    private function getCarriersWithMultiColloCondition(): array
-    {
-        $carriers = AccountSettings::getInstance()
-            ->getEnabledCarriers()
-            ->filter(function (AbstractCarrier $carrier) {
-                return ConsignmentFactory::createFromCarrier($carrier)
-                    ->canHaveExtraOption(
-                        AbstractConsignment::EXTRA_OPTION_MULTI_COLLO
-                    );
-            })
-            ->map(function (AbstractCarrier $carrier) {
-                return $carrier->getName();
-            })
-            ->toArray();
-
-        return [
-            'parent_name'  => self::OPTION_CARRIER,
-            'type'         => 'show',
-            'parent_value' => $carriers,
-            'set_value'    => 0,
         ];
     }
 

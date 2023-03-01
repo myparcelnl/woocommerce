@@ -8,6 +8,7 @@ use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLForYou;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DropOffPoint;
@@ -564,18 +565,20 @@ class WCMP_Export
      */
     public function prepareReturnShipmentData($order_id, ?array $options = []): array
     {
-        $order = WCX::get_order($order_id);
-
-        $shipping_name =
+        $order           = WCX::get_order($order_id);
+        $deliveryOptions = json_decode($order->get_meta('_myparcel_delivery_options'), true);
+        $lastShipmentIds = json_decode($order->get_meta('_myparcel_last_shipment_ids'), true);
+        $carrier         = CarrierFactory::createFromName($deliveryOptions['carrier']);
+        $shipping_name   =
             method_exists($order, 'get_formatted_shipping_full_name') ? $order->get_formatted_shipping_full_name()
                 : trim($order->get_shipping_first_name() . ' ' . $order->get_shipping_last_name());
 
         // set name & email
         $return_shipment_data = [
-            'parent'  => (int) $order->get_order_number(),
+            'parent'  => (int) array_pop($lastShipmentIds),
             'name'    => $shipping_name,
             'email'   => WCX_Order::get_prop($order, 'billing_email'),
-            'carrier' => PostNLConsignment::CARRIER_ID, // default to PostNL for now
+            'carrier' => $carrier->getId(),
         ];
 
         if (! Arr::get($return_shipment_data, 'email')) {
@@ -1691,6 +1694,10 @@ class WCMP_Export
         AbstractConsignment $consignment
     ): void {
         $colloAmount = $orderSettings->getColloAmount();
+
+        if (CarrierDHLForYou::NAME === $consignment->getCarrier()->getName() && ! AccountSettings::getInstance()->isDhlForYouPilotUser()) {
+            $consignment->setSameDayDelivery(true);
+        }
 
         if ($colloAmount > 1) {
             $this->addMultiCollo($orderSettings, $collection, $consignment);

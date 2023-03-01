@@ -9,6 +9,7 @@ defined('ABSPATH') or die();
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLForYou;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLParcelConnect;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
@@ -154,22 +155,24 @@ class CarrierSettings
         $settings = [];
 
         foreach ($options as $option) {
-            $settings[] = $callback($option);
+            $settings[] = $callback($option, $consignment->getCarrier());
         }
 
         return array_merge(...$settings);
     }
 
     /**
-     * @param  string $option
+     * @param  string                                            $option
+     * @param  \MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier $carrier
      *
      * @return array
      * @throws \Exception
      */
-    private function createDefaultExportSettingsArray(string $option): array
+    private function createDefaultExportSettingsArray(string $option, AbstractCarrier $carrier): array
     {
         $settings           = [];
-        $euInsuranceAmounts = [0  => __('no_insurance', 'woocommerce-myparcel')] + WCMP_Data::getInsuranceAmounts('FR');
+        $euInsuranceAmounts = [0  => __('no_insurance', 'woocommerce-myparcel')] + WCMP_Data::getInsuranceAmounts('FR', $carrier->getName());
+        $nlInsuranceAmounts = WCMP_Data::getInsuranceAmounts(AbstractConsignment::CC_NL, $carrier->getName());
 
         switch ($option) {
             case AbstractConsignment::SHIPMENT_OPTION_AGE_CHECK:
@@ -194,14 +197,18 @@ class CarrierSettings
                     'help_text' => __('shipment_options_insured_from_price_help_text', 'woocommerce-myparcel'),
                     'type'      => 'number',
                 ];
-                $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
-                    'condition' => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
-                    'label'     => __('shipment_options_insured_amount', 'woocommerce-myparcel'),
-                    'help_text' => __('shipment_options_insured_amount_help_text', 'woocommerce-myparcel'),
-                    'type'      => 'select',
-                    'options'   => WCMP_Data::getInsuranceAmounts(AbstractConsignment::CC_NL),
-                ];
+
+                if ($nlInsuranceAmounts) {
+                    $settings[] = [
+                        'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
+                        'condition' => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                        'label'     => __('shipment_options_insured_amount', 'woocommerce-myparcel'),
+                        'help_text' => __('shipment_options_insured_amount_help_text', 'woocommerce-myparcel'),
+                        'type'      => 'select',
+                        'options'   => WCMP_Data::getInsuranceAmounts(AbstractConsignment::CC_NL, $carrier->getName()),
+                    ];
+                }
+
                 $settings[] = [
                     'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_EU_AMOUNT,
                     'condition' => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
@@ -210,6 +217,11 @@ class CarrierSettings
                     'type'      => 'select',
                     'options'   => $euInsuranceAmounts,
                 ];
+
+                if (CarrierDHLParcelConnect::NAME === $carrier->getName()) {
+                    break;
+                }
+
                 $settings[] = [
                     'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FOR_BE,
                     'condition' => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
@@ -252,14 +264,18 @@ class CarrierSettings
                     'type'      => 'toggle',
                 ];
                 break;
-//            case AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY:
-//                $settings[] = [
-//                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY,
-//                    'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
-//                    'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
-//                    'type'      => 'toggle',
-//                ];
-//                break;
+            case AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY:
+                if (! AccountSettings::getInstance()->isDhlForYouPilotUser()) {
+                    break;
+                }
+
+                $settings[] = [
+                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY,
+                    'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
+                    'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
+                    'type'      => 'toggle',
+                ];
+                break;
             case AbstractConsignment::SHIPMENT_OPTION_HIDE_SENDER:
                 $settings[] = [
                     'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_HIDE_SENDER,
