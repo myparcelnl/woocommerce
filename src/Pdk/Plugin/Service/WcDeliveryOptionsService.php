@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Service;
 
-use MyParcelNL\Pdk\Plugin\Service\DeliveryOptionsServiceInterface;
+use MyParcelNL\Pdk\Plugin\Service\DeliveryOptionsService;
 
-final class WcDeliveryOptionsService implements DeliveryOptionsServiceInterface
+final class WcDeliveryOptionsService extends DeliveryOptionsService
 {
     private const HOOKS = [
         'woocommerce_after_cart',
@@ -34,7 +34,7 @@ final class WcDeliveryOptionsService implements DeliveryOptionsServiceInterface
         return array_combine(
             self::HOOKS,
             array_map(static function (string $hook) {
-                return 'wc_hook_' . $hook;
+                return sprintf('wc_hook_%s', $hook);
             }, self::HOOKS)
         );
     }
