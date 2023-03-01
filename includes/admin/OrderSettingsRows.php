@@ -90,16 +90,13 @@ class OrderSettingsRows
         'type'         => 'disable',
         'parent_value'    => WCMP_Settings_Data::ENABLED,
     ];
-
     private const DHL_PARCEL_CONNECT_FORBIDDEN_COUNTRIES = [
         AbstractConsignment::CC_NL,
         AbstractConsignment::CC_BE,
-        'SE',
-        'FR',
         'DK',
+        'FR',
+        'SE',
     ];
-
-
 
     /**
      * @var \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter
@@ -448,7 +445,7 @@ class OrderSettingsRows
         $carriersWithFeature = [];
 
         foreach ($carriers as $carrier) {
-            $carrierClass = ConsignmentFactory::createFromCarrier($carrier);
+            $carrierClass    = ConsignmentFactory::createFromCarrier($carrier);
             $shipmentOptions = $this->deliveryOptions->isPickup()
                 ? $carrierClass->getAllowedShipmentOptionsForPickup()
                 : $carrierClass->getAllowedShipmentOptions();

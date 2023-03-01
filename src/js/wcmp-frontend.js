@@ -324,7 +324,6 @@ jQuery(($) => {
       MyParcelFrontend.validateMyParcelConfig();
 
       const streetField = MyParcelFrontend.getField(MyParcelFrontend.streetNameField).value ?? MyParcelFrontend.getField(MyParcelFrontend.addressField).value
-      console.log('straat: ' + streetField)
 
       window.MyParcelConfig.address = {
         cc: MyParcelFrontend.getField(MyParcelFrontend.countryField).value,
