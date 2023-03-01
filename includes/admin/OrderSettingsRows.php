@@ -23,16 +23,14 @@ use WCMP_Settings_Data;
 
 class OrderSettingsRows
 {
-    private const HOME_COUNTRY_ONLY_ROWS            = [
+    private const HOME_COUNTRY_ONLY_ROWS = [
         self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
         self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT,
         self::OPTION_SHIPMENT_OPTIONS_SIGNATURE,
     ];
-
-    private const DHL_CARRIERS = [
-        CarrierDHLForYou::NAME,
-        CarrierDHLParcelConnect::NAME,
-        CarrierDHLEuroplus::NAME,
+    private const DHL_ONLY_ROWS          = [
+        self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
+        self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT,
     ];
 
     private const OPTION_CARRIER                                 = '[carrier]';
@@ -259,15 +257,14 @@ class OrderSettingsRows
             return $rows;
         }
 
-        $homeCountryOnly = self::HOME_COUNTRY_ONLY_ROWS;
+        $shipmentOptions = self::HOME_COUNTRY_ONLY_ROWS;
 
         if (in_array($carrier, [CarrierDHLEuroplus::NAME, CarrierDHLParcelConnect::NAME], true)) {
-            //TODO: cleanup
-            unset($homeCountryOnly[2]);
+            $shipmentOptions = self::DHL_ONLY_ROWS;
         }
 
-        return array_filter($rows, static function ($row) use ($homeCountryOnly) {
-            return ! in_array($row['name'], $homeCountryOnly, true);
+        return array_filter($rows, static function ($row) use ($shipmentOptions) {
+            return ! in_array($row['name'], $shipmentOptions, true);
         });
     }
 
