@@ -323,8 +323,8 @@ jQuery(($) => {
     updateAddress() {
       MyParcelFrontend.validateMyParcelConfig();
 
-      const streetField = MyParcelFrontend.getField(MyParcelFrontend.streetNameField).value
-        || MyParcelFrontend.getField(MyParcelFrontend.addressField).value
+      const streetField = MyParcelFrontend.getField(MyParcelFrontend.streetNameField)?.value
+        || MyParcelFrontend.getField(MyParcelFrontend.addressField)?.value
 
       window.MyParcelConfig.address = {
         cc: MyParcelFrontend.getField(MyParcelFrontend.countryField).value,
