@@ -56,8 +56,8 @@
           <PdkButtonGroup>
             <ActionButton
               v-for="(action, index) in actions"
-              :key="`action_${action.id}_${index}`"
-              :action="action.id"
+              :key="`action_${getActionIdentifier(action)}_${index}`"
+              :action="action"
               :label="action.label" />
           </PdkButtonGroup>
         </div>
@@ -77,6 +77,7 @@ import {
   useModalStore,
 } from '@myparcel-pdk/admin/src';
 import {PropType, computed} from 'vue';
+import {getActionIdentifier} from '@myparcel-pdk/frontend-core/src';
 
 const props = defineProps({
   modalKey: {
