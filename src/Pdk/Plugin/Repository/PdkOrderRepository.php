@@ -172,7 +172,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                 ? $this->createCustomsDeclaration($order, $items)
                 : null,
             'orderPrice'            => $order->get_total(),
-            'orderPriceAfterVat'    => $order->get_total() + $order->get_cart_tax(),
+            'orderPriceAfterVat'    => ((float) $order->get_total()) + ((float) $order->get_cart_tax()),
             'orderVat'              => $order->get_total_tax(),
             'shipmentPrice'         => (float) $order->get_shipping_total(),
             'shipmentPriceAfterVat' => (float) $order->get_shipping_total(),
