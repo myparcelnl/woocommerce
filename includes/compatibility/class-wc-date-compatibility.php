@@ -44,7 +44,7 @@ class WC_DateTime extends DateTime
      * @return int
      * @since  3.0.0
      */
-    public function getTimestamp()
+    public function getTimestamp(): int
     {
         return method_exists('DateTime', 'getTimestamp') ? parent::getTimestamp() : $this->format('U');
     }
