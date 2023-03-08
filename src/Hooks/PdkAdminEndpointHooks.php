@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
-use MyParcelNL;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Api\PdkEndpoint;
 use MyParcelNL\WooCommerce\Hooks\Concern\UsesPdkRequestConverter;
-use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcBackendEndpointService;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -42,7 +40,7 @@ final class PdkAdminEndpointHooks implements WordPressHooksInterface
      */
     public function registerPdkRoutes(): void
     {
-        register_rest_route(MyParcelNL::BACKEND_REST_ROUTE, WcBackendEndpointService::ROUTE, [
+        register_rest_route(Pdk::get('routeBackend'), Pdk::get('routeBackendPdk'), [
             'methods'             => WP_REST_Server::ALLMETHODS,
             'callback'            => [$this, 'processPdkRequest'],
             'permission_callback' => function () {

@@ -62,12 +62,12 @@ class WcRenderService extends RenderService
 
             ob_start();
 
-            $pluginName = $appInfo['name'];
+            $pluginName = $appInfo->name;
 
             printf('<div id="%s" class="panel woocommerce_options_panel">', "{$pluginName}_product_data");
 
             foreach ($productSettingsView->toArray()['elements'] as $field) {
-                $key = Str::snake(sprintf('%s_product_%s', $appInfo['name'], $field['name']));
+                $key = Str::snake(sprintf('%s_product_%s', $appInfo->name, $field['name']));
 
                 $options = [
                     'id'    => $key,

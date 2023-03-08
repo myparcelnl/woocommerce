@@ -51,7 +51,7 @@ use function DI\autowire;
 use function DI\value;
 
 /**
- * @see \MyParcelNL\WooCommerce\Pdk\Boot::setupPdk() for configuration based on the plugin itself.
+ * @see \MyParcelNL\WooCommerce\Pdk\WcPdkBootstrapper for configuration based on the plugin itself.
  */
 return [
     'mode'                                      => value(WP_DEBUG ? Pdk::MODE_DEVELOPMENT : Pdk::MODE_PRODUCTION),

@@ -75,7 +75,7 @@ class WcWebhooksRepository extends AbstractPdkWebhooksRepository
         $appInfo = Pdk::getAppInfo();
 
         return strtr('_:app_:hook', [
-            ':app'  => $appInfo['name'],
+            ':app'  => $appInfo->name,
             ':hook' => $hook,
         ]);
     }

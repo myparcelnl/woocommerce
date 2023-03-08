@@ -90,9 +90,9 @@ class PdkCoreHooks implements WordPressHooksInterface
 
         $this->service->enqueueStyle(
             WpScriptService::HANDLE_PDK_ADMIN,
-            sprintf('%s/views/backend/admin/lib/style.css', $appInfo['url']),
+            sprintf('%s/views/backend/admin/lib/style.css', $appInfo->url),
             [],
-            $appInfo['version']
+            $appInfo->version
         );
     }
 
