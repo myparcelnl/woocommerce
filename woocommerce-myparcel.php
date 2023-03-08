@@ -18,18 +18,14 @@ License URI: http://www.opensource.org/licenses/mit-license.php
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Facade\Messages;
 use MyParcelNL\WooCommerce\Migration\Migrator;
-use MyParcelNL\WooCommerce\Pdk\Boot;
+use MyParcelNL\WooCommerce\Pdk\WcPdkBootstrapper;
 use MyParcelNL\WooCommerce\Service\WordPressHookService;
 
 require(plugin_dir_path(__FILE__) . 'vendor/autoload.php');
 
 class MyParcelNL
 {
-    public const ROOT_FILE              = __FILE__;
-    public const PHP_VERSION_MINIMUM    = '7.1';
-    public const NAME                   = 'myparcelnl';
-    public const BACKEND_REST_ROUTE     = self::NAME . '/backend/v1';
-    public const FRONTEND_REST_ROUTE    = self::NAME . '/frontend/v1';
+    private const PHP_VERSION_MINIMUM = '7.1';
 
     /**
      * @var string
@@ -43,7 +39,14 @@ class MyParcelNL
     {
         $this->version = $this->getVersion();
 
-        Boot::setupPdk($this->version);
+        WcPdkBootstrapper::boot(
+            'myparcelnl',
+            'MyParcel WooCommerce',
+            $this->version,
+            plugin_dir_path(__FILE__),
+            plugin_dir_url(__FILE__)
+        );
+
         define('MYPARCELNL_WC_VERSION', $this->version);
 
         if (! defined('DOING_AJAX') && is_admin()) {

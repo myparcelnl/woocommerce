@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
-use MyParcelNL;
 use MyParcelNL\Pdk\Facade\DefaultLogger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Api\PdkWebhook;
@@ -45,7 +44,8 @@ final class PdkWebhookHooks implements WordPressHooksInterface
     public function registerWebhookRoutes(): void
     {
         register_rest_route(
-            MyParcelNL::BACKEND_REST_ROUTE, WcWebhookService::ROUTE . '/(?P<hash>.+)',
+            Pdk::get('routeBackend'),
+            sprintf('%s/(?P<hash>.+)', Pdk::get('routeBackendWebhook')),
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [$this, 'processWebhookRequest'],

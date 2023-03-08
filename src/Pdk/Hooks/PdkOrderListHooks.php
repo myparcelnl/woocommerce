@@ -41,8 +41,7 @@ class PdkOrderListHooks implements WordPressHooksInterface
             'exportPrintOrders',
         ];
 
-        $appInfo    = Pdk::getAppInfo();
-        $pluginName = $appInfo['name'];
+        $pluginName = Pdk::getAppInfo()->name;
 
         foreach ($customActions as $action) {
             $string = Str::snake("bulk_action_$action");

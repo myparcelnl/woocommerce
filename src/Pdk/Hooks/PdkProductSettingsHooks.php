@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
-use MyParcelNL;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
 use MyParcelNL\Pdk\Product\Repository\ProductRepositoryInterface;
@@ -33,11 +32,11 @@ class PdkProductSettingsHooks implements WordPressHooksInterface
     public function registerProductSettingsTab(array $tabs): array
     {
         $appInfo    = Pdk::getAppInfo();
-        $pluginName = $appInfo['name'];
+        $pluginName = $appInfo->name;
 
         $tabs[$pluginName] = [
             'title'  => $pluginName,
-            'label'  => $appInfo['title'],
+            'label'  => $appInfo->title,
             'target' => "{$pluginName}_product_data",
             'class'  => ['show_if_simple', 'show_if_variable', 'show_if_grouped', 'show_if_external'],
         ];
@@ -64,10 +63,11 @@ class PdkProductSettingsHooks implements WordPressHooksInterface
      */
     public function savePdkProductSettings(int $productId): void
     {
-        $post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+        $post    = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+        $appInfo = Pdk::getAppInfo();
 
-        $values = array_filter($post, static function ($key) {
-            return Str::startsWith($key, MyParcelNL::NAME);
+        $values = array_filter($post, static function ($key) use ($appInfo) {
+            return Str::startsWith($key, $appInfo->name);
         }, ARRAY_FILTER_USE_KEY);
 
         /** @var \MyParcelNL\WooCommerce\Pdk\Product\Repository\PdkProductRepository $productRepository */
