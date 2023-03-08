@@ -26,9 +26,6 @@ class WcLogger extends AbstractLogger
 
         $json = count($context) ? PHP_EOL . json_encode($context, JSON_PRETTY_PRINT) : '';
 
-        /** @var array $appInfo */
-        $appInfo = Pdk::get('appInfo');
-
-        $logger->log($level, $message . $json, ['source' => $appInfo['name']]);
+        $logger->log($level, $message . $json, ['source' => Pdk::getAppInfo()->name]);
     }
 }

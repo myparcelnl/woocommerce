@@ -66,16 +66,14 @@ class PdkProductRepository extends AbstractProductRepository
     public function getProductSettings($identifier): ProductSettings
     {
         $product = $this->getWcProduct($identifier);
-
-        /** @var array $appInfo */
-        $appInfo = Pdk::get('appInfo');
+        $appInfo = Pdk::getAppInfo();
         $key     = sprintf('product_settings_%s', $product->get_id());
 
         return $this->retrieve($key, function () use ($appInfo, $product) {
             $productSettings = new ProductSettings();
 
             foreach ($productSettings->getAttributes() as $key => $value) {
-                $metaKey = sprintf('%s_product_%s', $appInfo['name'], Str::snake($key));
+                $metaKey = sprintf('%s_product_%s', $appInfo->name, Str::snake($key));
                 $value   = $product->get_meta($metaKey) ?: null;
 
                 if (! $value) {
@@ -107,12 +105,10 @@ class PdkProductRepository extends AbstractProductRepository
     public function update(PdkProduct $product): void
     {
         $wcProduct = wc_get_product($product->externalIdentifier);
-
-        /** @var array $appInfo */
-        $appInfo = Pdk::get('appInfo');
+        $appInfo   = Pdk::getAppInfo();
 
         foreach ($product->settings->getAttributes() as $key => $value) {
-            $metaKey = sprintf('%s_product_%s', $appInfo['name'], Str::snake($key));
+            $metaKey = sprintf('%s_product_%s', $appInfo->name, Str::snake($key));
             $wcProduct->update_meta_data($metaKey, $value);
         }
 
@@ -131,7 +127,7 @@ class PdkProductRepository extends AbstractProductRepository
         $result  = [];
 
         foreach ($productSettings as $setting => $value) {
-            $key                   = str_replace(sprintf('%s_product_', $appInfo['name']), '', $setting);
+            $key                   = str_replace(sprintf('%s_product_', $appInfo->name), '', $setting);
             $camelCaseKey          = Str::camel($key);
             $result[$camelCaseKey] = $value;
         }

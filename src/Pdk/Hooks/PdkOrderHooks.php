@@ -26,7 +26,7 @@ class PdkOrderHooks implements WordPressHooksInterface
 
         add_meta_box(
             'myparcelnl_woocommerce_order_data',
-            $appInfo['title'],
+            $appInfo->title,
             [$this, 'renderPdkOrderBox'],
             'shop_order',
             'advanced',

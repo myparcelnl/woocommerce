@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Action;
 
-use MyParcelNL;
+use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Api\Backend\AbstractPdkBackendEndpointService;
 
 class WcBackendEndpointService extends AbstractPdkBackendEndpointService
 {
-    public const ROUTE = 'pdk';
-
     /**
      * Add a nonce to the request to authenticate the user.
      */
@@ -24,6 +22,9 @@ class WcBackendEndpointService extends AbstractPdkBackendEndpointService
      */
     public function getBaseUrl(): string
     {
-        return get_rest_url(null, sprintf('%s/%s', MyParcelNL::BACKEND_REST_ROUTE, self::ROUTE));
+        return get_rest_url(
+            null,
+            sprintf('%s/%s', Pdk::get('routeBackend'), Pdk::get('routeBackendPdk'))
+        );
     }
 }

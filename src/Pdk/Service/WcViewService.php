@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MyParcelNL\WooCommerce\Pdk\Service;
 
 use MyParcelNL\Pdk\Facade\Pdk;
@@ -7,7 +9,7 @@ use MyParcelNL\Pdk\Plugin\Service\AbstractViewService;
 
 class WcViewService extends AbstractViewService
 {
-    private const SETTINGS_MENU_SLUG = ':name_settings';
+    private const SETTINGS_MENU_SLUG = ':name-settings';
 
     /**
      * @return string
@@ -16,7 +18,7 @@ class WcViewService extends AbstractViewService
     {
         $appInfo = Pdk::getAppInfo();
 
-        return strtr(self::SETTINGS_MENU_SLUG, [':name' => $appInfo['name']]);
+        return strtr(self::SETTINGS_MENU_SLUG, [':name' => $appInfo->name]);
     }
 
     /**
