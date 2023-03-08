@@ -13,7 +13,8 @@ use MyParcelNL\Sdk\src\Model\Account\CarrierOptions;
 use MyParcelNL\Sdk\src\Model\Account\Shop;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLForYou;
-use MyParcelNL\Sdk\src\Support\Arr;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLParcelConnect;
+use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Support\Collection;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
@@ -37,7 +38,14 @@ class AccountSettings extends Model
     /**
      * @var string Name of the wp_options row the account settings are saved in.
      */
-    public const WP_OPTION_KEY = 'woocommerce_myparcel_account_settings';
+    public const  WP_OPTION_KEY                          = 'woocommerce_myparcel_account_settings';
+    private const DHL_PARCEL_CONNECT_FORBIDDEN_COUNTRIES = [
+        AbstractConsignment::CC_NL,
+        AbstractConsignment::CC_BE,
+        'DK',
+        'FR',
+        'SE',
+    ];
 
     /**
      * @var string[]
@@ -80,9 +88,22 @@ class AccountSettings extends Model
     /**
      * @throws \Exception
      */
+    public function afterApiKeyUpdate($optionName, $newApiKey, $oldApiKey): void
+    {
+        $accountSettingsService = new AccountSettingsService();
+        $accountSettingsService->removeSettings();
+        $accountSettingsService->refreshSettingsFromApi($newApiKey);
+        (new WebhookSubscriptionService())->subscribeToWebhooks($newApiKey);
+    }
+
+    /**
+     * @throws \Exception
+     */
     public function ajaxRefreshFromApi(): void
     {
-        $response = AccountSettingsService::getInstance()->restRefreshSettingsFromApi();
+        $response = AccountSettingsService::getInstance()
+            ->restRefreshSettingsFromApi();
+
         switch ($response->get_status()) {
             case 400:
                 wp_send_json_error(esc_html__('error_settings_account_missing', 'woocommerce-myparcel'), 400);
@@ -92,7 +113,32 @@ class AccountSettings extends Model
             default:
                 wp_send_json($response, $response->get_status());
         }
-        wp_die();
+
+        die();
+    }
+
+    /**
+     * @param  \MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier $carrier
+     * @param  string                                            $country
+     *
+     * @return bool
+     */
+    public function carrierIsAllowedForCountry(AbstractCarrier $carrier, string $country): bool
+    {
+        $isNl     = AbstractConsignment::CC_NL === $country;
+        $isNlOrBe = $isNl || AbstractConsignment::CC_BE === $country;
+        $isInEu   = in_array($country, AbstractConsignment::EURO_COUNTRIES, true);
+
+        switch ($carrier->getName()) {
+            case CarrierDHLForYou::NAME:
+                return $this->hasDhlForYouCompleteAccess() ? $isNlOrBe : $isNl;
+
+            case CarrierDHLParcelConnect::NAME:
+                return $isInEu && ! in_array($country, self::DHL_PARCEL_CONNECT_FORBIDDEN_COUNTRIES, true);
+
+            default:
+                return true;
+        }
     }
 
     /**
@@ -101,17 +147,6 @@ class AccountSettings extends Model
     public function getAccount(): ?Account
     {
         return $this->account;
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function afterApiKeyUpdate($optionName, $newApiKey, $oldApiKey): void
-    {
-        $accountSettingsService = new AccountSettingsService();
-        $accountSettingsService->removeSettings();
-        $accountSettingsService->refreshSettingsFromApi($newApiKey);
-        (new WebhookSubscriptionService())->subscribeToWebhooks($newApiKey);
     }
 
     /**
@@ -170,6 +205,20 @@ class AccountSettings extends Model
     }
 
     /**
+     * @param  string $country
+     *
+     * @return \MyParcelNL\Sdk\src\Support\Collection|\MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier[]
+     */
+    public function getCarriersForCountry(string $country): Collection
+    {
+        return $this
+            ->getEnabledCarriers()
+            ->filter(function (AbstractCarrier $carrier) use ($country) {
+                return $this->carrierIsAllowedForCountry($carrier, $country);
+            });
+    }
+
+    /**
      * Returns indexed array with carrier names that are enabled for the current shop.
      *
      * @return \MyParcelNL\Sdk\src\Support\Collection|\MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier[]
@@ -198,17 +247,31 @@ class AccountSettings extends Model
     }
 
     /**
+     * When this is on, allows non-same-day-delivery for dhl for you in NL and BE.
+     *
+     * @return bool
+     */
+    public function hasDhlForYouCompleteAccess(): bool
+    {
+        return (new Collection($this->carrier_options))
+            ->contains(static function ($carrierOption) {
+                return CarrierDHLForYou::NAME === $carrierOption->getCarrier()
+                        ->getName()
+                    && 'dhl_for_you_complete_access' === $carrierOption->getLabel();
+            });
+    }
+
+    /**
      * @param  string $carrierName
      *
      * @return bool
      */
     public function isEnabledCarrier(string $carrierName): bool
     {
-        return (bool) $this->getEnabledCarriers()
-            ->filter(static function (AbstractCarrier $carrier) use ($carrierName) {
+        return $this->getEnabledCarriers()
+            ->contains(static function (AbstractCarrier $carrier) use ($carrierName) {
                 return $carrier->getName() === $carrierName;
-            })
-            ->first();
+            });
     }
 
     /**
@@ -268,17 +331,5 @@ class AccountSettings extends Model
         }
 
         return $this->settings->get($settingKey);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDhlForYouPilotUser(): bool
-    {
-        return (new Collection($this->carrier_options))->contains(static function ($carrierOption) {
-            return CarrierDHLForYou::NAME === $carrierOption->getCarrier()
-                    ->getName()
-                && 'dhl_for_you_complete_access' === $carrierOption->getLabel();
-        });
     }
 }

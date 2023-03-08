@@ -39,7 +39,7 @@ jQuery(($) => {
     /**
      * @type {RegExp}
      */
-    splitStreetRegex: /(.*?)\s?(\d{1,4})[/\s-]{0,2}([A-z]\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[A-z][A-z\s]{0,3})?$/,
+    splitStreetRegex: /.*?\s?(\d{1,4})[/\s-]{0,2}[A-z]\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[A-z][A-z\s]{0,3}?$/,
 
     /**
      * @type {Boolean}
@@ -203,7 +203,6 @@ jQuery(($) => {
           .addEventListener('change', MyParcelFrontend.addAddressListeners);
       }
 
-      document.addEventListener(MyParcelFrontend.updatedAddressEvent, MyParcelFrontend.onDeliveryOptionsAddressUpdate);
       document.addEventListener(MyParcelFrontend.updatedDeliveryOptionsEvent, MyParcelFrontend.onDeliveryOptionsUpdate);
 
       /*
@@ -271,23 +270,17 @@ jQuery(($) => {
         return MyParcelFrontend.getField(MyParcelFrontend.houseNumberField).value;
       }
 
-      return MyParcelFrontend.getAddressParts().house_number;
+      return MyParcelFrontend.getHouseNumberFromFullStreet();
     },
 
     /**
-     * @returns {{house_number_suffix: (String | null), house_number: (String | null), street_name: (String | null)}}
+     * @returns {String|null}
      */
-    getAddressParts: function() {
+    getHouseNumberFromFullStreet: function() {
       const address = MyParcelFrontend.getField(MyParcelFrontend.addressField).value;
       const result = MyParcelFrontend.splitStreetRegex.exec(address);
 
-      const parts = {};
-
-      parts[MyParcelFrontend.streetNameField] = result ? result[1] : null;
-      parts[MyParcelFrontend.houseNumberField] = result ? result[2] : null;
-      parts[MyParcelFrontend.houseNumberSuffixField] = result ? result[3] : null;
-
-      return parts;
+      return result ? result[1] : null;
     },
 
     /**
@@ -303,18 +296,19 @@ jQuery(($) => {
       element.dispatchEvent(event);
     },
 
-    /**
-     * Check if the country changed by comparing the old value with the new value before overwriting the MyParcelConfig
-     *  with the new value. Returns true if none was set yet.
-     *
-     * @returns {Boolean}
-     */
-    countryHasChanged() {
-      if (window.MyParcelConfig.address && window.MyParcelConfig.address.hasOwnProperty('cc')) {
-        return window.MyParcelConfig.address.cc !== MyParcelFrontend.getField(MyParcelFrontend.countryField).value;
+    getAddress() {
+      let street = MyParcelFrontend.getField(MyParcelFrontend.addressField)?.value;
+
+      if (MyParcelFrontend.hasSplitAddressFields()) {
+        street = MyParcelFrontend.getFullStreet();
       }
 
-      return true;
+      return {
+        cc: MyParcelFrontend.getField(MyParcelFrontend.countryField).value,
+        postalCode: MyParcelFrontend.getField(MyParcelFrontend.postcodeField).value,
+        city: MyParcelFrontend.getField(MyParcelFrontend.cityField).value,
+        street: street,
+      };
     },
 
     /**
@@ -323,16 +317,7 @@ jQuery(($) => {
     updateAddress() {
       MyParcelFrontend.validateMyParcelConfig();
 
-      const streetField = MyParcelFrontend.getField(MyParcelFrontend.streetNameField)?.value
-        || MyParcelFrontend.getField(MyParcelFrontend.addressField)?.value
-
-      window.MyParcelConfig.address = {
-        cc: MyParcelFrontend.getField(MyParcelFrontend.countryField).value,
-        postalCode: MyParcelFrontend.getField(MyParcelFrontend.postcodeField).value,
-        number: MyParcelFrontend.getHouseNumber(),
-        city: MyParcelFrontend.getField(MyParcelFrontend.cityField).value,
-        street: streetField,
-      };
+      window.MyParcelConfig.address = MyParcelFrontend.getAddress();
 
       if (MyParcelFrontend.hasDeliveryOptions) {
         MyParcelFrontend.triggerEvent(MyParcelFrontend.updateDeliveryOptionsEvent);
@@ -345,7 +330,6 @@ jQuery(($) => {
      * @param {?Object} address - The new address.
      * @param {String} address.postalCode
      * @param {String} address.city
-     * @param {String} address.number
      */
     setAddressFromDeliveryOptions: function(address = null) {
       address = address || {};
@@ -356,10 +340,6 @@ jQuery(($) => {
 
       if (address.city) {
         MyParcelFrontend.getField(MyParcelFrontend.cityField).value = address.city;
-      }
-
-      if (address.number) {
-        MyParcelFrontend.setHouseNumber(address.number);
       }
     },
 
@@ -419,15 +399,6 @@ jQuery(($) => {
       MyParcelFrontend.hiddenDataInput.setAttribute('name', MyParcelDeliveryOptions.hiddenInputName);
 
       document.querySelector('form[name="checkout"]').appendChild(MyParcelFrontend.hiddenDataInput);
-    },
-
-    /**
-     * When the delivery options module has updated the address, using the "retry" option.
-     *
-     * @param {CustomEvent} event - The event containing the new address.
-     */
-    onDeliveryOptionsAddressUpdate: function(event) {
-      MyParcelFrontend.setAddressFromDeliveryOptions(event.detail);
     },
 
     /**
@@ -608,15 +579,19 @@ jQuery(($) => {
      */
     updateDeliveryOptionsConfig() {
       MyParcelFrontend.validateMyParcelConfig();
+
       $.ajax({
         type: 'GET',
         url: wcmp.ajax_url,
         async: false,
-        data: {
-          action: 'wcmp_get_delivery_options_config',
-        },
+        data: Object.assign(
+          {
+            action: 'wcmp_get_delivery_options_config',
+          },
+          MyParcelFrontend.getAddress(),
+        ),
         success(data) {
-          const {config} = JSON.parse(data);
+          const { config } = JSON.parse(data);
           window.MyParcelConfig.config = config;
           MyParcelFrontend.sendUpdateConfigEvent();
         },
@@ -634,6 +609,24 @@ jQuery(($) => {
       }
 
       return shippingMethod;
+    },
+
+    getFullStreet() {
+      const [
+        streetName,
+        houseNumber,
+        houseNumberSuffix,
+      ] = [
+        MyParcelFrontend.streetNameField,
+        MyParcelFrontend.houseNumberField,
+        MyParcelFrontend.houseNumberSuffixField,
+      ].map((fieldName) => {
+        const field = MyParcelFrontend.getField(fieldName);
+
+        return field.value || '';
+      });
+
+      return `${streetName} ${houseNumber}${houseNumberSuffix}`.trim();
     },
 
     /**
@@ -666,27 +659,9 @@ jQuery(($) => {
           return;
         }
 
-        if (MyParcelFrontend.hasSplitAddressFields(newCountry)) {
-          const parts = MyParcelFrontend.getAddressParts();
-
-          MyParcelFrontend.fillCheckoutFields(parts);
-        } else {
-          const [
-            houseNumberField,
-            houseNumberSuffixField,
-            streetNameField,
-          ] = [
-            MyParcelFrontend.houseNumberField,
-            MyParcelFrontend.houseNumberSuffixField,
-            MyParcelFrontend.streetNameField,
-          ].map((fieldName) => MyParcelFrontend.getField(fieldName));
-
-          const number = houseNumberField.value || '';
-          const street = streetNameField.value || '';
-          const suffix = houseNumberSuffixField.value || '';
-
+        if (!MyParcelFrontend.hasSplitAddressFields(newCountry)) {
           MyParcelFrontend.fillCheckoutFields({
-            address_1: `${street} ${number}${suffix}`.trim(),
+            address_1: MyParcelFrontend.getFullStreet(),
           });
         }
 
