@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.18.1](https://github.com/myparcelnl/woocommerce/compare/v4.18.0...v4.18.1) (2023-03-09)
+
+
+### :bug: Bug Fixes
+
+* fix delivery options for dhl parcelconnect and dhl europlus ([#957](https://github.com/myparcelnl/woocommerce/issues/957)) ([5753745](https://github.com/myparcelnl/woocommerce/commit/575374509eacd1c865e28c641813c2ddee8014ad))
+
 ## [4.18.0](https://github.com/myparcelnl/woocommerce/compare/v4.17.0...v4.18.0) (2023-03-01)
 
 

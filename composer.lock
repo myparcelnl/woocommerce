@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "48411a71f77c77036abc781e17a067f9",
+    "content-hash": "8f0177c91121e6c90f4265b21516479b",
     "packages": [
         {
             "name": "myparcelnl/sdk",
