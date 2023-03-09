@@ -44,6 +44,16 @@ class CarrierSettings
     /**
      * @param  \MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier $carrier
      *
+     * @return string
+     */
+    public static function getRetailOverviewLink(AbstractCarrier $carrier): string
+    {
+        return Status::LINK_RETAIL_OVERVIEW . "?carrier={$carrier->getId()}";
+    }
+
+    /**
+     * @param  \MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier $carrier
+     *
      * @return array
      * @throws \Exception
      */
@@ -93,16 +103,6 @@ class CarrierSettings
                 self::getRetailOverviewLink($carrier)
             )
         );
-    }
-
-    /**
-     * @param  \MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier $carrier
-     *
-     * @return string
-     */
-    public static function getRetailOverviewLink(AbstractCarrier $carrier): string
-    {
-        return Status::LINK_RETAIL_OVERVIEW . "?carrier={$carrier->getId()}";
     }
 
     /**
@@ -265,7 +265,7 @@ class CarrierSettings
                 ];
                 break;
             case AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY:
-                if (! AccountSettings::getInstance()->isDhlForYouPilotUser()) {
+                if (! AccountSettings::getInstance()->hasDhlForYouCompleteAccess()) {
                     break;
                 }
 
