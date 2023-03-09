@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.18.2-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.18.1...v4.18.2-rc.1) (2023-03-09)
+
+
+### :bug: Bug Fixes
+
+* change the return type of getTimestamp to match with the parent ([#958](https://github.com/myparcelnl/woocommerce/issues/958)) ([f56dab2](https://github.com/myparcelnl/woocommerce/commit/f56dab2003c47e00e6c4444c343e6dcbbb1b6e33))
+
 ## [4.18.1](https://github.com/myparcelnl/woocommerce/compare/v4.18.0...v4.18.1) (2023-03-09)
 
 
