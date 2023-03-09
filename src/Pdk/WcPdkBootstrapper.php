@@ -36,7 +36,7 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'routeBackendPdk'     => value('pdk'),
             'routeBackendWebhook' => value('webhook'),
 
-            'routeFrontend'           => value("$name/frontend/v1"),
+            'routeFrontend'         => value("$name/frontend/v1"),
             'routeFrontendMyParcel' => value($name),
         ];
     }
