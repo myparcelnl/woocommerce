@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.18.4](https://github.com/myparcelnl/woocommerce/compare/v4.18.3...v4.18.4) (2023-03-10)
+
+
+### :bug: Bug Fixes
+
+* fix numeric number suffix not working in checkout ([64db714](https://github.com/myparcelnl/woocommerce/commit/64db71474622a5690cbd4a994dd5c5700733cac4))
+
 ## [4.18.3](https://github.com/myparcelnl/woocommerce/compare/v4.18.2...v4.18.3) (2023-03-10)
 
 
