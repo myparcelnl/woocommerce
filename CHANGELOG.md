@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.18.5](https://github.com/myparcelnl/woocommerce/compare/v4.18.4...v4.18.5) (2023-03-10)
+
+
+### :bug: Bug Fixes
+
+* dont send number suffix with delivery options api call ([#960](https://github.com/myparcelnl/woocommerce/issues/960)) ([db77bca](https://github.com/myparcelnl/woocommerce/commit/db77bca38ef50cdce56e0cc3e4fc37665d34b942))
+
 ## [4.18.4](https://github.com/myparcelnl/woocommerce/compare/v4.18.3...v4.18.4) (2023-03-10)
 
 
