@@ -4,10 +4,10 @@ import {useActionStore} from '@myparcel-pdk/admin/src';
 const BULK_ACTION_PREFIX = 'myparcelnl';
 
 const BULK_ACTION_MAP = Object.freeze({
-  action_edit: AdminAction.ORDERS_EDIT,
-  action_export: AdminAction.ORDERS_EXPORT,
-  action_export_print: AdminAction.ORDERS_EXPORT_PRINT,
-  action_print: AdminAction.ORDERS_PRINT,
+  action_edit: AdminAction.OrdersEdit,
+  action_export: AdminAction.OrdersExport,
+  action_export_print: AdminAction.OrdersExportPrint,
+  action_print: AdminAction.OrdersPrint,
 });
 
 export const onInitialized: () => void = () => {
