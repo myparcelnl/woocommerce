@@ -10,15 +10,13 @@ use MyParcelNL\Pdk\Webhook\Collection\WebhookSubscriptionCollection;
 
 class WcWebhooksRepository extends AbstractPdkWebhooksRepository
 {
-    private const KEY_WEBHOOKS     = 'webhooks';
-    private const KEY_WEBHOOK_HASH = 'webhook_hash';
 
     /**
      * @return \MyParcelNL\Pdk\Webhook\Collection\WebhookSubscriptionCollection
      */
     public function getAll(): WebhookSubscriptionCollection
     {
-        $key = $this->getKey(self::KEY_WEBHOOKS);
+        $key = Pdk::get('settingKeyWebhooks');
 
         return $this->retrieve($key, function () use ($key) {
             $items = get_option($key, null);
@@ -32,7 +30,7 @@ class WcWebhooksRepository extends AbstractPdkWebhooksRepository
      */
     public function getHashedUrl(): ?string
     {
-        return get_option($this->getKey(self::KEY_WEBHOOK_HASH), null);
+        return get_option($this->getKey(Pdk::get('settingKeyWebhookHash')), null);
     }
 
     /**
@@ -52,7 +50,7 @@ class WcWebhooksRepository extends AbstractPdkWebhooksRepository
      */
     public function store(WebhookSubscriptionCollection $subscriptions): void
     {
-        update_option($this->getKey(self::KEY_WEBHOOKS), $subscriptions->toArray());
+        update_option(Pdk::get('settingKeyWebhooks'), $subscriptions->toArray());
     }
 
     /**
@@ -62,21 +60,16 @@ class WcWebhooksRepository extends AbstractPdkWebhooksRepository
      */
     public function storeHashedUrl(string $url): void
     {
-        update_option($this->getKey(self::KEY_WEBHOOK_HASH), $url);
+        update_option($this->getKey(Pdk::get('settingKeyWebhookHash')), $url);
     }
 
     /**
-     * @param  string $hook
+     * @param  string $name
      *
      * @return string
      */
-    private function getKey(string $hook): string
+    private function getKey(string $name): string
     {
-        $appInfo = Pdk::getAppInfo();
-
-        return strtr('_:app_:hook', [
-            ':app'  => $appInfo->name,
-            ':hook' => $hook,
-        ]);
+        return Pdk::get('settingKeyPrefix') . $name;
     }
 }

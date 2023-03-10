@@ -16,7 +16,6 @@ License URI: http://www.opensource.org/licenses/mit-license.php
 */
 
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\WooCommerce\Facade\Messages;
 use MyParcelNL\WooCommerce\Migration\Migrator;
 use MyParcelNL\WooCommerce\Pdk\WcPdkBootstrapper;
 use MyParcelNL\WooCommerce\Service\WordPressHookService;
@@ -25,29 +24,22 @@ require(plugin_dir_path(__FILE__) . 'vendor/autoload.php');
 
 class MyParcelNL
 {
-    private const PHP_VERSION_MINIMUM = '7.1';
-
-    /**
-     * @var string
-     */
-    private $version;
-
     /**
      * @throws \Throwable
      */
     public function __construct()
     {
-        $this->version = $this->getVersion();
+        $version = $this->getVersion();
 
         WcPdkBootstrapper::boot(
             'myparcelnl',
-            'MyParcel WooCommerce',
-            $this->version,
+            'MyParcel',
+            $version,
             plugin_dir_path(__FILE__),
             plugin_dir_url(__FILE__)
         );
 
-        define('MYPARCELNL_WC_VERSION', $this->version);
+        define('MYPARCELNL_WC_VERSION', $version);
 
         if (! defined('DOING_AJAX') && is_admin()) {
             add_action('init', [$this, 'upgrade']);
@@ -67,26 +59,30 @@ class MyParcelNL
             return;
         }
 
-        $this->useStagingEnvironment();
-
         /** @var WordPressHookService $hookService */
         $hookService = Pdk::get(WordPressHookService::class);
         $hookService->applyAll();
     }
 
+    /**
+     * @return void
+     * @throws \Exception
+     */
     public function upgrade(): void
     {
+        $appInfo = Pdk::getAppInfo();
+
         $versionSetting   = 'woocommerce_myparcel_version';
         $installedVersion = get_option($versionSetting) ?: '0';
 
-        if (version_compare($installedVersion, $this->version, '<')) {
+        if (version_compare($installedVersion, $appInfo->version, '<')) {
             /** @var \MyParcelNL\WooCommerce\Migration\Migrator $migrator */
             $migrator = Pdk::get(Migrator::class);
 
             $migrator->migrate($installedVersion);
 
             // new version number
-            update_option($versionSetting, $this->version);
+            update_option($versionSetting, $appInfo->version);
         }
     }
 
@@ -126,34 +122,24 @@ class MyParcelNL
      */
     private function phpVersionMeets(): bool
     {
-        if (version_compare(PHP_VERSION, self::PHP_VERSION_MINIMUM, '>=')) {
+        $minimumPhpVersion = Pdk::get('minimumPhpVersion');
+
+        if (version_compare(PHP_VERSION, $minimumPhpVersion, '>=')) {
             return true;
         }
 
-        $error = __('WooCommerce MyParcel requires PHP {PHP_VERSION} or higher.', 'woocommerce-myparcel');
-        $error = str_replace('{PHP_VERSION}', self::PHP_VERSION_MINIMUM, $error);
-
-        $howToUpdate = __('How to update your PHP version', 'woocommerce-myparcel');
-        $message     = sprintf(
-            '<p>%s</p><p><a href="%s">%s</a></p>',
-            $error,
-            'http://docs.wpovernight.com/general/how-to-update-your-php-version/',
-            $howToUpdate
-        );
-
-        Messages::error($message);
+        //        $error = __('WooCommerce MyParcel requires PHP {PHP_VERSION} or higher.', 'woocommerce-myparcel');
+        //        $error = str_replace('{PHP_VERSION}', $minimumPhpVersion, $error);
+        //
+        //        $howToUpdate = __('How to update your PHP version', 'woocommerce-myparcel');
+        //        $message     = sprintf(
+        //            '<p>%s</p><p><a href="%s">%s</a></p>',
+        //            $error,
+        //            'http://docs.wpovernight.com/general/how-to-update-your-php-version/',
+        //            $howToUpdate
+        //        );
 
         return false;
-    }
-
-    /**
-     * This method is used internally, to be able to use the staging environment of MyParcel
-     */
-    private function useStagingEnvironment(): void
-    {
-        if (get_option('use_myparcel_staging_environment')) {
-            putenv('MYPARCEL_API_BASE_URL=' . get_option('myparcel_base_url'));
-        }
     }
 }
 

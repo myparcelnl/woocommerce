@@ -9,18 +9,6 @@ use MyParcelNL\Pdk\Plugin\Service\AbstractViewService;
 
 class WcViewService extends AbstractViewService
 {
-    private const SETTINGS_MENU_SLUG = ':name-settings';
-
-    /**
-     * @return string
-     */
-    public function getSettingsPageSlug(): string
-    {
-        $appInfo = Pdk::getAppInfo();
-
-        return strtr(self::SETTINGS_MENU_SLUG, [':name' => $appInfo->name]);
-    }
-
     /**
      * The order received page has the same page id as the checkout so `is_checkout()` returns true on both.
      *
@@ -52,7 +40,7 @@ class WcViewService extends AbstractViewService
      */
     public function isPluginSettingsPage(): bool
     {
-        return sprintf('woocommerce_page_%s', $this->getSettingsPageSlug()) === $this->getScreen();
+        return Pdk::get('settingsMenuSlug') === $this->getScreen();
     }
 
     /**
