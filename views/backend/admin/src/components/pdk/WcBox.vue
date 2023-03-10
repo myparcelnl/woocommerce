@@ -50,7 +50,7 @@ const props = defineProps({
 
   size: {
     type: String as PropType<Size>,
-    default: Size.MEDIUM,
+    default: Size.Medium,
   },
 
   title: {
@@ -60,11 +60,11 @@ const props = defineProps({
 });
 
 const cssClasses = computed(() => ({
-  'mypa-px-2 mypa-pb-2 mypa-pt-1 mypa-mb-1 mypa-rounded': [Size.SMALL, Size.EXTRA_SMALL].includes(props.size),
-  'mypa-px-4 mypa-pb-4 mypa-pt-3 mypa-mb-3': [Size.MEDIUM].includes(props.size),
-  'mypa-px-5 mypa-pb-5 mypa-pt-4 mypa-mb-4': [Size.LARGE].includes(props.size),
-  'mypa-px-6 mypa-pb-6 mypa-pt-5 mypa-mb-5': [Size.EXTRA_LARGE].includes(props.size),
-  'mypa-rounded-xl': [Size.MEDIUM, Size.LARGE, Size.EXTRA_LARGE].includes(props.size),
+  'mypa-px-2 mypa-pb-2 mypa-pt-1 mypa-mb-1 mypa-rounded': [Size.Small, Size.ExtraSmall].includes(props.size),
+  'mypa-px-4 mypa-pb-4 mypa-pt-3 mypa-mb-3': [Size.Medium].includes(props.size),
+  'mypa-px-5 mypa-pb-5 mypa-pt-4 mypa-mb-4': [Size.Large].includes(props.size),
+  'mypa-px-6 mypa-pb-6 mypa-pt-5 mypa-mb-5': [Size.ExtraLarge].includes(props.size),
+  'mypa-rounded-xl': [Size.Medium, Size.Large, Size.ExtraLarge].includes(props.size),
 }));
 
 const {translate} = useLanguage();

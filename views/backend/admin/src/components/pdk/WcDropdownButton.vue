@@ -72,7 +72,7 @@ defineEmits(['click']);
 
 const {dropdownActions, toggled} = useDropdownData(props.actions);
 
-const dropdownIcon = computed(() => (toggled.value ? AdminIcon.ARROW_UP : AdminIcon.ARROW_DOWN));
+const dropdownIcon = computed(() => (toggled.value ? AdminIcon.ArrowUp : AdminIcon.ArrowDown));
 
 const {translate} = useLanguage();
 </script>

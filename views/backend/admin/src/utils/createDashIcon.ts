@@ -2,22 +2,22 @@ import {AdminIcon} from '@myparcel-pdk/admin/src';
 import {memoize} from 'lodash-unified';
 
 const PDK_DASH_ICON_MAP: Partial<Record<AdminIcon, string>> = {
-  [AdminIcon.ADD]: 'plus',
-  [AdminIcon.ARROW_DOWN]: 'arrow-down',
-  [AdminIcon.ARROW_UP]: 'arrow-up',
-  [AdminIcon.CLOSE]: 'no',
-  [AdminIcon.DELETE]: 'trash',
-  [AdminIcon.DOWNLOAD]: 'download',
-  [AdminIcon.EDIT]: 'edit',
-  [AdminIcon.EXPORT]: 'share-alt2',
-  [AdminIcon.EXTERNAL]: 'external',
-  [AdminIcon.NO]: 'no',
-  [AdminIcon.PRINT]: 'printer',
-  [AdminIcon.REFRESH]: 'update',
-  [AdminIcon.RETURN]: 'undo',
-  [AdminIcon.SAVE]: 'yes',
-  [AdminIcon.SPINNER]: 'update',
-  [AdminIcon.YES]: 'yes',
+  [AdminIcon.Add]: 'plus',
+  [AdminIcon.ArrowDown]: 'arrow-down',
+  [AdminIcon.ArrowUp]: 'arrow-up',
+  [AdminIcon.Close]: 'no',
+  [AdminIcon.Delete]: 'trash',
+  [AdminIcon.Download]: 'download',
+  [AdminIcon.Edit]: 'edit',
+  [AdminIcon.Export]: 'share-alt2',
+  [AdminIcon.External]: 'external',
+  [AdminIcon.No]: 'no',
+  [AdminIcon.Print]: 'printer',
+  [AdminIcon.Refresh]: 'update',
+  [AdminIcon.Return]: 'undo',
+  [AdminIcon.Save]: 'yes',
+  [AdminIcon.Spinner]: 'update',
+  [AdminIcon.Yes]: 'yes',
 };
 
 export const createDashIcon = memoize((icon: AdminIcon): string | undefined => {

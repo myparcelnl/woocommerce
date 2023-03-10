@@ -1,5 +1,5 @@
 <template>
-  <PdkBox :size="Size.SMALL">
+  <PdkBox :size="Size.Small">
     <WcLoadingOverlay v-show="loading" />
 
     <slot />
