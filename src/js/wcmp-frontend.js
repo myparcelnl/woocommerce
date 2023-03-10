@@ -626,7 +626,7 @@ jQuery(($) => {
         return field.value || '';
       });
 
-      return `${streetName} ${houseNumber}${houseNumberSuffix}`.trim();
+      return `${streetName} ${houseNumber} ${houseNumberSuffix}`.trim();
     },
 
     /**
