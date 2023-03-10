@@ -45,12 +45,12 @@
 </template>
 
 <script lang="ts" setup>
-import {ActionButton, AdminIcon, ResolvedAction, Size, useDropdownData, useLanguage} from '@myparcel-pdk/admin/src';
+import {ActionButton, ActionDefinition, AdminIcon, Size, useDropdownData, useLanguage} from '@myparcel-pdk/admin/src';
 import {PropType, computed} from 'vue';
 
 const props = defineProps({
   actions: {
-    type: Array as PropType<ResolvedAction[]>,
+    type: Array as PropType<ActionDefinition[]>,
     default: () => [],
   },
 

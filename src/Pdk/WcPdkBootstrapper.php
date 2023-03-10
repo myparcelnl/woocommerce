@@ -38,6 +38,34 @@ class WcPdkBootstrapper extends PdkBootstrapper
 
             'routeFrontend'         => value("$name/frontend/v1"),
             'routeFrontendMyParcel' => value($name),
+
+            /**
+             * The name of our column in the order grid.
+             */
+            'orderGridColumnName'   => value($name),
+
+            /**
+             * The name of the column we want to appear after.
+             */
+            'orderGridColumnBefore' => value('shipping_address'),
+
+            /**
+             * Bulk order actions.
+             */
+            'bulkActions'           => value([
+                'action_print',
+                'action_export_print',
+                'action_export',
+                'action_edit',
+            ]),
+
+            /**
+             * Bulk order actions in order mode.
+             */
+            'orderModeBulkActions'  => value([
+                'action_edit',
+                'action_export',
+            ]),
         ];
     }
 }
