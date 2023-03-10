@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.18.3](https://github.com/myparcelnl/woocommerce/compare/v4.18.2...v4.18.3) (2023-03-10)
+
+
+### :bug: Bug Fixes
+
+* fix operator error in order settings ([#959](https://github.com/myparcelnl/woocommerce/issues/959)) ([93e6ae1](https://github.com/myparcelnl/woocommerce/commit/93e6ae17386648918660a60777370658f9ee548f))
+
 ## [4.18.2](https://github.com/myparcelnl/woocommerce/compare/v4.18.1...v4.18.2) (2023-03-09)
 
 
