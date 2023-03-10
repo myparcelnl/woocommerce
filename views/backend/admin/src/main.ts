@@ -7,7 +7,7 @@ import {
   DefaultNumberInput,
   DefaultTimeInput,
 } from '@myparcel-pdk/admin-components/src';
-import {LogLevel, createPdkAdmin, useModalStore} from '@myparcel-pdk/admin/src';
+import {LogLevel, createPdkAdmin} from '@myparcel-pdk/admin/src';
 import {
   PdkShipmentLabelWrapper,
   WcBox,
@@ -38,6 +38,8 @@ import {
 } from './components/pdk';
 import {get} from '@vueuse/core';
 import {h} from 'vue';
+import {onCreateStore} from './hooks/onCreateStore';
+import {onInitialized} from './hooks/onInitialized';
 
 const FADE = 'fade';
 
@@ -117,33 +119,6 @@ createPdkAdmin({
     tableRow: FADE,
   },
 
-  onCreateStore() {
-    const modalStore = useModalStore();
-
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        modalStore.close();
-      }
-    };
-
-    modalStore.onOpen(() => {
-      document.addEventListener('keydown', closeOnEscape);
-    });
-
-    modalStore.onClose(() => {
-      document.removeEventListener('keydown', closeOnEscape);
-    });
-  },
-
-  onCreated() {
-    jQuery('#doaction').on('click', (event) => {
-      const bulkSelect = jQuery('#bulk-action-selector-top');
-      const value = bulkSelect.val();
-      const action: string | null = value ? String(value) : null;
-
-      if (action?.startsWith('myparcelnl')) {
-        event.preventDefault();
-      }
-    });
-  },
+  onCreateStore: onCreateStore,
+  onInitialized: onInitialized,
 });

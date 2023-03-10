@@ -7,15 +7,13 @@ namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 use MyParcelNL\Pdk\Facade\LanguageService;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
-use MyParcelNL\Pdk\Plugin\Api\Backend\PdkBackendActions;
+use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Plugin\Repository\PdkOrderRepositoryInterface;
-use MyParcelNL\Sdk\src\Support\Str;
+use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
 use MyParcelNL\WooCommerce\Hooks\WordPressHooksInterface;
 
 class PdkOrderListHooks implements WordPressHooksInterface
 {
-    private const CUSTOM_ORDER_COLUMN_ID = 'myparcelnl';
-
     public function apply(): void
     {
         // Render custom column in order grid
@@ -35,18 +33,10 @@ class PdkOrderListHooks implements WordPressHooksInterface
      */
     public function registerBulkActions(array $actions): array
     {
-        $customActions = [
-            PdkBackendActions::EXPORT_ORDERS,
-            PdkBackendActions::PRINT_ORDERS,
-            'exportPrintOrders',
-        ];
-
         $pluginName = Pdk::getAppInfo()->name;
 
-        foreach ($customActions as $action) {
-            $string = Str::snake("bulk_action_$action");
-
-            $actions["$pluginName.$action"] = LanguageService::translate($string);
+        foreach ($this->getBulkActions() as $action) {
+            $actions["$pluginName.$action"] = LanguageService::translate($action);
         }
 
         return $actions;
@@ -65,9 +55,11 @@ class PdkOrderListHooks implements WordPressHooksInterface
         foreach ($columns as $name => $data) {
             $newColumns[$name] = $data;
 
-            if ('shipping_address' === $name) {
-                $newColumns[self::CUSTOM_ORDER_COLUMN_ID] = __('MyParcel', 'my-textdomain');
+            if (Pdk::get('orderGridColumnBefore') !== $name) {
+                continue;
             }
+
+            $newColumns[Pdk::get('orderGridColumnName')] = Pdk::getAppInfo()->title;
         }
 
         return $newColumns;
@@ -82,7 +74,7 @@ class PdkOrderListHooks implements WordPressHooksInterface
     {
         global $post;
 
-        if (self::CUSTOM_ORDER_COLUMN_ID === $column) {
+        if (Pdk::getAppInfo()->name === $column) {
             /** @var \MyParcelNL\Pdk\Plugin\Repository\PdkOrderRepositoryInterface $orderRepository */
             $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
 
@@ -90,5 +82,15 @@ class PdkOrderListHooks implements WordPressHooksInterface
 
             echo RenderService::renderOrderListItem($pdkOrder);
         }
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getBulkActions(): array
+    {
+        $orderMode = Settings::get(GeneralSettings::ORDER_MODE, GeneralSettings::ID);
+
+        return $orderMode ? Pdk::get('bulkActionsOrderMode') : Pdk::get('bulkActions');
     }
 }
