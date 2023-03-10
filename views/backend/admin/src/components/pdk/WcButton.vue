@@ -4,6 +4,7 @@
       sizeClasses,
       {
         'mypa-animate-pulse': loading,
+        'mypa-opacity-50': loading || disabled,
       },
     ]"
     :disabled="loading || disabled"
@@ -47,11 +48,6 @@ const props = defineProps({
     default: null,
   },
 
-  size: {
-    type: String as PropType<Size>,
-    default: 'md',
-  },
-
   label: {
     type: String,
     default: null,
@@ -59,6 +55,11 @@ const props = defineProps({
 
   loading: {
     type: Boolean,
+  },
+
+  size: {
+    type: String as PropType<Size>,
+    default: 'md',
   },
 });
 
