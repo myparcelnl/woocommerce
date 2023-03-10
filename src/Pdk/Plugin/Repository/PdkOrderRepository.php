@@ -7,6 +7,7 @@ namespace MyParcelNL\WooCommerce\Pdk\Plugin\Repository;
 use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\DefaultLogger;
+use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrderLine;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
@@ -24,9 +25,6 @@ use function apply_filters;
 
 class PdkOrderRepository extends AbstractPdkOrderRepository
 {
-    public const WC_ORDER_META_ORDER_DATA = 'myparcelnl_order_data';
-    public const WC_ORDER_META_SHIPMENTS  = 'myparcelnl_order_shipments';
-
     /**
      * @var \MyParcelNL\Pdk\Base\Service\CountryService
      */
@@ -100,7 +98,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         $existingOrder = $this->get($order->externalIdentifier);
 
         if (serialize($order) !== serialize($existingOrder)) {
-            update_post_meta($wcOrder->get_id(), self::WC_ORDER_META_ORDER_DATA, $order->toStorableArray());
+            update_post_meta($wcOrder->get_id(), Pdk::get('metaKeyOrderData'), $order->toStorableArray());
         }
 
         if ($order->shipments->contains('updated', null)) {
@@ -143,7 +141,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     private function getDataFromOrder(WC_Order $order): PdkOrder
     {
-        $savedOrderData  = $order->get_meta(self::WC_ORDER_META_ORDER_DATA) ?: [];
+        $savedOrderData  = $order->get_meta(Pdk::get('metaKeyOrderData')) ?: [];
         $deliveryOptions = apply_filters(
             'wc_myparcel_order_delivery_options',
             $savedOrderData['deliveryOptions'] ?? [],
@@ -203,7 +201,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     private function getShipments(WC_Order $order): ?ShipmentCollection
     {
-        $shipments = $order->get_meta(self::WC_ORDER_META_SHIPMENTS) ?: null;
+        $shipments = $order->get_meta(Pdk::get('metaKeyShipments')) ?: null;
 
         return new ShipmentCollection($shipments);
     }
@@ -254,13 +252,13 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     private function saveShipments(WC_Order $wcOrder, PdkOrder $order): void
     {
-        $existingShipments = get_post_meta($wcOrder->get_id(), self::WC_ORDER_META_SHIPMENTS, true) ?: [];
+        $existingShipments = get_post_meta($wcOrder->get_id(), Pdk::get('metaKeyShipments'), true) ?: [];
 
         $order->shipments = (new ShipmentCollection($existingShipments))->mergeByKey($order->shipments, 'id');
 
         $shipmentsArray = $order->shipments->toStorableArray();
 
-        update_post_meta($wcOrder->get_id(), self::WC_ORDER_META_SHIPMENTS, $shipmentsArray);
+        update_post_meta($wcOrder->get_id(), Pdk::get('metaKeyShipments'), $shipmentsArray);
 
         $barcodes = array_filter(
             Arr::pluck($shipmentsArray, 'barcode'),

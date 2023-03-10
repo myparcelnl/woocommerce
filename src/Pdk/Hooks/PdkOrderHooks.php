@@ -22,11 +22,9 @@ class PdkOrderHooks implements WordPressHooksInterface
      */
     public function registerSingleOrderPageMetaBox(): void
     {
-        $appInfo = Pdk::getAppInfo();
-
         add_meta_box(
-            'myparcelnl_woocommerce_order_data',
-            $appInfo->title,
+            Pdk::get('orderMetaBoxId'),
+            Pdk::get('orderMetaBoxTitle'),
             [$this, 'renderPdkOrderBox'],
             'shop_order',
             'advanced',

@@ -4,25 +4,12 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
+use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
-use MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface;
 use MyParcelNL\WooCommerce\Hooks\WordPressHooksInterface;
 
 class PdkPluginSettingsHooks implements WordPressHooksInterface
 {
-    /**
-     * @var \MyParcelNL\WooCommerce\Pdk\Service\WcViewService
-     */
-    private $viewService;
-
-    /**
-     * @param  \MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface $viewService
-     */
-    public function __construct(ViewServiceInterface $viewService)
-    {
-        $this->viewService = $viewService;
-    }
-
     public function apply(): void
     {
         // Add MyParcel menu item
@@ -42,10 +29,10 @@ class PdkPluginSettingsHooks implements WordPressHooksInterface
     {
         add_submenu_page(
             'woocommerce',
-            __('MyParcel', 'woocommerce-myparcel'),
-            __('MyParcel', 'woocommerce-myparcel'),
+            Pdk::get('settingsPageTitle'),
+            Pdk::get('settingsMenuTitle'),
             'edit_pages',
-            $this->viewService->getSettingsPageSlug(),
+            Pdk::get('settingsMenuSlug'),
             [$this, 'renderPdkPluginSettings']
         );
     }
@@ -57,7 +44,7 @@ class PdkPluginSettingsHooks implements WordPressHooksInterface
      */
     public function registerSettingsScreenInWooCommerce(array $screenIds): array
     {
-        $screenIds[] = sprintf('woocommerce_page_%s', $this->viewService->getSettingsPageSlug());
+        $screenIds[] = Pdk::get('settingsMenuSlug');
 
         return $screenIds;
     }
@@ -77,7 +64,7 @@ class PdkPluginSettingsHooks implements WordPressHooksInterface
      */
     public function setWooCommerceBodyClasses(array $classes): array
     {
-        if (isset($_GET['page']) && $_GET['page'] === $this->viewService->getSettingsPageSlug()) {
+        if (isset($_GET['page']) && $_GET['page'] === Pdk::get('settingsMenuSlug')) {
             $classes[] = 'woocommerce';
             $classes[] = 'woocommerce-page';
         }
