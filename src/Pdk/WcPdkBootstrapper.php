@@ -26,18 +26,25 @@ class WcPdkBootstrapper extends PdkBootstrapper
         string $url
     ): array {
         return [
-            'userAgent' => value([
+            ###
+            # General
+            ###
+
+            'userAgent'             => value([
                 'MyParcelNL-WooCommerce' => $version,
                 'WooCommerce'            => defined('WOOCOMMERCE_VERSION') ? constant('WOOCOMMERCE_VERSION') : '?',
                 'WordPress'              => get_bloginfo('version'),
             ]),
 
-            'routeBackend'        => value("$name/backend/v1"),
-            'routeBackendPdk'     => value('pdk'),
-            'routeBackendWebhook' => value('webhook'),
+            /**
+             * Meta keys.
+             */
+            'metaKeyOrderData'      => value('myparcelnl_order_data'),
+            'metaKeyShipments'      => value('myparcelnl_order_shipments'),
 
-            'routeFrontend'         => value("$name/frontend/v1"),
-            'routeFrontendMyParcel' => value($name),
+            ###
+            # Order grid
+            ###
 
             /**
              * The name of our column in the order grid.
@@ -66,6 +73,42 @@ class WcPdkBootstrapper extends PdkBootstrapper
                 'action_edit',
                 'action_export',
             ]),
+
+            ###
+            # Single order page
+            ###
+
+            'orderMetaBoxId'    => value("{$name}_woocommerce_order_data"),
+            'orderMetaBoxTitle' => value($title),
+
+            ###
+            # Settings
+            ###
+
+            'settingsMenuSlug'      => value("woocommerce_page_$name-settings"),
+            'settingsMenuTitle'     => value($title),
+            'settingsPageTitle'     => value("$title WooCommerce"),
+
+            /**
+             * Prefix of each setting saved to the database. Prefixed with an underscore to prevent it from being shown and edited in ACF.
+             */
+            'settingKeyPrefix'      => value("_{$name}_"),
+
+            /** Settings key where webhooks are saved */
+            'settingKeyWebhooks'    => value('webhooks'),
+            /** Settings key where the hashed webhook url is saved */
+            'settingKeyWebhookHash' => value('webhook_hash'),
+
+            ###
+            # Routes
+            ###
+
+            'routeBackend'        => value("$name/backend/v1"),
+            'routeBackendPdk'     => value('pdk'),
+            'routeBackendWebhook' => value('webhook'),
+
+            'routeFrontend'         => value("$name/frontend/v1"),
+            'routeFrontendMyParcel' => value($name),
         ];
     }
 }
