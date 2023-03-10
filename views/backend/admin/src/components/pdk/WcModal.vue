@@ -53,10 +53,10 @@
             </KeepAlive>
           </div>
 
-          <PdkButtonGroup>
+          <PdkButtonGroup v-if="actions?.length">
             <ActionButton
               v-for="(action, index) in actions"
-              :key="`action_${getActionIdentifier(action)}_${index}`"
+              :key="`action_${action.id}_${index}`"
               :action="action"
               :label="action.label" />
           </PdkButtonGroup>
@@ -69,17 +69,25 @@
 <script lang="ts" setup>
 import {
   ActionButton,
+  ActionDefinition,
   AdminModalKey,
-  AnyAdminAction,
   NotificationContainer,
   useAdminConfig,
   useLanguage,
   useModalStore,
 } from '@myparcel-pdk/admin/src';
 import {PropType, computed} from 'vue';
-import {getActionIdentifier} from '@myparcel-pdk/frontend-core/src';
 
 const props = defineProps({
+  actions: {
+    type: Array as PropType<ActionDefinition[]>,
+    default: () => [],
+  },
+
+  loading: {
+    type: Boolean,
+  },
+
   modalKey: {
     type: String as PropType<AdminModalKey>,
     default: null,
@@ -87,11 +95,6 @@ const props = defineProps({
 
   title: {
     type: String,
-    required: true,
-  },
-
-  actions: {
-    type: Array as PropType<AnyAdminAction[]>,
     required: true,
   },
 });
