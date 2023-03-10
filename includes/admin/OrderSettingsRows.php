@@ -372,7 +372,7 @@ class OrderSettingsRows
                 'value'     => $orderSettings->hasSameDayDelivery(),
                 'condition' => [
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY),
-                ] + $hasDhlForYouCompleteAccess ? [] : [self::CONDITION_FORCE_ENABLED],
+                ] + ($hasDhlForYouCompleteAccess ? [] : [self::CONDITION_FORCE_ENABLED]),
             ],
         ];
 
