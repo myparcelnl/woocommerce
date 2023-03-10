@@ -10,7 +10,7 @@
     "test:watch": "run ws:test:watch \"$(pwd)\""
   },
   "dependencies": {
-    "@myparcel/delivery-options": "^5.5.0",
+    "@myparcel/delivery-options": "^5.7.0",
     "@myparcel/ts-utils": "^1.6.0"
   },
   "devDependencies": {

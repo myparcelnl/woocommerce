@@ -69,9 +69,9 @@ const {translate} = useLanguage();
 
 const sizeClasses = computed((): string[] => {
   return [
-    ...(props.size === Size.EXTRA_SMALL ? ['!mypa-min-h-0', '!mypa-leading-normal', '!mypa-px-1'] : []),
-    ...([Size.SMALL, Size.EXTRA_SMALL].includes(props.size) ? ['button-small'] : []),
-    ...([Size.LARGE, Size.EXTRA_LARGE].includes(props.size) ? ['button-large'] : []),
+    ...(props.size === Size.ExtraSmall ? ['!mypa-min-h-0', '!mypa-leading-normal', '!mypa-px-1'] : []),
+    ...([Size.Small, Size.ExtraSmall].includes(props.size) ? ['button-small'] : []),
+    ...([Size.Large, Size.ExtraLarge].includes(props.size) ? ['button-large'] : []),
   ];
 });
 </script>
