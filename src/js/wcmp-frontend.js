@@ -300,7 +300,9 @@ jQuery(($) => {
       let street = MyParcelFrontend.getField(MyParcelFrontend.addressField)?.value;
 
       if (MyParcelFrontend.hasSplitAddressFields()) {
-        street = MyParcelFrontend.getFullStreet();
+        const fullStreet = MyParcelFrontend.getFullStreet();
+
+        street = `${fullStreet.streetName} ${fullStreet.houseNumber}`.trim();
       }
 
       return {
@@ -626,7 +628,11 @@ jQuery(($) => {
         return field.value || '';
       });
 
-      return `${streetName} ${houseNumber} ${houseNumberSuffix}`.trim();
+      return {
+        streetName,
+        houseNumber,
+        houseNumberSuffix,
+      };
     },
 
     /**
@@ -661,7 +667,7 @@ jQuery(($) => {
 
         if (!MyParcelFrontend.hasSplitAddressFields(newCountry)) {
           MyParcelFrontend.fillCheckoutFields({
-            address_1: MyParcelFrontend.getFullStreet(),
+            address_1: Object.values(MyParcelFrontend.getFullStreet()).join(' '),
           });
         }
 
