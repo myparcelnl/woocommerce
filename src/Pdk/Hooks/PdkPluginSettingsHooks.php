@@ -32,7 +32,7 @@ class PdkPluginSettingsHooks implements WordPressHooksInterface
             Pdk::get('settingsPageTitle'),
             Pdk::get('settingsMenuTitle'),
             'edit_pages',
-            Pdk::get('settingsMenuSlug'),
+            Pdk::get('settingsMenuSlugShort'),
             [$this, 'renderPdkPluginSettings']
         );
     }
