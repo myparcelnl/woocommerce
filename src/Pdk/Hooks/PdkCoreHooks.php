@@ -6,8 +6,8 @@ namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
-use MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface;
-use MyParcelNL\WooCommerce\Hooks\WordPressHooksInterface;
+use MyParcelNL\Pdk\Plugin\Contract\ViewServiceInterface;
+use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Service\WpScriptService;
 
 class PdkCoreHooks implements WordPressHooksInterface
@@ -60,7 +60,7 @@ class PdkCoreHooks implements WordPressHooksInterface
      */
     public function registerPdkScripts(): void
     {
-        /** @var \MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface $viewService */
+        /** @var \MyParcelNL\Pdk\Plugin\Contract\ViewServiceInterface $viewService */
         $viewService = Pdk::get(ViewServiceInterface::class);
 
         if (! $viewService->isAnyPdkPage()) {

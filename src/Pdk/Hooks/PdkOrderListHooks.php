@@ -8,9 +8,9 @@ use MyParcelNL\Pdk\Facade\LanguageService;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
 use MyParcelNL\Pdk\Facade\Settings;
-use MyParcelNL\Pdk\Plugin\Repository\PdkOrderRepositoryInterface;
+use MyParcelNL\Pdk\Plugin\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
-use MyParcelNL\WooCommerce\Hooks\WordPressHooksInterface;
+use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 
 class PdkOrderListHooks implements WordPressHooksInterface
 {
@@ -75,7 +75,7 @@ class PdkOrderListHooks implements WordPressHooksInterface
         global $post;
 
         if (Pdk::getAppInfo()->name === $column) {
-            /** @var \MyParcelNL\Pdk\Plugin\Repository\PdkOrderRepositoryInterface $orderRepository */
+            /** @var \MyParcelNL\Pdk\Plugin\Contract\PdkOrderRepositoryInterface $orderRepository */
             $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
 
             $pdkOrder = $orderRepository->get($post->ID);

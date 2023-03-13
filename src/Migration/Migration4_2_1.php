@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration;
 
+use MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface;
+
 /**
  * Migrates pre v4.2.1 settings
  */

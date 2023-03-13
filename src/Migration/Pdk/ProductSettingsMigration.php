@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Product\Repository\AbstractProductRepository;
-use MyParcelNL\WooCommerce\Migration\AbstractUpgradeMigration;
-use MyParcelNL\WooCommerce\Migration\MigrationInterface;
-use MyParcelNL\WooCommerce\Service\WpCronService;
+use MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface;
+use MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface;
+use WC_Product;
 
 class ProductSettingsMigration implements MigrationInterface
 {
@@ -20,11 +19,6 @@ class ProductSettingsMigration implements MigrationInterface
     private const CHUNK_SIZE          = 10;
     private const SECONDS_APART       = 30;
 
-    public function getVersion(): string
-    {
-        return '5.0.0';
-    }
-
     public function down(): void
     {
         /**
@@ -32,13 +26,9 @@ class ProductSettingsMigration implements MigrationInterface
          */
     }
 
-    public function up(): void
+    public function getVersion(): string
     {
-        if (! function_exists('wc_get_products')) {
-            return;
-        }
-
-        $this->migrateProductSettings();
+        return '5.0.0';
     }
 
     public function migrateProductSettings(): void
@@ -57,13 +47,22 @@ class ProductSettingsMigration implements MigrationInterface
         $this->migrateTheseWcProducts($wcProducts);
     }
 
+    public function up(): void
+    {
+        if (! function_exists('wc_get_products')) {
+            return;
+        }
+
+        $this->migrateProductSettings();
+    }
+
     private function migrateTheseWcProducts($wcProducts): void
     {
-        /** @var \MyParcelNL\WooCommerce\Pdk\Product\Repository\PdkProductRepository $productRepository */
-        $productRepository = Pdk::get(\MyParcelNL\Pdk\Product\Repository\ProductRepositoryInterface::class);
+        /** @var \MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface $productRepository */
+        $productRepository = Pdk::get(ProductRepositoryInterface::class);
 
         foreach ($wcProducts as $wcProduct) {
-            if (! $wcProduct instanceof \WC_Product) {
+            if (! $wcProduct instanceof WC_Product) {
                 continue;
             }
 
@@ -97,7 +96,11 @@ class ProductSettingsMigration implements MigrationInterface
             }
 
             (wc_get_logger())->debug(
-                sprintf('Settings for product %s migrated %s', $wcProduct->get_id(), $changed ? '' : '(no data)') . PHP_EOL,
+                sprintf(
+                    'Settings for product %s migrated %s',
+                    $wcProduct->get_id(),
+                    $changed ? '' : '(no data)'
+                ) . PHP_EOL,
                 ['source' => 'wc-myparcel']
             );
 
