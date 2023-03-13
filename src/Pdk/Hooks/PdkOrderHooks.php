@@ -6,8 +6,8 @@ namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
-use MyParcelNL\Pdk\Plugin\Repository\PdkOrderRepositoryInterface;
-use MyParcelNL\WooCommerce\Hooks\WordPressHooksInterface;
+use MyParcelNL\Pdk\Plugin\Contract\PdkOrderRepositoryInterface;
+use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 
 class PdkOrderHooks implements WordPressHooksInterface
 {
@@ -39,7 +39,7 @@ class PdkOrderHooks implements WordPressHooksInterface
     {
         global $post;
 
-        /** @var \MyParcelNL\Pdk\Plugin\Repository\PdkOrderRepositoryInterface $orderRepository */
+        /** @var \MyParcelNL\Pdk\Plugin\Contract\PdkOrderRepositoryInterface $orderRepository */
         $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
         $order           = $orderRepository->get($post->ID);
 

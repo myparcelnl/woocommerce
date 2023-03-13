@@ -5,19 +5,15 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
 use Exception;
-use MyParcelNL;
 use MyParcelNL\Pdk\Facade\DefaultLogger;
-use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Facade\RenderService;
-use MyParcelNL\Pdk\Plugin\Repository\PdkOrderRepositoryInterface;
-use MyParcelNL\Pdk\Plugin\Service\DeliveryOptionsFeesService;
+use MyParcelNL\Pdk\Plugin\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
-use MyParcelNL\WooCommerce\Hooks\WordPressHooksInterface;
+use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 
 class PdkPlaceOrderHooks implements WordPressHooksInterface
 {
     /**
-     * @var \MyParcelNL\Pdk\Plugin\Repository\PdkOrderRepositoryInterface
+     * @var \MyParcelNL\Pdk\Plugin\Contract\PdkOrderRepositoryInterface
      */
     private $repository;
 

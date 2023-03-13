@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MyParcelNL\WooCommerce\Hooks;
+namespace MyParcelNL\WooCommerce\Hooks\Contract;
 
 interface WordPressHooksInterface
 {

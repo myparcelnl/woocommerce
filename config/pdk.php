@@ -2,29 +2,29 @@
 
 declare(strict_types=1);
 
-use MyParcelNL\Pdk\Account\Repository\AccountRepositoryInterface;
-use MyParcelNL\Pdk\Api\Adapter\ClientAdapterInterface;
-use MyParcelNL\Pdk\Api\Service\ApiServiceInterface;
+use MyParcelNL\Pdk\Account\Contract\AccountRepositoryInterface;
+use MyParcelNL\Pdk\Api\Contract\ApiServiceInterface;
+use MyParcelNL\Pdk\Api\Contract\ClientAdapterInterface;
 use MyParcelNL\Pdk\Api\Service\MyParcelApiService;
-use MyParcelNL\Pdk\Base\Concern\WeightServiceInterface;
-use MyParcelNL\Pdk\Base\CronServiceInterface;
+use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
+use MyParcelNL\Pdk\Base\Contract\WeightServiceInterface;
 use MyParcelNL\Pdk\Base\Pdk;
-use MyParcelNL\Pdk\Frontend\Service\ScriptServiceInterface;
-use MyParcelNL\Pdk\Language\Service\LanguageServiceInterface;
-use MyParcelNL\Pdk\Plugin\Api\Backend\BackendEndpointServiceInterface;
-use MyParcelNL\Pdk\Plugin\Api\Frontend\FrontendEndpointServiceInterface;
-use MyParcelNL\Pdk\Plugin\Repository\PdkCartRepositoryInterface;
-use MyParcelNL\Pdk\Plugin\Repository\PdkOrderRepositoryInterface;
-use MyParcelNL\Pdk\Plugin\Repository\PdkShippingMethodRepositoryInterface;
-use MyParcelNL\Pdk\Plugin\Service\DeliveryOptionsServiceInterface;
-use MyParcelNL\Pdk\Plugin\Service\OrderStatusServiceInterface;
-use MyParcelNL\Pdk\Plugin\Service\RenderServiceInterface;
-use MyParcelNL\Pdk\Plugin\Service\TaxService;
-use MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface;
-use MyParcelNL\Pdk\Plugin\Webhook\PdkWebhookServiceInterface;
-use MyParcelNL\Pdk\Plugin\Webhook\Repository\PdkWebhooksRepositoryInterface;
-use MyParcelNL\Pdk\Product\Repository\ProductRepositoryInterface;
-use MyParcelNL\Pdk\Settings\Repository\SettingsRepositoryInterface;
+use MyParcelNL\Pdk\Frontend\Contract\ScriptServiceInterface;
+use MyParcelNL\Pdk\Language\Contract\LanguageServiceInterface;
+use MyParcelNL\Pdk\Plugin\Api\Contract\BackendEndpointServiceInterface;
+use MyParcelNL\Pdk\Plugin\Api\Contract\FrontendEndpointServiceInterface;
+use MyParcelNL\Pdk\Plugin\Contract\DeliveryOptionsServiceInterface;
+use MyParcelNL\Pdk\Plugin\Contract\OrderStatusServiceInterface;
+use MyParcelNL\Pdk\Plugin\Contract\PdkCartRepositoryInterface;
+use MyParcelNL\Pdk\Plugin\Contract\PdkOrderRepositoryInterface;
+use MyParcelNL\Pdk\Plugin\Contract\PdkShippingMethodRepositoryInterface;
+use MyParcelNL\Pdk\Plugin\Contract\RenderServiceInterface;
+use MyParcelNL\Pdk\Plugin\Contract\TaxServiceInterface;
+use MyParcelNL\Pdk\Plugin\Contract\ViewServiceInterface;
+use MyParcelNL\Pdk\Plugin\Webhook\Contract\PdkWebhookServiceInterface;
+use MyParcelNL\Pdk\Plugin\Webhook\Contract\PdkWebhooksRepositoryInterface;
+use MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface;
+use MyParcelNL\Pdk\Settings\Contract\SettingsRepositoryInterface;
 use MyParcelNL\WooCommerce\Logger\WcLogger;
 use MyParcelNL\WooCommerce\Pdk\Guzzle7ClientAdapter;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcBackendEndpointService;
@@ -76,7 +76,7 @@ return [
     RenderServiceInterface::class               => autowire(WcRenderService::class),
     ViewServiceInterface::class                 => autowire(WcViewService::class),
     WeightServiceInterface::class               => autowire(WcWeightService::class),
-    TaxService::class                           => autowire(WcTaxService::class),
+    TaxServiceInterface::class                  => autowire(WcTaxService::class),
 
     /**
      * Endpoints

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration;
 
+use MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface;
+
 /**
  * Migrates pre v4.4.1 settings
  *  - move show delivery day setting from checkout to general

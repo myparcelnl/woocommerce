@@ -16,7 +16,7 @@ use MyParcelNL\Pdk\Settings\Model\LabelSettings;
 use MyParcelNL\Pdk\Settings\Model\OrderSettings;
 use MyParcelNL\Pdk\Settings\Model\Settings;
 use MyParcelNL\Pdk\Shipment\Model\DropOffDay;
-use MyParcelNL\WooCommerce\Migration\MigrationInterface;
+use MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkAccountRepository;
 use MyParcelNL\WooCommerce\Pdk\Settings\Repository\PdkSettingsRepository;
 
@@ -27,6 +27,42 @@ class SettingsMigration implements MigrationInterface
     private const LABEL    = 'label';
     private const ORDER    = 'order';
     private const CUSTOMS  = 'customs';
+
+    public function down(): void
+    {
+        /**
+         * Nothing to do here.
+         */
+    }
+
+    public function getVersion(): string
+    {
+        return '5.0.0';
+    }
+
+    /**
+     * @param  string $carrierName
+     *
+     * @return array
+     */
+    public function getWcCarrierSettings(string $carrierName): array
+    {
+        if (! in_array($carrierName, [Carrier::CARRIER_POSTNL_NAME, 'dhlforyou'], true)) {
+            return [];
+        }
+
+        $wcCarrierSettings = $this->getSettings("woocommerce_myparcel_{$carrierName}_settings");
+
+        $mapped      = $this->mapCarrierSettingKeys();
+        $transformed = [];
+
+        foreach ($wcCarrierSettings as $key => $value) {
+            $newKey               = $mapped[$key] ?? $key;
+            $transformed[$newKey] = $value;
+        }
+
+        return $transformed + ['carrierName' => $carrierName];
+    }
 
     /**
      * @return void
@@ -167,6 +203,55 @@ class SettingsMigration implements MigrationInterface
     }
 
     /**
+     * @param  string $key
+     *
+     * @return array
+     */
+    private function getSettings(string $key): array
+    {
+        $value = get_option($key);
+
+        if (! is_array($value)) {
+            return [];
+        }
+
+        return $value;
+    }
+
+    /**
+     * @return array
+     */
+    private function getWcSettings(): array
+    {
+        $wcSettings = array_merge(
+            $this->getSettings('woocommerce_myparcel_general_settings'),
+            $this->getSettings('woocommerce_myparcel_export_defaults_settings'),
+            $this->getSettings('woocommerce_myparcel_checkout_settings')
+        );
+
+        $mapped      = $this->mapSettingKeys();
+        $transformed = [];
+
+        foreach ($wcSettings as $key => $value) {
+            $search = $this->searchParentKey($key, $mapped);
+            $newKey = $mapped[$search][$key] ?? $key;
+
+            switch ($key) {
+                case 'nothing_yet':
+                    $value = $value === 'yes' ? '1' : '0';
+                    break;
+                case 'export_insured_for_be':
+                    $value = 50000;
+                    break;
+            }
+
+            $transformed[$newKey] = $value;
+        }
+
+        return $transformed;
+    }
+
+    /**
      * @return string[]
      */
     private function mapCarrierSettingKeys(): array
@@ -262,63 +347,6 @@ class SettingsMigration implements MigrationInterface
     }
 
     /**
-     * @param  string $carrierName
-     *
-     * @return array
-     */
-    public function getWcCarrierSettings(string $carrierName): array
-    {
-        if (! in_array($carrierName, [Carrier::CARRIER_POSTNL_NAME, 'dhlforyou'], true)) {
-            return [];
-        }
-
-        $wcCarrierSettings = $this->getSettings("woocommerce_myparcel_{$carrierName}_settings");
-
-        $mapped      = $this->mapCarrierSettingKeys();
-        $transformed = [];
-
-        foreach ($wcCarrierSettings as $key => $value) {
-            $newKey               = $mapped[$key] ?? $key;
-            $transformed[$newKey] = $value;
-        }
-
-        return $transformed + ['carrierName' => $carrierName];
-    }
-
-    /**
-     * @return array
-     */
-    private function getWcSettings(): array
-    {
-        $wcSettings = array_merge(
-            $this->getSettings('woocommerce_myparcel_general_settings'),
-            $this->getSettings('woocommerce_myparcel_export_defaults_settings'),
-            $this->getSettings('woocommerce_myparcel_checkout_settings')
-        );
-
-        $mapped      = $this->mapSettingKeys();
-        $transformed = [];
-
-        foreach ($wcSettings as $key => $value) {
-            $search = $this->searchParentKey($key, $mapped);
-            $newKey = $mapped[$search][$key] ?? $key;
-
-            switch ($key) {
-                case 'nothing_yet':
-                    $value = $value === 'yes' ? '1' : '0';
-                    break;
-                case 'export_insured_for_be':
-                    $value = 50000;
-                    break;
-            }
-
-            $transformed[$newKey] = $value;
-        }
-
-        return $transformed;
-    }
-
-    /**
      * @param $needle
      * @param $haystack
      *
@@ -333,33 +361,5 @@ class SettingsMigration implements MigrationInterface
         }
 
         return false;
-    }
-
-    /**
-     * @param  string $key
-     *
-     * @return array
-     */
-    private function getSettings(string $key): array
-    {
-        $value = get_option($key);
-
-        if (! is_array($value)) {
-            return [];
-        }
-
-        return $value;
-    }
-
-    public function down(): void
-    {
-        /**
-         * Nothing to do here.
-         */
-    }
-
-    public function getVersion(): string
-    {
-        return '5.0.0';
     }
 }

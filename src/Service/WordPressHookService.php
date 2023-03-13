@@ -8,11 +8,11 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Hooks\AutomaticOrderExportHooks;
 use MyParcelNL\WooCommerce\Hooks\CartFeesHooks;
 use MyParcelNL\WooCommerce\Hooks\CheckoutScriptHooks;
+use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Hooks\PdkAdminEndpointHooks;
 use MyParcelNL\WooCommerce\Hooks\PdkWebhookHooks;
 use MyParcelNL\WooCommerce\Hooks\ScheduledMigrationHooks;
 use MyParcelNL\WooCommerce\Hooks\TrackTraceHooks;
-use MyParcelNL\WooCommerce\Hooks\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkCoreHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkOrderHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkOrderListHooks;
@@ -29,7 +29,7 @@ final class WordPressHookService
     public function applyAll(): void
     {
         foreach ($this->getHooks() as $service) {
-            /** @var \MyParcelNL\WooCommerce\Hooks\WordPressHooksInterface $instance */
+            /** @var \MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface $instance */
             $instance = Pdk::get($service);
 
             if (! $instance instanceof WordPressHooksInterface) {
@@ -41,7 +41,7 @@ final class WordPressHookService
     }
 
     /**
-     * @return class-string<WordPressHooksInterface>[]
+     * @return class-string<\MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface>[]
      */
     private function getHooks(): array
     {

@@ -11,11 +11,11 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrderLine;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
-use MyParcelNL\Pdk\Product\Repository\ProductRepositoryInterface;
+use MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
-use MyParcelNL\Pdk\Storage\StorageInterface;
+use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
 use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\WooCommerce\Service\WcRecipientService;
 use Throwable;
@@ -31,7 +31,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     private $countryService;
 
     /**
-     * @var \MyParcelNL\Pdk\Product\Repository\ProductRepositoryInterface
+     * @var \MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface
      */
     private $productRepository;
 
@@ -41,10 +41,10 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     private $recipientService;
 
     /**
-     * @param  \MyParcelNL\Pdk\Storage\StorageInterface                      $storage
-     * @param  \MyParcelNL\Pdk\Product\Repository\ProductRepositoryInterface $productRepository
-     * @param  \MyParcelNL\WooCommerce\Service\WcRecipientService            $recipientService
-     * @param  \MyParcelNL\Pdk\Base\Service\CountryService                   $countryService
+     * @param  \MyParcelNL\Pdk\Storage\Contract\StorageInterface           $storage
+     * @param  \MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface $productRepository
+     * @param  \MyParcelNL\WooCommerce\Service\WcRecipientService          $recipientService
+     * @param  \MyParcelNL\Pdk\Base\Service\CountryService                 $countryService
      */
     public function __construct(
         StorageInterface           $storage,

@@ -7,20 +7,20 @@ namespace MyParcelNL\WooCommerce\Pdk\Plugin\Repository;
 use InvalidArgumentException;
 use MyParcelNL\Pdk\Plugin\Model\PdkCart;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkCartRepository;
-use MyParcelNL\Pdk\Product\Repository\ProductRepositoryInterface;
-use MyParcelNL\Pdk\Storage\StorageInterface;
+use MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface;
+use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
 use WC_Cart;
 
 class WcCartRepository extends AbstractPdkCartRepository
 {
     /**
-     * @var \MyParcelNL\Pdk\Product\Repository\ProductRepositoryInterface
+     * @var \MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface
      */
     private $productRepository;
 
     /**
-     * @param  \MyParcelNL\Pdk\Storage\StorageInterface                      $storage
-     * @param  \MyParcelNL\Pdk\Product\Repository\ProductRepositoryInterface $productRepository
+     * @param  \MyParcelNL\Pdk\Storage\Contract\StorageInterface           $storage
+     * @param  \MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface $productRepository
      */
     public function __construct(StorageInterface $storage, ProductRepositoryInterface $productRepository)
     {
@@ -46,7 +46,8 @@ class WcCartRepository extends AbstractPdkCartRepository
                 'shipmentPriceAfterVat' => (int) (100 * ($input->get_shipping_total() + $input->get_shipping_tax())),
                 'shipmentVat'           => (int) (100 * $input->get_shipping_tax()),
                 'orderPrice'            => (int) (100 * $input->get_cart_contents_total()),
-                'orderPriceAfterVat'    => (int) (100 * ($input->get_cart_contents_total() + $input->get_cart_contents_tax())),
+                'orderPriceAfterVat'    => (int) (100 * ($input->get_cart_contents_total(
+                        ) + $input->get_cart_contents_tax())),
                 'orderVat'              => (int) (100 * $input->get_cart_contents_tax()),
                 'shippingMethod'        => [
                     'shippingAddress' => [
