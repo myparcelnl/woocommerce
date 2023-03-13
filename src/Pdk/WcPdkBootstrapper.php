@@ -86,6 +86,7 @@ class WcPdkBootstrapper extends PdkBootstrapper
             ###
 
             'settingsMenuSlug'      => value("woocommerce_page_$name-settings"),
+            'settingsMenuSlugShort' => value("$name-settings"),
             'settingsMenuTitle'     => value($title),
             'settingsPageTitle'     => value("$title WooCommerce"),
 
