@@ -69,7 +69,7 @@ class WcPdkBootstrapper extends PdkBootstrapper
             /**
              * Bulk order actions in order mode.
              */
-            'orderModeBulkActions'  => value([
+            'bulkActionsOrderMode'  => value([
                 'action_edit',
                 'action_export',
             ]),
