@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Migration;
 
 use MyParcelNL\Sdk\src\Support\Arr;
+use MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface;
 
 class Migration4_0_0 extends AbstractUpgradeMigration implements MigrationInterface
 {

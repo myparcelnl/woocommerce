@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MyParcelNL\WooCommerce\Migration;
+namespace MyParcelNL\WooCommerce\Migration\Contract;
 
 interface MigrationInterface
 {

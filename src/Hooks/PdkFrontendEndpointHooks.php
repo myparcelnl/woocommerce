@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
-use MyParcelNL;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Api\PdkEndpoint;
 use MyParcelNL\WooCommerce\Hooks\Concern\UsesPdkRequestConverter;
-use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcBackendEndpointService;
+use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use WP_REST_Request;
 use WP_REST_Response;
 

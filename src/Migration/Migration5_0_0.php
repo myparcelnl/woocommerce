@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration;
 
+use MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface;
 use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
 use MyParcelNL\WooCommerce\Migration\Pdk\ProductSettingsMigration;
 use MyParcelNL\WooCommerce\Migration\Pdk\SettingsMigration;

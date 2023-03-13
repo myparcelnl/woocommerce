@@ -6,7 +6,7 @@ namespace MyParcelNL\WooCommerce\Migration;
 
 /**
  * @deprecated Do not use for new migrations. Use the interface instead.
- * @see \MyParcelNL\WooCommerce\Migration\MigrationInterface
+ * @see \MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface
  */
 abstract class AbstractUpgradeMigration
 {

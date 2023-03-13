@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Product\Repository;
 
-use MyParcelNL\Pdk\Base\Concern\WeightServiceInterface;
+use MyParcelNL\Pdk\Base\Contract\WeightServiceInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Plugin\Collection\PdkProductCollection;
 use MyParcelNL\Pdk\Plugin\Model\PdkProduct;
 use MyParcelNL\Pdk\Product\Repository\AbstractProductRepository;
-use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\Pdk\Settings\Model\ProductSettings;
-use MyParcelNL\Pdk\Storage\StorageInterface;
+use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
 use MyParcelNL\Sdk\src\Support\Str;
 use WC_Product;
 
@@ -24,13 +22,34 @@ class PdkProductRepository extends AbstractProductRepository
     protected $weightService;
 
     /**
-     * @param  \MyParcelNL\Pdk\Storage\StorageInterface            $storage
-     * @param  \MyParcelNL\Pdk\Base\Concern\WeightServiceInterface $weightService
+     * @param  \MyParcelNL\Pdk\Storage\Contract\StorageInterface    $storage
+     * @param  \MyParcelNL\Pdk\Base\Contract\WeightServiceInterface $weightService
      */
     public function __construct(StorageInterface $storage, WeightServiceInterface $weightService)
     {
         parent::__construct($storage);
         $this->weightService = $weightService;
+    }
+
+    /**
+     * @param  \MyParcelNL\Pdk\Plugin\Model\PdkProduct $product
+     * @param  array                                   $productSettings
+     *
+     * @return void
+     */
+    public function convertDbValuesToProductSettings(PdkProduct $product, array $productSettings): PdkProduct
+    {
+        $appInfo = Pdk::getAppInfo();
+        $result  = [];
+
+        foreach ($productSettings as $setting => $value) {
+            $key                   = str_replace(sprintf('%s_product_', $appInfo->name), '', $setting);
+            $camelCaseKey          = Str::camel($key);
+            $result[$camelCaseKey] = $value;
+        }
+
+        $product->settings = new ProductSettings($result);
+        return $product;
     }
 
     /**
@@ -113,27 +132,6 @@ class PdkProductRepository extends AbstractProductRepository
         }
 
         $wcProduct->save_meta_data();
-    }
-
-    /**
-     * @param  \MyParcelNL\Pdk\Plugin\Model\PdkProduct $product
-     * @param  array                                   $productSettings
-     *
-     * @return void
-     */
-    public function convertDbValuesToProductSettings(PdkProduct $product, array $productSettings): PdkProduct
-    {
-        $appInfo = Pdk::getAppInfo();
-        $result  = [];
-
-        foreach ($productSettings as $setting => $value) {
-            $key                   = str_replace(sprintf('%s_product_', $appInfo->name), '', $setting);
-            $camelCaseKey          = Str::camel($key);
-            $result[$camelCaseKey] = $value;
-        }
-
-        $product->settings = new ProductSettings($result);
-        return $product;
     }
 
     /**

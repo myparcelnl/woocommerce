@@ -7,6 +7,7 @@ namespace MyParcelNL\WooCommerce\Hooks;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Api\PdkEndpoint;
 use MyParcelNL\WooCommerce\Hooks\Concern\UsesPdkRequestConverter;
+use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;

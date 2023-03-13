@@ -6,7 +6,7 @@ namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
-use MyParcelNL\WooCommerce\Hooks\WordPressHooksInterface;
+use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 
 class PdkPluginSettingsHooks implements WordPressHooksInterface
 {

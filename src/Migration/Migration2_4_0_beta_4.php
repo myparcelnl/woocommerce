@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration;
 
+use MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface;
+
 /**
  * - remove log file (now uses WC logger)
  */

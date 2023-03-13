@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Service;
 
-use MyParcelNL\Pdk\Plugin\Service\OrderStatusServiceInterface;
+use MyParcelNL\Pdk\Plugin\Contract\OrderStatusServiceInterface;
 
 class WcStatusService implements OrderStatusServiceInterface
 {

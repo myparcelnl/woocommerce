@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
+use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
 use MyParcelNL\WooCommerce\Migration\Pdk\ProductSettingsMigration;
 

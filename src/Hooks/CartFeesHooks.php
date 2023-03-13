@@ -11,6 +11,7 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Model\PdkCartFee;
 use MyParcelNL\Pdk\Plugin\Service\DeliveryOptionsFeesService;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
+use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Pdk\Service\WcTaxService;
 use WC_Cart;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Service;
 
-use MyParcelNL\Pdk\Base\CronServiceInterface;
+use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
 
 class WpCronService implements CronServiceInterface

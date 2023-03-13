@@ -7,9 +7,10 @@ namespace MyParcelNL\WooCommerce\Hooks;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
 use MyParcelNL\Pdk\Facade\Settings;
-use MyParcelNL\Pdk\Plugin\Repository\PdkCartRepositoryInterface;
-use MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface;
+use MyParcelNL\Pdk\Plugin\Contract\PdkCartRepositoryInterface;
+use MyParcelNL\Pdk\Plugin\Contract\ViewServiceInterface;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
+use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Service\WpScriptService;
 use WC_Product;
 
@@ -40,7 +41,7 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
      */
     public function enqueueFrontendScripts(): void
     {
-        /** @var \MyParcelNL\Pdk\Plugin\Service\ViewServiceInterface $viewService */
+        /** @var \MyParcelNL\Pdk\Plugin\Contract\ViewServiceInterface $viewService */
         $viewService = Pdk::get(ViewServiceInterface::class);
 
         if ($viewService->isCheckoutPage()) {
@@ -76,7 +77,7 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
             return;
         }
 
-        /** @var \MyParcelNL\Pdk\Plugin\Repository\PdkCartRepositoryInterface $repository */
+        /** @var \MyParcelNL\Pdk\Plugin\Contract\PdkCartRepositoryInterface $repository */
         $repository = Pdk::get(PdkCartRepositoryInterface::class);
 
         echo RenderService::renderDeliveryOptions($repository->get($wcCart));
