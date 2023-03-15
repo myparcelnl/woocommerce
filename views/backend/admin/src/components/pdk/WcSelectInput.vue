@@ -15,17 +15,17 @@
 </template>
 
 <script lang="ts" setup>
-import {ElementInstance, generateFieldId, useSelectInputContext} from '@myparcel-pdk/admin/src';
+import {ElementInstance, OptionsProp, useSelectInputContext} from '@myparcel-pdk/admin/src';
 import {computed, onBeforeUnmount, onMounted, ref, watchEffect} from 'vue';
-import {InteractiveElementInstance} from '@myparcel/vue-form-builder/src';
 import {get} from '@vueuse/core';
 import {isOfType} from '@myparcel/ts-utils';
 
 // eslint-disable-next-line vue/no-unused-properties
-const props = defineProps<{modelValue: string | number; element: InteractiveElementInstance}>();
+const props = defineProps<{element: ElementInstance<OptionsProp>; modelValue: string | number}>();
 const emit = defineEmits<(e: 'update:modelValue', value: string | number) => void>();
 
-const id = generateFieldId(props.element as ElementInstance);
+// @ts-expect-error todo
+const {id, options} = useSelectInputContext(props, emit);
 
 const model = computed({
   get: () => props.modelValue,
@@ -35,15 +35,11 @@ const model = computed({
   },
 });
 
-// @ts-expect-error props are not typed
-const {options} = useSelectInputContext(model, props.element.props?.options ?? []);
-
 const selectElement = ref<HTMLElement | null>(null);
 const $select = ref<JQuery | null>(null);
 
 watchEffect(() => {
   $select.value?.toggleClass('form-required', get(props.element.isValid));
-  // @ts-expect-error typescript doesn't get it
   $select.value?.attr('disabled', get(props.element.isDisabled) || get(props.element.isSuspended));
 });
 
