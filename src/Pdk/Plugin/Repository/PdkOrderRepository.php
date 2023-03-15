@@ -101,9 +101,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             update_post_meta($wcOrder->get_id(), Pdk::get('metaKeyOrderData'), $order->toStorableArray());
         }
 
-        if ($order->shipments->contains('updated', null)) {
-            $this->saveShipments($wcOrder, $order);
-        }
+        $this->saveShipments($wcOrder, $order);
 
         return $this->save($order->externalIdentifier, $order);
     }
