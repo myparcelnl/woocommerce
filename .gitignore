@@ -4,6 +4,9 @@ vendor/
 lib/
 dist/
 
+**/tsconfig.json
+!./tsconfig.json
+
 *.zip
 .DS_Store
 
