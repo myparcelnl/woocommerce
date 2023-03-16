@@ -129,7 +129,7 @@ export const initialize = (): void => {
       modalBackdrop: FADE,
       notification: FADE,
       shipmentBox: FADE,
-      shipmentRow: FADE,
+      shipmentRow: 'mypa-shipment-row',
       tabNavigation: FADE,
       tableRow: FADE,
     },

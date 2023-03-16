@@ -7,3 +7,22 @@
 .fade-leave-to {
   @apply mypa-translate-y-1 mypa-opacity-0;
 }
+
+.mypa-shipment-row-enter td,
+.mypa-shipment-row-leave-to td {
+  transform: translateX(-30px);
+  opacity: 0;
+}
+
+.mypa-shipment-row-leave-active {
+  background-color: var(--danger);
+}
+
+.mypa-shipment-row-leave-active ~ .mypa-shipment-row-move {
+  transition-delay: 2s;
+}
+
+.mypa-shipment-row-enter-active {
+  transition: background 5s;
+  background-color: #abd292;
+}
