@@ -217,7 +217,7 @@ class WCMP_Checkout
     public function enqueue_frontend_scripts(): void
     {
         // The order received page has the same page id as the checkout so `is_checkout()` returns true on both...
-        if (! is_checkout() || is_order_received_page()) {
+        if (! is_checkout() || is_order_received_page() || is_checkout_pay_page()) {
             return;
         }
 
