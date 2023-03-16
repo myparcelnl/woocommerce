@@ -5,16 +5,13 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\RequestOptions;
 use MyParcelNL\Pdk\Api\Contract\ClientAdapterInterface;
 use MyParcelNL\Pdk\Api\Contract\ClientResponseInterface;
 use MyParcelNL\Pdk\Api\Response\ClientResponse;
 
 class Guzzle7ClientAdapter implements ClientAdapterInterface
 {
-    private const DEFAULT_OPTIONS = [
-        'exceptions' => false,
-    ];
-
     /**
      * @var \GuzzleHttp\Client
      */
@@ -38,18 +35,21 @@ class Guzzle7ClientAdapter implements ClientAdapterInterface
      */
     public function doRequest(string $httpMethod, string $uri, array $options = []): ClientResponseInterface
     {
-        $response = $this->client->request(
-            $httpMethod,
-            $uri,
-            self::DEFAULT_OPTIONS + $options
-        );
+        $requestOptions = array_filter([
+            RequestOptions::HTTP_ERRORS => false,
+            RequestOptions::HEADERS     => $options['headers'] ?? null,
+            RequestOptions::BODY        => $options['body'] ?? null,
+        ], static function ($value) {
+            return $value !== null;
+        });
 
-        $statusCode = $response->getStatusCode() ?? 500;
+        $response     = $this->client->request(strtolower($httpMethod), $uri, $requestOptions);
+        $responseBody = $response->getBody();
 
-        $body = $response
-            ->getBody()
-            ->getContents();
+        $body = $responseBody->isReadable()
+            ? $responseBody->getContents()
+            : null;
 
-        return new ClientResponse($body, $statusCode);
+        return new ClientResponse($body, $response->getStatusCode() ?? 500, $response->getHeaders());
     }
 }
