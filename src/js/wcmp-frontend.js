@@ -301,8 +301,10 @@ jQuery(($) => {
 
       if (MyParcelFrontend.hasSplitAddressFields()) {
         const fullStreet = MyParcelFrontend.getFullStreet();
+        const streetName = fullStreet.streetName || 'substitute';
+        const houseNumber = fullStreet.houseNumber || '1';
 
-        street = `${fullStreet.streetName} ${fullStreet.houseNumber}`.trim();
+        street = `${streetName} ${houseNumber}`.trim();
       }
 
       return {
