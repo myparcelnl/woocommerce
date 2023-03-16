@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.18.6-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.18.5...v4.18.6-rc.1) (2023-03-16)
+
+
+### :bug: Bug Fixes
+
+* prevent javascript errors on order-pay ([#961](https://github.com/myparcelnl/woocommerce/issues/961)) ([847dd04](https://github.com/myparcelnl/woocommerce/commit/847dd049c21903cf0d92219292495bebbec9c427))
+
 ## [4.18.5](https://github.com/myparcelnl/woocommerce/compare/v4.18.4...v4.18.5) (2023-03-10)
 
 
