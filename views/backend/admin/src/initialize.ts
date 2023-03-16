@@ -113,7 +113,9 @@ export const initialize = (): void => {
 
     cssUtilities: {
       animationSpin: 'mypa-animate-spin',
+      cursorDefault: 'mypa-cursor-default',
       displayFlex: 'mypa-flex',
+      flexGrow: 'mypa-flex-grow',
       marginLAuto: 'mypa-ml-auto',
       marginYAuto: 'mypa-my-auto',
       textCenter: 'mypa-text-center',
