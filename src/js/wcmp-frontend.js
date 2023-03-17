@@ -303,8 +303,6 @@ jQuery(($) => {
      * To prevent the 'address can not be split' error undefined values are replaced with a substitute.
      * Since the street is not required for the endpoint, it can be substituted with any string.
      * To err on the safe side, the house number is also replaced with a substitute (relevant for Belgium).
-     *
-     * @returns {{cc: *, city: *, street: *, postalCode: *}}
      */
     getAddress() {
       let street = MyParcelFrontend.getField(MyParcelFrontend.addressField)?.value;
