@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.18.6](https://github.com/myparcelnl/woocommerce/compare/v4.18.5...v4.18.6) (2023-03-17)
+
+
+### :bug: Bug Fixes
+
+* allow delivery options with partial address ([#963](https://github.com/myparcelnl/woocommerce/issues/963)) ([d4f10cb](https://github.com/myparcelnl/woocommerce/commit/d4f10cb8e1c2d79a95142e17bf02761b013d4ace)), closes [#962](https://github.com/myparcelnl/woocommerce/issues/962)
+* prevent javascript errors on order-pay ([#961](https://github.com/myparcelnl/woocommerce/issues/961)) ([847dd04](https://github.com/myparcelnl/woocommerce/commit/847dd049c21903cf0d92219292495bebbec9c427))
+
 ## [4.18.6-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.18.5...v4.18.6-rc.1) (2023-03-16)
 
 

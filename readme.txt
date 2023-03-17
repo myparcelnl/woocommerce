@@ -3,7 +3,7 @@ Contributors: richardperdaan, edielemoine, joerimyparcel
 Tags: woocommerce, export, delivery, packages, myparcel, flespakket, postnl
 Requires at least: 5.2.0
 Tested up to: 6.1
-Stable tag: 4.18.6-rc.1
+Stable tag: 4.18.6
 Requires PHP: 7.1
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
@@ -102,6 +102,11 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 6. MyParcel pickup delivery options
 
 == Changelog ==
+
+= 4.18.6 (2023-03-17) =
+
+* Fixed bug: allow delivery options with partial address (#963)
+* Fixed bug: prevent javascript errors on order-pay (#961)
 
 = 4.18.6-rc.1 (2023-03-16) =
 
