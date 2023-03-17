@@ -296,13 +296,23 @@ jQuery(($) => {
       element.dispatchEvent(event);
     },
 
+    /**
+     * In this method the address is assembled for the delivery options endpoint, which does not accept number suffixes,
+     * only street+number.
+     * Postcode-checker plugins that fill in the address later, can cause the street to be empty.
+     * To prevent the 'address can not be split' error undefined values are replaced with a substitute.
+     * Since the street is not required for the endpoint, it can be substituted with any string.
+     * To err on the safe side, the house number is also replaced with a substitute (relevant for Belgium).
+     */
     getAddress() {
       let street = MyParcelFrontend.getField(MyParcelFrontend.addressField)?.value;
 
       if (MyParcelFrontend.hasSplitAddressFields()) {
         const fullStreet = MyParcelFrontend.getFullStreet();
+        const streetName = fullStreet.streetName || 'substitute';
+        const houseNumber = fullStreet.houseNumber || '1';
 
-        street = `${fullStreet.streetName} ${fullStreet.houseNumber}`.trim();
+        street = `${streetName} ${houseNumber}`.trim();
       }
 
       return {
