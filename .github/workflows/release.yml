@@ -91,6 +91,7 @@ jobs:
           ASSETS_DIR: ${{ env.ASSETS_DIR }}
           BUILD_DIR: ${{ env.BUILD_DIR }}
           SLUG: woocommerce-myparcel
+          VERSION: ${{ steps.release.outputs.version }}
 
   rebase-develop:
     name: 'Rebase develop onto main'
