@@ -72,6 +72,9 @@ class PdkProductRepository extends AbstractProductRepository
                     'currency' => get_woocommerce_currency(),
                 ],
                 'weight'             => $this->weightService->convertToGrams((float) $product->get_weight()),
+                'length'             => $product->get_length(),
+                'width'              => $product->get_width(),
+                'height'             => $product->get_height(),
                 'settings'           => $this->getProductSettings($product),
             ]);
         });

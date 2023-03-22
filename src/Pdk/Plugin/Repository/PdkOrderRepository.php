@@ -167,6 +167,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'customsDeclaration'    => $this->countryService->isRow($recipient['cc'])
                 ? $this->createCustomsDeclaration($order, $items)
                 : null,
+            'physicalProperties'    => $this->getPhysicalProperties($items),
             'orderPrice'            => $order->get_total(),
             'orderPriceAfterVat'    => ((float) $order->get_total()) + ((float) $order->get_cart_tax()),
             'orderVat'              => $order->get_total_tax(),
@@ -190,6 +191,18 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         $wcOrderCreated = $order->get_date_created();
 
         return $wcOrderCreated ? $wcOrderCreated->format('Y-m-d H:i:s') : null;
+    }
+
+    private function getPhysicalProperties(Collection $items): array
+    {
+        $totalWeight = $items->reduce(static function (float $acc, $item) {
+            $acc += $item['item']->get_quantity() * $item['product']->get_weight();
+            return $acc;
+        }, 0);
+
+        return [
+            'weight' => $totalWeight
+        ];
     }
 
     /**
