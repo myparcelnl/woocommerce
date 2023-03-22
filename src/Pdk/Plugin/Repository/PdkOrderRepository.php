@@ -8,10 +8,12 @@ use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\DefaultLogger;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrderLine;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
 use MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface;
+use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
@@ -159,7 +161,6 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                     return new PdkOrderLine([
                         'quantity' => $item['item']->get_quantity(),
                         'price'    => (int) ((float) $item['item']->get_total() * 100),
-                        'vat'      => (int) ((float) $item['item']->get_total_tax() * 100),
                         'product'  => $item['pdkProduct'],
                     ]);
                 })
@@ -277,8 +278,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         );
 
         if ($barcodes) {
-            // TODO: Use setting for note prefix
-            $prefix = '';
+            $prefix = Settings::get(GeneralSettings::BARCODE_IN_NOTE_TITLE, GeneralSettings::ID);
 
             $wcOrder->add_order_note($prefix . implode(', ', $barcodes));
         }
