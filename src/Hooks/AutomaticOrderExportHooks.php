@@ -25,7 +25,7 @@ final class AutomaticOrderExportHooks implements WordPressHooksInterface
      */
     public function automaticExportOrder(int $orderId): void
     {
-        if (! Settings::get(GeneralSettings::ORDER_MODE, GeneralSettings::ID)) {
+        if (! Settings::get(GeneralSettings::PROCESS_DIRECTLY, GeneralSettings::ID)) {
             return;
         }
 
