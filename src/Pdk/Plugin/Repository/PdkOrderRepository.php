@@ -197,7 +197,9 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     private function getPhysicalProperties(Collection $items): array
     {
         $totalWeight = $items->reduce(static function (float $acc, $item) {
-            $acc += $item['item']->get_quantity() * $item['product']->get_weight();
+            if (is_numeric($item['item']->get_quantity()) && is_numeric($item['product']->get_weight())) {
+                $acc += $item['item']->get_quantity() * $item['product']->get_weight();
+            }
             return $acc;
         }, 0);
 
