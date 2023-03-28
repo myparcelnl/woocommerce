@@ -1,2 +1,44 @@
-@import "autofill-hack";
-@import "checkout";
+.woocommerce-page,
+.woocommerce {
+  .form-row-third {
+    float: left;
+
+    & .optional {
+      display: none;
+    }
+
+    &:not(&.last) {
+      margin-right: 1rem;
+    }
+
+    &.first {
+      width: 46%;
+    }
+
+    &:not(.first) {
+      width: calc(26% - 1rem);
+    }
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .woocommerce-page form .form-row-third.first {
+    width: 100%;
+  }
+  .woocommerce-page form .form-row-third {
+    width: 48%;
+  }
+}
+
+#billing_number::-webkit-outer-spin-button,
+#billing_number::-webkit-inner-spin-button,
+#shipping_number::-webkit-outer-spin-button,
+#shipping_number::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+#billing_number,
+#shipping_number {
+  -moz-appearance: textfield;
+}

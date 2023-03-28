@@ -1,3 +1,3 @@
 export * from './setAddress';
-export * from './split-fields';
+export * from './splitFields';
 export * from './synchronizeAddress';

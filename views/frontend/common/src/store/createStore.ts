@@ -20,7 +20,17 @@ type Store<S extends State = State> = {
 
 type StoreData<S extends State = State, N extends string = string> = Record<N, Store<S>>;
 
-const storedState: StoreData = {};
+declare global {
+  interface Window {
+    MyParcel: {
+      storedState: StoreData;
+    };
+  }
+}
+
+window.MyParcel ??= {
+  storedState: {},
+};
 
 type Listeners<T extends State> = {
   [StoreListener.UPDATE]: (newState: T, oldState: T) => void | T;
@@ -30,6 +40,8 @@ export const createStore = <S extends State = State, N extends string = string>(
   name: N,
   initialData: () => InitialData<S>,
 ): (() => StoreData<S, N>[N]) => {
+  const {storedState} = window.MyParcel;
+
   if (!storedState[name]) {
     const resolvedData: InitialData<S> = initialData();
 
@@ -50,7 +62,11 @@ export const createStore = <S extends State = State, N extends string = string>(
         // eslint-disable-next-line no-console
         console.log('%cSET', 'color: #0f0', name, {newState, oldState});
 
-        const updates = storedState[name].listeners?.update?.map((listener) => listener({...state}, oldState));
+        const updateListeners = storedState[name].listeners?.[StoreListener.UPDATE];
+
+        const updates = updateListeners?.map((listener) => {
+          return listener({...state}, oldState);
+        });
 
         if (updates?.length) {
           const additionalUpdate = updates.reduce((state, update) => {
@@ -64,6 +80,6 @@ export const createStore = <S extends State = State, N extends string = string>(
   }
 
   return () => {
-    return storedState[name];
+    return storedState[name] as StoreData<S, N>[N];
   };
 };

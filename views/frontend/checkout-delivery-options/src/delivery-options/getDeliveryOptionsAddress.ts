@@ -1,18 +1,24 @@
 import {
   AddressType,
+  FIELD_ADDRESS_1,
   FIELD_CITY,
   FIELD_COUNTRY,
   FIELD_POSTCODE,
   getAddressFieldValue,
-  getHouseNumber,
 } from '@myparcel-woocommerce/frontend-common';
-import {MyParcelDeliveryOptions} from '@myparcel/delivery-options';
 
-export const getDeliveryOptionsAddress = (type?: AddressType): MyParcelDeliveryOptions.Address => {
+export const getDeliveryOptionsAddress = (
+  type?: AddressType,
+): {
+  cc?: string;
+  postalCode?: string;
+  street?: string;
+  city?: string;
+} => {
   return {
     cc: getAddressFieldValue(FIELD_COUNTRY, type),
     postalCode: getAddressFieldValue(FIELD_POSTCODE, type),
-    number: getHouseNumber(type),
+    street: getAddressFieldValue(FIELD_ADDRESS_1, type),
     city: getAddressFieldValue(FIELD_CITY, type),
-  } as MyParcelDeliveryOptions.Address;
+  };
 };

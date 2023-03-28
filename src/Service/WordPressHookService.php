@@ -12,6 +12,7 @@ use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Hooks\PdkAdminEndpointHooks;
 use MyParcelNL\WooCommerce\Hooks\PdkWebhookHooks;
 use MyParcelNL\WooCommerce\Hooks\ScheduledMigrationHooks;
+use MyParcelNL\WooCommerce\Hooks\SeparateAddressFieldsHooks;
 use MyParcelNL\WooCommerce\Hooks\TrackTraceHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkCoreHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkOrderHooks;
@@ -52,12 +53,13 @@ final class WordPressHookService
             PdkAdminEndpointHooks::class,
             PdkCoreHooks::class,
             PdkOrderHooks::class,
-            PdkPlaceOrderHooks::class,
             PdkOrderListHooks::class,
+            PdkPlaceOrderHooks::class,
             PdkPluginSettingsHooks::class,
             PdkProductSettingsHooks::class,
             PdkWebhookHooks::class,
             ScheduledMigrationHooks::class,
+            SeparateAddressFieldsHooks::class,
             TrackTraceHooks::class,
         ];
     }
