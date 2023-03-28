@@ -92,7 +92,10 @@ class WpScriptService extends ScriptService
         string $version = null,
         string $media = 'all'
     ): void {
-        wp_enqueue_style($handle, $src, $deps, $this->getVersion($version), $media);
+        $appInfo = Pdk::getAppInfo();
+        $url     = sprintf('%s/%s', $appInfo->url, $src);
+
+        wp_enqueue_style($handle, $url, $deps, $this->getVersion($version), $media);
     }
 
     /**

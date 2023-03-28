@@ -13,16 +13,10 @@ export const FIELD_SHIPPING_METHOD = '[name="shipping_method[0]"]';
  */
 export const FIELD_HIGHEST_SHIPPING_CLASS = '[name="myparcel_highest_shipping_class"]';
 
-export const FIELD_ADDRESS = 'address_1';
+export const FIELD_ADDRESS_1 = 'address_1';
 
 export const FIELD_CITY = 'city';
 
 export const FIELD_COUNTRY = 'country';
 
-export const FIELD_HOUSE_NUMBER = 'house_number';
-
-export const FIELD_HOUSE_NUMBER_SUFFIX = 'house_number_suffix';
-
 export const FIELD_POSTCODE = 'postcode';
-
-export const FIELD_STREET_NAME = 'street_name';
