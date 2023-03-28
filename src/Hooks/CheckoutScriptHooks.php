@@ -49,11 +49,7 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
         }
 
         if ($this->useSeparateAddressFields()) {
-            $this->service->enqueueLocalScript(
-                WpScriptService::HANDLE_SPLIT_ADDRESS_FIELDS,
-                'views/checkout-split-address-fields/lib/split-fields.iife.js',
-                [WpScriptService::HANDLE_WC_CHECKOUT]
-            );
+            $this->loadSeparateAddressFieldsScripts();
         }
 
         // Don't load the delivery options scripts if it's disabled
@@ -101,26 +97,52 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
      */
     private function loadDeliveryOptionsScripts(): void
     {
-        $dependencies = [WpScriptService::HANDLE_WC_CHECKOUT];
-
-        /**
-         * If split address fields are enabled add the checkout fields script as an additional dependency.
-         */
-        if ($this->useSeparateAddressFields()) {
-            $dependencies[] = 'wcmp - checkout - fields';
-        }
-
         if (! $this->shouldShowDeliveryOptions()) {
             return;
         }
 
+        $dependencies = [
+            WpScriptService::HANDLE_JQUERY,
+            WpScriptService::HANDLE_WC_CHECKOUT,
+            WpScriptService::HANDLE_DELIVERY_OPTIONS,
+        ];
+
+        /**
+         * If split address fields are enabled add its script as an additional dependency.
+         */
+        if ($this->useSeparateAddressFields()) {
+            $dependencies[] = WpScriptService::HANDLE_SPLIT_ADDRESS_FIELDS;
+        }
+
+        $this->service->enqueueDeliveryOptions();
+
         $this->service->enqueueLocalScript(
             WpScriptService::HANDLE_CHECKOUT_DELIVERY_OPTIONS,
             'views/frontend/checkout-delivery-options/lib/delivery-options',
-            $dependencies + [WpScriptService::HANDLE_DELIVERY_OPTIONS, WpScriptService::HANDLE_JQUERY]
+            $dependencies
         );
 
-        $this->service->enqueueDeliveryOptions();
+        $this->service->enqueueStyle(
+            WpScriptService::HANDLE_SPLIT_ADDRESS_FIELDS,
+            'views/frontend/checkout-delivery-options/lib/style.css'
+        );
+    }
+
+    /**
+     * @return void
+     */
+    private function loadSeparateAddressFieldsScripts(): void
+    {
+        $this->service->enqueueLocalScript(
+            WpScriptService::HANDLE_SPLIT_ADDRESS_FIELDS,
+            'views/frontend/checkout-split-address-fields/lib/split-address-fields',
+            [WpScriptService::HANDLE_WC_CHECKOUT]
+        );
+
+        $this->service->enqueueStyle(
+            WpScriptService::HANDLE_SPLIT_ADDRESS_FIELDS,
+            'views/frontend/checkout-split-address-fields/lib/style.css'
+        );
     }
 
     /**

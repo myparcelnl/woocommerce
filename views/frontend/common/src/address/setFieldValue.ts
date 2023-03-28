@@ -5,5 +5,6 @@ export const setFieldValue = (name: string, value?: string, addressType?: Addres
 
   if (field) {
     field.value = value ?? '';
+    field.form?.dispatchEvent(new Event('change'));
   }
 };
