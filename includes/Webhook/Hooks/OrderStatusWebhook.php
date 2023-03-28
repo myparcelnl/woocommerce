@@ -12,6 +12,7 @@ use MyParcelNL\Sdk\src\Model\Fulfilment\Order;
 use MyParcelNL\Sdk\src\Services\Web\Webhook\OrderStatusChangeWebhookWebService;
 use MyParcelNL\WooCommerce\includes\Webhook\Hooks\AbstractWebhook;
 use WCMP_Log;
+use WCMYPA_Admin;
 use WCMYPA_Settings;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -55,6 +56,7 @@ class OrderStatusWebhook extends AbstractWebhook
         }
 
         $this->updateWooCommerceOrderStatus($order);
+        $this->updateOrderBarcode($order);
 
         return $this->getNoContentResponse();
     }
@@ -82,6 +84,21 @@ class OrderStatusWebhook extends AbstractWebhook
             self::COMPLETED_SHIPMENT_STATUSES,
             true
         );
+    }
+
+    private function updateOrderBarcode(Order $order): void
+    {
+        $orderData      = get_post_meta($order->getExternalIdentifier(), WCMYPA_Admin::META_PPS, true);
+        $orderShipments = $order->getOrderShipments();
+        $barcode        = $orderShipments[0]['shipment']['barcode'];
+
+        if (! $barcode) {
+            return;
+        }
+
+        end($orderData)[WCMYPA_Admin::META_TRACK_TRACE] = $barcode;
+
+        update_post_meta($order->getExternalIdentifier(), WCMYPA_Admin::META_PPS, end($orderData));
     }
 
     /**

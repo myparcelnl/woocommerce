@@ -4,21 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cf49de3b79dec71812f7b7bcc342aca4",
+    "content-hash": "3cbc668c042d8cb7102eb85d832b0b49",
     "packages": [
         {
             "name": "myparcelnl/sdk",
-            "version": "7.7.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/myparcelnl/sdk.git",
-                "reference": "b6bf2c5adfc7242b52cc0a81cf72988b3e5c234e"
-            },
+            "version": "7.7.0",
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/b6bf2c5adfc7242b52cc0a81cf72988b3e5c234e",
-                "reference": "b6bf2c5adfc7242b52cc0a81cf72988b3e5c234e",
-                "shasum": ""
+                "type": "path",
+                "url": "/Users/mark/Projects/sdk",
+                "reference": "9502951e3e4974eea67655c343bfc1a7f01a053d"
             },
             "require": {
                 "php": ">=7.1.0"
@@ -31,11 +25,15 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "MyParcelNL\\Sdk\\": "src",
-                    "MyParcelNL\\Sdk\\src\\": "src"
+                    "MyParcelNL\\Sdk\\src\\": "src",
+                    "MyParcelNL\\Sdk\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "MyParcelNL\\Sdk\\Test\\": "test"
+                }
+            },
             "license": [
                 "MIT"
             ],
@@ -61,20 +59,21 @@
             "homepage": "https://myparcelnl.github.io/sdk",
             "keywords": [
                 "Flespakket",
-                "myparcel",
-                "postnl"
+                "MyParcel",
+                "PostNL"
             ],
-            "support": {
-                "issues": "https://github.com/myparcelnl/sdk/issues",
-                "source": "https://github.com/myparcelnl/sdk/tree/v7.7.3"
-            },
-            "time": "2023-03-14T10:55:08+00:00"
+            "transport-options": {
+                "symlink": false,
+                "relative": false
+            }
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "myparcelnl/sdk": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

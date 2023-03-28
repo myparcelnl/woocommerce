@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter;
+use MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection;
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
+use MyParcelNL\Sdk\src\Helper\TrackTraceUrl;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
@@ -17,6 +19,7 @@ use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcel\Entity\SettingsFieldArguments;
 
+use MyParcelNL\Sdk\src\Concerns\HasApiKey;
 if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
@@ -30,6 +33,8 @@ if (class_exists('WCMYPA_Admin')) {
  */
 class WCMYPA_Admin
 {
+    use HasApiKey;
+
     public const META_CONSIGNMENTS                = "_myparcel_consignments";
     public const META_CONSIGNMENT_ID              = "_myparcel_consignment_id";
     public const META_DELIVERY_OPTIONS            = "_myparcel_delivery_options";
@@ -1172,11 +1177,40 @@ class WCMYPA_Admin
         $exportMode = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
 
         if (WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
-            $orderId = WCX_Order::get_id($order);
-            $metaPps = get_post_meta($orderId, self::META_PPS);
+            $orderId   = WCX_Order::get_id($order);
+            $metaPps   = get_post_meta($orderId, self::META_PPS);
+            $lastOrder = end($metaPps);
 
             if ($metaPps) {
-                echo esc_html(sprintf(__('export_hint_how_many_times', 'woocommerce-myparcel'), count($metaPps)));
+                if (isset($lastOrder[self::META_PPS_UUID])) {
+                    $apiKey          = WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_API_KEY);
+                    $orderCollection = OrderCollection::getOrder($lastOrder[self::META_PPS_UUID], $apiKey);
+
+                    /** @var \MyParcelNL\Sdk\src\Model\Fulfilment\Order $fulfilmentOrder */
+                    $fulfilmentOrder = $orderCollection->first();
+
+                    if (! isset($lastOrder[self::META_TRACK_TRACE])) {
+                        $orderShipments = $fulfilmentOrder->getOrderShipments();
+
+                        if ($orderShipments) {
+                            $barcode                           = $orderShipments[0]['shipment']['barcode'];
+                            $lastOrder[self::META_TRACK_TRACE] = $barcode;
+                            update_post_meta($orderId, self::META_PPS, $lastOrder);
+                        }
+                    }
+
+                    echo $lastOrder[self::META_TRACK_TRACE] ? sprintf(
+                        '<a href="%s">%s</a>',
+                        TrackTraceUrl::create(
+                            $lastOrder[self::META_TRACK_TRACE],
+                            $fulfilmentOrder->getRecipient()->getPostalCode(),
+                            $fulfilmentOrder->getRecipient()->getCc()
+                        ),
+                        $lastOrder[self::META_TRACK_TRACE]
+                    ) : esc_html(__('Concept created but not printed.', 'woocommerce-myparcel'));
+                } else {
+                    echo esc_html(sprintf(__('export_hint_how_many_times', 'woocommerce-myparcel'), count($metaPps)));
+                }
             } else {
                 esc_html_e('export_hint_not_exported', 'woocommerce-myparcel');
             }

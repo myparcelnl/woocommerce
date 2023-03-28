@@ -2,12 +2,21 @@
   "name": "myparcelnl/woocommerce",
   "version": "4.18.6",
   "require": {
-    "myparcelnl/sdk": "~7.7.1"
+    "myparcelnl/sdk": "*@dev"
   },
   "autoload": {
     "psr-4": {
       "MyParcelNL\\WooCommerce\\includes\\": "includes",
       "MyParcelNL\\WooCommerce\\": "includes"
     }
-  }
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "/Users/mark/Projects/sdk",
+      "options": {
+        "symlink": false
+      }
+    }
+  ]
 }
