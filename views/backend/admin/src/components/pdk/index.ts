@@ -8,6 +8,8 @@ export {default as WcButtonGroup} from './WcButtonGroup.vue';
 
 export {default as WcCheckboxInput} from './WcCheckboxInput.vue';
 
+export {default as WcCodeEditor} from './WcCodeEditor.vue';
+
 export {default as WcCol} from './WcCol.vue';
 
 export {default as WcDropOffInput} from './WcDropOffInput.vue';
@@ -45,6 +47,8 @@ export {default as WcTable} from './WcTable.vue';
 export {default as WcTableCol} from './WcTableCol.vue';
 
 export {default as WcTableRow} from './WcTableRow.vue';
+
+export {default as WcTextArea} from './WcTextArea.vue';
 
 export {default as WcTextInput} from './WcTextInput.vue';
 
