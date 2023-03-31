@@ -46,6 +46,8 @@ export {default as WcTableCol} from './WcTableCol.vue';
 
 export {default as WcTableRow} from './WcTableRow.vue';
 
+export {default as WcTextArea} from './WcTextArea.vue';
+
 export {default as WcTextInput} from './WcTextInput.vue';
 
 export {default as WcToggleInput} from './WcToggleInput.vue';

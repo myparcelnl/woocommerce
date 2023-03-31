@@ -6,6 +6,7 @@ import {
   DefaultLink,
   DefaultMultiRadio,
   DefaultNumberInput,
+  DefaultTextArea,
   DefaultTimeInput,
 } from '@myparcel-pdk/admin-components/src';
 import {LogLevel, createPdkAdmin} from '@myparcel-pdk/admin/src';
@@ -34,6 +35,7 @@ import {
   WcTable,
   WcTableCol,
   WcTableRow,
+  WcTextArea,
   WcTextInput,
   WcToggleInput,
 } from './components/pdk';
@@ -107,6 +109,7 @@ export const initialize = (): void => {
       PdkTableCol: WcTableCol,
       PdkTableRow: WcTableRow,
       PdkTextInput: WcTextInput,
+      PdkTextArea: WcTextArea,
       PdkTimeInput: DefaultTimeInput,
       PdkToggleInput: WcToggleInput,
     },
