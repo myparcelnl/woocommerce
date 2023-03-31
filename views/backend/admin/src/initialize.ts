@@ -34,6 +34,7 @@ import {
   WcTable,
   WcTableCol,
   WcTableRow,
+  WcTextArea,
   WcTextInput,
   WcToggleInput,
 } from './components/pdk';
@@ -80,6 +81,7 @@ export const initialize = (): void => {
       PdkButton: WcButton,
       PdkButtonGroup: WcButtonGroup,
       PdkCheckboxInput: WcCheckboxInput,
+      PdkCodeEditor: WcTextArea,
       PdkCol: WcCol,
       PdkCurrencyInput: DefaultCurrencyInput,
       PdkDropOffInput: WcDropOffInput,
@@ -105,6 +107,7 @@ export const initialize = (): void => {
       PdkTable: WcTable,
       PdkTableCol: WcTableCol,
       PdkTableRow: WcTableRow,
+      PdkTextArea: WcTextArea,
       PdkTextInput: WcTextInput,
       PdkTimeInput: DefaultTimeInput,
       PdkToggleInput: WcToggleInput,
