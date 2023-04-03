@@ -6,7 +6,6 @@
       'form-required': !element.isValid,
     }"
     :disabled="element.isDisabled || element.isSuspended"
-    :type="element.props.type ?? 'text'"
     class="!mypa-w-full" />
 </template>
 

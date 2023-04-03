@@ -6,7 +6,6 @@ import {
   DefaultLink,
   DefaultMultiRadio,
   DefaultNumberInput,
-  DefaultTextArea,
   DefaultTimeInput,
 } from '@myparcel-pdk/admin-components/src';
 import {LogLevel, createPdkAdmin} from '@myparcel-pdk/admin/src';
