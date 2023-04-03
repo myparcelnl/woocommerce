@@ -1,10 +1,12 @@
 <template>
-  <PdkTextArea
+  <WcTextArea
     v-model="model"
-    style="font-family: monospace, monospace"></PdkTextArea>
+    style="font-family: monospace; font-size: 12px"
+    element=""></WcTextArea>
 </template>
 
 <script lang="ts" setup>
+import WcTextArea from './WcTextArea.vue';
 import {InteractiveElementInstance} from '@myparcel/vue-form-builder/src';
 import {useVModel} from '@vueuse/core';
 

@@ -83,6 +83,7 @@ export const initialize = (): void => {
       PdkButtonGroup: WcButtonGroup,
       PdkCheckboxInput: WcCheckboxInput,
       PdkCol: WcCol,
+      PdkCodeEditor: WcTextArea,
       PdkCurrencyInput: DefaultCurrencyInput,
       PdkDropOffInput: WcDropOffInput,
       PdkDropdownButton: WcDropdownButton,
