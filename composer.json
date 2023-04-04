@@ -2,7 +2,7 @@
   "name": "myparcelnl/woocommerce",
   "version": "4.18.7-rc.1",
   "require": {
-    "myparcelnl/sdk": "~7.7.1"
+    "myparcelnl/sdk": "~7.7.4"
   },
   "autoload": {
     "psr-4": {
