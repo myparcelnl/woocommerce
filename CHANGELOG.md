@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.18.7-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.18.6...v4.18.7-rc.1) (2023-04-04)
+
+
+### :bug: Bug Fixes
+
+* **checkout:** do not show address inputs when allowRetry is false ([#967](https://github.com/myparcelnl/woocommerce/issues/967)) ([255e8b0](https://github.com/myparcelnl/woocommerce/commit/255e8b0daf62ddcd178ba5aea328d51b6a989da4))
+* fix absent version in svn release script ([#964](https://github.com/myparcelnl/woocommerce/issues/964)) ([97cd557](https://github.com/myparcelnl/woocommerce/commit/97cd557baa74643c246479e1d68d7c3c384edaa9))
+
 ## [4.18.6](https://github.com/myparcelnl/woocommerce/compare/v4.18.5...v4.18.6) (2023-03-17)
 
 
