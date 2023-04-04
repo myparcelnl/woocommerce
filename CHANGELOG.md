@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.18.7-rc.2](https://github.com/myparcelnl/woocommerce/compare/v4.18.7-rc.1...v4.18.7-rc.2) (2023-04-04)
+
+
+### :bug: Bug Fixes
+
+* prevent carrier 5 error when retrieving account settings ([#968](https://github.com/myparcelnl/woocommerce/issues/968)) ([634ecc2](https://github.com/myparcelnl/woocommerce/commit/634ecc2b4d023133c030b49e389a041937a4b504))
+
 ## [4.18.7-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.18.6...v4.18.7-rc.1) (2023-04-04)
 
 
