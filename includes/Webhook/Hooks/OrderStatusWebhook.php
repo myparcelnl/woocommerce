@@ -43,7 +43,7 @@ class OrderStatusWebhook extends AbstractWebhook
         $orderUuid   = $jsonBody['data']['hooks'][0]['order'] ?? null;
 
         try {
-            /** @type \MyParcelNL\Sdk\src\Model\Fulfilment\Order */
+            /** @type \MyParcelNL\Sdk\src\Model\Fulfilment\Order $order */
             $order = OrderCollection::query($this->ensureHasApiKey(), ['uuid' => $orderUuid])
                 ->first();
         } catch (Exception $e) {
@@ -96,9 +96,9 @@ class OrderStatusWebhook extends AbstractWebhook
             return;
         }
 
-        end($orderData)[WCMYPA_Admin::META_TRACK_TRACE] = $barcode;
+        $orderData[WCMYPA_Admin::META_TRACK_TRACE] = $barcode;
 
-        update_post_meta($order->getExternalIdentifier(), WCMYPA_Admin::META_PPS, end($orderData));
+        update_post_meta($order->getExternalIdentifier(), WCMYPA_Admin::META_PPS, $orderData);
     }
 
     /**
