@@ -10,12 +10,27 @@
       }"
       :disabled="element.isDisabled || element.isSuspended"
       :value="element.props?.value"
-      type="radio" />
-    <label
-      :for="id"
-      v-text="element.label"></label>
+      type="radio"
+      v-bind="$attrs" />
+    <label :for="id">
+      <PdkIcon
+        v-if="element.props?.icon"
+        :icon="element.props?.icon" />
+
+      <PdkImage
+        v-if="element.props?.image"
+        :alt="element.label"
+        :src="element.props?.image"
+        width="24" />
+
+      {{ element.label }}
+    </label>
   </div>
 </template>
+
+<script lang="ts">
+export default {inheritAttrs: false};
+</script>
 
 <script lang="ts" setup>
 import {ElementInstance, generateFieldId} from '@myparcel-pdk/admin/src';
