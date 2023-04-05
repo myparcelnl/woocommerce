@@ -8,6 +8,8 @@ defined('ABSPATH') or die();
 
 use Exception;
 use MyParcelNL\Sdk\src\Services\Web\Webhook\AbstractWebhookWebService;
+use MyParcelNL\Sdk\src\Services\Web\Webhook\OrderStatusChangeWebhookWebService;
+use MyParcelNL\Sdk\src\Services\Web\Webhook\ShipmentStatusChangeWebhookWebService;
 use MyParcelNL\Sdk\src\Support\Collection;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Utils;
@@ -305,6 +307,7 @@ class WebhookSubscriptionService
     public function subscribeToWebhooks(string $apiKey): void
     {
         $hooks                      = AccountSettingsWebhook::ACCOUNT_SETTINGS_WEBHOOKS;
+        array_push($hooks, OrderStatusChangeWebhookWebService::class, ShipmentStatusChangeWebhookWebService::class);
         $webhookSubscriptionService = new WebhookSubscriptionService();
 
         foreach ($hooks as $webhookClass) {
