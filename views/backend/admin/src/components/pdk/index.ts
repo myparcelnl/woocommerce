@@ -6,6 +6,8 @@ export {default as WcButton} from './WcButton.vue';
 
 export {default as WcButtonGroup} from './WcButtonGroup.vue';
 
+export {default as WcCheckboxGroup} from './WcCheckboxGroup.vue';
+
 export {default as WcCheckboxInput} from './WcCheckboxInput.vue';
 
 export {default as WcCodeEditor} from './WcCodeEditor.vue';
@@ -25,8 +27,6 @@ export {default as WcImage} from './WcImage.vue';
 export {default as WcLoader} from './WcLoader.vue';
 
 export {default as WcModal} from './WcModal.vue';
-
-export {default as WcMultiCheckbox} from './WcMultiCheckbox.vue';
 
 export {default as WcNotification} from './WcNotification.vue';
 
