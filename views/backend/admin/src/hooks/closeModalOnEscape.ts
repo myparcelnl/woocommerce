@@ -1,6 +1,6 @@
 import {useModalStore} from '@myparcel-pdk/admin/src';
 
-export const onCreateStore = (): void => {
+export const closeModalOnEscape = (): void => {
   const modalStore = useModalStore();
 
   const closeOnEscape = (event: KeyboardEvent) => {

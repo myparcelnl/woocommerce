@@ -10,7 +10,7 @@ const BULK_ACTION_MAP = Object.freeze({
   action_print: AdminAction.OrdersPrint,
 });
 
-export const onInitialized: () => void = () => {
+export const listenForBulkActions = (): void => {
   jQuery('#doaction').on('click', (event) => {
     const bulkAction = String(jQuery('#bulk-action-selector-top').val());
 
