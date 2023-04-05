@@ -6,6 +6,7 @@ import {
   DefaultLink,
   DefaultNumberInput,
   DefaultRadioGroup,
+  DefaultSettingsDivider,
   DefaultTimeInput,
 } from '@myparcel-pdk/admin-preset-default/src';
 import {LogLevel, createPdkAdmin} from '@myparcel-pdk/admin/src';
@@ -101,6 +102,7 @@ export const initialize = (): void => {
       PdkRadioInput: WcRadioInput,
       PdkRow: WcRow,
       PdkSelectInput: WcSelectInput,
+      PdkSettingsDivider: DefaultSettingsDivider,
       PdkShipmentLabelWrapper,
       PdkTabNavButton: WcTabNavButton,
       PdkTabNavButtonWrapper: WcTabNavButtonWrapper,
