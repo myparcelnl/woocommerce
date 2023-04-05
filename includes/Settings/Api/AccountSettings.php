@@ -15,6 +15,7 @@ use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLForYou;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLParcelConnect;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+use MyParcelNL\Sdk\src\Services\Web\HasCarrier;
 use MyParcelNL\Sdk\src\Support\Collection;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
@@ -34,6 +35,7 @@ class AccountSettings extends Model
 {
     use HasApiKey;
     use HasInstance;
+    use HasCarrier;
 
     /**
      * @var string Name of the wp_options row the account settings are saved in.
@@ -310,9 +312,13 @@ class AccountSettings extends Model
         $account['shops']             = [$shop];
         $this->account                = new Account($account);
         $this->carrier_options        = (new Collection($carrierOptions))->mapInto(CarrierOptions::class);
-        $this->carrier_configurations = (new Collection($carrierConfigurations))->map(function (array $data) {
-            return CarrierConfigurationFactory::create($data);
-        });
+        $this->carrier_configurations = (new Collection($carrierConfigurations))
+            ->filter(function (array $array) {
+                return $this->carrierIdExists($array['carrier_id']);
+            })
+            ->map(function (array $data) {
+                return CarrierConfigurationFactory::create($data);
+            });
     }
 
     /**
