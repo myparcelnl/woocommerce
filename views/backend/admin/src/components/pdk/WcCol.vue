@@ -8,6 +8,7 @@
 import {useAdminConfig} from '@myparcel-pdk/admin/src';
 
 defineProps({
+  // eslint-disable-next-line vue/no-unused-properties
   span: {
     type: Number,
     default: null,
