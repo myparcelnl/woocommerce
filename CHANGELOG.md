@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.18.7](https://github.com/myparcelnl/woocommerce/compare/v4.18.6...v4.18.7) (2023-04-06)
+
+
+### :bug: Bug Fixes
+
+* **checkout:** do not show address inputs when allowRetry is false ([#967](https://github.com/myparcelnl/woocommerce/issues/967)) ([255e8b0](https://github.com/myparcelnl/woocommerce/commit/255e8b0daf62ddcd178ba5aea328d51b6a989da4))
+* fix absent version in svn release script ([#964](https://github.com/myparcelnl/woocommerce/issues/964)) ([97cd557](https://github.com/myparcelnl/woocommerce/commit/97cd557baa74643c246479e1d68d7c3c384edaa9))
+* prevent carrier 5 error when retrieving account settings ([#968](https://github.com/myparcelnl/woocommerce/issues/968)) ([634ecc2](https://github.com/myparcelnl/woocommerce/commit/634ecc2b4d023133c030b49e389a041937a4b504))
+* prevent passing unknown carrier id ([#969](https://github.com/myparcelnl/woocommerce/issues/969)) ([49ad496](https://github.com/myparcelnl/woocommerce/commit/49ad49626fac5799e4ef41abecb7d01600030e78))
+
 ## [4.18.7-rc.3](https://github.com/myparcelnl/woocommerce/compare/v4.18.7-rc.2...v4.18.7-rc.3) (2023-04-06)
 
 
