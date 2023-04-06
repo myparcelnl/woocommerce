@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.18.7-rc.3](https://github.com/myparcelnl/woocommerce/compare/v4.18.7-rc.2...v4.18.7-rc.3) (2023-04-06)
+
+
+### :bug: Bug Fixes
+
+* prevent passing unknown carrier id ([#969](https://github.com/myparcelnl/woocommerce/issues/969)) ([49ad496](https://github.com/myparcelnl/woocommerce/commit/49ad49626fac5799e4ef41abecb7d01600030e78))
+
 ## [4.18.7-rc.2](https://github.com/myparcelnl/woocommerce/compare/v4.18.7-rc.1...v4.18.7-rc.2) (2023-04-04)
 
 
