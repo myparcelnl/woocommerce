@@ -18,6 +18,7 @@ jobs:
     runs-on: ubuntu-22.04
     outputs:
       released: ${{ steps.release.outputs.released }}
+      version: ${{ steps.release.outputs.version }}
     steps:
       - uses: myparcelnl/actions/setup-git-credentials@v3
         id: credentials
@@ -91,7 +92,7 @@ jobs:
           ASSETS_DIR: ${{ env.ASSETS_DIR }}
           BUILD_DIR: ${{ env.BUILD_DIR }}
           SLUG: woocommerce-myparcel
-          VERSION: ${{ steps.release.outputs.version }}
+          VERSION: ${{ needs.release.outputs.version }}
 
   rebase-develop:
     name: 'Rebase develop onto main'

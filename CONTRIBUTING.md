@@ -4,7 +4,7 @@
 2. If you're planning to change JavaScript or CSS code, see below section for
    details.
 3. Make your changes
-4. Create a pull request!
+4. Create a pull request! See the [Developer Guide for contributing to MyParcel repositories](https://github.com/myparcelnl/developer/blob/main/DEVELOPERS.md) for details on how to structure your commit message and create a valid PR.
 
 ## Prerequisites
 
