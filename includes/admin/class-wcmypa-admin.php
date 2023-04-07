@@ -1194,8 +1194,6 @@ class WCMYPA_Admin
                         ),
                         $lastOrder[self::META_TRACK_TRACE]
                     ) : esc_html(__('Concept created but not printed.', 'woocommerce-myparcel'));
-                } else {
-                    echo esc_html(sprintf(__('export_hint_how_many_times', 'woocommerce-myparcel'), count($metaPps)));
                 }
             } else {
                 esc_html_e('export_hint_not_exported', 'woocommerce-myparcel');
