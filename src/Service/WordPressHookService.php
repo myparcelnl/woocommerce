@@ -10,7 +10,9 @@ use MyParcelNL\WooCommerce\Hooks\CartFeesHooks;
 use MyParcelNL\WooCommerce\Hooks\CheckoutScriptHooks;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Hooks\PdkAdminEndpointHooks;
+use MyParcelNL\WooCommerce\Hooks\PdkFrontendEndpointHooks;
 use MyParcelNL\WooCommerce\Hooks\PdkWebhookHooks;
+use MyParcelNL\WooCommerce\Hooks\PluginInfoHooks;
 use MyParcelNL\WooCommerce\Hooks\ScheduledMigrationHooks;
 use MyParcelNL\WooCommerce\Hooks\SeparateAddressFieldsHooks;
 use MyParcelNL\WooCommerce\Hooks\TrackTraceHooks;
@@ -52,12 +54,14 @@ final class WordPressHookService
             CheckoutScriptHooks::class,
             PdkAdminEndpointHooks::class,
             PdkCoreHooks::class,
+            PdkFrontendEndpointHooks::class,
             PdkOrderHooks::class,
             PdkOrderListHooks::class,
             PdkPlaceOrderHooks::class,
             PdkPluginSettingsHooks::class,
             PdkProductSettingsHooks::class,
             PdkWebhookHooks::class,
+            PluginInfoHooks::class,
             ScheduledMigrationHooks::class,
             SeparateAddressFieldsHooks::class,
             TrackTraceHooks::class,

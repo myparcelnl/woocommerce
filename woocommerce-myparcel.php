@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 /*
 Plugin Name: MyParcel WooCommerce
-Plugin URI: https://myparcel.nl/
+Plugin URI: https://github.com/myparcelnl/woocommerce
 Description: Export your WooCommerce orders to MyParcel and print labels directly from the WooCommerce admin
 Author: MyParcel
 Author URI: https://myparcel.nl
