@@ -76,7 +76,7 @@ import {
   useLanguage,
 } from '@myparcel-pdk/admin/src';
 import {PropType} from 'vue';
-import {useModalElementContext} from '@myparcel-pdk/frontend-core/src';
+import {useModalElementContext} from '@myparcel-pdk/admin/src';
 
 const props = defineProps({
   actions: {

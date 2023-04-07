@@ -1,5 +1,4 @@
-import {AdminAction} from '@myparcel-pdk/frontend-core/src';
-import {useActionStore} from '@myparcel-pdk/admin/src';
+import {AdminAction, useActionStore} from '@myparcel-pdk/admin/src';
 
 const BULK_ACTION_PREFIX = 'myparcelnl';
 
