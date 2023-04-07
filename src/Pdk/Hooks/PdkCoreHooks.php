@@ -34,7 +34,7 @@ class PdkCoreHooks implements WordPressHooksInterface
         add_action('admin_footer', [$this, 'renderPdkInitScripts']);
 
         // Render main notification container in admin notices area
-        add_action('admin_notices', [$this, 'renderPdkNotifications']);
+        add_action('all_admin_notices', [$this, 'renderPdkNotifications']);
 
         // change script tags to script type=module for esm scripts
         add_filter('script_loader_tag', [$this, 'changeScriptTag'], 10, 2);
