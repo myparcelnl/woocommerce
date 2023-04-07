@@ -30,15 +30,17 @@ class WcPdkBootstrapper extends PdkBootstrapper
             # General
             ###
 
-            'userAgent'             => value([
+            'pluginBaseName' => value('woocommerce-myparcel'),
+
+            'userAgent' => value([
                 'MyParcelNL-WooCommerce' => $version,
                 'WooCommerce'            => defined('WOOCOMMERCE_VERSION') ? constant('WOOCOMMERCE_VERSION') : '?',
                 'WordPress'              => get_bloginfo('version'),
             ]),
 
-            /**
-             * Meta keys.
-             */
+            'urlDocumentation' => value('https://developer.myparcel.nl/nl/documentatie/10.woocommerce.html'),
+            'urlReleaseNotes'  => value('https://github.com/myparcelnl/woocommerce/releases'),
+
             'metaKeyOrderData'      => value('myparcelnl_order_data'),
             'metaKeyShipments'      => value('myparcelnl_order_shipments'),
 
