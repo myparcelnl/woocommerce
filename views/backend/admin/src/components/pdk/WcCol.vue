@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import {useAdminConfig} from '@myparcel-pdk/frontend-core/src';
+import {useAdminConfig} from '@myparcel-pdk/admin/src';
 
 defineProps({
   span: {
