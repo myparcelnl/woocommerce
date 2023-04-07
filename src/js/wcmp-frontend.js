@@ -329,29 +329,16 @@ jQuery(($) => {
     updateAddress() {
       MyParcelFrontend.validateMyParcelConfig();
 
-      window.MyParcelConfig.address = MyParcelFrontend.getAddress();
+      const address = MyParcelFrontend.getAddress();
+
+      window.MyParcelConfig.address = address;
+
+      if (MyParcelFrontend.isUsingSplitAddressFields) {
+        MyParcelFrontend.fillCheckoutFields({ [MyParcelFrontend.addressField]: address.street });
+      }
 
       if (MyParcelFrontend.hasDeliveryOptions) {
         MyParcelFrontend.triggerEvent(MyParcelFrontend.updateDeliveryOptionsEvent);
-      }
-    },
-
-    /**
-     * Set the values of the WooCommerce fields from delivery options data.
-     *
-     * @param {?Object} address - The new address.
-     * @param {String} address.postalCode
-     * @param {String} address.city
-     */
-    setAddressFromDeliveryOptions: function(address = null) {
-      address = address || {};
-
-      if (address.postalCode) {
-        MyParcelFrontend.getField(MyParcelFrontend.postcodeField).value = address.postalCode;
-      }
-
-      if (address.city) {
-        MyParcelFrontend.getField(MyParcelFrontend.cityField).value = address.city;
       }
     },
 
@@ -623,6 +610,9 @@ jQuery(($) => {
       return shippingMethod;
     },
 
+    /**
+     * @return {{streetName: string, houseNumberSuffix: string, houseNumber: string}}
+     */
     getFullStreet() {
       const [
         streetName,
@@ -703,18 +693,15 @@ jQuery(($) => {
     },
 
     /**
-     * Checks if the inner wrapper of an address type form exists to determine if the address type is available.
-     *
-     * Does not check the outer div (.woocommerce-shipping-fields) because when the shipping form does not exist, it's
-     *  still rendered on the page.
+     * Checks if the address_1 field of an address type form exists to determine if the address type is available.
      *
      * @param {String} addressType
      * @returns {Boolean}
      */
     hasAddressType(addressType) {
-      const formWrapper = document.querySelector(`.woocommerce-${addressType}-fields__field-wrapper`);
+      const field = MyParcelFrontend.getField(MyParcelFrontend.addressField, addressType);
 
-      return Boolean(formWrapper);
+      return Boolean(field);
     },
 
     /**
@@ -723,9 +710,6 @@ jQuery(($) => {
      */
     onChangeShippingMethod(oldShippingMethod, newShippingMethod) {
       MyParcelFrontend.toggleDeliveryOptions(newShippingMethod);
-      // if (MyParcelFrontend.shippingMethodHasDeliveryOptions(newShippingMethod)) {
-      //   MyParcelFrontend.updateDeliveryOptionsConfig();
-      // }
     },
 
     validateMyParcelConfig() {
