@@ -90,7 +90,7 @@ class OrderStatusWebhook extends AbstractWebhook
     {
         $orderData      = get_post_meta($order->getExternalIdentifier(), WCMYPA_Admin::META_PPS, true);
         $orderShipments = $order->getOrderShipments();
-        $barcode        = $orderShipments[0]['shipment']['barcode'];
+        $barcode        = end($orderShipments)['shipment']['barcode'];
 
         if (! $barcode) {
             return;
