@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.19.0-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.18.7...v4.19.0-rc.1) (2023-04-11)
+
+
+### :sparkles: New Features
+
+* add barcode to fulfilment orders ([#966](https://github.com/myparcelnl/woocommerce/issues/966)) ([0ab0f83](https://github.com/myparcelnl/woocommerce/commit/0ab0f8395a98ec0bd9537fe05d14f46d6e3d14d6))
+
 ## [4.18.7](https://github.com/myparcelnl/woocommerce/compare/v4.18.6...v4.18.7) (2023-04-06)
 
 
