@@ -24,6 +24,13 @@ class TaxFieldsHooks implements WordPressHooksInterface
             apply_filters('wcmp_checkout_fields_priority', 10, 'billing'),
             2
         );
+
+        add_filter(
+            'woocommerce_shipping_fields',
+            [$this, 'extendShippingFields'],
+            apply_filters('wcmp_checkout_fields_priority', 10, 'shipping'),
+            2
+        );
     }
 
     /**
@@ -50,6 +57,11 @@ class TaxFieldsHooks implements WordPressHooksInterface
         return $this->addTaxFields($fields, 'billing');
     }
 
+    public function extendShippingFields(array $fields): array
+    {
+        return $this->addTaxFields($fields, 'shipping');
+    }
+
     /**
      * New checkout and account page billing/shipping fields
      *
@@ -65,13 +77,13 @@ class TaxFieldsHooks implements WordPressHooksInterface
             [
                 sprintf('%s_%s', $form, self::FIELD_EORI)        => [
                     'label'    => LanguageService::translate('eori'),
-                    'class'    => apply_filters('wcmp_custom_address_field_class', ['form-row-third first']),
+                    'class'    => apply_filters('wcmp_custom_eori_field_class', ['form-row']),
                     'type'     => 'text',
                     'priority' => 100,
                 ],
                 sprintf('%s_%s', $form, self::FIELD_VAT)        => [
                     'label'    => LanguageService::translate('vat'),
-                    'class'    => apply_filters('wcmp_custom_address_field_class', ['form-row-third']),
+                    'class'    => apply_filters('wcmp_custom_vat_field_class', ['form-row']),
                     'type'     => 'text',
                     'priority' => 101,
                 ],

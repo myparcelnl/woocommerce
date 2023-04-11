@@ -13,6 +13,7 @@ use MyParcelNL\WooCommerce\Hooks\PdkAdminEndpointHooks;
 use MyParcelNL\WooCommerce\Hooks\PdkWebhookHooks;
 use MyParcelNL\WooCommerce\Hooks\ScheduledMigrationHooks;
 use MyParcelNL\WooCommerce\Hooks\SeparateAddressFieldsHooks;
+use MyParcelNL\WooCommerce\Hooks\TaxFieldsHooks;
 use MyParcelNL\WooCommerce\Hooks\TrackTraceHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkCoreHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkOrderHooks;
@@ -60,6 +61,7 @@ final class WordPressHookService
             PdkWebhookHooks::class,
             ScheduledMigrationHooks::class,
             SeparateAddressFieldsHooks::class,
+            TaxFieldsHooks::class,
             TrackTraceHooks::class,
         ];
     }
