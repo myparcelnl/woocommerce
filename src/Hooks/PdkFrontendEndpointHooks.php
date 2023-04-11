@@ -40,7 +40,7 @@ final class PdkFrontendEndpointHooks implements WordPressHooksInterface
      */
     public function registerPdkRoutes(): void
     {
-        register_rest_route(Pdk::get('routeFrontend'), Pdk::get('routeFrontendPdk'), [
+        register_rest_route(Pdk::get('routeFrontend'), Pdk::get('routeFrontendMyParcel'), [
             'methods'             => 'GET',
             'callback'            => [$this, 'processFrontendRequest'],
             'permission_callback' => '__return_true',
