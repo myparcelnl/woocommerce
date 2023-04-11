@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.18.8](https://github.com/myparcelnl/woocommerce/compare/v4.18.7...v4.18.8) (2023-04-11)
+
+
+### :bug: Bug Fixes
+
+* **frontend:** fix address_1 being empty with separate address fields ([#971](https://github.com/myparcelnl/woocommerce/issues/971)) ([47a22b5](https://github.com/myparcelnl/woocommerce/commit/47a22b58e401028246e00561b15c15742afbd865))
+
 ## [4.18.7](https://github.com/myparcelnl/woocommerce/compare/v4.18.6...v4.18.7) (2023-04-06)
 
 
