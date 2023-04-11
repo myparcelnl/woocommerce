@@ -1,12 +1,11 @@
-import '../assets/scss/index.scss';
-import {EVENT_WOOCOMMERCE_COUNTRY_TO_STATE_CHANGED} from '@myparcel-woocommerce/frontend-common/src';
-import {setAddress, synchronizeAddress} from './utils';
+import {EVENT_UPDATED_DELIVERY_OPTIONS} from '@myparcel-pdk/checkout/src';
+import {showHideTaxFields} from './utils';
+import {EVENT_WOOCOMMERCE_COUNTRY_TO_STATE_CHANGED} from '@myparcel-woocommerce/frontend-common';
 
-jQuery(() => {
-  console.log('[tax-fields:START]');
-  // hide the tax fields except:
-  // europlus + gb: show eori
-  // europlus + customs country: show vat
+document.addEventListener(EVENT_UPDATED_DELIVERY_OPTIONS, (e) => {
+  showHideTaxFields(e.detail.carrier);
+});
 
-  console.log('[tax-fields:END]');
+document.addEventListener(EVENT_WOOCOMMERCE_COUNTRY_TO_STATE_CHANGED, () => {
+  showHideTaxFields(null);
 });
