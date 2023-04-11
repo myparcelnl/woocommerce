@@ -2,63 +2,56 @@
   <select
     :id="id"
     ref="selectElement"
-    v-model="model"
-    v-test="'SelectInput'"
-    class="select">
-    <option
-      v-for="(item, index) in options"
-      :key="index"
-      v-test="'SelectInput__option'"
-      :value="item.value"
-      v-text="item.label" />
-  </select>
+    v-test="'SelectInput'" />
 </template>
 
 <script lang="ts" setup>
 import {ElementInstance, OptionsProp, useSelectInputContext} from '@myparcel-pdk/admin/src';
+import {onBeforeUnmount, onMounted, ref, toRaw, watchEffect} from 'vue';
+import {OneOrMore} from '@myparcel/ts-utils';
+import {get} from '@vueuse/core';
 
 // eslint-disable-next-line vue/no-unused-properties
 const props = defineProps<{element: ElementInstance<OptionsProp>; modelValue: string | number}>();
-const emit = defineEmits<(e: 'update:modelValue', value: string | number) => void>();
+const emit = defineEmits<(e: 'update:modelValue', value: OneOrMore<string | number>) => void>();
 
-const {id, options, model} = useSelectInputContext(props, emit);
+const {id, options} = useSelectInputContext(props, emit);
 
-// TODO: The initial value is not set.
-// const model = computed({
-//   get: () => props.modelValue,
-//   set: (value) => {
-//     $select.value?.val(value).trigger('change');
-//     emit('update:modelValue', value);
-//   },
-// });
-//
-// const selectElement = ref<HTMLElement | null>(null);
-// const $select = ref<JQuery | null>(null);
-//
-// watchEffect(() => {
-//   $select.value?.toggleClass('form-required', get(props.element.isValid));
-//   $select.value?.attr('disabled', get(props.element.isDisabled) || get(props.element.isSuspended));
-// });
-//
-// onMounted(() => {
-//   if (!selectElement.value) {
-//     return;
-//   }
-//
-//   $select.value = jQuery(selectElement.value);
-//
-//   const selectWoo = $select.value.selectWoo({width: 'auto'});
-//
-//   selectWoo.on('change', (event) => {
-//     if (!isOfType<HTMLSelectElement>(event.target, 'value')) {
-//       return;
-//     }
-//
-//     emit('update:modelValue', event.target.value);
-//   });
-// });
-//
-// onBeforeUnmount(() => {
-//   $select.value?.selectWoo('destroy');
-// });
+const selectElement = ref<HTMLElement | null>(null);
+const $select = ref<JQuery | null>(null);
+
+watchEffect(() => {
+  $select.value?.attr('disabled', get(props.element.isDisabled) || get(props.element.isSuspended));
+});
+
+watchEffect(() => {
+  $select.value?.toggleClass('form-required', get(props.element.isValid));
+});
+
+onMounted(() => {
+  if (!selectElement.value) {
+    return;
+  }
+
+  $select.value = jQuery(selectElement.value);
+
+  get($select)
+    ?.selectWoo({
+      width: 'auto',
+      data: get(options).map((option) => ({
+        id: option.value as string | number,
+        text: option.label,
+        disabled: option.disabled,
+      })),
+    })
+    .val(toRaw(props.modelValue))
+    .trigger('change')
+    .on('change', () => {
+      emit('update:modelValue', get($select)?.val() ?? []);
+    });
+});
+
+onBeforeUnmount(() => {
+  get($select)?.off().selectWoo('destroy');
+});
 </script>
