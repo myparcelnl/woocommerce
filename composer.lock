@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e79e1535420b941e42fb9d55c024505b",
+    "content-hash": "ada7ba282f9a9e815eeec78abcc63eb8",
     "packages": [
         {
             "name": "myparcelnl/sdk",
-            "version": "7.7.4",
+            "version": "7.7.5",
             "source": {
                 "type": "git",
                 "url": "git@github.com:myparcelnl/sdk.git",
-                "reference": "afb49ffcbdaeb9a5a52b0908675640c996b78e98"
+                "reference": "ddca49c71f5f03f68663c7e4932c5961b3f8db40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/afb49ffcbdaeb9a5a52b0908675640c996b78e98",
-                "reference": "afb49ffcbdaeb9a5a52b0908675640c996b78e98",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/ddca49c71f5f03f68663c7e4932c5961b3f8db40",
+                "reference": "ddca49c71f5f03f68663c7e4932c5961b3f8db40",
                 "shasum": ""
             },
             "require": {
@@ -64,7 +64,7 @@
                 "myparcel",
                 "postnl"
             ],
-            "time": "2023-04-04T11:49:48+00:00"
+            "time": "2023-04-11T11:41:07+00:00"
         }
     ],
     "packages-dev": [],
@@ -75,5 +75,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
