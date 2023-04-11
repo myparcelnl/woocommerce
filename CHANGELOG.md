@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.19.0-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.18.8...v4.19.0-rc.1) (2023-04-11)
+
+
+### :sparkles: New Features
+
+* add barcode to fulfilment orders ([#966](https://github.com/myparcelnl/woocommerce/issues/966)) ([ab84873](https://github.com/myparcelnl/woocommerce/commit/ab84873f4d9f65d5b944ef7572c8a7d2ff1414e8))
+
+
+### :bug: Bug Fixes
+
+* default to postnl when carrier id is invalid ([#972](https://github.com/myparcelnl/woocommerce/issues/972)) ([2df693a](https://github.com/myparcelnl/woocommerce/commit/2df693a8cb1ba35c0d3775759d934511ea45dddb))
+
 ## [4.19.0-rc.2](https://github.com/myparcelnl/woocommerce/compare/v4.19.0-rc.1...v4.19.0-rc.2) (2023-04-11)
 
 
