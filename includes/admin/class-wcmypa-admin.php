@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter;
+use MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection;
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
+use MyParcelNL\Sdk\src\Helper\TrackTraceUrl;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
@@ -17,6 +19,7 @@ use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcel\Entity\SettingsFieldArguments;
 
+use MyParcelNL\Sdk\src\Concerns\HasApiKey;
 if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
@@ -30,6 +33,8 @@ if (class_exists('WCMYPA_Admin')) {
  */
 class WCMYPA_Admin
 {
+    use HasApiKey;
+
     public const META_CONSIGNMENTS                = "_myparcel_consignments";
     public const META_CONSIGNMENT_ID              = "_myparcel_consignment_id";
     public const META_DELIVERY_OPTIONS            = "_myparcel_delivery_options";
@@ -164,31 +169,31 @@ class WCMYPA_Admin
                 : false;
             ?>
 
-            <select name="deliveryDate">
-                <option value=""><?php _e('all_delivery_days', 'woocommerce-myparcel'); ?></option>
-                <?php
-                $carrierName       = CarrierPostNL::NAME;
-                $deliveryDayWindow = (int) WCMYPA()->setting_collection->where('carrier', $carrierName)->getByName(
-                    WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW
-                );
+          <select name="deliveryDate">
+            <option value=""><?php _e('all_delivery_days', 'woocommerce-myparcel'); ?></option>
+              <?php
+              $carrierName       = CarrierPostNL::NAME;
+              $deliveryDayWindow = (int) WCMYPA()->setting_collection->where('carrier', $carrierName)->getByName(
+                  WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW
+              );
 
-                foreach (range(1, $deliveryDayWindow) as $number) {
-                    $date       = date('Y-m-d', strtotime($number . 'days'));
-                    $dateString = wc_format_datetime(new WC_DateTime($date), 'D d-m');
+              foreach (range(1, $deliveryDayWindow) as $number) {
+                  $date       = date('Y-m-d', strtotime($number . 'days'));
+                  $dateString = wc_format_datetime(new WC_DateTime($date), 'D d-m');
 
-                    if (1 === $number) {
-                        $dateString = __('tomorrow', 'woocommerce-myparcel') . ' ' . $dateString;
-                    }
+                  if (1 === $number) {
+                      $dateString = __('tomorrow', 'woocommerce-myparcel') . ' ' . $dateString;
+                  }
 
-                    printf(
-                        '<option value="%s""%s">%s</option>',
-                        $date,
-                        selected($date, $selected),
-                        $dateString
-                    );
-                }
-                ?>
-            </select>
+                  printf(
+                      '<option value="%s""%s">%s</option>',
+                      $date,
+                      selected($date, $selected),
+                      $dateString
+                  );
+              }
+              ?>
+          </select>
             <?php
         }
     }
@@ -456,17 +461,17 @@ class WCMYPA_Admin
             $lastShipmentId = $lastShipment['shipment_id'];
 
             ?>
-            <a class="wcmp__shipment-summary__show">
-                <span class="wcmp__encircle wcmp__shipment-summary__show">i</span>
-            </a>
-            <div
-                class="wcmp__box wcmp__modal wcmp__shipment-summary__list"
-                data-loaded=""
-                data-shipment_id="<?php echo (int) $lastShipmentId; ?>"
-                data-order_id="<?php echo $order->get_id(); ?>"
-                style="display: none;">
-                <?php self::renderSpinner(); ?>
-            </div>
+          <a class="wcmp__shipment-summary__show">
+            <span class="wcmp__encircle wcmp__shipment-summary__show">i</span>
+          </a>
+          <div
+            class="wcmp__box wcmp__modal wcmp__shipment-summary__list"
+            data-loaded=""
+            data-shipment_id="<?php echo (int) $lastShipmentId; ?>"
+            data-order_id="<?php echo $order->get_id(); ?>"
+            style="display: none;">
+              <?php self::renderSpinner(); ?>
+          </div>
         <?php endif;
         $packageType       = (new WCMP_Export())->getAllowedPackageType($order, $orderSettings->getPackageType());
         $packageTypeHuman  = WCMP_Data::getPackageTypeHuman(
@@ -551,16 +556,16 @@ class WCMYPA_Admin
         if ('shop_order' === $post_type) {
             $bulk_actions = $this->getMyParcelBulkActions();
             ?>
-            <script type="text/javascript">
-              jQuery(document).ready(function () {
-                  <?php foreach ($bulk_actions as $action => $title) { ?>
-                jQuery('<option>')
-                  .val('<?php echo $action; ?>')
-                  .html('<?php echo esc_attr($title); ?>')
-                  .appendTo('select[name=\'action\'], select[name=\'action2\']');
-                  <?php }    ?>
-              });
-            </script>
+          <script type="text/javascript">
+          jQuery(document).ready(function () {
+              <?php foreach ($bulk_actions as $action => $title) { ?>
+            jQuery('<option>')
+              .val('<?php echo $action; ?>')
+              .html('<?php echo esc_attr($title); ?>')
+              .appendTo('select[name=\'action\'], select[name=\'action2\']');
+              <?php }    ?>
+          });
+          </script>
             <?php
             self::renderSpinner();
         }
@@ -594,39 +599,39 @@ class WCMYPA_Admin
         $class = new SettingsFieldArguments($field, '');
         ?>
 
-        <div
-            class="wcmp wcmp__box wcmp__modal wcmp__offset-dialog wcmp__ws--nowrap"
-            style="display: none;">
-            <div class="wcmp__offset-dialog__inner wcmp__d--flex">
-                <div>
-                    <div class="wcmp__pb--2">
-                        <?php printf(
-                            '<label for="%s">%s</label>',
-                            $class->getId(),
-                            __("Labels to skip", "woocommerce-myparcel")
-                        ); ?>
-                    </div>
-                    <div class="wcmp__d--flex wcmp__pb--2">
-                        <?php woocommerce_form_field($field["name"], $class->getArguments(false), ""); ?>
-                        <img
-                          src="<?php echo WCMYPA()->plugin_url(), '/assets/img/offset.svg'; ?>"
-                          alt="Offset"
-                          class="wcmp__offset-dialog__icon wcmp__pl--1"/>
-                    </div>
-                    <div>
-                        <a
-                            href="#"
-                            class="wcmp__offset-dialog__button button"
-                            style="display: none;"
-                            target="_blank">
-                            <?php esc_html_e('Print', 'woocommerce-myparcel'); ?>
-                            <?php self::renderSpinner(); ?>
-                        </a>
-                    </div>
-                </div>
-                <div class="wcmp__close-button dashicons dashicons-no-alt wcmp__offset-dialog__close wcmp__pl--2"></div>
+      <div
+        class="wcmp wcmp__box wcmp__modal wcmp__offset-dialog wcmp__ws--nowrap"
+        style="display: none;">
+        <div class="wcmp__offset-dialog__inner wcmp__d--flex">
+          <div>
+            <div class="wcmp__pb--2">
+                <?php printf(
+                    '<label for="%s">%s</label>',
+                    $class->getId(),
+                    __("Labels to skip", "woocommerce-myparcel")
+                ); ?>
             </div>
+            <div class="wcmp__d--flex wcmp__pb--2">
+                <?php woocommerce_form_field($field["name"], $class->getArguments(false), ""); ?>
+              <img
+                src="<?php echo WCMYPA()->plugin_url(), '/assets/img/offset.svg'; ?>"
+                alt="Offset"
+                class="wcmp__offset-dialog__icon wcmp__pl--1"/>
+            </div>
+            <div>
+              <a
+                href="#"
+                class="wcmp__offset-dialog__button button"
+                style="display: none;"
+                target="_blank">
+                  <?php esc_html_e('Print', 'woocommerce-myparcel'); ?>
+                  <?php self::renderSpinner(); ?>
+              </a>
+            </div>
+          </div>
+          <div class="wcmp__close-button dashicons dashicons-no-alt wcmp__offset-dialog__close wcmp__pl--2"></div>
         </div>
+      </div>
         <?php
     }
 
@@ -1111,7 +1116,7 @@ class WCMYPA_Admin
                 'type'        => 'select',
                 'options'     => array_merge(
                     [
-                      null => __('Default', 'woocommerce-myparcel'),
+                        null => __('Default', 'woocommerce-myparcel'),
                     ],
                     (new WC_Countries())->get_countries()
                 ),
@@ -1172,11 +1177,24 @@ class WCMYPA_Admin
         $exportMode = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
 
         if (WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
-            $orderId = WCX_Order::get_id($order);
-            $metaPps = get_post_meta($orderId, self::META_PPS);
+            $orderId   = WCX_Order::get_id($order);
+            $metaPps   = get_post_meta($orderId, self::META_PPS);
 
             if ($metaPps) {
-                echo esc_html(sprintf(__('export_hint_how_many_times', 'woocommerce-myparcel'), count($metaPps)));
+                $lastOrder = end($metaPps);
+
+                if (isset($lastOrder[self::META_PPS_UUID])) {
+
+                    echo $lastOrder[self::META_TRACK_TRACE] ? sprintf(
+                        '<a href="%s">%s</a>',
+                        TrackTraceUrl::create(
+                            $lastOrder[self::META_TRACK_TRACE],
+                            $order->get_shipping_postcode(),
+                            $order->get_shipping_country()
+                        ),
+                        $lastOrder[self::META_TRACK_TRACE]
+                    ) : esc_html(__('Concept created but not printed.', 'woocommerce-myparcel'));
+                }
             } else {
                 esc_html_e('export_hint_not_exported', 'woocommerce-myparcel');
             }
@@ -1282,7 +1300,7 @@ class WCMYPA_Admin
         foreach ($enabledCarriers->all() as $carrier) {
             if (WCMYPA()->setting_collection->where('carrier', $carrier->getName())
                 ->getByName(WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE)) {
-              return true;
+                return true;
             }
         }
 
@@ -1483,7 +1501,7 @@ class WCMYPA_Admin
         return null;
     }
 
-		/**
+    /**
      * Output a spinner.
      *
      * @param string $state

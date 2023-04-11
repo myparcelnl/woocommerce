@@ -126,9 +126,7 @@ if (! class_exists('WCMYPA')) :
          */
         private function registerWebhooks(): void
         {
-            if (WebhookSubscriptionService::shouldRegisterOrderStatusRoute()) {
-                (new OrderStatusWebhook())->register();
-            }
+            (new OrderStatusWebhook())->register();
 
             (new AccountSettingsWebhook())->register();
         }
