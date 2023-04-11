@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.19.0-rc.2](https://github.com/myparcelnl/woocommerce/compare/v4.19.0-rc.1...v4.19.0-rc.2) (2023-04-11)
+
+
+### :bug: Bug Fixes
+
+* default to postnl when carrier id is invalid ([#972](https://github.com/myparcelnl/woocommerce/issues/972)) ([2d01538](https://github.com/myparcelnl/woocommerce/commit/2d01538ccde469d11e5872ea7fe5fdc497a97268))
+
 ## [4.19.0-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.18.7...v4.19.0-rc.1) (2023-04-11)
 
 
