@@ -5,12 +5,13 @@ on:
     branches:
       - main
       - develop
+      - alpha
 
   workflow_dispatch:
 
 concurrency:
-  group: release-${{ github.ref }}
-  cancel-in-progress: true
+  group: release
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   release:
@@ -106,7 +107,7 @@ jobs:
       force: true
 
   rebase-prs:
-    name: 'Rebase pull requests onto develop'
+    name: 'Rebase pull requests'
     needs:
       - release
       - rebase-develop
@@ -122,6 +123,5 @@ jobs:
       - uses: peter-evans/rebase@v2
         with:
           token: ${{ steps.credentials.outputs.token }}
-          base: develop
           exclude-drafts: true
           exclude-labels: 'hotfix'
