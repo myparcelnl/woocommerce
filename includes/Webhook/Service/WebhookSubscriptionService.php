@@ -8,6 +8,8 @@ defined('ABSPATH') or die();
 
 use Exception;
 use MyParcelNL\Sdk\src\Services\Web\Webhook\AbstractWebhookWebService;
+use MyParcelNL\Sdk\src\Services\Web\Webhook\OrderStatusChangeWebhookWebService;
+use MyParcelNL\Sdk\src\Services\Web\Webhook\ShipmentStatusChangeWebhookWebService;
 use MyParcelNL\Sdk\src\Support\Collection;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Utils;
@@ -305,6 +307,7 @@ class WebhookSubscriptionService
     public function subscribeToWebhooks(string $apiKey): void
     {
         $hooks                      = AccountSettingsWebhook::ACCOUNT_SETTINGS_WEBHOOKS;
+        array_push($hooks, OrderStatusChangeWebhookWebService::class, ShipmentStatusChangeWebhookWebService::class);
         $webhookSubscriptionService = new WebhookSubscriptionService();
 
         foreach ($hooks as $webhookClass) {
@@ -339,21 +342,5 @@ class WebhookSubscriptionService
         }
 
         return true;
-    }
-
-    /**
-     * @return bool
-     */
-    public static function shouldRegisterOrderStatusRoute(): bool
-    {
-        $isAutomaticStatusActive   = WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION);
-        $changeStatusAfterPrinting = WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING === WCMP_Export_Consignments::getSetting(
-                WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER
-            );
-        $isExportModeActive        = WCMP_Settings_Data::EXPORT_MODE_PPS === WCMP_Export_Consignments::getSetting(
-                WCMYPA_Settings::SETTING_EXPORT_MODE
-            );
-
-        return $isAutomaticStatusActive && $changeStatusAfterPrinting && $isExportModeActive;
     }
 }
