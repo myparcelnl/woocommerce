@@ -52,6 +52,8 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
             $this->loadSeparateAddressFieldsScripts();
         }
 
+        $this->loadTaxFieldsScripts();
+
         // Don't load the delivery options scripts if it's disabled
         //        if (Settings::get(CheckoutSettings::DELIVERY_OPTIONS_DISPLAY, CheckoutSettings::ID)) {
         add_action($this->getDeliveryOptionsPosition(), [$this, 'renderDeliveryOptions']);
@@ -142,6 +144,20 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
         $this->service->enqueueStyle(
             WpScriptService::HANDLE_SPLIT_ADDRESS_FIELDS,
             'views/frontend/checkout-split-address-fields/lib/style.css'
+        );
+    }
+
+    private function loadTaxFieldsScripts(): void
+    {
+        $this->service->enqueueLocalScript(
+            WpScriptService::HANDLE_TAX_FIELDS,
+            'views/frontend/checkout-tax-fields/lib/tax-fields',
+            [WpScriptService::HANDLE_WC_CHECKOUT]
+        );
+
+        $this->service->enqueueStyle(
+            WpScriptService::HANDLE_TAX_FIELDS,
+            'views/frontend/checkout-tax-fields/lib/style.css'
         );
     }
 
