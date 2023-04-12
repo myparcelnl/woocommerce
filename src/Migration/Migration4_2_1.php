@@ -9,7 +9,7 @@ use MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface;
 /**
  * Migrates pre v4.2.1 settings
  */
-class Migration4_2_1 extends AbstractUpgradeMigration implements MigrationInterface
+final class Migration4_2_1 extends AbstractUpgradeMigration implements MigrationInterface
 {
     /**
      * @var array

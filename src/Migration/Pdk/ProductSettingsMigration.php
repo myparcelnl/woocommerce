@@ -6,10 +6,9 @@ namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface;
-use MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface;
 use WC_Product;
 
-class ProductSettingsMigration implements MigrationInterface
+final class ProductSettingsMigration extends AbstractPdkMigration
 {
     private const OPTION_TRANSLATIONS = [
         '_myparcel_hs_code'           => ['name' => 'customsCode'],
@@ -24,11 +23,6 @@ class ProductSettingsMigration implements MigrationInterface
         /**
          * No need to downgrade, original data is still there.
          */
-    }
-
-    public function getVersion(): string
-    {
-        return '5.0.0';
     }
 
     public function migrateProductSettings(): void
@@ -50,6 +44,7 @@ class ProductSettingsMigration implements MigrationInterface
     public function up(): void
     {
         if (! function_exists('wc_get_products')) {
+            $this->warn('Could not find function wc_get_products.');
             return;
         }
 
@@ -95,13 +90,8 @@ class ProductSettingsMigration implements MigrationInterface
                 $productRepository->update($product);
             }
 
-            (wc_get_logger())->debug(
-                sprintf(
-                    'Settings for product %s migrated %s',
-                    $wcProduct->get_id(),
-                    $changed ? '' : '(no data)'
-                ) . PHP_EOL,
-                ['source' => 'wc-myparcel']
+            $this->debug(
+                sprintf('Settings for product %s migrated %s', $wcProduct->get_id(), $changed ? '' : '(no data)')
             );
 
             $wcProduct->update_meta_data('myparcelnl_pdk_migrated', true);
@@ -112,6 +102,6 @@ class ProductSettingsMigration implements MigrationInterface
     private function scheduleNextRun(): void
     {
         $time = time() + self::SECONDS_APART;
-        wp_schedule_single_event($time, 'myparcelnl_migrate_product_settings_to_pdk_5_0_0', []);
+        wp_schedule_single_event($time, 'myparcelnl_migrate_product_settings_to_pdk_5_0_0');
     }
 }

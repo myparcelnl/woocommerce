@@ -4,29 +4,27 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
-use MyParcelNL\Pdk\Carrier\Model\Carrier;
+use Generator;
+use MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface;
+use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Plugin\Action\Backend\Account\UpdateAccountAction;
-use MyParcelNL\Pdk\Settings\Model\AccountSettings;
-use MyParcelNL\Pdk\Settings\Model\CarrierSettings;
-use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
-use MyParcelNL\Pdk\Settings\Model\CustomsSettings;
-use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
-use MyParcelNL\Pdk\Settings\Model\LabelSettings;
-use MyParcelNL\Pdk\Settings\Model\OrderSettings;
+use MyParcelNL\Pdk\Settings\Collection\SettingsModelCollection;
+use MyParcelNL\Pdk\Settings\Contract\SettingsRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\Settings;
 use MyParcelNL\Pdk\Shipment\Model\DropOffDay;
-use MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface;
-use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkAccountRepository;
-use MyParcelNL\WooCommerce\Pdk\Settings\Repository\PdkSettingsRepository;
 
-class SettingsMigration implements MigrationInterface
+final class SettingsMigration extends AbstractPdkMigration
 {
-    private const GENERAL  = 'general';
-    private const CHECKOUT = 'checkout';
-    private const LABEL    = 'label';
-    private const ORDER    = 'order';
-    private const CUSTOMS  = 'customs';
+    private const OLD_CARRIERS            = ['postnl', 'dhlforyou', 'dhlparcelconnect', 'dhleuroplus'];
+    private const TRANSFORM_CAST_BOOL     = 'bool';
+    private const TRANSFORM_CAST_CENTS    = 'cents';
+    private const TRANSFORM_CAST_FLOAT    = 'float';
+    private const TRANSFORM_CAST_INT      = 'int';
+    private const TRANSFORM_CAST_STRING   = 'string';
+    private const TRANSFORM_KEY_CAST      = 'cast';
+    private const TRANSFORM_KEY_SOURCE    = 'source';
+    private const TRANSFORM_KEY_TARGET    = 'target';
+    private const TRANSFORM_KEY_TRANSFORM = 'transform';
 
     public function down(): void
     {
@@ -35,33 +33,36 @@ class SettingsMigration implements MigrationInterface
          */
     }
 
-    public function getVersion(): string
-    {
-        return '5.0.0';
-    }
-
     /**
-     * @param  string $carrierName
+     * @note This method is public for testing purposes.
+     * @see \MyParcelNL\WooCommerce\Tests\Unit\Migration\Pdk\SettingsMigrationTest
      *
-     * @return array
+     * @param  array $oldSettings
+     *
+     * @return void
+     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
      */
-    public function getWcCarrierSettings(string $carrierName): array
+    public function migrateSettings(array $oldSettings): void
     {
-        if (! in_array($carrierName, [Carrier::CARRIER_POSTNL_NAME, 'dhlforyou'], true)) {
-            return [];
+        /** @var \MyParcelNL\Pdk\Settings\Contract\SettingsRepositoryInterface $settingsRepository */
+        $settingsRepository = Pdk::get(SettingsRepositoryInterface::class);
+
+        $newSettings = $this->transformSettings($oldSettings);
+
+        $newSettings['carrier'] = new SettingsModelCollection();
+
+        foreach (self::OLD_CARRIERS as $carrier) {
+            $transformed                         = $this->transformSettings($oldSettings[$carrier] ?? []);
+            $transformed['dropOffPossibilities'] = $this->transformDropOffPossibilities($oldSettings[$carrier] ?? []);
+
+            $newSettings['carrier']->put($carrier, $transformed);
         }
 
-        $wcCarrierSettings = $this->getSettings("woocommerce_myparcel_{$carrierName}_settings");
+        $settings = new Settings($newSettings);
 
-        $mapped      = $this->mapCarrierSettingKeys();
-        $transformed = [];
-
-        foreach ($wcCarrierSettings as $key => $value) {
-            $newKey               = $mapped[$key] ?? $key;
-            $transformed[$newKey] = $value;
+        foreach (array_keys($newSettings) as $editedSettingsId) {
+            $settingsRepository->storeSettings($settings->getAttribute($editedSettingsId));
         }
-
-        return $transformed + ['carrierName' => $carrierName];
     }
 
     /**
@@ -70,135 +71,53 @@ class SettingsMigration implements MigrationInterface
      */
     public function up(): void
     {
-        /** @var  PdkSettingsRepository $pdkSettingsRepository */
-        $pdkSettingsRepository = Pdk::get(PdkSettingsRepository::class);
-
-        $pdkSettingsModel = [
-            GeneralSettings::class,
-            CheckoutSettings::class,
-            LabelSettings::class,
-            CustomsSettings::class,
-            OrderSettings::class,
-        ];
-
-        $transformedWcSettingsData = $this->getWcSettings();
-        foreach ($pdkSettingsModel as $model) {
-            $modelInstance = new $model($transformedWcSettingsData);
-            $pdkSettingsRepository->storeSettings($modelInstance);
-        }
-
-        $accountSettings = new AccountSettings($transformedWcSettingsData);
-        if ($accountSettings->apiKey) {
-            $pdkSettingsRepository->storeSettings($accountSettings);
-            $accountRepository = Pdk::get(PdkAccountRepository::class);
-            $accountUpdate     = Pdk::get(UpdateAccountAction::class);
-            $account           = $accountRepository->getAccount(true);
-            $accountUpdate->updateAndSaveAccount($account);
-        }
-
-        $carriers  = [Carrier::CARRIER_POSTNL_NAME, 'dhlforyou'];
-        $aggregate = [CarrierSettings::ID => []];
-        foreach ($carriers as $carrier) {
-            $data                         = $this->getWcCarrierSettings($carrier) + $transformedWcSettingsData;
-            $data['dropOffPossibilities'] = $this->getDropOffPossibilities($data);
-            $data['allowDeliveryOptions'] = true;
-
-            $carrierModel                             = new CarrierSettings($data);
-            $aggregate[CarrierSettings::ID][$carrier] = $carrierModel->toStorableArray();
-        }
-
-        $settings = new Settings($aggregate);
-
-        $pdkSettingsRepository->storeSettings($settings->getAttribute(CarrierSettings::ID));
+        $this->migrateSettings($this->getOldSettings());
     }
 
     /**
-     * @param  array $data
+     * @param  string $cast
+     * @param  mixed  $value
      *
-     * @return \array[][]
+     * @return mixed
      */
-    private function getDropOffPossibilities(array $data): array
+    private function castValue(string $cast, $value)
     {
-        $defaultCutoffTime     = $data['cutoffTime'] ?? '23:59:59';
-        $saturdayCutoffTime    = $data['saturdayCutoffTime'] ?? $defaultCutoffTime;
-        $sameDayCutoffTime     = '10:00:00';
-        $mondayDeliveryEnabled = $data['mondayDeliveryEnabled'] ?? false;
-        $dropOffDays           = $data['dropOffDays'] ?? [];
+        /** @var \MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface $currencyService */
+        $currencyService = Pdk::get(CurrencyServiceInterface::class);
 
+        switch ($cast) {
+            case self::TRANSFORM_CAST_BOOL:
+                return (bool) $value;
+
+            case self::TRANSFORM_CAST_INT:
+                return (int) $value;
+
+            case self::TRANSFORM_CAST_STRING:
+                return (string) $value;
+
+            case self::TRANSFORM_CAST_FLOAT:
+                return (float) $value;
+
+            case self::TRANSFORM_CAST_CENTS:
+                return $currencyService->convertToCents((float) $value);
+
+            default:
+                return $value;
+        }
+    }
+
+    private function getOldSettings(): array
+    {
         return [
-            'dropOffDays' => [
-                [
-                    'cutoffTime'        => $defaultCutoffTime,
-                    'sameDayCutoffTime' => $sameDayCutoffTime,
-                    'weekday'           => DropOffDay::WEEKDAY_MONDAY,
-                    'dispatch'          => in_array(
-                        DropOffDay::WEEKDAY_MONDAY,
-                        $dropOffDays,
-                        true
-                    ),
-                ],
-                [
-                    'cutoffTime'        => $defaultCutoffTime,
-                    'sameDayCutoffTime' => $sameDayCutoffTime,
-                    'weekday'           => DropOffDay::WEEKDAY_TUESDAY,
-                    'dispatch'          => in_array(
-                        DropOffDay::WEEKDAY_TUESDAY,
-                        $dropOffDays,
-                        true
-                    ),
-                ],
-                [
-                    'cutoffTime'        => $defaultCutoffTime,
-                    'sameDayCutoffTime' => $sameDayCutoffTime,
-                    'weekday'           => DropOffDay::WEEKDAY_WEDNESDAY,
-                    'dispatch'          => in_array(
-                        DropOffDay::WEEKDAY_WEDNESDAY,
-                        $dropOffDays,
-                        true
-                    ),
-                ],
-                [
-                    'cutoffTime'        => $defaultCutoffTime,
-                    'sameDayCutoffTime' => $sameDayCutoffTime,
-                    'weekday'           => DropOffDay::WEEKDAY_THURSDAY,
-                    'dispatch'          => in_array(
-                        DropOffDay::WEEKDAY_THURSDAY,
-                        $dropOffDays,
-                        true
-                    ),
-                ],
-                [
-                    'cutoffTime'        => $defaultCutoffTime,
-                    'sameDayCutoffTime' => $sameDayCutoffTime,
-                    'weekday'           => DropOffDay::WEEKDAY_FRIDAY,
-                    'dispatch'          => in_array(
-                        DropOffDay::WEEKDAY_FRIDAY,
-                        $dropOffDays,
-                        true
-                    ),
-                ],
-                [
-                    'cutoffTime'        => $saturdayCutoffTime,
-                    'sameDayCutoffTime' => $sameDayCutoffTime,
-                    'weekday'           => DropOffDay::WEEKDAY_SATURDAY,
-                    'dispatch'          => $mondayDeliveryEnabled
-                        && in_array(
-                            DropOffDay::WEEKDAY_SATURDAY,
-                            $dropOffDays,
-                            true
-                        ),
-                ],
-                [
-                    'cutoffTime'        => null,
-                    'sameDayCutoffTime' => null,
-                    'weekday'           => DropOffDay::WEEKDAY_SUNDAY,
-                    'dispatch'          => in_array(
-                        DropOffDay::WEEKDAY_SUNDAY,
-                        $dropOffDays,
-                        true
-                    ),
-                ],
-            ],
+            'general'          => $this->getSettings('woocommerce_myparcel_general_settings'),
+            'checkout'         => $this->getSettings('woocommerce_myparcel_checkout_settings'),
+            'export_defaults'  => $this->getSettings('woocommerce_myparcel_export_defaults_settings'),
+
+            // Carriers
+            'postnl'           => $this->getSettings('woocommerce_myparcel_postnl_settings'),
+            'dhleuroplus'      => $this->getSettings('woocommerce_myparcel_dhleuroplus_settings'),
+            'dhlforyou'        => $this->getSettings('woocommerce_myparcel_dhlforyou_settings'),
+            'dhlparcelconnect' => $this->getSettings('woocommerce_myparcel_dhlparcelconnect_settings'),
         ];
     }
 
@@ -219,147 +138,533 @@ class SettingsMigration implements MigrationInterface
     }
 
     /**
+     * @return \Generator
+     */
+    private function getTransformationMap(): Generator
+    {
+        /**
+         * General
+         */
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'general.api_key',
+            self::TRANSFORM_KEY_TARGET => 'account.apiKey',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_STRING,
+        ];
+
+        // general.trigger_manual_update
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE    => 'general.export_mode',
+            self::TRANSFORM_KEY_TARGET    => 'general.orderMode',
+            self::TRANSFORM_KEY_TRANSFORM => function ($value): bool {
+                return $value === 'pps';
+            },
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE    => 'general.download_display',
+            self::TRANSFORM_KEY_TARGET    => 'label.output',
+            self::TRANSFORM_KEY_TRANSFORM => function ($value): string {
+                return $value === 'display' ? 'open' : 'download';
+            },
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE    => 'general.label_format',
+            self::TRANSFORM_KEY_TARGET    => 'label.format',
+            self::TRANSFORM_KEY_TRANSFORM => function ($value): string {
+                return $value === 'A6' ? 'a6' : 'a4';
+            },
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'general.ask_for_print_position',
+            self::TRANSFORM_KEY_TARGET => 'label.prompt',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'general.track_trace_email',
+            self::TRANSFORM_KEY_TARGET => 'general.trackTraceInEmail',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'general.track_trace_my_account',
+            self::TRANSFORM_KEY_TARGET => 'general.trackTraceInAccount',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        //        yield [
+        //            self::TRANSFORM_KEY_SOURCE => 'general.show_delivery_day',
+        //            self::TRANSFORM_KEY_TARGET => '', // TODO
+        //        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE    => 'general.process_directly',
+            self::TRANSFORM_KEY_TARGET    => 'general.conceptShipments',
+            self::TRANSFORM_KEY_TRANSFORM => function ($value): bool {
+                return ! $value;
+            },
+        ];
+
+        //        yield [
+        //            self::TRANSFORM_KEY_SOURCE => 'general.order_status_automation',
+        //            self::TRANSFORM_KEY_TARGET => '', // TODO
+        //        ];
+
+        //        yield [
+        //            self::TRANSFORM_KEY_SOURCE => 'general.change_order_status_after',
+        //            self::TRANSFORM_KEY_TARGET => '', // TODO
+        //        ];
+
+        // NOTE: Risky. Resulting value may not exist in array of order statuses.
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'general.automatic_order_status',
+            self::TRANSFORM_KEY_TARGET => 'general.orderStatusOnLabelCreate',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_STRING,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'general.barcode_in_note',
+            self::TRANSFORM_KEY_TARGET => 'general.barcodeInNote',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'general.barcode_in_note_title',
+            self::TRANSFORM_KEY_TARGET => 'general.barcodeInNoteTitle',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_STRING, // TODO: can also be null, is this a problem?
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'general.error_logging',
+            self::TRANSFORM_KEY_TARGET => 'general.apiLogging',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        /**
+         * Checkout
+         */
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'checkout.use_split_address_fields',
+            self::TRANSFORM_KEY_TARGET => 'checkout.useSeparateAddressFields',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'checkout.delivery_options_enabled',
+            self::TRANSFORM_KEY_TARGET => 'checkout.enableDeliveryOptions',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'checkout.delivery_options_enabled_for_backorders',
+            self::TRANSFORM_KEY_TARGET => 'checkout.enableDeliveryOptionsWhenNotInStock',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'checkout.delivery_options_display',
+            self::TRANSFORM_KEY_TARGET => 'checkout.deliveryOptionsDisplay',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+            // TODO check this setting, should be for specific shipping methods
+        ];
+
+        // NOTE: Risky. Resulting value may not exist in array of checkout hooks.
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'checkout.delivery_options_position',
+            self::TRANSFORM_KEY_TARGET => 'checkout.deliveryOptionsPosition',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_STRING,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE    => 'checkout.delivery_options_price_format',
+            self::TRANSFORM_KEY_TARGET    => 'checkout.priceType',
+            self::TRANSFORM_KEY_TRANSFORM => function ($value): string {
+                return $value === 'total_price' ? 'included' : 'excluded';
+            },
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE    => 'checkout.pickup_locations_default_view',
+            self::TRANSFORM_KEY_TARGET    => 'checkout.pickupLocationsDefaultView',
+            self::TRANSFORM_KEY_TRANSFORM => function ($value): string {
+                return $value === 'map' ? 'map' : 'list';
+            },
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'checkout.delivery_options_custom_css',
+            self::TRANSFORM_KEY_TARGET => 'checkout.deliveryOptionsCustomCss',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_STRING,
+        ];
+
+        //        yield [
+        //            self::TRANSFORM_KEY_SOURCE => 'checkout.header_delivery_options_title',
+        //            self::TRANSFORM_KEY_TARGET => '', // TODO
+        //        ];
+
+        //        yield [
+        //            self::TRANSFORM_KEY_SOURCE => 'checkout.delivery_title',
+        //            self::TRANSFORM_KEY_TARGET => '', // TODO
+        //        ];
+
+        //        yield [
+        //            self::TRANSFORM_KEY_SOURCE => 'checkout.morning_title',
+        //            self::TRANSFORM_KEY_TARGET => '', // TODO
+        //        ];
+
+        //        yield [
+        //            self::TRANSFORM_KEY_SOURCE => 'checkout.standard_title',
+        //            self::TRANSFORM_KEY_TARGET => '', // TODO
+        //        ];
+
+        //        yield [
+        //            self::TRANSFORM_KEY_SOURCE => 'checkout.evening_title',
+        //            self::TRANSFORM_KEY_TARGET => '', // TODO
+        //        ];
+
+        //        yield [
+        //            self::TRANSFORM_KEY_SOURCE => 'checkout.same_day_title',
+        //            self::TRANSFORM_KEY_TARGET => '', // TODO
+        //        ];
+
+        //        yield [
+        //            self::TRANSFORM_KEY_SOURCE => 'checkout.only_recipient_title',
+        //            self::TRANSFORM_KEY_TARGET => '', // TODO
+        //        ];
+
+        //        yield [
+        //            self::TRANSFORM_KEY_SOURCE => 'checkout.signature_title',
+        //            self::TRANSFORM_KEY_TARGET => '', // TODO
+        //        ];
+
+        //        yield [
+        //            self::TRANSFORM_KEY_SOURCE => 'checkout.pickup_title',
+        //            self::TRANSFORM_KEY_TARGET => '', // TODO
+        //        ];
+
+        //        yield [
+        //            self::TRANSFORM_KEY_SOURCE => 'checkout.address_not_found_title',
+        //            self::TRANSFORM_KEY_TARGET => '', // TODO
+        //        ];
+
+        /**
+         * Export defaults
+         */
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE    => 'export_defaults.shipping_methods_package_types',
+            self::TRANSFORM_KEY_TARGET    => 'checkout.allowedShippingMethods',
+            self::TRANSFORM_KEY_TRANSFORM => function ($value): array {
+                if (! is_array($value)) {
+                    return [];
+                }
+
+                return array_reduce(
+                    $value,
+                    static function (array $carry, $shippingMethods): array {
+                        if (is_array($shippingMethods)) {
+                            foreach ($shippingMethods as $shippingMethod) {
+                                $carry[] = $shippingMethod;
+                            }
+                        }
+
+                        return $carry;
+                    },
+                    []
+                );
+            },
+        ];
+
+        //        yield [
+        //            self::TRANSFORM_KEY_SOURCE => 'export_defaults.connect_email',
+        //            self::TRANSFORM_KEY_TARGET => '', // TODO
+        //        ];
+
+        //        yield [
+        //            self::TRANSFORM_KEY_SOURCE => 'export_defaults.connect_phone',
+        //            self::TRANSFORM_KEY_TARGET => '', // TODO
+        //        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'export_defaults.save_customer_address',
+            self::TRANSFORM_KEY_TARGET => 'order.saveCustomerAddress',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'export_defaults.label_description',
+            self::TRANSFORM_KEY_TARGET => 'label.description',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_STRING,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'export_defaults.empty_parcel_weight',
+            self::TRANSFORM_KEY_TARGET => 'order.emptyParcelWeight',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_INT,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'export_defaults.empty_digital_stamp_weight',
+            self::TRANSFORM_KEY_TARGET => 'order.emptyDigitalStampWeight',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_INT,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'export_defaults.hs_code',
+            self::TRANSFORM_KEY_TARGET => 'customs.customsCode',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_STRING,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'export_defaults.package_contents',
+            self::TRANSFORM_KEY_TARGET => 'customs.packageContents',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_STRING,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'export_defaults.country_of_origin',
+            self::TRANSFORM_KEY_TARGET => 'customs.countryOfOrigin',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_STRING,
+        ];
+
+        //        yield [
+        //            self::TRANSFORM_KEY_SOURCE => 'export_defaults.export_automatic',
+        //            self::TRANSFORM_KEY_TARGET => '', // TODO
+        //        ];
+
+        //        yield [
+        //            self::TRANSFORM_KEY_SOURCE => 'export_defaults.export_automatic_status',
+        //            self::TRANSFORM_KEY_TARGET => '', // TODO
+        //        ];
+
+        /**
+         * Carriers
+         */
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'export_age_check',
+            self::TRANSFORM_KEY_TARGET => 'exportAgeCheck',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'export_insured',
+            self::TRANSFORM_KEY_TARGET => 'exportInsurance',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'export_insured_from_price',
+            self::TRANSFORM_KEY_TARGET => 'exportInsuranceAmount',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_CENTS,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'export_insured_amount',
+            self::TRANSFORM_KEY_TARGET => 'exportInsuranceUpTo',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_CENTS,
+        ];
+
+        //        yield [
+        //            self::TRANSFORM_KEY_SOURCE => 'export_insured_eu_amount',
+        //            self::TRANSFORM_KEY_TARGET => '',
+        //        ];
+
+        //        yield [
+        //            self::TRANSFORM_KEY_SOURCE => 'export_insured_for_be',
+        //            self::TRANSFORM_KEY_TARGET => '',
+        //        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'export_large_format',
+            self::TRANSFORM_KEY_TARGET => 'exportLargeFormat',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'export_only_recipient',
+            self::TRANSFORM_KEY_TARGET => 'exportOnlyRecipient',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        //        yield [
+        //            self::TRANSFORM_KEY_SOURCE => 'export_return_shipments',
+        //            self::TRANSFORM_KEY_TARGET => 'exportReturn',
+        //            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        //        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'export_signature',
+            self::TRANSFORM_KEY_TARGET => 'exportSignature',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'delivery_enabled',
+            self::TRANSFORM_KEY_TARGET => 'allowDeliveryOptions',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'delivery_standard_fee',
+            self::TRANSFORM_KEY_TARGET => 'priceDeliveryTypeStandard',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_CENTS,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'digital_stamp_default_weight',
+            self::TRANSFORM_KEY_TARGET => 'digitalStampDefaultWeight',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_INT,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'allow_show_delivery_date',
+            self::TRANSFORM_KEY_TARGET => 'showDeliveryDay',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'delivery_days_window',
+            self::TRANSFORM_KEY_TARGET => 'deliveryDaysWindow',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_INT,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'drop_off_delay',
+            self::TRANSFORM_KEY_TARGET => 'dropOffDelay',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_INT,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'monday_delivery_enabled',
+            self::TRANSFORM_KEY_TARGET => 'allowMondayDelivery',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'delivery_morning_enabled',
+            self::TRANSFORM_KEY_TARGET => 'allowMorningDelivery',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'delivery_morning_fee',
+            self::TRANSFORM_KEY_TARGET => 'priceDeliveryTypeMorning',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_CENTS,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'delivery_evening_enabled',
+            self::TRANSFORM_KEY_TARGET => 'allowEveningDelivery',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'delivery_evening_fee',
+            self::TRANSFORM_KEY_TARGET => 'priceDeliveryTypeEvening',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_CENTS,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'only_recipient_enabled',
+            self::TRANSFORM_KEY_TARGET => 'allowOnlyRecipient',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'only_recipient_fee',
+            self::TRANSFORM_KEY_TARGET => 'priceOnlyRecipient',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_CENTS,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'signature_enabled',
+            self::TRANSFORM_KEY_TARGET => 'allowSignature',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'signature_fee',
+            self::TRANSFORM_KEY_TARGET => 'priceSignature',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_CENTS,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'pickup_enabled',
+            self::TRANSFORM_KEY_TARGET => 'allowPickupPoints',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'pickup_fee',
+            self::TRANSFORM_KEY_TARGET => 'priceDeliveryTypePickup',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_CENTS,
+        ];
+    }
+
+    /**
+     * @param  array $oldSettings
+     *
      * @return array
      */
-    private function getWcSettings(): array
-    {
-        $wcSettings = array_merge(
-            $this->getSettings('woocommerce_myparcel_general_settings'),
-            $this->getSettings('woocommerce_myparcel_export_defaults_settings'),
-            $this->getSettings('woocommerce_myparcel_checkout_settings')
-        );
-
-        $mapped      = $this->mapSettingKeys();
-        $transformed = [];
-
-        foreach ($wcSettings as $key => $value) {
-            $search = $this->searchParentKey($key, $mapped);
-            $newKey = $mapped[$search][$key] ?? $key;
-
-            switch ($key) {
-                case 'nothing_yet':
-                    $value = $value === 'yes' ? '1' : '0';
-                    break;
-                case 'export_insured_for_be':
-                    $value = 50000;
-                    break;
-            }
-
-            $transformed[$newKey] = $value;
-        }
-
-        return $transformed;
-    }
-
-    /**
-     * @return string[]
-     */
-    private function mapCarrierSettingKeys(): array
+    private function transformDropOffPossibilities(array $oldSettings): array
     {
         return [
-            'export_age_check'              => 'exportAgeCheck',
-            'export_insured'                => 'exportInsurance',
-            'export_insured_from_price'     => 'exportInsuranceFromAmount',
-            'export_insured_amount'         => 'exportInsuranceUpTo',
-            'export_insured_eu_amount'      => 'exportInsuranceUpToEu',
-            'export_insured_for_be'         => 'exportInsuranceUpToBe',
-            'export_hide_sender'            => 'exportHideSender',
-            'export_extra_assurance'        => 'exportExtraAssurance',
-            'export_large_format'           => 'exportLargeFormat',
-            'export_only_recipient'         => 'exportOnlyRecipient',
-            'export_return_shipments'       => 'exportReturnShipments',
-            'export_same_day_delivery'      => 'exportSameDayDelivery',
-            'export_signature'              => 'exportSignature',
-            'delivery_enabled'              => 'allowStandardDelivery',
-            'delivery_standard_fee'         => 'priceStandardDelivery',
-            'drop_off_days'                 => 'dropOffDays',
-            'cutoff_time'                   => 'cutoffTime',
-            'delivery_days_window'          => 'featureShowDeliveryDate',
-            'digital_stamp_default_weight'  => '',
-            'drop_off_delay'                => 'dropOffDelay',
-            'monday_delivery_enabled'       => 'allowMondayDelivery',
-            'saturday_cutoff_time'          => 'saturdayCutoffTime',
-            'delivery_morning_enabled'      => 'allowMorningDelivery',
-            'delivery_morning_fee'          => 'priceMorningDelivery',
-            'delivery_evening_enabled'      => 'allowEveningDelivery',
-            'delivery_evening_fee'          => 'priceEveningDelivery',
-            'allow_show_delivery_date'      => 'showDeliveryDay',
-            'only_recipient_enabled'        => 'allowOnlyRecipient',
-            'only_recipient_fee'            => 'priceOnlyRecipient',
-            'same_day_delivery'             => 'allowSameDayDelivery',
-            'same_day_delivery_fee'         => 'priceSameDayDelivery',
-            'same_day_delivery_cutoff_time' => 'cutoffTimeSameDay',
-            'signature_enabled'             => 'allowSignature',
-            'signature_fee'                 => 'priceSignature',
-            'pickup_enabled'                => 'allowPickupLocations',
-            'pickup_fee'                    => 'pricePickup',
+            'dropOffDays' => array_map(static function ($weekday) use ($oldSettings) {
+                $cutoffTime = $oldSettings['cutoff_time'] ?? null;
+
+                switch ($weekday) {
+                    case DropOffDay::WEEKDAY_FRIDAY:
+                        $cutoffTime = $oldSettings['friday_cutoff_time'] ?? $cutoffTime;
+                        break;
+
+                    case DropOffDay::WEEKDAY_SATURDAY:
+                        $cutoffTime = $oldSettings['saturday_cutoff_time'] ?? $cutoffTime;
+                        break;
+                }
+
+                return [
+                    'cutoffTime'        => $cutoffTime,
+                    'sameDayCutoffTime' => $oldSettings['same_day_delivery_cutoff_time'] ?? null,
+                    'weekday'           => $weekday,
+                    'dispatch'          => in_array($weekday, $oldSettings['drop_off_days'] ?? [], true),
+                ];
+            }, DropOffDay::WEEKDAYS),
         ];
     }
 
     /**
-     * @return string[]
-     */
-    private function mapSettingKeys(): array
-    {
-        return [
-            self::GENERAL  => [
-                'api_key'                 => 'apiKey',
-                'error_logging'           => 'apiLogging',
-                'connect_email'           => 'shareCustomerInformation',
-                'process_directly'        => 'conceptShipments',
-                'export_mode'             => 'orderMode',
-                'track_trace_email'       => 'trackTraceInEmail',
-                'track_trace_my_account'  => 'trackTraceInAccount',
-                'barcode_in_note'         => 'barcodeInNote',
-                'barcode_in_note_title'   => 'barcodeInNoteTitle',
-                'export_automatic'        => 'processDirectly',
-                'export_automatic_status' => 'exportWithAutomaticStatus',
-                'automatic_order_status'  => 'orderStatusOnLabelCreate',
-            ],
-            self::ORDER    => [
-                'save_customer_address'      => 'saveCustomerAddress',
-                'empty_parcel_weight'        => 'emptyParcelWeight',
-                'empty_digital_stamp_weight' => 'emptyDigitalStampWeight',
-            ],
-            self::LABEL    => [
-                'label_description'      => 'description',
-                'label_format'           => 'format',
-                'download_display'       => 'output',
-                'ask_for_print_position' => 'prompt',
-            ],
-            self::CUSTOMS  => [
-                'package_contents'  => 'packageContents',
-                'hs_code'           => 'customsCode',
-                'country_of_origin' => 'countryOfOrigin',
-            ],
-            self::CHECKOUT => [
-                'use_split_address_fields'                => 'useSeparateAddressFields',
-                'delivery_options_enabled'                => 'enableDeliveryOptions',
-                'delivery_options_enabled_for_backorders' => 'enableDeliveryOptionsWhenNotInStock',
-                'header_delivery_options_title'           => 'deliveryOptionsHeader',
-                'delivery_options_display'                => 'deliveryOptionsDisplay',
-                'delivery_options_position'               => 'deliveryOptionsPosition',
-                'delivery_options_price_format'           => 'priceType',
-                'pickup_locations_default_view'           => 'pickupLocationsDefaultView',
-                'delivery_options_custom_css'             => 'deliveryOptionsCustomCss',
-            ],
-        ];
-    }
-
-    /**
-     * @param $needle
-     * @param $haystack
+     * @param  array $oldSettings
      *
-     * @return false|int|string
+     * @return array
      */
-    private function searchParentKey($needle, $haystack)
+    private function transformSettings(array $oldSettings): array
     {
-        foreach ($haystack as $key => $value) {
-            if ($needle === $value || (is_array($value) && $this->searchParentKey($needle, $value) !== false)) {
-                return $key;
+        $newSettings = [];
+
+        foreach ($this->getTransformationMap() as $item) {
+            if (! Arr::has($oldSettings, $item[self::TRANSFORM_KEY_SOURCE])) {
+                continue;
             }
+
+            $value    = Arr::get($oldSettings, $item[self::TRANSFORM_KEY_SOURCE]);
+            $newValue = $value;
+
+            if ($item[self::TRANSFORM_KEY_TRANSFORM] ?? false) {
+                $newValue = $item[self::TRANSFORM_KEY_TRANSFORM]($newValue);
+            }
+
+            if ($item[self::TRANSFORM_KEY_CAST] ?? false) {
+                $newValue = $this->castValue($item[self::TRANSFORM_KEY_CAST], $newValue);
+            }
+
+            Arr::set($newSettings, $item[self::TRANSFORM_KEY_TARGET], $newValue);
         }
 
-        return false;
+        return $newSettings;
     }
 }

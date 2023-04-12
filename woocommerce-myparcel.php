@@ -42,7 +42,7 @@ class MyParcelNL
         define('MYPARCELNL_WC_VERSION', $version);
 
         if (! defined('DOING_AJAX') && is_admin()) {
-            add_action('init', [$this, 'upgrade']);
+            add_action('init', [$this, 'migrate']);
         }
 
         add_action('init', [$this, 'initialize'], 9999);
@@ -68,12 +68,14 @@ class MyParcelNL
      * @return void
      * @throws \Exception
      */
-    public function upgrade(): void
+    public function migrate(): void
     {
         $appInfo = Pdk::getAppInfo();
 
-        $versionSetting   = 'woocommerce_myparcel_version';
-        $installedVersion = get_option($versionSetting) ?: '0';
+        $versionSetting = Pdk::get('settingKeyVersion');
+
+        // Get the version number from the database. If it doesn't exist, get the version number from the old setting.
+        $installedVersion = get_option($versionSetting) ?: get_option('woocommerce_myparcel_version') ?: '0';
 
         if (version_compare($installedVersion, $appInfo->version, '<')) {
             /** @var \MyParcelNL\WooCommerce\Migration\Migrator $migrator */
@@ -81,7 +83,6 @@ class MyParcelNL
 
             $migrator->migrate($installedVersion);
 
-            // new version number
             update_option($versionSetting, $appInfo->version);
         }
     }
@@ -91,8 +92,7 @@ class MyParcelNL
      */
     private function checkPrerequisites(): bool
     {
-        return $this->isWoocommerceActivated()
-            && $this->phpVersionMeets();
+        return $this->isWoocommerceActivated() && $this->phpVersionMeets();
     }
 
     /**

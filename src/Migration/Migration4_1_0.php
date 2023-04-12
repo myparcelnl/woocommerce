@@ -8,7 +8,7 @@ use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface;
 
-class Migration4_1_0 extends AbstractUpgradeMigration implements MigrationInterface
+final class Migration4_1_0 extends AbstractUpgradeMigration implements MigrationInterface
 {
     /**
      * @var array

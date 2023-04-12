@@ -6,7 +6,7 @@ namespace MyParcelNL\WooCommerce\Migration;
 
 use MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface;
 
-class Migration3_0_4 implements MigrationInterface
+final class Migration3_0_4 implements MigrationInterface
 {
     public function down(): void
     {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration;
 
-use MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface;
+use MyParcelNL\WooCommerce\Migration\Pdk\AbstractPdkMigration;
 use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
 use MyParcelNL\WooCommerce\Migration\Pdk\ProductSettingsMigration;
 use MyParcelNL\WooCommerce\Migration\Pdk\SettingsMigration;
@@ -12,27 +12,43 @@ use MyParcelNL\WooCommerce\Migration\Pdk\SettingsMigration;
 /**
  * The PDK upgrade.
  */
-class Migration5_0_0 implements MigrationInterface
+final class Migration5_0_0 extends AbstractPdkMigration
 {
-    public function down(): void
-    {
-        // todo: Implement down() method.
+    /**
+     * @var array<class-string<\MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface>>
+     */
+    private $migrations;
+
+    /**
+     * @param  \MyParcelNL\WooCommerce\Migration\Pdk\SettingsMigration        $settingsMigration
+     * @param  \MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration          $ordersMigration
+     * @param  \MyParcelNL\WooCommerce\Migration\Pdk\ProductSettingsMigration $productSettingsMigration
+     */
+    public function __construct(
+        SettingsMigration        $settingsMigration,
+        OrdersMigration          $ordersMigration,
+        ProductSettingsMigration $productSettingsMigration
+    ) {
+        $this->migrations = [
+            $settingsMigration,
+            $ordersMigration,
+            $productSettingsMigration,
+        ];
     }
 
-    public function getVersion(): string
+    public function down(): void
     {
-        return '5.0.0';
+        /** @var \MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface $migration */
+        foreach ($this->migrations as $migration) {
+            $migration->down();
+        }
     }
 
     public function up(): void
     {
-        $settingsMigration = new SettingsMigration();
-        $settingsMigration->up();
-
-        $ordersMigration = new OrdersMigration();
-        $ordersMigration->run();
-
-        $productSettingsMigration = new ProductSettingsMigration();
-        $productSettingsMigration->up();
+        /** @var \MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface $migration */
+        foreach ($this->migrations as $migration) {
+            $migration->up();
+        }
     }
 }

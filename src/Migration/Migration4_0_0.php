@@ -7,7 +7,7 @@ namespace MyParcelNL\WooCommerce\Migration;
 use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface;
 
-class Migration4_0_0 extends AbstractUpgradeMigration implements MigrationInterface
+final class Migration4_0_0 extends AbstractUpgradeMigration implements MigrationInterface
 {
     private const MAP_GENERAL                = [
         'email_tracktrace'     => 'track_trace_email',
