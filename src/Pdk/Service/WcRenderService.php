@@ -52,75 +52,21 @@ class WcRenderService extends RenderService
      * @param  \MyParcelNL\Pdk\Plugin\Model\PdkProduct $product
      *
      * @return string
-     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
      */
     public function renderProductSettings(PdkProduct $product): string
     {
         try {
             $appInfo = Pdk::getAppInfo();
+
             /** @var \MyParcelNL\Pdk\Frontend\Settings\View\ProductSettingsView $productSettingsView */
             $productSettingsView = Pdk::get(ProductSettingsView::class);
 
             ob_start();
 
-            $pluginName = $appInfo->name;
-
-            printf('<div id="%s" class="panel woocommerce_options_panel">', "{$pluginName}_product_data");
+            printf('<div id="%s" class="panel woocommerce_options_panel">', "{$appInfo->name}_product_data");
 
             foreach ($productSettingsView->getElements() ?? [] as $field) {
-                $method = null;
-                $key    = Str::snake(sprintf('%s_product_%s', $appInfo->name, $field['name'] ?? ''));
-
-                $params = [
-                    'id'                => $key,
-                    'value'             => get_post_meta(get_the_ID(), $key, true),
-                    'label'             => isset($field['label']) ? LanguageService::translate($field['label']) : null,
-                    'custom_attributes' => $field,
-                ];
-
-                switch ($field['$component']) {
-                    case Components::INPUT_TRISTATE:
-                        $method            = 'woocommerce_wp_select';
-                        $params['options'] = $this->getTristateOptions();
-                        break;
-
-                    case Components::INPUT_TOGGLE:
-                        $method            = 'woocommerce_wp_checkbox';
-                        $params['cbvalue'] = 1;
-                        break;
-
-                    case Components::INPUT_SELECT:
-                        $method            = 'woocommerce_wp_select';
-                        $params['options'] = $this->transformSelectOptions($field['options']);
-                        break;
-
-                    case Components::INPUT_NUMBER:
-                        $method         = 'woocommerce_wp_text_input';
-                        $params['type'] = 'number';
-                        break;
-
-                    case Components::SETTINGS_DIVIDER:
-                        echo sprintf(
-                            '<h2>%s</h2><p class="description">%s</p><hr />',
-                            LanguageService::translate($field['heading']),
-                            LanguageService::translate($field['content'])
-                        );
-                        break;
-
-                    default:
-                        $method = Str::snake(sprintf('woocommerce_wp%s', $field['$component']));
-                        break;
-                }
-
-                if ($method) {
-                    $descriptionKey = "{$field['label']}_description";
-
-                    if (LanguageService::hasTranslation($descriptionKey)) {
-                        $params['desc_tip'] = LanguageService::translate($descriptionKey);
-                    }
-
-                    $method($params);
-                }
+                $this->renderProductSettingsField($field);
             }
 
             echo '</div>';
@@ -147,6 +93,70 @@ class WcRenderService extends RenderService
             AbstractSettingsModel::TRISTATE_VALUE_DISABLED => LanguageService::translate('toggle_no'),
             AbstractSettingsModel::TRISTATE_VALUE_ENABLED  => LanguageService::translate('toggle_yes'),
         ];
+    }
+
+    /**
+     * @param  array $field
+     *
+     * @return void
+     */
+    private function renderProductSettingsField(array $field): void
+    {
+        $appInfo = Pdk::getAppInfo();
+
+        $method = null;
+        $key    = Str::snake(sprintf('%s_product_%s', $appInfo->name, $field['name'] ?? ''));
+
+        $params = [
+            'id'                => $key,
+            'value'             => get_post_meta(get_the_ID(), $key, true),
+            'label'             => isset($field['label']) ? LanguageService::translate($field['label']) : null,
+            'custom_attributes' => $field,
+        ];
+
+        switch ($field['$component']) {
+            case Components::INPUT_TRISTATE:
+                $method            = 'woocommerce_wp_select';
+                $params['options'] = $this->getTristateOptions();
+                break;
+
+            case Components::INPUT_TOGGLE:
+                $method            = 'woocommerce_wp_checkbox';
+                $params['cbvalue'] = 1;
+                break;
+
+            case Components::INPUT_SELECT:
+                $method            = 'woocommerce_wp_select';
+                $params['options'] = $this->transformSelectOptions($field['options']);
+                break;
+
+            case Components::INPUT_NUMBER:
+                $method         = 'woocommerce_wp_text_input';
+                $params['type'] = 'number';
+                break;
+
+            case Components::SETTINGS_DIVIDER:
+                echo sprintf(
+                    '<h2>%s</h2><p class="description">%s</p><hr />',
+                    LanguageService::translate($field['heading']),
+                    LanguageService::translate($field['content'])
+                );
+                break;
+
+            default:
+                $method = Str::snake(sprintf('woocommerce_wp%s', $field['$component']));
+                break;
+        }
+
+        if ($method) {
+            $descriptionKey = "{$field['label']}_description";
+
+            if (LanguageService::hasTranslation($descriptionKey)) {
+                $params['desc_tip'] = LanguageService::translate($descriptionKey);
+            }
+
+            $method($params);
+        }
     }
 
     /**
