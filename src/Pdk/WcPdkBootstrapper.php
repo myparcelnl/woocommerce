@@ -41,27 +41,48 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'urlDocumentation' => value('https://developer.myparcel.nl/nl/documentatie/10.woocommerce.html'),
             'urlReleaseNotes'  => value('https://github.com/myparcelnl/woocommerce/releases'),
 
-            'metaKeyOrderData'      => value('myparcelnl_order_data'),
-            'metaKeyShipments'      => value('myparcelnl_order_shipments'),
+            ###
+            # Meta Keys
+            ###
+
+            /**
+             * The meta key a PdkOrder's data is saved in.
+             *
+             * @see \MyParcelNL\Pdk\Plugin\Model\PdkOrder
+             */
+
+            'metaKeyOrderData' => value("{$name}_order_data"),
+
+            /**
+             * The meta key a PdkOrder's shipments are saved in.
+             *
+             * @see \MyParcelNL\Pdk\Shipment\Model\Shipment
+             * @see \MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection
+             */
+
+            'metaKeyShipments' => value("{$name}_order_shipments"),
+
+            /** Key set on a product if its settings have been migrated to 5.0.0. */
+
+            'metaKeyProductSettingsMigrated' => value("{$name}_product_migrated_pdk"),
 
             ###
             # Order grid
             ###
 
-            /**
-             * The name of our column in the order grid.
-             */
-            'orderGridColumnName'   => value($name),
+            /** The name of our column in the order grid. */
 
-            /**
-             * The name of the column we want to appear after.
-             */
+            'orderGridColumnName' => value($name),
+
+            /** The name of the column our column appears after.*/
+
             'orderGridColumnBefore' => value('shipping_address'),
 
             /**
              * Bulk order actions.
              */
-            'bulkActions'           => value([
+
+            'bulkActions' => value([
                 'action_print',
                 'action_export_print',
                 'action_export',
@@ -71,7 +92,8 @@ class WcPdkBootstrapper extends PdkBootstrapper
             /**
              * Bulk order actions in order mode.
              */
-            'bulkActionsOrderMode'  => value([
+
+            'bulkActionsOrderMode' => value([
                 'action_edit',
                 'action_export',
             ]),
@@ -93,15 +115,22 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'settingsPageTitle'     => value("$title WooCommerce"),
 
             /**
-             * Prefix of each setting saved to the database. Prefixed with an underscore to prevent it from being shown and edited in ACF.
+             * Prefix of each setting saved to the database. Prefixed with an underscore to prevent it from being shown
+             * and edited in ACF.
              */
-            'settingKeyPrefix'      => value("_{$name}_"),
+
+            'settingKeyPrefix' => value("_{$name}_"),
 
             /** Settings key where the installed version of the plugin is saved. */
-            'settingKeyVersion'     => value("_{$name}_version"),
+
+            'settingKeyVersion' => value("_{$name}_version"),
+
             /** Settings key where webhooks are saved */
-            'settingKeyWebhooks'    => value('webhooks'),
+
+            'settingKeyWebhooks' => value('webhooks'),
+
             /** Settings key where the hashed webhook url is saved */
+
             'settingKeyWebhookHash' => value('webhook_hash'),
 
             ###

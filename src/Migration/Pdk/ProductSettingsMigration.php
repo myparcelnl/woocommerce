@@ -11,9 +11,19 @@ use WC_Product;
 final class ProductSettingsMigration extends AbstractPdkMigration
 {
     private const OPTION_TRANSLATIONS = [
-        '_myparcel_hs_code'           => ['name' => 'customsCode'],
-        '_myparcel_country_of_origin' => ['name' => 'countryOfOrigin'],
-        '_myparcel_age_check'         => ['name' => 'exportAgeCheck', 'values' => ['no' => 0, 'yes' => 1]],
+        '_myparcel_hs_code'           => [
+            'name' => 'customsCode',
+        ],
+        '_myparcel_country_of_origin' => [
+            'name' => 'countryOfOrigin',
+        ],
+        '_myparcel_age_check'         => [
+            'name'   => 'exportAgeCheck',
+            'values' => [
+                'yes' => true,
+                'no'  => false,
+            ],
+        ],
     ];
     private const CHUNK_SIZE          = 10;
     private const SECONDS_APART       = 30;
@@ -27,24 +37,24 @@ final class ProductSettingsMigration extends AbstractPdkMigration
 
     public function migrateProductSettings(): void
     {
-        $wcProducts = wc_get_products([
+        $nonMigratedProducts = wc_get_products([
             'limit'        => self::CHUNK_SIZE,
-            'meta_key'     => 'myparcelnl_pdk_migrated',
+            'meta_key'     => Pdk::get('metaKeyProductSettingsMigrated'),
             'meta_compare' => 'NOT EXISTS',
         ]);
 
-        if (empty($wcProducts)) {
+        if (empty($nonMigratedProducts)) {
             return;
         }
 
         $this->scheduleNextRun();
-        $this->migrateTheseWcProducts($wcProducts);
+        $this->migrateTheseWcProducts($nonMigratedProducts);
     }
 
     public function up(): void
     {
         if (! function_exists('wc_get_products')) {
-            $this->warn('Could not find function wc_get_products.');
+            $this->warning('Could not find function wc_get_products.');
             return;
         }
 
@@ -62,25 +72,29 @@ final class ProductSettingsMigration extends AbstractPdkMigration
             }
 
             $metaData = $wcProduct->get_meta_data();
-            $metaAsKV = array_reduce($metaData, static function ($carry, $item) {
+
+            $metaKeysAndValues = array_reduce($metaData, static function ($carry, $item) {
                 $item = $item->get_data();
+
                 if (! isset($item['key'], $item['value'])) {
                     return $carry;
                 }
+
                 $carry[$item['key']] = $item['value'];
 
                 return $carry;
             }, []);
-            $product  = $productRepository->getProduct($wcProduct->get_id());
-            $changed  = false;
+
+            $product = $productRepository->getProduct($wcProduct->get_id());
+            $changed = false;
 
             foreach (self::OPTION_TRANSLATIONS as $oldKey => $setting) {
                 $settingName = $setting['name'];
 
-                if (isset($metaAsKV[$oldKey])) {
+                if (isset($metaKeysAndValues[$oldKey])) {
                     $value                             = isset($setting['values'])
-                        ? $setting['values'][$metaAsKV[$oldKey]] ?? null
-                        : $metaAsKV[$oldKey];
+                        ? $setting['values'][$metaKeysAndValues[$oldKey]] ?? null
+                        : $metaKeysAndValues[$oldKey];
                     $product->settings->{$settingName} = $value;
                     $changed                           = true;
                 }
@@ -94,7 +108,7 @@ final class ProductSettingsMigration extends AbstractPdkMigration
                 sprintf('Settings for product %s migrated %s', $wcProduct->get_id(), $changed ? '' : '(no data)')
             );
 
-            $wcProduct->update_meta_data('myparcelnl_pdk_migrated', true);
+            $wcProduct->update_meta_data(Pdk::get('metaKeyProductSettingsMigrated'), true);
             $wcProduct->save();
         }
     }
