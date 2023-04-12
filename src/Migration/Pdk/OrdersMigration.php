@@ -5,18 +5,58 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use DateTime;
-use Exception;
 use WC_Data;
 use WC_Order;
 
-class OrdersMigration
+final class OrdersMigration extends AbstractPdkMigration
 {
+    public function down(): void
+    {
+        /*
+         * Nothing to do here.
+         */
+    }
+
+    /**
+     * @param  array $data
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function migrateOrder(array $data): void
+    {
+        $orderIds  = $data['orderIds'] ?? [];
+        $chunk     = $data['chunk'] ?? null;
+        $lastChunk = $data['lastChunk'] ?? null;
+
+        $this->debug(
+            sprintf(
+                'Start migration for orders %d..%d (chunk %d/%d)',
+                $orderIds[0],
+                $orderIds[count($orderIds) - 1],
+                $chunk,
+                $lastChunk
+            )
+        );
+
+        foreach ($orderIds as $orderId) {
+            $wcOrder = wc_get_order($orderId);
+
+            $this->updatePdkOrder($wcOrder);
+            $this->migrateMetaKeys($wcOrder);
+
+            $this->debug("Order $orderId migrated.");
+        }
+    }
+
     /**
      * @return void
      */
-    public function run(): void
+    public function up(): void
     {
         if (! function_exists('wc_get_orders')) {
+            $this->warn('Could not find function wc_get_products.');
+
             return;
         }
 
@@ -33,47 +73,6 @@ class OrdersMigration
                     'lastChunk' => $lastChunk,
                 ],
             ]);
-        }
-    }
-
-    /**
-     * @param  array $data
-     *
-     * @return void
-     * @throws \Exception
-     */
-    public function migrateOrder(array $data): void
-    {
-        $orderIds  = $data['orderIds'] ?? [];
-        $chunk     = $data['chunk'] ?? null;
-        $lastChunk = $data['lastChunk'] ?? null;
-
-        $createTimestamp = static function () {
-            return (new DateTime())->format('Y-m-d H:i:s');
-        };
-
-        (wc_get_logger())->debug(
-            sprintf(
-                '[%s] Start migration for orders %d..%d (chunk %d/%d)',
-                $createTimestamp(),
-                $orderIds[0],
-                $orderIds[count($orderIds) - 1],
-                $chunk,
-                $lastChunk
-            ) . PHP_EOL,
-            ['source' => 'wc-myparcel']
-        );
-
-        foreach ($orderIds as $orderId) {
-            $wcOrder = wc_get_order($orderId);
-
-            $this->updatePdkOrder($wcOrder);
-            $this->migrateMetaKeys($wcOrder);
-
-            (wc_get_logger())->debug(
-                sprintf('[%s] Order %s migrated', $createTimestamp(), $orderId) . PHP_EOL,
-                ['source' => 'wc-myparcel']
-            );
         }
     }
 
@@ -184,8 +183,7 @@ class OrdersMigration
         foreach ($shipmentMeta as $shipmentObject) {
             $shipment = $shipmentObject['shipment'];
 
-            $shipmentCollection[] = (
-            $shipment ? [
+            $shipmentCollection[] = $shipment ? [
                 'id'                       => $shipment['id'] ?? null,
                 'parentId'                 => $shipment['parent_id'] ?? null,
                 'shopId'                   => $shipment['shop_id'] ?? null,
@@ -308,27 +306,21 @@ class OrdersMigration
                 'createdBy'                => $shipment['created_by'] ?? null,
                 'modified'                 => $shipment['modified'] ?? null,
                 'modifiedBy'               => $shipment['modified_by'] ?? null,
-            ] : null
-            );
+            ] : null;
         }
 
         return $shipmentCollection;
     }
 
     /**
-     * Gets an object's stored meta value.
-     *
-     * @param  WC_Data $object  the data object, likely \WC_Order or \WC_Product
-     * @param  string  $key     the meta key
-     * @param  bool    $single  whether to get the meta as a single item. Defaults to `true`
-     * @param  string  $context if 'view' then the value will be filtered
+     * @param  WC_Data $object
+     * @param  string  $key
      *
      * @return mixed
-     * @since 4.6.0-dev
      */
-    private function get_meta(WC_Data $object, string $key = '', bool $single = true, string $context = 'edit')
+    private function get_meta(WC_Data $object, string $key = '')
     {
-        $value = $object->get_meta($key, $single, $context);
+        $value = $object->get_meta($key, true, 'edit');
 
         if (is_string($value)) {
             $decoded = json_decode($value, true);

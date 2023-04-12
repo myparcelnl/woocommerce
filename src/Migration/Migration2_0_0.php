@@ -9,7 +9,7 @@ use MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface;
 /**
  * Migrates pre v2.0 settings. Pre-2.0.0 did not store a version number.
  */
-class Migration2_0_0 implements MigrationInterface
+final class Migration2_0_0 implements MigrationInterface
 {
     public function down(): void
     {

@@ -9,7 +9,7 @@ use MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface;
 /**
  * - remove log file (now uses WC logger)
  */
-class Migration2_4_0_beta_4 implements MigrationInterface
+final class Migration2_4_0_beta_4 implements MigrationInterface
 {
     public function down(): void
     {

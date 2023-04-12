@@ -97,6 +97,8 @@ class WcPdkBootstrapper extends PdkBootstrapper
              */
             'settingKeyPrefix'      => value("_{$name}_"),
 
+            /** Settings key where the installed version of the plugin is saved. */
+            'settingKeyVersion'     => value("_{$name}_version"),
             /** Settings key where webhooks are saved */
             'settingKeyWebhooks'    => value('webhooks'),
             /** Settings key where the hashed webhook url is saved */

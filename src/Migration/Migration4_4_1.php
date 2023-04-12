@@ -11,7 +11,7 @@ use MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface;
  *  - move show delivery day setting from checkout to general
  *  - add per carrier feature allow show delivery date, set to on when delivery days window > 0, else off
  */
-class Migration4_4_1 extends AbstractUpgradeMigration implements MigrationInterface
+final class Migration4_4_1 extends AbstractUpgradeMigration implements MigrationInterface
 {
     /**
      * @var array

@@ -17,6 +17,12 @@
       "MyParcelNL\\WooCommerce\\": "src"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "MyParcelNL\\WooCommerce\\Tests\\": "tests",
+      "MyParcelNL\\Pdk\\Tests\\": "vendor/myparcelnl/pdk/tests"
+    }
+  },
   "config": {
     "prepend-autoloader": false,
     "allow-plugins": {

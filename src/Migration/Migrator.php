@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration;
 
-class Migrator
+use MyParcelNL\Pdk\Facade\Pdk;
+
+final class Migrator
 {
     /**
      * @param  string $version
@@ -13,29 +15,32 @@ class Migrator
      */
     public function migrate(string $version): void
     {
-        $migrations = $this->getMigrations();
+        foreach ($this->getMigrations() as $migrationClass) {
+            /** @var \MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface $instance */
+            $instance = Pdk::get($migrationClass);
 
-        foreach ($migrations as $migration) {
-            if (version_compare($migration->getVersion(), $version, '>')) {
-                $migration->up();
+            if (! version_compare($instance->getVersion(), $version, '>')) {
+                continue;
             }
+
+            $instance->up();
         }
     }
 
     /**
-     * @return array
+     * @return array<class-string<\MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface>>
      */
     protected function getMigrations(): array
     {
         return [
-            new Migration2_0_0(),
-            new Migration2_4_0_beta_4(),
-            new Migration3_0_4(),
-            new Migration4_0_0(),
-            new Migration4_1_0(),
-            new Migration4_2_1(),
-            new Migration4_4_1(),
-            new Migration5_0_0(),
+            Migration2_0_0::class,
+            Migration2_4_0_beta_4::class,
+            Migration3_0_4::class,
+            Migration4_0_0::class,
+            Migration4_1_0::class,
+            Migration4_2_1::class,
+            Migration4_4_1::class,
+            Migration5_0_0::class,
         ];
     }
 }
