@@ -15,6 +15,7 @@ use MyParcelNL\Pdk\Plugin\Context;
 use MyParcelNL\Pdk\Plugin\Model\PdkCart;
 use MyParcelNL\Pdk\Plugin\Model\PdkProduct;
 use MyParcelNL\Pdk\Plugin\Service\RenderService;
+use MyParcelNL\Pdk\Settings\Model\AbstractSettingsModel;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\Sdk\src\Support\Str;
 use Throwable;
@@ -66,38 +67,44 @@ class WcRenderService extends RenderService
 
             printf('<div id="%s" class="panel woocommerce_options_panel">', "{$pluginName}_product_data");
 
-            foreach ($productSettingsView->toArray()['elements'] as $field) {
-                $key = Str::snake(sprintf('%s_product_%s', $appInfo->name, $field['name']));
+            foreach ($productSettingsView->getElements() ?? [] as $field) {
+                $method = null;
+                $key    = Str::snake(sprintf('%s_product_%s', $appInfo->name, $field['name'] ?? ''));
 
-                $options = [
-                    'id'    => $key,
-                    'value' => get_post_meta(get_the_ID(), $key, true),
-                    'label' => LanguageService::translate($field['label']),
+                $params = [
+                    'id'                => $key,
+                    'value'             => get_post_meta(get_the_ID(), $key, true),
+                    'label'             => isset($field['label']) ? LanguageService::translate($field['label']) : null,
+                    'custom_attributes' => $field,
                 ];
 
                 switch ($field['$component']) {
                     case Components::INPUT_TRISTATE:
-                        $method             = 'woocommerce_wp_select';
-                        $options['options'] = [
-                            -1 => 'option_default',
-                            0  => 'option_no',
-                            1  => 'option_yes',
-                        ];
+                        $method            = 'woocommerce_wp_select';
+                        $params['options'] = $this->getTristateOptions();
                         break;
 
                     case Components::INPUT_TOGGLE:
-                        $method             = 'woocommerce_wp_checkbox';
-                        $options['cbvalue'] = 1;
+                        $method            = 'woocommerce_wp_checkbox';
+                        $params['cbvalue'] = 1;
                         break;
 
                     case Components::INPUT_SELECT:
-                        $method             = 'woocommerce_wp_select';
-                        $options['options'] = $this->transformSelectOptions($field['options']);
+                        $method            = 'woocommerce_wp_select';
+                        $params['options'] = $this->transformSelectOptions($field['options']);
                         break;
 
                     case Components::INPUT_NUMBER:
-                        $method          = 'woocommerce_wp_text_input';
-                        $options['type'] = 'number';
+                        $method         = 'woocommerce_wp_text_input';
+                        $params['type'] = 'number';
+                        break;
+
+                    case Components::SETTINGS_DIVIDER:
+                        echo sprintf(
+                            '<h2>%s</h2><p class="description">%s</p><hr />',
+                            LanguageService::translate($field['heading']),
+                            LanguageService::translate($field['content'])
+                        );
                         break;
 
                     default:
@@ -105,11 +112,15 @@ class WcRenderService extends RenderService
                         break;
                 }
 
-                if (isset($field['description']) && LanguageService::hasTranslation($field['description'])) {
-                    $options['description'] = LanguageService::translate($field['description']);
-                }
+                if ($method) {
+                    $descriptionKey = "{$field['label']}_description";
 
-                $method($options);
+                    if (LanguageService::hasTranslation($descriptionKey)) {
+                        $params['desc_tip'] = LanguageService::translate($descriptionKey);
+                    }
+
+                    $method($params);
+                }
             }
 
             echo '</div>';
@@ -119,10 +130,23 @@ class WcRenderService extends RenderService
             DefaultLogger::error('Failed to render component', [
                 'component' => self::COMPONENT_PRODUCT_SETTINGS,
                 'exception' => $e->getMessage(),
+                'trace'     => $e->getTraceAsString(),
             ]);
 
             return '';
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function getTristateOptions(): array
+    {
+        return [
+            AbstractSettingsModel::TRISTATE_VALUE_DEFAULT  => LanguageService::translate('toggle_default'),
+            AbstractSettingsModel::TRISTATE_VALUE_DISABLED => LanguageService::translate('toggle_no'),
+            AbstractSettingsModel::TRISTATE_VALUE_ENABLED  => LanguageService::translate('toggle_yes'),
+        ];
     }
 
     /**
@@ -135,7 +159,7 @@ class WcRenderService extends RenderService
         $flattenedArray  = array_column($options, 'label', 'value');
         $translatedArray = LanguageService::translateArray($flattenedArray);
 
-        asort($translatedArray,SORT_NATURAL);
+        asort($translatedArray, SORT_NATURAL);
 
         $noneOption = $translatedArray[AbstractSettingsView::OPTIONS_VALUE_NONE] ?? null;
 
