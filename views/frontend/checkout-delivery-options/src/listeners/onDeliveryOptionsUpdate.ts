@@ -11,8 +11,10 @@ export const onDeliveryOptionsUpdate: EventListener = (event): void => {
   const checkout = useCheckoutStore();
 
   if (checkout.state.hiddenInput && isOfType<CustomEvent>(event, 'detail')) {
-    checkout.state.hiddenInput.value = JSON.stringify(event.detail);
+    const htmlInput = checkout.state.hiddenInput;
+    htmlInput.value = JSON.stringify(event.detail);
+    checkout.set({
+      hiddenInput: htmlInput,
+    });
   }
-
-  jQuery(document.body).trigger(EVENT_WOOCOMMERCE_UPDATE_CHECKOUT);
 };

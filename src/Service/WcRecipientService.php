@@ -9,8 +9,10 @@ use WC_Order;
 
 class WcRecipientService
 {
-    public const BILLING  = 'billing';
-    public const SHIPPING = 'shipping';
+    public const BILLING       = 'billing';
+    public const SHIPPING      = 'shipping';
+    public const SHIPPING_EORI = '_shipping_eori';
+    public const SHIPPING_VAT  = '_shipping_vat';
 
     /**
      * @var \MyParcelNL\Pdk\Base\Service\CountryService
@@ -39,11 +41,13 @@ class WcRecipientService
                 'cc'          => $order->{"get_{$type}_country"}(),
                 'city'        => $order->{"get_{$type}_city"}(),
                 'company'     => $order->{"get_{$type}_company"}(),
+                'eoriNumber'  => $order->get_meta(self::SHIPPING_EORI),
                 'postal_code' => $order->{"get_{$type}_postcode"}(),
                 'region'      => $order->{"get_{$type}_state"}(),
                 'person'      => $this->getPersonFromOrder($order, $type),
                 'email'       => $order->get_billing_email(),
                 'phone'       => $order->get_billing_phone(),
+                'vatNumber'   => $order->get_meta(self::SHIPPING_VAT),
             ] + $this->getAddressFromOrder($order, $type);
     }
 
