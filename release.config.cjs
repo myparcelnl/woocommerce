@@ -28,7 +28,7 @@ module.exports = {
     addChangelogPlugin(),
     '@myparcel/semantic-release-wordpress-readme-generator',
     addExecPlugin({
-      prepareCmd: 'node ./private/updateVersion.cjs ${nextRelease.version} && yarn bundle',
+      prepareCmd: 'node ./private/updateVersion.cjs ${nextRelease.version} && yarn build',
     }),
     addGitHubPlugin({
       assets: [
