@@ -23,8 +23,8 @@
     "@babel/core": "^7.13.10",
     "@babel/preset-env": "^7.13.10",
     "@myparcel/eslint-config": "^3.0.2",
-    "@myparcel/semantic-release-config": "^4.2.1",
-    "@myparcel/semantic-release-wordpress-readme-generator": "^1.1.0",
+    "@myparcel/semantic-release-config": "^5.0.0",
+    "@myparcel/semantic-release-wordpress-readme-generator": "^1.2.0",
     "@types/papaparse": "^5.2.5",
     "autoprefixer": "^10.2.5",
     "babelify": "^10.0.0",
@@ -48,6 +48,9 @@
     "postcss": "^8.2.10",
     "sass": "^1.43.2",
     "vinyl-buffer": "^1.0.1"
+  },
+  "resolutions": {
+    "@semantic-release/release-notes-generator": "npm:@myparcel/semantic-release-release-notes-generator@^10.1.0"
   },
   "packageManager": "yarn@3.3.0"
 }

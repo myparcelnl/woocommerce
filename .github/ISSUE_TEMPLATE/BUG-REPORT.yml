@@ -1,13 +1,13 @@
 name: 'Bug report'
 description: 'Report a bug to help us fix it.'
-labels: [ 'bug' ]
+labels: ['bug']
 
 body:
   - type: markdown
     attributes:
       value: |
         Thanks for taking the time to fill out this form! We will respond as fast as we can. Don't forget to check
-        whether your issue might be a duplicate of an existing one before submitting.
+        whether your issue might be a [duplicate of an existing one](https://github.com/myparcelnl/woocommerce/issues) before submitting.
 
   - type: input
     id: version

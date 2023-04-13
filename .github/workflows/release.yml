@@ -10,8 +10,8 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: release
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   release:
@@ -126,5 +126,6 @@ jobs:
       - uses: peter-evans/rebase@v2
         with:
           token: ${{ steps.credentials.outputs.token }}
+          base: ${{ github.ref_name }}
           exclude-drafts: true
           exclude-labels: 'hotfix'
