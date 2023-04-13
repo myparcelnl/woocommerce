@@ -1594,6 +1594,7 @@ __metadata:
     papaparse: ^5.3.0
     postcss: ^8.2.10
     sass: ^1.43.2
+    semantic-release: ^21.0.1
     vinyl-buffer: ^1.0.1
   languageName: unknown
   linkType: soft
@@ -11363,7 +11364,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semantic-release@npm:^21.0.0":
+"semantic-release@npm:^21.0.0, semantic-release@npm:^21.0.1":
   version: 21.0.1
   resolution: "semantic-release@npm:21.0.1"
   dependencies:
