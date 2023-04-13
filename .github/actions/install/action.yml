@@ -1,0 +1,26 @@
+name: 'Install'
+description: 'Install dependencies using cache'
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/cache@v3
+      id: cache
+      with:
+        path: |
+          node_modules
+          vendor
+        key: ${{ runner.os }}-cache-${{ hashFiles('**/yarn.lock', '**/composer.lock') }}-${{ hashFiles('**/*.php', 'includes/**', 'src/**', 'templates/**','migration/**') }}
+        restore-keys: |
+          ${{ runner.os }}-cache-${{ hashFiles('**/yarn.lock', '**/composer.lock') }}
+          ${{ runner.os }}-cache
+
+    - uses: myparcelnl/actions/composer-install@v3
+      if: steps.cache.outputs.cache-hit != 'true'
+      with:
+        php-version: ${{ env.PHP_VERSION }}
+
+    - uses: myparcelnl/actions/yarn-install@v3
+      if: steps.cache.outputs.cache-hit != 'true'
+      with:
+        node-version: ${{ env.NODE_VERSION }}

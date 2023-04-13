@@ -13,6 +13,10 @@ concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  PHP_VERSION: ${{ github.ref_name == 'alpha' && '7.4' || '7.1' }}
+  NODE_VERSION: 18
+
 jobs:
   release:
     name: 'Build and publish 🚀'
@@ -20,9 +24,6 @@ jobs:
     outputs:
       released: ${{ steps.release.outputs.released }}
       version: ${{ steps.release.outputs.version }}
-    env:
-      PHP_VERSION: ${{ github.ref_name == 'alpha' && '7.4' || '7.1' }}
-      NODE_VERSION: 18
     steps:
       - uses: myparcelnl/actions/setup-git-credentials@v3
         id: credentials
@@ -35,40 +36,13 @@ jobs:
           fetch-depth: 0
           token: ${{ steps.credentials.outputs.token }}
 
-      - uses: actions/cache@v3
-        id: cache
-        with:
-          path: |
-            node_modules
-            vendor
-            woocommerce-myparcel.zip
-          key: ${{ runner.os }}-cache-${{ hashFiles('**/yarn.lock', '**/composer.lock') }}-${{ hashFiles('**/*.php', 'includes/**', 'src/**', 'templates/**','migration/**') }}
-          restore-keys: |
-            ${{ runner.os }}-cache-${{ hashFiles('**/yarn.lock', '**/composer.lock') }}
-            ${{ runner.os }}-cache
-
-      - uses: myparcelnl/actions/composer-install@v3
-        if: steps.cache.outputs.cache-hit != 'true'
-        with:
-          php-version: ${{ env.PHP_VERSION }}
-
-      - uses: myparcelnl/actions/yarn-install@v3
-        if: steps.cache.outputs.cache-hit != 'true'
-        with:
-          node-version: ${{ env.NODE_VERSION }}
+      - uses: ./.github/actions/install
 
       - uses: myparcelnl/actions/semantic-release@v3
         id: release
         with:
           token: ${{ steps.credentials.outputs.token }}
           write-summary: true
-
-      - name: 'Upload composer artifact'
-        if: steps.release.outputs.released == 'true'
-        uses: actions/upload-artifact@v3
-        with:
-          name: composer
-          path: vendor
 
   deploy-svn:
     needs: release
@@ -80,11 +54,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: 'Download composer artifact'
-        uses: actions/download-artifact@v3
-        with:
-          name: composer
-          path: vendor
+      - uses: ./.github/actions/install
 
       - name: 'Create dist folder'
         run: |
