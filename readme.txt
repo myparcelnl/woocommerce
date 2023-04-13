@@ -3,7 +3,7 @@ Contributors: richardperdaan, edielemoine, joerimyparcel
 Tags: woocommerce, export, delivery, packages, myparcel, flespakket, postnl
 Requires at least: 5.2.0
 Tested up to: 6.2
-Stable tag: 4.19.1
+Stable tag: 5.0.0-alpha.1
 Requires PHP: 7.1
 License: MIT
 License URI: http://www.opensource.org/licenses/mit-license.php
@@ -102,6 +102,47 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 6. MyParcel pickup delivery options
 
 == Changelog ==
+
+= 5.0.0-alpha.1 (2023-04-13) =
+
+* New: retrieve shipping methods
+* New: improve settings views
+* New: make select2 component work properly
+* New: add links to plugin meta
+* New: improve radio component
+* New: add text area and code editor component
+* New: prepend order note with text from settings
+* New: add bulk actions
+* New: add dhleuroplus and dhlparcelconnect
+* New: rebuild entire plugin with pdk
+* Fixed bug: improve migration logic
+* Fixed bug: add multi select input
+* Fixed bug: fix error on getting pdk frontend routes
+* Fixed bug: show notices through all_admin_notices hook
+* Fixed bug: fix imports
+* Fixed bug: update form group
+* Fixed bug: initialize tooltips properly
+* Fixed bug: ensure numeric values at physical properties
+* Fixed bug: use correct option for automatic export
+* Fixed bug: set physical properties on pdkorder
+* Fixed bug: change shipment label row transition
+* Fixed bug: update guzzle adapter
+* Fixed bug: increase order list column width
+* Fixed bug: save shipment even when updated is not null
+* Fixed bug: disable selectwoo for now because it won't work
+* Fixed bug: improve select inputs
+* Fixed bug: wrap pdk admin init in window.onload
+* Fixed bug: fix naming error in bulk actions order mode
+* Fixed bug: render settings page
+* Fixed bug: update button style
+* Fixed bug: update frontend routes
+* Fixed bug: implement bootstrapper
+* Fixed bug: fix number error on "add order" page
+* Fixed bug: fix modal actions
+* Fixed bug: update product settings
+* Fixed bug: update components
+* Fixed bug: fix select boxes duplicating and options not being preselected
+* Fixed bug: improve components
 
 = 4.19.1 (2023-04-13) =
 
