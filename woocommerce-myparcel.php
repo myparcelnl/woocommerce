@@ -83,8 +83,6 @@ if (! class_exists('WCMYPA')) :
          */
         public function __construct()
         {
-            $this->fixAddressInPost();
-
             $this->version         = $this->getVersion();
             $this->define('WC_MYPARCEL_NL_VERSION', $this->version);
             $this->plugin_basename = plugin_basename(__FILE__);
@@ -96,22 +94,6 @@ if (! class_exists('WCMYPA')) :
             // run lifecycle methods
             if (is_admin() && ! defined('DOING_AJAX')) {
                 add_action('init', [$this, 'do_install']);
-            }
-        }
-
-        private function fixAddressInPost(): void
-        {
-            foreach (['billing', 'shipping'] as $type) {
-                if (isset($_POST["{$type}_address_1"], $_POST["{$type}_street_name"])
-                    && '' === $_POST["{$type}_address_1"]) {
-                    $_POST["{$type}_address_1"] = trim(
-                        $_POST["{$type}_street_name"]
-                        . ' '
-                        . ($_POST["{$type}_house_number"] ?? '')
-                        . ' '
-                        . ($_POST["{$type}_house_number_suffix"] ?? '')
-                    );
-                }
             }
         }
 
