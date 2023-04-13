@@ -1,5 +1,5 @@
-import {EVENT_WOOCOMMERCE_UPDATE_CHECKOUT, useCheckoutStore} from '@myparcel-woocommerce/frontend-common';
 import {isOfType} from '@myparcel/ts-utils';
+import {useCheckoutStore} from '@myparcel-woocommerce/frontend-common';
 
 /**
  * When the delivery options are updated, fill the hidden input with the new data and trigger the WooCommerce
