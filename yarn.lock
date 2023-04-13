@@ -661,8 +661,8 @@ __metadata:
   linkType: hard
 
 "@myparcel-pdk/app-builder@npm:^1.0.0-alpha.9":
-  version: 1.0.0-alpha.16
-  resolution: "@myparcel-pdk/app-builder@npm:1.0.0-alpha.16"
+  version: 1.0.0-alpha.17
+  resolution: "@myparcel-pdk/app-builder@npm:1.0.0-alpha.17"
   dependencies:
     archiver: ^5.3.1
     chalk: ^5.2.0
@@ -674,7 +674,7 @@ __metadata:
     supports-color: ^9.3.1
   bin:
     pdk-builder: ./bin/index.js
-  checksum: 7b67b5aea49b24a9424e2e1abbf2a4e5d04e213d0abfd9e7ca257505c10a09140d7985ed7e6e76fb1b1ac887b70c5bc3e47c616201ca316e00413dff740aed48
+  checksum: 6c83aca439d8407abdde9c6d45743d72194256ca62d87486d8b39929be0f91f43b6c9cebd5a6a38b3830d31cd91c7b1e0c93aad002329b4b8f6a9891e8e5667e
   languageName: node
   linkType: hard
 
