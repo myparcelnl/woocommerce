@@ -32,16 +32,19 @@ module.exports = {
     }),
     addGitHubPlugin({
       assets: [
-        {path: './woocommerce-myparcel.zip', label: 'Download MyParcel plugin v${nextRelease.version}'},
+        {
+          path: './dist/myparcelnl-*.zip',
+          label: 'Download MyParcelNL WooCommerce v${nextRelease.version} (for myparcel.nl customers)',
+        },
+        {
+          path: './dist/myparcelbe-*.zip',
+          label: 'Download MyParcelBE WooCommerce v${nextRelease.version} (for sendmyparcel.be customers)',
+        },
       ],
     }),
     addGitPlugin({
       ...gitPluginDefaults,
-      assets: [
-        ...gitPluginDefaults.assets,
-        'woocommerce-myparcel.php',
-        'readme.txt',
-      ],
+      assets: [...gitPluginDefaults.assets, 'woocommerce-myparcel.php', 'readme.txt'],
     }),
   ],
 };
