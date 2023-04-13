@@ -20,6 +20,9 @@ jobs:
     outputs:
       released: ${{ steps.release.outputs.released }}
       version: ${{ steps.release.outputs.version }}
+    env:
+      PHP_VERSION: ${{ github.ref_name == 'alpha' && '7.4' || '7.1' }}
+      NODE_VERSION: ${{ github.ref_name == 'alpha' && '18' || '16' }}
     steps:
       - uses: myparcelnl/actions/setup-git-credentials@v3
         id: credentials
@@ -47,12 +50,12 @@ jobs:
       - uses: myparcelnl/actions/composer-install@v3
         if: steps.cache.outputs.cache-hit != 'true'
         with:
-          php-version: '7.1'
+          php-version: ${{ env.PHP_VERSION }}
 
       - uses: myparcelnl/actions/yarn-install@v3
         if: steps.cache.outputs.cache-hit != 'true'
         with:
-          node-version: '16'
+          node-version: ${{ env.NODE_VERSION }}
 
       - uses: myparcelnl/actions/semantic-release@v3
         id: release
