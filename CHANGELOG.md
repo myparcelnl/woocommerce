@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.19.1](https://github.com/myparcelnl/woocommerce/compare/v4.19.0...v4.19.1) (2023-04-13)
+
+
+### :bug: Bug Fixes
+
+* fix billing address is required error in checkout ([#970](https://github.com/myparcelnl/woocommerce/issues/970)) ([34aeff6](https://github.com/myparcelnl/woocommerce/commit/34aeff604e544724d1bec63d6f7064e8b196c65c))
+
 ## [4.19.0](https://github.com/myparcelnl/woocommerce/compare/v4.18.8...v4.19.0) (2023-04-11)
 
 
