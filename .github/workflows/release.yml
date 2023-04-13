@@ -100,3 +100,21 @@ jobs:
           base: ${{ github.ref_name }}
           exclude-drafts: true
           exclude-labels: 'hotfix'
+
+  prune-releases:
+    needs: release
+    if: github.ref == 'refs/heads/alpha' && needs.release.outputs.released == 'true'
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: myparcelnl/actions/setup-app-credentials@v3
+        id: credentials
+        with:
+          app-id: ${{ secrets.MYPARCEL_APP_ID }}
+          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
+
+      - uses: dev-drprasad/delete-older-releases@v0.2
+        with:
+          keep_latest: 1
+          delete_tag_pattern: alpha
+        env:
+          GITHUB_TOKEN: ${{ steps.credentials.outputs.token }}
