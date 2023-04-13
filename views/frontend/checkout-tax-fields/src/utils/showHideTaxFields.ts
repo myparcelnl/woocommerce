@@ -1,10 +1,14 @@
-import {AddressType} from '@myparcel-woocommerce/frontend-common';
-import {useCheckoutStore} from '@myparcel-woocommerce/frontend-common';
+import {AddressType, useCheckoutStore} from '@myparcel-woocommerce/frontend-common';
+import {EU_COUNTRIES} from './countries';
 import {usesAddressType} from '@myparcel-woocommerce/frontend-common/src/address/usesAddressType';
 
-export const showHideTaxFields = (carrier: string | null): void => {
-  const eoriCountries = ['FR'];
-  const vatCountries = ['FR', 'DE'];
+export const showHideTaxFields = (): void => {
+  const store = useCheckoutStore();
+  const hiddenInput = store.state.hiddenInput?.value;
+  const carrier = hiddenInput ? JSON.parse(hiddenInput)?.carrier : null;
+  const eoriCountries = ['NL'];
+  const nonVatCountries = EU_COUNTRIES;
+  // const nonVatCountries = ['NL'];
   const $ = jQuery;
   const checkout = useCheckoutStore();
   let country = checkout.state.form.billing_country ?? 'NL';
@@ -17,8 +21,6 @@ export const showHideTaxFields = (carrier: string | null): void => {
     $('#billing_vat_field').hide();
   }
 
-  console.warn(activeAddressType, carrier);
-
   if (carrier === 'dhleuroplus') {
     if (eoriCountries.includes(country)) {
       $(`#${activeAddressType}_eori_field`).show();
@@ -26,10 +28,10 @@ export const showHideTaxFields = (carrier: string | null): void => {
       $(`#${activeAddressType}_eori_field`).hide();
     }
 
-    if (vatCountries.includes(country)) {
-      $(`#${activeAddressType}_vat_field`).show();
-    } else {
+    if (nonVatCountries.includes(country)) {
       $(`#${activeAddressType}_vat_field`).hide();
+    } else {
+      $(`#${activeAddressType}_vat_field`).show();
     }
   } else {
     $(`#${activeAddressType}_eori_field`).hide();
