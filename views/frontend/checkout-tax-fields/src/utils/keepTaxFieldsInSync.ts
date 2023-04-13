@@ -2,12 +2,12 @@ import {AddressType} from '@myparcel-woocommerce/frontend-common';
 
 export const keepTaxFieldsInSync = (): void => {
   const addressTypes = [AddressType.BILLING, AddressType.SHIPPING];
-  const activate = (addressType: string, fieldtype: string) => {
-    const field = document.getElementById(`${addressType}_${fieldtype}`) as HTMLInputElement;
+  const activate = (addressType: string, fieldType: string) => {
+    const field = document.getElementById(`${addressType}_${fieldType}`) as HTMLInputElement;
     field?.addEventListener('keyup', () => {
-      const thisAddressType = addressType === AddressType.BILLING ? AddressType.SHIPPING : AddressType.BILLING; // TODO
-      const thisField = document.getElementById(`${thisAddressType}_${fieldtype}`) as HTMLInputElement;
-      thisField.value = field.value;
+      const otherAddressType = addressType === AddressType.BILLING ? AddressType.SHIPPING : AddressType.BILLING;
+      const otherField = document.getElementById(`${otherAddressType}_${fieldType}`) as HTMLInputElement;
+      otherField.value = field.value;
     });
   };
 
