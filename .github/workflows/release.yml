@@ -61,6 +61,7 @@ jobs:
         id: release
         with:
           token: ${{ steps.credentials.outputs.token }}
+          write-summary: true
 
       - name: 'Upload composer artifact'
         if: steps.release.outputs.released == 'true'
