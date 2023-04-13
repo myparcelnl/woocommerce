@@ -8,4 +8,4 @@ function createCopyTask(gulp) {
     .pipe(gulp.dest('assets'));
 }
 
-module.exports = { createCopyTask };
+module.exports = {createCopyTask};

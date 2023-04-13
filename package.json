@@ -3,8 +3,8 @@
   "private": true,
   "version": "4.19.0",
   "scripts": {
-    "build": "gulp",
-    "serve": "gulp watch"
+    "build": "gulp -f gulpfile.cjs",
+    "serve": "gulp -f gulpfile.cjs watch"
   },
   "repository": {
     "type": "git",

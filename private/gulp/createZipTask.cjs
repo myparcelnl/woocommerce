@@ -11,9 +11,9 @@ function createZipTask(gulp, plugins) {
     'composer.json',
     'woocommerce-myparcel.php',
     'wpm-config.json',
-  ], { base: '.' })
+  ], {base: '.'})
     .pipe(plugins.zip('woocommerce-myparcel.zip'))
     .pipe(gulp.dest('./'));
 }
 
-module.exports = { createZipTask };
+module.exports = {createZipTask};

@@ -1,7 +1,7 @@
 /**
  * @param {Date} date
  *
- * @returns {String}
+ * @returns {string}
  */
 function createTimestamp(date = new Date()) {
   const day = `0${date.getDate()}`.slice(-2);

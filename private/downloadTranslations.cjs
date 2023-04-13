@@ -1,4 +1,4 @@
-const {createGettextFiles} = require('./createGettextFiles');
+const {createGettextFiles} = require('./createGettextFiles.cjs');
 const download = require('download');
 
 /**

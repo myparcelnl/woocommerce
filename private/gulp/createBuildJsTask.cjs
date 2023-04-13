@@ -3,7 +3,7 @@ function createBuildJsTask(gulp, plugins) {
   const browserify = require('browserify');
   const buffer = require('vinyl-buffer');
 
-  return () => gulp.src('src/js/**/*.js', { read: false })
+  return () => gulp.src('src/js/**/*.js', {read: false})
     .pipe(plugins.tap((file) => {
       file.contents = browserify(file.path)
         .transform(babelify)
@@ -16,4 +16,4 @@ function createBuildJsTask(gulp, plugins) {
     .pipe(gulp.dest('assets/js'));
 }
 
-module.exports = { createBuildJsTask };
+module.exports = {createBuildJsTask};

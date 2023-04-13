@@ -19,12 +19,17 @@
   "overrides": [
     {
       "files": [
+        "./*.cjs",
         "./*.js",
+        "./private/**/*.cjs",
         "./private/**/*.js"
       ],
       "env": {
         "browser": false,
         "node": true
+      },
+      "rules": {
+        "jsdoc/require-jsdoc": "off"
       }
     }
   ]

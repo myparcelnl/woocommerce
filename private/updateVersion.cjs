@@ -34,6 +34,6 @@ const rootDir = path.resolve(__dirname, '..');
       break;
   }
 
-  fs.writeFileSync(filePath, contentsAsString.trim() + '\n');
+  fs.writeFileSync(filePath, `${contentsAsString.trim()}\n`);
   console.log(`Changed version from \u{1b}[33m${oldVersion}\u{1b}[0m to \u{1b}[32m${version}\u{1b}[0m in ${relativeFilePath}`);
 });

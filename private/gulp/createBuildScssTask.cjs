@@ -7,4 +7,4 @@ function createBuildScssTask(gulp, plugins) {
     .pipe(gulp.dest('assets/css'));
 }
 
-module.exports = { createBuildScssTask };
+module.exports = {createBuildScssTask};

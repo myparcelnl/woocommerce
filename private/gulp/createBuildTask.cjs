@@ -12,4 +12,4 @@ function createBuildTask(gulp) {
   );
 }
 
-module.exports = { createBuildTask };
+module.exports = {createBuildTask};

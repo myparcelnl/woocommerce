@@ -3,4 +3,4 @@ function createCopyDeliveryOptionsTask(gulp) {
     .pipe(gulp.dest('assets/js'));
 }
 
-module.exports = { createCopyDeliveryOptionsTask };
+module.exports = {createCopyDeliveryOptionsTask};
