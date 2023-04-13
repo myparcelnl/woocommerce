@@ -9,5 +9,10 @@
       "MyParcelNL\\WooCommerce\\includes\\": "includes",
       "MyParcelNL\\WooCommerce\\": "includes"
     }
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
   }
 }
