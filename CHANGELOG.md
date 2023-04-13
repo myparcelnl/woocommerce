@@ -3,6 +3,75 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## ⚠ Warning ⚠
+
+🚧 This version is **not ready for production use**. 🚧
+
+This is the alpha release of the next major version of the MyParcel WooCommerce plugin. We've rewritten the plugin from scratch, using the [frontend] and [backend] of the MyParcel PDK (Plugin Development Kit).
+
+For a safer experience, we recommend you to use the stable or release candidate version of the plugin. You can find the stable version in the [WordPress plugin directory]. The release candidate versions can be found in the [releases] section of this repository. They are versioned with a `-rc` suffix.
+
+If you do choose to install this version, we would love to hear your feedback. Please report any issues you encounter using the [Bug report for v5.0.0-alpha.x form] or by sending an email to [support@myparcel.nl]
+
+[Bug report for v5.0.0-alpha.x form]: https://github.com/myparcelnl/woocommerce/issues/new?labels=alpha&template=ZZ-BUG-REPORT-v5.yml
+[WordPress plugin directory]: https://wordpress.org/plugins/woocommerce-myparcel/
+[backend]: https://github.com/myparcelnl/pdk
+[frontend]: https://github.com/myparcelnl/js-pdk
+[releases]: https://github.com/myparcelnl/woocommerce/releases
+[support@myparcel.nl]: mailto:support@myparcel.nl
+
+## [5.0.0-alpha.1](https://github.com/myparcelnl/woocommerce/compare/v4.19.1...v5.0.0-alpha.1) (2023-04-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* rebuild entire plugin with pdk
+
+### :bug: Bug Fixes
+
+* **admin:** add multi select input ([a0f4ea0](https://github.com/myparcelnl/woocommerce/commit/a0f4ea09d89d617269f5dcf3a53a83f515fe39cf))
+* **admin:** change shipment label row transition ([92097cb](https://github.com/myparcelnl/woocommerce/commit/92097cbfcc01d552aa9095f0aa77412e4f3fa198))
+* **admin:** fix select boxes duplicating and options not being preselected ([0a6b3c8](https://github.com/myparcelnl/woocommerce/commit/0a6b3c84cdf4dddbe8e28f181705a9495a704867))
+* **admin:** improve select inputs ([5ebacab](https://github.com/myparcelnl/woocommerce/commit/5ebacab1e9f168f8d3d419a5a760d3a5bab75cab))
+* **admin:** initialize tooltips properly ([87fb4e2](https://github.com/myparcelnl/woocommerce/commit/87fb4e2df7852620ef2276d818a3ec2011593780))
+* **admin:** update button style ([d61f6cf](https://github.com/myparcelnl/woocommerce/commit/d61f6cf2d2d5b859423d0cf7f749f1b08b460bc8))
+* **admin:** update components ([aec2ed9](https://github.com/myparcelnl/woocommerce/commit/aec2ed909f0fed38490d942ca26dddd12c4e1eee))
+* **admin:** update form group ([ab28858](https://github.com/myparcelnl/woocommerce/commit/ab2885859d151cc3daa0701480c05a64d88acfee))
+* disable selectwoo for now because it won't work ([7b1635b](https://github.com/myparcelnl/woocommerce/commit/7b1635b22190caaffde50c975e14d36e849cb4ea))
+* ensure numeric values at physical properties ([a5d3ffe](https://github.com/myparcelnl/woocommerce/commit/a5d3ffeb6def12fc8796ad0110ebbf6207cf4584))
+* fix imports ([306f4ec](https://github.com/myparcelnl/woocommerce/commit/306f4ec16e45963b9b5c945bd281affe3a90c978))
+* fix naming error in bulk actions order mode ([1494d28](https://github.com/myparcelnl/woocommerce/commit/1494d289f041e98145e1b9e10f79d982778199bb))
+* fix number error on "add order" page ([35e4485](https://github.com/myparcelnl/woocommerce/commit/35e448561ccca080fe45c6937065967efbbef89f))
+* **hooks:** fix error on getting pdk frontend routes ([417916a](https://github.com/myparcelnl/woocommerce/commit/417916a66c804ea28f29d6a4a510df990b38b0bc))
+* implement bootstrapper ([6846597](https://github.com/myparcelnl/woocommerce/commit/68465979a1971162b96a0b848cc4b2819bab9cc2))
+* improve components ([7d4278e](https://github.com/myparcelnl/woocommerce/commit/7d4278e877fbb50f3610b3e33e44d5c8b487929b))
+* increase order list column width ([84fb9c8](https://github.com/myparcelnl/woocommerce/commit/84fb9c891be6d4bc34223417facb8db7dfcb18a5))
+* **migration:** improve migration logic ([d2f3962](https://github.com/myparcelnl/woocommerce/commit/d2f396298251255de28a71ffe6b7dfe7deb9c0eb))
+* **modal:** fix modal actions ([a5e629d](https://github.com/myparcelnl/woocommerce/commit/a5e629deca098e23371f5fe95a6611bf4ba6df89))
+* render settings page ([239f169](https://github.com/myparcelnl/woocommerce/commit/239f169e804d86314f0b9d7550a6259cb563a567))
+* **request:** update guzzle adapter ([c77452d](https://github.com/myparcelnl/woocommerce/commit/c77452d3b70a1bb22e274a10062be23eee52d8d1))
+* save shipment even when updated is not null ([4ffe30a](https://github.com/myparcelnl/woocommerce/commit/4ffe30a39e6d2964e002a188367b7a3fe94b393f))
+* set physical properties on pdkorder ([d11d40e](https://github.com/myparcelnl/woocommerce/commit/d11d40e03728ae0996fcba9d53e30afcac60c604))
+* show notices through all_admin_notices hook ([ce445ef](https://github.com/myparcelnl/woocommerce/commit/ce445effc0cdaf82c14cdc8b3050739b37bb1adb))
+* update frontend routes ([8174f1f](https://github.com/myparcelnl/woocommerce/commit/8174f1f63f5ac7c55905df507410b6f94a201644))
+* update product settings ([ef89e3a](https://github.com/myparcelnl/woocommerce/commit/ef89e3a4636ac32ee78d4bdaf00fe210ea976952))
+* use correct option for automatic export ([9f176b6](https://github.com/myparcelnl/woocommerce/commit/9f176b66366cfed0813efe221cd617629fddcba9))
+* wrap pdk admin init in window.onload ([64915cc](https://github.com/myparcelnl/woocommerce/commit/64915ccdcfefae75c2651ccc6ece563a3b0242ea))
+
+
+### :sparkles: New Features
+
+* add bulk actions ([b6818b8](https://github.com/myparcelnl/woocommerce/commit/b6818b8c372ee0c422c576544ffe2515e2fd0bde))
+* add dhleuroplus and dhlparcelconnect ([3042371](https://github.com/myparcelnl/woocommerce/commit/30423712370d6925d8edc65b708e29b61e3bea02))
+* **admin:** add text area and code editor component ([fc75a0d](https://github.com/myparcelnl/woocommerce/commit/fc75a0dfb7271220e207e0e56fcc544d251eddd3))
+* **admin:** improve radio component ([57123ef](https://github.com/myparcelnl/woocommerce/commit/57123ef907cca48d505d4c0d7d572639748428b9))
+* **admin:** make select2 component work properly ([d995187](https://github.com/myparcelnl/woocommerce/commit/d9951877a34b99b997b9d323eb2159a9c5073179))
+* **plugin:** add links to plugin meta ([94f9c6c](https://github.com/myparcelnl/woocommerce/commit/94f9c6c7a2e57e27049e6b22ebec921bf770f2e4))
+* prepend order note with text from settings ([bac9e19](https://github.com/myparcelnl/woocommerce/commit/bac9e1989c11563ba60cd617d75051b80674e49c))
+* rebuild entire plugin with pdk ([d9d1459](https://github.com/myparcelnl/woocommerce/commit/d9d1459cea663f78e93167b7aced383c0c2a292a))
+* retrieve shipping methods ([6bbe39a](https://github.com/myparcelnl/woocommerce/commit/6bbe39a139afa9bcd3aa03ec3b66601b9f94481c))
+* **settings:** improve settings views ([1f96af0](https://github.com/myparcelnl/woocommerce/commit/1f96af0a61b1a00dfe4edce5123b034e8246fe0e))
+
 ## [4.19.1](https://github.com/myparcelnl/woocommerce/compare/v4.19.0...v4.19.1) (2023-04-13)
 
 
