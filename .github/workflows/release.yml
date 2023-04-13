@@ -56,6 +56,17 @@ jobs:
 
       - uses: ./.github/actions/install
 
+      - name: 'Trim leading "v" from version number'
+        id: prepare
+        run: |
+          VERSION=${{ needs.release.outputs.version }}
+          echo "version=${VERSION#v}" >> $GITHUB_OUTPUT
+
+      - name: 'Create build'
+        run: |
+          node ./private/updateVersion.cjs ${{ steps.prepare.outputs.version }}
+          yarn build
+
       - name: 'Create dist folder'
         run: |
           bash ./private/bash/createDistFolder.sh ${{ env.BUILD_DIR }}
@@ -67,7 +78,7 @@ jobs:
           ASSETS_DIR: ${{ env.ASSETS_DIR }}
           BUILD_DIR: ${{ env.BUILD_DIR }}
           SLUG: woocommerce-myparcel
-          VERSION: ${{ needs.release.outputs.version }}
+          VERSION: ${{ steps.prepare.outputs.version }}
 
   rebase-develop:
     name: 'Rebase develop onto main'
