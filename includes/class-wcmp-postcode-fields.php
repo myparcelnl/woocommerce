@@ -33,6 +33,7 @@ class WCMP_NL_Postcode_Fields
         $this->postedValues = wp_unslash(filter_input_array(INPUT_POST));
         if ($this->postedValues) {
             wp_verify_nonce('_wpnonce');
+            $this->fixAddressInPost();
         }
 
         // Load styles
@@ -42,6 +43,23 @@ class WCMP_NL_Postcode_Fields
         add_action('admin_enqueue_scripts', [$this, 'admin_scripts_styles']);
 
         add_action("wp_loaded", [$this, "initialize"], 9999);
+    }
+
+    private function fixAddressInPost(): void
+    {
+        $post = $this->postedValues;
+        foreach (['billing', 'shipping'] as $type) {
+            if (isset($post["{$type}_address_1"], $post["{$type}_street_name"])
+                && '' === $post["{$type}_address_1"]) {
+                $_POST["{$type}_address_1"] = trim(
+                    $post["{$type}_street_name"]
+                    . ' '
+                    . ($post["{$type}_house_number"] ?? '')
+                    . ' '
+                    . ($post["{$type}_house_number_suffix"] ?? '')
+                );
+            }
+        }
     }
 
     /**
