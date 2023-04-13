@@ -22,7 +22,7 @@ jobs:
       version: ${{ steps.release.outputs.version }}
     env:
       PHP_VERSION: ${{ github.ref_name == 'alpha' && '7.4' || '7.1' }}
-      NODE_VERSION: ${{ github.ref_name == 'alpha' && '18' || '16' }}
+      NODE_VERSION: 18
     steps:
       - uses: myparcelnl/actions/setup-git-credentials@v3
         id: credentials
