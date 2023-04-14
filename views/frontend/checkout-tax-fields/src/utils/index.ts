@@ -1,2 +1,2 @@
-export * from './keepTaxFieldsInSync';
-export * from './showHideTaxFields';
+export * from './hasTaxFields';
+export * from './toggleTaxFields';

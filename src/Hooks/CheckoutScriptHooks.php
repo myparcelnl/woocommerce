@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
+use MyParcelNL\Pdk\Facade\AccountSettings;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
 use MyParcelNL\Pdk\Facade\Settings;
@@ -52,7 +53,9 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
             $this->loadSeparateAddressFieldsScripts();
         }
 
-        $this->loadTaxFieldsScripts();
+        if (AccountSettings::hasTaxFields()) {
+            $this->loadTaxFieldsScripts();
+        }
 
         // Don't load the delivery options scripts if it's disabled
         //        if (Settings::get(CheckoutSettings::DELIVERY_OPTIONS_DISPLAY, CheckoutSettings::ID)) {

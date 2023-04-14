@@ -15,18 +15,13 @@ export interface FrontendAppContext {
 }
 
 export type FrontendSettings = {
-  addressType: AddressType | null;
-  allowedShippingMethods: string[];
-  alwaysShow: boolean;
-  disallowedShippingMethods: string[];
-  hasDeliveryOptions: boolean;
-  hasSplitAddressFields: boolean;
-  hiddenInputName: string;
-  shippingMethod: string | null;
-  splitAddressFieldsCountries: string[];
-
   actions: {
     baseUrl: string;
     endpoints: FrontendPdkEndpointObject;
   };
+  allowedShippingMethods: string[];
+  carriersWithTaxFields: string[];
+  hasDeliveryOptions: boolean;
+  hiddenInputName: string;
+  splitAddressFieldsCountries: string[];
 };

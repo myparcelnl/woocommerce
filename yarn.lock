@@ -840,6 +840,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@myparcel-woocommerce/frontend-checkout-tax-fields@workspace:views/frontend/checkout-tax-fields":
+  version: 0.0.0-use.local
+  resolution: "@myparcel-woocommerce/frontend-checkout-tax-fields@workspace:views/frontend/checkout-tax-fields"
+  dependencies:
+    "@myparcel-woocommerce/frontend-common": "workspace:*"
+    "@myparcel-woocommerce/vite-config": "workspace:*"
+    "@myparcel/ts-utils": ^1.7.0
+    "@types/jquery": ^3.5.16
+    vite: ^4.2.1
+    vite-plugin-custom-tsconfig: ^1.0.4
+    vite-plugin-dts: ^2.1.0
+    vitest: ^0.29.7
+  languageName: unknown
+  linkType: soft
+
 "@myparcel-woocommerce/frontend-common@workspace:*, @myparcel-woocommerce/frontend-common@workspace:views/frontend/common":
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/frontend-common@workspace:views/frontend/common"
