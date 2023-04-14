@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
+use MyParcelNL\Pdk\Facade\AccountSettings;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
 use MyParcelNL\Pdk\Facade\Settings;
@@ -50,6 +51,10 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
 
         if ($this->useSeparateAddressFields()) {
             $this->loadSeparateAddressFieldsScripts();
+        }
+
+        if (AccountSettings::hasTaxFields()) {
+            $this->loadTaxFieldsScripts();
         }
 
         // Don't load the delivery options scripts if it's disabled
@@ -142,6 +147,20 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
         $this->service->enqueueStyle(
             WpScriptService::HANDLE_SPLIT_ADDRESS_FIELDS,
             'views/frontend/checkout-split-address-fields/lib/style.css'
+        );
+    }
+
+    private function loadTaxFieldsScripts(): void
+    {
+        $this->service->enqueueLocalScript(
+            WpScriptService::HANDLE_TAX_FIELDS,
+            'views/frontend/checkout-tax-fields/lib/tax-fields',
+            [WpScriptService::HANDLE_WC_CHECKOUT]
+        );
+
+        $this->service->enqueueStyle(
+            WpScriptService::HANDLE_TAX_FIELDS,
+            'views/frontend/checkout-tax-fields/lib/style.css'
         );
     }
 

@@ -9,8 +9,10 @@ use WC_Order;
 
 class WcRecipientService
 {
-    public const BILLING  = 'billing';
-    public const SHIPPING = 'shipping';
+    public const  BILLING  = 'billing';
+    public const  SHIPPING = 'shipping';
+    private const EORI     = '_eori_number';
+    private const VAT      = '_vat_number';
 
     /**
      * @var \MyParcelNL\Pdk\Base\Service\CountryService
@@ -26,6 +28,9 @@ class WcRecipientService
     }
 
     /**
+     *
+     * 18 Scotia Cl, Sheffield S2 1HL, UK
+     *
      * @param  \WC_Order $order
      * @param  string    $type
      *
@@ -36,14 +41,16 @@ class WcRecipientService
     public function createAddress(WC_Order $order, string $type): array
     {
         return [
-                'cc'          => $order->{"get_{$type}_country"}(),
-                'city'        => $order->{"get_{$type}_city"}(),
-                'company'     => $order->{"get_{$type}_company"}(),
-                'postal_code' => $order->{"get_{$type}_postcode"}(),
-                'region'      => $order->{"get_{$type}_state"}(),
-                'person'      => $this->getPersonFromOrder($order, $type),
-                'email'       => $order->get_billing_email(),
-                'phone'       => $order->get_billing_phone(),
+                'cc'         => $order->{"get_{$type}_country"}(),
+                'city'       => $order->{"get_{$type}_city"}(),
+                'company'    => $order->{"get_{$type}_company"}(),
+                'email'      => $order->get_billing_email(),
+                'eoriNumber' => $order->get_meta(sprintf('_%s%s', $type, self::EORI)),
+                'person'     => $this->getPersonFromOrder($order, $type),
+                'phone'      => $order->get_billing_phone(),
+                'postalCode' => $order->{"get_{$type}_postcode"}(),
+                'region'     => $order->{"get_{$type}_state"}(),
+                'vatNumber'  => $order->get_meta(sprintf('_%s%s', $type, self::VAT)),
             ] + $this->getAddressFromOrder($order, $type);
     }
 
