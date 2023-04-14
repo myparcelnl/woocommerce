@@ -3,7 +3,7 @@ Contributors: richardperdaan, edielemoine, joerimyparcel
 Tags: woocommerce, export, delivery, packages, myparcel, flespakket, postnl
 Requires at least: 5.2.0
 Tested up to: 6.2
-Stable tag: 5.0.0-alpha.1
+Stable tag: 5.0.0-alpha.2
 Requires PHP: 7.1
 License: MIT
 License URI: http://www.opensource.org/licenses/mit-license.php
@@ -102,6 +102,11 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 6. MyParcel pickup delivery options
 
 == Changelog ==
+
+= 5.0.0-alpha.2 (2023-04-14) =
+
+* Fixed bug: fix rendering on elements with undefined as ref value
+* Fixed bug: correct keys for webhook settings
 
 = 5.0.0-alpha.1 (2023-04-13) =
 
