@@ -8,6 +8,7 @@ use Generator;
 use MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface;
 use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Facade\Settings as SettingsFacade;
 use MyParcelNL\Pdk\Settings\Collection\SettingsModelCollection;
 use MyParcelNL\Pdk\Settings\Contract\SettingsRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\Settings;
@@ -35,12 +36,11 @@ final class SettingsMigration extends AbstractPdkMigration
 
     /**
      * @note This method is public for testing purposes.
-     * @see \MyParcelNL\WooCommerce\Tests\Unit\Migration\Pdk\SettingsMigrationTest
      *
      * @param  array $oldSettings
      *
      * @return void
-     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
+     * @see  \MyParcelNL\WooCommerce\Tests\Unit\Migration\Pdk\SettingsMigrationTest
      */
     public function migrateSettings(array $oldSettings): void
     {
@@ -58,16 +58,13 @@ final class SettingsMigration extends AbstractPdkMigration
             $newSettings['carrier']->put($carrier, $transformed);
         }
 
-        $settings = new Settings($newSettings);
+        $settings = new Settings(array_replace_recursive(SettingsFacade::getDefaults(), $newSettings));
 
-        foreach (array_keys($newSettings) as $editedSettingsId) {
-            $settingsRepository->storeSettings($settings->getAttribute($editedSettingsId));
-        }
+        $settingsRepository->storeAllSettings($settings);
     }
 
     /**
      * @return void
-     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
      */
     public function up(): void
     {

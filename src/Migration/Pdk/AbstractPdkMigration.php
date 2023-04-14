@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use MyParcelNL\Pdk\Facade\DefaultLogger;
-use MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface;
+use MyParcelNL\Pdk\Plugin\Installer\Contract\MigrationInterface;
 
 abstract class AbstractPdkMigration implements MigrationInterface
 {

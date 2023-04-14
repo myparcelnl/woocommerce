@@ -15,8 +15,8 @@ License: MIT
 License URI: http://www.opensource.org/licenses/mit-license.php
 */
 
+use MyParcelNL\Pdk\Facade\Installer;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\WooCommerce\Migration\Migrator;
 use MyParcelNL\WooCommerce\Pdk\WcPdkBootstrapper;
 use MyParcelNL\WooCommerce\Service\WordPressHookService;
 
@@ -42,7 +42,7 @@ class MyParcelNL
         define('MYPARCELNL_WC_VERSION', $version);
 
         if (! defined('DOING_AJAX') && is_admin()) {
-            add_action('init', [$this, 'migrate']);
+            add_action('init', [$this, 'install']);
         }
 
         add_action('init', [$this, 'initialize'], 9999);
@@ -68,23 +68,9 @@ class MyParcelNL
      * @return void
      * @throws \Exception
      */
-    public function migrate(): void
+    public function install(): void
     {
-        $appInfo = Pdk::getAppInfo();
-
-        $versionSetting = Pdk::get('settingKeyVersion');
-
-        // Get the version number from the database. If it doesn't exist, get the version number from the old setting.
-        $installedVersion = get_option($versionSetting) ?: get_option('woocommerce_myparcel_version') ?: '0';
-
-        if (version_compare($installedVersion, $appInfo->version, '<')) {
-            /** @var \MyParcelNL\WooCommerce\Migration\Migrator $migrator */
-            $migrator = Pdk::get(Migrator::class);
-
-            $migrator->migrate($installedVersion);
-
-            update_option($versionSetting, $appInfo->version);
-        }
+        Installer::install();
     }
 
     /**

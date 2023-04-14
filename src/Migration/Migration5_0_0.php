@@ -15,7 +15,7 @@ use MyParcelNL\WooCommerce\Migration\Pdk\SettingsMigration;
 final class Migration5_0_0 extends AbstractPdkMigration
 {
     /**
-     * @var array<class-string<\MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface>>
+     * @var array<class-string<\MyParcelNL\Pdk\Plugin\Installer\Contract\MigrationInterface>>
      */
     private $migrations;
 
@@ -38,7 +38,7 @@ final class Migration5_0_0 extends AbstractPdkMigration
 
     public function down(): void
     {
-        /** @var \MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface $migration */
+        /** @var \MyParcelNL\Pdk\Plugin\Installer\Contract\MigrationInterface $migration */
         foreach ($this->migrations as $migration) {
             $migration->down();
         }
@@ -46,7 +46,7 @@ final class Migration5_0_0 extends AbstractPdkMigration
 
     public function up(): void
     {
-        /** @var \MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface $migration */
+        /** @var \MyParcelNL\Pdk\Plugin\Installer\Contract\MigrationInterface $migration */
         foreach ($this->migrations as $migration) {
             $migration->up();
         }

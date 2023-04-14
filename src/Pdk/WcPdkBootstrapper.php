@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk;
 
 use MyParcelNL\Pdk\Base\PdkBootstrapper;
+use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use function DI\value;
 
 class WcPdkBootstrapper extends PdkBootstrapper
@@ -121,17 +122,15 @@ class WcPdkBootstrapper extends PdkBootstrapper
 
             'settingKeyPrefix' => value("_{$name}_"),
 
-            /** Settings key where the installed version of the plugin is saved. */
+            /**
+             * Settings defaults
+             */
 
-            'settingKeyVersion' => value("_{$name}_version"),
-
-            /** Settings key where webhooks are saved */
-
-            'settingKeyWebhooks' => value("_{$name}_webhooks"),
-
-            /** Settings key where the hashed webhook url is saved */
-
-            'settingKeyWebhookHash' => value("_{$name}_webhook_hash"),
+            'defaultSettings' => value([
+                CheckoutSettings::ID => [
+                    CheckoutSettings::ALLOWED_SHIPPING_METHODS => ['flat_rate', 'free_shipping'],
+                ],
+            ]),
 
             ###
             # Routes
