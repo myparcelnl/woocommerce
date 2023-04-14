@@ -45,7 +45,6 @@
 import {ElementInstance, generateFieldId, useLanguage} from '@myparcel-pdk/admin/src';
 import {InteractiveElementInstance} from '@myparcel/vue-form-builder/src';
 import {computed} from 'vue';
-import {isOfType} from '@myparcel/ts-utils';
 
 // eslint-disable-next-line vue/no-unused-properties
 const props = defineProps<{modelValue: boolean; element: InteractiveElementInstance}>();
@@ -54,7 +53,5 @@ const id = generateFieldId(props.element as ElementInstance);
 
 const {translate} = useLanguage();
 
-const isInteractiveElement = computed(() => {
-  return isOfType<InteractiveElementInstance>(props.element, 'ref');
-});
+const isInteractiveElement = computed(() => props.element.hasOwnProperty('ref'));
 </script>
