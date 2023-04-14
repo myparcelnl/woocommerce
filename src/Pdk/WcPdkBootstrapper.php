@@ -127,11 +127,11 @@ class WcPdkBootstrapper extends PdkBootstrapper
 
             /** Settings key where webhooks are saved */
 
-            'settingKeyWebhooks' => value('webhooks'),
+            'settingKeyWebhooks' => value("_{$name}_webhooks"),
 
             /** Settings key where the hashed webhook url is saved */
 
-            'settingKeyWebhookHash' => value('webhook_hash'),
+            'settingKeyWebhookHash' => value("_{$name}_webhook_hash"),
 
             ###
             # Routes
