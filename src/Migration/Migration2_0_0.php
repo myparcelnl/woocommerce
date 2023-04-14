@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration;
 
-use MyParcelNL\WooCommerce\Migration\Contract\MigrationInterface;
+use MyParcelNL\Pdk\Plugin\Installer\Contract\MigrationInterface;
 
 /**
  * Migrates pre v2.0 settings. Pre-2.0.0 did not store a version number.
