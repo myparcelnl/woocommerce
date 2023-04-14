@@ -16,6 +16,7 @@ class WpScriptService extends ScriptService
     public const HANDLE_CHECKOUT_DELIVERY_OPTIONS = 'myparcelnl-checkout-delivery-options';
     // External dependencies
     public const HANDLE_DELIVERY_OPTIONS = 'myparcelnl-delivery-options';
+    public const HANDLE_TAX_FIELDS       = 'myparcelnl-checkout-tax-fields';
     public const HANDLE_VUE              = 'vue';
     public const HANDLE_VUE_DEMI         = 'vue-demi';
     // Scripts that are already present in WooCommerce
