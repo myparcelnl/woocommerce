@@ -1,10 +1,12 @@
-import {StoreListener, useCheckoutStore} from '@myparcel-woocommerce/frontend-common';
+import {StoreListener, useCheckoutStore} from '@myparcel-woocommerce/frontend-common/src';
 import {keepTaxFieldsInSync, showHideTaxFields} from './utils';
 
-const store = useCheckoutStore();
+jQuery(() => {
+  const checkout = useCheckoutStore();
 
-store.on(StoreListener.UPDATE, () => {
-  showHideTaxFields();
+  checkout.on(StoreListener.UPDATE, () => {
+    showHideTaxFields();
+  });
+
+  keepTaxFieldsInSync();
 });
-
-keepTaxFieldsInSync();
