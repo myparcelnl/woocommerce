@@ -19,7 +19,8 @@
     "default": {
       "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "build:dev"]
+        "cacheableOperations": ["build", "build:dev"],
+        "parallel": 10
       }
     }
   }
