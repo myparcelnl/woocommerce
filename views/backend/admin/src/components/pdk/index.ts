@@ -1,5 +1,3 @@
-export {default as PdkShipmentLabelWrapper} from './WcShipmentLabelWrapper.vue';
-
 export {default as WcBox} from './WcBox.vue';
 
 export {default as WcButton} from './WcButton.vue';
@@ -37,6 +35,8 @@ export {default as WcRadioInput} from './WcRadioInput.vue';
 export {default as WcRow} from './WcRow.vue';
 
 export {default as WcSelectInput} from './WcSelectInput.vue';
+
+export {default as WcShipmentLabelWrapper} from './WcShipmentLabelWrapper.vue';
 
 export {default as WcTabNavButton} from './WcTabNavButton.vue';
 

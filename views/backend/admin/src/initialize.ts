@@ -1,6 +1,7 @@
 // noinspection JSUnusedGlobalSymbols
 
 import {
+  DefaultBadge,
   DefaultCurrencyInput,
   DefaultHeading,
   DefaultLink,
@@ -12,7 +13,6 @@ import {
 } from '@myparcel-pdk/admin-preset-default/src';
 import {LogLevel, createPdkAdmin} from '@myparcel-pdk/admin/src';
 import {
-  PdkShipmentLabelWrapper,
   WcBox,
   WcButton,
   WcButtonGroup,
@@ -31,6 +31,7 @@ import {
   WcRadioInput,
   WcRow,
   WcSelectInput,
+  WcShipmentLabelWrapper,
   WcTabNavButton,
   WcTabNavButtonWrapper,
   WcTable,
@@ -79,6 +80,7 @@ export const initialize = (): void => {
     },
 
     components: {
+      PdkBadge: DefaultBadge,
       PdkBox: WcBox,
       PdkButton: WcButton,
       PdkButtonGroup: WcButtonGroup,
@@ -105,7 +107,7 @@ export const initialize = (): void => {
       PdkRow: WcRow,
       PdkSelectInput: WcSelectInput,
       PdkSettingsDivider: DefaultSettingsDivider,
-      PdkShipmentLabelWrapper,
+      PdkShipmentLabelWrapper: WcShipmentLabelWrapper,
       PdkTabNavButton: WcTabNavButton,
       PdkTabNavButtonWrapper: WcTabNavButtonWrapper,
       PdkTable: WcTable,
