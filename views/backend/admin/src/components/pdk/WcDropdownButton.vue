@@ -9,6 +9,7 @@
       :class="{
         '!mypa-rounded-r-none': index === dropdownActions.standalone.length - 1,
       }"
+      :disabled="disabled"
       :hide-text="hideText"
       :size="size" />
 
@@ -28,6 +29,8 @@
       @focusout="toggled = false"
       @mouseout="toggled = false"
       @mouseover="toggled = true">
+      <slot />
+
       <div
         v-show="toggled"
         class="mypa-absolute mypa-bg-white mypa-border mypa-border-solid mypa-flex mypa-flex-col mypa-right-0 mypa-rounded mypa-top-full mypa-z-50">
@@ -36,6 +39,8 @@
           :key="`${index}_${action.id}`"
           v-test="'HiddenDropdownAction'"
           :action="action"
+          :disabled="disabled"
+          :icon="action.icon"
           class="!mypa-border-none !mypa-text-left">
           {{ translate(action.label) }}
         </ActionButton>
@@ -45,34 +50,17 @@
 </template>
 
 <script lang="ts" setup>
-import {ActionButton, ActionDefinition, AdminIcon, Size, useDropdownData, useLanguage} from '@myparcel-pdk/admin/src';
-import {PropType, computed} from 'vue';
+import {ActionButton, ActionDefinition, Size, useDropdownData, useLanguage} from '@myparcel-pdk/admin/src';
 
-const props = defineProps({
-  actions: {
-    type: Array as PropType<ActionDefinition[]>,
-    default: () => [],
-  },
+const props = defineProps<{
+  // eslint-disable-next-line vue/no-unused-properties
+  actions: ActionDefinition[];
+  disabled: boolean;
+  hideText: boolean;
+  size: Size;
+}>();
 
-  size: {
-    type: String as PropType<Size>,
-    default: 'sm',
-  },
-
-  disabled: {
-    type: Boolean,
-  },
-
-  hideText: {
-    type: Boolean,
-  },
-});
-
-defineEmits(['click']);
-
-const {dropdownActions, toggled} = useDropdownData(props.actions);
-
-const dropdownIcon = computed(() => (toggled.value ? AdminIcon.ArrowUp : AdminIcon.ArrowDown));
+const {dropdownActions, toggled, dropdownIcon} = useDropdownData(props);
 
 const {translate} = useLanguage();
 </script>
