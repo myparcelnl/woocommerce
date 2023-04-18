@@ -5,8 +5,8 @@ import {useCheckoutStore} from '../store';
 /**
  * Get field by name. Will return element with MyParcelFrontend selector: "#<billing|shipping>_<name>".
  */
-export const getAddressField = (name: string, addressType?: AddressType): HTMLInputElement | null => {
+export const getAddressField = (name: string, addressType?: AddressType, warn = true): HTMLInputElement | null => {
   addressType ??= useCheckoutStore().state.addressType;
 
-  return getElement(`#${addressType}_${name}`);
+  return getElement(`#${addressType}_${name}`, warn);
 };

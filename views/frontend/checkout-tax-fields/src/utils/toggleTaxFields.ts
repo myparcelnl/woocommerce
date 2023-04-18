@@ -7,7 +7,7 @@ export const toggleTaxFields = (): void => {
 
   [AddressType.BILLING, AddressType.SHIPPING].forEach((addressType) => {
     [FIELD_EORI_NUMBER, FIELD_VAT_NUMBER].forEach((fieldName) => {
-      const wrapper = getAddressField(`${fieldName}_wrapper`, addressType);
+      const wrapper = getAddressField(`${fieldName}_wrapper`, addressType, false);
 
       if (!wrapper) {
         return;
