@@ -1,6 +1,8 @@
 import {AddressType, PdkField, Util, createPdkCheckout, useUtil} from '@myparcel-pdk/checkout/src';
 import {createFields} from './utils/createFields';
 
+// TODO: Get fields from the backend
+
 const PREFIX_BILLING = 'billing_';
 const PREFIX_SHIPPING = 'shipping_';
 
