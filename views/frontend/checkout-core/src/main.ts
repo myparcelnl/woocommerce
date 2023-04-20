@@ -45,4 +45,15 @@ createPdkCheckout({
     deliveryOptionsWrapper: '#mypa-delivery-options-wrapper',
     hasAddressType: '.woocommerce-billing-fields__field-wrapper',
   },
+
+  toggleField(field: HTMLInputElement, show: boolean): void {
+    const $field = jQuery(field);
+    const $wrapper = $field.closest('.form-row');
+
+    if (show) {
+      $wrapper.show();
+    } else {
+      $wrapper.hide();
+    }
+  },
 });
