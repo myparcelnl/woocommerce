@@ -198,17 +198,19 @@ class WcPdkBootstrapper extends PdkBootstrapper
                 'separateAddressFieldsPriority' => 10,
                 'taxFieldsPriority'             => 10,
 
-                'fieldEoriNumberClass'   => ['form-row'],
-                'fieldVatNumberClass'    => ['form-row'],
                 'fieldStreetClass'       => ['form-row-third', 'first'],
                 'fieldNumberClass'       => ['form-row-third'],
                 'fieldNumberSuffixClass' => ['form-row-third', 'last'],
 
-                'fieldEoriNumberPriority'   => 100,
-                'fieldVatNumberPriority'    => 101,
+                'fieldEoriNumberClass' => ['form-row'],
+                'fieldVatNumberClass'  => ['form-row'],
+
                 'fieldStreetPriority'       => 60,
                 'fieldNumberPriority'       => 61,
                 'fieldNumberSuffixPriority' => 62,
+
+                'fieldEoriNumberPriority' => 900,
+                'fieldVatNumberPriority'  => 901,
             ]),
 
             /**

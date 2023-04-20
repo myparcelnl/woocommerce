@@ -19,14 +19,21 @@ abstract class AbstractFieldsHooks implements WordPressHooksInterface
      *
      * @return array[]
      */
-    protected function createField(string $form, string $name, string $label, array $additionalFields = []): array
-    {
+    protected function createField(
+        string $form,
+        string $name,
+        string $label,
+        array  $additionalFields = []
+    ): array {
         return [
-            sprintf('%s_%s', $form, Pdk::get($name)) => [
+            sprintf('%s_%s', $form, Pdk::get($name)) => array_merge(
+                [
                     'class'    => Filter::apply("{$name}Class"),
                     'label'    => LanguageService::translate($label),
                     'priority' => Filter::apply("{$name}Priority"),
-                ] + $additionalFields,
+                ],
+                $additionalFields
+            ),
         ];
     }
 
@@ -43,12 +50,14 @@ abstract class AbstractFieldsHooks implements WordPressHooksInterface
      */
     protected function createSelectorFor(string $field): array
     {
+        $resolvedField = Pdk::get($field);
+
         return [
-            $field => implode(
-                ',',
+            $resolvedField => implode(
+                ', ',
                 array_map(
-                    static function (string $addressType) use ($field): string {
-                        return sprintf('#%s_%s_field', $addressType, Pdk::get($field));
+                    static function (string $addressType) use ($resolvedField): string {
+                        return sprintf('#%s_%s_field', $addressType, $resolvedField);
                     },
                     Pdk::get('wcAddressTypes')
                 )

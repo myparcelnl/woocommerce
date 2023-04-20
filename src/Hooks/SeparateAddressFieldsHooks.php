@@ -16,7 +16,7 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks
 {
     public function apply(): void
     {
-        add_filter('woocommerce_get_country_locale', [$this, 'extendLocaleWithSeparateAddressFields']);
+        add_filter('woocommerce_get_country_locale', [$this, 'extendLocaleWithSeparateAddressFields'], 1);
         add_filter('woocommerce_country_locale_field_selectors', [$this, 'extendSelectorsWithSeparateAddressFields']);
         add_filter('woocommerce_default_address_fields', [$this, 'extendDefaultsWithSeparateAddressFields']);
 
@@ -115,7 +115,7 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks
      */
     public function extendSelectorsWithSeparateAddressFields(array $localeFields): array
     {
-        return array_merge(
+        return array_replace(
             $localeFields,
             $this->createSelectorFor('fieldStreet'),
             $this->createSelectorFor('fieldNumber'),
@@ -141,7 +141,7 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks
      */
     private function extendWithSeparateAddressFields(array $fields, string $form): array
     {
-        return array_merge_recursive(
+        return array_merge(
             $fields,
             $this->createField($form, 'fieldStreet', 'street'),
             $this->createField($form, 'fieldNumber', 'number', ['type' => 'number']),
