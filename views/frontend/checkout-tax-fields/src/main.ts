@@ -1,10 +1,5 @@
-import {StoreListener, useCheckoutStore} from '@myparcel-woocommerce/frontend-common/src';
-import {toggleTaxFields} from './utils';
+import {initializeCheckoutTaxFields, usePdkCheckout} from '@myparcel-pdk/checkout/src';
 
-jQuery(() => {
-  const checkout = useCheckoutStore();
-
-  checkout.on(StoreListener.UPDATE, () => {
-    toggleTaxFields();
-  });
+usePdkCheckout().onInitialize(async () => {
+  await initializeCheckoutTaxFields();
 });

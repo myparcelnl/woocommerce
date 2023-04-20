@@ -49,6 +49,12 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
             return;
         }
 
+        $this->service->enqueueLocalScript(
+            WpScriptService::HANDLE_CHECKOUT_CORE,
+            'views/frontend/checkout-core/lib/checkout-core',
+            [WpScriptService::HANDLE_WC_CHECKOUT, WpScriptService::HANDLE_JQUERY]
+        );
+
         if ($this->useSeparateAddressFields()) {
             $this->loadSeparateAddressFieldsScripts();
         }
@@ -156,11 +162,6 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
             WpScriptService::HANDLE_TAX_FIELDS,
             'views/frontend/checkout-tax-fields/lib/tax-fields',
             [WpScriptService::HANDLE_WC_CHECKOUT]
-        );
-
-        $this->service->enqueueStyle(
-            WpScriptService::HANDLE_TAX_FIELDS,
-            'views/frontend/checkout-tax-fields/lib/style.css'
         );
     }
 
