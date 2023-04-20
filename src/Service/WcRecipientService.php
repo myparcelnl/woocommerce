@@ -70,9 +70,9 @@ class WcRecipientService
         $cc = $order->{"get_{$type}_country"}();
 
         $isUnique        = $this->countryService->isUnique($cc);
-        $hasSplitAddress = $street || $number || $numberSuffix;
+        $hasSeparateAddress = $street || $number || $numberSuffix;
 
-        if ($isUnique && $hasSplitAddress) {
+        if ($isUnique && $hasSeparateAddress) {
             return [
                 'street'        => $street,
                 'number'        => $number,

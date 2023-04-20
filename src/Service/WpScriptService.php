@@ -11,7 +11,8 @@ class WpScriptService extends ScriptService
 {
     // Our local scripts
     public const HANDLE_PDK_ADMIN                 = 'myparcelnl-pdk-admin';
-    public const HANDLE_SPLIT_ADDRESS_FIELDS      = 'myparcelnl-checkout-split-address-fields';
+    public const HANDLE_CHECKOUT_CORE             = 'myparcelnl-checkout-core';
+    public const HANDLE_SEPARATE_ADDRESS_FIELDS   = 'myparcelnl-checkout-separate-address-fields';
     public const HANDLE_TAX_FIELDS                = 'myparcelnl-checkout-tax-fields';
     public const HANDLE_CHECKOUT_DELIVERY_OPTIONS = 'myparcelnl-checkout-delivery-options';
     // External dependencies

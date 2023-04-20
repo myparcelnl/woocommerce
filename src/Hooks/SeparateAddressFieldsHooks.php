@@ -48,38 +48,38 @@ class SeparateAddressFieldsHooks implements WordPressHooksInterface
      *
      * @return array
      */
-    public function addSplitAddressFieldsToLocale(array $locale): array
+    public function addSeparateAddressFieldsToLocale(array $locale): array
     {
-        $useSplitAddressFields = Settings::get(CheckoutSettings::USE_SEPARATE_ADDRESS_FIELDS, CheckoutSettings::ID);
+        $useSeparateAddressFields = Settings::get(CheckoutSettings::USE_SEPARATE_ADDRESS_FIELDS, CheckoutSettings::ID);
 
-        foreach (Pdk::get('splitAddressFieldsCountries') as $countryCode) {
+        foreach (Pdk::get('countriesWithSeparateAddressFields') as $countryCode) {
             $locale[$countryCode]['address_1'] = [
                 'required' => false,
-                'hidden'   => $useSplitAddressFields,
+                'hidden'   => $useSeparateAddressFields,
             ];
 
             $locale[$countryCode]['address_2'] = [
-                'hidden' => $useSplitAddressFields,
+                'hidden' => $useSeparateAddressFields,
             ];
 
             $locale[$countryCode]['state'] = [
-                'hidden'   => $useSplitAddressFields,
+                'hidden'   => $useSeparateAddressFields,
                 'required' => false,
             ];
 
             $locale[$countryCode][self::FIELD_STREET] = [
-                'required' => $useSplitAddressFields,
-                'hidden'   => ! $useSplitAddressFields,
+                'required' => $useSeparateAddressFields,
+                'hidden'   => ! $useSeparateAddressFields,
             ];
 
             $locale[$countryCode][self::FIELD_NUMBER] = [
-                'required' => $useSplitAddressFields,
-                'hidden'   => ! $useSplitAddressFields,
+                'required' => $useSeparateAddressFields,
+                'hidden'   => ! $useSeparateAddressFields,
             ];
 
             $locale[$countryCode][self::FIELD_NUMBER_SUFFIX] = [
                 'required' => false,
-                'hidden'   => ! $useSplitAddressFields,
+                'hidden'   => ! $useSeparateAddressFields,
             ];
         }
 
@@ -88,7 +88,7 @@ class SeparateAddressFieldsHooks implements WordPressHooksInterface
 
     public function apply(): void
     {
-        add_filter('woocommerce_get_country_locale', [$this, 'addSplitAddressFieldsToLocale'], 1);
+        add_filter('woocommerce_get_country_locale', [$this, 'addSeparateAddressFieldsToLocale'], 1);
         add_filter('woocommerce_country_locale_field_selectors', [$this, 'country_locale_field_selectors']);
         add_filter('woocommerce_default_address_fields', [$this, 'addDefaultSeparateAddressFields']);
 
@@ -129,7 +129,7 @@ class SeparateAddressFieldsHooks implements WordPressHooksInterface
      */
     public function extendBillingFields(array $fields): array
     {
-        return $this->addSplitAddressFields($fields, 'billing');
+        return $this->addSeparateAddressFields($fields, 'billing');
     }
 
     /**
@@ -139,7 +139,7 @@ class SeparateAddressFieldsHooks implements WordPressHooksInterface
      */
     public function extendShippingFields(array $fields): array
     {
-        return $this->addSplitAddressFields($fields, 'shipping');
+        return $this->addSeparateAddressFields($fields, 'shipping');
     }
 
     /**
@@ -150,7 +150,7 @@ class SeparateAddressFieldsHooks implements WordPressHooksInterface
      *
      * @return array
      */
-    private function addSplitAddressFields(array $fields, string $form): array
+    private function addSeparateAddressFields(array $fields, string $form): array
     {
         return array_merge_recursive(
             $fields,

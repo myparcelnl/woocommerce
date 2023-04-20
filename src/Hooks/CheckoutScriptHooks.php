@@ -116,7 +116,7 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
          * If split address fields are enabled add its script as an additional dependency.
          */
         if ($this->useSeparateAddressFields()) {
-            $dependencies[] = WpScriptService::HANDLE_SPLIT_ADDRESS_FIELDS;
+            $dependencies[] = WpScriptService::HANDLE_SEPARATE_ADDRESS_FIELDS;
         }
 
         $this->service->enqueueDeliveryOptions();
@@ -128,7 +128,7 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
         );
 
         $this->service->enqueueStyle(
-            WpScriptService::HANDLE_SPLIT_ADDRESS_FIELDS,
+            WpScriptService::HANDLE_SEPARATE_ADDRESS_FIELDS,
             'views/frontend/checkout-delivery-options/lib/style.css'
         );
     }
@@ -139,14 +139,14 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
     private function loadSeparateAddressFieldsScripts(): void
     {
         $this->service->enqueueLocalScript(
-            WpScriptService::HANDLE_SPLIT_ADDRESS_FIELDS,
-            'views/frontend/checkout-split-address-fields/lib/split-address-fields',
+            WpScriptService::HANDLE_SEPARATE_ADDRESS_FIELDS,
+            'views/frontend/checkout-separate-address-fields/lib/separate-address-fields',
             [WpScriptService::HANDLE_WC_CHECKOUT]
         );
 
         $this->service->enqueueStyle(
-            WpScriptService::HANDLE_SPLIT_ADDRESS_FIELDS,
-            'views/frontend/checkout-split-address-fields/lib/style.css'
+            WpScriptService::HANDLE_SEPARATE_ADDRESS_FIELDS,
+            'views/frontend/checkout-separate-address-fields/lib/style.css'
         );
     }
 
