@@ -19,40 +19,46 @@ class WcShippingMethodRepository extends AbstractPdkShippingMethodRepository
      */
     public function all(): PdkShippingMethodCollection
     {
-        $wcShipping = $this->wcShipping();
+        $shippingMethods = $this->wcShipping()
+            ->get_shipping_methods();
 
-        $shippingMethods = $wcShipping->get_shipping_methods();
-
-        $zones = WC_Shipping_Zones::get_zones();
-
-        foreach ($zones as $zone) {
+        foreach (WC_Shipping_Zones::get_zones() as $zone) {
             $zoneInstance = WC_Shipping_Zones::get_zone($zone['zone_id']);
 
-            array_push($shippingMethods, ...$zoneInstance->get_shipping_methods());
+            /** @var WC_Shipping_Method $shippingMethod */
+            foreach ($zoneInstance->get_shipping_methods() as $shippingMethod) {
+                $shippingMethods[] = $shippingMethod;
+            }
         }
 
         return new PdkShippingMethodCollection(
             array_values(
-                array_map(function ($shippingMethod) {
-                    return $this->get($shippingMethod);
-                }, $shippingMethods)
+                array_map(
+                    function ($shippingMethod) {
+                        return $this->get($shippingMethod);
+                    },
+                    $shippingMethods
+                )
             )
         );
     }
 
     /**
-     * @param  \WC_Shipping_Method|string $input
+     * @param  \WC_Shipping_Method|\MyParcelNL\Pdk\Plugin\Model\PdkShippingMethod|string $input
      *
      * @return \MyParcelNL\Pdk\Plugin\Model\PdkShippingMethod
      */
     public function get($input): PdkShippingMethod
     {
+        if ($input instanceof PdkShippingMethod) {
+            return $input;
+        }
+
         if ($input instanceof WC_Shipping_Method) {
             $method = $input;
         } else {
             $wcShipping = $this->wcShipping();
-
-            $method = $wcShipping->get_shipping_methods()[$input] ?? null;
+            $method     = $wcShipping->get_shipping_methods()[$input] ?? null;
         }
 
         if (! $method) {
@@ -60,7 +66,7 @@ class WcShippingMethodRepository extends AbstractPdkShippingMethodRepository
         }
 
         return new PdkShippingMethod([
-            'id'        => $method->id,
+            'id'        => "$method->id:$method->instance_id",
             'name'      => $method->get_method_title(),
             'isEnabled' => $method->enabled === 'yes',
         ]);
@@ -68,6 +74,7 @@ class WcShippingMethodRepository extends AbstractPdkShippingMethodRepository
 
     /**
      * @return \WC_Shipping
+     * @noinspection PhpUndefinedFieldInspection
      */
     public function wcShipping(): WC_Shipping
     {

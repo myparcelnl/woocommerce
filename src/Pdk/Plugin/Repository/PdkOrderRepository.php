@@ -149,12 +149,12 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         );
 
         $items     = $this->getWcOrderItems($order);
-        $recipient = $this->recipientService->createAddress($order, WcRecipientService::SHIPPING);
+        $recipient = $this->recipientService->createAddress($order, Pdk::get('wcAddressTypeShipping'));
 
         $orderData = [
             'externalIdentifier'    => $order->get_id(),
             'recipient'             => $recipient,
-            'billingAddress'        => $this->recipientService->createAddress($order, WcRecipientService::BILLING),
+            'billingAddress'        => $this->recipientService->createAddress($order, Pdk::get('wcAddressTypeBilling')),
             'deliveryOptions'       => $deliveryOptions,
             'lines'                 => $items
                 ->map(function (array $item) {
