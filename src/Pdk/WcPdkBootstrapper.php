@@ -64,8 +64,7 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'fieldLastName'   => value('last_name'),
             'fieldPhone'      => value('phone'),
             'fieldPostalCode' => value('postcode'),
-            'fieldRegion'     => value('region'),
-            'fieldState'      => value('state'),
+            'fieldRegion'     => value('state'),
 
             ###
             # Meta Keys
