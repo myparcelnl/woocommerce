@@ -5,7 +5,7 @@ const {version} = require('./package.json');
  */
 module.exports = {
   name: 'woocommerce',
-  version: version,
+  platforms: ['myparcelnl', 'myparcelbe'],
   source: [
     '!**/node_modules/**',
     'vendor/**/*',
@@ -20,5 +20,11 @@ module.exports = {
     'wpm-config.json',
     'woocommerce-myparcel.php',
   ],
-  platforms: ['myparcelnl', 'myparcelbe'],
+  version,
+  versionSource: [
+    {path: 'package.json'},
+    {path: 'composer.json'},
+    {path: 'readme.txt', regex: /Stable tag:\s*(.+)/},
+    {path: 'woocommerce-myparcel.php', regex: /Version:\s*(.+)/},
+  ],
 };
