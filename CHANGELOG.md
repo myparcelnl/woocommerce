@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+**🚧 Note: 🚧**
+
+This is a release candidate. It's not fully tested yet, but will be tested thoroughly and released on the [WordPress plugin directory] soon.
+
+You can install this version manually to get a head start on [the new features and improvements]. Please report any issues you encounter using the [Bug report form] or by sending an email to [support@myparcel.nl].
+
+[Bug report form]: https://github.com/myparcelnl/woocommerce/issues/new?labels=bug&template=BUG-REPORT.yml&version=v4.x.x-rc.x
+[WordPress plugin directory]: https://wordpress.org/plugins/woocommerce-myparcel/
+[support@myparcel.nl]: mailto:support@myparcel.nl
+[the new features and improvements]: https://github.com/myparcelnl/woocommerce/compare/main...develop
+
+## [4.19.1-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.19.0...v4.19.1-rc.1) (2023-05-01)
+
+
+### :bug: Bug Fixes
+
+* **checkout:** fix showing address errors before address is filled in ([#976](https://github.com/myparcelnl/woocommerce/issues/976)) ([08ccfdc](https://github.com/myparcelnl/woocommerce/commit/08ccfdcb42323c6464207c0162a36b4f2aacf715)), closes [myparcelnl/delivery-options#177](https://github.com/myparcelnl/delivery-options/issues/177)
+* fix billing address is required error in checkout ([#970](https://github.com/myparcelnl/woocommerce/issues/970)) ([34aeff6](https://github.com/myparcelnl/woocommerce/commit/34aeff604e544724d1bec63d6f7064e8b196c65c))
+
 ## [4.19.1](https://github.com/myparcelnl/woocommerce/compare/v4.19.0...v4.19.1) (2023-04-13)
 
 
