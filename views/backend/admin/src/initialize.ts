@@ -41,7 +41,7 @@ import {
   WcTextInput,
   WcToggleInput,
 } from './components/pdk';
-import {closeModalOnEscape, initializeTooltips, listenForBulkActions} from './hooks';
+import {closeModalOnEscape, listenForBulkActions} from './hooks';
 import {get} from '@vueuse/core';
 import {h} from 'vue';
 
@@ -148,10 +148,6 @@ export const initialize = (): void => {
 
     onInitialized() {
       listenForBulkActions();
-    },
-
-    onRendered() {
-      initializeTooltips();
     },
   });
 };

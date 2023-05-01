@@ -43,8 +43,8 @@
 
 <script lang="ts" setup>
 import {ElementInstance, generateFieldId, useLanguage} from '@myparcel-pdk/admin/src';
+import {computed, onMounted} from 'vue';
 import {InteractiveElementInstance} from '@myparcel/vue-form-builder/src';
-import {computed} from 'vue';
 
 // eslint-disable-next-line vue/no-unused-properties
 const props = defineProps<{modelValue: boolean; element: InteractiveElementInstance}>();
@@ -54,4 +54,9 @@ const id = generateFieldId(props.element as ElementInstance);
 const {translate} = useLanguage();
 
 const isInteractiveElement = computed(() => props.element.hasOwnProperty('ref'));
+
+onMounted(() => {
+  // Initialize WooCommerce tooltips/"tiptips"
+  document.body.dispatchEvent(new Event('init_tooltips'));
+});
 </script>
