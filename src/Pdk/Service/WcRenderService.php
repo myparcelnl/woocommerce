@@ -65,7 +65,9 @@ class WcRenderService extends RenderService
 
             printf('<div id="%s" class="panel woocommerce_options_panel">', "{$appInfo->name}_product_data");
 
-            foreach ($productSettingsView->getElements() ?? [] as $field) {
+            $elements = $productSettingsView->getElements();
+
+            foreach ($elements ? $elements->toArray() : [] as $field) {
                 $this->renderProductSettingsField($field);
             }
 
@@ -150,9 +152,14 @@ class WcRenderService extends RenderService
 
         if ($method) {
             $descriptionKey = "{$field['label']}_description";
+            $subtextKey     = "{$field['label']}_subtext";
 
             if (LanguageService::hasTranslation($descriptionKey)) {
                 $params['desc_tip'] = LanguageService::translate($descriptionKey);
+            }
+
+            if (LanguageService::hasTranslation($subtextKey)) {
+                $params['description'] = LanguageService::translate($subtextKey);
             }
 
             $method($params);

@@ -18,7 +18,7 @@
           <span
             v-if="element.props?.description"
             v-test="'FormGroup__description'"
-            :data-tip="translate(element.props?.description)"
+            :data-tip="element.props?.description"
             class="woocommerce-help-tip" />
         </label>
       </PdkTableCol>
@@ -29,6 +29,11 @@
           class="mypa-max-w-md">
           <slot />
         </div>
+
+        <p
+          v-if="element.props?.subtext"
+          class="desc"
+          v-html="element.props?.subtext" />
       </PdkTableCol>
     </template>
 
@@ -42,7 +47,7 @@
 </template>
 
 <script lang="ts" setup>
-import {ElementInstance, generateFieldId, useLanguage} from '@myparcel-pdk/admin/src';
+import {ElementInstance, generateFieldId} from '@myparcel-pdk/admin/src';
 import {computed, onMounted} from 'vue';
 import {InteractiveElementInstance} from '@myparcel/vue-form-builder/src';
 
@@ -50,8 +55,6 @@ import {InteractiveElementInstance} from '@myparcel/vue-form-builder/src';
 const props = defineProps<{modelValue: boolean; element: InteractiveElementInstance}>();
 
 const id = generateFieldId(props.element as ElementInstance);
-
-const {translate} = useLanguage();
 
 const isInteractiveElement = computed(() => props.element.hasOwnProperty('ref'));
 
