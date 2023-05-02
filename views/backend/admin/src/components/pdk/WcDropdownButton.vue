@@ -41,7 +41,8 @@
           :action="action"
           :disabled="disabled"
           :icon="action.icon"
-          class="!mypa-border-none !mypa-text-left">
+          :variant="action.variant as Variant"
+          class="!mypa-px-2 button-link">
           {{ translate(action.label) }}
         </ActionButton>
       </div>
@@ -51,6 +52,7 @@
 
 <script lang="ts" setup>
 import {ActionButton, ActionDefinition, Size, useDropdownData, useLanguage} from '@myparcel-pdk/admin/src';
+import {Variant} from '@myparcel-pdk/common/src';
 
 const props = defineProps<{
   // eslint-disable-next-line vue/no-unused-properties

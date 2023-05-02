@@ -2,7 +2,9 @@
   <button
     :class="[
       sizeClasses,
+      variantClasses,
       {
+        'button-disabled': disabled,
         'mypa-animate-pulse': loading,
         'mypa-opacity-50': loading || disabled,
       },
@@ -36,6 +38,7 @@
 <script lang="ts" setup>
 import {AdminIcon, Size, useLanguage} from '@myparcel-pdk/admin/src';
 import {PropType, computed} from 'vue';
+import {Variant} from '@myparcel-pdk/common';
 import WcSpinner from '../WcSpinner.vue';
 
 const props = defineProps({
@@ -61,6 +64,11 @@ const props = defineProps({
     type: String as PropType<Size>,
     default: 'md',
   },
+
+  variant: {
+    type: String as PropType<Variant>,
+    default: Variant.Primary,
+  },
 });
 
 defineEmits(['click']);
@@ -72,6 +80,13 @@ const sizeClasses = computed((): string[] => {
     ...(props.size === Size.ExtraSmall ? ['!mypa-min-h-0', '!mypa-leading-normal', '!mypa-px-1'] : []),
     ...([Size.Small, Size.ExtraSmall].includes(props.size) ? ['button-small'] : []),
     ...([Size.Large, Size.ExtraLarge].includes(props.size) ? ['button-large'] : []),
+  ];
+});
+
+const variantClasses = computed((): string[] => {
+  return [
+    ...(Variant.Secondary === props.variant ? ['button-primary'] : []),
+    ...(Variant.Error === props.variant ? ['button-link-delete'] : []),
   ];
 });
 </script>
