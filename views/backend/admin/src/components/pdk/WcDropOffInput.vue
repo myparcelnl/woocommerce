@@ -34,20 +34,12 @@
 
 <script lang="ts" setup>
 import {ElementInstance, Settings, generateFieldId, useDropOffInputContext, useLanguage} from '@myparcel-pdk/admin/src';
-import {PropType} from 'vue';
 
-const props = defineProps({
-  modelValue: {
-    type: Object as PropType<Settings.ModelDropOffPossibilities>,
-    default: null,
-  },
-
+const props = defineProps<{
   // eslint-disable-next-line vue/no-unused-properties
-  element: {
-    type: Object as PropType<ElementInstance>,
-    required: true,
-  },
-});
+  element: ElementInstance;
+  modelValue: Settings.ModelDropOffPossibilities;
+}>();
 
 const emit = defineEmits(['update:modelValue']);
 

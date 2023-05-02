@@ -15,12 +15,12 @@
     <label :for="id">
       <PdkIcon
         v-if="element.props?.icon"
-        :icon="element.props?.icon" />
+        :icon="element.props.icon" />
 
       <PdkImage
         v-if="element.props?.image"
         :alt="element.label"
-        :src="element.props?.image"
+        :src="element.props.image"
         width="24" />
 
       {{ element.label }}
@@ -34,14 +34,13 @@ export default {inheritAttrs: false};
 
 <script lang="ts" setup>
 import {ElementInstance, generateFieldId} from '@myparcel-pdk/admin/src';
-import {InteractiveElementInstance} from '@myparcel/vue-form-builder/src';
 import {useVModel} from '@vueuse/core';
 
 // eslint-disable-next-line vue/no-unused-properties
-const props = defineProps<{modelValue: string | number; element: InteractiveElementInstance}>();
+const props = defineProps<{modelValue: string | number; element: ElementInstance}>();
 const emit = defineEmits<(e: 'update:modelValue', value: string) => void>();
 
 const model = useVModel(props, undefined, emit);
 
-const id = generateFieldId(props.element as ElementInstance);
+const id = generateFieldId(props.element);
 </script>

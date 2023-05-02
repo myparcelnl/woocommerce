@@ -19,14 +19,13 @@
 
 <script lang="ts" setup>
 import {ElementInstance, generateFieldId} from '@myparcel-pdk/admin/src';
-import {InteractiveElementInstance} from '@myparcel/vue-form-builder/src';
 import {useVModel} from '@vueuse/core';
 
 // eslint-disable-next-line vue/no-unused-properties
-const props = defineProps<{modelValue: string | boolean | number | unknown[]; element: InteractiveElementInstance}>();
+const props = defineProps<{modelValue: string | boolean | number | unknown[]; element: ElementInstance}>();
 const emit = defineEmits<(e: 'update:modelValue', value: string | boolean | number | unknown[]) => void>();
 
 const model = useVModel(props, undefined, emit);
 
-const id = generateFieldId(props.element as ElementInstance);
+const id = generateFieldId(props.element);
 </script>
