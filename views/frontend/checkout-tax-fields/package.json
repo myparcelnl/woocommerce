@@ -17,9 +17,9 @@
     "@myparcel-woocommerce/frontend-common": "workspace:*",
     "@myparcel-woocommerce/vite-config": "workspace:*",
     "@types/jquery": "^3.5.16",
-    "vite": "^4.2.1",
+    "vite": "^4.3.4",
     "vite-plugin-custom-tsconfig": "^1.0.4",
     "vite-plugin-dts": "^2.1.0",
-    "vitest": "^0.29.7"
+    "vitest": "^0.30.1"
   }
 }
