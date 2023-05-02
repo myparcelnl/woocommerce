@@ -20,6 +20,47 @@ If you do choose to install this version, we would love to hear your feedback. P
 [releases]: https://github.com/myparcelnl/woocommerce/releases
 [support@myparcel.nl]: mailto:support@myparcel.nl
 
+## [5.0.0-alpha.4](https://github.com/myparcelnl/woocommerce/compare/v5.0.0-alpha.3...v5.0.0-alpha.4) (2023-05-02)
+
+
+### :bug: Bug Fixes
+
+* add missing entry to container ([f4cb71b](https://github.com/myparcelnl/woocommerce/commit/f4cb71bb689836a1bd956b4d55658f521f0716ad))
+* **admin:** do not render untranslated subtext ([fb0ccce](https://github.com/myparcelnl/woocommerce/commit/fb0ccce444cee85a7ca12a22f89f1b9e90a7207f))
+* **admin:** fix cutoff time option throwing error ([8e84af9](https://github.com/myparcelnl/woocommerce/commit/8e84af99fc47022f0030725ed6459dff7dce19f2))
+* **admin:** fix import of shipment label wrapper ([69dc9fa](https://github.com/myparcelnl/woocommerce/commit/69dc9fa4a45672519582f9476927f50a0d617107))
+* **admin:** fix tooltips not being initialized ([43cfc49](https://github.com/myparcelnl/woocommerce/commit/43cfc49f299615fb4a812d120443669ee34dbc3e))
+* **admin:** improve dropdown button ([578dadb](https://github.com/myparcelnl/woocommerce/commit/578dadb2089d6f226a7023c7640eb19722c2a694))
+* **admin:** translate form group text correctly ([e0ba9c0](https://github.com/myparcelnl/woocommerce/commit/e0ba9c0627aee8768aa68a789614f1571c8ae1fc))
+* **checkout:** disable eori field warnings when they don't exist ([adc7527](https://github.com/myparcelnl/woocommerce/commit/adc7527699e4409fa5f02b14789c1b7c267c20c4))
+* fix custom fields not showing when they should ([8b1a3e1](https://github.com/myparcelnl/woocommerce/commit/8b1a3e1caeb1d70d18263230823ebbf50f0ad2f2))
+* update fields ([1180fdf](https://github.com/myparcelnl/woocommerce/commit/1180fdf17e9f6a64ad144cc4c28eda99f420c07a))
+
+
+### :sparkles: New Features
+
+* **admin:** add subtext option to field ([5190f08](https://github.com/myparcelnl/woocommerce/commit/5190f08f2b827880317a3f4673290a42fd4edb54))
+* **admin:** improve button styles ([ba59c53](https://github.com/myparcelnl/woocommerce/commit/ba59c530a1633d5d046ca2a998adf21c03e8a2a4))
+* move frontend checkout logic to pdk ([d64e053](https://github.com/myparcelnl/woocommerce/commit/d64e053d8aea0bfeee23f4dd9d9756d5e5b2e68f))
+* move showing/hiding logic to app config ([4fc8a25](https://github.com/myparcelnl/woocommerce/commit/4fc8a25c8d23beff879d9c3e65134fe07477ea10))
+
+## ⚠ Warning ⚠
+
+🚧 This version is **not ready for production use**. 🚧
+
+This is the alpha release of the next major version of the MyParcel WooCommerce plugin. We've rewritten the plugin from scratch, using the [frontend] and [backend] of the MyParcel PDK (Plugin Development Kit).
+
+For a safer experience, we recommend you to use the stable or release candidate version of the plugin. You can find the stable version in the [WordPress plugin directory]. The release candidate versions can be found in the [releases] section of this repository. They are versioned with a `-rc` suffix.
+
+If you do choose to install this version, we would love to hear your feedback. Please report any issues you encounter using the [Bug report for v5.0.0-alpha.x form] or by sending an email to [support@myparcel.nl]
+
+[Bug report for v5.0.0-alpha.x form]: https://github.com/myparcelnl/woocommerce/issues/new?labels=alpha&template=ZZ-BUG-REPORT-v5.yml
+[WordPress plugin directory]: https://wordpress.org/plugins/woocommerce-myparcel/
+[backend]: https://github.com/myparcelnl/pdk
+[frontend]: https://github.com/myparcelnl/js-pdk
+[releases]: https://github.com/myparcelnl/woocommerce/releases
+[support@myparcel.nl]: mailto:support@myparcel.nl
+
 ## [5.0.0-alpha.3](https://github.com/myparcelnl/woocommerce/compare/v5.0.0-alpha.2...v5.0.0-alpha.3) (2023-04-14)
 
 
