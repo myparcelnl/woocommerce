@@ -18,7 +18,7 @@
           <span
             v-if="element.props?.description"
             v-test="'FormGroup__description'"
-            :data-tip="element.props?.description"
+            :data-tip="translate(element.props.description)"
             class="woocommerce-help-tip" />
         </label>
       </PdkTableCol>
@@ -32,8 +32,8 @@
 
         <p
           v-if="element.props?.subtext"
-          class="desc"
-          v-html="element.props?.subtext" />
+          class="description"
+          v-html="translate(element.props.subtext)" />
       </PdkTableCol>
     </template>
 
@@ -47,14 +47,13 @@
 </template>
 
 <script lang="ts" setup>
-import {ElementInstance, generateFieldId} from '@myparcel-pdk/admin/src';
+import {ElementInstance, generateFieldId, useLanguage} from '@myparcel-pdk/admin/src';
 import {computed, onMounted} from 'vue';
-import {InteractiveElementInstance} from '@myparcel/vue-form-builder/src';
 
 // eslint-disable-next-line vue/no-unused-properties
-const props = defineProps<{modelValue: boolean; element: InteractiveElementInstance}>();
+const props = defineProps<{modelValue: boolean; element: ElementInstance}>();
 
-const id = generateFieldId(props.element as ElementInstance);
+const id = generateFieldId(props.element);
 
 const isInteractiveElement = computed(() => props.element.hasOwnProperty('ref'));
 
@@ -62,4 +61,6 @@ onMounted(() => {
   // Initialize WooCommerce tooltips/"tiptips"
   document.body.dispatchEvent(new Event('init_tooltips'));
 });
+
+const {translate} = useLanguage();
 </script>
