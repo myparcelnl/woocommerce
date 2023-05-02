@@ -38,6 +38,19 @@ jobs:
 
       - uses: ./.github/actions/install
 
+      - name: 'Import translations'
+        if: github.ref == 'refs/heads/alpha'
+        run: |
+          yarn translations:import
+
+      - name: 'Build JS assets'
+        if: github.ref == 'refs/heads/alpha'
+        run: |
+          yarn nx run-many \
+            --output-style=static \
+            --runner=cloud \
+            --target=build
+
       - uses: myparcelnl/actions/semantic-release@v3
         id: release
         with:

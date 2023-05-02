@@ -26,9 +26,10 @@ module.exports = {
     addGitHubActionsOutputPlugin(),
     addReleaseNotesGeneratorPlugin({header: path.resolve(__dirname, `private/semantic-release/header-${branch}.md`)}),
     addChangelogPlugin(),
-    '@myparcel/semantic-release-wordpress-readme-generator',
+    // TODO: Uncomment when this version is stable.
+    // '@myparcel/semantic-release-wordpress-readme-generator',
     addExecPlugin({
-      prepareCmd: 'node ./private/updateVersion.cjs ${nextRelease.version} && yarn build',
+      prepareCmd: 'yarn pdk-builder release --version ${nextRelease.version}',
     }),
     addGitHubPlugin({
       assets: [
