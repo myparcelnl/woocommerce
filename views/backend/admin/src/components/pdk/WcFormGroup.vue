@@ -16,7 +16,7 @@
           </slot>
 
           <span
-            v-if="element.props?.description"
+            v-if="has(element.props?.description)"
             v-test="'FormGroup__description'"
             :data-tip="translate(element.props.description)"
             class="woocommerce-help-tip" />
@@ -31,7 +31,7 @@
         </div>
 
         <p
-          v-if="element.props?.subtext"
+          v-if="has(element.props?.subtext)"
           class="description"
           v-html="translate(element.props.subtext)" />
       </PdkTableCol>
@@ -62,5 +62,5 @@ onMounted(() => {
   document.body.dispatchEvent(new Event('init_tooltips'));
 });
 
-const {translate} = useLanguage();
+const {translate, has} = useLanguage();
 </script>
