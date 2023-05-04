@@ -48,7 +48,7 @@ final class CartFeesHooks implements WordPressHooksInterface
             $postData = $post;
         }
 
-        $deliveryOptionsData = $postData['myparcelnl_delivery_options'] ?? null;
+        $deliveryOptionsData = $postData[Pdk::get('checkoutHiddenInputName')] ?? null;
 
         if (empty($deliveryOptionsData)) {
             return;
