@@ -16,7 +16,7 @@
     "views/**"
   ],
   "scripts": {
-    "build": "yarn build:js && yarn translations:import && yarn bundle",
+    "build": "yarn build:js && yarn translations:import && pdk-builder build",
     "build:js": "nx run-many --output-style=stream --target=build --runner=cloud",
     "build:js:dev": "nx run-many --output-style=stream --target=build:dev",
     "build:js:dev:backend": "yarn build:js:dev --projects='backend-*'",
@@ -27,9 +27,9 @@
     "test": "nx run-many --output-style=stream --target=test",
     "test:watch": "nx run-many --output-style=stream --target=test:watch",
     "translations:import": "npx -q @edielemoine/google-docs-importer --documentId 1TPE7gwG2GXtX7vlKIaskwMy0Xr4o_ir-lsedWB86xyc -o config/pdk/translations",
-    "watch": "yarn build:js:dev -- --watch",
-    "watch:backend": "yarn build:js:dev:backend -- --watch",
-    "watch:frontend": "yarn build:js:dev:frontend -- --watch",
+    "watch": "yarn build:js:dev --parallel=99 -- --watch",
+    "watch:backend": "yarn build:js:dev:backend --parallel=99 -- --watch",
+    "watch:frontend": "yarn build:js:dev:frontend --parallel=99 -- --watch",
     "ws:build": "vite build",
     "ws:build:dev": "vite build --mode development",
     "ws:dev": "vite",
