@@ -2,20 +2,16 @@
 
 declare(strict_types=1);
 
-namespace MyParcelNL\WooCommerce\Hooks;
+namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Api\PdkEndpoint;
-use MyParcelNL\WooCommerce\Hooks\Concern\UsesPdkRequestConverter;
-use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
-final class PdkAdminEndpointHooks implements WordPressHooksInterface
+final class PdkAdminEndpointHooks extends AbstractPdkEndpointHooks
 {
-    use UsesPdkRequestConverter;
-
     public function apply(): void
     {
         add_action('rest_api_init', [$this, 'registerPdkRoutes']);
@@ -26,14 +22,9 @@ final class PdkAdminEndpointHooks implements WordPressHooksInterface
      *
      * @return \WP_REST_Response
      */
-    public function processPdkRequest(WP_REST_Request $request): WP_REST_Response
+    public function processBackendRequest(WP_REST_Request $request): WP_REST_Response
     {
-        /** @var \MyParcelNL\Pdk\Plugin\Api\PdkEndpoint $endpoint */
-        $endpoint = Pdk::get(PdkEndpoint::class);
-
-        $response = $endpoint->call($this->convertRequest($request), PdkEndpoint::CONTEXT_BACKEND);
-
-        return $this->convertResponse($response);
+        return $this->processRequest(PdkEndpoint::CONTEXT_BACKEND, $request);
     }
 
     /**
@@ -43,7 +34,7 @@ final class PdkAdminEndpointHooks implements WordPressHooksInterface
     {
         register_rest_route(Pdk::get('routeBackend'), Pdk::get('routeBackendPdk'), [
             'methods'             => WP_REST_Server::ALLMETHODS,
-            'callback'            => [$this, 'processPdkRequest'],
+            'callback'            => [$this, 'processBackendRequest'],
             'permission_callback' => function () {
                 return current_user_can('manage_options');
             },

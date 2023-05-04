@@ -9,20 +9,20 @@ use MyParcelNL\WooCommerce\Hooks\AutomaticOrderExportHooks;
 use MyParcelNL\WooCommerce\Hooks\CartFeesHooks;
 use MyParcelNL\WooCommerce\Hooks\CheckoutScriptHooks;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
-use MyParcelNL\WooCommerce\Hooks\PdkAdminEndpointHooks;
-use MyParcelNL\WooCommerce\Hooks\PdkFrontendEndpointHooks;
-use MyParcelNL\WooCommerce\Hooks\PdkWebhookHooks;
 use MyParcelNL\WooCommerce\Hooks\PluginInfoHooks;
 use MyParcelNL\WooCommerce\Hooks\ScheduledMigrationHooks;
 use MyParcelNL\WooCommerce\Hooks\SeparateAddressFieldsHooks;
 use MyParcelNL\WooCommerce\Hooks\TaxFieldsHooks;
 use MyParcelNL\WooCommerce\Hooks\TrackTraceHooks;
+use MyParcelNL\WooCommerce\Pdk\Hooks\PdkAdminEndpointHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkCoreHooks;
+use MyParcelNL\WooCommerce\Pdk\Hooks\PdkFrontendEndpointHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkOrderHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkOrderListHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkPlaceOrderHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkPluginSettingsHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkProductSettingsHooks;
+use MyParcelNL\WooCommerce\Pdk\Hooks\PdkWebhookHooks;
 use RuntimeException;
 
 final class WordPressHookService

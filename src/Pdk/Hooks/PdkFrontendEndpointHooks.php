@@ -2,19 +2,15 @@
 
 declare(strict_types=1);
 
-namespace MyParcelNL\WooCommerce\Hooks;
+namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Api\PdkEndpoint;
-use MyParcelNL\WooCommerce\Hooks\Concern\UsesPdkRequestConverter;
-use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use WP_REST_Request;
 use WP_REST_Response;
 
-final class PdkFrontendEndpointHooks implements WordPressHooksInterface
+final class PdkFrontendEndpointHooks extends AbstractPdkEndpointHooks
 {
-    use UsesPdkRequestConverter;
-
     public function apply(): void
     {
         add_action('rest_api_init', [$this, 'registerPdkRoutes']);
@@ -27,12 +23,7 @@ final class PdkFrontendEndpointHooks implements WordPressHooksInterface
      */
     public function processFrontendRequest(WP_REST_Request $request): WP_REST_Response
     {
-        /** @var \MyParcelNL\Pdk\Plugin\Api\PdkEndpoint $endpoint */
-        $endpoint = Pdk::get(PdkEndpoint::class);
-
-        $response = $endpoint->call($this->convertRequest($request), PdkEndpoint::CONTEXT_FRONTEND);
-
-        return $this->convertResponse($response);
+        return $this->processRequest(PdkEndpoint::CONTEXT_FRONTEND, $request);
     }
 
     /**
