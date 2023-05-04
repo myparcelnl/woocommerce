@@ -26,24 +26,43 @@ createPdkCheckout({
     [AddressType.Shipping]: createFields(PREFIX_SHIPPING),
   },
 
-  getForm: () => {
+  selectors: {
+    deliveryOptionsWrapper: '#mypa-delivery-options-wrapper',
+    hasAddressType: '.woocommerce-billing-fields__field-wrapper',
+  },
+
+  async doRequest(endpoint) {
+    const query = new URLSearchParams(endpoint.parameters).toString();
+
+    const response = await window.fetch(`${endpoint.baseUrl}/${endpoint.path}?${query}`, {
+      method: endpoint.method,
+      body: endpoint.body,
+    });
+
+    if (response.ok) {
+      return response.json();
+    }
+  },
+
+  getForm() {
     const getElement = useUtil(Util.GetElement);
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return getElement('form[name="checkout"]')!;
   },
 
-  initialize: () => {
+  onFormChange(callback) {
+    jQuery(this.getForm()).on('change', () => {
+      callback();
+    });
+  },
+
+  initialize() {
     return new Promise((resolve) => {
       jQuery(() => {
         resolve();
       });
     });
-  },
-
-  selectors: {
-    deliveryOptionsWrapper: '#mypa-delivery-options-wrapper',
-    hasAddressType: '.woocommerce-billing-fields__field-wrapper',
   },
 
   toggleField(field: HTMLInputElement, show: boolean): void {

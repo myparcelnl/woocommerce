@@ -1,16 +1,17 @@
 import '../assets/scss/index.scss';
 import {
   PdkDeliveryOptionsEvent,
-  initializeCheckoutDeliveryOptions,
+  initializeCheckoutDeliveryOptions as initialize,
   useEvent,
   usePdkCheckout,
 } from '@myparcel-pdk/checkout/src';
 
-usePdkCheckout().onInitialize(() => {
-  initializeCheckoutDeliveryOptions();
+const initializeCheckoutDeliveryOptions = () => {
+  void initialize();
 
-  document.addEventListener(useEvent(PdkDeliveryOptionsEvent.DeliveryOptionsUpdated), (event) => {
-    console.log('deliveryOptionsUpdated', event);
-    // $(document.body).trigger('update_checkout');
+  document.addEventListener(useEvent(PdkDeliveryOptionsEvent.DeliveryOptionsUpdated), () => {
+    jQuery(document.body).trigger('update_checkout');
   });
-});
+};
+
+usePdkCheckout().onInitialize(initializeCheckoutDeliveryOptions);
