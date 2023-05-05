@@ -17,9 +17,13 @@ class WpFilterService
      */
     public function apply(string $name, ...$args)
     {
-        $filter = Arr::get(Pdk::get('filters'), $name);
-        $value  = Arr::get(Pdk::get('filterDefaults'), $name);
+        $filter     = Arr::get(Pdk::get('filters'), $name);
+        $hasDefault = Arr::has(Pdk::get('filterDefaults'), $name);
 
-        return apply_filters($filter, $value, ...$args);
+        if ($hasDefault) {
+            array_unshift($args, Arr::get(Pdk::get('filterDefaults'), $name));
+        }
+
+        return apply_filters($filter, ...$args);
     }
 }
