@@ -48,7 +48,7 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
         /** @var \MyParcelNL\Pdk\Plugin\Contract\ViewServiceInterface $viewService */
         $viewService = Pdk::get(ViewServiceInterface::class);
 
-        if ($viewService->isCheckoutPage()) {
+        if (! $viewService->isCheckoutPage()) {
             return;
         }
 

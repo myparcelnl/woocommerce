@@ -16,7 +16,7 @@ class WcViewService extends AbstractViewService
      */
     public function isCheckoutPage(): bool
     {
-        return ! is_checkout() || is_order_received_page();
+        return is_checkout() || is_order_received_page();
     }
 
     /**
