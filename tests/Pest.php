@@ -1,4 +1,5 @@
 <?php
+/** @noinspection StaticClosureCanBeUsedInspection */
 
 declare(strict_types=1);
 
@@ -9,3 +10,4 @@ declare(strict_types=1);
  */
 
 require __DIR__ . '/../vendor/myparcelnl/pdk/tests/Pest.php';
+require __DIR__ . '/mock_class_map.php';

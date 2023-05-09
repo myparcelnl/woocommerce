@@ -6,14 +6,21 @@ namespace MyParcelNL\WooCommerce\Pdk\Plugin\Repository;
 
 use InvalidArgumentException;
 use MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface;
+use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Plugin\Model\PdkCart;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkCartRepository;
 use MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface;
 use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
+use MyParcelNL\WooCommerce\Factory\WcAddressAdapter;
 use WC_Cart;
 
 class WcCartRepository extends AbstractPdkCartRepository
 {
+    /**
+     * @var \MyParcelNL\WooCommerce\Factory\WcAddressAdapter
+     */
+    private $addressAdapter;
+
     /**
      * @var \MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface
      */
@@ -28,46 +35,62 @@ class WcCartRepository extends AbstractPdkCartRepository
      * @param  \MyParcelNL\Pdk\Storage\Contract\StorageInterface           $storage
      * @param  \MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface $productRepository
      * @param  \MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface      $currencyService
+     * @param  \MyParcelNL\WooCommerce\Factory\WcAddressAdapter            $addressAdapter
      */
     public function __construct(
         StorageInterface           $storage,
         ProductRepositoryInterface $productRepository,
-        CurrencyServiceInterface   $currencyService
+        CurrencyServiceInterface   $currencyService,
+        WcAddressAdapter           $addressAdapter
     ) {
         parent::__construct($storage);
         $this->productRepository = $productRepository;
         $this->currencyService   = $currencyService;
+        $this->addressAdapter    = $addressAdapter;
     }
 
     /**
-     * @param  \WC_Cart|string|int $input
+     * @param  \WC_Cart|string|int|null $input
      *
      * @return \MyParcelNL\Pdk\Plugin\Model\PdkCart
      */
     public function get($input): PdkCart
     {
+        $input = $input ?? WC()->cart;
+
         if (! $input instanceof WC_Cart) {
             throw new InvalidArgumentException('Invalid input for cart repository');
         }
 
-        return $this->retrieve($input->get_cart_hash(), function () use ($input): PdkCart {
-            $shipmentPriceAfterVat = $input->get_shipping_total() + $input->get_shipping_tax();
-            $orderPriceAfterVat    = $input->get_cart_contents_total() + $input->get_cart_contents_tax();
+        return $this->fromWcCart($input);
+    }
 
-            $data = [
-                'externalIdentifier'    => $input->get_cart_hash(),
-                'shipmentPrice'         => $this->currencyService->convertToCents($input->get_shipping_total()),
+    /**
+     * @param  \WC_Cart $cart
+     *
+     * @return mixed
+     */
+    protected function fromWcCart(WC_Cart $cart): PdkCart
+    {
+        return $this->retrieve($cart->get_cart_hash(), function () use ($cart): PdkCart {
+            $shipmentPriceAfterVat = $cart->get_shipping_total() + $cart->get_shipping_tax();
+            $orderPriceAfterVat    = $cart->get_cart_contents_total() + $cart->get_cart_contents_tax();
+
+            /** @var null|\WC_Shipping_Method|\WC_Shipping_Rate $shippingMethod */
+            $shippingMethod = Arr::first($cart->calculate_shipping());
+
+            return new PdkCart([
+                'externalIdentifier'    => $cart->get_cart_hash(),
+                'shipmentPrice'         => $this->currencyService->convertToCents($cart->get_shipping_total()),
                 'shipmentPriceAfterVat' => $this->currencyService->convertToCents($shipmentPriceAfterVat),
-                'shipmentVat'           => $this->currencyService->convertToCents($input->get_shipping_tax()),
-                'orderPrice'            => $this->currencyService->convertToCents($input->get_cart_contents_total()),
+                'shipmentVat'           => $this->currencyService->convertToCents($cart->get_shipping_tax()),
+                'orderPrice'            => $this->currencyService->convertToCents($cart->get_cart_contents_total()),
                 'orderPriceAfterVat'    => $this->currencyService->convertToCents($orderPriceAfterVat),
-                'orderVat'              => $this->currencyService->convertToCents($input->get_cart_contents_tax()),
+                'orderVat'              => $this->currencyService->convertToCents($cart->get_cart_contents_tax()),
                 'shippingMethod'        => [
-                    'shippingAddress' => [
-                        'cc'         => WC()->customer->get_shipping_country(),
-                        'postalCode' => WC()->customer->get_shipping_postcode(),
-                        'fullStreet' => WC()->customer->get_shipping_address(),
-                    ],
+                    'id'              => $shippingMethod ? $shippingMethod->get_id() : null,
+                    'name'            => $shippingMethod ? $shippingMethod->get_label() : null,
+                    'shippingAddress' => $this->addressAdapter->fromWcCart($cart),
                 ],
                 'lines'                 => array_map(function (array $item) {
                     $product       = $this->productRepository->getProduct($item['data']);
@@ -80,10 +103,8 @@ class WcCartRepository extends AbstractPdkCartRepository
                         'priceAfterVat' => $this->currencyService->convertToCents($priceAfterVat),
                         'product'       => $product,
                     ];
-                }, array_values($input->cart_contents)),
-            ];
-
-            return new PdkCart($data);
+                }, array_values($cart->cart_contents)),
+            ]);
         });
     }
 }

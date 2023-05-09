@@ -19,14 +19,19 @@ use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
 use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
 use MyParcelNL\Sdk\src\Support\Arr;
-use MyParcelNL\WooCommerce\Service\WcRecipientService;
+use MyParcelNL\WooCommerce\Facade\Filter;
+use MyParcelNL\WooCommerce\Factory\WcAddressAdapter;
 use Throwable;
 use WC_Order;
 use WC_Order_Item_Product;
-use function apply_filters;
 
 class PdkOrderRepository extends AbstractPdkOrderRepository
 {
+    /**
+     * @var \MyParcelNL\WooCommerce\Factory\WcAddressAdapter
+     */
+    private $addressAdapter;
+
     /**
      * @var \MyParcelNL\Pdk\Base\Service\CountryService
      */
@@ -38,26 +43,21 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     private $productRepository;
 
     /**
-     * @var \MyParcelNL\WooCommerce\Service\WcRecipientService
-     */
-    private $recipientService;
-
-    /**
      * @param  \MyParcelNL\Pdk\Storage\Contract\StorageInterface           $storage
      * @param  \MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface $productRepository
-     * @param  \MyParcelNL\WooCommerce\Service\WcRecipientService          $recipientService
      * @param  \MyParcelNL\Pdk\Base\Service\CountryService                 $countryService
+     * @param  \MyParcelNL\WooCommerce\Factory\WcAddressAdapter            $addressAdapter
      */
     public function __construct(
         StorageInterface           $storage,
         ProductRepositoryInterface $productRepository,
-        WcRecipientService         $recipientService,
-        CountryService             $countryService
+        CountryService             $countryService,
+        WcAddressAdapter           $addressAdapter
     ) {
         parent::__construct($storage);
         $this->productRepository = $productRepository;
-        $this->recipientService  = $recipientService;
         $this->countryService    = $countryService;
+        $this->addressAdapter    = $addressAdapter;
     }
 
     /**
@@ -138,23 +138,24 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      * @throws \ErrorException
      * @throws \JsonException
      * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
+     * @throws \Exception
      */
     private function getDataFromOrder(WC_Order $order): PdkOrder
     {
         $savedOrderData  = $order->get_meta(Pdk::get('metaKeyOrderData')) ?: [];
-        $deliveryOptions = apply_filters(
-            'wc_myparcel_order_delivery_options',
+        $deliveryOptions = Filter::apply(
+            'orderDeliveryOptions',
             $savedOrderData['deliveryOptions'] ?? [],
             $order
         );
 
         $items     = $this->getWcOrderItems($order);
-        $recipient = $this->recipientService->createAddress($order, Pdk::get('wcAddressTypeShipping'));
+        $recipient = $this->addressAdapter->fromWcOrder($order);
 
         $orderData = [
             'externalIdentifier'    => $order->get_id(),
             'recipient'             => $recipient,
-            'billingAddress'        => $this->recipientService->createAddress($order, Pdk::get('wcAddressTypeBilling')),
+            'billingAddress'        => $this->addressAdapter->fromWcOrder($order, Pdk::get('wcAddressTypeBilling')),
             'deliveryOptions'       => $deliveryOptions,
             'lines'                 => $items
                 ->map(function (array $item) {
@@ -204,7 +205,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         }, 0);
 
         return [
-            'weight' => $totalWeight
+            'weight' => $totalWeight,
         ];
     }
 
