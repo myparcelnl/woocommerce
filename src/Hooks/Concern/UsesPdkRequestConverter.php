@@ -9,8 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use WP_REST_Request;
 use WP_REST_Response;
 
-trait
-UsesPdkRequestConverter
+trait UsesPdkRequestConverter
 {
     /**
      * Convert a WP_REST_Request to a Symfony Request.
@@ -25,9 +24,9 @@ UsesPdkRequestConverter
             $wpRestRequest->get_route(),
             $wpRestRequest->get_method(),
             $wpRestRequest->get_query_params(),
-            [],
+            $_COOKIE,
             $wpRestRequest->get_file_params(),
-            [],
+            $_SERVER,
             $wpRestRequest->get_body()
         );
 
