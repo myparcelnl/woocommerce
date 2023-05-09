@@ -8,8 +8,8 @@ use Exception;
 use MyParcelNL\Pdk\Facade\DefaultLogger;
 use MyParcelNL\Pdk\Facade\LanguageService;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Plugin\Contract\DeliveryOptionsFeesServiceInterface;
 use MyParcelNL\Pdk\Plugin\Model\PdkCartFee;
-use MyParcelNL\Pdk\Plugin\Service\DeliveryOptionsFeesService;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Pdk\Service\WcTaxService;
@@ -59,8 +59,8 @@ final class CartFeesHooks implements WordPressHooksInterface
         try {
             $deliveryOptions = new DeliveryOptions(json_decode(stripslashes($deliveryOptionsData), true));
 
-            /** @var DeliveryOptionsFeesService $feesService */
-            $feesService = Pdk::get(DeliveryOptionsFeesService::class);
+            /** @var DeliveryOptionsFeesServiceInterface $feesService */
+            $feesService = Pdk::get(DeliveryOptionsFeesServiceInterface::class);
             $fees        = $feesService->getFees($deliveryOptions);
         } catch (Exception $e) {
             DefaultLogger::error(
