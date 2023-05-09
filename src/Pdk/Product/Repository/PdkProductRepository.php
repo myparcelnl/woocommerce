@@ -53,7 +53,7 @@ class PdkProductRepository extends AbstractProductRepository
     }
 
     /**
-     * @param  \WC_Order|string|int $identifier
+     * @param  \WC_Product|string|int $identifier
      *
      * @return \MyParcelNL\Pdk\Plugin\Model\PdkProduct
      */
