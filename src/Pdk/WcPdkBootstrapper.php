@@ -150,10 +150,29 @@ class WcPdkBootstrapper extends PdkBootstrapper
              * Settings defaults
              */
 
-            'defaultSettings' => value([
+            'defaultSettings'          => value([
                 CheckoutSettings::ID => [
-                    CheckoutSettings::ALLOWED_SHIPPING_METHODS => ['flat_rate', 'free_shipping'],
+                    CheckoutSettings::ALLOWED_SHIPPING_METHODS  => ['flat_rate', 'free_shipping'],
+                    CheckoutSettings::DELIVERY_OPTIONS_POSITION => 'woocommerce_after_checkout_billing_form',
                 ],
+            ]),
+
+            /**
+             * @see https://www.businessbloomer.com/woocommerce-visual-hook-guide-checkout-page/
+             */
+            'deliveryOptionsPositions' => value([
+                'woocommerce_checkout_before_customer_details',
+                'woocommerce_before_checkout_billing_form',
+                'woocommerce_after_checkout_billing_form',
+                'woocommerce_before_checkout_shipping_form',
+                'woocommerce_after_checkout_shipping_form',
+                'woocommerce_before_order_notes',
+                'woocommerce_after_order_notes',
+                'woocommerce_checkout_after_customer_details',
+                'woocommerce_review_order_before_shipping',
+                'woocommerce_review_order_after_shipping',
+                'woocommerce_review_order_before_order_total',
+                'woocommerce_review_order_after_order_total',
             ]),
 
             ###
@@ -192,6 +211,14 @@ class WcPdkBootstrapper extends PdkBootstrapper
                 'fieldStreetPriority'           => 'mpwc_checkout_field_street_priority',
                 'fieldNumberPriority'           => 'mpwc_checkout_field_number_priority',
                 'fieldNumberSuffixPriority'     => 'mpwc_checkout_field_number_suffix_priority',
+
+                /**
+                 * Checkout
+                 */
+                'deliveryOptionsPosition'       => 'mpwc_checkout_delivery_options_position',
+                'deliveryOptionsPositions'      => 'mpwc_checkout_delivery_options_positions',
+                'orderDeliveryOptions'          => 'mpwc_checkout_order_delivery_options',
+                'showDeliveryOptions'           => 'mpwc_checkout_show_delivery_options',
             ]),
 
             'filterDefaults' => value([
@@ -212,18 +239,6 @@ class WcPdkBootstrapper extends PdkBootstrapper
                 'fieldEoriNumberPriority' => 900,
                 'fieldVatNumberPriority'  => 901,
             ]),
-
-            /**
-             * Used to change the priority of the filter that adds the separate address fields to the checkout.
-             */
-
-            'filterCheckoutSeparateAddressFieldsPriority' => value('mpwc_checkout_separate_address_fields_priority'),
-
-            /**
-             * Used to change the priority of the filter that adds the tax fields to the checkout.
-             */
-
-            'filterCheckoutTaxPriority' => value('mpwc_checkout_tax_fields_priority'),
         ];
     }
 }

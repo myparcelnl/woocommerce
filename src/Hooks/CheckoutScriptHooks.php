@@ -11,6 +11,7 @@ use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Plugin\Contract\PdkCartRepositoryInterface;
 use MyParcelNL\Pdk\Plugin\Contract\ViewServiceInterface;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
+use MyParcelNL\WooCommerce\Facade\Filter;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Service\WpScriptService;
 use WC_Product;
@@ -33,9 +34,6 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
     public function apply(): void
     {
         add_action('wp_enqueue_scripts', [$this, 'enqueueFrontendScripts'], 100);
-
-
-
     }
 
     /**
@@ -52,26 +50,25 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
             return;
         }
 
+        $this->loadCoreScripts();
+        $this->loadSeparateAddressFieldsScripts();
+        $this->loadDeliveryOptionsScripts();
+        $this->loadTaxFieldsScripts();
+    }
+
+    /**
+     * @return void
+     */
+    public function loadCoreScripts(): void
+    {
         $this->service->enqueueLocalScript(
             WpScriptService::HANDLE_CHECKOUT_CORE,
             'views/frontend/checkout-core/lib/checkout-core',
-            [WpScriptService::HANDLE_WC_CHECKOUT, WpScriptService::HANDLE_JQUERY]
+            [
+                WpScriptService::HANDLE_JQUERY,
+                WpScriptService::HANDLE_WC_CHECKOUT,
+            ]
         );
-
-        if ($this->useSeparateAddressFields()) {
-            $this->loadSeparateAddressFieldsScripts();
-        }
-
-        if (AccountSettings::hasTaxFields()) {
-            $this->loadTaxFieldsScripts();
-        }
-
-        // Don't load the delivery options scripts if it's disabled
-        //        if (Settings::get(CheckoutSettings::DELIVERY_OPTIONS_DISPLAY, CheckoutSettings::ID)) {
-        add_action($this->getDeliveryOptionsPosition(), [$this, 'renderDeliveryOptions']);
-
-        $this->loadDeliveryOptionsScripts();
-        //        }
     }
 
     /**
@@ -98,11 +95,9 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
      */
     private function getDeliveryOptionsPosition(): string
     {
-        $position = Settings::get(CheckoutSettings::DELIVERY_OPTIONS_POSITION, CheckoutSettings::ID);
-
-        return apply_filters(
-            'wc_wcmp_delivery_options_location',
-            $position ?? 'woocommerce_after_checkout_billing_form'
+        return Filter::apply(
+            'deliveryOptionsPosition',
+            Settings::get(CheckoutSettings::DELIVERY_OPTIONS_POSITION, CheckoutSettings::ID)
         );
     }
 
@@ -115,18 +110,14 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
             return;
         }
 
+        add_action($this->getDeliveryOptionsPosition(), [$this, 'renderDeliveryOptions']);
+
         $dependencies = [
             WpScriptService::HANDLE_JQUERY,
             WpScriptService::HANDLE_WC_CHECKOUT,
+            WpScriptService::HANDLE_CHECKOUT_CORE,
             WpScriptService::HANDLE_DELIVERY_OPTIONS,
         ];
-
-        /**
-         * If split address fields are enabled add its script as an additional dependency.
-         */
-        if ($this->useSeparateAddressFields()) {
-            $dependencies[] = WpScriptService::HANDLE_SEPARATE_ADDRESS_FIELDS;
-        }
 
         $this->service->enqueueDeliveryOptions();
 
@@ -147,10 +138,17 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
      */
     private function loadSeparateAddressFieldsScripts(): void
     {
+        if (! $this->useSeparateAddressFields()) {
+            return;
+        }
+
         $this->service->enqueueLocalScript(
             WpScriptService::HANDLE_SEPARATE_ADDRESS_FIELDS,
             'views/frontend/checkout-separate-address-fields/lib/separate-address-fields',
-            [WpScriptService::HANDLE_WC_CHECKOUT]
+            [
+                WpScriptService::HANDLE_WC_CHECKOUT,
+                WpScriptService::HANDLE_CHECKOUT_CORE,
+            ]
         );
 
         $this->service->enqueueStyle(
@@ -159,12 +157,25 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
         );
     }
 
+    /**
+     * @return void
+     */
     private function loadTaxFieldsScripts(): void
     {
+        if (! AccountSettings::hasTaxFields()) {
+            return;
+        }
+
         $this->service->enqueueLocalScript(
             WpScriptService::HANDLE_TAX_FIELDS,
             'views/frontend/checkout-tax-fields/lib/tax-fields',
-            [WpScriptService::HANDLE_WC_CHECKOUT]
+            array_merge(
+                [
+                    WpScriptService::HANDLE_WC_CHECKOUT,
+                    WpScriptService::HANDLE_CHECKOUT_CORE,
+                ],
+                $this->shouldShowDeliveryOptions() ? [WpScriptService::HANDLE_CHECKOUT_DELIVERY_OPTIONS] : []
+            )
         );
     }
 
@@ -175,6 +186,10 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
      */
     private function shouldShowDeliveryOptions(): bool
     {
+        if (! Settings::get(CheckoutSettings::ENABLE_DELIVERY_OPTIONS, CheckoutSettings::ID)) {
+            return false;
+        }
+
         $showDeliveryOptions = false;
 
         foreach (WC()->cart->get_cart() as $cartItem) {
@@ -187,7 +202,7 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
             }
         }
 
-        return apply_filters('wc_myparcel_show_delivery_options', $showDeliveryOptions);
+        return Filter::apply('showDeliveryOptions', $showDeliveryOptions);
     }
 
     /**
