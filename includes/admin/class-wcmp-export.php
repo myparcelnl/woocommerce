@@ -1509,10 +1509,6 @@ class WCMP_Export
     ): void {
         $colloAmount = $orderSettings->getColloAmount();
 
-        if (CarrierDHLForYou::NAME === $consignment->getCarrier()->getName() && ! AccountSettings::getInstance()->hasDhlForYouCompleteAccess()) {
-            $consignment->setSameDayDelivery(true);
-        }
-
         if ($colloAmount > 1) {
             $this->addMultiCollo($orderSettings, $collection, $consignment);
             return;
