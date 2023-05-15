@@ -445,21 +445,19 @@ class WCMP_Checkout
      */
     private function adjustDhlForYouDeliverySettings(array $dhlForYouSettings): array
     {
-        $weekDay = date('N', strtotime(date('Y-m-d')));
-
-        $now        = new DateTime();
-        $cutOffTime = DateTime::createFromFormat('H:i', $dhlForYouSettings['cutoffTime']);
-
-        $weekDay = $now < $cutOffTime ? $weekDay : $weekDay + 1;
-        $weekDay = ($weekDay + $dhlForYouSettings['dropOffDelay']) % 7;
-
-        $accountSettings   = AccountSettings::getInstance();
+        $weekDay           = date('N', strtotime(date('Y-m-d')));
+        $now               = new DateTime();
+        $cutOffTime        = DateTime::createFromFormat('H:i', $dhlForYouSettings['cutoffTime']);
+        $weekDay           = $now < $cutOffTime ? $weekDay : $weekDay + 1;
+        $weekDay           = ($weekDay + $dhlForYouSettings['dropOffDelay']) % 7;
         $todayIsDropOffDay = in_array((string) $weekDay, $dhlForYouSettings['dropOffDays'], true);
 
         $dhlForYouSettings['allowDeliveryOptions'] = $todayIsDropOffDay;
-        $dhlForYouSettings['allowSameDayDelivery'] = ! $accountSettings->hasDhlForYouCompleteAccess()
-            || WCMYPA()->setting_collection->where('carrier', CarrierDHLForYou::NAME)
-                ->getByName(WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY);
+        $dhlForYouSettings['allowSameDayDelivery'] = WCMYPA()->setting_collection->where(
+            'carrier',
+            CarrierDHLForYou::NAME
+        )
+            ->getByName(WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY);
 
         return $dhlForYouSettings;
     }
