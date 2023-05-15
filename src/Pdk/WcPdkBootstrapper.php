@@ -191,39 +191,50 @@ class WcPdkBootstrapper extends PdkBootstrapper
             ###
 
             'filters' => value([
-                'separateAddressFieldsPriority' => 'mpwc_checkout_separate_address_fields_priority',
-                'taxFieldsPriority'             => 'mpwc_checkout_tax_fields_priority',
+                'separateAddressFieldsPriority'    => 'mpwc_checkout_separate_address_fields_priority',
+                'taxFieldsPriority'                => 'mpwc_checkout_tax_fields_priority',
+                'trackTraceInMyAccountPriority'    => 'mpwc_track_trace_in_my_account_priority',
+                'trackTraceInMyEmailPriority'      => 'mpwc_track_trace_in_email_priority',
+                'trackTraceInOrderDetailsPriority' => 'mpwc_track_trace_in_order_details_priority',
 
                 /**
                  * Field classes
                  */
-                'fieldEoriNumberClass'          => 'mpwc_checkout_field_eori_number_class',
-                'fieldVatNumberClass'           => 'mpwc_checkout_field_vat_number_class',
-                'fieldStreetClass'              => 'mpwc_checkout_field_street_class',
-                'fieldNumberClass'              => 'mpwc_checkout_field_number_class',
-                'fieldNumberSuffixClass'        => 'mpwc_checkout_field_number_suffix_class',
+                'fieldEoriNumberClass'             => 'mpwc_checkout_field_eori_number_class',
+                'fieldVatNumberClass'              => 'mpwc_checkout_field_vat_number_class',
+                'fieldStreetClass'                 => 'mpwc_checkout_field_street_class',
+                'fieldNumberClass'                 => 'mpwc_checkout_field_number_class',
+                'fieldNumberSuffixClass'           => 'mpwc_checkout_field_number_suffix_class',
 
                 /**
                  * Field priorities
                  */
-                'fieldEoriNumberPriority'       => 'mpwc_checkout_field_eori_number_priority',
-                'fieldVatNumberPriority'        => 'mpwc_checkout_field_vat_number_priority',
-                'fieldStreetPriority'           => 'mpwc_checkout_field_street_priority',
-                'fieldNumberPriority'           => 'mpwc_checkout_field_number_priority',
-                'fieldNumberSuffixPriority'     => 'mpwc_checkout_field_number_suffix_priority',
+                'fieldEoriNumberPriority'          => 'mpwc_checkout_field_eori_number_priority',
+                'fieldVatNumberPriority'           => 'mpwc_checkout_field_vat_number_priority',
+                'fieldStreetPriority'              => 'mpwc_checkout_field_street_priority',
+                'fieldNumberPriority'              => 'mpwc_checkout_field_number_priority',
+                'fieldNumberSuffixPriority'        => 'mpwc_checkout_field_number_suffix_priority',
 
                 /**
                  * Checkout
                  */
-                'deliveryOptionsPosition'       => 'mpwc_checkout_delivery_options_position',
-                'deliveryOptionsPositions'      => 'mpwc_checkout_delivery_options_positions',
-                'orderDeliveryOptions'          => 'mpwc_checkout_order_delivery_options',
-                'showDeliveryOptions'           => 'mpwc_checkout_show_delivery_options',
+                'deliveryOptionsPosition'          => 'mpwc_checkout_delivery_options_position',
+                'deliveryOptionsPositions'         => 'mpwc_checkout_delivery_options_positions',
+                'orderDeliveryOptions'             => 'mpwc_checkout_order_delivery_options',
+                'showDeliveryOptions'              => 'mpwc_checkout_show_delivery_options',
+
+                /**
+                 * Account page
+                 */
+                'trackTraceLabel'                  => 'mpwc_track_trace_label',
             ]),
 
             'filterDefaults' => value([
-                'separateAddressFieldsPriority' => 10,
-                'taxFieldsPriority'             => 10,
+                'separateAddressFieldsPriority'    => 10,
+                'taxFieldsPriority'                => 10,
+                'trackTraceInEmailPriority'        => 10,
+                'trackTraceInMyAccountPriority'    => 10,
+                'trackTraceInOrderDetailsPriority' => 10,
 
                 'fieldStreetClass'       => ['form-row-third', 'first'],
                 'fieldNumberClass'       => ['form-row-third'],
