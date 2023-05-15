@@ -1,8 +1,6 @@
 import {AddressType, PdkField, Util, createPdkCheckout, useUtil} from '@myparcel-pdk/checkout/src';
 import {createFields} from './utils/createFields';
 
-// TODO: Get fields from the backend
-
 const PREFIX_BILLING = 'billing_';
 const PREFIX_SHIPPING = 'shipping_';
 
@@ -13,22 +11,21 @@ const createId = (name: string) => `#${name}`;
 
 createPdkCheckout({
   fields: {
-    [PdkField.ShippingMethod]: createId('shipping_method'),
-    [PdkField.ToggleAddressType]: '#ship-to-different-address-checkbox',
+    [PdkField.AddressType]: createId('ship-to-different-address-checkbox'),
+    [PdkField.ShippingMethod]: createId(FIELD_SHIPPING_METHOD),
     [AddressType.Billing]: createFields(PREFIX_BILLING, createName),
     [AddressType.Shipping]: createFields(PREFIX_SHIPPING, createName),
   },
 
   formData: {
+    [PdkField.AddressType]: 'ship_to_different_address',
     [PdkField.ShippingMethod]: `${FIELD_SHIPPING_METHOD}[0]`,
-    [PdkField.ToggleAddressType]: 'ship_to_different_address',
     [AddressType.Billing]: createFields(PREFIX_BILLING),
     [AddressType.Shipping]: createFields(PREFIX_SHIPPING),
   },
 
   selectors: {
     deliveryOptionsWrapper: '#mypa-delivery-options-wrapper',
-    hasAddressType: '.woocommerce-billing-fields__field-wrapper',
   },
 
   async doRequest(endpoint) {
@@ -44,6 +41,16 @@ createPdkCheckout({
     }
   },
 
+  formChange(callback) {
+    jQuery(this.getForm()).on('change', () => {
+      callback();
+    });
+  },
+
+  getAddressType(value) {
+    return value === '1' ? AddressType.Shipping : AddressType.Billing;
+  },
+
   getForm() {
     const getElement = useUtil(Util.GetElement);
 
@@ -51,10 +58,10 @@ createPdkCheckout({
     return getElement('form[name="checkout"]')!;
   },
 
-  onFormChange(callback) {
-    jQuery(this.getForm()).on('change', () => {
-      callback();
-    });
+  hasAddressType(addressType: AddressType) {
+    const billingElement = document.querySelector('.woocommerce-billing-fields__field-wrapper');
+
+    return AddressType.Shipping === addressType || billingElement !== null;
   },
 
   initialize() {

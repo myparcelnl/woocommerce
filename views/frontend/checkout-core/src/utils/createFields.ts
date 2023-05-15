@@ -1,5 +1,7 @@
 import {AddressFields} from '@myparcel-pdk/checkout/src';
 
+// TODO: Get fields from the backend
+
 const addressBase = {
   address1: `address_1`,
   city: `city`,
