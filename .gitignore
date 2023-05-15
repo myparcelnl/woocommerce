@@ -4,6 +4,8 @@ vendor/
 lib/
 dist/
 
+docker-compose.override.yml
+
 **/tsconfig.json
 !./tsconfig.json
 

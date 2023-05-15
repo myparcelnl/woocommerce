@@ -1,0 +1,17 @@
+version: '3.9'
+
+x-common:
+  - &common
+    image: myparcelnl/woocommerce
+    build: .
+    volumes:
+      - .:/app
+
+services:
+  php:
+    <<: *common
+    command: ['composer', 'update']
+
+  test:
+    <<: *common
+    command: ['php', 'vendor/bin/pest']
