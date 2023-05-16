@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
+use MyParcelNL\Pdk\App\Cart\Contract\PdkCartRepositoryInterface;
 use MyParcelNL\Pdk\Facade\AccountSettings;
+use MyParcelNL\Pdk\Facade\Frontend;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Facade\RenderService;
 use MyParcelNL\Pdk\Facade\Settings;
-use MyParcelNL\Pdk\Plugin\Contract\PdkCartRepositoryInterface;
-use MyParcelNL\Pdk\Plugin\Contract\ViewServiceInterface;
+use MyParcelNL\Pdk\Frontend\Contract\ViewServiceInterface;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\WooCommerce\Facade\Filter;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
@@ -43,7 +43,7 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
      */
     public function enqueueFrontendScripts(): void
     {
-        /** @var \MyParcelNL\Pdk\Plugin\Contract\ViewServiceInterface $viewService */
+        /** @var ViewServiceInterface $viewService */
         $viewService = Pdk::get(ViewServiceInterface::class);
 
         if (! $viewService->isCheckoutPage()) {
@@ -54,21 +54,6 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
         $this->loadSeparateAddressFieldsScripts();
         $this->loadDeliveryOptionsScripts();
         $this->loadTaxFieldsScripts();
-    }
-
-    /**
-     * @return void
-     */
-    public function loadCoreScripts(): void
-    {
-        $this->service->enqueueLocalScript(
-            WpScriptService::HANDLE_CHECKOUT_CORE,
-            'views/frontend/checkout-core/lib/checkout-core',
-            [
-                WpScriptService::HANDLE_JQUERY,
-                WpScriptService::HANDLE_WC_CHECKOUT,
-            ]
-        );
     }
 
     /**
@@ -84,10 +69,10 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
             return;
         }
 
-        /** @var \MyParcelNL\Pdk\Plugin\Contract\PdkCartRepositoryInterface $repository */
+        /** @var PdkCartRepositoryInterface $repository */
         $repository = Pdk::get(PdkCartRepositoryInterface::class);
 
-        echo RenderService::renderDeliveryOptions($repository->get($wcCart));
+        echo Frontend::renderDeliveryOptions($repository->get($wcCart));
     }
 
     /**
@@ -102,6 +87,29 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
     }
 
     /**
+     * @return array
+     */
+    private function getWcCheckoutDependencies(): array
+    {
+        return [
+            WpScriptService::HANDLE_JQUERY,
+            WpScriptService::HANDLE_WC_CHECKOUT,
+        ];
+    }
+
+    /**
+     * @return void
+     */
+    private function loadCoreScripts(): void
+    {
+        $this->service->enqueueLocalScript(
+            WpScriptService::HANDLE_CHECKOUT_CORE,
+            'views/frontend/checkout-core/lib/checkout-core',
+            $this->getWcCheckoutDependencies()
+        );
+    }
+
+    /**
      * @throws \Exception
      */
     private function loadDeliveryOptionsScripts(): void
@@ -112,23 +120,19 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
 
         add_action($this->getDeliveryOptionsPosition(), [$this, 'renderDeliveryOptions']);
 
-        $dependencies = [
-            WpScriptService::HANDLE_JQUERY,
-            WpScriptService::HANDLE_WC_CHECKOUT,
-            WpScriptService::HANDLE_CHECKOUT_CORE,
-            WpScriptService::HANDLE_DELIVERY_OPTIONS,
-        ];
-
         $this->service->enqueueDeliveryOptions();
 
         $this->service->enqueueLocalScript(
             WpScriptService::HANDLE_CHECKOUT_DELIVERY_OPTIONS,
             'views/frontend/checkout-delivery-options/lib/delivery-options',
-            $dependencies
+            $this->getWcCheckoutDependencies() + [
+                WpScriptService::HANDLE_CHECKOUT_CORE,
+                WpScriptService::HANDLE_DELIVERY_OPTIONS,
+            ]
         );
 
         $this->service->enqueueStyle(
-            WpScriptService::HANDLE_SEPARATE_ADDRESS_FIELDS,
+            WpScriptService::HANDLE_CHECKOUT_DELIVERY_OPTIONS,
             'views/frontend/checkout-delivery-options/lib/style.css'
         );
     }
@@ -145,8 +149,7 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
         $this->service->enqueueLocalScript(
             WpScriptService::HANDLE_SEPARATE_ADDRESS_FIELDS,
             'views/frontend/checkout-separate-address-fields/lib/separate-address-fields',
-            [
-                WpScriptService::HANDLE_WC_CHECKOUT,
+            $this->getWcCheckoutDependencies() + [
                 WpScriptService::HANDLE_CHECKOUT_CORE,
             ]
         );
@@ -170,8 +173,8 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
             WpScriptService::HANDLE_TAX_FIELDS,
             'views/frontend/checkout-tax-fields/lib/tax-fields',
             array_merge(
+                $this->getWcCheckoutDependencies(),
                 [
-                    WpScriptService::HANDLE_WC_CHECKOUT,
                     WpScriptService::HANDLE_CHECKOUT_CORE,
                 ],
                 $this->shouldShowDeliveryOptions() ? [WpScriptService::HANDLE_CHECKOUT_DELIVERY_OPTIONS] : []

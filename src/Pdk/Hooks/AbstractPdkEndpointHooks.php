@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
-use MyParcelNL\Pdk\Plugin\Api\PdkEndpoint;
+use MyParcelNL\Pdk\App\Api\PdkEndpoint;
 use MyParcelNL\WooCommerce\Hooks\Concern\UsesPdkRequestConverter;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use WP_REST_Request;
@@ -15,10 +15,13 @@ abstract class AbstractPdkEndpointHooks implements WordPressHooksInterface
     use UsesPdkRequestConverter;
 
     /**
-     * @var \MyParcelNL\Pdk\Plugin\Api\PdkEndpoint
+     * @var \MyParcelNL\Pdk\App\Api\PdkEndpoint
      */
     private $endpoint;
 
+    /**
+     * @param  \MyParcelNL\Pdk\App\Api\PdkEndpoint $endpoint
+     */
     public function __construct(PdkEndpoint $endpoint)
     {
         $this->endpoint = $endpoint;
@@ -27,7 +30,6 @@ abstract class AbstractPdkEndpointHooks implements WordPressHooksInterface
     /**
      * Convert the request to a format that the PDK understands, calls the endpoint and converts the response back to
      * a format that WordPress understands.
-     *
      * Disables notices to prevent random plugin notices from breaking the response.
      *
      * @param  string           $context

@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Action;
 
-use MyParcelNL;
+use MyParcelNL\Pdk\App\Api\Frontend\AbstractFrontendEndpointService;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Plugin\Api\Frontend\AbstractFrontendEndpointService;
 
 class WcFrontendEndpointService extends AbstractFrontendEndpointService
 {

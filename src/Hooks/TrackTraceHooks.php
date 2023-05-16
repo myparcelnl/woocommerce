@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Hooks;
 
 use Exception;
-use MyParcelNL\Pdk\Facade\LanguageService;
+use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
+use MyParcelNL\Pdk\Facade\Language;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
-use MyParcelNL\Pdk\Plugin\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
 use MyParcelNL\Pdk\Shipment\Model\Shipment;
 use MyParcelNL\WooCommerce\Facade\Filter;
@@ -18,12 +18,12 @@ use WC_Order;
 final class TrackTraceHooks implements WordPressHooksInterface
 {
     /**
-     * @var \MyParcelNL\Pdk\Plugin\Contract\PdkOrderRepositoryInterface
+     * @var \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface
      */
     private $orderRepository;
 
     /**
-     * @param  \MyParcelNL\Pdk\Plugin\Contract\PdkOrderRepositoryInterface $pdkOrderRepository
+     * @param  \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $pdkOrderRepository
      */
     public function __construct(PdkOrderRepositoryInterface $pdkOrderRepository)
     {
@@ -76,7 +76,7 @@ final class TrackTraceHooks implements WordPressHooksInterface
         if ($lastShipment) {
             $actions["{$appInfo->name}_track_trace"] = [
                 'url'  => $lastShipment->linkConsumerPortal,
-                'name' => Filter::apply('trackTraceLabel', LanguageService::translate('track_trace'), $lastShipment),
+                'name' => Filter::apply('trackTraceLabel', Language::translate('track_trace'), $lastShipment),
             ];
         }
 
@@ -152,7 +152,7 @@ final class TrackTraceHooks implements WordPressHooksInterface
 
         printf(
             '<p>%s %s</p>',
-            Filter::apply($filter, LanguageService::translate('track_trace_link'), $lastShipment),
+            Filter::apply($filter, Language::translate('track_trace_link'), $lastShipment),
             $this->createTrackTraceLink($lastShipment)
         );
     }

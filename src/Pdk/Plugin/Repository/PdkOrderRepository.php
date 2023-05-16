@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Repository;
 
+use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
+use MyParcelNL\Pdk\App\Order\Model\PdkOrder;
+use MyParcelNL\Pdk\App\Order\Model\PdkOrderLine;
+use MyParcelNL\Pdk\App\Order\Repository\AbstractPdkOrderRepository;
 use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Base\Support\Collection;
-use MyParcelNL\Pdk\Facade\DefaultLogger;
+use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
-use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
-use MyParcelNL\Pdk\Plugin\Model\PdkOrderLine;
-use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
-use MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
@@ -38,21 +38,21 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     private $countryService;
 
     /**
-     * @var \MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface
+     * @var \MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface
      */
     private $productRepository;
 
     /**
-     * @param  \MyParcelNL\Pdk\Storage\Contract\StorageInterface           $storage
-     * @param  \MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface $productRepository
-     * @param  \MyParcelNL\Pdk\Base\Service\CountryService                 $countryService
-     * @param  \MyParcelNL\WooCommerce\Factory\WcAddressAdapter            $addressAdapter
+     * @param  \MyParcelNL\Pdk\Storage\Contract\StorageInterface                $storage
+     * @param  \MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface $productRepository
+     * @param  \MyParcelNL\Pdk\Base\Service\CountryService                      $countryService
+     * @param  \MyParcelNL\WooCommerce\Factory\WcAddressAdapter                 $addressAdapter
      */
     public function __construct(
-        StorageInterface           $storage,
-        ProductRepositoryInterface $productRepository,
-        CountryService             $countryService,
-        WcAddressAdapter           $addressAdapter
+        StorageInterface              $storage,
+        PdkProductRepositoryInterface $productRepository,
+        CountryService                $countryService,
+        WcAddressAdapter              $addressAdapter
     ) {
         parent::__construct($storage);
         $this->productRepository = $productRepository;
@@ -63,8 +63,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     /**
      * @param  int|string|WC_Order $input
      *
-     * @return \MyParcelNL\Pdk\Plugin\Model\PdkOrder
-     * @throws \Exception
+     * @return \MyParcelNL\Pdk\App\Order\Model\PdkOrder
      */
     public function get($input): PdkOrder
     {
@@ -74,7 +73,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             try {
                 return $this->getDataFromOrder($order);
             } catch (Throwable $exception) {
-                DefaultLogger::error(
+                Logger::error(
                     'Could not retrieve order data from WooCommerce order',
                     [
                         'order_id' => $order->get_id(),
@@ -88,11 +87,10 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     }
 
     /**
-     * @param  \MyParcelNL\Pdk\Plugin\Model\PdkOrder $order
+     * @param  \MyParcelNL\Pdk\App\Order\Model\PdkOrder $order
      *
-     * @return \MyParcelNL\Pdk\Plugin\Model\PdkOrder
+     * @return \MyParcelNL\Pdk\App\Order\Model\PdkOrder
      * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
-     * @throws \Exception
      */
     public function update(PdkOrder $order): PdkOrder
     {
@@ -134,10 +132,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     /**
      * @param  \WC_Order $order
      *
-     * @return \MyParcelNL\Pdk\Plugin\Model\PdkOrder
-     * @throws \ErrorException
-     * @throws \JsonException
-     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
+     * @return \MyParcelNL\Pdk\App\Order\Model\PdkOrder
      * @throws \Exception
      */
     private function getDataFromOrder(WC_Order $order): PdkOrder
@@ -260,8 +255,8 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     }
 
     /**
-     * @param  \WC_Order                             $wcOrder
-     * @param  \MyParcelNL\Pdk\Plugin\Model\PdkOrder $order
+     * @param  \WC_Order                                $wcOrder
+     * @param  \MyParcelNL\Pdk\App\Order\Model\PdkOrder $order
      *
      * @return void
      */

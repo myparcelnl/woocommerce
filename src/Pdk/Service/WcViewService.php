@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk\Service;
 
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Plugin\Service\AbstractViewService;
+use MyParcelNL\Pdk\Frontend\Service\AbstractViewService;
 
 class WcViewService extends AbstractViewService
 {

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
+use MyParcelNL\Pdk\App\Api\PdkEndpoint;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Plugin\Api\PdkEndpoint;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;

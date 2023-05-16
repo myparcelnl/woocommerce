@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Action;
 
+use MyParcelNL\Pdk\App\Webhook\Service\AbstractPdkWebhookService;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Plugin\Webhook\AbstractPdkWebhookService;
 
 class WcWebhookService extends AbstractPdkWebhookService
 {

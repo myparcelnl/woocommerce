@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
+use MyParcelNL\Pdk\App\Api\Backend\PdkBackendActions;
 use MyParcelNL\Pdk\Facade\Actions;
 use MyParcelNL\Pdk\Facade\Settings;
-use MyParcelNL\Pdk\Plugin\Api\Backend\PdkBackendActions;
 use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 

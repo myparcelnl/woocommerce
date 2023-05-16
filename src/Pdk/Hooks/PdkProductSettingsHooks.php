@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
+use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
+use MyParcelNL\Pdk\Facade\Frontend;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Facade\RenderService;
-use MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface;
 use MyParcelNL\Sdk\src\Support\Str;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 
@@ -49,11 +49,11 @@ class PdkProductSettingsHooks implements WordPressHooksInterface
      */
     public function renderPdkProductSettings(): void
     {
-        /** @var \MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface $productRepository */
-        $productRepository = Pdk::get(ProductRepositoryInterface::class);
+        /** @var PdkProductRepositoryInterface $productRepository */
+        $productRepository = Pdk::get(PdkProductRepositoryInterface::class);
         $product           = $productRepository->getProduct(get_the_ID());
 
-        echo RenderService::renderProductSettings($product);
+        echo Frontend::renderProductSettings($product);
     }
 
     /**
@@ -71,7 +71,7 @@ class PdkProductSettingsHooks implements WordPressHooksInterface
         }, ARRAY_FILTER_USE_KEY);
 
         /** @var \MyParcelNL\WooCommerce\Pdk\Product\Repository\PdkProductRepository $productRepository */
-        $productRepository = Pdk::get(ProductRepositoryInterface::class);
+        $productRepository = Pdk::get(PdkProductRepositoryInterface::class);
         $product           = $productRepository->getProduct($productId);
         $productRepository->update($productRepository->convertDbValuesToProductSettings($product, $values));
     }

@@ -73,7 +73,7 @@ class WcPdkBootstrapper extends PdkBootstrapper
             /**
              * The meta key a PdkOrder's data is saved in.
              *
-             * @see \MyParcelNL\Pdk\Plugin\Model\PdkOrder
+             * @see \MyParcelNL\Pdk\App\Order\Model\PdkOrder
              */
 
             'metaKeyOrderData' => value("{$name}_order_data"),

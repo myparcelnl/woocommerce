@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Service;
 
-use MyParcelNL\Pdk\Plugin\Service\AbstractTaxService;
+use MyParcelNL\Pdk\App\Tax\Service\AbstractTaxService;
 use WC_Tax;
 
 class WcTaxService extends AbstractTaxService

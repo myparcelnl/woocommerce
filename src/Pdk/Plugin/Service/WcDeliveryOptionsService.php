@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Service;
 
-use MyParcelNL\Pdk\Plugin\Service\DeliveryOptionsService;
+use MyParcelNL\Pdk\App\DeliveryOptions\Service\DeliveryOptionsService;
 
 final class WcDeliveryOptionsService extends DeliveryOptionsService
 {

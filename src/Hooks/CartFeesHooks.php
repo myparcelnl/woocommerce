@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Hooks;
 
 use Exception;
-use MyParcelNL\Pdk\Facade\DefaultLogger;
-use MyParcelNL\Pdk\Facade\LanguageService;
+use MyParcelNL\Pdk\App\Cart\Model\PdkCartFee;
+use MyParcelNL\Pdk\App\DeliveryOptions\Contract\DeliveryOptionsFeesServiceInterface;
+use MyParcelNL\Pdk\Facade\Language;
+use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Plugin\Contract\DeliveryOptionsFeesServiceInterface;
-use MyParcelNL\Pdk\Plugin\Model\PdkCartFee;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Pdk\Service\WcTaxService;
@@ -63,10 +63,10 @@ final class CartFeesHooks implements WordPressHooksInterface
             $feesService = Pdk::get(DeliveryOptionsFeesServiceInterface::class);
             $fees        = $feesService->getFees($deliveryOptions);
         } catch (Exception $e) {
-            DefaultLogger::error(
+            Logger::error(
                 'Error calculating delivery options fees.',
                 [
-                    'exception' => $e,
+                    'exception' => $e->getMessage(),
                     'deliveryOptions' => $deliveryOptions ? $deliveryOptions->toArrayWithoutNull() : null,
                 ]
             );
@@ -76,7 +76,7 @@ final class CartFeesHooks implements WordPressHooksInterface
         $tax = $this->taxService->getShippingTaxClass();
 
         $fees->each(function (PdkCartFee $fee) use ($tax, $cart) {
-            $cart->add_fee(LanguageService::translate($fee->translation), $fee->amount, (bool) $tax, $tax);
+            $cart->add_fee(Language::translate($fee->translation), $fee->amount, (bool) $tax, $tax);
         });
     }
 }

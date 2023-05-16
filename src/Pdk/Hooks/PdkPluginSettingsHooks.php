@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
+use MyParcelNL\Pdk\Facade\Frontend;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Facade\RenderService;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 
 class PdkPluginSettingsHooks implements WordPressHooksInterface
@@ -54,7 +54,7 @@ class PdkPluginSettingsHooks implements WordPressHooksInterface
      */
     public function renderPdkPluginSettings(): void
     {
-        echo RenderService::renderPluginSettings();
+        echo Frontend::renderPluginSettings();
     }
 
     /**

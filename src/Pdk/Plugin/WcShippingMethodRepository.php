@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk\Plugin;
 
 use InvalidArgumentException;
-use MyParcelNL\Pdk\Plugin\Collection\PdkShippingMethodCollection;
-use MyParcelNL\Pdk\Plugin\Model\PdkShippingMethod;
-use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkShippingMethodRepository;
+use MyParcelNL\Pdk\App\ShippingMethod\Collection\PdkShippingMethodCollection;
+use MyParcelNL\Pdk\App\ShippingMethod\Model\PdkShippingMethod;
+use MyParcelNL\Pdk\App\ShippingMethod\Repository\AbstractPdkShippingMethodRepository;
 use WC_Shipping;
 use WC_Shipping_Method;
 use WC_Shipping_Zones;
@@ -44,9 +44,9 @@ class WcShippingMethodRepository extends AbstractPdkShippingMethodRepository
     }
 
     /**
-     * @param  \WC_Shipping_Method|\MyParcelNL\Pdk\Plugin\Model\PdkShippingMethod|string $input
+     * @param  \WC_Shipping_Method|PdkShippingMethod|string $input
      *
-     * @return \MyParcelNL\Pdk\Plugin\Model\PdkShippingMethod
+     * @return \MyParcelNL\Pdk\App\ShippingMethod\Model\PdkShippingMethod
      */
     public function get($input): PdkShippingMethod
     {
@@ -67,16 +67,31 @@ class WcShippingMethodRepository extends AbstractPdkShippingMethodRepository
 
         return new PdkShippingMethod([
             'id'        => "$method->id:$method->instance_id",
-            'name'      => $method->get_method_title(),
+            'name'      => $this->getShippingMethodTitle($method),
             'isEnabled' => $method->enabled === 'yes',
         ]);
+    }
+
+    /**
+     * @param  \WC_Shipping_Method $method
+     *
+     * @return string
+     */
+    private function getShippingMethodTitle(WC_Shipping_Method $method): string
+    {
+        $title       = $method->get_title();
+        $methodTitle = $method->get_method_title();
+
+        $suffix = $title && trim($title) !== trim($methodTitle) ? " – $title" : '';
+
+        return $methodTitle . $suffix;
     }
 
     /**
      * @return \WC_Shipping
      * @noinspection PhpUndefinedFieldInspection
      */
-    public function wcShipping(): WC_Shipping
+    private function wcShipping(): WC_Shipping
     {
         return WC()->shipping;
     }

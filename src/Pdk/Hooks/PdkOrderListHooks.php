@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
-use MyParcelNL\Pdk\Facade\LanguageService;
+use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
+use MyParcelNL\Pdk\Facade\Frontend;
+use MyParcelNL\Pdk\Facade\Language;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Facade\RenderService;
 use MyParcelNL\Pdk\Facade\Settings;
-use MyParcelNL\Pdk\Plugin\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 
@@ -36,7 +36,7 @@ class PdkOrderListHooks implements WordPressHooksInterface
         $pluginName = Pdk::getAppInfo()->name;
 
         foreach ($this->getBulkActions() as $action) {
-            $actions["$pluginName.$action"] = LanguageService::translate($action);
+            $actions["$pluginName.$action"] = Language::translate($action);
         }
 
         return $actions;
@@ -75,12 +75,12 @@ class PdkOrderListHooks implements WordPressHooksInterface
         global $post;
 
         if (Pdk::getAppInfo()->name === $column) {
-            /** @var \MyParcelNL\Pdk\Plugin\Contract\PdkOrderRepositoryInterface $orderRepository */
+            /** @var PdkOrderRepositoryInterface $orderRepository */
             $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
 
             $pdkOrder = $orderRepository->get($post->ID);
 
-            echo RenderService::renderOrderListItem($pdkOrder);
+            echo Frontend::renderOrderListItem($pdkOrder);
         }
     }
 

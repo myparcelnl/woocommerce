@@ -4,26 +4,26 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Service;
 
-use MyParcelNL\Pdk\Facade\DefaultLogger;
-use MyParcelNL\Pdk\Facade\LanguageService;
+use MyParcelNL\Pdk\App\Cart\Model\PdkCart;
+use MyParcelNL\Pdk\App\Order\Model\PdkProduct;
+use MyParcelNL\Pdk\Context\Context;
+use MyParcelNL\Pdk\Facade\Language;
+use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Frontend\Form\Components;
-use MyParcelNL\Pdk\Frontend\Settings\View\AbstractSettingsView;
-use MyParcelNL\Pdk\Frontend\Settings\View\ProductSettingsView;
-use MyParcelNL\Pdk\Plugin\Context;
-use MyParcelNL\Pdk\Plugin\Model\PdkCart;
-use MyParcelNL\Pdk\Plugin\Model\PdkProduct;
-use MyParcelNL\Pdk\Plugin\Service\RenderService;
+use MyParcelNL\Pdk\Frontend\Service\FrontendRenderService;
+use MyParcelNL\Pdk\Frontend\View\AbstractSettingsView;
+use MyParcelNL\Pdk\Frontend\View\ProductSettingsView;
 use MyParcelNL\Pdk\Settings\Model\AbstractSettingsModel;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\Sdk\src\Support\Str;
 use Throwable;
 
-class WcRenderService extends RenderService
+class WcFrontendRenderService extends FrontendRenderService
 {
     /**
-     * @param  \MyParcelNL\Pdk\Plugin\Model\PdkCart $cart
+     * @param  \MyParcelNL\Pdk\App\Cart\Model\PdkCart $cart
      *
      * @return string
      * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
@@ -49,7 +49,7 @@ class WcRenderService extends RenderService
     }
 
     /**
-     * @param  \MyParcelNL\Pdk\Plugin\Model\PdkProduct $product
+     * @param  \MyParcelNL\Pdk\App\Order\Model\PdkProduct $product
      *
      * @return string
      */
@@ -58,7 +58,7 @@ class WcRenderService extends RenderService
         try {
             $appInfo = Pdk::getAppInfo();
 
-            /** @var \MyParcelNL\Pdk\Frontend\Settings\View\ProductSettingsView $productSettingsView */
+            /** @var ProductSettingsView $productSettingsView */
             $productSettingsView = Pdk::get(ProductSettingsView::class);
 
             ob_start();
@@ -75,7 +75,7 @@ class WcRenderService extends RenderService
 
             return ob_get_clean();
         } catch (Throwable $e) {
-            DefaultLogger::error('Failed to render component', [
+            Logger::error('Failed to render component', [
                 'component' => self::COMPONENT_PRODUCT_SETTINGS,
                 'exception' => $e->getMessage(),
                 'trace'     => $e->getTraceAsString(),
@@ -91,9 +91,9 @@ class WcRenderService extends RenderService
     private function getTristateOptions(): array
     {
         return [
-            AbstractSettingsModel::TRISTATE_VALUE_DEFAULT  => LanguageService::translate('toggle_default'),
-            AbstractSettingsModel::TRISTATE_VALUE_DISABLED => LanguageService::translate('toggle_no'),
-            AbstractSettingsModel::TRISTATE_VALUE_ENABLED  => LanguageService::translate('toggle_yes'),
+            AbstractSettingsModel::TRISTATE_VALUE_DEFAULT  => Language::translate('toggle_default'),
+            AbstractSettingsModel::TRISTATE_VALUE_DISABLED => Language::translate('toggle_no'),
+            AbstractSettingsModel::TRISTATE_VALUE_ENABLED  => Language::translate('toggle_yes'),
         ];
     }
 
@@ -112,7 +112,7 @@ class WcRenderService extends RenderService
         $params = [
             'id'                => $key,
             'value'             => get_post_meta(get_the_ID(), $key, true),
-            'label'             => isset($field['label']) ? LanguageService::translate($field['label']) : null,
+            'label'             => isset($field['label']) ? Language::translate($field['label']) : null,
             'custom_attributes' => $field,
         ];
 
@@ -140,8 +140,8 @@ class WcRenderService extends RenderService
             case Components::SETTINGS_DIVIDER:
                 echo sprintf(
                     '<h2>%s</h2><p class="description">%s</p><hr />',
-                    LanguageService::translate($field['heading']),
-                    LanguageService::translate($field['content'])
+                    Language::translate($field['heading']),
+                    Language::translate($field['content'])
                 );
                 break;
 
@@ -154,12 +154,12 @@ class WcRenderService extends RenderService
             $descriptionKey = "{$field['label']}_description";
             $subtextKey     = "{$field['label']}_subtext";
 
-            if (LanguageService::hasTranslation($descriptionKey)) {
-                $params['desc_tip'] = LanguageService::translate($descriptionKey);
+            if (Language::hasTranslation($descriptionKey)) {
+                $params['desc_tip'] = Language::translate($descriptionKey);
             }
 
-            if (LanguageService::hasTranslation($subtextKey)) {
-                $params['description'] = LanguageService::translate($subtextKey);
+            if (Language::hasTranslation($subtextKey)) {
+                $params['description'] = Language::translate($subtextKey);
             }
 
             $method($params);
@@ -174,7 +174,7 @@ class WcRenderService extends RenderService
     private function transformSelectOptions(array $options): array
     {
         $flattenedArray  = array_column($options, 'label', 'value');
-        $translatedArray = LanguageService::translateArray($flattenedArray);
+        $translatedArray = Language::translateArray($flattenedArray);
 
         asort($translatedArray, SORT_NATURAL);
 

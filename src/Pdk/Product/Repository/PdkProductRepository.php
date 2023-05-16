@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Product\Repository;
 
+use MyParcelNL\Pdk\App\Order\Collection\PdkProductCollection;
+use MyParcelNL\Pdk\App\Order\Model\PdkProduct;
+use MyParcelNL\Pdk\App\Order\Repository\AbstractPdkPdkProductRepository;
 use MyParcelNL\Pdk\Base\Contract\WeightServiceInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Plugin\Collection\PdkProductCollection;
-use MyParcelNL\Pdk\Plugin\Model\PdkProduct;
-use MyParcelNL\Pdk\Product\Repository\AbstractProductRepository;
 use MyParcelNL\Pdk\Settings\Model\ProductSettings;
 use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
 use MyParcelNL\Sdk\src\Support\Str;
 use WC_Product;
 
-class PdkProductRepository extends AbstractProductRepository
+class PdkProductRepository extends AbstractPdkPdkProductRepository
 {
     /**
      * @var \MyParcelNL\WooCommerce\Pdk\Service\WcWeightService
@@ -32,10 +32,12 @@ class PdkProductRepository extends AbstractProductRepository
     }
 
     /**
-     * @param  \MyParcelNL\Pdk\Plugin\Model\PdkProduct $product
-     * @param  array                                   $productSettings
+     * @param  \MyParcelNL\Pdk\App\Order\Model\PdkProduct $product
+     * @param  array                                      $productSettings
      *
      * @return void
+     *
+     * @deprecated todo: (re)move this
      */
     public function convertDbValuesToProductSettings(PdkProduct $product, array $productSettings): PdkProduct
     {
@@ -49,13 +51,14 @@ class PdkProductRepository extends AbstractProductRepository
         }
 
         $product->settings = new ProductSettings($result);
+
         return $product;
     }
 
     /**
      * @param  \WC_Product|string|int $identifier
      *
-     * @return \MyParcelNL\Pdk\Plugin\Model\PdkProduct
+     * @return \MyParcelNL\Pdk\App\Order\Model\PdkProduct
      */
     public function getProduct($identifier): PdkProduct
     {
@@ -112,7 +115,7 @@ class PdkProductRepository extends AbstractProductRepository
     /**
      * @param  array $identifiers
      *
-     * @return \MyParcelNL\Pdk\Plugin\Collection\PdkProductCollection
+     * @return \MyParcelNL\Pdk\App\Order\Collection\PdkProductCollection
      */
     public function getProducts(array $identifiers = []): PdkProductCollection
     {
@@ -120,7 +123,7 @@ class PdkProductRepository extends AbstractProductRepository
     }
 
     /**
-     * @param  \MyParcelNL\Pdk\Plugin\Model\PdkProduct $product
+     * @param  \MyParcelNL\Pdk\App\Order\Model\PdkProduct $product
      *
      * @return void
      */

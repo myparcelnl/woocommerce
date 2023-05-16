@@ -55,8 +55,6 @@ final class OrdersMigration extends AbstractPdkMigration
     public function up(): void
     {
         if (! function_exists('wc_get_orders')) {
-            $this->warn('Could not find function wc_get_products.');
-
             return;
         }
 

@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Webhook;
 
+use MyParcelNL\Pdk\App\Webhook\Repository\AbstractPdkWebhooksRepository;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Plugin\Webhook\Repository\AbstractPdkWebhooksRepository;
 use MyParcelNL\Pdk\Webhook\Collection\WebhookSubscriptionCollection;
 
 class WcWebhooksRepository extends AbstractPdkWebhooksRepository
 {
-
     /**
      * @return \MyParcelNL\Pdk\Webhook\Collection\WebhookSubscriptionCollection
      */

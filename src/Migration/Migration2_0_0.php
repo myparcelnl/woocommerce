@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration;
 
-use MyParcelNL\Pdk\Plugin\Installer\Contract\MigrationInterface;
+use MyParcelNL\Pdk\App\Installer\Contract\MigrationInterface;
 
 /**
  * Migrates pre v2.0 settings. Pre-2.0.0 did not store a version number.
  */
 final class Migration2_0_0 implements MigrationInterface
 {
-    public function down(): void
-    {
-    }
+    public function down(): void {}
 
     public function getVersion(): string
     {

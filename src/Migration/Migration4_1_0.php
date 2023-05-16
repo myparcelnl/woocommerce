@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration;
 
-use MyParcelNL\Pdk\Plugin\Installer\Contract\MigrationInterface;
+use MyParcelNL\Pdk\App\Installer\Contract\MigrationInterface;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 

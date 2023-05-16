@@ -6,25 +6,25 @@ use MyParcelNL\Pdk\Account\Contract\AccountRepositoryInterface;
 use MyParcelNL\Pdk\Api\Contract\ApiServiceInterface;
 use MyParcelNL\Pdk\Api\Contract\ClientAdapterInterface;
 use MyParcelNL\Pdk\Api\Service\MyParcelApiService;
+use MyParcelNL\Pdk\App\Api\Contract\BackendEndpointServiceInterface;
+use MyParcelNL\Pdk\App\Api\Contract\FrontendEndpointServiceInterface;
+use MyParcelNL\Pdk\App\Cart\Contract\PdkCartRepositoryInterface;
+use MyParcelNL\Pdk\App\DeliveryOptions\Contract\DeliveryOptionsServiceInterface;
+use MyParcelNL\Pdk\App\Installer\Contract\MigrationServiceInterface;
+use MyParcelNL\Pdk\App\Order\Contract\OrderStatusServiceInterface;
+use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
+use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
+use MyParcelNL\Pdk\App\ShippingMethod\Contract\PdkShippingMethodRepositoryInterface;
+use MyParcelNL\Pdk\App\Tax\Contract\TaxServiceInterface;
+use MyParcelNL\Pdk\App\Webhook\Contract\PdkWebhookServiceInterface;
+use MyParcelNL\Pdk\App\Webhook\Contract\PdkWebhooksRepositoryInterface;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Base\Contract\WeightServiceInterface;
 use MyParcelNL\Pdk\Base\Pdk;
+use MyParcelNL\Pdk\Frontend\Contract\FrontendRenderServiceInterface;
 use MyParcelNL\Pdk\Frontend\Contract\ScriptServiceInterface;
+use MyParcelNL\Pdk\Frontend\Contract\ViewServiceInterface;
 use MyParcelNL\Pdk\Language\Contract\LanguageServiceInterface;
-use MyParcelNL\Pdk\Plugin\Api\Contract\BackendEndpointServiceInterface;
-use MyParcelNL\Pdk\Plugin\Api\Contract\FrontendEndpointServiceInterface;
-use MyParcelNL\Pdk\Plugin\Contract\DeliveryOptionsServiceInterface;
-use MyParcelNL\Pdk\Plugin\Contract\OrderStatusServiceInterface;
-use MyParcelNL\Pdk\Plugin\Contract\PdkCartRepositoryInterface;
-use MyParcelNL\Pdk\Plugin\Contract\PdkOrderRepositoryInterface;
-use MyParcelNL\Pdk\Plugin\Contract\PdkShippingMethodRepositoryInterface;
-use MyParcelNL\Pdk\Plugin\Contract\RenderServiceInterface;
-use MyParcelNL\Pdk\Plugin\Contract\TaxServiceInterface;
-use MyParcelNL\Pdk\Plugin\Contract\ViewServiceInterface;
-use MyParcelNL\Pdk\Plugin\Installer\Contract\MigrationServiceInterface;
-use MyParcelNL\Pdk\Plugin\Webhook\Contract\PdkWebhookServiceInterface;
-use MyParcelNL\Pdk\Plugin\Webhook\Contract\PdkWebhooksRepositoryInterface;
-use MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Contract\SettingsRepositoryInterface;
 use MyParcelNL\WooCommerce\Logger\WcLogger;
 use MyParcelNL\WooCommerce\Pdk\Guzzle7ClientAdapter;
@@ -40,7 +40,7 @@ use MyParcelNL\WooCommerce\Pdk\Plugin\Service\WcStatusService;
 use MyParcelNL\WooCommerce\Pdk\Plugin\WcShippingMethodRepository;
 use MyParcelNL\WooCommerce\Pdk\Product\Repository\PdkProductRepository;
 use MyParcelNL\WooCommerce\Pdk\Service\LanguageService;
-use MyParcelNL\WooCommerce\Pdk\Service\WcRenderService;
+use MyParcelNL\WooCommerce\Pdk\Service\WcFrontendRenderService;
 use MyParcelNL\WooCommerce\Pdk\Service\WcTaxService;
 use MyParcelNL\WooCommerce\Pdk\Service\WcViewService;
 use MyParcelNL\WooCommerce\Pdk\Service\WcWeightService;
@@ -62,11 +62,11 @@ return [
      * Repositories
      */
     AccountRepositoryInterface::class           => autowire(PdkAccountRepository::class),
-    PdkOrderRepositoryInterface::class          => autowire(PdkOrderRepository::class),
-    ProductRepositoryInterface::class           => autowire(PdkProductRepository::class),
-    SettingsRepositoryInterface::class          => autowire(PdkSettingsRepository::class),
     PdkCartRepositoryInterface::class           => autowire(WcCartRepository::class),
+    PdkOrderRepositoryInterface::class          => autowire(PdkOrderRepository::class),
+    PdkProductRepositoryInterface::class        => autowire(PdkProductRepository::class),
     PdkShippingMethodRepositoryInterface::class => autowire(WcShippingMethodRepository::class),
+    SettingsRepositoryInterface::class          => autowire(PdkSettingsRepository::class),
 
     /**
      * Services
@@ -75,7 +75,7 @@ return [
     CronServiceInterface::class                 => autowire(WpCronService::class),
     LanguageServiceInterface::class             => autowire(LanguageService::class),
     OrderStatusServiceInterface::class          => autowire(WcStatusService::class),
-    RenderServiceInterface::class               => autowire(WcRenderService::class),
+    FrontendRenderServiceInterface::class       => autowire(WcFrontendRenderService::class),
     ViewServiceInterface::class                 => autowire(WcViewService::class),
     WeightServiceInterface::class               => autowire(WcWeightService::class),
     TaxServiceInterface::class                  => autowire(WcTaxService::class),

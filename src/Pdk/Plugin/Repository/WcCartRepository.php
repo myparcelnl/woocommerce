@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Repository;
 
 use InvalidArgumentException;
+use MyParcelNL\Pdk\App\Cart\Model\PdkCart;
+use MyParcelNL\Pdk\App\Cart\Repository\AbstractPdkCartRepository;
+use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface;
 use MyParcelNL\Pdk\Base\Support\Arr;
-use MyParcelNL\Pdk\Plugin\Model\PdkCart;
-use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkCartRepository;
-use MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface;
 use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
 use MyParcelNL\WooCommerce\Factory\WcAddressAdapter;
 use WC_Cart;
@@ -27,21 +27,21 @@ class WcCartRepository extends AbstractPdkCartRepository
     private $currencyService;
 
     /**
-     * @var \MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface
+     * @var \MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface
      */
     private $productRepository;
 
     /**
-     * @param  \MyParcelNL\Pdk\Storage\Contract\StorageInterface           $storage
-     * @param  \MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface $productRepository
-     * @param  \MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface      $currencyService
-     * @param  \MyParcelNL\WooCommerce\Factory\WcAddressAdapter            $addressAdapter
+     * @param  \MyParcelNL\Pdk\Storage\Contract\StorageInterface                $storage
+     * @param  \MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface $productRepository
+     * @param  \MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface           $currencyService
+     * @param  \MyParcelNL\WooCommerce\Factory\WcAddressAdapter                 $addressAdapter
      */
     public function __construct(
-        StorageInterface           $storage,
-        ProductRepositoryInterface $productRepository,
-        CurrencyServiceInterface   $currencyService,
-        WcAddressAdapter           $addressAdapter
+        StorageInterface              $storage,
+        PdkProductRepositoryInterface $productRepository,
+        CurrencyServiceInterface      $currencyService,
+        WcAddressAdapter              $addressAdapter
     ) {
         parent::__construct($storage);
         $this->productRepository = $productRepository;
@@ -52,7 +52,7 @@ class WcCartRepository extends AbstractPdkCartRepository
     /**
      * @param  \WC_Cart|string|int|null $input
      *
-     * @return \MyParcelNL\Pdk\Plugin\Model\PdkCart
+     * @return \MyParcelNL\Pdk\App\Cart\Model\PdkCart
      */
     public function get($input): PdkCart
     {

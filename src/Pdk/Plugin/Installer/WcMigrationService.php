@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Installer;
 
-use MyParcelNL\Pdk\Plugin\Installer\Contract\MigrationServiceInterface;
+use MyParcelNL\Pdk\App\Installer\Contract\MigrationServiceInterface;
 use MyParcelNL\WooCommerce\Migration\Migration2_0_0;
 use MyParcelNL\WooCommerce\Migration\Migration2_4_0_beta_4;
 use MyParcelNL\WooCommerce\Migration\Migration3_0_4;

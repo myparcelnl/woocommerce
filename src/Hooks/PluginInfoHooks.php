@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
-use MyParcelNL\Pdk\Facade\LanguageService;
+use MyParcelNL\Pdk\Facade\Language;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 
@@ -29,6 +29,7 @@ class PluginInfoHooks implements WordPressHooksInterface
         add_filter('plugin_row_meta', [$this, 'setPluginMeta'], 10, 2);
     }
 
+    /** @noinspection HtmlUnknownTarget */
     public function setPluginActionLinks(array $links): array
     {
         $appInfo  = Pdk::getAppInfo();
@@ -49,14 +50,15 @@ class PluginInfoHooks implements WordPressHooksInterface
      * @param        $file
      *
      * @return array
+     * @noinspection HtmlUnknownTarget
      */
     public function setPluginMeta(array $links, $file): array
     {
         if (strpos($file, 'woocommerce-myparcelnl') !== false) {
             $link = '<a href="%s" target="_blank">%s</a>';
 
-            $links[] = sprintf($link, Pdk::get('urlDocumentation'), LanguageService::translate('link_documentation'));
-            $links[] = sprintf($link, Pdk::get('urlReleaseNotes'), LanguageService::translate('link_release_notes'));
+            $links[] = sprintf($link, Pdk::get('urlDocumentation'), Language::translate('link_documentation'));
+            $links[] = sprintf($link, Pdk::get('urlReleaseNotes'), Language::translate('link_release_notes'));
         }
 
         return $links;

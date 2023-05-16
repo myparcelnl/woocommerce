@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
-use MyParcelNL\Pdk\Facade\LanguageService;
+use MyParcelNL\Pdk\Facade\Language;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Facade\Filter;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
@@ -29,7 +29,7 @@ abstract class AbstractFieldsHooks implements WordPressHooksInterface
             sprintf('%s_%s', $form, Pdk::get($name)) => array_merge(
                 [
                     'class'    => Filter::apply("{$name}Class"),
-                    'label'    => LanguageService::translate($label),
+                    'label'    => Language::translate($label),
                     'priority' => Filter::apply("{$name}Priority"),
                 ],
                 $additionalFields

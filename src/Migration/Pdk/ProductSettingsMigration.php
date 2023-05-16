@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
+use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface;
 use WC_Product;
 
 final class ProductSettingsMigration extends AbstractPdkMigration
@@ -63,8 +63,8 @@ final class ProductSettingsMigration extends AbstractPdkMigration
 
     private function migrateTheseWcProducts($wcProducts): void
     {
-        /** @var \MyParcelNL\Pdk\Product\Contract\ProductRepositoryInterface $productRepository */
-        $productRepository = Pdk::get(ProductRepositoryInterface::class);
+        /** @var PdkProductRepositoryInterface $productRepository */
+        $productRepository = Pdk::get(PdkProductRepositoryInterface::class);
 
         foreach ($wcProducts as $wcProduct) {
             if (! $wcProduct instanceof WC_Product) {

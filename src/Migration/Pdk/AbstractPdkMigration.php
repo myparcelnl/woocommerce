@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
-use MyParcelNL\Pdk\Facade\DefaultLogger;
-use MyParcelNL\Pdk\Plugin\Installer\Contract\MigrationInterface;
+use MyParcelNL\Pdk\App\Installer\Contract\MigrationInterface;
+use MyParcelNL\Pdk\Facade\Logger;
 
 abstract class AbstractPdkMigration implements MigrationInterface
 {
@@ -16,22 +16,22 @@ abstract class AbstractPdkMigration implements MigrationInterface
 
     protected function debug(string $message, array $context = []): void
     {
-        DefaultLogger::debug($message, $context + $this->getCommonLogContext());
+        Logger::debug($message, $context + $this->getCommonLogContext());
     }
 
     protected function error(string $message, array $context = []): void
     {
-        DefaultLogger::error($message, $context + $this->getCommonLogContext());
+        Logger::error($message, $context + $this->getCommonLogContext());
     }
 
     protected function info(string $message, array $context = []): void
     {
-        DefaultLogger::info($message, $context + $this->getCommonLogContext());
+        Logger::info($message, $context + $this->getCommonLogContext());
     }
 
     protected function warning(string $message, array $context = []): void
     {
-        DefaultLogger::warning($message, $context + $this->getCommonLogContext());
+        Logger::warning($message, $context + $this->getCommonLogContext());
     }
 
     /**

@@ -5,18 +5,21 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
 use Exception;
-use MyParcelNL\Pdk\Facade\DefaultLogger;
-use MyParcelNL\Pdk\Plugin\Contract\PdkOrderRepositoryInterface;
+use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
+use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 
 class PdkPlaceOrderHooks implements WordPressHooksInterface
 {
     /**
-     * @var \MyParcelNL\Pdk\Plugin\Contract\PdkOrderRepositoryInterface
+     * @var \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface
      */
     private $repository;
 
+    /**
+     * @param  \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $repository
+     */
     public function __construct(PdkOrderRepositoryInterface $repository)
     {
         $this->repository = $repository;
@@ -42,17 +45,17 @@ class PdkPlaceOrderHooks implements WordPressHooksInterface
         try {
             $deliveryOptions = new DeliveryOptions(json_decode(stripslashes($deliveryOptionsData), true));
         } catch (Exception $e) {
-            DefaultLogger::error(
+            Logger::error(
                 'Error saving pdk order data during checkout.',
                 [
-                    'exception' => $e,
+                    'exception'       => $e,
                     'deliveryOptions' => $deliveryOptions ? $deliveryOptions->toArrayWithoutNull() : null,
                 ]
             );
             return;
         }
 
-        $pdkOrder = $this->repository->get($wcOrder);
+        $pdkOrder                  = $this->repository->get($wcOrder);
         $pdkOrder->deliveryOptions = $deliveryOptions;
         $this->repository->update($pdkOrder);
     }

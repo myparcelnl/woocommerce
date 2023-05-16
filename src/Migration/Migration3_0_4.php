@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration;
 
-use MyParcelNL\Pdk\Plugin\Installer\Contract\MigrationInterface;
+use MyParcelNL\Pdk\App\Installer\Contract\MigrationInterface;
 
 final class Migration3_0_4 implements MigrationInterface
 {
