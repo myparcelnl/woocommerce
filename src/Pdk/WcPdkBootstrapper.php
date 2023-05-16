@@ -152,7 +152,7 @@ class WcPdkBootstrapper extends PdkBootstrapper
 
             'defaultSettings'          => value([
                 CheckoutSettings::ID => [
-                    CheckoutSettings::ALLOWED_SHIPPING_METHODS  => ['flat_rate', 'free_shipping'],
+                    CheckoutSettings::ALLOWED_SHIPPING_METHODS  => ['flat_rate:0', 'free_shipping:0'],
                     CheckoutSettings::DELIVERY_OPTIONS_POSITION => 'woocommerce_after_checkout_billing_form',
                 ],
             ]),
