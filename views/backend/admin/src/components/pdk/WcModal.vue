@@ -47,8 +47,9 @@
           </PdkHeading>
 
           <div v-if="isOpen">
+            <NotificationContainer category="modal" />
+
             <KeepAlive>
-              <NotificationContainer category="modal" />
               <slot :context="context" />
             </KeepAlive>
           </div>
