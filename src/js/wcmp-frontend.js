@@ -511,7 +511,12 @@ jQuery(($) => {
      *  function on the update event so it doesn't matter if we send 5 updates at once.
      */
     addAddressListeners() {
-      const fields = [MyParcelFrontend.countryField, MyParcelFrontend.postcodeField, MyParcelFrontend.getSplitField()];
+      const extraField = MyParcelFrontend.getSplitField();
+      const fields = [MyParcelFrontend.countryField, MyParcelFrontend.postcodeField, extraField];
+
+      if (extraField === MyParcelFrontend.houseNumberField) {
+        fields.push(MyParcelFrontend.streetNameField);
+      }
 
       /* If address type is already set, remove the existing listeners before adding new ones. */
       if (MyParcelFrontend.addressType) {
