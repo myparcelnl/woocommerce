@@ -265,10 +265,6 @@ class CarrierSettings
                 ];
                 break;
             case AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY:
-                if (! AccountSettings::getInstance()->hasDhlForYouCompleteAccess()) {
-                    break;
-                }
-
                 $settings[] = [
                     'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY,
                     'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),

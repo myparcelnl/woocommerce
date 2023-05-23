@@ -23,12 +23,12 @@ use WCMP_Settings_Data;
 
 class OrderSettingsRows
 {
-    private const HOME_COUNTRY_ONLY_ROWS = [
+    private const HOME_COUNTRY_ONLY_ROWS                    = [
         self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
         self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT,
         self::OPTION_SHIPMENT_OPTIONS_SIGNATURE,
     ];
-    private const DHL_ONLY_ROWS          = [
+    private const DHL_ONLY_ROWS                             = [
         self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
         self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT,
     ];
@@ -271,10 +271,9 @@ class OrderSettingsRows
      */
     private function getAdditionalOptionsRows(OrderSettings $orderSettings): array
     {
-        $hasDhlForYouCompleteAccess = AccountSettings::getInstance()->hasDhlForYouCompleteAccess();
-        $carrier                    = $orderSettings->getDeliveryOptions()->getCarrier();
-
-        $rows = [
+        $carrier = $orderSettings->getDeliveryOptions()
+            ->getCarrier();
+        $rows    = [
             [
                 'name'        => self::OPTION_EXTRA_OPTIONS_DIGITAL_STAMP_WEIGHT,
                 'type'        => 'select',
@@ -372,7 +371,7 @@ class OrderSettingsRows
                 'value'     => $orderSettings->hasSameDayDelivery(),
                 'condition' => [
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY),
-                ] + ($hasDhlForYouCompleteAccess ? [] : [self::CONDITION_FORCE_ENABLED]),
+                ],
             ],
         ];
 

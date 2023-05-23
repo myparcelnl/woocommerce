@@ -133,7 +133,7 @@ class AccountSettings extends Model
 
         switch ($carrier->getName()) {
             case CarrierDHLForYou::NAME:
-                return $this->hasDhlForYouCompleteAccess() ? $isNlOrBe : $isNl;
+                return $isNlOrBe;
 
             case CarrierDHLParcelConnect::NAME:
                 return $isInEu && ! in_array($country, self::DHL_PARCEL_CONNECT_FORBIDDEN_COUNTRIES, true);
@@ -246,21 +246,6 @@ class AccountSettings extends Model
     public function getShop(): ?Shop
     {
         return $this->shop;
-    }
-
-    /**
-     * When this is on, allows non-same-day-delivery for dhl for you in NL and BE.
-     *
-     * @return bool
-     */
-    public function hasDhlForYouCompleteAccess(): bool
-    {
-        return (new Collection($this->carrier_options))
-            ->contains(static function ($carrierOption) {
-                return CarrierDHLForYou::NAME === $carrierOption->getCarrier()
-                        ->getName()
-                    && 'dhl_for_you_complete_access' === $carrierOption->getLabel();
-            });
     }
 
     /**
