@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.19.2](https://github.com/myparcelnl/woocommerce/compare/v4.19.1...v4.19.2) (2023-05-23)
+
+
+### :bug: Bug Fixes
+
+* **checkout:** fix showing address errors before address is filled in ([#976](https://github.com/myparcelnl/woocommerce/issues/976)) ([83fe50b](https://github.com/myparcelnl/woocommerce/commit/83fe50b95c49f15c24f2fdfcdb61e85286465932)), closes [myparcelnl/delivery-options#177](https://github.com/myparcelnl/delivery-options/issues/177)
+
 **🚧 Note: 🚧**
 
 This is a release candidate. It's not fully tested yet, but will be tested thoroughly and released on the [WordPress plugin directory] soon.
