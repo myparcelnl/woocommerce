@@ -1,4 +1,4 @@
-name: '🚀 Release'
+name: "🚀 Release"
 
 on:
   push:
@@ -19,7 +19,7 @@ env:
 
 jobs:
   release:
-    name: 'Build and publish 🚀'
+    name: "Build and publish 🚀"
     runs-on: ubuntu-22.04
     outputs:
       released: ${{ steps.release.outputs.released }}
@@ -56,18 +56,7 @@ jobs:
 
       - uses: ./.github/actions/install
 
-      - name: 'Trim leading "v" from version number'
-        id: prepare
-        run: |
-          VERSION=${{ needs.release.outputs.version }}
-          echo "version=${VERSION#v}" >> $GITHUB_OUTPUT
-
-      - name: 'Create build'
-        run: |
-          node ./private/updateVersion.cjs ${{ steps.prepare.outputs.version }}
-          yarn build
-
-      - name: 'Create dist folder'
+      - name: "Create dist folder"
         run: |
           bash ./private/bash/createDistFolder.sh ${{ env.BUILD_DIR }}
 
@@ -78,21 +67,21 @@ jobs:
           ASSETS_DIR: ${{ env.ASSETS_DIR }}
           BUILD_DIR: ${{ env.BUILD_DIR }}
           SLUG: woocommerce-myparcel
-          VERSION: ${{ steps.prepare.outputs.version }}
+          VERSION: ${{ needs.release.outputs.version }}
 
   rebase-develop:
-    name: 'Rebase develop onto main'
+    name: "Rebase develop onto main"
     uses: ./.github/workflows/rebase.yml
     secrets: inherit
     needs: release
     if: always() && github.ref == 'refs/heads/main'
     with:
-      base: 'main'
-      target: 'develop'
-      force: true
+      base: "main"
+      target: "develop"
+      force: ${{ needs.release.outputs.released == 'true' }}
 
   rebase-prs:
-    name: 'Rebase pull requests'
+    name: "Rebase pull requests"
     needs:
       - release
       - rebase-develop
@@ -110,7 +99,7 @@ jobs:
           token: ${{ steps.credentials.outputs.token }}
           base: ${{ github.ref_name }}
           exclude-drafts: true
-          exclude-labels: 'hotfix'
+          exclude-labels: "hotfix"
 
   prune-releases:
     needs: release
