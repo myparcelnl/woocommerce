@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.20.0](https://github.com/myparcelnl/woocommerce/compare/v4.19.2...v4.20.0) (2023-05-23)
+
+
+### :sparkles: New Features
+
+* allow dhl for you features for every user ([272dd31](https://github.com/myparcelnl/woocommerce/commit/272dd31454342fc4be9fedc579bde38d4624b9f6))
+
 ## [4.19.2](https://github.com/myparcelnl/woocommerce/compare/v4.19.1...v4.19.2) (2023-05-23)
 
 
