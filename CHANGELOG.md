@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.20.1](https://github.com/myparcelnl/woocommerce/compare/v4.20.0...v4.20.1) (2023-05-25)
+
+
+### :bug: Bug Fixes
+
+* **deps:** update @myparcel/delivery-options to 5.7.4 ([#982](https://github.com/myparcelnl/woocommerce/issues/982)) ([30203be](https://github.com/myparcelnl/woocommerce/commit/30203be917775264cf64073bf68c6646a560a74a))
+
 ## [4.20.0](https://github.com/myparcelnl/woocommerce/compare/v4.19.2...v4.20.0) (2023-05-23)
 
 
