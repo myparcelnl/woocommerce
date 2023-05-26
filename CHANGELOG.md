@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.20.2](https://github.com/myparcelnl/woocommerce/compare/v4.20.1...v4.20.2) (2023-05-26)
+
+
+### :bug: Bug Fixes
+
+* fix missing translations ([8adced5](https://github.com/myparcelnl/woocommerce/commit/8adced5c6de07faed8acfd7fd2f9ad7ab7a1a854))
+
 ## [4.20.1](https://github.com/myparcelnl/woocommerce/compare/v4.20.0...v4.20.1) (2023-05-25)
 
 
