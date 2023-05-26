@@ -3,18 +3,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-**🚧 Note: 🚧**
+## [4.20.2](https://github.com/myparcelnl/woocommerce/compare/v4.20.1...v4.20.2) (2023-05-26)
 
-This is a release candidate. It's not fully tested yet, but will be tested thoroughly and released on the [WordPress plugin directory] soon.
 
-You can install this version manually to get a head start on [the new features and improvements]. Please report any issues you encounter using the [Bug report form] or by sending an email to [support@myparcel.nl].
+### :bug: Bug Fixes
 
-[Bug report form]: https://github.com/myparcelnl/woocommerce/issues/new?labels=bug&template=BUG-REPORT.yml&version=v4.x.x-rc.x
-[WordPress plugin directory]: https://wordpress.org/plugins/woocommerce-myparcel/
-[support@myparcel.nl]: mailto:support@myparcel.nl
-[the new features and improvements]: https://github.com/myparcelnl/woocommerce/compare/main...develop
+* fix missing translations ([8adced5](https://github.com/myparcelnl/woocommerce/commit/8adced5c6de07faed8acfd7fd2f9ad7ab7a1a854))
 
-## [4.20.1-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.20.0...v4.20.1-rc.1) (2023-05-25)
+## [4.20.1](https://github.com/myparcelnl/woocommerce/compare/v4.20.0...v4.20.1) (2023-05-25)
 
 
 ### :bug: Bug Fixes
