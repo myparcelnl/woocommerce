@@ -17,8 +17,8 @@
 </template>
 
 <script lang="ts" setup>
-import {TabDefinition, useLanguage} from '@myparcel-pdk/admin/src';
-import {PropType} from 'vue';
+import {type PropType} from 'vue';
+import {type TabDefinition, useLanguage} from '@myparcel-pdk/admin';
 
 defineProps({
   active: {

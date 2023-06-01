@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts" setup>
-import {useAdminConfig} from '@myparcel-pdk/admin/src';
+import {useAdminConfig} from '@myparcel-pdk/admin';
 
 const config = useAdminConfig();
 </script>

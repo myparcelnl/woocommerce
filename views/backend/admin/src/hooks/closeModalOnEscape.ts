@@ -1,4 +1,4 @@
-import {useModalStore} from '@myparcel-pdk/admin/src';
+import {useModalStore} from '@myparcel-pdk/admin';
 
 export const closeModalOnEscape = (): void => {
   const modalStore = useModalStore();

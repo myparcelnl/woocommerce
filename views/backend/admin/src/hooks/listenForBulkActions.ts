@@ -1,4 +1,4 @@
-import {AdminAction, useActionStore} from '@myparcel-pdk/admin/src';
+import {AdminAction, useActionStore} from '@myparcel-pdk/admin';
 
 const BULK_ACTION_PREFIX = 'myparcelnl';
 
@@ -30,6 +30,6 @@ export const listenForBulkActions = (): void => {
     const selectedPosts = document.querySelectorAll<HTMLInputElement>('input[name="post[]"]:checked');
     const actionStore = useActionStore();
 
-    actionStore.dispatch(adminAction, {orderIds: [...selectedPosts].map((el) => el.value)});
+    void actionStore.dispatch(adminAction, {orderIds: [...selectedPosts].map((el) => el.value)});
   });
 };

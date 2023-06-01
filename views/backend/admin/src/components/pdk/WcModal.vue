@@ -68,16 +68,16 @@
 </template>
 
 <script lang="ts" setup>
+import {type PropType} from 'vue';
 import {
   ActionButton,
-  ActionDefinition,
-  AdminModalKey,
+  type ActionDefinition,
+  type AdminModalKey,
   NotificationContainer,
   useAdminConfig,
   useLanguage,
   useModalElementContext,
-} from '@myparcel-pdk/admin/src';
-import {PropType} from 'vue';
+} from '@myparcel-pdk/admin';
 
 const props = defineProps({
   actions: {

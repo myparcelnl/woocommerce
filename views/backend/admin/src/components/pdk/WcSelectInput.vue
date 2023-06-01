@@ -6,10 +6,10 @@
 </template>
 
 <script lang="ts" setup>
-import {ElementInstance, OptionsProp, useSelectInputContext} from '@myparcel-pdk/admin/src';
 import {onBeforeUnmount, onMounted, ref, toRaw, watchEffect} from 'vue';
-import {OneOrMore} from '@myparcel/ts-utils';
 import {get} from '@vueuse/core';
+import {type ElementInstance, type OptionsProp, useSelectInputContext} from '@myparcel-pdk/admin';
+import {type OneOrMore} from '@myparcel/ts-utils';
 
 // eslint-disable-next-line vue/no-unused-properties
 const props = defineProps<{element: ElementInstance<OptionsProp>; modelValue: string | number}>();

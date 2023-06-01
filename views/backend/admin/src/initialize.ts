@@ -1,5 +1,7 @@
 // noinspection JSUnusedGlobalSymbols
 
+import {h} from 'vue';
+import {get} from '@vueuse/core';
 import {
   DefaultBadge,
   DefaultCurrencyInput,
@@ -10,8 +12,10 @@ import {
   DefaultRadioGroup,
   DefaultSettingsDivider,
   DefaultTimeInput,
-} from '@myparcel-pdk/admin-preset-default/src';
-import {LogLevel, createPdkAdmin} from '@myparcel-pdk/admin/src';
+} from '@myparcel-pdk/admin-preset-default';
+import {DashIconsIcon} from '@myparcel-pdk/admin-preset-dashicons';
+import {LogLevel, createPdkAdmin} from '@myparcel-pdk/admin';
+import {closeModalOnEscape, listenForBulkActions} from './hooks';
 import {
   WcBox,
   WcButton,
@@ -23,7 +27,6 @@ import {
   WcDropOffInput,
   WcDropdownButton,
   WcFormGroup,
-  WcIcon,
   WcImage,
   WcLoader,
   WcModal,
@@ -42,11 +45,9 @@ import {
   WcTextInput,
   WcToggleInput,
 } from './components/pdk';
-import {closeModalOnEscape, listenForBulkActions} from './hooks';
-import {get} from '@vueuse/core';
-import {h} from 'vue';
 
 const FADE = 'fade';
+
 // eslint-disable-next-line max-lines-per-function
 export const initialize = (): void => {
   createPdkAdmin({
@@ -94,7 +95,7 @@ export const initialize = (): void => {
       PdkDropdownButton: WcDropdownButton,
       PdkFormGroup: WcFormGroup,
       PdkHeading: DefaultHeading,
-      PdkIcon: WcIcon,
+      PdkIcon: DashIconsIcon,
       PdkImage: WcImage,
       PdkLink: DefaultLink,
       PdkLoader: WcLoader,

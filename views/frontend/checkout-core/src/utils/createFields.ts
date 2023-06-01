@@ -1,4 +1,4 @@
-import {AddressFields} from '@myparcel-pdk/checkout/src';
+import {type AddressFields} from '@myparcel-pdk/checkout';
 
 // TODO: Get fields from the backend
 

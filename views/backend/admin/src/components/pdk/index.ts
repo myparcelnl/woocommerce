@@ -18,8 +18,6 @@ export {default as WcDropdownButton} from './WcDropdownButton.vue';
 
 export {default as WcFormGroup} from './WcFormGroup.vue';
 
-export {default as WcIcon} from './WcIcon.vue';
-
 export {default as WcImage} from './WcImage.vue';
 
 export {default as WcLoader} from './WcLoader.vue';

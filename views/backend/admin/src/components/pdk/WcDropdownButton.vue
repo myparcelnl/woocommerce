@@ -51,8 +51,8 @@
 </template>
 
 <script lang="ts" setup>
-import {ActionButton, ActionDefinition, Size, useDropdownData, useLanguage} from '@myparcel-pdk/admin/src';
-import {Variant} from '@myparcel-pdk/common/src';
+import {type Variant} from '@myparcel-pdk/common';
+import {ActionButton, type ActionDefinition, type Size, useDropdownData, useLanguage} from '@myparcel-pdk/admin';
 
 const props = defineProps<{
   // eslint-disable-next-line vue/no-unused-properties

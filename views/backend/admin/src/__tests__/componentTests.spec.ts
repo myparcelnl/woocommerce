@@ -1,3 +1,4 @@
+import {executePdkComponentTests} from '@myparcel-pdk/admin-component-tests';
 import {
   WcBox,
   WcButton,
@@ -7,7 +8,6 @@ import {
   WcCol,
   WcDropdownButton,
   WcFormGroup,
-  WcIcon,
   WcImage,
   WcModal,
   WcNotification,
@@ -23,7 +23,6 @@ import {
   WcTextInput,
   WcToggleInput,
 } from '../components/pdk';
-import {executePdkComponentTests} from '@myparcel-pdk/admin-component-tests';
 
 executePdkComponentTests({
   PdkBox: WcBox,
@@ -34,7 +33,6 @@ executePdkComponentTests({
   PdkCol: WcCol,
   PdkDropdownButton: WcDropdownButton,
   PdkFormGroup: WcFormGroup,
-  PdkIcon: WcIcon,
   PdkImage: WcImage,
   PdkModal: WcModal,
   PdkNotification: WcNotification,

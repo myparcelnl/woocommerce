@@ -13,8 +13,8 @@
 </template>
 
 <script lang="ts" setup>
-import {ActionButton, ActionDefinition} from '@myparcel-pdk/admin/src';
-import {PropType} from 'vue';
+import {type PropType} from 'vue';
+import {ActionButton, type ActionDefinition} from '@myparcel-pdk/admin';
 
 defineProps({
   actions: {

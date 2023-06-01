@@ -13,10 +13,10 @@
     "test:watch": "run ws:test:watch \"$(pwd)\""
   },
   "dependencies": {
-    "@myparcel-pdk/admin": "^1.0.0-alpha.1",
+    "@myparcel-pdk/admin": "^1.0.0-alpha.64",
     "@myparcel-pdk/admin-component-tests": "^1.0.0-alpha.1",
-    "@myparcel-pdk/admin-preset-bootstrap4": "^1.0.0-alpha.1",
-    "@myparcel-pdk/admin-preset-default": "^1.0.0-alpha.1",
+    "@myparcel-pdk/admin-preset-dashicons": "^1.0.0-alpha.11",
+    "@myparcel-pdk/admin-preset-default": "^1.0.0-alpha.36",
     "@myparcel/ts-utils": "^1.8.0",
     "@tanstack/vue-query": "^4.27.0"
   },

@@ -13,9 +13,10 @@ module.exports = {
   overrides: [
     {
       files: ['./**/*.vue'],
-      extends: '@myparcel-eslint/eslint-config-prettier-typescript-vue',
+      extends: ['@myparcel-eslint/eslint-config-prettier-typescript-vue', '@myparcel-eslint/eslint-config-import'],
       rules: {
         '@typescript-eslint/no-misused-promises': 'off',
+        'import/first': 'off',
         'vue/no-empty-component-block': 'off',
         'vue/no-undef-components': [
           'error',
@@ -27,7 +28,7 @@ module.exports = {
     },
     {
       files: ['./**/*.ts', './**/*.tsx'],
-      extends: '@myparcel-eslint/eslint-config-prettier-typescript',
+      extends: ['@myparcel-eslint/eslint-config-prettier-typescript', '@myparcel-eslint/eslint-config-import'],
       rules: {
         'class-methods-use-this': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',

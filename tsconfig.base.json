@@ -3,8 +3,8 @@
   "compilerOptions": {
     "importsNotUsedAsValues": "remove",
     "incremental": true,
-    "preserveValueImports": false,
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "preserveValueImports": false,
     "types": ["node", "vite/client"]
   },
   "exclude": ["../**/__tests__/*", "../**/*.spec.*"]

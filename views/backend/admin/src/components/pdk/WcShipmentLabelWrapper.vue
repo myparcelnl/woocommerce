@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts" setup>
-import {Size} from '@myparcel-pdk/admin/src';
+import {Size} from '@myparcel-pdk/admin';
 import WcLoadingOverlay from '../WcLoadingOverlay.vue';
 
 defineProps({

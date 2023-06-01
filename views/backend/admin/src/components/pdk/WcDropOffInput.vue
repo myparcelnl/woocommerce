@@ -33,7 +33,13 @@
 </template>
 
 <script lang="ts" setup>
-import {ElementInstance, Settings, generateFieldId, useDropOffInputContext, useLanguage} from '@myparcel-pdk/admin/src';
+import {
+  type ElementInstance,
+  type Settings,
+  generateFieldId,
+  useDropOffInputContext,
+  useLanguage,
+} from '@myparcel-pdk/admin';
 
 const props = defineProps<{
   // eslint-disable-next-line vue/no-unused-properties

@@ -1,11 +1,11 @@
 import '../assets/scss/index.scss';
+import {EVENT_WOOCOMMERCE_COUNTRY_TO_STATE_CHANGED} from '@myparcel-woocommerce/frontend-common';
 import {
   PdkEvent,
   initializeCheckoutSeparateAddressFields as initialize,
   useEvent,
   usePdkCheckout,
-} from '@myparcel-pdk/checkout/src';
-import {EVENT_WOOCOMMERCE_COUNTRY_TO_STATE_CHANGED} from '@myparcel-woocommerce/frontend-common/src';
+} from '@myparcel-pdk/checkout';
 
 const initializeCheckoutSeparateAddressFields = () => {
   // @ts-expect-error this is a valid event

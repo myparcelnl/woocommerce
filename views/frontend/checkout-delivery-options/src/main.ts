@@ -4,7 +4,7 @@ import {
   initializeCheckoutDeliveryOptions as initialize,
   useEvent,
   usePdkCheckout,
-} from '@myparcel-pdk/checkout/src';
+} from '@myparcel-pdk/checkout';
 
 const initializeCheckoutDeliveryOptions = () => {
   void initialize();

@@ -1,4 +1,4 @@
-import {AddressType, PdkField, Util, createPdkCheckout, useUtil} from '@myparcel-pdk/checkout/src';
+import {AddressType, PdkField, Util, createPdkCheckout, useUtil} from '@myparcel-pdk/checkout';
 import {createFields} from './utils/createFields';
 
 const PREFIX_BILLING = 'billing_';

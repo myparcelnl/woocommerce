@@ -1,5 +1,5 @@
-import {createViteConfig} from '@myparcel-woocommerce/vite-config';
 import vue from '@vitejs/plugin-vue';
+import {createViteConfig} from '@myparcel-woocommerce/vite-config';
 
 export default createViteConfig({
   plugins: [vue()],
