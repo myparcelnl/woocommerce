@@ -18,6 +18,19 @@ module.exports = {
     'wpm-config.json',
     'woocommerce-myparcel.php',
   ],
+
+  platformFolderName(platform) {
+    switch (platform) {
+      case 'myparcelnl':
+        return 'woocommerce-myparcel';
+
+      case 'myparcelbe':
+        return 'wc-myparcel-belgium';
+    }
+
+    return '{{name}}';
+  },
+
   versionSource: [
     {path: 'package.json'},
     {path: 'composer.json'},
