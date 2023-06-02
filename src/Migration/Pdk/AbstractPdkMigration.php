@@ -11,7 +11,7 @@ abstract class AbstractPdkMigration implements MigrationInterface
 {
     public function getVersion(): string
     {
-        return '5.0.0';
+        return '5.0.0-alpha.1';
     }
 
     protected function debug(string $message, array $context = []): void
