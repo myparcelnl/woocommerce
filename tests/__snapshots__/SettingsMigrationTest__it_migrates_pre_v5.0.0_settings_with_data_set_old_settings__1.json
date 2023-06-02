@@ -1,61 +1,76 @@
 {
   "account": {
     "id": "account",
-    "apiKey": null
+    "apiKey": "b183f9372d6f9bd050418e31cc40965360ca814d"
   },
   "general": {
     "id": "general",
-    "apiLogging": false,
-    "barcodeInNote": false,
-    "barcodeInNoteTitle": null,
+    "apiLogging": true,
+    "barcodeInNote": true,
+    "barcodeInNoteTitle": "T&T:",
     "conceptShipments": true,
     "exportWithAutomaticStatus": null,
     "orderMode": false,
     "processDirectly": false,
-    "shareCustomerInformation": false,
-    "trackTraceInAccount": false,
-    "trackTraceInEmail": false
+    "shareCustomerInformation": true,
+    "trackTraceInAccount": true,
+    "trackTraceInEmail": true
   },
   "order": {
     "id": "order",
-    "emptyDigitalStampWeight": null,
+    "emptyDigitalStampWeight": 200,
     "emptyMailboxWeight": null,
-    "emptyParcelWeight": null,
+    "emptyParcelWeight": 1100,
     "ignoreOrderStatuses": null,
     "orderStatusMail": true,
-    "saveCustomerAddress": false,
+    "saveCustomerAddress": true,
     "sendNotificationAfter": null,
     "sendOrderStateForDigitalStamp": true,
-    "statusOnLabelCreate": null,
+    "statusOnLabelCreate": "processed",
     "statusWhenDelivered": null,
     "statusWhenLabelScanned": null
   },
   "label": {
     "id": "label",
-    "description": null,
-    "format": "a4",
+    "description": "[ORDER_NR]- [PRODUCT_NAME] - [PRODUCT_ID]- test",
+    "format": "a6",
     "output": "open",
-    "position": [1, 2, 3, 4],
-    "prompt": false
+    "position": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "prompt": true
   },
   "customs": {
     "id": "customs",
-    "countryOfOrigin": null,
-    "customsCode": "0",
-    "packageContents": "1"
+    "countryOfOrigin": "NL",
+    "customsCode": "1234",
+    "packageContents": "2"
   },
   "checkout": {
     "id": "checkout",
-    "allowedShippingMethods": [],
-    "deliveryOptionsCustomCss": null,
-    "deliveryOptionsDisplay": false,
-    "deliveryOptionsHeader": null,
-    "deliveryOptionsPosition": null,
-    "pickupLocationsDefaultView": null,
+    "allowedShippingMethods": [
+      "flat_rate:32",
+      "free_shipping",
+      "local_pickup",
+      "table_rate:5:2",
+      "flat_rate:30",
+      "table_rate:5:1",
+      "flat_rate:33",
+      "flat_rate:31"
+    ],
+    "deliveryOptionsCustomCss": "/* Storefront preset */",
+    "deliveryOptionsDisplay": true,
+    "deliveryOptionsHeader": "Kop",
+    "deliveryOptionsPosition": "woocommerce_after_checkout_billing_form",
+    "exportInsurancePriceFactor": 1,
+    "pickupLocationsDefaultView": "map",
     "priceType": "included",
     "enableDeliveryOptions": true,
     "enableDeliveryOptionsWhenNotInStock": true,
-    "useSeparateAddressFields": false
+    "useSeparateAddressFields": true
   },
-  "carrier": []
+  "carrier": [ ]
 }

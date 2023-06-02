@@ -23,16 +23,16 @@ dataset('oldPluginSettings', [
                 'export_mode'               => 'shipments',
                 'download_display'          => 'display',
                 'label_format'              => 'A6',
-                'ask_for_print_position'    => '0',
+                'ask_for_print_position'    => '1',
                 'track_trace_email'         => '1',
                 'track_trace_my_account'    => '1',
                 'show_delivery_day'         => '1',
                 'process_directly'          => '0',
                 'order_status_automation'   => '1',
                 'change_order_status_after' => 'after_export',
-                'automatic_order_status'    => 'processing',
+                'automatic_order_status'    => 'processed',
                 'barcode_in_note'           => '1',
-                'barcode_in_note_title'     => 'Track & Trace code:',
+                'barcode_in_note_title'     => 'T&T:',
                 'error_logging'             => '1',
             ],
             'checkout'         => [
@@ -43,15 +43,8 @@ dataset('oldPluginSettings', [
                 'delivery_options_position'               => 'woocommerce_after_checkout_billing_form',
                 'delivery_options_price_format'           => 'total_price',
                 'pickup_locations_default_view'           => 'map',
-                'delivery_options_custom_css'             => '/* Storefront preset */
-.woocommerce-myparcel__delivery-options > .myparcel-delivery-options {
-  background-color: #ffffff;
-  clear: both;
-  margin-bottom: 1rem;
-  padding: 1em 1.41575em;
-}
-',
-                'header_delivery_options_title'           => 'delivery methods',
+                'delivery_options_custom_css'             => '/* Storefront preset */',
+                'header_delivery_options_title'           => 'Kop',
                 'delivery_title'                          => 'Delivery at home or work',
                 'morning_title'                           => 'Morning delivery',
                 'standard_title'                          => 'Standaard delivery',
@@ -73,10 +66,10 @@ dataset('oldPluginSettings', [
                 'connect_phone'                  => '1',
                 'save_customer_address'          => '1',
                 'label_description'              => '[ORDER_NR]- [PRODUCT_NAME] - [PRODUCT_ID]- test',
-                'empty_parcel_weight'            => '0',
-                'empty_digital_stamp_weight'     => '0',
+                'empty_parcel_weight'            => '1.1',
+                'empty_digital_stamp_weight'     => '0.2',
                 'hs_code'                        => '1234',
-                'package_contents'               => '1',
+                'package_contents'               => '2',
                 'country_of_origin'              => 'NL',
                 'export_automatic'               => '0',
                 'export_automatic_status'        => 'processing',

@@ -6,6 +6,7 @@ namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use Generator;
 use MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface;
+use MyParcelNL\Pdk\Base\Service\WeightService;
 use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings as SettingsFacade;
@@ -13,6 +14,7 @@ use MyParcelNL\Pdk\Settings\Collection\SettingsModelCollection;
 use MyParcelNL\Pdk\Settings\Contract\SettingsRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\Settings;
 use MyParcelNL\Pdk\Shipment\Model\DropOffDay;
+use MyParcelNL\WooCommerce\Pdk\Service\WcWeightService;
 
 final class SettingsMigration extends AbstractPdkMigration
 {
@@ -58,9 +60,28 @@ final class SettingsMigration extends AbstractPdkMigration
             $newSettings['carrier']->put($carrier, $transformed);
         }
 
-        $settings = new Settings(array_replace_recursive(SettingsFacade::getDefaults(), $newSettings));
+        //$settings = new Settings(array_replace_recursive(SettingsFacade::getDefaults(), $newSettings));
+        $settings = new Settings($newSettings);
 
         $settingsRepository->storeAllSettings($settings);
+    }
+
+    public function test()
+    {
+        try {
+            $oldConfigurationSettings = $this->getConfigurationSettings();
+            $newSettings              = $this->transformSettings(
+                $oldConfigurationSettings,
+                $this->getSettingsTransformationMap()
+            );
+            $settings                 = new Settings(
+                array_replace_recursive(SettingsFacade::getDefaults(), $newSettings)
+            );
+        } catch (Exception $e) {
+            $settings = new Settings(SettingsFacade::getDefaults());
+        }
+
+        $this->settingsRepository->storeAllSettings($settings);
     }
 
     /**
@@ -193,10 +214,11 @@ final class SettingsMigration extends AbstractPdkMigration
             self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
         ];
 
-        //        yield [
-        //            self::TRANSFORM_KEY_SOURCE => 'general.show_delivery_day',
-        //            self::TRANSFORM_KEY_TARGET => '', // TODO
-        //        ];
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'general.show_delivery_day',
+            self::TRANSFORM_KEY_TARGET => 'checkout.deliveryOptionsDisplay',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
 
         yield [
             self::TRANSFORM_KEY_SOURCE    => 'general.process_directly',
@@ -204,23 +226,6 @@ final class SettingsMigration extends AbstractPdkMigration
             self::TRANSFORM_KEY_TRANSFORM => function ($value): bool {
                 return ! $value;
             },
-        ];
-
-        //        yield [
-        //            self::TRANSFORM_KEY_SOURCE => 'general.order_status_automation',
-        //            self::TRANSFORM_KEY_TARGET => '', // TODO
-        //        ];
-
-        //        yield [
-        //            self::TRANSFORM_KEY_SOURCE => 'general.change_order_status_after',
-        //            self::TRANSFORM_KEY_TARGET => '', // TODO
-        //        ];
-
-        // NOTE: Risky. Resulting value may not exist in array of order statuses.
-        yield [
-            self::TRANSFORM_KEY_SOURCE => 'general.automatic_order_status',
-            self::TRANSFORM_KEY_TARGET => 'general.orderStatusOnLabelCreate',
-            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_STRING,
         ];
 
         yield [
@@ -299,55 +304,11 @@ final class SettingsMigration extends AbstractPdkMigration
             self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_STRING,
         ];
 
-        //        yield [
-        //            self::TRANSFORM_KEY_SOURCE => 'checkout.header_delivery_options_title',
-        //            self::TRANSFORM_KEY_TARGET => '', // TODO
-        //        ];
-
-        //        yield [
-        //            self::TRANSFORM_KEY_SOURCE => 'checkout.delivery_title',
-        //            self::TRANSFORM_KEY_TARGET => '', // TODO
-        //        ];
-
-        //        yield [
-        //            self::TRANSFORM_KEY_SOURCE => 'checkout.morning_title',
-        //            self::TRANSFORM_KEY_TARGET => '', // TODO
-        //        ];
-
-        //        yield [
-        //            self::TRANSFORM_KEY_SOURCE => 'checkout.standard_title',
-        //            self::TRANSFORM_KEY_TARGET => '', // TODO
-        //        ];
-
-        //        yield [
-        //            self::TRANSFORM_KEY_SOURCE => 'checkout.evening_title',
-        //            self::TRANSFORM_KEY_TARGET => '', // TODO
-        //        ];
-
-        //        yield [
-        //            self::TRANSFORM_KEY_SOURCE => 'checkout.same_day_title',
-        //            self::TRANSFORM_KEY_TARGET => '', // TODO
-        //        ];
-
-        //        yield [
-        //            self::TRANSFORM_KEY_SOURCE => 'checkout.only_recipient_title',
-        //            self::TRANSFORM_KEY_TARGET => '', // TODO
-        //        ];
-
-        //        yield [
-        //            self::TRANSFORM_KEY_SOURCE => 'checkout.signature_title',
-        //            self::TRANSFORM_KEY_TARGET => '', // TODO
-        //        ];
-
-        //        yield [
-        //            self::TRANSFORM_KEY_SOURCE => 'checkout.pickup_title',
-        //            self::TRANSFORM_KEY_TARGET => '', // TODO
-        //        ];
-
-        //        yield [
-        //            self::TRANSFORM_KEY_SOURCE => 'checkout.address_not_found_title',
-        //            self::TRANSFORM_KEY_TARGET => '', // TODO
-        //        ];
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'checkout.header_delivery_options_title',
+            self::TRANSFORM_KEY_TARGET => 'checkout.deliveryOptionsHeader',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_STRING,
+        ];
 
         /**
          * Export defaults
@@ -377,15 +338,11 @@ final class SettingsMigration extends AbstractPdkMigration
             },
         ];
 
-        //        yield [
-        //            self::TRANSFORM_KEY_SOURCE => 'export_defaults.connect_email',
-        //            self::TRANSFORM_KEY_TARGET => '', // TODO
-        //        ];
-
-        //        yield [
-        //            self::TRANSFORM_KEY_SOURCE => 'export_defaults.connect_phone',
-        //            self::TRANSFORM_KEY_TARGET => '', // TODO
-        //        ];
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'export_defaults.connect_email',
+            self::TRANSFORM_KEY_TARGET => 'general.shareCustomerInformation',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
 
         yield [
             self::TRANSFORM_KEY_SOURCE => 'export_defaults.save_customer_address',
@@ -402,12 +359,18 @@ final class SettingsMigration extends AbstractPdkMigration
         yield [
             self::TRANSFORM_KEY_SOURCE => 'export_defaults.empty_parcel_weight',
             self::TRANSFORM_KEY_TARGET => 'order.emptyParcelWeight',
+            self::TRANSFORM_KEY_TRANSFORM => function ($value): int {
+                return (new WcWeightService())->convertToGrams($value, 'kg');
+            },
             self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_INT,
         ];
 
         yield [
             self::TRANSFORM_KEY_SOURCE => 'export_defaults.empty_digital_stamp_weight',
             self::TRANSFORM_KEY_TARGET => 'order.emptyDigitalStampWeight',
+            self::TRANSFORM_KEY_TRANSFORM => function ($value): int {
+                return (new WcWeightService())->convertToGrams($value, 'kg');
+            },
             self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_INT,
         ];
 
@@ -428,16 +391,6 @@ final class SettingsMigration extends AbstractPdkMigration
             self::TRANSFORM_KEY_TARGET => 'customs.countryOfOrigin',
             self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_STRING,
         ];
-
-        //        yield [
-        //            self::TRANSFORM_KEY_SOURCE => 'export_defaults.export_automatic',
-        //            self::TRANSFORM_KEY_TARGET => '', // TODO
-        //        ];
-
-        //        yield [
-        //            self::TRANSFORM_KEY_SOURCE => 'export_defaults.export_automatic_status',
-        //            self::TRANSFORM_KEY_TARGET => '', // TODO
-        //        ];
 
         /**
          * Carriers
@@ -660,6 +613,11 @@ final class SettingsMigration extends AbstractPdkMigration
             }
 
             Arr::set($newSettings, $item[self::TRANSFORM_KEY_TARGET], $newValue);
+        }
+
+        if ('1' === Arr::get($oldSettings,'general.order_status_automation')) {
+            $newValue = Arr::get($oldSettings,'general.automatic_order_status') ?? 'processing';
+            Arr::set($newSettings, 'order.statusOnLabelCreate', $newValue);
         }
 
         return $newSettings;
