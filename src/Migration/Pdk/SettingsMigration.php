@@ -6,6 +6,7 @@ namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use Generator;
 use MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface;
+use MyParcelNL\Pdk\Base\Contract\WeightServiceInterface;
 use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings as SettingsFacade;
@@ -13,7 +14,6 @@ use MyParcelNL\Pdk\Settings\Collection\SettingsModelCollection;
 use MyParcelNL\Pdk\Settings\Contract\SettingsRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\Settings;
 use MyParcelNL\Pdk\Shipment\Model\DropOffDay;
-use MyParcelNL\WooCommerce\Pdk\Service\WcWeightService;
 
 final class SettingsMigration extends AbstractPdkMigration
 {
@@ -358,7 +358,8 @@ final class SettingsMigration extends AbstractPdkMigration
             self::TRANSFORM_KEY_SOURCE    => 'export_defaults.empty_parcel_weight',
             self::TRANSFORM_KEY_TARGET    => 'order.emptyParcelWeight',
             self::TRANSFORM_KEY_TRANSFORM => function ($value): int {
-                return (new WcWeightService())->convertToGrams($value);
+                $unit = get_option('woocommerce_weight_unit') ?? 'kg';
+                return Pdk::get(WeightServiceInterface::class)->convertToGrams($value, $unit);
             },
             self::TRANSFORM_KEY_CAST      => self::TRANSFORM_CAST_INT,
         ];
@@ -367,7 +368,8 @@ final class SettingsMigration extends AbstractPdkMigration
             self::TRANSFORM_KEY_SOURCE    => 'export_defaults.empty_digital_stamp_weight',
             self::TRANSFORM_KEY_TARGET    => 'order.emptyDigitalStampWeight',
             self::TRANSFORM_KEY_TRANSFORM => function ($value): int {
-                return (new WcWeightService())->convertToGrams($value);
+                $unit = get_option('woocommerce_weight_unit') ?? 'kg';
+                return Pdk::get(WeightServiceInterface::class)->convertToGrams($value, $unit);
             },
             self::TRANSFORM_KEY_CAST      => self::TRANSFORM_CAST_INT,
         ];

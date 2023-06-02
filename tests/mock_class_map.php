@@ -24,7 +24,7 @@ function get_option(string $name)
         case 'woocommerce_weight_unit':
             return 'kg';
     }
-    return '';
+    return null;
 }
 
 const WP_DEBUG = true;
