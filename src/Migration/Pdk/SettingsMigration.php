@@ -6,7 +6,6 @@ namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use Generator;
 use MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface;
-use MyParcelNL\Pdk\Base\Service\WeightService;
 use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings as SettingsFacade;
@@ -357,21 +356,21 @@ final class SettingsMigration extends AbstractPdkMigration
         ];
 
         yield [
-            self::TRANSFORM_KEY_SOURCE => 'export_defaults.empty_parcel_weight',
-            self::TRANSFORM_KEY_TARGET => 'order.emptyParcelWeight',
+            self::TRANSFORM_KEY_SOURCE    => 'export_defaults.empty_parcel_weight',
+            self::TRANSFORM_KEY_TARGET    => 'order.emptyParcelWeight',
             self::TRANSFORM_KEY_TRANSFORM => function ($value): int {
                 return (new WcWeightService())->convertToGrams($value, 'kg');
             },
-            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_INT,
+            self::TRANSFORM_KEY_CAST      => self::TRANSFORM_CAST_INT,
         ];
 
         yield [
-            self::TRANSFORM_KEY_SOURCE => 'export_defaults.empty_digital_stamp_weight',
-            self::TRANSFORM_KEY_TARGET => 'order.emptyDigitalStampWeight',
+            self::TRANSFORM_KEY_SOURCE    => 'export_defaults.empty_digital_stamp_weight',
+            self::TRANSFORM_KEY_TARGET    => 'order.emptyDigitalStampWeight',
             self::TRANSFORM_KEY_TRANSFORM => function ($value): int {
                 return (new WcWeightService())->convertToGrams($value, 'kg');
             },
-            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_INT,
+            self::TRANSFORM_KEY_CAST      => self::TRANSFORM_CAST_INT,
         ];
 
         yield [
@@ -409,7 +408,7 @@ final class SettingsMigration extends AbstractPdkMigration
 
         yield [
             self::TRANSFORM_KEY_SOURCE => 'export_insured_from_price',
-            self::TRANSFORM_KEY_TARGET => 'exportInsuranceAmount',
+            self::TRANSFORM_KEY_TARGET => 'exportInsuranceFromAmount',
             self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_CENTS,
         ];
 
@@ -419,15 +418,17 @@ final class SettingsMigration extends AbstractPdkMigration
             self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_CENTS,
         ];
 
-        //        yield [
-        //            self::TRANSFORM_KEY_SOURCE => 'export_insured_eu_amount',
-        //            self::TRANSFORM_KEY_TARGET => '',
-        //        ];
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'export_insured_eu_amount',
+            self::TRANSFORM_KEY_TARGET => 'exportInsuranceUpToEu',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_CENTS,
+        ];
 
-        //        yield [
-        //            self::TRANSFORM_KEY_SOURCE => 'export_insured_for_be',
-        //            self::TRANSFORM_KEY_TARGET => '',
-        //        ];
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'export_insured_for_be',
+            self::TRANSFORM_KEY_TARGET => 'exportInsuranceUpToBe',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_CENTS,
+        ];
 
         yield [
             self::TRANSFORM_KEY_SOURCE => 'export_large_format',
@@ -581,7 +582,7 @@ final class SettingsMigration extends AbstractPdkMigration
                     'cutoffTime'        => $cutoffTime,
                     'sameDayCutoffTime' => $oldSettings['same_day_delivery_cutoff_time'] ?? null,
                     'weekday'           => $weekday,
-                    'dispatch'          => in_array($weekday, $oldSettings['drop_off_days'] ?? [], true),
+                    'dispatch'          => in_array((string) $weekday, $oldSettings['drop_off_days'] ?? [], true),
                 ];
             }, DropOffDay::WEEKDAYS),
         ];
@@ -615,8 +616,8 @@ final class SettingsMigration extends AbstractPdkMigration
             Arr::set($newSettings, $item[self::TRANSFORM_KEY_TARGET], $newValue);
         }
 
-        if ('1' === Arr::get($oldSettings,'general.order_status_automation')) {
-            $newValue = Arr::get($oldSettings,'general.automatic_order_status') ?? 'processing';
+        if ('1' === Arr::get($oldSettings, 'general.order_status_automation')) {
+            $newValue = Arr::get($oldSettings, 'general.automatic_order_status') ?? 'processing';
             Arr::set($newSettings, 'order.statusOnLabelCreate', $newValue);
         }
 
