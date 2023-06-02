@@ -26,9 +26,9 @@
     "saveCustomerAddress": true,
     "sendNotificationAfter": null,
     "sendOrderStateForDigitalStamp": true,
-    "statusOnLabelCreate": "processed",
-    "statusWhenDelivered": null,
-    "statusWhenLabelScanned": null
+    "statusOnLabelCreate": "wc-processed",
+    "statusWhenDelivered": "-1",
+    "statusWhenLabelScanned": "-1"
   },
   "label": {
     "id": "label",
@@ -435,7 +435,7 @@
       "exportInsuranceUpToEu": 50000,
       "exportLargeFormat": true,
       "exportOnlyRecipient": true,
-      "exportReturn": false,
+      "exportReturn": true,
       "exportReturnLargeFormat": false,
       "exportReturnPackageType": "package",
       "exportSignature": true,

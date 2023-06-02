@@ -5,15 +5,18 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use Generator;
+use MyParcelNL\Pdk\App\Api\Backend\PdkBackendActions;
 use MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface;
 use MyParcelNL\Pdk\Base\Contract\WeightServiceInterface;
 use MyParcelNL\Pdk\Base\Support\Arr;
+use MyParcelNL\Pdk\Facade\Actions;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings as SettingsFacade;
 use MyParcelNL\Pdk\Settings\Collection\SettingsModelCollection;
 use MyParcelNL\Pdk\Settings\Contract\SettingsRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\Settings;
 use MyParcelNL\Pdk\Shipment\Model\DropOffDay;
+use RectorPrefix202305\Symplify\EasyParallel\Enum\Action;
 
 final class SettingsMigration extends AbstractPdkMigration
 {
@@ -59,28 +62,9 @@ final class SettingsMigration extends AbstractPdkMigration
             $newSettings['carrier']->put($carrier, $transformed);
         }
 
-        //$settings = new Settings(array_replace_recursive(SettingsFacade::getDefaults(), $newSettings));
         $settings = new Settings($newSettings);
 
         $settingsRepository->storeAllSettings($settings);
-    }
-
-    public function test()
-    {
-        try {
-            $oldConfigurationSettings = $this->getConfigurationSettings();
-            $newSettings              = $this->transformSettings(
-                $oldConfigurationSettings,
-                $this->getSettingsTransformationMap()
-            );
-            $settings                 = new Settings(
-                array_replace_recursive(SettingsFacade::getDefaults(), $newSettings)
-            );
-        } catch (Exception $e) {
-            $settings = new Settings(SettingsFacade::getDefaults());
-        }
-
-        $this->settingsRepository->storeAllSettings($settings);
     }
 
     /**
@@ -443,11 +427,11 @@ final class SettingsMigration extends AbstractPdkMigration
             self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
         ];
 
-        //        yield [
-        //            self::TRANSFORM_KEY_SOURCE => 'export_return_shipments',
-        //            self::TRANSFORM_KEY_TARGET => 'exportReturn',
-        //            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
-        //        ];
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'export_return_shipments',
+            self::TRANSFORM_KEY_TARGET => 'exportReturn',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
 
         yield [
             self::TRANSFORM_KEY_SOURCE => 'export_signature',
@@ -617,10 +601,13 @@ final class SettingsMigration extends AbstractPdkMigration
             Arr::set($newSettings, $item[self::TRANSFORM_KEY_TARGET], $newValue);
         }
 
+        $newValue = -1;
         if ('1' === Arr::get($oldSettings, 'general.order_status_automation')) {
-            $newValue = Arr::get($oldSettings, 'general.automatic_order_status') ?? 'processing';
-            Arr::set($newSettings, 'order.statusOnLabelCreate', $newValue);
+            $newValue = 'wc-' . (Arr::get($oldSettings, 'general.automatic_order_status') ?? 'processing');
         }
+        Arr::set($newSettings, 'order.statusOnLabelCreate', $newValue);
+        Arr::set($newSettings, 'order.statusWhenDelivered', -1);
+        Arr::set($newSettings, 'order.statusWhenLabelScanned', -1);
 
         return $newSettings;
     }
