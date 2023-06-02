@@ -271,7 +271,6 @@ final class SettingsMigration extends AbstractPdkMigration
             self::TRANSFORM_KEY_SOURCE => 'checkout.delivery_options_display',
             self::TRANSFORM_KEY_TARGET => 'checkout.deliveryOptionsDisplay',
             self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
-            // TODO check this setting, should be for specific shipping methods
         ];
 
         // NOTE: Risky. Resulting value may not exist in array of checkout hooks.
@@ -359,7 +358,7 @@ final class SettingsMigration extends AbstractPdkMigration
             self::TRANSFORM_KEY_SOURCE    => 'export_defaults.empty_parcel_weight',
             self::TRANSFORM_KEY_TARGET    => 'order.emptyParcelWeight',
             self::TRANSFORM_KEY_TRANSFORM => function ($value): int {
-                return (new WcWeightService())->convertToGrams($value, 'kg');
+                return (new WcWeightService())->convertToGrams($value);
             },
             self::TRANSFORM_KEY_CAST      => self::TRANSFORM_CAST_INT,
         ];
@@ -368,7 +367,7 @@ final class SettingsMigration extends AbstractPdkMigration
             self::TRANSFORM_KEY_SOURCE    => 'export_defaults.empty_digital_stamp_weight',
             self::TRANSFORM_KEY_TARGET    => 'order.emptyDigitalStampWeight',
             self::TRANSFORM_KEY_TRANSFORM => function ($value): int {
-                return (new WcWeightService())->convertToGrams($value, 'kg');
+                return (new WcWeightService())->convertToGrams($value);
             },
             self::TRANSFORM_KEY_CAST      => self::TRANSFORM_CAST_INT,
         ];

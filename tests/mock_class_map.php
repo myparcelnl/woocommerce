@@ -18,4 +18,13 @@ function get_bloginfo(string $name): string
     return '';
 }
 
+function get_option(string $name)
+{
+    switch ($name) {
+        case 'woocommerce_weight_unit':
+            return 'kg';
+    }
+    return '';
+}
+
 const WP_DEBUG = true;
