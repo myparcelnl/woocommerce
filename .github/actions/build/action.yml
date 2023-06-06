@@ -1,0 +1,23 @@
+name: 'Create build'
+description: ''
+
+runs:
+  using: composite
+  steps:
+    - name: 'Import translations'
+      shell: bash
+      run: |
+        yarn translations:import
+
+    - name: 'Build JavaScript bundles'
+      shell: bash
+      run: |
+        yarn nx run-many \
+          --output-style=static \
+          --runner=cloud \
+          --target=build
+
+    - name: 'Build plugins'
+      shell: bash
+      run: |
+        yarn pdk-builder release --version ${{ steps.pre-release.outputs.version }}
