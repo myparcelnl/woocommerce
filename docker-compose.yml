@@ -1,17 +1,14 @@
 version: '3.9'
 
-x-common:
-  - &common
-    image: myparcelnl/woocommerce
-    build: .
-    volumes:
-      - .:/app
-
 services:
   php:
-    <<: *common
-    command: ['composer', 'update']
+    image: ghcr.io/myparcelnl/php-xd:7.4-alpine
+    volumes:
+      - .:/app
+    command: ['composer', 'install']
 
   test:
-    <<: *common
+    image: ghcr.io/myparcelnl/php-xd:7.4-alpine
+    volumes:
+      - .:/app
     command: ['php', 'vendor/bin/pest']
