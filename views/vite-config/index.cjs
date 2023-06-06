@@ -1,7 +1,10 @@
 const customTsConfig = require('vite-plugin-custom-tsconfig');
 const {mergeConfig} = require('vite');
 
-/** @param env {import('vite').Env} */
+/**
+ * @type createDefaultConfig {import('vitest/config').UserConfigExport}
+ * @returns {import('vitest/config').UserConfig}
+ */
 const createDefaultConfig = (env) => {
   const isDev = env.mode === 'development';
 
@@ -11,10 +14,21 @@ const createDefaultConfig = (env) => {
       minify: !isDev,
       outDir: 'lib',
     },
+
+    test: {
+      passWithNoTests: true,
+      coverage: {
+        enabled: false,
+        reporter: ['text', 'clover'],
+      },
+    },
   };
 };
 
-/** @type createViteConfig {import('@myparcel-woocommerce/vite-config').createViteConfig} */
+/**
+ *  @param config {import('vitest/config').UserConfigExport}
+ *  @returns {import('vitest/config').UserConfigFn}
+ */
 const createViteConfig = (config) => async (env) => {
   let resolvedConfig = config ?? {};
 

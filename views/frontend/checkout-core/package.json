@@ -4,9 +4,9 @@
   "private": true,
   "main": "src/index.ts",
   "scripts": {
-    "dev": "run ws:dev \"$(pwd)\"",
     "test": "run ws:test \"$(pwd)\"",
-    "test:watch": "run ws:test:watch \"$(pwd)\""
+    "test:coverage": "run ws:test:coverage \"$(pwd)\"",
+    "test:run": "run ws:test:run \"$(pwd)\""
   },
   "dependencies": {
     "@myparcel-pdk/checkout": "^1.0.0-alpha.1"

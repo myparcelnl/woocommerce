@@ -25,16 +25,17 @@
     "docker:run": "docker run -it --rm -v $(pwd):/app myparcelnl/woocommerce",
     "prepare": "is-ci || husky install",
     "test": "nx run-many --output-style=stream --target=test",
-    "test:watch": "nx run-many --output-style=stream --target=test:watch",
+    "test:coverage": "nx run-many --output-style=stream --target=test:coverage",
+    "test:run": "nx run-many --output-style=stream --target=test:run",
     "translations:import": "npx -q @edielemoine/google-docs-importer --documentId 1TPE7gwG2GXtX7vlKIaskwMy0Xr4o_ir-lsedWB86xyc -o config/pdk/translations",
     "watch": "yarn build:js:dev --parallel=99 -- --watch",
     "watch:backend": "yarn build:js:dev:backend --parallel=99 -- --watch",
     "watch:frontend": "yarn build:js:dev:frontend --parallel=99 -- --watch",
-    "ws:build": "vite build",
-    "ws:build:dev": "vite build --mode development",
-    "ws:dev": "vite",
-    "ws:test": "vitest run",
-    "ws:test:watch": "vitest"
+    "ws:build": "cd $0 && vite build",
+    "ws:build:dev": "cd $0 && vite build --mode development",
+    "ws:test": "cd $0 && vitest",
+    "ws:test:coverage": "cd $0 && vitest run --coverage",
+    "ws:test:run": "cd $0 && vitest run"
   },
   "lint-staged": {
     "*.{ts,vue}": "eslint --fix",
