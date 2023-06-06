@@ -4,11 +4,22 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Tests\Uses;
 
-use MyParcelNL\Pdk\Tests\Uses\UsesMockPdkInstance;
-use MyParcelNL\WooCommerce\Pdk\WcPdkBootstrapper;
+use MyParcelNL\Pdk\Tests\Bootstrap\MockPdkConfig;
+use MyParcelNL\Pdk\Tests\Uses\UsesEachMockPdkInstance;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkBootstrapper;
 
-final class UsesMockWcPdkInstance extends UsesMockPdkInstance
+final class UsesMockWcPdkInstance extends UsesEachMockPdkInstance
 {
+    /**
+     * @return void
+     */
+    public function afterEach(): void
+    {
+        MockWcPdkBootstrapper::reset();
+
+        parent::afterEach();
+    }
+
     /**
      * @throws \Exception
      */
@@ -16,7 +27,9 @@ final class UsesMockWcPdkInstance extends UsesMockPdkInstance
     {
         $pluginFile = __DIR__ . '/../../woocommerce-myparcel.php';
 
-        WcPdkBootstrapper::boot(
+        MockWcPdkBootstrapper::setConfig(MockPdkConfig::create($this->config));
+
+        MockWcPdkBootstrapper::boot(
             'myparcelnl',
             'MyParcel [TEST]',
             '0.0.1',

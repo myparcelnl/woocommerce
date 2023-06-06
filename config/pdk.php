@@ -10,6 +10,7 @@ use MyParcelNL\Pdk\App\Api\Contract\BackendEndpointServiceInterface;
 use MyParcelNL\Pdk\App\Api\Contract\FrontendEndpointServiceInterface;
 use MyParcelNL\Pdk\App\Cart\Contract\PdkCartRepositoryInterface;
 use MyParcelNL\Pdk\App\DeliveryOptions\Contract\DeliveryOptionsServiceInterface;
+use MyParcelNL\Pdk\App\Installer\Contract\InstallerServiceInterface;
 use MyParcelNL\Pdk\App\Installer\Contract\MigrationServiceInterface;
 use MyParcelNL\Pdk\App\Order\Contract\OrderStatusServiceInterface;
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
@@ -47,6 +48,7 @@ use MyParcelNL\WooCommerce\Pdk\Service\WcWeightService;
 use MyParcelNL\WooCommerce\Pdk\Settings\Repository\PdkSettingsRepository;
 use MyParcelNL\WooCommerce\Pdk\Webhook\WcWebhooksRepository;
 use MyParcelNL\WooCommerce\Service\WpCronService;
+use MyParcelNL\WooCommerce\Service\WpInstallerService;
 use MyParcelNL\WooCommerce\Service\WpScriptService;
 use Psr\Log\LoggerInterface;
 use function DI\autowire;
@@ -56,7 +58,7 @@ use function DI\value;
  * @see \MyParcelNL\WooCommerce\Pdk\WcPdkBootstrapper for configuration based on the plugin itself.
  */
 return [
-    'mode'                                      => value(WP_DEBUG ? Pdk::MODE_DEVELOPMENT : Pdk::MODE_PRODUCTION),
+    'mode' => value(WP_DEBUG ? Pdk::MODE_DEVELOPMENT : Pdk::MODE_PRODUCTION),
 
     /**
      * Repositories
@@ -73,6 +75,7 @@ return [
      */
     ApiServiceInterface::class                  => autowire(MyParcelApiService::class),
     CronServiceInterface::class                 => autowire(WpCronService::class),
+    InstallerServiceInterface::class            => autowire(WpInstallerService::class),
     LanguageServiceInterface::class             => autowire(LanguageService::class),
     OrderStatusServiceInterface::class          => autowire(WcStatusService::class),
     FrontendRenderServiceInterface::class       => autowire(WcFrontendRenderService::class),

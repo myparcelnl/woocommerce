@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk;
 
+use MyParcelNL\Pdk\Account\Platform;
 use MyParcelNL\Pdk\Base\PdkBootstrapper;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
@@ -44,6 +45,8 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'urlDocumentation' => value('https://developer.myparcel.nl/nl/documentatie/10.woocommerce.html'),
             'urlReleaseNotes'  => value('https://github.com/myparcelnl/woocommerce/releases'),
 
+            'defaultWeightUnit' => value('kg'),
+
             'wcAddressTypeBilling'  => value('billing'),
             'wcAddressTypeShipping' => value('shipping'),
 
@@ -65,6 +68,22 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'fieldPhone'      => value('phone'),
             'fieldPostalCode' => value('postcode'),
             'fieldRegion'     => value('state'),
+
+            /**
+             * Get the legacy installed version key for the current platform. Used for migration from pre 5.0.0 versions.
+             */
+
+            'legacyInstalledVersionKey' => factory(function () {
+                switch (Pdk::get('platform')) {
+                    case Platform::MYPARCEL_NAME:
+                        return 'woocommerce_myparcel_version';
+
+                    case Platform::SENDMYPARCEL_NAME:
+                        return 'woocommerce_myparcelbe_version';
+                }
+
+                return null;
+            }),
 
             ###
             # Meta Keys

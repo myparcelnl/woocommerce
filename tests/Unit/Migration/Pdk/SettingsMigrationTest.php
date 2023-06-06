@@ -7,15 +7,16 @@ namespace MyParcelNL\WooCommerce\Tests\Unit\Migration\Pdk;
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
-use MyParcelNL\Pdk\Tests\Uses\UsesMockPdkInstance;
 use MyParcelNL\WooCommerce\Migration\Pdk\SettingsMigration;
+use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 
-usesShared(new UsesMockPdkInstance());
+usesShared(new UsesMockWcPdkInstance());
 
 dataset('oldPluginSettings', [
-    'old settings' => [
+    'empty' => [[]],
+    'filled' => [
         [
             'general'          => [
                 'api_key'                   => 'b183f9372d6f9bd050418e31cc40965360ca814d',

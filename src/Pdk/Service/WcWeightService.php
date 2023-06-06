@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk\Service;
 
 use MyParcelNL\Pdk\Base\Service\WeightService;
+use MyParcelNL\Pdk\Facade\Pdk;
 
 class WcWeightService extends WeightService
 {
@@ -16,6 +17,6 @@ class WcWeightService extends WeightService
      */
     public function convertToGrams($weight, ?string $unit = null): int
     {
-        return parent::convertToGrams($weight, $unit ?? get_option('woocommerce_weight_unit'));
+        return parent::convertToGrams($weight, $unit ?? get_option('woocommerce_weight_unit', Pdk::get('defaultWeightUnit')));
     }
 }

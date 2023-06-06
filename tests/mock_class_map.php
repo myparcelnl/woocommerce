@@ -13,18 +13,48 @@ class WC_Customer extends MockWcCustomer { }
 
 class WC_Cart extends MockWcCart { }
 
+/**
+ * Data container for WordPress options.
+ */
+final class WordPressOptions
+{
+    public static $options = [
+        'woocommerce_weight_unit' => 'kg',
+    ];
+
+    public static function getOption(string $name, $default = false)
+    {
+        return self::$options[$name] ?? $default;
+    }
+
+    public static function updateOption($option, $value, $autoload = null): void
+    {
+        self::$options[$option] = $value;
+    }
+}
+
+/**
+ * @see \get_bloginfo()
+ */
 function get_bloginfo(string $name): string
 {
     return '';
 }
 
-function get_option(string $name)
+/**
+ * @see \get_option()
+ */
+function get_option(string $name, $default = false)
 {
-    switch ($name) {
-        case 'woocommerce_weight_unit':
-            return 'kg';
-    }
-    return '';
+    return WordPressOptions::getOption($name, $default);
+}
+
+/**
+ * @see \update_option()
+ */
+function update_option($option, $value, $autoload = null)
+{
+    WordPressOptions::updateOption($option, $value, $autoload);
 }
 
 const WP_DEBUG = true;

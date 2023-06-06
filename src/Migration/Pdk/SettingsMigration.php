@@ -6,14 +6,13 @@ namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use Generator;
 use MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface;
+use MyParcelNL\Pdk\Base\Contract\WeightServiceInterface;
 use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Facade\Settings as SettingsFacade;
 use MyParcelNL\Pdk\Settings\Collection\SettingsModelCollection;
 use MyParcelNL\Pdk\Settings\Contract\SettingsRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\Settings;
 use MyParcelNL\Pdk\Shipment\Model\DropOffDay;
-use MyParcelNL\WooCommerce\Pdk\Service\WcWeightService;
 
 final class SettingsMigration extends AbstractPdkMigration
 {
@@ -21,6 +20,7 @@ final class SettingsMigration extends AbstractPdkMigration
     private const TRANSFORM_CAST_BOOL     = 'bool';
     private const TRANSFORM_CAST_CENTS    = 'cents';
     private const TRANSFORM_CAST_FLOAT    = 'float';
+    private const TRANSFORM_CAST_GRAMS    = 'grams';
     private const TRANSFORM_CAST_INT      = 'int';
     private const TRANSFORM_CAST_STRING   = 'string';
     private const TRANSFORM_KEY_CAST      = 'cast';
@@ -28,6 +28,29 @@ final class SettingsMigration extends AbstractPdkMigration
     private const TRANSFORM_KEY_TARGET    = 'target';
     private const TRANSFORM_KEY_TRANSFORM = 'transform';
 
+    /**
+     * @var \MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface
+     */
+    private $currencyService;
+
+    /**
+     * @var \MyParcelNL\Pdk\Base\Contract\WeightServiceInterface
+     */
+    private $weightService;
+
+    /**
+     * @param  \MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface $currencyService
+     * @param  \MyParcelNL\Pdk\Base\Contract\WeightServiceInterface   $weightService
+     */
+    public function __construct(CurrencyServiceInterface $currencyService, WeightServiceInterface $weightService)
+    {
+        $this->currencyService = $currencyService;
+        $this->weightService   = $weightService;
+    }
+
+    /**
+     * @return void
+     */
     public function down(): void
     {
         /**
@@ -59,28 +82,9 @@ final class SettingsMigration extends AbstractPdkMigration
             $newSettings['carrier']->put($carrier, $transformed);
         }
 
-        //$settings = new Settings(array_replace_recursive(SettingsFacade::getDefaults(), $newSettings));
         $settings = new Settings($newSettings);
 
         $settingsRepository->storeAllSettings($settings);
-    }
-
-    public function test()
-    {
-        try {
-            $oldConfigurationSettings = $this->getConfigurationSettings();
-            $newSettings              = $this->transformSettings(
-                $oldConfigurationSettings,
-                $this->getSettingsTransformationMap()
-            );
-            $settings                 = new Settings(
-                array_replace_recursive(SettingsFacade::getDefaults(), $newSettings)
-            );
-        } catch (Exception $e) {
-            $settings = new Settings(SettingsFacade::getDefaults());
-        }
-
-        $this->settingsRepository->storeAllSettings($settings);
     }
 
     /**
@@ -99,9 +103,6 @@ final class SettingsMigration extends AbstractPdkMigration
      */
     private function castValue(string $cast, $value)
     {
-        /** @var \MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface $currencyService */
-        $currencyService = Pdk::get(CurrencyServiceInterface::class);
-
         switch ($cast) {
             case self::TRANSFORM_CAST_BOOL:
                 return (bool) $value;
@@ -116,7 +117,10 @@ final class SettingsMigration extends AbstractPdkMigration
                 return (float) $value;
 
             case self::TRANSFORM_CAST_CENTS:
-                return $currencyService->convertToCents((float) $value);
+                return $this->currencyService->convertToCents((float) $value);
+
+            case self::TRANSFORM_CAST_GRAMS:
+                return $this->weightService->convertToGrams((float) $value);
 
             default:
                 return $value;
@@ -168,8 +172,6 @@ final class SettingsMigration extends AbstractPdkMigration
             self::TRANSFORM_KEY_TARGET => 'account.apiKey',
             self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_STRING,
         ];
-
-        // general.trigger_manual_update
 
         yield [
             self::TRANSFORM_KEY_SOURCE    => 'general.export_mode',
@@ -236,13 +238,27 @@ final class SettingsMigration extends AbstractPdkMigration
         yield [
             self::TRANSFORM_KEY_SOURCE => 'general.barcode_in_note_title',
             self::TRANSFORM_KEY_TARGET => 'general.barcodeInNoteTitle',
-            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_STRING, // TODO: can also be null, is this a problem?
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_STRING,
         ];
 
         yield [
             self::TRANSFORM_KEY_SOURCE => 'general.error_logging',
             self::TRANSFORM_KEY_TARGET => 'general.apiLogging',
             self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
+
+        yield [
+            self::TRANSFORM_KEY_SOURCE    => 'general.order_status_automation',
+            self::TRANSFORM_KEY_TARGET    => 'order.statusOnLabelCreate',
+            self::TRANSFORM_KEY_TRANSFORM => function ($value, array $oldSettings) {
+                if ('1' !== $value) {
+                    return -1; // "None"
+                }
+
+                $oldOrderStatus = Arr::get($oldSettings, 'general.automatic_order_status');
+
+                return sprintf("wc-%s", $oldOrderStatus ?? 'processing');
+            },
         ];
 
         /**
@@ -355,21 +371,15 @@ final class SettingsMigration extends AbstractPdkMigration
         ];
 
         yield [
-            self::TRANSFORM_KEY_SOURCE    => 'export_defaults.empty_parcel_weight',
-            self::TRANSFORM_KEY_TARGET    => 'order.emptyParcelWeight',
-            self::TRANSFORM_KEY_TRANSFORM => function ($value): int {
-                return (new WcWeightService())->convertToGrams($value);
-            },
-            self::TRANSFORM_KEY_CAST      => self::TRANSFORM_CAST_INT,
+            self::TRANSFORM_KEY_SOURCE => 'export_defaults.empty_parcel_weight',
+            self::TRANSFORM_KEY_TARGET => 'order.emptyParcelWeight',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_GRAMS,
         ];
 
         yield [
-            self::TRANSFORM_KEY_SOURCE    => 'export_defaults.empty_digital_stamp_weight',
-            self::TRANSFORM_KEY_TARGET    => 'order.emptyDigitalStampWeight',
-            self::TRANSFORM_KEY_TRANSFORM => function ($value): int {
-                return (new WcWeightService())->convertToGrams($value);
-            },
-            self::TRANSFORM_KEY_CAST      => self::TRANSFORM_CAST_INT,
+            self::TRANSFORM_KEY_SOURCE => 'export_defaults.empty_digital_stamp_weight',
+            self::TRANSFORM_KEY_TARGET => 'order.emptyDigitalStampWeight',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_GRAMS,
         ];
 
         yield [
@@ -441,11 +451,11 @@ final class SettingsMigration extends AbstractPdkMigration
             self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
         ];
 
-        //        yield [
-        //            self::TRANSFORM_KEY_SOURCE => 'export_return_shipments',
-        //            self::TRANSFORM_KEY_TARGET => 'exportReturn',
-        //            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
-        //        ];
+        yield [
+            self::TRANSFORM_KEY_SOURCE => 'export_return_shipments',
+            self::TRANSFORM_KEY_TARGET => 'exportReturn',
+            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
+        ];
 
         yield [
             self::TRANSFORM_KEY_SOURCE => 'export_signature',
@@ -605,7 +615,7 @@ final class SettingsMigration extends AbstractPdkMigration
             $newValue = $value;
 
             if ($item[self::TRANSFORM_KEY_TRANSFORM] ?? false) {
-                $newValue = $item[self::TRANSFORM_KEY_TRANSFORM]($newValue);
+                $newValue = $item[self::TRANSFORM_KEY_TRANSFORM]($newValue, $oldSettings);
             }
 
             if ($item[self::TRANSFORM_KEY_CAST] ?? false) {
@@ -613,11 +623,6 @@ final class SettingsMigration extends AbstractPdkMigration
             }
 
             Arr::set($newSettings, $item[self::TRANSFORM_KEY_TARGET], $newValue);
-        }
-
-        if ('1' === Arr::get($oldSettings, 'general.order_status_automation')) {
-            $newValue = Arr::get($oldSettings, 'general.automatic_order_status') ?? 'processing';
-            Arr::set($newSettings, 'order.statusOnLabelCreate', $newValue);
         }
 
         return $newSettings;
