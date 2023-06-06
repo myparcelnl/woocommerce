@@ -6,12 +6,13 @@ namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use MyParcelNL\Pdk\App\Installer\Contract\MigrationInterface;
 use MyParcelNL\Pdk\Facade\Logger;
+use MyParcelNL\Pdk\Facade\Pdk;
 
 abstract class AbstractPdkMigration implements MigrationInterface
 {
     public function getVersion(): string
     {
-        return '5.0.0-alpha.1';
+        return Pdk::getAppInfo()->version;
     }
 
     protected function debug(string $message, array $context = []): void
