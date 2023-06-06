@@ -45,7 +45,7 @@ final class PdkWebhookHooks implements WordPressHooksInterface
     {
         register_rest_route(
             Pdk::get('routeBackend'),
-            sprintf('%s/(?P<hash>.+)', Pdk::get('routeBackendWebhook')),
+            Pdk::get('routeBackendWebhook'),
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [$this, 'processWebhookRequest'],

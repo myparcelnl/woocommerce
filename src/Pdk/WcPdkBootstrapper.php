@@ -181,7 +181,7 @@ class WcPdkBootstrapper extends PdkBootstrapper
 
             'routeBackend'        => value("$name/backend/v1"),
             'routeBackendPdk'     => value('pdk'),
-            'routeBackendWebhook' => value('webhook'),
+            'routeBackendWebhook' => value('webhook/(?P<hash>.+)'),
 
             'routeFrontend'         => value("$name/frontend/v1"),
             'routeFrontendMyParcel' => value($name),
