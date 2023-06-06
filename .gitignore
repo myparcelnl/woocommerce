@@ -3,6 +3,7 @@ node_modules/
 vendor/
 lib/
 dist/
+coverage/
 
 docker-compose.override.yml
 
