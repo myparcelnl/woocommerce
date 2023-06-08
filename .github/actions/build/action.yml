@@ -16,8 +16,3 @@ runs:
           --output-style=static \
           --runner=cloud \
           --target=build
-
-    - name: 'Build plugins'
-      shell: bash
-      run: |
-        yarn pdk-builder release --version ${{ steps.pre-release.outputs.version }}
