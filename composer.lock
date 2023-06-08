@@ -510,16 +510,16 @@
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "2.3.0",
+            "version": "2.4.1",
             "source": {
                 "type": "git",
                 "url": "git@github.com:myparcelnl/pdk.git",
-                "reference": "781c5bec6fb2760255c7d57f54094d0f08eb86e8"
+                "reference": "57cec295c471b440fe0451d0986b1fd518e7f751"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/781c5bec6fb2760255c7d57f54094d0f08eb86e8",
-                "reference": "781c5bec6fb2760255c7d57f54094d0f08eb86e8",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/57cec295c471b440fe0451d0986b1fd518e7f751",
+                "reference": "57cec295c471b440fe0451d0986b1fd518e7f751",
                 "shasum": ""
             },
             "require": {
@@ -557,7 +557,7 @@
             ],
             "description": "MyParcel Plugin Development Kit",
             "homepage": "https://myparcel.nl",
-            "time": "2023-06-06T10:00:47+00:00"
+            "time": "2023-06-08T08:32:25+00:00"
         },
         {
             "name": "myparcelnl/sdk",
