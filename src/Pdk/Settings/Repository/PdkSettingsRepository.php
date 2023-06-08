@@ -29,5 +29,7 @@ class PdkSettingsRepository extends AbstractSettingsRepository
     public function store(string $key, $value): void
     {
         update_option($key, $value);
+
+        $this->save($key, $value);
     }
 }

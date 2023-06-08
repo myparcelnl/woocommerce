@@ -30,6 +30,8 @@ class PdkAccountRepository extends AbstractAccountRepository
     {
         $settingKey = $this->getSettingKey();
 
+        $this->save('account', $account);
+
         if (! $account) {
             delete_option($settingKey);
 
@@ -38,7 +40,7 @@ class PdkAccountRepository extends AbstractAccountRepository
 
         update_option($settingKey, $account->toStorableArray());
 
-        return $this->save('account', $account);
+        return $account;
     }
 
     /**
