@@ -13,10 +13,6 @@ class TaxFieldsHooks extends AbstractFieldsHooks
 {
     public function apply(): void
     {
-        if (! AccountSettings::hasTaxFields()) {
-            return;
-        }
-
         add_filter('woocommerce_get_country_locale', [$this, 'extendLocaleWithTaxFields'], 1);
         add_filter('woocommerce_country_locale_field_selectors', [$this, 'extendSelectorsWithTaxFields']);
         add_filter('woocommerce_default_address_fields', [$this, 'extendDefaultsWithTaxFields']);
@@ -53,6 +49,10 @@ class TaxFieldsHooks extends AbstractFieldsHooks
      */
     public function extendDefaultsWithTaxFields(array $fields): array
     {
+        if (! $this->shouldRender()) {
+            return $fields;
+        }
+
         return array_merge($fields, [
             Pdk::get('fieldEoriNumber') => [
                 'hidden'   => false,
@@ -72,6 +72,10 @@ class TaxFieldsHooks extends AbstractFieldsHooks
      */
     public function extendLocaleWithTaxFields(array $locale): array
     {
+        if (! $this->shouldRender()) {
+            return $locale;
+        }
+
         foreach (CountryCodes::EU_COUNTRIES as $countryCode) {
             foreach (Pdk::get('taxFields') as $field) {
                 $locale[$countryCode][Pdk::get($field)] = [
@@ -91,6 +95,10 @@ class TaxFieldsHooks extends AbstractFieldsHooks
      */
     public function extendSelectorsWithTaxFields(array $localeFields): array
     {
+        if (! $this->shouldRender()) {
+            return $localeFields;
+        }
+
         return array_replace(
             $localeFields,
             $this->createSelectorFor('fieldEoriNumber'),
@@ -109,6 +117,14 @@ class TaxFieldsHooks extends AbstractFieldsHooks
     }
 
     /**
+     * @return bool
+     */
+    protected function shouldRender(): bool
+    {
+        return AccountSettings::hasTaxFields();
+    }
+
+    /**
      * @param  array  $fields
      * @param  string $form
      *
@@ -116,6 +132,10 @@ class TaxFieldsHooks extends AbstractFieldsHooks
      */
     private function extendWithTaxFields(array $fields, string $form): array
     {
+        if (! $this->shouldRender()) {
+            return $fields;
+        }
+
         return array_replace(
             $fields,
             $this->createField($form, 'fieldEoriNumber', 'eori'),
