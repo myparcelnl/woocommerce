@@ -20,6 +20,43 @@ If you do choose to install this version, we would love to hear your feedback. P
 [releases]: https://github.com/myparcelnl/woocommerce/releases
 [support@myparcel.nl]: mailto:support@myparcel.nl
 
+## [5.0.0-alpha.11](https://github.com/myparcelnl/woocommerce/compare/v5.0.0-alpha.10...v5.0.0-alpha.11) (2023-06-08)
+
+
+### :zap: Performance Improvements
+
+* reduce amount of checks for account ([9b83be8](https://github.com/myparcelnl/woocommerce/commit/9b83be81947223718c0f2f96c309b23ca70f7923))
+
+
+### :sparkles: New Features
+
+* **deps:** update @myparcel-pdk/admin ([4b19ca2](https://github.com/myparcelnl/woocommerce/commit/4b19ca22e9f9c34463a7ab8fa8bac4ae7e6a5d22))
+* **deps:** update myparcelnl/pdk to from 2.3.0 to 2.4.1 ([a9e294e](https://github.com/myparcelnl/woocommerce/commit/a9e294e9393d392919aba31d765b4e943ce15ae5)), closes [#98](https://github.com/myparcelnl/woocommerce/issues/98) [#105](https://github.com/myparcelnl/woocommerce/issues/105)
+
+
+### :bug: Bug Fixes
+
+* **admin:** use the correct versions of js dependencies ([2eefa0e](https://github.com/myparcelnl/woocommerce/commit/2eefa0e012668af9d987606fc9e07a2124484812))
+* fix changes in settings and account not being updated correctly ([514d990](https://github.com/myparcelnl/woocommerce/commit/514d9904e1e0fe49242a972f9f3e6909a94cd07b))
+* **migration:** improve settings migration ([43e0c69](https://github.com/myparcelnl/woocommerce/commit/43e0c697c8b9148a9fa88f45cef3de7be8cbe665))
+
+## ⚠ Warning ⚠
+
+🚧 This version is **not ready for production use**. 🚧
+
+This is the alpha release of the next major version of the MyParcel WooCommerce plugin. We've rewritten the plugin from scratch, using the [frontend] and [backend] of the MyParcel PDK (Plugin Development Kit).
+
+For a safer experience, we recommend you to use the stable or release candidate version of the plugin. You can find the stable version in the [WordPress plugin directory]. The release candidate versions can be found in the [releases] section of this repository. They are versioned with a `-rc` suffix.
+
+If you do choose to install this version, we would love to hear your feedback. Please report any issues you encounter using the [Bug report for v5.0.0-alpha.x form] or by sending an email to [support@myparcel.nl]
+
+[Bug report for v5.0.0-alpha.x form]: https://github.com/myparcelnl/woocommerce/issues/new?labels=alpha&template=ZZ-BUG-REPORT-v5.yml
+[WordPress plugin directory]: https://wordpress.org/plugins/woocommerce-myparcel/
+[backend]: https://github.com/myparcelnl/pdk
+[frontend]: https://github.com/myparcelnl/js-pdk
+[releases]: https://github.com/myparcelnl/woocommerce/releases
+[support@myparcel.nl]: mailto:support@myparcel.nl
+
 ## [5.0.0-alpha.10](https://github.com/myparcelnl/woocommerce/compare/v5.0.0-alpha.9...v5.0.0-alpha.10) (2023-06-02)
 
 
