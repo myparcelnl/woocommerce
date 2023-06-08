@@ -29,12 +29,13 @@ class WpScriptService extends ScriptService
      */
     public function enqueueDeliveryOptions(): void
     {
-        $version = Pdk::get('deliveryOptionsVersion');
-
-        $this->enqueueVue('2.6.0');
+        $this->enqueueVue(Pdk::get('deliveryOptionsVueVersion'));
         $this->enqueueScript(
             self::HANDLE_DELIVERY_OPTIONS,
-            sprintf('https://unpkg.com/@myparcel/delivery-options@%s/dist/myparcel.lib.js', $version),
+            sprintf(
+                'https://unpkg.com/@myparcel/delivery-options@%s/dist/myparcel.lib.js',
+                Pdk::get('deliveryOptionsVersion')
+            ),
             [self::HANDLE_VUE]
         );
     }

@@ -10,7 +10,7 @@ use MyParcelNL\Pdk\Frontend\Contract\ViewServiceInterface;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Service\WpScriptService;
 
-class PdkCoreHooks implements WordPressHooksInterface
+final class PdkCoreHooks implements WordPressHooksInterface
 {
     /**
      * @var \MyParcelNL\WooCommerce\Service\WpScriptService
@@ -69,8 +69,8 @@ class PdkCoreHooks implements WordPressHooksInterface
 
         wp_enqueue_style('woocommerce_admin_styles');
 
-        $this->service->enqueueVue('3.2.45');
-        $this->service->enqueueVueDemi('0.13.11');
+        $this->service->enqueueVue(Pdk::get('vueVersion'));
+        $this->service->enqueueVueDemi(Pdk::get('vueDemiVersion'));
 
         $select = version_compare(WC()->version, '3.2.0', '>=') ? 'selectWoo' : 'select2';
 
