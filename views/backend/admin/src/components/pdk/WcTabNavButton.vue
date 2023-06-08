@@ -1,37 +1,19 @@
 <template>
   <a
-    v-test="'TabNavButton'"
+    v-test="AdminComponent.TabNavButton"
     :class="{
       'nav-tab-active': active,
     }"
     class="nav-tab"
     href="#"
     @click.prevent="$emit('click')">
-    <PdkIcon
-      v-if="tab.icon"
-      v-test="'TabNavButton__icon'"
-      :icon="tab.icon" />
-
-    {{ translate(tab.label) }}
+    <slot />
   </a>
 </template>
 
 <script lang="ts" setup>
-import {type PropType} from 'vue';
-import {type TabDefinition, useLanguage} from '@myparcel-pdk/admin';
+import {AdminComponent} from '@myparcel-pdk/admin';
 
-defineProps({
-  active: {
-    type: Boolean,
-  },
-
-  tab: {
-    type: Object as PropType<TabDefinition>,
-    required: true,
-  },
-});
-
-defineEmits(['click']);
-
-const {translate} = useLanguage();
+defineProps<{active: boolean}>();
+defineEmits<(event: 'click') => void>();
 </script>
