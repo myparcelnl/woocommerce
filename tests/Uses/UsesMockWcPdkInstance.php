@@ -25,7 +25,7 @@ final class UsesMockWcPdkInstance extends UsesEachMockPdkInstance
      */
     protected function setup(): void
     {
-        $pluginFile = __DIR__ . '/../../woocommerce-myparcel.php';
+        $pluginFile = __DIR__ . '/../../myparcelnl-woocommerce.php';
 
         MockWcPdkBootstrapper::setConfig(MockPdkConfig::create($this->config));
 

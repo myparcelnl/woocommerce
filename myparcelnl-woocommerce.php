@@ -4,13 +4,12 @@
 declare(strict_types=1);
 
 /*
-Plugin Name: MyParcel WooCommerce
+Plugin Name: MyParcelNL WooCommerce
 Plugin URI: https://github.com/myparcelnl/woocommerce
 Description: Export your WooCommerce orders to MyParcel and print labels directly from the WooCommerce admin
 Author: MyParcel
 Author URI: https://myparcel.nl
 Version: 5.0.0-alpha.10
-
 License: MIT
 License URI: http://www.opensource.org/licenses/mit-license.php
 */
@@ -22,7 +21,7 @@ use MyParcelNL\WooCommerce\Service\WordPressHookService;
 
 require(plugin_dir_path(__FILE__) . 'vendor/autoload.php');
 
-class MyParcelNL
+final class MyParcelNLWooCommerce
 {
     /**
      * @throws \Throwable
@@ -114,19 +113,8 @@ class MyParcelNL
             return true;
         }
 
-        //        $error = __('WooCommerce MyParcel requires PHP {PHP_VERSION} or higher.', 'woocommerce-myparcel');
-        //        $error = str_replace('{PHP_VERSION}', $minimumPhpVersion, $error);
-        //
-        //        $howToUpdate = __('How to update your PHP version', 'woocommerce-myparcel');
-        //        $message     = sprintf(
-        //            '<p>%s</p><p><a href="%s">%s</a></p>',
-        //            $error,
-        //            'http://docs.wpovernight.com/general/how-to-update-your-php-version/',
-        //            $howToUpdate
-        //        );
-
         return false;
     }
 }
 
-new MyParcelNL();
+new MyParcelNLWooCommerce();

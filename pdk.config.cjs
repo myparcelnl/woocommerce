@@ -16,7 +16,7 @@ module.exports = {
     'composer.json',
     'readme.txt',
     'wpm-config.json',
-    'woocommerce-myparcel.php',
+    'myparcelnl-woocommerce.php',
   ],
 
   platformFolderName(platform) {
@@ -34,7 +34,7 @@ module.exports = {
   versionSource: [
     {path: 'package.json'},
     {path: 'composer.json'},
-    {path: 'woocommerce-myparcel.php', regex: /Version:\s*(.+)/},
+    {path: 'myparcelnl-woocommerce.php', regex: /Version:\s*(.+)/},
     // TODO: Uncomment when this version is stable.
     // {path: 'readme.txt', regex: /Stable tag:\s*(.+)/},
   ],
