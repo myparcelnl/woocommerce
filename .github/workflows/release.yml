@@ -124,7 +124,7 @@ jobs:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
 
-      - uses: dev-drprasad/delete-older-releases@v0.2
+      - uses: dev-drprasad/delete-older-releases@02a7034
         with:
           keep_latest: 1
           delete_tag_pattern: alpha
