@@ -67,7 +67,7 @@ class PdkProductSettingsHooks implements WordPressHooksInterface
         $appInfo = Pdk::getAppInfo();
 
         $values = array_filter($post, static function ($key) use ($appInfo) {
-            return Str::startsWith($key, $appInfo->name);
+            return Str::startsWith($key, '_' . $appInfo->name);
         }, ARRAY_FILTER_USE_KEY);
 
         /** @var \MyParcelNL\WooCommerce\Pdk\Product\Repository\PdkProductRepository $productRepository */

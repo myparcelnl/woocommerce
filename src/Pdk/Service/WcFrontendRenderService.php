@@ -107,7 +107,7 @@ class WcFrontendRenderService extends FrontendRenderService
         $appInfo = Pdk::getAppInfo();
 
         $method = null;
-        $key    = Str::snake(sprintf('%s_product_%s', $appInfo->name, $field['name'] ?? ''));
+        $key    = Str::snake(sprintf('_%s_product_%s', $appInfo->name, $field['name'] ?? ''));
 
         $params = [
             'id'                => $key,

@@ -98,7 +98,7 @@ class PdkProductRepository extends AbstractPdkPdkProductRepository
             $productSettings = new ProductSettings();
 
             foreach ($productSettings->getAttributes() as $key => $value) {
-                $metaKey = sprintf('%s_product_%s', $appInfo->name, Str::snake($key));
+                $metaKey = sprintf('_%s_product_%s', $appInfo->name, Str::snake($key));
                 $value   = $product->get_meta($metaKey) ?: null;
 
                 if (! $value) {
@@ -133,7 +133,7 @@ class PdkProductRepository extends AbstractPdkPdkProductRepository
         $appInfo   = Pdk::getAppInfo();
 
         foreach ($product->settings->getAttributes() as $key => $value) {
-            $metaKey = sprintf('%s_product_%s', $appInfo->name, Str::snake($key));
+            $metaKey = sprintf('_%s_product_%s', $appInfo->name, Str::snake($key));
             $wcProduct->update_meta_data($metaKey, $value);
         }
 
