@@ -24,6 +24,7 @@ use MyParcelNL\WooCommerce\Factory\WcAddressAdapter;
 use Throwable;
 use WC_Order;
 use WC_Order_Item_Product;
+use WC_Tax;
 
 class PdkOrderRepository extends AbstractPdkOrderRepository
 {
@@ -154,10 +155,14 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'deliveryOptions'       => $deliveryOptions,
             'lines'                 => $items
                 ->map(function (array $item) {
+                    $vatPercentage = WC_Tax::get_rates($item['item']->get_tax_class())[1]['rate'] ?? 0;
+                    $lineFactor    = 0 === $item['item']->get_quantity() ? 0 : 1 / $item['item']->get_quantity();
                     return new PdkOrderLine([
-                        'quantity' => $item['item']->get_quantity(),
-                        'price'    => (int) ((float) $item['item']->get_total() * 100),
-                        'product'  => $item['pdkProduct'],
+                        'quantity'      => $item['item']->get_quantity(),
+                        'price'         => (int) ((float) $item['item']->get_total() * 100 * $lineFactor),
+                        'vat'           => (int) ((float) $item['item']->get_total_tax() * 100 * $lineFactor),
+                        'product'       => $item['pdkProduct'],
+                        'vatPercentage' => $vatPercentage,
                     ]);
                 })
                 ->toArray(),
@@ -166,12 +171,12 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                 : null,
             'physicalProperties'    => $this->getPhysicalProperties($items),
             'orderPrice'            => $order->get_total(),
-            'orderPriceAfterVat'    => ((float) $order->get_total()) + ((float) $order->get_cart_tax()),
+            'orderPriceAfterVat'    => (float) $order->get_total() + (float) $order->get_total_tax(),
             'orderVat'              => $order->get_total_tax(),
-            'shipmentPrice'         => (float) $order->get_shipping_total(),
-            'shipmentPriceAfterVat' => (float) $order->get_shipping_total(),
+            'shipmentPrice'         => 100 * (float) $order->get_shipping_total(),
+            'shipmentPriceAfterVat' => 100 * ((float) $order->get_shipping_total() + (float) $order->get_shipping_tax()),
             'shipments'             => $this->getShipments($order),
-            'shipmentVat'           => (float) $order->get_shipping_tax(),
+            'shipmentVat'           => 100 * (float) $order->get_shipping_tax(),
             'orderDate'             => $this->getOrderDate($order),
         ];
 
