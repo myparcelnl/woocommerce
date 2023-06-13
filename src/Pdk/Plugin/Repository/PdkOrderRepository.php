@@ -153,6 +153,9 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'recipient'             => $recipient,
             'billingAddress'        => $this->addressAdapter->fromWcOrder($order, Pdk::get('wcAddressTypeBilling')),
             'deliveryOptions'       => $deliveryOptions,
+            'invoiceId'             => $order->get_id(),
+            'invoiceDate'           => $this->getOrderDate($order),
+            'paymentMethod'         => $order->get_payment_method(),
             'lines'                 => $items
                 ->map(function (array $item) {
                     $vatPercentage = WC_Tax::get_rates($item['item']->get_tax_class())[1]['rate'] ?? 0;
