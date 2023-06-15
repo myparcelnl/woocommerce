@@ -14,6 +14,7 @@ use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
+use MyParcelNL\Pdk\Settings\Model\LabelSettings;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
@@ -24,6 +25,7 @@ use MyParcelNL\WooCommerce\Factory\WcAddressAdapter;
 use Throwable;
 use WC_Order;
 use WC_Order_Item_Product;
+use WC_Product;
 
 class PdkOrderRepository extends AbstractPdkOrderRepository
 {
@@ -144,8 +146,12 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             $order
         );
 
-        $items     = $this->getWcOrderItems($order);
-        $recipient = $this->addressAdapter->fromWcOrder($order);
+        if (isset($deliveryOptions['shipmentOptions'])) {
+            $deliveryOptions['shipmentOptions']['labelDescription'] = $this->getLabelDescription($order);
+        }
+
+        $items                               = $this->getWcOrderItems($order);
+        $recipient                           = $this->addressAdapter->fromWcOrder($order);
 
         $orderData = [
             'externalIdentifier'    => $order->get_id(),
@@ -166,7 +172,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                 : null,
             'physicalProperties'    => $this->getPhysicalProperties($items),
             'orderPrice'            => $order->get_total(),
-            'orderPriceAfterVat'    => ((float) $order->get_total()) + ((float) $order->get_cart_tax()),
+            'orderPriceAfterVat'    => (float) $order->get_total() + (float) $order->get_cart_tax(),
             'orderVat'              => $order->get_total_tax(),
             'shipmentPrice'         => (float) $order->get_shipping_total(),
             'shipmentPriceAfterVat' => (float) $order->get_shipping_total(),
@@ -176,6 +182,52 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         ];
 
         return new PdkOrder($orderData + $savedOrderData);
+    }
+
+    /**
+     * @param  \WC_Order $order
+     *
+     * @return string
+     */
+    private function getLabelDescription(WC_Order $order): string
+    {
+        $labelDescription = Settings::get(LabelSettings::DESCRIPTION, LabelSettings::ID);
+
+        $productIds      = [];
+        $productNames    = [];
+        $productSkus     = [];
+        $productQuantity = [];
+
+        foreach ($order->get_items() as $item) {
+            if (! method_exists($item, 'get_product')) {
+                continue;
+            }
+
+            /** @var WC_Product $product */
+            $product = $item->get_product();
+            if (! $product) {
+                continue;
+            }
+
+            $sku = $product->get_sku();
+
+            $productIds[]      = $product->get_id();
+            $productNames[]    = $product->get_name();
+            $productSkus[]     = empty($sku) ? '–' : $sku;
+            $productQuantity[] = $item->get_quantity();
+
+        }
+        return strtr(
+            $labelDescription,
+            [
+                '[ORDER_NR]'      => $order->get_order_number(),
+                '[PRODUCT_ID]'    => implode(', ', $productIds),
+                '[PRODUCT_NAME]'  => implode(', ', $productNames),
+                '[PRODUCT_QTY]'   => implode(', ', $productQuantity),
+                '[PRODUCT_SKU]'   => implode(', ', $productSkus),
+                '[CUSTOMER_NOTE]' => $order->get_customer_note(),
+            ]
+        );
     }
 
     /**
