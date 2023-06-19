@@ -20,6 +20,7 @@ use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
 use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
 use MyParcelNL\Sdk\src\Support\Arr;
+use MyParcelNL\Sdk\src\Support\Str;
 use MyParcelNL\WooCommerce\Facade\Filter;
 use MyParcelNL\WooCommerce\Factory\WcAddressAdapter;
 use Throwable;
@@ -29,6 +30,21 @@ use WC_Product;
 
 class PdkOrderRepository extends AbstractPdkOrderRepository
 {
+    private const DESCRIPTION_CUSTOMER_NOTE = '[CUSTOMER_NOTE]';
+    private const DESCRIPTION_ORDER_NR      = '[ORDER_NR]';
+    private const DESCRIPTION_PRODUCT_ID    = '[PRODUCT_ID]';
+    private const DESCRIPTION_PRODUCT_NAME  = '[PRODUCT_NAME]';
+    private const DESCRIPTION_PRODUCT_QTY   = '[PRODUCT_QTY]';
+    private const DESCRIPTION_PRODUCT_SKU   = '[PRODUCT_SKU]';
+    private const DESCRIPTION_PLACEHOLDERS  = [
+        self::DESCRIPTION_CUSTOMER_NOTE,
+        self::DESCRIPTION_ORDER_NR,
+        self::DESCRIPTION_PRODUCT_ID,
+        self::DESCRIPTION_PRODUCT_NAME,
+        self::DESCRIPTION_PRODUCT_QTY,
+        self::DESCRIPTION_PRODUCT_SKU,
+    ];
+
     /**
      * @var \MyParcelNL\WooCommerce\Factory\WcAddressAdapter
      */
@@ -139,25 +155,20 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     private function getDataFromOrder(WC_Order $order): PdkOrder
     {
-        $savedOrderData  = $order->get_meta(Pdk::get('metaKeyOrderData')) ?: [];
-        $deliveryOptions = Filter::apply(
-            'orderDeliveryOptions',
-            $savedOrderData['deliveryOptions'] ?? [],
-            $order
-        );
+        $savedOrderData = $order->get_meta(Pdk::get('metaKeyOrderData')) ?: [];
 
-        if (isset($deliveryOptions['shipmentOptions'])) {
-            $deliveryOptions['shipmentOptions']['labelDescription'] = $this->getLabelDescription($order);
-        }
-
-        $items                               = $this->getWcOrderItems($order);
-        $recipient                           = $this->addressAdapter->fromWcOrder($order);
+        $items     = $this->getWcOrderItems($order);
+        $recipient = $this->addressAdapter->fromWcOrder($order);
 
         $orderData = [
             'externalIdentifier'    => $order->get_id(),
             'recipient'             => $recipient,
             'billingAddress'        => $this->addressAdapter->fromWcOrder($order, Pdk::get('wcAddressTypeBilling')),
-            'deliveryOptions'       => $deliveryOptions,
+            'deliveryOptions'       => $this->getDeliveryOptions(
+                $savedOrderData['deliveryOptions'] ?? [],
+                $order,
+                $items
+            ),
             'lines'                 => $items
                 ->map(function (array $item) {
                     return new PdkOrderLine([
@@ -185,47 +196,65 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     }
 
     /**
-     * @param  \WC_Order $order
+     * @param  array                                   $deliveryOptions
+     * @param  \WC_Order                               $order
+     * @param  \MyParcelNL\Pdk\Base\Support\Collection $items
+     *
+     * @return array
+     */
+    private function getDeliveryOptions(array $deliveryOptions, WC_Order $order, Collection $items): array
+    {
+        if (isset($deliveryOptions['shipmentOptions'])) {
+            $deliveryOptions['shipmentOptions']['labelDescription'] = $this->getLabelDescription(
+                $order,
+                $items,
+                $deliveryOptions['shipmentOptions']['labelDescription']
+            );
+        }
+
+        return (array) (Filter::apply('orderDeliveryOptions', $deliveryOptions ?? [], $order) ?? []);
+    }
+
+    /**
+     * @param  \WC_Order                                       $order
+     * @param  \MyParcelNL\Pdk\Base\Support\Collection|array[] $items
+     * @param  null|string                                     $labelDescription
      *
      * @return string
      */
-    private function getLabelDescription(WC_Order $order): string
+    private function getLabelDescription(WC_Order $order, Collection $items, ?string $labelDescription): string
     {
-        $labelDescription = Settings::get(LabelSettings::DESCRIPTION, LabelSettings::ID);
+        $description = $labelDescription ?? Settings::get(LabelSettings::DESCRIPTION, LabelSettings::ID) ?? '';
 
-        $productIds      = [];
-        $productNames    = [];
-        $productSkus     = [];
-        $productQuantity = [];
-
-        foreach ($order->get_items() as $item) {
-            if (! method_exists($item, 'get_product')) {
-                continue;
-            }
-
-            /** @var WC_Product $product */
-            $product = $item->get_product();
-            if (! $product) {
-                continue;
-            }
-
-            $sku = $product->get_sku();
-
-            $productIds[]      = $product->get_id();
-            $productNames[]    = $product->get_name();
-            $productSkus[]     = empty($sku) ? '–' : $sku;
-            $productQuantity[] = $item->get_quantity();
-
+        if (! Str::contains($description, self::DESCRIPTION_PLACEHOLDERS)) {
+            return $description;
         }
+
+        $productDetails = $items
+            ->where('product', '!=', null)
+            ->reduce(function (array $carry, array $item) {
+                /** @var WC_Product $product */
+                $product = $item['product'];
+
+                $sku = $product->get_sku();
+
+                $carry['ids'][]      = $product->get_id();
+                $carry['names'][]    = $product->get_name();
+                $carry['skus'][]     = empty($sku) ? '–' : $sku;
+                $carry['quantity'][] = $item['item']->get_quantity();
+
+                return $carry;
+            }, []);
+
         return strtr(
-            $labelDescription,
+            $description,
             [
-                '[ORDER_NR]'      => $order->get_order_number(),
-                '[PRODUCT_ID]'    => implode(', ', $productIds),
-                '[PRODUCT_NAME]'  => implode(', ', $productNames),
-                '[PRODUCT_QTY]'   => implode(', ', $productQuantity),
-                '[PRODUCT_SKU]'   => implode(', ', $productSkus),
-                '[CUSTOMER_NOTE]' => $order->get_customer_note(),
+                self::DESCRIPTION_CUSTOMER_NOTE => $order->get_customer_note(),
+                self::DESCRIPTION_ORDER_NR      => $order->get_id(),
+                self::DESCRIPTION_PRODUCT_ID    => implode(', ', $productDetails['ids'] ?? []),
+                self::DESCRIPTION_PRODUCT_NAME  => implode(', ', $productDetails['names'] ?? []),
+                self::DESCRIPTION_PRODUCT_QTY   => implode(', ', $productDetails['quantity'] ?? []),
+                self::DESCRIPTION_PRODUCT_SKU   => implode(', ', $productDetails['skus'] ?? []),
             ]
         );
     }
@@ -242,17 +271,26 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         return $wcOrderCreated ? $wcOrderCreated->format('Y-m-d H:i:s') : null;
     }
 
+    /**
+     * @param  \MyParcelNL\Pdk\Base\Support\Collection $items
+     *
+     * @return array
+     */
     private function getPhysicalProperties(Collection $items): array
     {
-        $totalWeight = $items->reduce(static function (float $acc, $item) {
-            if (is_numeric($item['item']->get_quantity()) && is_numeric($item['product']->get_weight())) {
-                $acc += $item['item']->get_quantity() * $item['product']->get_weight();
-            }
-            return $acc;
-        }, 0);
-
         return [
-            'weight' => $totalWeight,
+            'weight' => $items
+                ->where('product', '!=', null)
+                ->reduce(static function (float $acc, $item) {
+                    $quantity = $item['item']->get_quantity();
+                    $weight   = $item['product']->get_weight();
+
+                    if (is_numeric($quantity) && is_numeric($weight)) {
+                        $acc += $quantity * $weight;
+                    }
+
+                    return $acc;
+                }, 0),
         ];
     }
 
@@ -302,7 +340,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                     'product'    => $product,
                     'pdkProduct' => $product ? $this->productRepository->getProduct($product) : null,
                 ];
-            }, array_values($order->get_items()))
+            }, array_values($order->get_items() ?? []))
         );
     }
 
