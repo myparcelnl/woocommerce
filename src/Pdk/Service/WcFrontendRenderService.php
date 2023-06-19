@@ -162,6 +162,11 @@ class WcFrontendRenderService extends FrontendRenderService
                 $params['description'] = Language::translate($subtextKey);
             }
 
+            if (isset($params['custom_attributes']['$attributes'])) {
+                $params['custom_attributes'] = array_merge($params['custom_attributes'], $params['custom_attributes']['$attributes']);
+                unset($params['custom_attributes']['$attributes']);
+            }
+
             $method($params);
         }
     }
