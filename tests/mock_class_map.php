@@ -7,11 +7,29 @@ use MyParcelNL\WooCommerce\Tests\Mock\MockWcCart;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcCustomer;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcOrder;
 
-class WC_Order extends MockWcOrder { }
+class WC_Cart extends MockWcCart
+{
+    public function needs_shipping()
+    {
+        return $this->get_needs_shipping();
+    }
+}
 
 class WC_Customer extends MockWcCustomer { }
 
-class WC_Cart extends MockWcCart { }
+class WC_Order extends MockWcOrder { }
+
+class WC_Order_Item extends MockWcOrder { }
+
+class WC_Order_Item_Product extends MockWcOrder { }
+
+class WC_Product extends MockWcOrder
+{
+    public function needs_shipping()
+    {
+        return $this->get_needs_shipping();
+    }
+}
 
 /**
  * Data container for WordPress options.
@@ -55,6 +73,19 @@ function get_option(string $name, $default = false)
 function update_option($option, $value, $autoload = null)
 {
     WordPressOptions::updateOption($option, $value, $autoload);
+}
+
+/**
+ * @see \apply_filters()
+ */
+function apply_filters($tag, $value)
+{
+    return $value;
+}
+
+function get_woocommerce_currency()
+{
+    return 'EUR';
 }
 
 const WP_DEBUG = true;
