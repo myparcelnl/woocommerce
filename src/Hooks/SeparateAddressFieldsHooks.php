@@ -81,7 +81,7 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks
 
         foreach (Pdk::get('countriesWithSeparateAddressFields') as $countryCode) {
             $locale[$countryCode][Pdk::get('fieldAddress1')] = [
-                'required' => false,
+                'required' => true,
                 'hidden'   => $useSeparateAddressFields,
             ];
 
