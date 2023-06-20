@@ -13,7 +13,9 @@ use MyParcelNL\Pdk\Settings\Collection\SettingsModelCollection;
 use MyParcelNL\Pdk\Settings\Contract\SettingsRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\Settings;
 use MyParcelNL\Pdk\Shipment\Model\DropOffDay;
+use MyParcelNL\Sdk\src\Support\Str;
 
+const PREFIX_FLAT_RATE = 'flat_rate:';
 final class SettingsMigration extends AbstractPdkMigration
 {
     private const OLD_CARRIERS            = ['postnl', 'dhlforyou', 'dhlparcelconnect', 'dhleuroplus'];
@@ -339,19 +341,29 @@ final class SettingsMigration extends AbstractPdkMigration
                     return [];
                 }
 
-                return array_reduce(
-                    $value,
-                    static function (array $carry, $shippingMethods): array {
-                        if (is_array($shippingMethods)) {
-                            foreach ($shippingMethods as $shippingMethod) {
-                                $carry[] = $shippingMethod;
-                            }
-                        }
+                $shippingMethods = array_reduce(Arr::flatten($value), static function ($carry, $item) {
+                    $parts  = explode(':', $item);
+                    $method = $item;
 
-                        return $carry;
-                    },
-                    []
-                );
+                    if (count($parts) === 1) {
+                        $method = $parts[0] . ':1';
+                    }
+
+                    if (count($parts) > 2) {
+                        $method = sprintf('%s:%s', $parts[0], $parts[1]);
+                    }
+
+                    if ($parts[1] > 10 && Str::startsWith($item, PREFIX_FLAT_RATE)) {
+                        $carry[] = $method;
+                        $method  = sprintf('%s%s', PREFIX_FLAT_RATE, $parts[1][0]);
+                    }
+
+                    $carry[] = $method;
+
+                    return $carry;
+                }, []);
+
+                return array_values(array_unique($shippingMethods));
             },
         ];
 
