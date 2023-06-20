@@ -1,4 +1,4 @@
-import {AddressType, PdkField, Util, createPdkCheckout, useUtil} from '@myparcel-pdk/checkout';
+import {AddressType, PdkField, Util, createPdkCheckout, useUtil, useSettings} from '@myparcel-pdk/checkout';
 import {createFields} from './utils/createFields';
 
 const PREFIX_BILLING = 'billing_';
@@ -62,6 +62,14 @@ createPdkCheckout({
     const billingElement = document.querySelector('.woocommerce-billing-fields__field-wrapper');
 
     return AddressType.Shipping === addressType || billingElement !== null;
+  },
+
+  hasDeliveryOptions(shippingMethod) {
+    const settings = useSettings();
+
+    return settings.allowedShippingMethods.some(
+      (method) => shippingMethod === method || shippingMethod.startsWith(`${method}:`),
+    );
   },
 
   initialize() {
