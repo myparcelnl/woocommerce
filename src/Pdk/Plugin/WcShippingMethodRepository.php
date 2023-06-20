@@ -15,30 +15,26 @@ use WC_Shipping_Zones;
 class WcShippingMethodRepository extends AbstractPdkShippingMethodRepository
 {
     /**
-     * Get all available shipping methods from WooCommerce, with shipping classes.
+     * Get all available shipping methods from WooCommerce.
      */
     public function all(): PdkShippingMethodCollection
     {
-        $shippingMethods = $this->wcShipping()
-            ->get_shipping_methods();
-
-        foreach (WC_Shipping_Zones::get_zones() as $zone) {
-            $zoneInstance = WC_Shipping_Zones::get_zone($zone['zone_id']);
-
-            /** @var WC_Shipping_Method $shippingMethod */
-            foreach ($zoneInstance->get_shipping_methods() as $shippingMethod) {
-                $shippingMethods[] = $shippingMethod;
-            }
-        }
+        // The "0" zone is the "Rest of the World" zone in WooCommerce.
+        $zoneIds = array_merge([0], array_keys(WC_Shipping_Zones::get_zones()));
 
         return new PdkShippingMethodCollection(
-            array_values(
-                array_map(
-                    function ($shippingMethod) {
-                        return $this->get($shippingMethod);
-                    },
-                    $shippingMethods
-                )
+            array_reduce(
+                $zoneIds,
+                function (array $carry, $zoneId): array {
+                    $zoneInstance = WC_Shipping_Zones::get_zone($zoneId);
+
+                    foreach ($zoneInstance->get_shipping_methods() as $shippingMethod) {
+                        $carry[] = $this->get($shippingMethod);
+                    }
+
+                    return $carry;
+                },
+                []
             )
         );
     }
