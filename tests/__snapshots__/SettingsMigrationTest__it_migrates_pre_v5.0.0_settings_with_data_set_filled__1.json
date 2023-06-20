@@ -48,11 +48,11 @@
     "id": "checkout",
     "allowedShippingMethods": [
       "flat_rate:32",
-      "free_shipping",
-      "local_pickup",
-      "table_rate:5:2",
+      "flat_rate:3",
+      "free_shipping:1",
+      "local_pickup:1",
+      "table_rate:5",
       "flat_rate:30",
-      "table_rate:5:1",
       "flat_rate:33",
       "flat_rate:31"
     ],
@@ -69,6 +69,7 @@
   "carrier": {
     "postnl": {
       "id": "postnl",
+      "carrierName": null,
       "allowDeliveryOptions": true,
       "allowEveningDelivery": true,
       "allowMondayDelivery": true,
@@ -167,6 +168,7 @@
     },
     "dhlforyou": {
       "id": "dhlforyou",
+      "carrierName": null,
       "allowDeliveryOptions": true,
       "allowEveningDelivery": false,
       "allowMondayDelivery": false,
@@ -265,6 +267,7 @@
     },
     "dhlparcelconnect": {
       "id": "dhlparcelconnect",
+      "carrierName": null,
       "allowDeliveryOptions": true,
       "allowEveningDelivery": false,
       "allowMondayDelivery": false,
@@ -363,6 +366,7 @@
     },
     "dhleuroplus": {
       "id": "dhleuroplus",
+      "carrierName": null,
       "allowDeliveryOptions": false,
       "allowEveningDelivery": false,
       "allowMondayDelivery": false,

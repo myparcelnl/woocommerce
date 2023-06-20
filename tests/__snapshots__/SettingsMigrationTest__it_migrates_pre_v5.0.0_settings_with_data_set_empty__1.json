@@ -60,6 +60,7 @@
   "carrier": {
     "postnl": {
       "id": "postnl",
+      "carrierName": null,
       "allowDeliveryOptions": false,
       "allowEveningDelivery": false,
       "allowMondayDelivery": false,
@@ -158,6 +159,7 @@
     },
     "dhlforyou": {
       "id": "dhlforyou",
+      "carrierName": null,
       "allowDeliveryOptions": false,
       "allowEveningDelivery": false,
       "allowMondayDelivery": false,
@@ -256,6 +258,7 @@
     },
     "dhlparcelconnect": {
       "id": "dhlparcelconnect",
+      "carrierName": null,
       "allowDeliveryOptions": false,
       "allowEveningDelivery": false,
       "allowMondayDelivery": false,
@@ -354,6 +357,7 @@
     },
     "dhleuroplus": {
       "id": "dhleuroplus",
+      "carrierName": null,
       "allowDeliveryOptions": false,
       "allowEveningDelivery": false,
       "allowMondayDelivery": false,
