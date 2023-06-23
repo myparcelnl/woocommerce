@@ -18,7 +18,7 @@
 
       <PdkTableRow v-if="toggleRefs[day]">
         <PdkTableCol>
-          <label :for="`${id}_time_${day}`">{{ translate('settings_cutoff_time') }}</label>
+          <label :for="`${id}_time_${day}`">{{ translate('settings_carrier_cutoff_time') }}</label>
         </PdkTableCol>
 
         <PdkTableCol>
