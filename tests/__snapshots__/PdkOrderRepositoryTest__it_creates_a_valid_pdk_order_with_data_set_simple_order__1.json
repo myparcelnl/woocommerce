@@ -1,7 +1,57 @@
 {
   "externalIdentifier": "1",
   "deliveryOptions": {
-    "carrier": "postnl",
+    "carrier": {
+      "externalIdentifier": "postnl",
+      "id": 1,
+      "name": "postnl",
+      "human": "PostNL",
+      "subscriptionId": null,
+      "enabled": false,
+      "isDefault": true,
+      "label": null,
+      "optional": false,
+      "primary": false,
+      "type": "main",
+      "capabilities": {
+        "deliveryTypes": ["morning", "standard", "evening", "pickup"],
+        "features": {
+          "labelDescriptionLength": 45
+        },
+        "packageTypes": ["package", "mailbox", "letter", "digital_stamp"],
+        "shipmentOptions": {
+          "ageCheck": true,
+          "largeFormat": true,
+          "onlyRecipient": true,
+          "return": true,
+          "sameDayDelivery": true,
+          "signature": true,
+          "insurance": [
+            0, 10000, 25000, 50000, 100000, 150000, 200000, 250000, 300000,
+            350000, 400000, 450000, 500000
+          ]
+        }
+      },
+      "returnCapabilities": {
+        "deliveryTypes": ["standard"],
+        "features": {
+          "labelDescriptionLength": 45
+        },
+        "packageTypes": ["package"],
+        "shipmentOptions": {
+          "signature": true,
+          "insurance": [
+            0, 10000, 25000, 50000, 100000, 150000, 200000, 250000, 300000,
+            350000, 400000, 450000, 500000
+          ],
+          "return": true,
+          "ageCheck": true,
+          "onlyRecipient": true,
+          "sameDayDelivery": true,
+          "largeFormat": true
+        }
+      }
+    },
     "date": null,
     "labelAmount": 1,
     "pickupLocation": null,
