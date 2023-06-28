@@ -288,12 +288,6 @@ final class SettingsMigration extends AbstractPdkMigration
             self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
         ];
 
-        yield [
-            self::TRANSFORM_KEY_SOURCE => 'checkout.delivery_options_display',
-            self::TRANSFORM_KEY_TARGET => 'checkout.deliveryOptionsDisplay',
-            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
-        ];
-
         // NOTE: Risky. Resulting value may not exist in array of checkout hooks.
         yield [
             self::TRANSFORM_KEY_SOURCE => 'checkout.delivery_options_position',
@@ -570,7 +564,7 @@ final class SettingsMigration extends AbstractPdkMigration
 
         yield [
             self::TRANSFORM_KEY_SOURCE => 'pickup_enabled',
-            self::TRANSFORM_KEY_TARGET => 'allowPickupPoints',
+            self::TRANSFORM_KEY_TARGET => 'allowPickupLocations',
             self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
         ];
 
