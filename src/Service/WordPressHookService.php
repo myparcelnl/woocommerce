@@ -15,11 +15,11 @@ use MyParcelNL\WooCommerce\Hooks\SeparateAddressFieldsHooks;
 use MyParcelNL\WooCommerce\Hooks\TaxFieldsHooks;
 use MyParcelNL\WooCommerce\Hooks\TrackTraceHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkAdminEndpointHooks;
+use MyParcelNL\WooCommerce\Pdk\Hooks\PdkCheckoutPlaceOrderHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkCoreHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkFrontendEndpointHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkOrderHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkOrderListHooks;
-use MyParcelNL\WooCommerce\Pdk\Hooks\PdkPlaceOrderHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkPluginSettingsHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkProductSettingsHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkWebhookHooks;
@@ -54,11 +54,11 @@ final class WordPressHookService
             CartFeesHooks::class,
             CheckoutScriptHooks::class,
             PdkAdminEndpointHooks::class,
+            PdkCheckoutPlaceOrderHooks::class,
             PdkCoreHooks::class,
             PdkFrontendEndpointHooks::class,
             PdkOrderHooks::class,
             PdkOrderListHooks::class,
-            PdkPlaceOrderHooks::class,
             PdkPluginSettingsHooks::class,
             PdkProductSettingsHooks::class,
             PdkWebhookHooks::class,
