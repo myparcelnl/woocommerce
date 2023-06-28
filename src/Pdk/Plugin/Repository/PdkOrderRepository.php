@@ -209,7 +209,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             $deliveryOptions['shipmentOptions']['labelDescription'] = $this->getLabelDescription(
                 $order,
                 $items,
-                $deliveryOptions['shipmentOptions']['labelDescription']
+                $deliveryOptions['shipmentOptions']['labelDescription'] ?? null
             );
         }
 
