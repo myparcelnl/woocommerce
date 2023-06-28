@@ -78,7 +78,7 @@ class WcPdkBootstrapper extends PdkBootstrapper
              * @see \MyParcelNL\Pdk\App\Order\Model\PdkOrder
              */
 
-            'metaKeyOrderData' => value("{$name}_order_data"),
+            'metaKeyOrderData' => value("_{$name}_order_data"),
 
             /**
              * The meta key a PdkOrder's shipments are saved in.
@@ -87,11 +87,13 @@ class WcPdkBootstrapper extends PdkBootstrapper
              * @see \MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection
              */
 
-            'metaKeyShipments' => value("{$name}_order_shipments"),
+            'metaKeyOrderShipments' => value("_{$name}_order_shipments"),
 
-            /** Key set on a product if its settings have been migrated to 5.0.0. */
+            /**
+             * The meta key that stores the version of the plugin the resource was last saved with.
+             */
 
-            'metaKeyProductSettingsMigrated' => value("{$name}_product_migrated_pdk"),
+            'metaKeyVersion' => value("_{$name}_version"),
 
             ###
             # Order grid
@@ -252,6 +254,17 @@ class WcPdkBootstrapper extends PdkBootstrapper
                 'fieldEoriNumberPriority' => 900,
                 'fieldVatNumberPriority'  => 901,
             ]),
+
+            ###
+            # Migrations
+            ###
+
+            'metaKeyMigrated_5_0_0' => value("_{$name}_migrated_5_0_0"),
+
+            # Migration actions
+
+            'migrateAction_5_0_0_Orders'          => value("{$name}_migrate_5_0_0_orders"),
+            'migrateAction_5_0_0_ProductSettings' => value("{$name}_migrate_5_0_0_product_settings"),
         ];
     }
 }

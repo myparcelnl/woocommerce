@@ -302,7 +302,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     private function getShipments(WC_Order $order): ?ShipmentCollection
     {
-        $shipments = $order->get_meta(Pdk::get('metaKeyShipments')) ?: null;
+        $shipments = $order->get_meta(Pdk::get('metaKeyOrderShipments')) ?: null;
 
         return new ShipmentCollection($shipments);
     }
@@ -353,13 +353,13 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     private function saveShipments(WC_Order $wcOrder, PdkOrder $order): void
     {
-        $existingShipments = get_post_meta($wcOrder->get_id(), Pdk::get('metaKeyShipments'), true) ?: [];
+        $existingShipments = get_post_meta($wcOrder->get_id(), Pdk::get('metaKeyOrderShipments'), true) ?: [];
 
         $order->shipments = (new ShipmentCollection($existingShipments))->mergeByKey($order->shipments, 'id');
 
         $shipmentsArray = $order->shipments->toStorableArray();
 
-        update_post_meta($wcOrder->get_id(), Pdk::get('metaKeyShipments'), $shipmentsArray);
+        update_post_meta($wcOrder->get_id(), Pdk::get('metaKeyOrderShipments'), $shipmentsArray);
 
         $barcodes = array_filter(
             Arr::pluck($shipmentsArray, 'barcode'),

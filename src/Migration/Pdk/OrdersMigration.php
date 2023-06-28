@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use DateTime;
-use WC_Data;
+use MyParcelNL\Pdk\Facade\Pdk;
 use WC_Order;
 
 final class OrdersMigration extends AbstractPdkMigration
@@ -40,10 +40,7 @@ final class OrdersMigration extends AbstractPdkMigration
         );
 
         foreach ($orderIds as $orderId) {
-            $wcOrder = wc_get_order($orderId);
-
-            $this->updatePdkOrder($wcOrder);
-            $this->migrateMetaKeys($wcOrder);
+            $this->savePdkData(wc_get_order($orderId));
 
             $this->debug("Order $orderId migrated.");
         }
@@ -64,7 +61,7 @@ final class OrdersMigration extends AbstractPdkMigration
 
         foreach ($chunks as $index => $chunk) {
             $time = time() + $index * 5;
-            wp_schedule_single_event($time, 'myparcelnl_migrate_order_to_pdk_5_0_0', [
+            wp_schedule_single_event($time, Pdk::get('migrateAction_5_0_0_Orders'), [
                 [
                     'orderIds'  => $chunk,
                     'chunk'     => $index,
@@ -128,8 +125,8 @@ final class OrdersMigration extends AbstractPdkMigration
      */
     private function getDeliveryOptions(WC_Order $wcOrder): ?array
     {
-        $deliveryOptions = $this->get_meta($wcOrder, '_myparcel_delivery_options');
-        $extraOptions    = $this->get_meta($wcOrder, '_myparcel_shipment_options_extra');
+        $deliveryOptions = $this->getMeta($wcOrder, '_myparcel_delivery_options');
+        $extraOptions    = $this->getMeta($wcOrder, '_myparcel_shipment_options_extra');
 
         return $deliveryOptions ? [
             'carrier'         => $deliveryOptions['carrier'] ?? null,
@@ -167,12 +164,33 @@ final class OrdersMigration extends AbstractPdkMigration
     /**
      * @param  \WC_Order $wcOrder
      *
+     * @return null|array
+     */
+    private function getRecipient(WC_Order $wcOrder): ?array
+    {
+        $street = $this->getMeta($wcOrder, Pdk::get('_shipping_street_name'));
+
+        if ($street) {
+            $number       = $this->getMeta($wcOrder, Pdk::get('_shipping_house_number'));
+            $numberSuffix = $this->getMeta($wcOrder, Pdk::get('_shipping_house_number_suffix'));
+
+            return [
+                'address_1' => trim("$street $number $numberSuffix"),
+            ];
+        }
+
+        return null;
+    }
+
+    /**
+     * @param  \WC_Order $wcOrder
+     *
      * @return array
      */
     private function getShipments(WC_Order $wcOrder): array
     {
         $shipmentCollection = [];
-        $shipmentMeta       = $this->get_meta($wcOrder, '_myparcel_shipments');
+        $shipmentMeta       = $this->getMeta($wcOrder, '_myparcel_shipments');
 
         if (! $shipmentMeta) {
             return $shipmentCollection;
@@ -185,6 +203,7 @@ final class OrdersMigration extends AbstractPdkMigration
                 'id'                       => $shipment['id'] ?? null,
                 'parentId'                 => $shipment['parent_id'] ?? null,
                 'shopId'                   => $shipment['shop_id'] ?? null,
+                'orderId'                  => $wcOrder->get_id(),
                 'referenceIdentifier'      => $shipment['reference_identifier'] ?? null,
                 'externalIdentifier'       => $shipment['external_identifier'] ?? null,
                 'apiKey'                   => null,
@@ -311,88 +330,20 @@ final class OrdersMigration extends AbstractPdkMigration
     }
 
     /**
-     * @param  WC_Data $object
-     * @param  string  $key
-     *
-     * @return mixed
-     */
-    private function get_meta(WC_Data $object, string $key = '')
-    {
-        $value = $object->get_meta($key, true, 'edit');
-
-        if (is_string($value)) {
-            $decoded = json_decode($value, true);
-            // json_decode returns null if there was a syntax error, meaning input was not valid JSON.
-            $value = $decoded ?? $value;
-        }
-
-        return $value;
-    }
-
-    /**
      * @param  \WC_Order $wcOrder
      *
      * @return void
      */
-    private function migrateMetaKeys(WC_Order $wcOrder): void
+    private function savePdkData(WC_Order $wcOrder): void
     {
-        $oldKeys = [
-            '_myparcel_last_shipments_ids',
-            '_myparcel_delivery_date',
-            '_myparcel_highest_shipping_class',
-            '_myparcel_order_version',
-        ];
+        $this->updateMeta($wcOrder, Pdk::get('metaKeyOrderData'), [
+            'deliveryOptions' => $this->getDeliveryOptions($wcOrder),
+            'recipient'       => $this->getRecipient($wcOrder),
+        ]);
 
-        foreach ($oldKeys as $key) {
-            $oldMeta = $this->get_meta($wcOrder, $key);
-            $newKey  = str_replace('myparcel', 'myparcelnl', $key);
-            $wcOrder->update_meta_data($newKey, $oldMeta);
-        }
-    }
+        $this->updateMeta($wcOrder, Pdk::get('metaKeyOrderShipments'), $this->getShipments($wcOrder));
+        $this->updateMeta($wcOrder, Pdk::get('metaKeyVersion'), $this->getMeta($wcOrder, '_myparcel_order_version'));
 
-    /**
-     * @param  array $pdkOrder
-     *
-     * @return void
-     */
-    private function saveMetaData(array $pdkOrder): void
-    {
-        update_post_meta(
-            $pdkOrder['externalIdentifier'],
-            'myparcelnl_order_data',
-            [
-                'deliveryOptions' => $pdkOrder['deliveryOptions'],
-                'recipient'       => $pdkOrder['recipient'],
-            ]
-        );
-
-        update_post_meta($pdkOrder['externalIdentifier'], 'myparcelnl_order_shipments', $pdkOrder['shipments']);
-
-        update_post_meta($pdkOrder['externalIdentifier'], 'myparcelnl_pdk_migrated', true);
-    }
-
-    /**
-     * @param  \WC_Order $wcOrder
-     *
-     * @return void
-     */
-    private function updatePdkOrder(WC_Order $wcOrder): void
-    {
-        $houseNumber       = $wcOrder->get_meta('_shipping_house_number');
-        $houseNumberSuffix = $wcOrder->get_meta('_shipping_house_number_suffix');
-        $streetName        = $wcOrder->get_meta('_shipping_street_name');
-
-        $pdkOrder = [
-            'externalIdentifier' => $wcOrder->get_id(),
-            'deliveryOptions'    => $this->getDeliveryOptions($wcOrder),
-            'recipient'          => [
-                'number'       => $houseNumber ?? null,
-                'numberSuffix' => $houseNumberSuffix ?? null,
-                'street'       => $streetName ?? null,
-            ],
-            'shipments'          => $this->getShipments($wcOrder),
-        ];
-
-        $this->saveMetaData($pdkOrder);
+        $this->markObjectMigrated($wcOrder);
     }
 }

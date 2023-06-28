@@ -39,8 +39,8 @@ final class ProductSettingsMigration extends AbstractPdkMigration
     {
         $nonMigratedProducts = wc_get_products([
             'limit'        => self::CHUNK_SIZE,
-            'meta_key'     => Pdk::get('metaKeyProductSettingsMigrated'),
-            'meta_compare' => 'NOT EXISTS',
+            'meta_key'     => Pdk::get('metaKeyMigrated'),
+            'meta_compare' => "LIKE %\"{$this->getVersion()}\"%",
         ]);
 
         if (empty($nonMigratedProducts)) {
@@ -61,7 +61,12 @@ final class ProductSettingsMigration extends AbstractPdkMigration
         $this->migrateProductSettings();
     }
 
-    private function migrateTheseWcProducts($wcProducts): void
+    /**
+     * @param  WC_Product[] $wcProducts
+     *
+     * @return void
+     */
+    private function migrateTheseWcProducts(array $wcProducts): void
     {
         /** @var PdkProductRepositoryInterface $productRepository */
         $productRepository = Pdk::get(PdkProductRepositoryInterface::class);
@@ -108,14 +113,13 @@ final class ProductSettingsMigration extends AbstractPdkMigration
                 sprintf('Settings for product %s migrated %s', $wcProduct->get_id(), $changed ? '' : '(no data)')
             );
 
-            $wcProduct->update_meta_data(Pdk::get('metaKeyProductSettingsMigrated'), true);
-            $wcProduct->save();
+            $this->markObjectMigrated($wcProduct);
         }
     }
 
     private function scheduleNextRun(): void
     {
         $time = time() + self::SECONDS_APART;
-        wp_schedule_single_event($time, 'myparcelnl_migrate_product_settings_to_pdk_5_0_0');
+        wp_schedule_single_event($time, Pdk::get('migrateAction_5_0_0_ProductSettings'));
     }
 }
