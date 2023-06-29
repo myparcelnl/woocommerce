@@ -4,7 +4,7 @@
 declare(strict_types=1);
 
 /*
-Plugin Name: MyParcelNL WooCommerce
+Plugin Name: MyParcelNL
 Plugin URI: https://github.com/myparcelnl/woocommerce
 Description: Export your WooCommerce orders to MyParcel and print labels directly from the WooCommerce admin
 Author: MyParcel
@@ -32,7 +32,7 @@ final class MyParcelNLWooCommerce
     public function __construct()
     {
         if (! defined('DOING_AJAX') && is_admin()) {
-            add_action('init', [$this, 'install']);
+            add_action('wp_loaded', [$this, 'install']);
         }
 
         add_action('init', [$this, 'initialize'], 9999);

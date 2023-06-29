@@ -25,8 +25,8 @@ final class ProductSettingsMigration extends AbstractPdkMigration
             ],
         ],
     ];
-    private const CHUNK_SIZE          = 10;
-    private const SECONDS_APART       = 30;
+    private const CHUNK_SIZE          = 100;
+    private const SECONDS_APART       = 60;
 
     public function down(): void
     {
@@ -105,9 +105,9 @@ final class ProductSettingsMigration extends AbstractPdkMigration
                 }
             }
 
-            if ($changed) {
-                $productRepository->update($product);
-            }
+            [$product->settings->fitInMailbox, $product->settings->packageType] = $this->getPackageTypeForProduct($wcProduct);
+
+            $productRepository->update($product);
 
             $this->debug(
                 sprintf('Settings for product %s migrated %s', $wcProduct->get_id(), $changed ? '' : '(no data)')
@@ -115,6 +115,100 @@ final class ProductSettingsMigration extends AbstractPdkMigration
 
             $this->markObjectMigrated($wcProduct);
         }
+    }
+
+    private function getPackageTypeForProduct(WC_Product $wcProduct): array
+    {
+        // TODO support variants!!
+
+        /* empty the woocommerce cart */
+        if (is_null( WC()->cart)) {
+            wc_load_cart();
+        }
+        WC()->cart->empty_cart();
+
+        /* add product to cart */
+        WC()->cart->add_to_cart($wcProduct->get_id());
+
+        /* get available shipping methods from cart */
+        $cartShippingPackages = WC()->cart->get_shipping_packages();
+        // todo log nice error if this did not return an array
+        $cartShippingMethods = $this->getMethodsFromPackages($cartShippingPackages);
+        // todo abstraheren en in een aparte functie zetten en let op als er false uit get_option komt
+        $methodToPackageType = get_option('woocommerce_myparcel_export_defaults_settings');
+        $methodToPackageType = $methodToPackageType['shipping_methods_package_types'];
+        $migratePackageType = 'package'; // default package type is 'package'
+        $productFitInMailbox = 0; // default product does not fit in mailbox
+        $available = [];
+        $increment = 1;
+
+
+        /* loop through shipping methods to see which one(s) are connected to a myparcel packagetype */
+        foreach (['digital_stamp', 'mailbox'] as $packageType) {
+            if (isset($methodToPackageType[$packageType])) {
+                $available = array_intersect($methodToPackageType[$packageType], $cartShippingMethods);
+                if ($available) {
+                    $productFitInMailbox = 1;
+                    $migratePackageType = $packageType;
+                }
+            }
+        }
+        while (true) {
+            WC()->cart->add_to_cart($wcProduct->get_id(), 1);
+            $cartShippingPackages = WC()->cart->get_shipping_packages();
+            // todo log nice error if this did not return an array
+            $cartShippingMethods = $this->getMethodsFromPackages($cartShippingPackages);
+            foreach (['digital_stamp', 'mailbox'] as $packageType) { // todo slightly duplicate code
+                if (isset($methodToPackageType[$packageType])) {
+                    $available = array_intersect($methodToPackageType[$packageType], $cartShippingMethods);
+                    if ($available) {
+                        $productFitInMailbox+=$increment;
+                    }
+                    switch (strlen((string)$productFitInMailbox)) {
+                        case 3:
+                            $increment = 10;
+                            break;
+                        case 4:
+                            $increment = 100;
+                            break;
+                        case 5:
+                            $available = []; // we're done here
+                    }
+                }
+            }
+            if (! $available) break;
+        }
+//        if (17 === $wcProduct->get_id()) {
+//            echo '<textarea style="width: 100%; height: 500px;">';
+//            var_dump(['product_id' => $wcProduct->get_id()]);
+//            var_dump($cartShippingMethods);
+//            var_dump($methodToPackageType);
+//            var_dump([$productFitInMailbox, $migratePackageType,]);
+//            echo '</textarea>';
+//        }
+
+        return [$productFitInMailbox,$migratePackageType,];
+    }
+
+    private function getMethodsFromPackages(array $cartShippingPackages): array {
+        $cartShippingMethods = [];
+        foreach( array_keys( $cartShippingPackages ) as $key ) {
+            if( $shipping_for_package = WC()->session->get('shipping_for_package_'.$key) ) {
+                if( isset($shipping_for_package['rates']) ) {
+                    // Loop through customer available shipping methods
+                    foreach ( $shipping_for_package['rates'] as $rate_key => $rate ) {
+                        $rate_id = $rate->id; // the shipping method rate ID (or $rate_key)
+                        $method_id = $rate->method_id; // the shipping method label
+                        $instance_id = $rate->instance_id; // The instance ID
+                        $cost = $rate->label; // The cost
+                        $label = $rate->label; // The label name
+                        $taxes = $rate->taxes; // The taxes (array)
+                        $cartShippingMethods[] = $rate_key;
+                    }
+                }
+            }
+        }
+        return $cartShippingMethods;;
     }
 
     private function scheduleNextRun(): void
