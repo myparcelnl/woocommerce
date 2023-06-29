@@ -70,6 +70,7 @@ final class ProductSettingsMigration extends AbstractPdkMigration
     {
         /** @var PdkProductRepositoryInterface $productRepository */
         $productRepository = Pdk::get(PdkProductRepositoryInterface::class);
+        $phpMemoryLimit    = ini_get('memory_limit');
 
         foreach ($wcProducts as $wcProduct) {
             if (! $wcProduct instanceof WC_Product) {
@@ -114,6 +115,11 @@ final class ProductSettingsMigration extends AbstractPdkMigration
             );
 
             $this->markObjectMigrated($wcProduct);
+            $wcProduct->save();
+
+            if (memory_get_usage() > .8 * $phpMemoryLimit) {
+                return;
+            }
         }
     }
 
