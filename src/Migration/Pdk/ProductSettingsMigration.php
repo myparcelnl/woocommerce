@@ -137,9 +137,8 @@ final class ProductSettingsMigration extends AbstractPdkMigration
         // todo abstraheren en in een aparte functie zetten en let op als er false uit get_option komt
         $methodToPackageType = get_option('woocommerce_myparcel_export_defaults_settings');
         $methodToPackageType = $methodToPackageType['shipping_methods_package_types'];
-        $migratePackageType = 'package'; // default package type is 'package'
-        $productFitInMailbox = 0; // default product does not fit in mailbox
-        $available = [];
+        $migratePackageType = 'package';
+        $productFitInMailbox = 0;
         $increment = 1;
 
 
@@ -150,10 +149,13 @@ final class ProductSettingsMigration extends AbstractPdkMigration
                 if ($available) {
                     $productFitInMailbox = 1;
                     $migratePackageType = $packageType;
+                    break;
                 }
             }
         }
-        while (true) {
+        $doingTheDo = true;
+        while ($doingTheDo) {
+            $doingTheDo = false;
             WC()->cart->add_to_cart($wcProduct->get_id(), 1);
             $cartShippingPackages = WC()->cart->get_shipping_packages();
             // todo log nice error if this did not return an array
@@ -162,6 +164,7 @@ final class ProductSettingsMigration extends AbstractPdkMigration
                 if (isset($methodToPackageType[$packageType])) {
                     $available = array_intersect($methodToPackageType[$packageType], $cartShippingMethods);
                     if ($available) {
+                        $doingTheDo = true;
                         $productFitInMailbox+=$increment;
                     }
                     switch (strlen((string)$productFitInMailbox)) {
@@ -172,11 +175,10 @@ final class ProductSettingsMigration extends AbstractPdkMigration
                             $increment = 100;
                             break;
                         case 5:
-                            $available = []; // we're done here
+                            $doingTheDo = false; // we’ve had enough
                     }
                 }
             }
-            if (! $available) break;
         }
 //        if (17 === $wcProduct->get_id()) {
 //            echo '<textarea style="width: 100%; height: 500px;">';
