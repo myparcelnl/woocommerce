@@ -8,7 +8,8 @@
       :class="{
         'form-required': !element.isValid,
       }"
-      :disabled="element.isDisabled || element.isSuspended"
+      :disabled="element.isDisabled || element.isSuspended || element.isReadOnly"
+      :readonly="element.isReadOnly"
       :value="element.props?.value"
       type="radio"
       v-bind="$attrs" />

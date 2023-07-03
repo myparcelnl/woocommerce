@@ -3,7 +3,8 @@
     <input
       :id="id"
       v-model="model"
-      :disabled="element.isDisabled || element.isSuspended"
+      :disabled="element.isDisabled || element.isSuspended || element.isReadOnly"
+      :readonly="element.isReadOnly"
       :value="true"
       class="!mypa-hidden"
       tabindex="-1"

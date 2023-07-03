@@ -8,6 +8,8 @@
         'form-required': !element.isValid,
       }"
       :value="element?.props?.value ?? '1'"
+      :disabled="element.isDisabled || element.isSuspended || element.isReadOnly"
+      :readonly="element.isReadOnly"
       type="checkbox" />
     <label
       v-if="element?.label"

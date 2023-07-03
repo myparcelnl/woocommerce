@@ -7,8 +7,8 @@
       'form-required': !element.isValid,
     }"
     :disabled="element.isDisabled || element.isSuspended"
-    :type="element.props?.type ?? 'text'"
-    class="!mypa-w-full" />
+    :readonly="element.isReadOnly"
+    :type="element.props?.type ?? 'text'" />
 </template>
 
 <script lang="ts" setup>

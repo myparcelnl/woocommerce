@@ -2,7 +2,8 @@
   <select
     :id="id"
     ref="selectElement"
-    v-test="AdminComponent.SelectInput" />
+    v-test="AdminComponent.SelectInput"
+    :disabled="element.isDisabled || element.isSuspended" />
 </template>
 
 <script lang="ts" setup>
