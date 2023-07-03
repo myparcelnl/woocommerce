@@ -5,6 +5,7 @@
     <input
       :id="id"
       v-model="model"
+      :name="id"
       :class="{
         'form-required': !element.isValid,
       }"

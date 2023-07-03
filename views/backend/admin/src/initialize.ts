@@ -16,6 +16,7 @@ import {
 import {DashIconsIcon} from '@myparcel-pdk/admin-preset-dashicons';
 import {LogLevel, createPdkAdmin} from '@myparcel-pdk/admin';
 import {closeModalOnEscape, listenForBulkActions} from './hooks';
+import WcProductSettingsFormGroup from './components/pdk/WcProductSettingsFormGroup.vue';
 import {
   WcBox,
   WcButton,
@@ -44,6 +45,7 @@ import {
   WcTextArea,
   WcTextInput,
   WcToggleInput,
+  WcTriStateInput,
 } from './components/pdk';
 
 const FADE = 'fade';
@@ -77,6 +79,14 @@ export const initialize = (): void => {
             // Omit the "wrap" class in modal forms to avoid the horizontal padding.
             class: 'woocommerce',
           },
+        },
+      },
+      productSettings: {
+        form: {
+          tag: 'div',
+        },
+        field: {
+          wrapper: WcProductSettingsFormGroup,
         },
       },
     },
@@ -119,6 +129,7 @@ export const initialize = (): void => {
       PdkTextInput: WcTextInput,
       PdkTimeInput: DefaultTimeInput,
       PdkToggleInput: WcToggleInput,
+      PdkTriStateInput: WcTriStateInput,
     },
 
     cssUtilities: {
@@ -150,6 +161,10 @@ export const initialize = (): void => {
 
     onInitialized() {
       listenForBulkActions();
+    },
+
+    generateFieldId(field) {
+      return `myparcelnl-${field.name}`;
     },
   });
 };

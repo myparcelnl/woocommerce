@@ -51,3 +51,5 @@ export {default as WcTextArea} from './WcTextArea.vue';
 export {default as WcTextInput} from './WcTextInput.vue';
 
 export {default as WcToggleInput} from './WcToggleInput.vue';
+
+export {default as WcTriStateInput} from './WcTriStateInput.vue';

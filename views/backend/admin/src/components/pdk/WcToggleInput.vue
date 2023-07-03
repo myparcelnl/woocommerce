@@ -3,6 +3,7 @@
     <input
       :id="id"
       v-model="model"
+      :name="id"
       :disabled="element.isDisabled || element.isSuspended || element.isReadOnly"
       :readonly="element.isReadOnly"
       :value="true"
@@ -11,9 +12,14 @@
       type="checkbox" />
 
     <label
-      :class="`woocommerce-input-toggle woocommerce-input-toggle--${model ? 'enabled' : 'disabled'}`"
+      class="!mypa-float-none !mypa-ml-auto !mypa-w-8 woocommerce-input-toggle"
+      :class="[
+        `woocommerce-input-toggle--${model ? 'enabled' : 'disabled'}`,
+        {
+          'woocommerce-input-toggle--loading': element.isDisabled || element.isSuspended || element.isReadOnly,
+        },
+      ]"
       :for="id"
-      class="!mypa-float-none !mypa-ml-auto !mypa-w-8"
       role="switch"
       tabindex="0">
       {{ translate(`toggle_${model ? 'yes' : 'no'}`) }}

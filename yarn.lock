@@ -661,48 +661,48 @@ __metadata:
   linkType: hard
 
 "@myparcel-pdk/admin-component-tests@npm:^1.0.0-alpha.1":
-  version: 1.0.0-alpha.80
-  resolution: "@myparcel-pdk/admin-component-tests@npm:1.0.0-alpha.80"
+  version: 1.0.0-alpha.81
+  resolution: "@myparcel-pdk/admin-component-tests@npm:1.0.0-alpha.81"
   dependencies:
     "@myparcel-pdk/common": ^1.0.0-alpha.39
-    "@myparcel-pdk/frontend-admin-core": ^1.0.0-alpha.78
+    "@myparcel-pdk/frontend-admin-core": ^1.0.0-alpha.79
     "@vue/test-utils": ^2.3.0
     pinia: ^2.1.3
   peerDependencies:
     vue: ^3
-  checksum: b8e1c544bd582b67e9c61fbf93027d66da67b2c11d30e53079f7e074f8c5f5c99db95b990841b3847ea850200faa49400345c06c9e16cc0c9cc7454b955d2e82
+  checksum: 8ec3e4e570b51d10065955d47bc8b244616452eec265bbb3c6762f84b05b7957f5679bf274bea7cfdadd6d277d97800d0da94281ff87ec07421d44945184c8f7
   languageName: node
   linkType: hard
 
 "@myparcel-pdk/admin-preset-dashicons@npm:^1.0.0-alpha.11":
-  version: 1.0.0-alpha.78
-  resolution: "@myparcel-pdk/admin-preset-dashicons@npm:1.0.0-alpha.78"
+  version: 1.0.0-alpha.80
+  resolution: "@myparcel-pdk/admin-preset-dashicons@npm:1.0.0-alpha.80"
   dependencies:
-    "@myparcel-pdk/frontend-admin-core": ^1.0.0-alpha.78
+    "@myparcel-pdk/admin": ^1.0.0-alpha.79
     vue: ^3.2.47
-  checksum: cd4094baf05062878ddf28de7f13f61de26339972abedb75d2b6ca98602e89ac434300957ae6bd9d1db9711ff7e2ac7b480d363fc667135ac8741b39136de0fe
+  checksum: 18b8ae174164e3429242ad5a33baecf80e762bb3d4ff47bef7e8b2947e7f65fe49f0effb91b86878d73fb90b864633def35ede6f88bd0f5f13d42613057684f7
   languageName: node
   linkType: hard
 
 "@myparcel-pdk/admin-preset-default@npm:^1.0.0-alpha.36":
-  version: 1.0.0-alpha.76
-  resolution: "@myparcel-pdk/admin-preset-default@npm:1.0.0-alpha.76"
+  version: 1.0.0-alpha.78
+  resolution: "@myparcel-pdk/admin-preset-default@npm:1.0.0-alpha.78"
   dependencies:
-    "@myparcel-pdk/frontend-admin-core": ^1.0.0-alpha.78
+    "@myparcel-pdk/admin": ^1.0.0-alpha.79
     "@myparcel/ts-utils": ^1.9.0
     "@vueuse/core": ^10.1.2
     vue: ^3.2.47
-  checksum: e2fd1e56ffa33018747b39cad34e6b59985cd0b5eae248837f9de4e87c543a26dee3c101338596bd7a6c06029e3b148e150eddad70075528fb5f25dbfa181b13
+  checksum: 907b771ec049a67b0d204ed2c5d4b1f2e47fe85fc3541260d954fe2978525d1ae8473b885ccb1d008b096a94d2755ffcde7bbca876cdcae866573e963a77c8c5
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/admin@npm:^1.0.0-alpha.64":
-  version: 1.0.0-alpha.77
-  resolution: "@myparcel-pdk/admin@npm:1.0.0-alpha.77"
+"@myparcel-pdk/admin@npm:^1.0.0-alpha.64, @myparcel-pdk/admin@npm:^1.0.0-alpha.79":
+  version: 1.0.0-alpha.79
+  resolution: "@myparcel-pdk/admin@npm:1.0.0-alpha.79"
   dependencies:
     "@myparcel-pdk/common": ^1.0.0-alpha.39
-    "@myparcel-pdk/frontend-admin-core": ^1.0.0-alpha.78
-  checksum: d981a7cfb83edfe7bf537c09a539a2178bb2adbf7a3710738b1dc233c1e485a0b5110e73ab8337f8bedb8c436c3d70ba77d97228fba77d44b935d10490ed0d8e
+    "@myparcel-pdk/frontend-admin-core": ^1.0.0-alpha.79
+  checksum: 9b0c4a485e8a6665a2e0f66180650c2e6e452d5b8b2d9d675f803462e1397cdba3d61435db56a85cefe10dbc03314408920292e895df4930228c4718344cb10b
   languageName: node
   linkType: hard
 
@@ -744,9 +744,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/frontend-admin-core@npm:^1.0.0-alpha.78":
-  version: 1.0.0-alpha.78
-  resolution: "@myparcel-pdk/frontend-admin-core@npm:1.0.0-alpha.78"
+"@myparcel-pdk/frontend-admin-core@npm:^1.0.0-alpha.79":
+  version: 1.0.0-alpha.79
+  resolution: "@myparcel-pdk/frontend-admin-core@npm:1.0.0-alpha.79"
   dependencies:
     "@myparcel-pdk/common": ^1.0.0-alpha.39
     "@myparcel/constants": ^1.0.0
@@ -760,7 +760,7 @@ __metadata:
     lodash-unified: ^1.0.3
     pinia: ^2.1.3
     vue: ^3.2.47
-  checksum: e676d77858902ceccd8d211b8bf1eecea5730ba4dfd695d6c81cc2c1863dbedcd3329719e0996fd65a3c5726d75b3600daab9c13da6cc0b45e2a3d44419225cd
+  checksum: 8cba774e963ee5a4214e423f117b793c24d4691204bdb194efce955d67f0df24d731ba99d4720702c8b299bfaa95b859ed1e48482fa9550ae61be92b294c9cf0
   languageName: node
   linkType: hard
 

@@ -50,8 +50,8 @@
 </template>
 
 <script lang="ts" setup>
-import {type Variant} from '@myparcel-pdk/common';
 import {
+  type Variant,
   ActionButton,
   type ActionDefinition,
   type Size,

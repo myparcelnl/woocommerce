@@ -4,6 +4,7 @@
       :id="id"
       v-model="model"
       v-test="AdminComponent.CheckboxInput"
+      :name="id"
       :class="{
         'form-required': !element.isValid,
       }"

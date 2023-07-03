@@ -36,8 +36,7 @@
 
 <script lang="ts" setup>
 import {type PropType, computed} from 'vue';
-import {Variant} from '@myparcel-pdk/common';
-import {AdminComponent, type AdminIcon, Size, useLanguage} from '@myparcel-pdk/admin';
+import {Variant, AdminComponent, type AdminIcon, Size, useLanguage} from '@myparcel-pdk/admin';
 import WcSpinner from '../WcSpinner.vue';
 
 const props = defineProps({

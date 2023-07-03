@@ -3,6 +3,7 @@
     :id="id"
     ref="selectElement"
     v-test="AdminComponent.SelectInput"
+    :name="id"
     :disabled="element.isDisabled || element.isSuspended" />
 </template>
 

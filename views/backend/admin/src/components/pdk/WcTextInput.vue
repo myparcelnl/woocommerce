@@ -3,6 +3,7 @@
     :id="id"
     v-model.trim="model"
     v-test="AdminComponent.TextInput"
+    :name="id"
     :class="{
       'form-required': !element.isValid,
     }"
