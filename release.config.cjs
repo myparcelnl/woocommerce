@@ -29,7 +29,7 @@ module.exports = {
     // TODO: Uncomment when this version is stable.
     // '@myparcel/semantic-release-wordpress-readme-generator',
     addExecPlugin({
-      prepareCmd: 'yarn pdk-builder release --version ${nextRelease.version}',
+      prepareCmd: 'yarn pdk-builder release --version ${nextRelease.version} -vvv',
     }),
     addGitHubPlugin({
       assets: [
