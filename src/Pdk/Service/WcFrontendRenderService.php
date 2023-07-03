@@ -117,7 +117,7 @@ class WcFrontendRenderService extends FrontendRenderService
         ];
 
         switch ($field['$component']) {
-            case Components::INPUT_TRISTATE:
+            case Components::INPUT_TRI_STATE:
                 $method            = 'woocommerce_wp_select';
                 $params['options'] = $this->getTristateOptions();
                 break;
