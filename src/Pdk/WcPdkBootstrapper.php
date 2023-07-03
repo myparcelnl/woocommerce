@@ -33,14 +33,6 @@ class WcPdkBootstrapper extends PdkBootstrapper
             # General
             ###
 
-            'pluginBaseName' => value('woocommerce-myparcel'),
-
-            'userAgent' => value([
-                'MyParcelNL-WooCommerce' => $version,
-                'WooCommerce'            => defined('WOOCOMMERCE_VERSION') ? constant('WOOCOMMERCE_VERSION') : '?',
-                'WordPress'              => get_bloginfo('version'),
-            ]),
-
             'urlDocumentation' => value('https://developer.myparcel.nl/nl/documentatie/10.woocommerce.html'),
             'urlReleaseNotes'  => value('https://github.com/myparcelnl/woocommerce/releases'),
 

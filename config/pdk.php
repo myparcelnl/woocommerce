@@ -22,6 +22,7 @@ use MyParcelNL\Pdk\App\Webhook\Contract\PdkWebhooksRepositoryInterface;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Base\Contract\WeightServiceInterface;
 use MyParcelNL\Pdk\Base\Pdk;
+use MyParcelNL\Pdk\Facade\Pdk as PdkFacade;
 use MyParcelNL\Pdk\Frontend\Contract\FrontendRenderServiceInterface;
 use MyParcelNL\Pdk\Frontend\Contract\ScriptServiceInterface;
 use MyParcelNL\Pdk\Frontend\Contract\ViewServiceInterface;
@@ -52,6 +53,7 @@ use MyParcelNL\WooCommerce\Service\WpInstallerService;
 use MyParcelNL\WooCommerce\Service\WpScriptService;
 use Psr\Log\LoggerInterface;
 use function DI\autowire;
+use function DI\factory;
 use function DI\value;
 
 /**
@@ -59,6 +61,18 @@ use function DI\value;
  */
 return [
     'mode' => value(WP_DEBUG ? Pdk::MODE_DEVELOPMENT : Pdk::MODE_PRODUCTION),
+
+    'pluginBaseName' => factory(function (): string {
+        return plugin_basename(PdkFacade::getAppInfo()->path);
+    }),
+
+    'userAgent' => factory(function (): array {
+        return [
+            'MyParcelNL-WooCommerce' => PdkFacade::getAppInfo()->version,
+            'WooCommerce'            => function_exists('WC') ? WC()->version : '?',
+            'WordPress'              => get_bloginfo('version'),
+        ];
+    }),
 
     /**
      * Repositories
@@ -74,34 +88,38 @@ return [
     /**
      * Services
      */
-    ApiServiceInterface::class                  => autowire(MyParcelApiService::class),
-    CronServiceInterface::class                 => autowire(WpCronService::class),
-    InstallerServiceInterface::class            => autowire(WpInstallerService::class),
-    LanguageServiceInterface::class             => autowire(LanguageService::class),
-    OrderStatusServiceInterface::class          => autowire(WcStatusService::class),
-    FrontendRenderServiceInterface::class       => autowire(WcFrontendRenderService::class),
-    ViewServiceInterface::class                 => autowire(WcViewService::class),
-    WeightServiceInterface::class               => autowire(WcWeightService::class),
-    TaxServiceInterface::class                  => autowire(WcTaxService::class),
+
+    ApiServiceInterface::class            => autowire(MyParcelApiService::class),
+    CronServiceInterface::class           => autowire(WpCronService::class),
+    InstallerServiceInterface::class      => autowire(WpInstallerService::class),
+    LanguageServiceInterface::class       => autowire(LanguageService::class),
+    OrderStatusServiceInterface::class    => autowire(WcStatusService::class),
+    FrontendRenderServiceInterface::class => autowire(WcFrontendRenderService::class),
+    ViewServiceInterface::class           => autowire(WcViewService::class),
+    WeightServiceInterface::class         => autowire(WcWeightService::class),
+    TaxServiceInterface::class            => autowire(WcTaxService::class),
 
     /**
      * Endpoints
      */
-    FrontendEndpointServiceInterface::class     => autowire(WcFrontendEndpointService::class),
-    BackendEndpointServiceInterface::class      => autowire(WcBackendEndpointService::class),
+
+    FrontendEndpointServiceInterface::class => autowire(WcFrontendEndpointService::class),
+    BackendEndpointServiceInterface::class  => autowire(WcBackendEndpointService::class),
 
     /**
      * Webhooks
      */
-    PdkWebhookServiceInterface::class           => autowire(WcWebhookService::class),
-    PdkWebhooksRepositoryInterface::class       => autowire(WcWebhooksRepository::class),
+
+    PdkWebhookServiceInterface::class     => autowire(WcWebhookService::class),
+    PdkWebhooksRepositoryInterface::class => autowire(WcWebhooksRepository::class),
 
     /**
      * Miscellaneous
      */
-    ClientAdapterInterface::class               => autowire(Guzzle7ClientAdapter::class),
-    DeliveryOptionsServiceInterface::class      => autowire(WcDeliveryOptionsService::class),
-    LoggerInterface::class                      => autowire(WcLogger::class),
-    MigrationServiceInterface::class            => autowire(WcMigrationService::class),
-    ScriptServiceInterface::class               => autowire(WpScriptService::class),
+
+    ClientAdapterInterface::class          => autowire(Guzzle7ClientAdapter::class),
+    DeliveryOptionsServiceInterface::class => autowire(WcDeliveryOptionsService::class),
+    LoggerInterface::class                 => autowire(WcLogger::class),
+    MigrationServiceInterface::class       => autowire(WcMigrationService::class),
+    ScriptServiceInterface::class          => autowire(WpScriptService::class),
 ];
