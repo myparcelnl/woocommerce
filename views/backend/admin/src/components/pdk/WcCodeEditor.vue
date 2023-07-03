@@ -1,6 +1,7 @@
 <template>
   <PdkTextArea
     v-model="model"
+    v-test="AdminComponent.CodeEditor"
     :element="element"
     class="mypa-font-mono"
     rows="5" />
@@ -8,7 +9,7 @@
 
 <script lang="ts" setup>
 import {useVModel} from '@vueuse/core';
-import {type ElementInstance} from '@myparcel-pdk/admin';
+import {AdminComponent, type ElementInstance} from '@myparcel-pdk/admin';
 
 // eslint-disable-next-line vue/no-unused-properties
 const props = defineProps<{modelValue: string | number; element: ElementInstance}>();

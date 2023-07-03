@@ -1,11 +1,13 @@
 <template>
-  <div :class="config.cssUtilities?.displayFlex">
+  <div
+    v-test="AdminComponent.Col"
+    :class="config.cssUtilities?.displayFlex">
     <slot />
   </div>
 </template>
 
 <script lang="ts" setup>
-import {useAdminConfig} from '@myparcel-pdk/admin';
+import {AdminComponent, useAdminConfig} from '@myparcel-pdk/admin';
 
 defineProps({
   // eslint-disable-next-line vue/no-unused-properties

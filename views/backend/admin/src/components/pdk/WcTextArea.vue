@@ -2,16 +2,17 @@
   <textarea
     :id="id"
     v-model.trim="model"
+    v-test="AdminComponent.TextArea"
     :class="{
       'form-required': !element.isValid,
     }"
     :disabled="element.isDisabled || element.isSuspended"
-    class="!mypa-w-full" />
+    :readonly="element.isReadOnly" />
 </template>
 
 <script lang="ts" setup>
 import {useVModel} from '@vueuse/core';
-import {type ElementInstance, generateFieldId} from '@myparcel-pdk/admin';
+import {AdminComponent, type ElementInstance, generateFieldId} from '@myparcel-pdk/admin';
 
 // eslint-disable-next-line vue/no-unused-properties
 const props = defineProps<{modelValue: string | number; element: ElementInstance}>();

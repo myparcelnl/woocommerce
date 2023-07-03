@@ -3,7 +3,7 @@
     <input
       :id="id"
       v-model="model"
-      v-test="'CheckboxInput'"
+      v-test="AdminComponent.CheckboxInput"
       :class="{
         'form-required': !element.isValid,
       }"
@@ -11,7 +11,6 @@
       type="checkbox" />
     <label
       v-if="element?.label"
-      v-test="'CheckboxInput__label'"
       :for="id"
       v-text="element?.label" />
   </div>
@@ -19,7 +18,7 @@
 
 <script lang="ts" setup>
 import {useVModel} from '@vueuse/core';
-import {type ElementInstance, generateFieldId} from '@myparcel-pdk/admin';
+import {AdminComponent, type ElementInstance, generateFieldId} from '@myparcel-pdk/admin';
 
 // eslint-disable-next-line vue/no-unused-properties
 const props = defineProps<{modelValue: string | boolean | number | unknown[]; element: ElementInstance}>();

@@ -1,5 +1,5 @@
 <template>
-  <PdkTable>
+  <PdkTable v-test="AdminComponent.DropOffInput">
     <template
       v-for="[day, human] in Object.entries(weekdaysObject)"
       :key="day">
@@ -34,6 +34,7 @@
 
 <script lang="ts" setup>
 import {
+  AdminComponent,
   type ElementInstance,
   type Settings,
   generateFieldId,

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-test="AdminComponent.PluginSettingsWrapper">
     <div class="woocommerce-layout">
       <div class="woocommerce-layout__header">
         <div class="woocommerce-layout__header-wrapper">
@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import {useAppInfo} from '@myparcel-pdk/admin';
+import {AdminComponent, useAppInfo} from '@myparcel-pdk/admin';
 
 const {title} = useAppInfo();
 </script>

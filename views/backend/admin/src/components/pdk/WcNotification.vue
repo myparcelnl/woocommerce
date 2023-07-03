@@ -1,6 +1,6 @@
 <template>
   <div
-    v-test="'Notification'"
+    v-test="AdminComponent.Notification"
     :class="[
       `notice-${notification.variant}`,
       {
@@ -19,7 +19,7 @@
 
 <script lang="ts" setup>
 import {type PropType, computed} from 'vue';
-import {type Notification} from '@myparcel-pdk/admin';
+import {AdminComponent, type Notification} from '@myparcel-pdk/admin';
 import {toArray} from '@myparcel/ts-utils';
 
 const props = defineProps({

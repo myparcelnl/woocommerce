@@ -2,7 +2,7 @@
   <input
     :id="id"
     v-model.trim="model"
-    v-test="'TextInput'"
+    v-test="AdminComponent.TextInput"
     :class="{
       'form-required': !element.isValid,
     }"
@@ -13,7 +13,7 @@
 
 <script lang="ts" setup>
 import {useVModel} from '@vueuse/core';
-import {type ElementInstance, generateFieldId} from '@myparcel-pdk/admin';
+import {type ElementInstance, generateFieldId, AdminComponent} from '@myparcel-pdk/admin';
 
 // eslint-disable-next-line vue/no-unused-properties
 const props = defineProps<{modelValue: string | number; element: ElementInstance<{type?: string}>}>();

@@ -2,13 +2,13 @@
   <select
     :id="id"
     ref="selectElement"
-    v-test="'SelectInput'" />
+    v-test="AdminComponent.SelectInput" />
 </template>
 
 <script lang="ts" setup>
 import {onBeforeUnmount, onMounted, ref, toRaw, watchEffect} from 'vue';
 import {get} from '@vueuse/core';
-import {type ElementInstance, type OptionsProp, useSelectInputContext} from '@myparcel-pdk/admin';
+import {type ElementInstance, type OptionsProp, useSelectInputContext, AdminComponent} from '@myparcel-pdk/admin';
 import {type OneOrMore} from '@myparcel/ts-utils';
 
 // eslint-disable-next-line vue/no-unused-properties

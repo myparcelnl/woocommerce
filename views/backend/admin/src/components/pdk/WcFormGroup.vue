@@ -1,32 +1,27 @@
 <template>
   <PdkTableRow
     v-show="element.isVisible"
-    v-test="'FormGroup'"
+    v-test="AdminComponent.FormGroup"
     valign="top">
     <template v-if="isInteractiveElement">
       <PdkTableCol
         class="titledesc"
         component="th"
         scope="row">
-        <label
-          v-test="'FormGroup__label'"
-          :for="id">
+        <label :for="id">
           <slot name="label">
             {{ element.label }}
           </slot>
 
           <span
             v-if="has(element.props?.description)"
-            v-test="'FormGroup__description'"
             :data-tip="translate(element.props.description)"
             class="woocommerce-help-tip" />
         </label>
       </PdkTableCol>
 
       <PdkTableCol>
-        <div
-          v-test="'FormGroup__slot'"
-          class="mypa-max-w-md">
+        <div class="mypa-max-w-md">
           <slot />
         </div>
 
@@ -48,7 +43,7 @@
 
 <script lang="ts" setup>
 import {computed, onMounted} from 'vue';
-import {type ElementInstance, generateFieldId, useLanguage} from '@myparcel-pdk/admin';
+import {AdminComponent, type ElementInstance, generateFieldId, useLanguage} from '@myparcel-pdk/admin';
 
 // eslint-disable-next-line vue/no-unused-properties
 const props = defineProps<{modelValue: boolean; element: ElementInstance}>();

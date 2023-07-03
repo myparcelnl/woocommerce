@@ -1,30 +1,25 @@
 <template>
   <table
-    v-test="'Table'"
+    v-test="AdminComponent.Table"
     class="striped widefat">
-    <thead
-      v-if="$slots.header"
-      v-test="'Table__header'">
+    <thead v-if="$slots.header">
       <slot name="header" />
     </thead>
 
     <TransitionGroup
-      v-test="'Table__body'"
       :name="config?.transitions.tableRow"
       tag="tbody">
       <slot />
     </TransitionGroup>
 
-    <tfoot
-      v-if="$slots.footer"
-      v-test="'Table__footer'">
+    <tfoot v-if="$slots.footer">
       <slot name="footer" />
     </tfoot>
   </table>
 </template>
 
 <script lang="ts" setup>
-import {useAdminConfig} from '@myparcel-pdk/admin';
+import {useAdminConfig, AdminComponent} from '@myparcel-pdk/admin';
 
 const config = useAdminConfig();
 </script>

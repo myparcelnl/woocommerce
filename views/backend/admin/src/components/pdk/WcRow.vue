@@ -1,5 +1,6 @@
 <template>
   <div
+    v-test="AdminComponent.Row"
     :class="{
       'mypa-gap-4': !collapseGutters,
     }"
@@ -9,10 +10,13 @@
 </template>
 
 <script lang="ts" setup>
+import {AdminComponent} from '@myparcel-pdk/admin';
+
 defineProps({
   collapseGutters: {
     type: Boolean,
   },
+  // eslint-disable-next-line vue/no-unused-properties
   columns: {
     type: [Number, String],
     default: null,

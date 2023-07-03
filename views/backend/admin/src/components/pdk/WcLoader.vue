@@ -1,5 +1,7 @@
 <template>
-  <component :is="tag">
+  <component
+    :is="tag"
+    v-test="AdminComponent.Loader">
     <div class="mypa-animate-pulse mypa-gap-x-4 mypa-gap-y-2 mypa-grid mypa-max-w-sm mypa-mb-2">
       <div
         :class="classes"
@@ -15,6 +17,8 @@
 </template>
 
 <script lang="ts" setup>
+import {AdminComponent} from '@myparcel-pdk/admin';
+
 defineProps({
   tag: {
     type: String,

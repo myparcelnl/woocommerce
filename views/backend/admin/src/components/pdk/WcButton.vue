@@ -1,5 +1,6 @@
 <template>
   <button
+    v-test="AdminComponent.Button"
     :class="[
       sizeClasses,
       variantClasses,
@@ -21,9 +22,7 @@
         class="mypa-m-auto mypa-text-sm" />
 
       <slot>
-        <span
-          v-test="'content'"
-          class="mypa-mt-0.5">
+        <span class="mypa-mt-0.5">
           {{ translate(label) }}
         </span>
       </slot>
@@ -38,7 +37,7 @@
 <script lang="ts" setup>
 import {type PropType, computed} from 'vue';
 import {Variant} from '@myparcel-pdk/common';
-import {type AdminIcon, Size, useLanguage} from '@myparcel-pdk/admin';
+import {AdminComponent, type AdminIcon, Size, useLanguage} from '@myparcel-pdk/admin';
 import WcSpinner from '../WcSpinner.vue';
 
 const props = defineProps({

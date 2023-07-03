@@ -1,7 +1,7 @@
 <template>
   <div
     v-show="isOpen"
-    v-test="'Modal'"
+    v-test="AdminComponent.Modal"
     :class="[...backgroundClasses, 'mypa-z-[9999]']"
     role="dialog"
     tabindex="-1"
@@ -9,7 +9,6 @@
     <Transition :name="config.transitions?.modalBackdrop">
       <div
         v-show="isOpen"
-        v-test="'Modal__backdrop'"
         :class="[...backgroundClasses, 'mypa-bg-black', 'mypa-bg-opacity-40']"
         role="none"
         @click="close" />
@@ -70,6 +69,7 @@
 <script lang="ts" setup>
 import {type PropType} from 'vue';
 import {
+  AdminComponent,
   ActionButton,
   type ActionDefinition,
   type AdminModalKey,

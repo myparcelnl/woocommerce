@@ -1,11 +1,13 @@
 <template>
   <img
-    v-test="'Image'"
+    v-test="AdminComponent.Image"
     :alt="alt"
     :src="src" />
 </template>
 
 <script lang="ts" setup>
+import {AdminComponent} from '@myparcel-pdk/admin';
+
 defineProps({
   alt: {
     type: String,

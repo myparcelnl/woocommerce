@@ -1,6 +1,6 @@
 <template>
   <div
-    v-test="'RadioInput'"
+    v-test="AdminComponent.RadioInput"
     class="wc-radio-input">
     <input
       :id="id"
@@ -34,7 +34,7 @@ export default {inheritAttrs: false};
 
 <script lang="ts" setup>
 import {useVModel} from '@vueuse/core';
-import {type ElementInstance, generateFieldId} from '@myparcel-pdk/admin';
+import {AdminComponent, type ElementInstance, generateFieldId} from '@myparcel-pdk/admin';
 
 // eslint-disable-next-line vue/no-unused-properties
 const props = defineProps<{modelValue: string | number; element: ElementInstance}>();

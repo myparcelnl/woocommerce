@@ -1,6 +1,6 @@
 <template>
   <div
-    v-test="'Box'"
+    v-test="AdminComponent.Box"
     :class="cssClasses"
     class="mypa-border mypa-border-gray-300 mypa-border-solid mypa-relative">
     <WcLoadingOverlay v-show="loading" />
@@ -35,7 +35,7 @@
 
 <script lang="ts" setup>
 import {type PropType, computed} from 'vue';
-import {ActionButton, type ActionDefinition, Size, useLanguage} from '@myparcel-pdk/admin';
+import {AdminComponent, ActionButton, type ActionDefinition, Size, useLanguage} from '@myparcel-pdk/admin';
 import WcLoadingOverlay from '../WcLoadingOverlay.vue';
 
 const props = defineProps({

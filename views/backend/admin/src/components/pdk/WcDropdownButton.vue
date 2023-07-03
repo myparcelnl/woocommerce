@@ -1,6 +1,6 @@
 <template>
   <div
-    v-test="'DropdownButton'"
+    v-test="AdminComponent.DropdownButton"
     class="mypa-flex">
     <ActionButton
       v-for="(action, index) in dropdownActions.standalone"
@@ -37,7 +37,6 @@
         <ActionButton
           v-for="(action, index) in dropdownActions.hidden"
           :key="`${index}_${action.id}`"
-          v-test="'HiddenDropdownAction'"
           :action="action"
           :disabled="disabled"
           :icon="action.icon"
@@ -52,7 +51,14 @@
 
 <script lang="ts" setup>
 import {type Variant} from '@myparcel-pdk/common';
-import {ActionButton, type ActionDefinition, type Size, useDropdownData, useLanguage} from '@myparcel-pdk/admin';
+import {
+  ActionButton,
+  type ActionDefinition,
+  type Size,
+  useDropdownData,
+  useLanguage,
+  AdminComponent,
+} from '@myparcel-pdk/admin';
 
 const props = defineProps<{
   // eslint-disable-next-line vue/no-unused-properties
