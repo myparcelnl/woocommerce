@@ -5,7 +5,7 @@ const [, , version] = process.argv;
 
 const rootDir = path.resolve(__dirname, '..');
 
-['composer.json', 'package.json', 'myparcelnl-woocommerce.php'].forEach((file) => {
+['composer.json', 'package.json', 'woocommerce-myparcel.php'].forEach((file) => {
   const filePath = path.resolve(rootDir, file);
   const relativeFilePath = path.relative(rootDir, filePath);
   const extension = file.split('.').pop();

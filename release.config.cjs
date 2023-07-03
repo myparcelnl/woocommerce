@@ -45,7 +45,7 @@ module.exports = {
     }),
     addGitPlugin({
       ...gitPluginDefaults,
-      assets: [...gitPluginDefaults.assets, 'myparcelnl-woocommerce.php', 'readme.txt'],
+      assets: [...gitPluginDefaults.assets, 'woocommerce-myparcel.php', 'readme.txt'],
     }),
   ],
 };
