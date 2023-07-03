@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Repository;
 
 use MyParcelNL\Pdk\Account\Model\Account;
-use MyParcelNL\Pdk\Account\Repository\AbstractAccountRepository;
+use MyParcelNL\Pdk\App\Account\Repository\AbstractPdkAccountRepository;
 use MyParcelNL\Pdk\Facade\Pdk;
 
-class PdkAccountRepository extends AbstractAccountRepository
+class PdkAccountRepository extends AbstractPdkAccountRepository
 {
     /**
      * @return null|\MyParcelNL\Pdk\Account\Model\Account

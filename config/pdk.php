@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use MyParcelNL\Pdk\Account\Contract\AccountRepositoryInterface;
 use MyParcelNL\Pdk\Api\Contract\ApiServiceInterface;
 use MyParcelNL\Pdk\Api\Contract\ClientAdapterInterface;
 use MyParcelNL\Pdk\Api\Service\MyParcelApiService;
+use MyParcelNL\Pdk\App\Account\Contract\PdkAccountRepositoryInterface;
 use MyParcelNL\Pdk\App\Api\Contract\BackendEndpointServiceInterface;
 use MyParcelNL\Pdk\App\Api\Contract\FrontendEndpointServiceInterface;
 use MyParcelNL\Pdk\App\Cart\Contract\PdkCartRepositoryInterface;
@@ -63,7 +63,8 @@ return [
     /**
      * Repositories
      */
-    AccountRepositoryInterface::class           => autowire(PdkAccountRepository::class),
+
+    PdkAccountRepositoryInterface::class        => autowire(PdkAccountRepository::class),
     PdkCartRepositoryInterface::class           => autowire(WcCartRepository::class),
     PdkOrderRepositoryInterface::class          => autowire(PdkOrderRepository::class),
     PdkProductRepositoryInterface::class        => autowire(PdkProductRepository::class),

@@ -82,14 +82,14 @@ class WcAddressAdapter
 
             'person' => $this->getPerson($class, $addressType),
 
-            'cc'                   => $this->getAddressField($class, Pdk::get('fieldCountry'), $addressType),
-            'city'                 => $this->getAddressField($class, Pdk::get('fieldCity'), $addressType),
-            'company'              => $this->getAddressField($class, Pdk::get('fieldCompany'), $addressType),
-            'fullStreet'           => $this->getAddressField($class, Pdk::get('fieldAddress1'), $addressType),
-            'postalCode'           => $this->getAddressField($class, Pdk::get('fieldPostalCode'), $addressType),
-            'region'               => $this->getAddressField($class, Pdk::get('fieldRegion'), $addressType),
-            'state'                => $this->getAddressField($class, Pdk::get('fieldState'), $addressType),
-            'streetAdditionalInfo' => $this->getAddressField($class, Pdk::get('fieldAddress2'), $addressType),
+            'address1'   => $this->getAddressField($class, Pdk::get('fieldAddress1'), $addressType),
+            'address2'   => $this->getAddressField($class, Pdk::get('fieldAddress2'), $addressType),
+            'cc'         => $this->getAddressField($class, Pdk::get('fieldCountry'), $addressType),
+            'city'       => $this->getAddressField($class, Pdk::get('fieldCity'), $addressType),
+            'company'    => $this->getAddressField($class, Pdk::get('fieldCompany'), $addressType),
+            'postalCode' => $this->getAddressField($class, Pdk::get('fieldPostalCode'), $addressType),
+            'region'     => $this->getAddressField($class, Pdk::get('fieldRegion'), $addressType),
+            'state'      => $this->getAddressField($class, Pdk::get('fieldState'), $addressType),
         ];
     }
 

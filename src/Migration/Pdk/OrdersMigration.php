@@ -338,7 +338,7 @@ final class OrdersMigration extends AbstractPdkMigration
     {
         $this->updateMeta($wcOrder, Pdk::get('metaKeyOrderData'), [
             'deliveryOptions' => $this->getDeliveryOptions($wcOrder),
-            'recipient'       => $this->getRecipient($wcOrder),
+            'shippingAddress' => $this->getRecipient($wcOrder),
         ]);
 
         $this->updateMeta($wcOrder, Pdk::get('metaKeyOrderShipments'), $this->getShipments($wcOrder));

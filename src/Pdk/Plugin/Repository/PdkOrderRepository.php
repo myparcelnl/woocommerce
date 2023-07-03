@@ -158,12 +158,12 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     {
         $savedOrderData = $order->get_meta(Pdk::get('metaKeyOrderData')) ?: [];
 
-        $items     = $this->getWcOrderItems($order);
-        $recipient = $this->addressAdapter->fromWcOrder($order);
+        $items           = $this->getWcOrderItems($order);
+        $shippingAddress = $this->addressAdapter->fromWcOrder($order);
 
         $orderData = [
             'externalIdentifier'    => $order->get_id(),
-            'recipient'             => $recipient,
+            'shippingAddress'       => $shippingAddress,
             'billingAddress'        => $this->addressAdapter->fromWcOrder($order, Pdk::get('wcAddressTypeBilling')),
             'deliveryOptions'       => $this->getDeliveryOptions(
                 $savedOrderData['deliveryOptions'] ?? [],
@@ -179,7 +179,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                     ]);
                 })
                 ->toArray(),
-            'customsDeclaration'    => $this->countryService->isRow($recipient['cc'])
+            'customsDeclaration'    => $this->countryService->isRow($shippingAddress['cc'] ?? null)
                 ? $this->createCustomsDeclaration($order, $items)
                 : null,
             'physicalProperties'    => $this->getPhysicalProperties($items),
