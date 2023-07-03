@@ -26,6 +26,33 @@ If you do choose to install this version, we would love to hear your feedback. P
 ### :bug: Bug Fixes
 
 * **checkout:** fix error on submitting order ([dae7a45](https://github.com/myparcelnl/woocommerce/commit/dae7a459c171b05340ec420e89d59ead7539b443))
+* **migration:** fix inverted product settings search query ([e76028e](https://github.com/myparcelnl/woocommerce/commit/e76028eb3948e7a3b2a07595d4344c3a1bb1ee3f))
+* **migration:** fix product settings migration failing ([2c32dd7](https://github.com/myparcelnl/woocommerce/commit/2c32dd7011600e097b022ac9508c87dc447770d1))
+* **product:** fix product settings not working ([756369e](https://github.com/myparcelnl/woocommerce/commit/756369e5848c429c1dc28ff84925a276a87ca02e))
+
+## ⚠ Warning ⚠
+
+🚧 This version is **not ready for production use**. 🚧
+
+This is the alpha release of the next major version of the MyParcel WooCommerce plugin. We've rewritten the plugin from scratch, using the [frontend] and [backend] of the MyParcel PDK (Plugin Development Kit).
+
+For a safer experience, we recommend you to use the stable or release candidate version of the plugin. You can find the stable version in the [WordPress plugin directory]. The release candidate versions can be found in the [releases] section of this repository. They are versioned with a `-rc` suffix.
+
+If you do choose to install this version, we would love to hear your feedback. Please report any issues you encounter using the [Bug report for v5.0.0-alpha.x form] or by sending an email to [support@myparcel.nl]
+
+[Bug report for v5.0.0-alpha.x form]: https://github.com/myparcelnl/woocommerce/issues/new?labels=alpha&template=ZZ-BUG-REPORT-v5.yml
+[WordPress plugin directory]: https://wordpress.org/plugins/woocommerce-myparcel/
+[backend]: https://github.com/myparcelnl/pdk
+[frontend]: https://github.com/myparcelnl/js-pdk
+[releases]: https://github.com/myparcelnl/woocommerce/releases
+[support@myparcel.nl]: mailto:support@myparcel.nl
+
+## [5.0.0-alpha.13](https://github.com/myparcelnl/woocommerce/compare/v5.0.0-alpha.12...v5.0.0-alpha.13) (2023-07-03)
+
+
+### :bug: Bug Fixes
+
+* **checkout:** fix error on submitting order ([dae7a45](https://github.com/myparcelnl/woocommerce/commit/dae7a459c171b05340ec420e89d59ead7539b443))
 
 ## ⚠ Warning ⚠
 
