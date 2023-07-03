@@ -40,7 +40,7 @@ final class ProductSettingsMigration extends AbstractPdkMigration
         $nonMigratedProducts = wc_get_products([
             'limit'        => self::CHUNK_SIZE,
             'meta_key'     => Pdk::get('metaKeyMigrated'),
-            'meta_compare' => "LIKE %\"{$this->getVersion()}\"%",
+            'meta_compare' => "NOT LIKE %\"{$this->getVersion()}\"%",
         ]);
 
         if (empty($nonMigratedProducts)) {
