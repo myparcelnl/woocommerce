@@ -20,6 +20,54 @@ If you do choose to install this version, we would love to hear your feedback. P
 [releases]: https://github.com/myparcelnl/woocommerce/releases
 [support@myparcel.nl]: mailto:support@myparcel.nl
 
+## [5.0.0-alpha.12](https://github.com/myparcelnl/woocommerce/compare/v5.0.0-alpha.11...v5.0.0-alpha.12) (2023-07-03)
+
+
+### :sparkles: New Features
+
+* **deps:** update myparcelnl/pdk from 2.4.1 to 2.5.2 ([f09fabb](https://github.com/myparcelnl/woocommerce/commit/f09fabb28c8c22dbef66764367ada481d1fe3722))
+* **deps:** update myparcelnl/pdk to v2.6.2 ([c9d367f](https://github.com/myparcelnl/woocommerce/commit/c9d367f08a6fee378abc1a32045eb8c6398a4edc))
+
+
+### :bug: Bug Fixes
+
+* **admin:** fix cutoff time translation ([87faab8](https://github.com/myparcelnl/woocommerce/commit/87faab8b44d52314626efca298d8a3f3446b05fe))
+* **admin:** fix disabled and readonly logic on all inputs ([77a5492](https://github.com/myparcelnl/woocommerce/commit/77a549264923f07f93623c442752515581c26c55))
+* **admin:** fix label description notice in order grid ([63b631e](https://github.com/myparcelnl/woocommerce/commit/63b631ed4e0bc2379905b7137cd21e7f16778876))
+* **checkout:** fix delivery options not being saved to order ([e69766e](https://github.com/myparcelnl/woocommerce/commit/e69766e37588ee1b3cce8a0722e0e462d085e70a))
+* **checkout:** fix javascript error on order received page ([c0477cc](https://github.com/myparcelnl/woocommerce/commit/c0477cc80aef2804de2dee23b9276dd85b4ee0d2))
+* **checkout:** fix third party shipping methods not working with delivery options ([80357fc](https://github.com/myparcelnl/woocommerce/commit/80357fc7a6e7fc01d8e4e06faa855e736211da19))
+* **checkout:** prevent orders without incomplete address ([e416558](https://github.com/myparcelnl/woocommerce/commit/e4165584738eb287a0c036af3b5421972342c4e3))
+* do not show product settings in custom fields ([c21f951](https://github.com/myparcelnl/woocommerce/commit/c21f9512ab8e2ff6ad980dcde891977535268107))
+* fill settings that didnt't exist before migration ([bab3a36](https://github.com/myparcelnl/woocommerce/commit/bab3a3661e099206e0df652ce6f875acc2416d24))
+* **migration:** fix allow pickup locations setting not being migrated ([44e29d1](https://github.com/myparcelnl/woocommerce/commit/44e29d14d562280d502a50ec88b3b97d742c7108))
+* **migration:** improve pdk migrations ([a970919](https://github.com/myparcelnl/woocommerce/commit/a97091983a40a9bf2354236e9a7fcde03dab33cd))
+* **migration:** improve shipping methods migration ([b9383d3](https://github.com/myparcelnl/woocommerce/commit/b9383d34cfa486b100580e1828d6bf987d79900f))
+* **orders:** fix some errors when creating orders ([de47001](https://github.com/myparcelnl/woocommerce/commit/de470019fe2eee1a4277885a262d3a0bfdbf02fe))
+* **plugin:** fix plugin being deactivated on upgrade ([3be182a](https://github.com/myparcelnl/woocommerce/commit/3be182a04176ac60c2117f0ad4ccdbcb857edfea))
+* prevent array to string conversion warning ([90c587d](https://github.com/myparcelnl/woocommerce/commit/90c587da80b39cc2e26420a62ae1386cbe1dda48))
+* set label description on order ([f7593f3](https://github.com/myparcelnl/woocommerce/commit/f7593f3c0bd7ac3ab23845413f53bcd1f84bb89c))
+* **settings:** fix correct shipping methods not showing up ([1528585](https://github.com/myparcelnl/woocommerce/commit/1528585be4b0ebd0f1e4683c018b2409b4f7f8d8))
+* **settings:** prevent array to string conversion notice ([16227b1](https://github.com/myparcelnl/woocommerce/commit/16227b1dcd54b77bd4d5252572fc255a9469b80e))
+* update account settings after migration ([c4cffdd](https://github.com/myparcelnl/woocommerce/commit/c4cffdd5693305fc1c8cfdcdf1bf7161dbacf7d4))
+
+## ⚠ Warning ⚠
+
+🚧 This version is **not ready for production use**. 🚧
+
+This is the alpha release of the next major version of the MyParcel WooCommerce plugin. We've rewritten the plugin from scratch, using the [frontend] and [backend] of the MyParcel PDK (Plugin Development Kit).
+
+For a safer experience, we recommend you to use the stable or release candidate version of the plugin. You can find the stable version in the [WordPress plugin directory]. The release candidate versions can be found in the [releases] section of this repository. They are versioned with a `-rc` suffix.
+
+If you do choose to install this version, we would love to hear your feedback. Please report any issues you encounter using the [Bug report for v5.0.0-alpha.x form] or by sending an email to [support@myparcel.nl]
+
+[Bug report for v5.0.0-alpha.x form]: https://github.com/myparcelnl/woocommerce/issues/new?labels=alpha&template=ZZ-BUG-REPORT-v5.yml
+[WordPress plugin directory]: https://wordpress.org/plugins/woocommerce-myparcel/
+[backend]: https://github.com/myparcelnl/pdk
+[frontend]: https://github.com/myparcelnl/js-pdk
+[releases]: https://github.com/myparcelnl/woocommerce/releases
+[support@myparcel.nl]: mailto:support@myparcel.nl
+
 ## [5.0.0-alpha.11](https://github.com/myparcelnl/woocommerce/compare/v5.0.0-alpha.10...v5.0.0-alpha.11) (2023-06-08)
 
 
