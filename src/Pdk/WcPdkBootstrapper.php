@@ -259,7 +259,7 @@ class WcPdkBootstrapper extends PdkBootstrapper
             # Migrations
             ###
 
-            'metaKeyMigrated_5_0_0' => value("_{$name}_migrated_5_0_0"),
+            'metaKeyMigrated' => value("_{$name}_migrated_5_0_0"),
 
             # Migration actions
 
