@@ -40,7 +40,7 @@ use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\WcCartRepository;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Service\WcDeliveryOptionsService;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Service\WcStatusService;
 use MyParcelNL\WooCommerce\Pdk\Plugin\WcShippingMethodRepository;
-use MyParcelNL\WooCommerce\Pdk\Product\Repository\PdkProductRepository;
+use MyParcelNL\WooCommerce\Pdk\Product\Repository\WcPdkProductRepository;
 use MyParcelNL\WooCommerce\Pdk\Service\LanguageService;
 use MyParcelNL\WooCommerce\Pdk\Service\WcFrontendRenderService;
 use MyParcelNL\WooCommerce\Pdk\Service\WcTaxService;
@@ -81,7 +81,7 @@ return [
     PdkAccountRepositoryInterface::class        => autowire(PdkAccountRepository::class),
     PdkCartRepositoryInterface::class           => autowire(WcCartRepository::class),
     PdkOrderRepositoryInterface::class          => autowire(PdkOrderRepository::class),
-    PdkProductRepositoryInterface::class        => autowire(PdkProductRepository::class),
+    PdkProductRepositoryInterface::class        => autowire(WcPdkProductRepository::class),
     PdkShippingMethodRepositoryInterface::class => autowire(WcShippingMethodRepository::class),
     SettingsRepositoryInterface::class          => autowire(PdkSettingsRepository::class),
 

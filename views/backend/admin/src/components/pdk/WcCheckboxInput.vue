@@ -11,13 +11,18 @@
       :value="element?.props?.value ?? '1'"
       :disabled="element.isDisabled || element.isSuspended || element.isReadOnly"
       :readonly="element.isReadOnly"
-      type="checkbox" />
+      type="checkbox"
+      v-bind="$attrs" />
     <label
       v-if="element?.label"
       :for="id"
       v-text="element?.label" />
   </div>
 </template>
+
+<script lang="ts">
+export default {inheritAttrs: false};
+</script>
 
 <script lang="ts" setup>
 import {useVModel} from '@vueuse/core';

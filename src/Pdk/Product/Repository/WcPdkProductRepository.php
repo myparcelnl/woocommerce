@@ -11,10 +11,9 @@ use MyParcelNL\Pdk\Base\Contract\WeightServiceInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\ProductSettings;
 use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
-use MyParcelNL\Sdk\src\Support\Str;
 use WC_Product;
 
-class PdkProductRepository extends AbstractPdkPdkProductRepository
+class WcPdkProductRepository extends AbstractPdkPdkProductRepository
 {
     /**
      * @var \MyParcelNL\WooCommerce\Pdk\Service\WcWeightService
@@ -29,30 +28,6 @@ class PdkProductRepository extends AbstractPdkPdkProductRepository
     {
         parent::__construct($storage);
         $this->weightService = $weightService;
-    }
-
-    /**
-     * @param  \MyParcelNL\Pdk\App\Order\Model\PdkProduct $product
-     * @param  array                                      $productSettings
-     *
-     * @return void
-     *
-     * @deprecated todo: (re)move this
-     */
-    public function convertDbValuesToProductSettings(PdkProduct $product, array $productSettings): PdkProduct
-    {
-        $appInfo = Pdk::getAppInfo();
-        $result  = [];
-
-        foreach ($productSettings as $setting => $value) {
-            $key                   = str_replace(sprintf('%s_product_', $appInfo->name), '', $setting);
-            $camelCaseKey          = Str::camel($key);
-            $result[$camelCaseKey] = $value;
-        }
-
-        $product->settings = new ProductSettings($result);
-
-        return $product;
     }
 
     /**
@@ -91,24 +66,11 @@ class PdkProductRepository extends AbstractPdkPdkProductRepository
     public function getProductSettings($identifier): ProductSettings
     {
         $product = $this->getWcProduct($identifier);
-        $appInfo = Pdk::getAppInfo();
-        $key     = sprintf('product_settings_%s', $product->get_id());
 
-        return $this->retrieve($key, function () use ($appInfo, $product) {
-            $productSettings = new ProductSettings();
+        return $this->retrieve(sprintf('product_settings_%s', $product->get_id()), function () use ($product) {
+            $meta = get_post_meta($product->get_id(), Pdk::get('metaKeyProductSettings'), true);
 
-            foreach ($productSettings->getAttributes() as $key => $value) {
-                $metaKey = sprintf('_%s_product_%s', $appInfo->name, Str::snake($key));
-                $value   = $product->get_meta($metaKey) ?: null;
-
-                if (! $value) {
-                    continue;
-                }
-
-                $productSettings->setAttribute($key, $value);
-            }
-
-            return $productSettings;
+            return new ProductSettings($meta ?: []);
         });
     }
 
@@ -126,18 +88,17 @@ class PdkProductRepository extends AbstractPdkPdkProductRepository
      * @param  \MyParcelNL\Pdk\App\Order\Model\PdkProduct $product
      *
      * @return void
+     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
      */
     public function update(PdkProduct $product): void
     {
-        $wcProduct = wc_get_product($product->externalIdentifier);
-        $appInfo   = Pdk::getAppInfo();
+        update_post_meta(
+            $product->externalIdentifier,
+            Pdk::get('metaKeyProductSettings'),
+            $product->settings->toStorableArray()
+        );
 
-        foreach ($product->settings->getAttributes() as $key => $value) {
-            $metaKey = sprintf('_%s_product_%s', $appInfo->name, Str::snake($key));
-            $wcProduct->update_meta_data($metaKey, $value);
-        }
-
-        $wcProduct->save_meta_data();
+        $this->save($product->externalIdentifier, $product);
     }
 
     /**

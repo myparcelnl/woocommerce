@@ -2,31 +2,39 @@
   <div
     v-test="AdminComponent.TriStateInput"
     :class="config?.cssUtilities?.displayFlex">
+    <input
+      v-model="model"
+      type="hidden"
+      :name="id" />
+
     <PdkToggleInput
       v-model="toggleModel"
       :class="config?.cssUtilities?.marginYAuto"
-      :element="element" />
+      :element="toggleElement" />
 
-    <label
-      :title="inheritValueElement.label"
-      class="!mypa-float-none !mypa-m-0"
-      :class="config?.cssUtilities?.displayFlex">
+    <PdkButton
+      :size="Size.ExtraSmall"
+      class="!mypa-float-none !mypa-ml-1"
+      :class="config?.cssUtilities?.displayFlex"
+      :title="inheritElement?.label"
+      @click="inheritModel = !inheritModel">
       <span
         class="dashicons"
         :class="[
           config?.cssUtilities?.marginYAuto,
           {
-            'dashicons-lock': inheritValueModel,
-            'dashicons-unlock': !inheritValueModel,
+            'dashicons-lock': inheritModel,
+            'dashicons-unlock mypa-text-green-600': !inheritModel,
           },
         ]"
         role="none" />
 
       <PdkCheckboxInput
-        v-model="inheritValueModel"
-        :element="inheritValueElement"
+        v-model="inheritModel"
+        tabindex="-1"
+        :element="{...inheritElement, label: undefined}"
         class="mypa-sr-only" />
-    </label>
+    </PdkButton>
   </div>
 </template>
 
@@ -38,6 +46,8 @@ import {
   useTriStateInputContext,
   AdminComponent,
   useAdminConfig,
+  generateFieldId,
+  Size,
 } from '@myparcel-pdk/admin';
 
 // eslint-disable-next-line vue/no-unused-properties
@@ -46,5 +56,7 @@ const emit = defineEmits<PdkElementEmits<T>>();
 
 const config = useAdminConfig();
 
-const {inheritValueElement, inheritValueModel, toggleModel} = useTriStateInputContext(props, emit);
+const id = generateFieldId(props.element);
+
+const {inheritElement, toggleElement, inheritModel, toggleModel, model} = useTriStateInputContext(props, emit);
 </script>

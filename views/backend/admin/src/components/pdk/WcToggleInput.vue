@@ -9,6 +9,7 @@
       :value="true"
       class="!mypa-hidden"
       tabindex="-1"
+      v-bind="$attrs"
       type="checkbox" />
 
     <label
@@ -26,6 +27,10 @@
     </label>
   </a>
 </template>
+
+<script lang="ts">
+export default {inheritAttrs: false};
+</script>
 
 <script lang="ts" setup>
 import {useVModel} from '@vueuse/core';

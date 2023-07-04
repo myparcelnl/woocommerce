@@ -82,6 +82,14 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'metaKeyOrderShipments' => value("_{$name}_order_shipments"),
 
             /**
+             * The meta key a product's MyParcel settings are saved in.
+             *
+             * @see \MyParcelNL\WooCommerce\Pdk\Product\Repository\WcPdkProductRepository
+             */
+
+            'metaKeyProductSettings' => value("_{$name}_product_settings"),
+
+            /**
              * The meta key that stores the version of the plugin the resource was last saved with.
              */
 
