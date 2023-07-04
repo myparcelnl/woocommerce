@@ -1,13 +1,13 @@
 email: bill@myparcel.nl
 phone: '0698765432'
 person: 'Bill Parcel'
+address1: 'Adriaan Brouwerstraat 16'
+address2: ''
 cc: BE
 city: Antwerpen
 company: MyParcel
-fullStreet: 'Adriaan Brouwerstraat 16'
 postalCode: '2000'
 region: null
 state: null
-streetAdditionalInfo: ''
 eoriNumber: null
 vatNumber: null

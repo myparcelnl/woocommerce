@@ -1,13 +1,14 @@
 email: test@test.com
 phone: '0612345678'
 person: 'Sirius Parcel'
+address1: ''
+address2: ''
 cc: NL
 city: Hoofddorp
 company: MyParcel
-fullStreet: 'Siriusdreef 66 -68'
 postalCode: 2132WT
 region: NH
 state: NH
-streetAdditionalInfo: ''
+fullStreet: 'Siriusdreef 66 -68'
 eoriNumber: null
 vatNumber: null

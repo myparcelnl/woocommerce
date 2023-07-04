@@ -1,11 +1,11 @@
 {
-  "externalIdentifier": "1",
+  "externalIdentifier": null,
   "deliveryOptions": {
     "carrier": {
-      "externalIdentifier": "dhlforyou",
-      "id": 9,
-      "name": "dhlforyou",
-      "human": "DHL For You",
+      "externalIdentifier": "postnl",
+      "id": 1,
+      "name": "postnl",
+      "human": "PostNL",
       "subscriptionId": null,
       "enabled": false,
       "isDefault": true,
@@ -14,23 +14,21 @@
       "primary": false,
       "type": "main",
       "capabilities": {
-        "deliveryTypes": ["standard", "pickup"],
+        "deliveryTypes": ["morning", "standard", "evening", "pickup"],
         "features": {
           "labelDescriptionLength": 45
         },
-        "packageTypes": ["package", "mailbox"],
+        "packageTypes": ["package", "mailbox", "letter", "digital_stamp"],
         "shipmentOptions": {
           "ageCheck": true,
-          "largeFormat": false,
+          "largeFormat": true,
           "onlyRecipient": true,
           "return": true,
           "sameDayDelivery": true,
           "signature": true,
-          "saturdayDelivery": true,
-          "hideSender": true,
           "insurance": [
-            0, 50000, 100000, 150000, 200000, 250000, 300000, 350000, 400000,
-            450000, 500000
+            0, 10000, 25000, 50000, 100000, 150000, 200000, 250000, 300000,
+            350000, 400000, 450000, 500000
           ]
         }
       },
@@ -42,7 +40,10 @@
         "packageTypes": ["package"],
         "shipmentOptions": {
           "signature": true,
-          "insurance": [0],
+          "insurance": [
+            0, 10000, 25000, 50000, 100000, 150000, 200000, 250000, 300000,
+            350000, 400000, 450000, 500000
+          ],
           "return": true,
           "ageCheck": true,
           "onlyRecipient": true,
@@ -51,151 +52,58 @@
         }
       }
     },
-    "date": "2024-12-31 12:00:00",
+    "date": null,
     "labelAmount": 1,
     "pickupLocation": null,
     "shipmentOptions": {
       "ageCheck": null,
       "insurance": null,
-      "labelDescription": "1 | 3214, 2324 | Test product, Test digital product | 2, 2 | WVS-0001, WVS-0002",
+      "labelDescription": null,
       "largeFormat": null,
       "onlyRecipient": null,
       "return": null,
       "sameDayDelivery": null,
-      "signature": true
+      "signature": null
     },
-    "deliveryType": "morning",
+    "deliveryType": "standard",
     "packageType": "package"
   },
   "senderAddress": null,
-  "billingAddress": {
-    "address1": "Antareslaan 31",
-    "address2": "",
-    "area": null,
-    "cc": "NL",
-    "city": "Hoofddorp",
-    "postalCode": "2132 JE",
-    "region": "",
-    "state": "",
-    "email": "test@myparcel.nl",
-    "phone": "0612345678",
-    "person": "John Doe",
-    "company": "MyParcel"
-  },
+  "billingAddress": null,
   "shippingAddress": {
-    "address1": "Antareslaan 31",
-    "address2": "",
+    "address1": null,
+    "address2": null,
     "area": null,
-    "cc": "NL",
-    "city": "Hoofddorp",
-    "postalCode": "2132 JE",
-    "region": "",
-    "state": "",
+    "cc": null,
+    "city": null,
+    "postalCode": null,
+    "region": null,
+    "state": null,
     "eoriNumber": null,
     "vatNumber": null,
-    "email": "test@myparcel.nl",
-    "phone": "0612345678",
-    "person": "John Doe",
-    "company": "MyParcel"
+    "email": null,
+    "phone": null,
+    "person": null,
+    "company": null
   },
   "shipments": [],
-  "lines": [
-    {
-      "quantity": 2,
-      "price": 100000,
-      "vat": 0,
-      "priceAfterVat": 100000,
-      "product": {
-        "externalIdentifier": "3214",
-        "sku": "WVS-0001",
-        "ean": null,
-        "isDeliverable": true,
-        "name": "Test product",
-        "price": {
-          "amount": 50000,
-          "currency": "EUR"
-        },
-        "weight": 1000000,
-        "length": 100,
-        "width": 80,
-        "height": 50,
-        "settings": {
-          "id": "product",
-          "countryOfOrigin": "NL",
-          "customsCode": "1234",
-          "disableDeliveryOptions": -1,
-          "dropOffDelay": 1,
-          "exportAgeCheck": -1,
-          "exportInsurance": -1,
-          "exportLargeFormat": -1,
-          "exportOnlyRecipient": -1,
-          "exportReturn": -1,
-          "exportSignature": -1,
-          "fitInMailbox": 4,
-          "packageType": "mailbox"
-        }
-      }
-    },
-    {
-      "quantity": 1,
-      "price": 100000,
-      "vat": 0,
-      "priceAfterVat": 100000,
-      "product": null
-    },
-    {
-      "quantity": 2,
-      "price": 100000,
-      "vat": 0,
-      "priceAfterVat": 100000,
-      "product": {
-        "externalIdentifier": "2324",
-        "sku": "WVS-0002",
-        "ean": null,
-        "isDeliverable": false,
-        "name": "Test digital product",
-        "price": {
-          "amount": 0,
-          "currency": "EUR"
-        },
-        "weight": 0,
-        "length": 0,
-        "width": 0,
-        "height": 0,
-        "settings": {
-          "id": "product",
-          "countryOfOrigin": "NL",
-          "customsCode": "0000",
-          "disableDeliveryOptions": -1,
-          "dropOffDelay": 0,
-          "exportAgeCheck": -1,
-          "exportInsurance": -1,
-          "exportLargeFormat": -1,
-          "exportOnlyRecipient": -1,
-          "exportReturn": -1,
-          "exportSignature": -1,
-          "fitInMailbox": 0,
-          "packageType": "package"
-        }
-      }
-    }
-  ],
+  "lines": [],
   "customsDeclaration": null,
   "physicalProperties": {
     "height": null,
     "length": null,
-    "weight": 2000,
+    "weight": 0,
     "width": null
   },
-  "orderDate": "2021-01-01 18:03:41",
+  "orderDate": null,
   "exported": false,
   "shipmentPrice": 0,
   "shipmentPriceAfterVat": 0,
   "shipmentVat": 0,
-  "orderPrice": 500000,
-  "orderPriceAfterVat": 500000,
+  "orderPrice": 0,
+  "orderPriceAfterVat": 0,
   "orderVat": 0,
-  "totalPrice": 500000,
+  "totalPrice": 0,
   "totalVat": 0,
-  "totalPriceAfterVat": 500000
+  "totalPriceAfterVat": 0
 }

@@ -5,7 +5,6 @@
   },
   "general": {
     "id": "general",
-    "apiLogging": true,
     "barcodeInNote": true,
     "barcodeInNoteTitle": "T&T:",
     "conceptShipments": true,

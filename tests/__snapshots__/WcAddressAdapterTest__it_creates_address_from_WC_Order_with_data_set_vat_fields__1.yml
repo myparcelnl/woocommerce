@@ -1,13 +1,13 @@
 email: null
 phone: null
 person: 'Eori Parcel'
+address1: 'Hoofdweg 679'
+address2: ''
 cc: NL
 city: Hoofddorp
 company: MyParcel
-fullStreet: 'Hoofdweg 679'
 postalCode: '2131 BC'
 region: NH
 state: NH
-streetAdditionalInfo: ''
 eoriNumber: NL123456789
 vatNumber: NL123456789B01
