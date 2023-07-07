@@ -45,42 +45,6 @@ jobs:
           token: ${{ steps.credentials.outputs.token }}
           write-summary: true
 
-  #  deploy-svn:
-  #    needs: release
-  #    if: needs.release.outputs.released == 'true'
-  #    runs-on: ubuntu-22.04
-  #    env:
-  #      ASSETS_DIR: ./.wordpress-assets
-  #      BUILD_DIR: ./.wordpress-dist
-  #    steps:
-  #      - uses: actions/checkout@v3
-  #
-  #      - uses: ./.github/actions/install
-  #
-  #      - name: 'Trim leading "v" from version number'
-  #        id: prepare
-  #        run: |
-  #          VERSION=${{ needs.release.outputs.version }}
-  #          echo "version=${VERSION#v}" >> $GITHUB_OUTPUT
-  #
-  #      - name: 'Create build'
-  #        run: |
-  #          node ./private/updateVersion.cjs ${{ steps.prepare.outputs.version }}
-  #          yarn build
-  #
-  #      - name: 'Create dist folder'
-  #        run: |
-  #          bash ./private/bash/createDistFolder.sh ${{ env.BUILD_DIR }}
-  #
-  #      - uses: 10up/action-wordpress-plugin-deploy@stable
-  #        env:
-  #          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-  #          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-  #          ASSETS_DIR: ${{ env.ASSETS_DIR }}
-  #          BUILD_DIR: ${{ env.BUILD_DIR }}
-  #          SLUG: woocommerce-myparcel
-  #          VERSION: ${{ steps.prepare.outputs.version }}
-
   rebase-develop:
     name: 'Rebase develop onto main'
     uses: ./.github/workflows/rebase.yml
