@@ -38,4 +38,6 @@ module.exports = {
     // TODO: Uncomment when this version is stable.
     // {path: 'readme.txt', regex: /Stable tag:\s*(.+)/},
   ],
+
+  composerCommand: 'docker compose run --rm -T php composer',
 };
