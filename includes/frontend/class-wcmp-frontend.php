@@ -44,13 +44,13 @@ class WCMP_Frontend
     }
 
     /**
-     * @param \WC_Order $order
+     * @param  null|\WC_Order $order
      *
      * @throws \Exception
      */
-    public function confirmationEmail(WC_Order $order): void
+    public function confirmationEmail(?WC_Order $order): void
     {
-        if ($this->isLocalPickup()) {
+        if ($this->isLocalPickup() || !$order) {
             return;
         }
 
