@@ -9,7 +9,12 @@
   }
 }
 
-// Increase the width of the MyParcel column in the orders list. Default is 12ch and causes the shipment buttons to float outside the column.
-.post-type-shop_order .wp-list-table .column-myparcelnl {
-  width: 21ch;
+// Legacy and HPOS order list page classes
+.post-type-shop_order,
+.woocommerce_page_wc-orders {
+  // Increase the width of the MyParcel column in the orders list.
+  // Default is 12ch and causes the shipment buttons to float outside the column.
+  .wp-list-table .column-myparcelnl {
+    @apply mypa-w-[21ch];
+  }
 }

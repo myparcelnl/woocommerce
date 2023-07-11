@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
+use Automattic\WooCommerce\Admin\Overrides\Order;
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\Facade\Frontend;
 use MyParcelNL\Pdk\Facade\Pdk;
@@ -11,6 +12,19 @@ use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 
 class PdkOrderHooks implements WordPressHooksInterface
 {
+    /**
+     * @var \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface
+     */
+    private $pdkOrderRepository;
+
+    /**
+     * @param  \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $pdkOrderRepository
+     */
+    public function __construct(PdkOrderRepositoryInterface $pdkOrderRepository)
+    {
+        $this->pdkOrderRepository = $pdkOrderRepository;
+    }
+
     public function apply(): void
     {
         // Render order card in meta box on order edit page
@@ -26,22 +40,20 @@ class PdkOrderHooks implements WordPressHooksInterface
             Pdk::get('orderMetaBoxId'),
             Pdk::get('orderMetaBoxTitle'),
             [$this, 'renderPdkOrderBox'],
-            'shop_order',
+            Pdk::get('orderPageId'),
             'advanced',
             'high'
         );
     }
 
     /**
+     * @param  \WP_Post|Order $orderInput - WP_Post in legacy, Order in HPOS
+     *
      * @return void
      */
-    public function renderPdkOrderBox(): void
+    public function renderPdkOrderBox($orderInput): void
     {
-        global $post;
-
-        /** @var PdkOrderRepositoryInterface $orderRepository */
-        $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
-        $order           = $orderRepository->get($post->ID);
+        $order = $this->pdkOrderRepository->get($orderInput);
 
         echo Frontend::renderOrderBox($order);
     }

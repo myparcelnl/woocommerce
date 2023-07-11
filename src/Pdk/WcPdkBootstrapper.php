@@ -10,6 +10,9 @@ use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use function DI\factory;
 use function DI\value;
 
+/**
+ * @see /config/pdk.php for services and values not based on plugin data
+ */
 class WcPdkBootstrapper extends PdkBootstrapper
 {
     /**
@@ -41,7 +44,7 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'wcAddressTypeBilling'  => value('billing'),
             'wcAddressTypeShipping' => value('shipping'),
 
-            'wcAddressTypes' => factory(function () {
+            'wcAddressTypes' => factory(static function (): array {
                 return [
                     Pdk::get('wcAddressTypeBilling'),
                     Pdk::get('wcAddressTypeShipping'),
@@ -96,35 +99,29 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'metaKeyVersion' => value("_{$name}_version"),
 
             ###
-            # Order grid
+            # Order list page
             ###
 
-            /** The name of our column in the order grid. */
-
-            'orderGridColumnName' => value($name),
-
-            /** The name of the column our column appears after.*/
-
-            'orderGridColumnBefore' => value('shipping_address'),
+            'orderListColumnName'     => value($name),
+            'orderListColumnTitle'    => value($title),
+            'orderListPreviousColumn' => value('shipping_address'),
 
             /**
              * Bulk order actions.
+             * @example Pdk::get('bulkActions') // gets the bulk actions for the current order mode.
              */
 
-            'bulkActions' => value([
-                'action_print',
-                'action_export_print',
-                'action_export',
-                'action_edit',
-            ]),
-
-            /**
-             * Bulk order actions in order mode.
-             */
-
-            'bulkActionsOrderMode' => value([
-                'action_edit',
-                'action_export',
+            'allBulkActions' => value([
+                'default'   => [
+                    'action_print',
+                    'action_export_print',
+                    'action_export',
+                    'action_edit',
+                ],
+                'orderMode' => [
+                    'action_edit',
+                    'action_export',
+                ],
             ]),
 
             ###

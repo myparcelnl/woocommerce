@@ -16,7 +16,7 @@ abstract class MockWcClass
     protected $attributes;
 
     /**
-     * @param  array $data
+     * @param  array|int|string $data - extra types to avoid type errors in real code.
      */
     public function __construct(array $data = [])
     {
@@ -41,11 +41,15 @@ abstract class MockWcClass
     }
 
     /**
-     * @param  string $key
+     * @param  mixed $key
+     * @param  mixed $single
+     * @param  mixed $context
      *
      * @return null|mixed
+     * @see          \WC_Data::get_meta()
+     * @noinspection PhpUnusedParameterInspection
      */
-    public function get_meta(string $key)
+    public function get_meta($key = '', $single = true, $context = 'view')
     {
         return $this->attributes['meta'][$key] ?? null;
     }

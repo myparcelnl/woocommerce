@@ -24,7 +24,7 @@ class WcViewService extends AbstractViewService
      */
     public function isOrderListPage(): bool
     {
-        return 'edit-shop_order' === $this->getScreen();
+        return Pdk::get('orderListPageId') === $this->getScreenId();
     }
 
     /**
@@ -32,7 +32,7 @@ class WcViewService extends AbstractViewService
      */
     public function isOrderPage(): bool
     {
-        return 'shop_order' === $this->getScreen();
+        return Pdk::get('orderPageId') === $this->getScreenId();
     }
 
     /**
@@ -40,7 +40,7 @@ class WcViewService extends AbstractViewService
      */
     public function isPluginSettingsPage(): bool
     {
-        return Pdk::get('settingsMenuSlug') === $this->getScreen();
+        return Pdk::get('settingsMenuSlug') === $this->getScreenId();
     }
 
     /**
@@ -48,13 +48,13 @@ class WcViewService extends AbstractViewService
      */
     public function isProductPage(): bool
     {
-        return 'product' === $this->getScreen();
+        return 'product' === $this->getScreenId();
     }
 
     /**
      * @return string
      */
-    private function getScreen(): string
+    private function getScreenId(): string
     {
         return get_current_screen()->id;
     }
