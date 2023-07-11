@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "658da77726d1ee5118802cde0b296caa",
+    "content-hash": "56b41cb0490fe04f38681865b094253c",
     "packages": [
         {
             "name": "doctrine/deprecations",
@@ -510,16 +510,16 @@
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "2.6.4",
+            "version": "2.8.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:myparcelnl/pdk.git",
-                "reference": "20376d987dc665e12aed6ca5ed9da94d01cf428f"
+                "reference": "4b3b44e7b8f5af4e8bbd225764ad65ca9c05adb9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/20376d987dc665e12aed6ca5ed9da94d01cf428f",
-                "reference": "20376d987dc665e12aed6ca5ed9da94d01cf428f",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/4b3b44e7b8f5af4e8bbd225764ad65ca9c05adb9",
+                "reference": "4b3b44e7b8f5af4e8bbd225764ad65ca9c05adb9",
                 "shasum": ""
             },
             "require": {
@@ -557,20 +557,20 @@
             ],
             "description": "MyParcel Plugin Development Kit",
             "homepage": "https://myparcel.nl",
-            "time": "2023-07-03T09:30:22+00:00"
+            "time": "2023-07-10T07:54:19+00:00"
         },
         {
             "name": "myparcelnl/sdk",
-            "version": "7.7.5",
+            "version": "7.7.6",
             "source": {
                 "type": "git",
                 "url": "git@github.com:myparcelnl/sdk.git",
-                "reference": "ddca49c71f5f03f68663c7e4932c5961b3f8db40"
+                "reference": "9c1a3da8891df16efe559aaf94a467d2f254d89b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/ddca49c71f5f03f68663c7e4932c5961b3f8db40",
-                "reference": "ddca49c71f5f03f68663c7e4932c5961b3f8db40",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/9c1a3da8891df16efe559aaf94a467d2f254d89b",
+                "reference": "9c1a3da8891df16efe559aaf94a467d2f254d89b",
                 "shasum": ""
             },
             "require": {
@@ -617,7 +617,7 @@
                 "myparcel",
                 "postnl"
             ],
-            "time": "2023-04-11T11:41:07+00:00"
+            "time": "2023-07-10T11:17:46+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -2670,16 +2670,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.6.9",
+            "version": "9.6.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "a9aceaf20a682aeacf28d582654a1670d8826778"
+                "reference": "a6d351645c3fe5a30f5e86be6577d946af65a328"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a9aceaf20a682aeacf28d582654a1670d8826778",
-                "reference": "a9aceaf20a682aeacf28d582654a1670d8826778",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a6d351645c3fe5a30f5e86be6577d946af65a328",
+                "reference": "a6d351645c3fe5a30f5e86be6577d946af65a328",
                 "shasum": ""
             },
             "require": {
@@ -2753,7 +2753,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.9"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.10"
             },
             "funding": [
                 {
@@ -2769,7 +2769,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-06-11T06:13:56+00:00"
+            "time": "2023-07-10T04:04:23+00:00"
         },
         {
             "name": "sebastian/cli-parser",
