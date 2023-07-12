@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare( strict_types=1 );
 
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Repository;
 
@@ -14,6 +14,7 @@ use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
+use MyParcelNL\Pdk\Fulfilment\Collection\OrderNoteCollection;
 use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
 use MyParcelNL\Pdk\Settings\Model\LabelSettings;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
@@ -30,163 +31,154 @@ use WC_Order_Item_Product;
 use WC_Product;
 use WP_Post;
 
-class PdkOrderRepository extends AbstractPdkOrderRepository
-{
-    private const DESCRIPTION_CUSTOMER_NOTE = '[CUSTOMER_NOTE]';
-    private const DESCRIPTION_ORDER_NR      = '[ORDER_NR]';
-    private const DESCRIPTION_PRODUCT_ID    = '[PRODUCT_ID]';
-    private const DESCRIPTION_PRODUCT_NAME  = '[PRODUCT_NAME]';
-    private const DESCRIPTION_PRODUCT_QTY   = '[PRODUCT_QTY]';
-    private const DESCRIPTION_PRODUCT_SKU   = '[PRODUCT_SKU]';
-    private const DESCRIPTION_PLACEHOLDERS  = [
-        self::DESCRIPTION_CUSTOMER_NOTE,
-        self::DESCRIPTION_ORDER_NR,
-        self::DESCRIPTION_PRODUCT_ID,
-        self::DESCRIPTION_PRODUCT_NAME,
-        self::DESCRIPTION_PRODUCT_QTY,
-        self::DESCRIPTION_PRODUCT_SKU,
-    ];
+class PdkOrderRepository extends AbstractPdkOrderRepository {
+	private const DESCRIPTION_CUSTOMER_NOTE = '[CUSTOMER_NOTE]';
+	private const DESCRIPTION_ORDER_NR      = '[ORDER_NR]';
+	private const DESCRIPTION_PRODUCT_ID    = '[PRODUCT_ID]';
+	private const DESCRIPTION_PRODUCT_NAME  = '[PRODUCT_NAME]';
+	private const DESCRIPTION_PRODUCT_QTY   = '[PRODUCT_QTY]';
+	private const DESCRIPTION_PRODUCT_SKU   = '[PRODUCT_SKU]';
+	private const DESCRIPTION_PLACEHOLDERS  = [
+		self::DESCRIPTION_CUSTOMER_NOTE,
+		self::DESCRIPTION_ORDER_NR,
+		self::DESCRIPTION_PRODUCT_ID,
+		self::DESCRIPTION_PRODUCT_NAME,
+		self::DESCRIPTION_PRODUCT_QTY,
+		self::DESCRIPTION_PRODUCT_SKU,
+	];
+	/**
+	 * @var \MyParcelNL\WooCommerce\Factory\WcAddressAdapter
+	 */
+	private $addressAdapter;
+	/**
+	 * @var \MyParcelNL\Pdk\Base\Service\CountryService
+	 */
+	private $countryService;
+	/**
+	 * @var \MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface
+	 */
+	private $productRepository;
 
-    /**
-     * @var \MyParcelNL\WooCommerce\Factory\WcAddressAdapter
-     */
-    private $addressAdapter;
+	/**
+	 * @param  \MyParcelNL\Pdk\Storage\Contract\StorageInterface                $storage
+	 * @param  \MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface $productRepository
+	 * @param  \MyParcelNL\Pdk\Base\Service\CountryService                      $countryService
+	 * @param  \MyParcelNL\WooCommerce\Factory\WcAddressAdapter                 $addressAdapter
+	 */
+	public function __construct(
+		StorageInterface $storage,
+		PdkProductRepositoryInterface $productRepository,
+		CountryService $countryService,
+		WcAddressAdapter $addressAdapter
+	) {
+		parent::__construct( $storage );
+		$this->productRepository = $productRepository;
+		$this->countryService    = $countryService;
+		$this->addressAdapter    = $addressAdapter;
+	}
 
-    /**
-     * @var \MyParcelNL\Pdk\Base\Service\CountryService
-     */
-    private $countryService;
+	/**
+	 * @param  int|string|WC_Order|WP_Post $input
+	 *
+	 * @return \MyParcelNL\Pdk\App\Order\Model\PdkOrder
+	 */
+	public function get( $input ): PdkOrder {
+		$order = $this->getWcOrder( $input );
 
-    /**
-     * @var \MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface
-     */
-    private $productRepository;
+		return $this->retrieve( (string) $order->get_id(), function () use ( $order ) {
+			try {
+				return $this->getDataFromOrder( $order );
+			} catch ( Throwable $exception ) {
+				Logger::error(
+					'Could not retrieve order data from WooCommerce order',
+					[
+						'order_id' => $order->get_id(),
+						'error'    => $exception->getMessage(),
+					]
+				);
 
-    /**
-     * @param  \MyParcelNL\Pdk\Storage\Contract\StorageInterface                $storage
-     * @param  \MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface $productRepository
-     * @param  \MyParcelNL\Pdk\Base\Service\CountryService                      $countryService
-     * @param  \MyParcelNL\WooCommerce\Factory\WcAddressAdapter                 $addressAdapter
-     */
-    public function __construct(
-        StorageInterface              $storage,
-        PdkProductRepositoryInterface $productRepository,
-        CountryService                $countryService,
-        WcAddressAdapter              $addressAdapter
-    ) {
-        parent::__construct($storage);
-        $this->productRepository = $productRepository;
-        $this->countryService    = $countryService;
-        $this->addressAdapter    = $addressAdapter;
-    }
+				return new PdkOrder();
+			}
+		} );
+	}
 
-    /**
-     * @param  int|string|WC_Order|WP_Post $input
-     *
-     * @return \MyParcelNL\Pdk\App\Order\Model\PdkOrder
-     */
-    public function get($input): PdkOrder
-    {
-        $order = $this->getWcOrder($input);
+	/**
+	 * @param  \MyParcelNL\Pdk\App\Order\Model\PdkOrder $newOrder
+	 *
+	 * @return \MyParcelNL\Pdk\App\Order\Model\PdkOrder
+	 * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
+	 */
+	public function update( PdkOrder $newOrder ): PdkOrder {
+		$wcOrder = $this->getWcOrder( $newOrder->externalIdentifier );
 
-        return $this->retrieve((string) $order->get_id(), function () use ($order) {
-            try {
-                return $this->getDataFromOrder($order);
-            } catch (Throwable $exception) {
-                Logger::error(
-                    'Could not retrieve order data from WooCommerce order',
-                    [
-                        'order_id' => $order->get_id(),
-                        'error'    => $exception->getMessage(),
-                    ]
-                );
+		$newOrder->shipments = $this
+			->getShipments( $wcOrder )
+			->mergeByKey( $newOrder->shipments, 'id' );
 
-                return new PdkOrder();
-            }
-        });
-    }
+		$this->addBarcodesToOrderNote( $wcOrder, $newOrder );
 
-    /**
-     * @param  \MyParcelNL\Pdk\App\Order\Model\PdkOrder $newOrder
-     *
-     * @return \MyParcelNL\Pdk\App\Order\Model\PdkOrder
-     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
-     */
-    public function update(PdkOrder $newOrder): PdkOrder
-    {
-        $wcOrder = $this->getWcOrder($newOrder->externalIdentifier);
+		$wcOrder->update_meta_data( Pdk::get( 'metaKeyOrderData' ), $newOrder->toStorableArray() );
+		$wcOrder->update_meta_data( Pdk::get( 'metaKeyOrderShipments' ), $newOrder->shipments->toStorableArray() );
 
-        $newOrder->shipments = $this
-            ->getShipments($wcOrder)
-            ->mergeByKey($newOrder->shipments, 'id');
+		$wcOrder->save_meta_data();
 
-        $this->addBarcodesToOrderNote($wcOrder, $newOrder);
+		return $this->save( $newOrder->externalIdentifier, $newOrder );
+	}
 
-        $wcOrder->update_meta_data(Pdk::get('metaKeyOrderData'), $newOrder->toStorableArray());
-        $wcOrder->update_meta_data(Pdk::get('metaKeyOrderShipments'), $newOrder->shipments->toStorableArray());
+	/**
+	 * @param  \WC_Order                                $wcOrder
+	 * @param  \MyParcelNL\Pdk\App\Order\Model\PdkOrder $order
+	 *
+	 * @return void
+	 */
+	private function addBarcodesToOrderNote( WC_Order $wcOrder, PdkOrder $order ): void {
+		$withBarcodes = $order->shipments->where( 'barcode', '!=', null );
 
-        $wcOrder->save_meta_data();
+		if ( $withBarcodes->isNotEmpty() ) {
+			$prefix = Settings::get( GeneralSettings::BARCODE_IN_NOTE_TITLE, GeneralSettings::ID );
 
-        return $this->save($newOrder->externalIdentifier, $newOrder);
-    }
+			$barcodeArray = $withBarcodes
+				->pluck( 'barcode' )
+				->toArray();
 
-    /**
-     * @param  \WC_Order                                $wcOrder
-     * @param  \MyParcelNL\Pdk\App\Order\Model\PdkOrder $order
-     *
-     * @return void
-     */
-    private function addBarcodesToOrderNote(WC_Order $wcOrder, PdkOrder $order): void
-    {
-        $withBarcodes = $order->shipments->where('barcode', '!=', null);
+			$wcOrder->add_order_note( $prefix . implode( ', ', $barcodeArray ) );
+		}
+	}
 
-        if ($withBarcodes->isNotEmpty()) {
-            $prefix = Settings::get(GeneralSettings::BARCODE_IN_NOTE_TITLE, GeneralSettings::ID);
+	/**
+	 * @param  \WC_Order                               $order
+	 * @param  \MyParcelNL\Pdk\Base\Support\Collection $items
+	 *
+	 * @return array
+	 */
+	private function createCustomsDeclaration( WC_Order $order, Collection $items ): array {
+		return [
+			'contents' => CustomsDeclaration::CONTENTS_COMMERCIAL_GOODS,
+			'invoice'  => $order->get_id(),
+			'items'    => array_values(
+				$items
+					->filter( function ( $item ) {
+						return $item['product'] && ! $item['product']->is_virtual();
+					} )
+					->map( function ( $item ) {
+						return CustomsDeclarationItem::fromProduct( $item['pdkProduct'] );
+					} )
+					->toArray()
+			),
+		];
+	}
 
-            $barcodeArray = $withBarcodes
-                ->pluck('barcode')
-                ->toArray();
+	/**
+	 * @param  \WC_Order $order
+	 *
+	 * @return \MyParcelNL\Pdk\App\Order\Model\PdkOrder
+	 * @throws \Exception
+	 */
+	private function getDataFromOrder( WC_Order $order ): PdkOrder {
+		$savedOrderData = $order->get_meta( Pdk::get( 'metaKeyOrderData' ) ) ?: [];
 
-            $wcOrder->add_order_note($prefix . implode(', ', $barcodeArray));
-        }
-    }
-
-    /**
-     * @param  \WC_Order                               $order
-     * @param  \MyParcelNL\Pdk\Base\Support\Collection $items
-     *
-     * @return array
-     */
-    private function createCustomsDeclaration(WC_Order $order, Collection $items): array
-    {
-        return [
-            'contents' => CustomsDeclaration::CONTENTS_COMMERCIAL_GOODS,
-            'invoice'  => $order->get_id(),
-            'items'    => array_values(
-                $items
-                    ->filter(function ($item) {
-                        return $item['product'] && ! $item['product']->is_virtual();
-                    })
-                    ->map(function ($item) {
-                        return CustomsDeclarationItem::fromProduct($item['pdkProduct']);
-                    })
-                    ->toArray()
-            ),
-        ];
-    }
-
-    /**
-     * @param  \WC_Order $order
-     *
-     * @return \MyParcelNL\Pdk\App\Order\Model\PdkOrder
-     * @throws \Exception
-     */
-    private function getDataFromOrder(WC_Order $order): PdkOrder
-    {
-        $savedOrderData = $order->get_meta(Pdk::get('metaKeyOrderData')) ?: [];
-
-        $items           = $this->getWcOrderItems($order);
-        $shippingAddress = $this->addressAdapter->fromWcOrder($order);
+		$items           = $this->getWcOrderItems( $order );
+		$shippingAddress = $this->addressAdapter->fromWcOrder( $order );
 
         $orderData = [
             'externalIdentifier'    => $order->get_id(),
@@ -287,100 +279,125 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         );
     }
 
-    /**
-     * @param  \WC_Order $order
-     *
-     * @return null|string
-     */
-    private function getOrderDate(WC_Order $order): ?string
-    {
-        $wcOrderCreated = $order->get_date_created();
+	/**
+	 * @param  \WC_Order $order
+	 *
+	 * @return null|string
+	 */
+	private function getOrderDate( WC_Order $order ): ?string {
+		$wcOrderCreated = $order->get_date_created();
 
-        return $wcOrderCreated ? $wcOrderCreated->format('Y-m-d H:i:s') : null;
-    }
+		return $wcOrderCreated ? $wcOrderCreated->format( 'Y-m-d H:i:s' ) : null;
+	}
 
-    /**
-     * @param  \MyParcelNL\Pdk\Base\Support\Collection $items
-     *
-     * @return array
-     */
-    private function getPhysicalProperties(Collection $items): array
-    {
-        return [
-            'weight' => $items
-                ->where('product', '!=', null)
-                ->reduce(static function (float $acc, $item) {
-                    $quantity = $item['item']->get_quantity();
-                    $weight   = $item['product']->get_weight();
+	public function getOrderNotes( string $externalIdentifier ): OrderNoteCollection {
+		$orderNoteCollection = new OrderNoteCollection();
+		$wcOrder             = wc_get_order( $externalIdentifier );
 
-                    if (is_numeric($quantity) && is_numeric($weight)) {
-                        $acc += $quantity * $weight;
-                    }
+		$orderNoteCollection->push( [
+			'note'   => $wcOrder->get_customer_note(),
+			'author' => 'customer',
+		] );
 
-                    return $acc;
-                }, 0),
-        ];
-    }
+		$adminNotes = wc_get_order_notes( [
+			'order_id' => $externalIdentifier,
+		] );
 
-    /**
-     * @param  \WC_Order $order
-     *
-     * @return \MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection
-     */
-    private function getShipments(WC_Order $order): ShipmentCollection
-    {
-        return $this->retrieve("wc_order_shipments_{$order->get_id()}", function () use ($order): ShipmentCollection {
-            $shipments = $order->get_meta(Pdk::get('metaKeyOrderShipments')) ?: null;
+		foreach ( $adminNotes as $note ) {
+			if ($note->added_by === 'system') {
+				continue;
+			}
 
-            return new ShipmentCollection($shipments);
-        });
-    }
+			$orderNoteCollection->push(
+				[
+					'note'   => $note->content,
+					'author' => 'webshop',
+				]
+			);
+		}
 
-    /**
-     * @param  int|string|WC_Order|\WP_Post $input
-     *
-     * @return \WC_Order
-     */
-    private function getWcOrder($input): WC_Order
-    {
-        if ($input instanceof WC_Data) {
-            $id = $input->get_id();
-        } elseif ($input instanceof WP_Post) {
-            $id = $input->ID;
-        } else {
-            $id = $input;
-        }
+		return $orderNoteCollection;
+	}
 
-        if (! is_scalar($id)) {
-            throw new InvalidArgumentException('Invalid input');
-        }
+	/**
+	 * @param  \MyParcelNL\Pdk\Base\Support\Collection $items
+	 *
+	 * @return array
+	 */
+	private function getPhysicalProperties( Collection $items ): array {
+		return [
+			'weight' => $items
+				->where( 'product', '!=', null )
+				->reduce( static function ( float $acc, $item ) {
+					$quantity = $item['item']->get_quantity();
+					$weight   = $item['product']->get_weight();
 
-        return $this->retrieve("wc_order_$id", function () use ($input, $id) {
-            if (is_a($input, WC_Order::class)) {
-                return $input;
-            }
+					if ( is_numeric( $quantity ) && is_numeric( $weight ) ) {
+						$acc += $quantity * $weight;
+					}
 
-            return new WC_Order($id);
-        });
-    }
+					return $acc;
+				}, 0 ),
+		];
+	}
 
-    /**
-     * @param  \WC_Order $order
-     *
-     * @return \MyParcelNL\Pdk\Base\Support\Collection
-     */
-    private function getWcOrderItems(WC_Order $order): Collection
-    {
-        return new Collection(
-            array_map(function ($item) {
-                $product = $item instanceof WC_Order_Item_Product ? $item->get_product() : null;
+	/**
+	 * @param  \WC_Order $order
+	 *
+	 * @return \MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection
+	 */
+	private function getShipments( WC_Order $order ): ShipmentCollection {
+		return $this->retrieve( "wc_order_shipments_{$order->get_id()}",
+			function () use ( $order ): ShipmentCollection {
+				$shipments = $order->get_meta( Pdk::get( 'metaKeyOrderShipments' ) ) ?: null;
 
-                return [
-                    'item'       => $item,
-                    'product'    => $product,
-                    'pdkProduct' => $product ? $this->productRepository->getProduct($product) : null,
-                ];
-            }, array_values($order->get_items() ?? []))
-        );
-    }
+				return new ShipmentCollection( $shipments );
+			} );
+	}
+
+	/**
+	 * @param  int|string|WC_Order|\WP_Post $input
+	 *
+	 * @return \WC_Order
+	 */
+	private function getWcOrder( $input ): WC_Order {
+		if ( $input instanceof WC_Data ) {
+			$id = $input->get_id();
+		} elseif ( $input instanceof WP_Post ) {
+			$id = $input->ID;
+		} else {
+			$id = $input;
+		}
+
+		if ( ! is_scalar( $id ) ) {
+			throw new InvalidArgumentException( 'Invalid input' );
+		}
+
+		return $this->retrieve( "wc_order_$id", function () use ( $input, $id ) {
+			if ( is_a( $input, WC_Order::class ) ) {
+				return $input;
+			}
+
+			return new WC_Order( $id );
+		} );
+	}
+
+	/**
+	 * @param  \WC_Order $order
+	 *
+	 * @return \MyParcelNL\Pdk\Base\Support\Collection
+	 */
+	private function getWcOrderItems( WC_Order $order ): Collection {
+		return new Collection(
+			array_map( function ( $item ) {
+				$product = $item instanceof WC_Order_Item_Product ? $item->get_product() : null;
+
+				return [
+					'item'       => $item,
+					'product'    => $product,
+					'pdkProduct' => $product ? $this->productRepository->getProduct( $product ) : null,
+				];
+			}, array_values( $order->get_items() ?? [] ) )
+		);
+	}
 }
