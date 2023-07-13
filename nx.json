@@ -1,6 +1,5 @@
 {
   "defaultBase": "main",
-  "npmScope": "myparcel-woocommerce",
   "workspaceLayout": {
     "appsDir": "views",
     "libsDir": "views"
