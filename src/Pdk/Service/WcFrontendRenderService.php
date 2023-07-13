@@ -30,7 +30,8 @@ class WcFrontendRenderService extends FrontendRenderService
         $context   = $this->contextService->createContexts([Context::ID_CHECKOUT], ['cart' => $cart]);
 
         printf(
-            '<div id="mypa-delivery-options-wrapper" class="woocommerce-myparcel__delivery-options" data-context="%s">%s<div id="myparcel-delivery-options"></div></div>',
+            '<div id="mypa-delivery-options-wrapper" class="%s__delivery-options" data-context="%s">%s<div id="myparcel-delivery-options"></div></div>',
+            Pdk::getAppInfo()->name,
             $this->encodeContext($context),
             $customCss ? sprintf('<style>%s</style>', $customCss) : ''
         );
