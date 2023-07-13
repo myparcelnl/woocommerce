@@ -290,7 +290,12 @@ class PdkOrderRepository extends AbstractPdkOrderRepository {
 		return $wcOrderCreated ? $wcOrderCreated->format( 'Y-m-d H:i:s' ) : null;
 	}
 
-	public function getOrderNotes( string $externalIdentifier ): OrderNoteCollection {
+	/**
+	 * @param  null|string $externalIdentifier
+	 *
+	 * @return \MyParcelNL\Pdk\Fulfilment\Collection\OrderNoteCollection
+	 */
+	public function getOrderNotes( ?string $externalIdentifier ): OrderNoteCollection {
 		$orderNoteCollection = new OrderNoteCollection();
 		$wcOrder             = wc_get_order( $externalIdentifier );
 
