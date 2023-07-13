@@ -21,7 +21,6 @@ use MyParcelNL\Pdk\App\Webhook\Contract\PdkWebhookServiceInterface;
 use MyParcelNL\Pdk\App\Webhook\Contract\PdkWebhooksRepositoryInterface;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Base\Contract\WeightServiceInterface;
-use MyParcelNL\Pdk\Base\Pdk;
 use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Facade\Pdk as PdkFacade;
 use MyParcelNL\Pdk\Facade\Settings;
@@ -31,7 +30,10 @@ use MyParcelNL\Pdk\Frontend\Contract\ViewServiceInterface;
 use MyParcelNL\Pdk\Language\Contract\LanguageServiceInterface;
 use MyParcelNL\Pdk\Settings\Contract\SettingsRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
-use MyParcelNL\WooCommerce\Contract\WcFeatureServiceInterface;
+use MyParcelNL\WooCommerce\Contract\WooCommerceServiceInterface;
+use MyParcelNL\WooCommerce\Contract\WordPressServiceInterface;
+use MyParcelNL\WooCommerce\Facade\WooCommerce;
+use MyParcelNL\WooCommerce\Facade\WordPress;
 use MyParcelNL\WooCommerce\Logger\WcLogger;
 use MyParcelNL\WooCommerce\Pdk\Guzzle7ClientAdapter;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcBackendEndpointService;
@@ -52,7 +54,8 @@ use MyParcelNL\WooCommerce\Pdk\Service\WcViewService;
 use MyParcelNL\WooCommerce\Pdk\Service\WcWeightService;
 use MyParcelNL\WooCommerce\Pdk\Settings\Repository\PdkSettingsRepository;
 use MyParcelNL\WooCommerce\Pdk\Webhook\WcWebhooksRepository;
-use MyParcelNL\WooCommerce\Service\WcFeatureService;
+use MyParcelNL\WooCommerce\Service\WooCommerceService;
+use MyParcelNL\WooCommerce\Service\WordPressService;
 use MyParcelNL\WooCommerce\Service\WpCronService;
 use MyParcelNL\WooCommerce\Service\WpInstallerService;
 use MyParcelNL\WooCommerce\Service\WpScriptService;
@@ -65,17 +68,29 @@ use function DI\value;
  * @see \MyParcelNL\WooCommerce\Pdk\WcPdkBootstrapper for configuration based on the plugin itself.
  */
 return [
-    'mode' => value(WP_DEBUG ? Pdk::MODE_DEVELOPMENT : Pdk::MODE_PRODUCTION),
+    'wordPressVersion' => factory(function (): string {
+        return get_bloginfo('version');
+    }),
 
-    'pluginBaseName' => factory(function (): string {
-        return plugin_basename(PdkFacade::getAppInfo()->path);
+    'wooCommerceIsActive' => factory(function (): bool {
+        return function_exists('WC');
+    }),
+
+    'wooCommerceVersion' => factory(function (): string {
+        return WooCommerce::isActive() ? WC()->version : '?';
+    }),
+
+    'minimumWooCommerceVersion' => value('5.0.0'),
+
+    'isWooCommerceVersionSupported' => factory(function (): bool {
+        return version_compare(WooCommerce::getVersion(), PdkFacade::get('minimumWooCommerceVersion'), '>=');
     }),
 
     'userAgent' => factory(function (): array {
         return [
             'MyParcelNL-WooCommerce' => PdkFacade::getAppInfo()->version,
-            'WooCommerce'            => function_exists('WC') ? WC()->version : '?',
-            'WordPress'              => get_bloginfo('version'),
+            'WooCommerce'            => WooCommerce::getVersion(),
+            'WordPress'              => WordPress::getVersion(),
         ];
     }),
 
@@ -88,8 +103,8 @@ return [
             : Arr::get($all, 'default', []);
     }),
 
-    'orderListPageId' => factory(static function (WcFeatureServiceInterface $wcFeatureService): string {
-        if (! $wcFeatureService->isUsingHpos()) {
+    'orderListPageId' => factory(static function (): string {
+        if (! WooCommerce::isUsingHpos()) {
             return 'edit-shop_order';
         }
 
@@ -102,8 +117,8 @@ return [
     # Single order page
     ###
 
-    'orderPageId' => factory(static function (WcFeatureServiceInterface $wcFeatureService): string {
-        if (! $wcFeatureService->isUsingHpos()) {
+    'orderPageId' => factory(static function (): string {
+        if (! WooCommerce::isUsingHpos()) {
             return 'shop_order';
         }
 
@@ -111,6 +126,17 @@ return [
             ? wc_get_page_screen_id('shop_order')
             : 'woocommerce_page_wc-order';
     }),
+
+    ###
+    # Custom services
+    ###
+
+    WordPressServiceInterface::class   => autowire(WordPressService::class),
+    WooCommerceServiceInterface::class => autowire(WooCommerceService::class),
+
+    ###
+    # PDK services
+    ###
 
     /**
      * Repositories
@@ -160,9 +186,4 @@ return [
     LoggerInterface::class                 => autowire(WcLogger::class),
     MigrationServiceInterface::class       => autowire(WcMigrationService::class),
     ScriptServiceInterface::class          => autowire(WpScriptService::class),
-
-    /**
-     * Custom classes
-     */
-    WcFeatureServiceInterface::class       => autowire(WcFeatureService::class),
 ];

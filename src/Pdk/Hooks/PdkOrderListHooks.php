@@ -8,7 +8,7 @@ use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\Facade\Frontend;
 use MyParcelNL\Pdk\Facade\Language;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\WooCommerce\Contract\WcFeatureServiceInterface;
+use MyParcelNL\WooCommerce\Facade\WooCommerce;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 
 class PdkOrderListHooks implements WordPressHooksInterface
@@ -19,20 +19,11 @@ class PdkOrderListHooks implements WordPressHooksInterface
     private $pdkOrderRepository;
 
     /**
-     * @var \MyParcelNL\WooCommerce\Contract\WcFeatureServiceInterface
-     */
-    private $wcFeatureService;
-
-    /**
      * @param  \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $pdkOrderRepository
-     * @param  \MyParcelNL\WooCommerce\Contract\WcFeatureServiceInterface     $wcFeatureService
      */
-    public function __construct(
-        PdkOrderRepositoryInterface $pdkOrderRepository,
-        WcFeatureServiceInterface   $wcFeatureService
-    ) {
+    public function __construct(PdkOrderRepositoryInterface $pdkOrderRepository)
+    {
         $this->pdkOrderRepository = $pdkOrderRepository;
-        $this->wcFeatureService   = $wcFeatureService;
     }
 
     public function apply(): void
@@ -109,7 +100,7 @@ class PdkOrderListHooks implements WordPressHooksInterface
      */
     private function getOrderListColumnHook(): string
     {
-        return $this->wcFeatureService->isUsingHpos()
+        return WooCommerce::isUsingHpos()
             ? sprintf('manage_%s_custom_column', Pdk::get('orderListPageId'))
             : 'manage_shop_order_posts_custom_column';
     }

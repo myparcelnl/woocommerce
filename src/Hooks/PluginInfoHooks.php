@@ -15,10 +15,7 @@ class PluginInfoHooks implements WordPressHooksInterface
 {
     public function apply(): void
     {
-        $pluginBaseName = sprintf(
-            '%s/woocommerce-myparcel.php',
-            Pdk::get('pluginBaseName')
-        );
+        $pluginBaseName = Pdk::get('pluginBasename');
 
         // Add links to the plugin actions.
         add_filter("plugin_action_links_$pluginBaseName", [$this, 'setPluginActionLinks']);
@@ -57,7 +54,7 @@ class PluginInfoHooks implements WordPressHooksInterface
      */
     public function setPluginMeta(array $links, $file): array
     {
-        if (strpos($file, 'woocommerce-myparcelnl') !== false) {
+        if (Pdk::get('pluginBasename') === $file) {
             $link = '<a href="%s" target="_blank">%s</a>';
 
             $links[] = sprintf($link, Pdk::get('urlDocumentation'), Language::translate('link_documentation'));

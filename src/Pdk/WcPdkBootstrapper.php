@@ -16,6 +16,21 @@ use function DI\value;
 class WcPdkBootstrapper extends PdkBootstrapper
 {
     /**
+     * @var array
+     */
+    private static $config = [];
+
+    /**
+     * @param  array $config
+     *
+     * @return void
+     */
+    public static function setAdditionalConfig(array $config): void
+    {
+        self::$config = $config;
+    }
+
+    /**
      * @param  string $name
      * @param  string $title
      * @param  string $version
@@ -31,7 +46,7 @@ class WcPdkBootstrapper extends PdkBootstrapper
         string $path,
         string $url
     ): array {
-        return [
+        return array_replace(self::$config, [
             ###
             # General
             ###
@@ -108,6 +123,7 @@ class WcPdkBootstrapper extends PdkBootstrapper
 
             /**
              * Bulk order actions.
+             *
              * @example Pdk::get('bulkActions') // gets the bulk actions for the current order mode.
              */
 
@@ -262,6 +278,6 @@ class WcPdkBootstrapper extends PdkBootstrapper
 
             'migrateAction_5_0_0_Orders'          => value("{$name}_migrate_5_0_0_orders"),
             'migrateAction_5_0_0_ProductSettings' => value("{$name}_migrate_5_0_0_product_settings"),
-        ];
+        ]);
     }
 }

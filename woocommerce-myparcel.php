@@ -14,10 +14,13 @@ License: MIT
 License URI: http://www.opensource.org/licenses/mit-license.php
 */
 
+use MyParcelNL\Pdk\Base\Pdk as PdkInstance;
 use MyParcelNL\Pdk\Facade\Installer;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\WooCommerce\Facade\WooCommerce;
 use MyParcelNL\WooCommerce\Pdk\WcPdkBootstrapper;
 use MyParcelNL\WooCommerce\Service\WordPressHookService;
+use function DI\value;
 
 require(plugin_dir_path(__FILE__) . 'vendor/autoload.php');
 
@@ -28,18 +31,6 @@ final class MyParcelNLWooCommerce
      */
     public function __construct()
     {
-        $version = $this->getVersion();
-
-        WcPdkBootstrapper::boot(
-            'myparcelnl',
-            'MyParcel',
-            $version,
-            plugin_dir_path(__FILE__),
-            plugin_dir_url(__FILE__)
-        );
-
-        define('MYPARCELNL_WC_VERSION', $version);
-
         if (! defined('DOING_AJAX') && is_admin()) {
             add_action('init', [$this, 'install']);
         }
@@ -54,9 +45,7 @@ final class MyParcelNLWooCommerce
      */
     public function initialize(): void
     {
-        if (! $this->checkPrerequisites()) {
-            return;
-        }
+        $this->boot();
 
         /** @var WordPressHookService $hookService */
         $hookService = Pdk::get(WordPressHookService::class);
@@ -69,15 +58,66 @@ final class MyParcelNLWooCommerce
      */
     public function install(): void
     {
+        $this->boot();
+
         Installer::install();
     }
 
     /**
-     * @return bool
+     * @return void
+     * @throws \Exception
      */
-    private function checkPrerequisites(): bool
+    private function boot(): void
     {
-        return $this->isWoocommerceActivated() && $this->phpVersionMeets();
+        $version = $this->getVersion();
+
+        WcPdkBootstrapper::setAdditionalConfig([
+            'pluginBasename' => value(plugin_basename(__FILE__)),
+        ]);
+
+        WcPdkBootstrapper::boot(
+            'myparcelnl',
+            'MyParcel',
+            $version,
+            plugin_dir_path(__FILE__),
+            plugin_dir_url(__FILE__),
+            constant('WP_DEBUG')
+                ? PdkInstance::MODE_DEVELOPMENT
+                : PdkInstance::MODE_PRODUCTION
+        );
+
+        $this->checkPrerequisites();
+
+        if (! defined('MYPARCELNL_WC_VERSION')) {
+            define('MYPARCELNL_WC_VERSION', $version);
+        }
+    }
+
+    /**
+     * Check if the minimum requirements are met and deactivate the plugin if not.
+     *
+     * @return void
+     */
+    private function checkPrerequisites(): void
+    {
+        $appInfo = Pdk::getAppInfo();
+        $errors  = [];
+
+        if (! Pdk::get('isPhpVersionSupported')) {
+            $errors[] = sprintf('%s requires PHP %s or higher.', $appInfo->title, Pdk::get('minimumPhpVersion'));
+        }
+
+        if (! WooCommerce::isActive() || ! Pdk::get('isWooCommerceVersionSupported')) {
+            $errors[] = sprintf(
+                '%s requires WooCommerce %s or higher.',
+                $appInfo->title,
+                Pdk::get('minimumWooCommerceVersion')
+            );
+        }
+
+        if (! empty($errors)) {
+            deactivate_plugins(plugin_basename(__FILE__));
+        }
     }
 
     /**
@@ -88,32 +128,6 @@ final class MyParcelNLWooCommerce
         $composerJson = json_decode(file_get_contents(__DIR__ . '/composer.json'), false);
 
         return $composerJson->version;
-    }
-
-    /**
-     * Check if woocommerce is activated
-     */
-    private function isWoocommerceActivated(): bool
-    {
-        $blogPlugins = get_option('active_plugins', []);
-        $sitePlugins = get_site_option('active_sitewide_plugins', []);
-
-        return isset($sitePlugins['woocommerce/woocommerce.php'])
-            || in_array('woocommerce/woocommerce.php', $blogPlugins, true);
-    }
-
-    /**
-     * @return bool
-     */
-    private function phpVersionMeets(): bool
-    {
-        $minimumPhpVersion = Pdk::get('minimumPhpVersion');
-
-        if (version_compare(PHP_VERSION, $minimumPhpVersion, '>=')) {
-            return true;
-        }
-
-        return false;
     }
 }
 
