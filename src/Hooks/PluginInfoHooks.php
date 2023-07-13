@@ -15,10 +15,8 @@ class PluginInfoHooks implements WordPressHooksInterface
 {
     public function apply(): void
     {
-        $appInfo        = Pdk::getAppInfo();
         $pluginBaseName = sprintf(
-            '%s/%s.php',
-            plugin_basename($appInfo->path),
+            '%s/woocommerce-myparcel.php',
             Pdk::get('pluginBaseName')
         );
 
@@ -29,7 +27,12 @@ class PluginInfoHooks implements WordPressHooksInterface
         add_filter('plugin_row_meta', [$this, 'setPluginMeta'], 10, 2);
     }
 
-    /** @noinspection HtmlUnknownTarget */
+    /**
+     * @param  array $links
+     *
+     * @return array
+     * @noinspection HtmlUnknownTarget
+     */
     public function setPluginActionLinks(array $links): array
     {
         $appInfo  = Pdk::getAppInfo();
