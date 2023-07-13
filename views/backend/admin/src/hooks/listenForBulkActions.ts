@@ -27,7 +27,7 @@ export const listenForBulkActions = (): void => {
       throw new Error(`Unknown bulk action: ${action}`);
     }
 
-    const selectedPosts = document.querySelectorAll<HTMLInputElement>('input[name="post[]"]:checked');
+    const selectedPosts = document.querySelectorAll<HTMLInputElement>('#the-list input[type=checkbox]:checked');
     const actionStore = useActionStore();
 
     void actionStore.dispatch(adminAction, {orderIds: [...selectedPosts].map((el) => el.value)});
