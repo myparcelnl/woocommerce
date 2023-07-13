@@ -4,6 +4,7 @@
     v-model.trim="model"
     v-test="AdminComponent.TextInput"
     :name="id"
+    class="mypa-max-w-full"
     :class="{
       'form-required': !element.isValid,
     }"
