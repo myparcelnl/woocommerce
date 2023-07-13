@@ -53,7 +53,7 @@ const FADE = 'fade';
 // eslint-disable-next-line max-lines-per-function
 export const initialize = (): void => {
   createPdkAdmin({
-    logLevel: LogLevel.Debug,
+    logLevel: import.meta.env.MODE === 'development' ? LogLevel.Info : LogLevel.Off,
 
     formConfig: {
       fieldDefaults: {
