@@ -1,0 +1,26 @@
+name: 'Test frontend'
+description: 'Run frontend tests'
+
+runs:
+  using: composite
+  steps:
+    - uses: ./.github/actions/install
+
+    - name: 'Run tests'
+      run: |
+        yarn nx run-many \
+          --output-style=static \
+          --runner=cloud \
+          --parallel=1 \
+          --target=test:coverage
+
+    - name: 'Move coverage files'
+      run: |
+        yarn workspaces foreach -pv --exclude '@myparcel/woocommerce' exec bash -c 'if [ -f coverage/clover.xml ]; then mv coverage/clover.xml coverage/$(basename $(pwd)).xml; fi'
+
+        find views -type f -name '*.xml' -exec mv {} coverage/ \;
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: coverage-frontend
+        path: coverage

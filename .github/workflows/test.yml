@@ -1,0 +1,12 @@
+name: '🧪 Run tests'
+
+on:
+  workflow_dispatch:
+
+  repository_dispatch:
+    types: [test-command]
+
+jobs:
+  test:
+    uses: ./.github/workflows/--test.yml
+    secrets: inherit

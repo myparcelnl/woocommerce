@@ -12,13 +12,13 @@ concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  PHP_VERSION: 7.4
-  NODE_VERSION: 18
-
 jobs:
+  test:
+    uses: ./.github/workflows/--test.yml
+    secrets: inherit
+
   release:
-    name: 'Build and publish 🚀'
+    needs: test
     runs-on: ubuntu-22.04
     outputs:
       released: ${{ steps.release.outputs.released }}
@@ -46,7 +46,6 @@ jobs:
           write-summary: true
 
   rebase-develop:
-    name: 'Rebase develop onto main'
     uses: ./.github/workflows/rebase.yml
     secrets: inherit
     needs: release
@@ -57,7 +56,6 @@ jobs:
       force: true
 
   rebase-prs:
-    name: 'Rebase pull requests'
     needs:
       - release
       - rebase-develop

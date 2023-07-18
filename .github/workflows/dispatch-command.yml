@@ -2,7 +2,7 @@ name: '📣 Dispatch command'
 
 on:
   issue_comment:
-    types: [ created ]
+    types: [created]
 
 jobs:
   dispatch:
@@ -14,8 +14,7 @@ jobs:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
 
-      - name: 'Slash Command Dispatch'
-        uses: peter-evans/slash-command-dispatch@v3
+      - uses: peter-evans/slash-command-dispatch@v3
         with:
           token: ${{ steps.credentials.outputs.token }}
           commands: rebase

@@ -1,0 +1,33 @@
+name: 'Test backend'
+description: 'Run backend tests'
+
+runs:
+  using: composite
+  steps:
+    - uses: ./.github/actions/install
+      id: install
+
+    - name: 'Cache coverage'
+      uses: actions/cache@v3
+      id: coverage-cache
+      with:
+        path: coverage
+        key: coverage-${{ hashFiles('**/composer.json', '**/composer.lock', 'src/**/*', 'tests/**/*') }}
+
+    - name: 'Run tests'
+      if: steps.coverage-cache.outputs.cache-hit != 'true'
+      run: |
+        docker run ${{ steps.install.outputs.image }} \
+          composer run test:coverage
+
+    - name: 'Move coverage file'
+      if: steps.coverage-cache.outputs.cache-hit != 'true'
+      run: |
+        docker cp $(docker ps -alq):/app/coverage.xml coverage.xml
+
+        mv coverage.xml coverage/backend.xml
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: coverage-backend
+        path: coverage

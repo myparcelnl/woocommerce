@@ -1,0 +1,21 @@
+name: 'Coverage'
+description: 'Upload coverage files'
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v3
+
+    - uses: actions/download-artifact@v3
+      with:
+        name: coverage-frontend
+        path: coverage
+
+    - uses: actions/download-artifact@v3
+      with:
+        name: coverage-backend
+        path: coverage
+
+    - uses: codecov/codecov-action@v2
+      with:
+        files: coverage/*.xml

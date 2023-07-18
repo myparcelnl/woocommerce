@@ -6,6 +6,10 @@
     "guzzlehttp/guzzle": "^7.5.0",
     "psr/log": "*"
   },
+  "scripts": {
+    "test": "vendor/bin/pest",
+    "test:coverage": "php -dpcov.enabled=1 vendor/bin/pest --coverage-clover=coverage.xml"
+  },
   "require-dev": {
     "pestphp/pest": ">= 1",
     "spatie/pest-plugin-snapshots": ">= 1"
