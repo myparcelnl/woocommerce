@@ -53,8 +53,8 @@
     "@myparcel-eslint/eslint-config-prettier": "^1.2.0",
     "@myparcel-eslint/eslint-config-prettier-typescript": "^1.2.0",
     "@myparcel-eslint/eslint-config-prettier-typescript-vue": "^1.2.0",
-    "@myparcel-pdk/app-builder": "^1.0.0-alpha.9",
-    "@myparcel/semantic-release-config": "^4.2.3",
+    "@myparcel-pdk/app-builder": "^1.0.0-alpha.1",
+    "@myparcel/semantic-release-config": "^5.0.0",
     "@myparcel/semantic-release-wordpress-readme-generator": "^1.1.0",
     "@nrwl/nx-cloud": "^16.0.5",
     "@semantic-release/git": "^10.0.1",
@@ -68,7 +68,7 @@
     "nx": "^16.0.1",
     "prettier": "^2.8.4",
     "semantic-release": "^21.0.1",
-    "typescript": "^4.9.5"
+    "typescript": "^5.1.6"
   },
   "packageManager": "yarn@3.5.1"
 }

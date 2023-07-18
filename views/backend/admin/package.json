@@ -13,7 +13,7 @@
     "test:run": "run ws:test:run \"$(pwd)\" || true"
   },
   "dependencies": {
-    "@myparcel-pdk/admin": "^1.0.0-alpha.64",
+    "@myparcel-pdk/admin": "^1.0.0-alpha.1",
     "@myparcel-pdk/admin-component-tests": "^1.0.0-alpha.1",
     "@myparcel-pdk/admin-preset-dashicons": "^1.0.0-alpha.11",
     "@myparcel-pdk/admin-preset-default": "^1.0.0-alpha.36",
@@ -27,7 +27,7 @@
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/test-utils": "^2.3.2",
     "autoprefixer": "^10.4.14",
-    "happy-dom": "^9.20.3",
+    "happy-dom": "^10.5.1",
     "postcss": "^8.4.21",
     "sass": "^1.60.0",
     "tailwindcss": "^3.2.7",
