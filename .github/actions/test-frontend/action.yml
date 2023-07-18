@@ -4,8 +4,6 @@ description: 'Run frontend tests'
 runs:
   using: composite
   steps:
-    - uses: ./.github/actions/install
-
     - name: 'Run tests'
       shell: bash
       run: |

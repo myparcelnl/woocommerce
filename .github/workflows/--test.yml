@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
+
       - uses: ./.github/actions/install
 
   test-frontend:
@@ -15,6 +16,9 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/install
+
       - uses: ./.github/actions/test-frontend
 
   test-backend:
@@ -22,7 +26,13 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/install
+        id: install
+
       - uses: ./.github/actions/test-backend
+        with:
+          image: ${{ steps.install.outputs.image }}
 
   coverage:
     needs:
@@ -31,4 +41,5 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
+
       - uses: ./.github/actions/test-coverage

@@ -1,12 +1,14 @@
 name: 'Test backend'
 description: 'Run backend tests'
 
+inputs:
+  image:
+    description: 'The Docker image to run the tests in'
+    required: true
+
 runs:
   using: composite
   steps:
-    - uses: ./.github/actions/install
-      id: install
-
     - name: 'Cache coverage'
       uses: actions/cache@v3
       id: coverage-cache
@@ -20,7 +22,7 @@ runs:
       run: |
         docker run \
           --volume $PWD:/app \
-          ${{ steps.install.outputs.image }} \
+          ${{ inputs.image }} \
           php -dpcov.enabled=1 \
           vendor/bin/pest --coverage-clover=coverage.xml
 
