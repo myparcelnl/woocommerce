@@ -23,7 +23,7 @@ runs:
 
         find views -type f -name '*.xml' -exec mv {} coverage/ \;
 
-    - uses: actions/upload-artifact@v2
+    - uses: codecov/codecov-action@v3
       with:
-        name: coverage-frontend
-        path: coverage
+        flags: frontend
+        files: coverage/*.xml

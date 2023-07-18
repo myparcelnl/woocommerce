@@ -30,13 +30,12 @@ runs:
       if: steps.coverage-cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        mkdir -p coverage
         docker cp $(docker ps -alq):/app/coverage.xml coverage/backend.xml
 
         # Strip the /app/ prefix from the coverage paths before uploading.
         sed -i 's/\/app\///g' coverage/backend.xml
 
-    - uses: actions/upload-artifact@v2
+    - uses: codecov/codecov-action@v3
       with:
-        name: coverage-backend
-        path: coverage
+        flags: backend
+        files: coverage/*.xml
