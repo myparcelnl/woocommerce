@@ -22,8 +22,8 @@ use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
 use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
 use MyParcelNL\Sdk\src\Support\Str;
+use MyParcelNL\WooCommerce\Adapter\WcAddressAdapter;
 use MyParcelNL\WooCommerce\Facade\Filter;
-use MyParcelNL\WooCommerce\Factory\WcAddressAdapter;
 use stdClass;
 use Throwable;
 use WC_DateTime;
@@ -50,7 +50,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     ];
 
     /**
-     * @var \MyParcelNL\WooCommerce\Factory\WcAddressAdapter
+     * @var \MyParcelNL\WooCommerce\Adapter\WcAddressAdapter
      */
     private $addressAdapter;
 
@@ -68,7 +68,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      * @param  \MyParcelNL\Pdk\Storage\Contract\StorageInterface                $storage
      * @param  \MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface $productRepository
      * @param  \MyParcelNL\Pdk\Base\Service\CountryService                      $countryService
-     * @param  \MyParcelNL\WooCommerce\Factory\WcAddressAdapter                 $addressAdapter
+     * @param  \MyParcelNL\WooCommerce\Adapter\WcAddressAdapter                 $addressAdapter
      */
     public function __construct(
         StorageInterface              $storage,

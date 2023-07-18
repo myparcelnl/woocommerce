@@ -11,13 +11,13 @@ use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface;
 use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
-use MyParcelNL\WooCommerce\Factory\WcAddressAdapter;
+use MyParcelNL\WooCommerce\Adapter\WcAddressAdapter;
 use WC_Cart;
 
 class WcCartRepository extends AbstractPdkCartRepository
 {
     /**
-     * @var \MyParcelNL\WooCommerce\Factory\WcAddressAdapter
+     * @var \MyParcelNL\WooCommerce\Adapter\WcAddressAdapter
      */
     private $addressAdapter;
 
@@ -35,7 +35,7 @@ class WcCartRepository extends AbstractPdkCartRepository
      * @param  \MyParcelNL\Pdk\Storage\Contract\StorageInterface                $storage
      * @param  \MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface $productRepository
      * @param  \MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface           $currencyService
-     * @param  \MyParcelNL\WooCommerce\Factory\WcAddressAdapter                 $addressAdapter
+     * @param  \MyParcelNL\WooCommerce\Adapter\WcAddressAdapter                 $addressAdapter
      */
     public function __construct(
         StorageInterface              $storage,

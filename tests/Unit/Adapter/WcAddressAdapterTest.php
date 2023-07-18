@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-namespace MyParcelNL\WooCommerce\Factory;
+namespace MyParcelNL\WooCommerce\Adapter;
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
