@@ -16,12 +16,14 @@ runs:
 
     - name: 'Run tests'
       if: steps.coverage-cache.outputs.cache-hit != 'true'
+      shell: bash
       run: |
         docker run ${{ steps.install.outputs.image }} \
           composer run test:coverage
 
     - name: 'Move coverage file'
       if: steps.coverage-cache.outputs.cache-hit != 'true'
+      shell: bash
       run: |
         docker cp $(docker ps -alq):/app/coverage.xml coverage.xml
 

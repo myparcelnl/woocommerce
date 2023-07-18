@@ -7,6 +7,7 @@ runs:
     - uses: ./.github/actions/install
 
     - name: 'Run tests'
+      shell: bash
       run: |
         yarn nx run-many \
           --output-style=static \
@@ -15,6 +16,7 @@ runs:
           --target=test:coverage
 
     - name: 'Move coverage files'
+      shell: bash
       run: |
         yarn workspaces foreach -pv --exclude '@myparcel/woocommerce' exec bash -c 'if [ -f coverage/clover.xml ]; then mv coverage/clover.xml coverage/$(basename $(pwd)).xml; fi'
 
