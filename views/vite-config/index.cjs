@@ -19,6 +19,7 @@ const createDefaultConfig = (env) => {
     test: {
       passWithNoTests: true,
       coverage: {
+        all: true,
         enabled: false,
         reporter: ['text', 'clover'],
       },
