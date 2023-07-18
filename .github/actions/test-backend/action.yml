@@ -18,9 +18,11 @@ runs:
       if: steps.coverage-cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        docker run ${{ steps.install.outputs.image }} \
+        docker run \
           --volume $PWD:/app \
-          composer run test:coverage
+          ${{ steps.install.outputs.image }} \
+          php -dpcov.enabled=1 \
+          vendor/bin/pest --coverage-clover=coverage.xml
 
     - name: 'Move coverage file'
       if: steps.coverage-cache.outputs.cache-hit != 'true'
