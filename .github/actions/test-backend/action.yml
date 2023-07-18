@@ -30,6 +30,7 @@ runs:
       if: steps.coverage-cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
+        mkdir -p coverage
         docker cp $(docker ps -alq):/app/coverage.xml coverage/backend.xml
 
         # Strip the /app/ prefix from the coverage paths before uploading.
