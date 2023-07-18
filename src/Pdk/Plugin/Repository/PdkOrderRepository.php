@@ -14,6 +14,7 @@ use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
+use MyParcelNL\Pdk\Fulfilment\Model\OrderNote;
 use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
 use MyParcelNL\Pdk\Settings\Model\LabelSettings;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
@@ -23,8 +24,9 @@ use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
 use MyParcelNL\Sdk\src\Support\Str;
 use MyParcelNL\WooCommerce\Facade\Filter;
 use MyParcelNL\WooCommerce\Factory\WcAddressAdapter;
+use stdClass;
 use Throwable;
-use WC_Data;
+use WC_DateTime;
 use WC_Order;
 use WC_Order_Item_Product;
 use WC_Product;
@@ -190,8 +192,10 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
 
         $orderData = [
             'externalIdentifier'    => $order->get_id(),
-            'shippingAddress'       => $shippingAddress,
             'billingAddress'        => $this->addressAdapter->fromWcOrder($order, Pdk::get('wcAddressTypeBilling')),
+            'customsDeclaration'    => $this->countryService->isRow($shippingAddress['cc'] ?? null)
+                ? $this->createCustomsDeclaration($order, $items)
+                : null,
             'deliveryOptions'       => $this->getDeliveryOptions(
                 $savedOrderData['deliveryOptions'] ?? [],
                 $order,
@@ -205,11 +209,10 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                         'product'  => $item['pdkProduct'],
                     ]);
                 })
-                ->toArray(),
-            'customsDeclaration'    => $this->countryService->isRow($shippingAddress['cc'] ?? null)
-                ? $this->createCustomsDeclaration($order, $items)
-                : null,
+                ->all(),
+            'notes'                 => $this->getNotes($order),
             'physicalProperties'    => $this->getPhysicalProperties($items),
+            'shippingAddress'       => $shippingAddress,
             'orderPrice'            => $order->get_total(),
             'orderPriceAfterVat'    => (float) $order->get_total() + (float) $order->get_cart_tax(),
             'orderVat'              => $order->get_total_tax(),
@@ -217,10 +220,24 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'shipmentPriceAfterVat' => (float) $order->get_shipping_total(),
             'shipments'             => $this->getShipments($order),
             'shipmentVat'           => (float) $order->get_shipping_tax(),
-            'orderDate'             => $this->getOrderDate($order),
+            'orderDate'             => $this->getDate($order->get_date_created()),
         ];
 
         return new PdkOrder($orderData + $savedOrderData);
+    }
+
+    /**
+     * @param  null|\WC_DateTime $date
+     *
+     * @return null|string
+     */
+    private function getDate(?WC_DateTime $date): ?string
+    {
+        if (! $date) {
+            return null;
+        }
+
+        return $date->date('Y-m-d H:i:s');
     }
 
     /**
@@ -290,13 +307,42 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     /**
      * @param  \WC_Order $order
      *
-     * @return null|string
+     * @return void
      */
-    private function getOrderDate(WC_Order $order): ?string
+    private function getNotes(WC_Order $order): array
     {
-        $wcOrderCreated = $order->get_date_created();
+        return $this->retrieve(sprintf("notes_%s", $order->get_id()), function () use ($order) {
+            $customerNote = $order->get_customer_note();
+            $notes        = wc_get_order_notes(['order_id' => $order->get_id()]);
 
-        return $wcOrderCreated ? $wcOrderCreated->format('Y-m-d H:i:s') : null;
+            if ($customerNote) {
+                $notes[] = (object) [
+                    'id'       => 'customer_note',
+                    'content'  => $customerNote,
+                    'added_by' => OrderNote::AUTHOR_CUSTOMER,
+                ];
+            }
+
+            return (new Collection($notes))
+                ->filter(static function (stdClass $note) {
+                    return 'system' !== $note->added_by;
+                })
+                ->map(function (stdClass $note) use ($order) {
+                    $noteCreatedDate = $this->getDate($note->date_created ?? $order->get_date_created());
+
+                    return [
+                        'externalIdentifier' => $note->id,
+                        'author'             => 'admin' === $note->added_by
+                            ? OrderNote::AUTHOR_WEBSHOP
+                            : OrderNote::AUTHOR_CUSTOMER,
+                        'note'               => $note->content ?? null,
+                        'createdAt'          => $noteCreatedDate,
+                        'updatedAt'          => $noteCreatedDate,
+                    ];
+                })
+                ->values()
+                ->all();
+        });
     }
 
     /**
@@ -343,9 +389,9 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     private function getWcOrder($input): WC_Order
     {
-        if ($input instanceof WC_Data) {
+        if (method_exists($input, 'get_id')) {
             $id = $input->get_id();
-        } elseif ($input instanceof WP_Post) {
+        } elseif (is_object($input) && isset($input->ID)) {
             $id = $input->ID;
         } else {
             $id = $input;

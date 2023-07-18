@@ -68,7 +68,7 @@ class WcPdkProductRepository extends AbstractPdkPdkProductRepository
         $product = $this->getWcProduct($identifier);
 
         return $this->retrieve(sprintf('product_settings_%s', $product->get_id()), function () use ($product) {
-            $meta = get_post_meta($product->get_id(), Pdk::get('metaKeyProductSettings'), true);
+            $meta = $product->get_meta(Pdk::get('metaKeyProductSettings'));
 
             return new ProductSettings($meta ?: []);
         });
