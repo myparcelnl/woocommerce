@@ -16,14 +16,15 @@ runs:
     - name: 'Move coverage files'
       shell: bash
       run: |
-        mkdir -p coverage
-
         yarn workspaces foreach -pv --exclude '@myparcel/woocommerce' exec \
           bash -c 'if [ -f coverage/clover.xml ]; then mv coverage/clover.xml coverage/$(basename $(pwd)).xml; fi'
 
-        find views -type f -name '*.xml' -exec mv {} coverage/ \;
+    - uses: codecov/codecov-action@v3
+      with:
+        flags: unit,frontend,admin
+        files: views/backend/**/coverage/*.xml
 
     - uses: codecov/codecov-action@v3
       with:
-        flags: frontend
-        files: coverage/*.xml
+        flags: unit,frontend,checkout
+        files: views/frontend/**/coverage/*.xml

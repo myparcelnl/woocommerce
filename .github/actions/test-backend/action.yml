@@ -38,5 +38,5 @@ runs:
 
     - uses: codecov/codecov-action@v3
       with:
-        flags: backend
+        flags: unit,backend
         files: coverage/*.xml
