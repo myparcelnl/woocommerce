@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "56b41cb0490fe04f38681865b094253c",
+    "content-hash": "490919542b28edb851ce1249ffd0d680",
     "packages": [
         {
             "name": "doctrine/deprecations",
@@ -510,16 +510,16 @@
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "2.8.0",
+            "version": "2.11.1",
             "source": {
                 "type": "git",
                 "url": "git@github.com:myparcelnl/pdk.git",
-                "reference": "4b3b44e7b8f5af4e8bbd225764ad65ca9c05adb9"
+                "reference": "c95d2ba356edef192c03d90f6777c76c681f3524"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/4b3b44e7b8f5af4e8bbd225764ad65ca9c05adb9",
-                "reference": "4b3b44e7b8f5af4e8bbd225764ad65ca9c05adb9",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/c95d2ba356edef192c03d90f6777c76c681f3524",
+                "reference": "c95d2ba356edef192c03d90f6777c76c681f3524",
                 "shasum": ""
             },
             "require": {
@@ -557,20 +557,20 @@
             ],
             "description": "MyParcel Plugin Development Kit",
             "homepage": "https://myparcel.nl",
-            "time": "2023-07-10T07:54:19+00:00"
+            "time": "2023-07-18T12:30:08+00:00"
         },
         {
             "name": "myparcelnl/sdk",
-            "version": "7.7.6",
+            "version": "7.8.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:myparcelnl/sdk.git",
-                "reference": "9c1a3da8891df16efe559aaf94a467d2f254d89b"
+                "reference": "3ebba3977fdb87e0b804d57350f50919974fb5ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/9c1a3da8891df16efe559aaf94a467d2f254d89b",
-                "reference": "9c1a3da8891df16efe559aaf94a467d2f254d89b",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/3ebba3977fdb87e0b804d57350f50919974fb5ef",
+                "reference": "3ebba3977fdb87e0b804d57350f50919974fb5ef",
                 "shasum": ""
             },
             "require": {
@@ -617,7 +617,7 @@
                 "myparcel",
                 "postnl"
             ],
-            "time": "2023-07-10T11:17:46+00:00"
+            "time": "2023-07-17T13:39:43+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -1803,16 +1803,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "2.15.2",
+            "version": "2.15.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "aac9304c5ed61bf7b1b7a6064bf9806ab842ce73"
+                "reference": "c83e88a30524f9360b11f585f71e6b17313b7187"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/aac9304c5ed61bf7b1b7a6064bf9806ab842ce73",
-                "reference": "aac9304c5ed61bf7b1b7a6064bf9806ab842ce73",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/c83e88a30524f9360b11f585f71e6b17313b7187",
+                "reference": "c83e88a30524f9360b11f585f71e6b17313b7187",
                 "shasum": ""
             },
             "require": {
@@ -1862,7 +1862,7 @@
             ],
             "support": {
                 "issues": "https://github.com/filp/whoops/issues",
-                "source": "https://github.com/filp/whoops/tree/2.15.2"
+                "source": "https://github.com/filp/whoops/tree/2.15.3"
             },
             "funding": [
                 {
@@ -1870,7 +1870,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-04-12T12:00:00+00:00"
+            "time": "2023-07-13T12:00:00+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2076,23 +2076,23 @@
         },
         {
             "name": "pestphp/pest",
-            "version": "v1.23.0",
+            "version": "v1.23.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pestphp/pest.git",
-                "reference": "061c9de301531e500a8157b476a5899361e60068"
+                "reference": "5c56ad8772b89611c72a07e23f6e30aa29dc677a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pestphp/pest/zipball/061c9de301531e500a8157b476a5899361e60068",
-                "reference": "061c9de301531e500a8157b476a5899361e60068",
+                "url": "https://api.github.com/repos/pestphp/pest/zipball/5c56ad8772b89611c72a07e23f6e30aa29dc677a",
+                "reference": "5c56ad8772b89611c72a07e23f6e30aa29dc677a",
                 "shasum": ""
             },
             "require": {
                 "nunomaduro/collision": "^5.11.0|^6.4.0",
                 "pestphp/pest-plugin": "^1.1.0",
                 "php": "^7.3 || ^8.0",
-                "phpunit/phpunit": "^9.6.7"
+                "phpunit/phpunit": "^9.6.10"
             },
             "require-dev": {
                 "illuminate/console": "^8.83.27",
@@ -2153,7 +2153,7 @@
             ],
             "support": {
                 "issues": "https://github.com/pestphp/pest/issues",
-                "source": "https://github.com/pestphp/pest/tree/v1.23.0"
+                "source": "https://github.com/pestphp/pest/tree/v1.23.1"
             },
             "funding": [
                 {
@@ -2165,7 +2165,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-04-19T20:10:22+00:00"
+            "time": "2023-07-12T19:42:47+00:00"
         },
         {
             "name": "pestphp/pest-plugin",
