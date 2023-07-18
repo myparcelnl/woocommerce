@@ -4,6 +4,7 @@ vendor/
 lib/
 dist/
 coverage/
+coverage.xml
 
 docker-compose.override.yml
 
