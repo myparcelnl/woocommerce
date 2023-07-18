@@ -5,13 +5,13 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Tests\Unit\Pdk\Plugin\Repository;
 
-use DateTimeImmutable;
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
 use MyParcelNL\WooCommerce\Pdk\Product\Repository\WcPdkProductRepository;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
+use WC_DateTime;
 use WC_Order;
 use WC_Order_Item;
 use WC_Order_Item_Product;
@@ -43,7 +43,7 @@ function getOrderDefaults(): array
         'billing_postcode'    => '2132 JE',
         'billing_state'       => '',
         'customer_note'       => 'This is a test order',
-        'date_created'        => new DateTimeImmutable('2021-01-01 18:03:41'),
+        'date_created'        => new WC_DateTime('2021-01-01 18:03:41'),
         'shipping_address_1'  => 'Antareslaan 31',
         'shipping_address_2'  => '',
         'shipping_city'       => 'Hoofddorp',
@@ -131,7 +131,7 @@ it('creates a valid pdk order', function (array $input) {
     $wcOrder  = new WC_Order($input);
     $pdkOrder = $orderRepository->get($wcOrder);
 
-    assertMatchesJsonSnapshot(json_encode($pdkOrder->toArray(), JSON_PRETTY_PRINT));
+    assertMatchesJsonSnapshot(json_encode($pdkOrder->toArrayWithoutNull(), JSON_PRETTY_PRINT));
 })->with([
     'simple order' => function () {
         return getOrderDefaults();

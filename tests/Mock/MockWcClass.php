@@ -41,6 +41,14 @@ abstract class MockWcClass
     }
 
     /**
+     * @return null|mixed|string
+     */
+    public function get_id()
+    {
+        return $this->attributes['id'] ?? null;
+    }
+
+    /**
      * @param  mixed $key
      * @param  mixed $single
      * @param  mixed $context
