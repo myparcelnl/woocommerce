@@ -18,7 +18,10 @@ runs:
     - name: 'Move coverage files'
       shell: bash
       run: |
-        yarn workspaces foreach -pv --exclude '@myparcel/woocommerce' exec bash -c 'if [ -f coverage/clover.xml ]; then mv coverage/clover.xml coverage/$(basename $(pwd)).xml; fi'
+        mkdir -p coverage
+
+        yarn workspaces foreach -pv --exclude '@myparcel/woocommerce' exec \
+          bash -c 'if [ -f coverage/clover.xml ]; then mv coverage/clover.xml coverage/$(basename $(pwd)).xml; fi'
 
         find views -type f -name '*.xml' -exec mv {} coverage/ \;
 
