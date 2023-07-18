@@ -20,6 +20,39 @@ If you do choose to install this version, we would love to hear your feedback. P
 [releases]: https://github.com/myparcelnl/woocommerce/releases
 [support@myparcel.nl]: mailto:support@myparcel.nl
 
+## [5.0.0-alpha.16](https://github.com/myparcelnl/woocommerce/compare/v5.0.0-alpha.15...v5.0.0-alpha.16) (2023-07-18)
+
+
+### :bug: Bug Fixes
+
+* **admin:** fix input widths exceeding containers ([e3381db](https://github.com/myparcelnl/woocommerce/commit/e3381dbaa2713030ff1236fd1a18e4f3800dae95))
+* **admin:** use different log level in production mode ([d2538f0](https://github.com/myparcelnl/woocommerce/commit/d2538f0d81ef74354d60471876c7918420a35ad7))
+* **hpos:** fix order grid bulk actions not working ([d1eef35](https://github.com/myparcelnl/woocommerce/commit/d1eef35bca6681736d2b349ef37e4371378378ae))
+* improve prerequisites logic ([60b65f7](https://github.com/myparcelnl/woocommerce/commit/60b65f7780c4b39c38cf6a2756f3258b5fb506ab))
+* **meta:** fix settings link not showing on plugins page ([1ea10bc](https://github.com/myparcelnl/woocommerce/commit/1ea10bca4d71c81ef5fbaefa81a25273a778e393))
+
+
+### :sparkles: New Features
+
+* **order:** get order notes ([a009cf7](https://github.com/myparcelnl/woocommerce/commit/a009cf7abbbcff47d5977507c9070f8da3945789))
+
+## ⚠ Warning ⚠
+
+🚧 This version is **not ready for production use**. 🚧
+
+This is the alpha release of the next major version of the MyParcel WooCommerce plugin. We've rewritten the plugin from scratch, using the [frontend] and [backend] of the MyParcel PDK (Plugin Development Kit).
+
+For a safer experience, we recommend you to use the stable or release candidate version of the plugin. You can find the stable version in the [WordPress plugin directory]. The release candidate versions can be found in the [releases] section of this repository. They are versioned with a `-rc` suffix.
+
+If you do choose to install this version, we would love to hear your feedback. Please report any issues you encounter using the [Bug report for v5.0.0-alpha.x form] or by sending an email to [support@myparcel.nl]
+
+[Bug report for v5.0.0-alpha.x form]: https://github.com/myparcelnl/woocommerce/issues/new?labels=alpha&template=ZZ-BUG-REPORT-v5.yml
+[WordPress plugin directory]: https://wordpress.org/plugins/woocommerce-myparcel/
+[backend]: https://github.com/myparcelnl/pdk
+[frontend]: https://github.com/myparcelnl/js-pdk
+[releases]: https://github.com/myparcelnl/woocommerce/releases
+[support@myparcel.nl]: mailto:support@myparcel.nl
+
 ## [5.0.0-alpha.15](https://github.com/myparcelnl/woocommerce/compare/v5.0.0-alpha.14...v5.0.0-alpha.15) (2023-07-11)
 
 
