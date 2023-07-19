@@ -15,10 +15,10 @@ use MyParcelNL\Pdk\Settings\Model\Settings;
 use MyParcelNL\Pdk\Shipment\Model\DropOffDay;
 use MyParcelNL\Sdk\src\Support\Str;
 
-const PREFIX_FLAT_RATE = 'flat_rate:';
 final class SettingsMigration extends AbstractPdkMigration
 {
     private const OLD_CARRIERS            = ['postnl', 'dhlforyou', 'dhlparcelconnect', 'dhleuroplus'];
+    private const PREFIX_FLAT_RATE        = 'flat_rate:';
     private const TRANSFORM_CAST_BOOL     = 'bool';
     private const TRANSFORM_CAST_CENTS    = 'cents';
     private const TRANSFORM_CAST_FLOAT    = 'float';
@@ -347,9 +347,9 @@ final class SettingsMigration extends AbstractPdkMigration
                         $method = sprintf('%s:%s', $parts[0], $parts[1]);
                     }
 
-                    if ($parts[1] > 10 && Str::startsWith($item, PREFIX_FLAT_RATE)) {
+                    if ($parts[1] > 10 && Str::startsWith($item, self::PREFIX_FLAT_RATE)) {
                         $carry[] = $method;
-                        $method  = sprintf('%s%s', PREFIX_FLAT_RATE, $parts[1][0]);
+                        $method  = sprintf('%s%s', self::PREFIX_FLAT_RATE, $parts[1][0]);
                     }
 
                     $carry[] = $method;
