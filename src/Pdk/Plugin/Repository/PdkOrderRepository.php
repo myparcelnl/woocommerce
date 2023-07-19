@@ -332,9 +332,9 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
 
                     return [
                         'externalIdentifier' => $note->id,
-                        'author'             => 'admin' === $note->added_by
-                            ? OrderNote::AUTHOR_WEBSHOP
-                            : OrderNote::AUTHOR_CUSTOMER,
+                        'author'             => OrderNote::AUTHOR_CUSTOMER === $note->added_by
+                            ? OrderNote::AUTHOR_CUSTOMER
+                            : OrderNote::AUTHOR_WEBSHOP,
                         'note'               => $note->content ?? null,
                         'createdAt'          => $noteCreatedDate,
                         'updatedAt'          => $noteCreatedDate,
