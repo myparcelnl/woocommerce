@@ -3,12 +3,11 @@
     :id="id"
     ref="selectElement"
     v-test="AdminComponent.SelectInput"
-    :name="id"
-    :disabled="element.isDisabled || element.isSuspended" />
+    :name="id" />
 </template>
 
 <script lang="ts" setup>
-import {onBeforeUnmount, onMounted, ref, toRaw, watchEffect} from 'vue';
+import {onBeforeUnmount, onMounted, ref, watchEffect} from 'vue';
 import {get} from '@vueuse/core';
 import {type ElementInstance, type OptionsProp, useSelectInputContext, AdminComponent} from '@myparcel-pdk/admin';
 import {type OneOrMore} from '@myparcel/ts-utils';
@@ -24,6 +23,10 @@ const $select = ref<JQuery | null>(null);
 
 watchEffect(() => {
   $select.value?.attr('disabled', get(props.element.isDisabled) || get(props.element.isSuspended));
+});
+
+watchEffect(() => {
+  $select.value?.attr('readonly', get(props.element.isReadOnly));
 });
 
 watchEffect(() => {
@@ -46,7 +49,7 @@ onMounted(() => {
         disabled: option.disabled,
       })),
     })
-    .val(toRaw(props.modelValue))
+    .val(props.modelValue ?? get(props.element.ref))
     .trigger('change')
     .on('change', () => {
       emit('update:modelValue', get($select)?.val() ?? []);
