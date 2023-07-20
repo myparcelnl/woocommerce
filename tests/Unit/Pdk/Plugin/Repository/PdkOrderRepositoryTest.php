@@ -8,7 +8,7 @@ namespace MyParcelNL\WooCommerce\Tests\Unit\Pdk\Plugin\Repository;
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
+use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\WcPdkOrderRepository;
 use MyParcelNL\WooCommerce\Pdk\Product\Repository\WcPdkProductRepository;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_DateTime;
@@ -23,7 +23,7 @@ use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 usesShared(
     new UsesMockWcPdkInstance([
         PdkProductRepositoryInterface::class => autowire(WcPdkProductRepository::class),
-        PdkOrderRepositoryInterface::class   => autowire(PdkOrderRepository::class),
+        PdkOrderRepositoryInterface::class   => autowire(WcPdkOrderRepository::class),
     ])
 );
 

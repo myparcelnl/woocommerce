@@ -5,11 +5,28 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Service;
 
 use MyParcelNL\Pdk\Account\Platform;
+use MyParcelNL\Pdk\App\Installer\Contract\MigrationServiceInterface;
 use MyParcelNL\Pdk\App\Installer\Service\InstallerService;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Settings\Contract\SettingsRepositoryInterface;
+use MyParcelNL\WooCommerce\Pdk\Storage\WpOptionsStorage;
 
 final class WpInstallerService extends InstallerService
 {
+    /**
+     * @var \MyParcelNL\WooCommerce\Pdk\Storage\WpOptionsStorage
+     */
+    private $wpOptionsStorage;
+
+    public function __construct(
+        SettingsRepositoryInterface $settingsRepository,
+        MigrationServiceInterface   $migrationService,
+        WpOptionsStorage            $wpOptionsStorage
+    ) {
+        parent::__construct($settingsRepository, $migrationService);
+        $this->wpOptionsStorage = $wpOptionsStorage;
+    }
+
     /**
      * @return null|string
      */
@@ -31,7 +48,7 @@ final class WpInstallerService extends InstallerService
             return null;
         }
 
-        $legacyVersion = get_option($legacyKey, null);
+        $legacyVersion = $this->wpOptionsStorage->get($legacyKey);
 
         return $legacyVersion ? (string) $legacyVersion : null;
     }

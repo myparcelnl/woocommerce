@@ -90,7 +90,7 @@ final class ProductSettingsMigration extends AbstractPdkMigration
                 return $carry;
             }, []);
 
-            $product = $productRepository->getProduct($wcProduct->get_id());
+            $product = $productRepository->get($wcProduct);
             $changed = false;
 
             foreach (self::OPTION_TRANSLATIONS as $oldKey => $setting) {

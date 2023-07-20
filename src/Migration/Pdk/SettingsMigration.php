@@ -89,7 +89,7 @@ final class SettingsMigration extends AbstractPdkMigration
 
         $settings = new Settings($newSettings);
 
-        $settingsRepository->storeAllSettings($settings);
+        $settingsRepository->storeSettings($settings);
     }
 
     /**

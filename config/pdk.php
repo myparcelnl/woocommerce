@@ -20,6 +20,7 @@ use MyParcelNL\Pdk\App\Tax\Contract\TaxServiceInterface;
 use MyParcelNL\Pdk\App\Webhook\Contract\PdkWebhookServiceInterface;
 use MyParcelNL\Pdk\App\Webhook\Contract\PdkWebhooksRepositoryInterface;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
+use MyParcelNL\Pdk\Base\Contract\LoggerInterface;
 use MyParcelNL\Pdk\Base\Contract\WeightServiceInterface;
 use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Facade\Pdk as PdkFacade;
@@ -30,6 +31,7 @@ use MyParcelNL\Pdk\Frontend\Contract\ViewServiceInterface;
 use MyParcelNL\Pdk\Language\Contract\LanguageServiceInterface;
 use MyParcelNL\Pdk\Settings\Contract\SettingsRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
+use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
 use MyParcelNL\WooCommerce\Contract\WooCommerceServiceInterface;
 use MyParcelNL\WooCommerce\Contract\WordPressServiceInterface;
 use MyParcelNL\WooCommerce\Facade\WooCommerce;
@@ -41,8 +43,8 @@ use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcFrontendEndpointService;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcWebhookService;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Installer\WcMigrationService;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkAccountRepository;
-use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\WcCartRepository;
+use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\WcPdkOrderRepository;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Service\WcDeliveryOptionsService;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Service\WcStatusService;
 use MyParcelNL\WooCommerce\Pdk\Plugin\WcShippingMethodRepository;
@@ -52,14 +54,14 @@ use MyParcelNL\WooCommerce\Pdk\Service\WcFrontendRenderService;
 use MyParcelNL\WooCommerce\Pdk\Service\WcTaxService;
 use MyParcelNL\WooCommerce\Pdk\Service\WcViewService;
 use MyParcelNL\WooCommerce\Pdk\Service\WcWeightService;
-use MyParcelNL\WooCommerce\Pdk\Settings\Repository\PdkSettingsRepository;
+use MyParcelNL\WooCommerce\Pdk\Settings\Repository\WcPdkSettingsRepository;
+use MyParcelNL\WooCommerce\Pdk\Storage\WpOptionsStorage;
 use MyParcelNL\WooCommerce\Pdk\Webhook\WcWebhooksRepository;
 use MyParcelNL\WooCommerce\Service\WooCommerceService;
 use MyParcelNL\WooCommerce\Service\WordPressService;
 use MyParcelNL\WooCommerce\Service\WpCronService;
 use MyParcelNL\WooCommerce\Service\WpInstallerService;
 use MyParcelNL\WooCommerce\Service\WpScriptService;
-use Psr\Log\LoggerInterface;
 use function DI\autowire;
 use function DI\factory;
 use function DI\value;
@@ -144,10 +146,10 @@ return [
 
     PdkAccountRepositoryInterface::class        => autowire(PdkAccountRepository::class),
     PdkCartRepositoryInterface::class           => autowire(WcCartRepository::class),
-    PdkOrderRepositoryInterface::class          => autowire(PdkOrderRepository::class),
+    PdkOrderRepositoryInterface::class          => autowire(WcPdkOrderRepository::class),
     PdkProductRepositoryInterface::class        => autowire(WcPdkProductRepository::class),
     PdkShippingMethodRepositoryInterface::class => autowire(WcShippingMethodRepository::class),
-    SettingsRepositoryInterface::class          => autowire(PdkSettingsRepository::class),
+    SettingsRepositoryInterface::class          => autowire(WcPdkSettingsRepository::class),
 
     /**
      * Services
@@ -181,6 +183,7 @@ return [
      * Miscellaneous
      */
 
+    StorageInterface::class                => autowire(WpOptionsStorage::class),
     ClientAdapterInterface::class          => autowire(Guzzle7ClientAdapter::class),
     DeliveryOptionsServiceInterface::class => autowire(WcDeliveryOptionsService::class),
     LoggerInterface::class                 => autowire(WcLogger::class),
