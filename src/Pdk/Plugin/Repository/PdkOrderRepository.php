@@ -124,10 +124,8 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
 
         $this->addBarcodesToOrderNote($wcOrder, $newOrder);
 
-        $wcOrder->update_meta_data(Pdk::get('metaKeyOrderData'), $newOrder->toStorableArray());
-        $wcOrder->update_meta_data(Pdk::get('metaKeyOrderShipments'), $newOrder->shipments->toStorableArray());
-
-        $wcOrder->save_meta_data();
+	    update_post_meta($wcOrder->get_id(), Pdk::get('metaKeyOrderData'), $newOrder->toStorableArray());
+	    update_post_meta($wcOrder->get_id(), Pdk::get('metaKeyOrderShipments'), $newOrder->shipments->toStorableArray());
 
         return $this->save($newOrder->externalIdentifier, $newOrder);
     }
