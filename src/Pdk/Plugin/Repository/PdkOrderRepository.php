@@ -36,10 +36,6 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
 {
     private const DESCRIPTION_CUSTOMER_NOTE = '[CUSTOMER_NOTE]';
     private const DESCRIPTION_ORDER_NR      = '[ORDER_NR]';
-    private const DESCRIPTION_PRODUCT_ID    = '[PRODUCT_ID]';
-    private const DESCRIPTION_PRODUCT_NAME  = '[PRODUCT_NAME]';
-    private const DESCRIPTION_PRODUCT_QTY   = '[PRODUCT_QTY]';
-    private const DESCRIPTION_PRODUCT_SKU   = '[PRODUCT_SKU]';
     private const DESCRIPTION_PLACEHOLDERS  = [
         self::DESCRIPTION_CUSTOMER_NOTE,
         self::DESCRIPTION_ORDER_NR,
@@ -48,6 +44,10 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         self::DESCRIPTION_PRODUCT_QTY,
         self::DESCRIPTION_PRODUCT_SKU,
     ];
+    private const DESCRIPTION_PRODUCT_ID    = '[PRODUCT_ID]';
+    private const DESCRIPTION_PRODUCT_NAME  = '[PRODUCT_NAME]';
+    private const DESCRIPTION_PRODUCT_QTY   = '[PRODUCT_QTY]';
+    private const DESCRIPTION_PRODUCT_SKU   = '[PRODUCT_SKU]';
 
     /**
      * @var \MyParcelNL\WooCommerce\Adapter\WcAddressAdapter
@@ -124,8 +124,12 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
 
         $this->addBarcodesToOrderNote($wcOrder, $newOrder);
 
-	    update_post_meta($wcOrder->get_id(), Pdk::get('metaKeyOrderData'), $newOrder->toStorableArray());
-	    update_post_meta($wcOrder->get_id(), Pdk::get('metaKeyOrderShipments'), $newOrder->shipments->toStorableArray());
+        update_post_meta($wcOrder->get_id(), Pdk::get('metaKeyOrderData'), $newOrder->toStorableArray());
+        update_post_meta(
+            $wcOrder->get_id(),
+            Pdk::get('metaKeyOrderShipments'),
+            $newOrder->shipments->toStorableArray()
+        );
 
         return $this->save($newOrder->externalIdentifier, $newOrder);
     }
@@ -312,6 +316,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         return $this->retrieve(sprintf("notes_%s", $order->get_id()), function () use ($order) {
             $customerNote = $order->get_customer_note();
             $notes        = wc_get_order_notes(['order_id' => $order->get_id()]);
+            $orderData    = $order->get_meta(Pdk::get('metaKeyOrderData'));
 
             if ($customerNote) {
                 $notes[] = (object) [
@@ -325,10 +330,19 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                 ->filter(static function (stdClass $note) {
                     return 'system' !== $note->added_by;
                 })
-                ->map(function (stdClass $note) use ($order) {
+                ->map(function (stdClass $note) use ($order, $orderData) {
                     $noteCreatedDate = $this->getDate($note->date_created ?? $order->get_date_created());
+                    $apiIdentifier   = null;
+
+                    if ($orderData && $orderData['notes']) {
+                        $matchingNote  =
+                            array_search($note->id, array_column($orderData['notes'], 'externalIdentifier'));
+                        $apiIdentifier =
+                            false !== $matchingNote ? $orderData['notes'][$matchingNote]['apiIdentifier'] : null;
+                    }
 
                     return [
+                        'apiIdentifier'      => $apiIdentifier,
                         'externalIdentifier' => $note->id,
                         'author'             => OrderNote::AUTHOR_CUSTOMER === $note->added_by
                             ? OrderNote::AUTHOR_CUSTOMER
@@ -373,11 +387,14 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     private function getShipments(WC_Order $order): ShipmentCollection
     {
-        return $this->retrieve("wc_order_shipments_{$order->get_id()}", function () use ($order): ShipmentCollection {
-            $shipments = $order->get_meta(Pdk::get('metaKeyOrderShipments')) ?: null;
+        return $this->retrieve(
+            "wc_order_shipments_{$order->get_id()}",
+            function () use ($order): ShipmentCollection {
+                $shipments = $order->get_meta(Pdk::get('metaKeyOrderShipments')) ?: null;
 
-            return new ShipmentCollection($shipments);
-        });
+                return new ShipmentCollection($shipments);
+            }
+        );
     }
 
     /**
