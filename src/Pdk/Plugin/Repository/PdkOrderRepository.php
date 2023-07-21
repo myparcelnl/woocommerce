@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Repository;
 
 use InvalidArgumentException;
+use MyParcelNL\Pdk\App\Order\Collection\PdkOrderNoteCollection;
 use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\App\Order\Model\PdkOrder;
 use MyParcelNL\Pdk\App\Order\Model\PdkOrderLine;
@@ -212,7 +213,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                     ]);
                 })
                 ->all(),
-            'notes'                 => $this->getNotes($order),
+            'notes'                 => $this->getNotes($order, $savedOrderData['notes'] ?? []),
             'physicalProperties'    => $this->getPhysicalProperties($items),
             'shippingAddress'       => $shippingAddress,
             'orderPrice'            => $order->get_total(),
@@ -308,15 +309,17 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
 
     /**
      * @param  \WC_Order $order
+     * @param  array     $existingNotes
      *
-     * @return void
+     * @return PdkOrderNoteCollection
      */
-    private function getNotes(WC_Order $order): array
+    private function getNotes(WC_Order $order, array $existingNotes): PdkOrderNoteCollection
     {
-        return $this->retrieve(sprintf("notes_%s", $order->get_id()), function () use ($order) {
+        return $this->retrieve(sprintf("notes_%s", $order->get_id()), function () use ($existingNotes, $order) {
+            $collection = new PdkOrderNoteCollection($existingNotes);
+
             $customerNote = $order->get_customer_note();
             $notes        = wc_get_order_notes(['order_id' => $order->get_id()]);
-            $orderData    = $order->get_meta(Pdk::get('metaKeyOrderData'));
 
             if ($customerNote) {
                 $notes[] = (object) [
@@ -326,20 +329,13 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                 ];
             }
 
-            return (new Collection($notes))
+            $newNotes = (new Collection($notes))
                 ->filter(static function (stdClass $note) {
                     return 'system' !== $note->added_by;
                 })
-                ->map(function (stdClass $note) use ($order, $orderData) {
+                ->map(function (stdClass $note) use ($order) {
                     $noteCreatedDate = $this->getDate($note->date_created ?? $order->get_date_created());
                     $apiIdentifier   = null;
-
-                    if ($orderData && $orderData['notes']) {
-                        $matchingNote  =
-                            array_search($note->id, array_column($orderData['notes'], 'externalIdentifier'));
-                        $apiIdentifier =
-                            false !== $matchingNote ? $orderData['notes'][$matchingNote]['apiIdentifier'] : null;
-                    }
 
                     return [
                         'apiIdentifier'      => $apiIdentifier,
@@ -351,9 +347,9 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                         'createdAt'          => $noteCreatedDate,
                         'updatedAt'          => $noteCreatedDate,
                     ];
-                })
-                ->values()
-                ->all();
+                });
+
+            return $collection->mergeByKey($newNotes, 'externalIdentifier');
         });
     }
 

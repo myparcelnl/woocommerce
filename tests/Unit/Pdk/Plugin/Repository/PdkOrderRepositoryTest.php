@@ -106,7 +106,7 @@ function getOrderDefaults(): array
     ];
 }
 
-function createOrderMeta(array $deliveryOptions = []): array
+function createDeliveryOptionsMeta(array $deliveryOptions = []): array
 {
     return [
         'meta' => [
@@ -119,6 +119,17 @@ function createOrderMeta(array $deliveryOptions = []): array
                         'signature' => true,
                     ],
                 ], $deliveryOptions),
+            ],
+        ],
+    ];
+}
+
+function createNotesMeta(array $notes = []): array
+{
+    return [
+        'meta' => [
+            Pdk::get('metaKeyOrderData') => [
+                'notes' => $notes,
             ],
         ],
     ];
@@ -137,53 +148,66 @@ it('creates a valid pdk order', function (array $input) {
         return getOrderDefaults();
     },
 
+    'order with saved notes' => function () {
+        return getOrderDefaults() + createNotesMeta([
+                [
+                    'apiIdentifier'      => '12345',
+                    'externalIdentifier' => '40',
+                    'author'             => 'customer',
+                    'note'               => 'moo',
+                    'createdAt'          => '2021-01-01 18:03:41',
+                    'updatedAt'          => '2021-01-01 18:03:41',
+                ],
+            ]);
+    },
+
     'order with saved delivery options' => function () {
-        return getOrderDefaults() + createOrderMeta();
+        return getOrderDefaults() + createDeliveryOptionsMeta();
     },
 
     'order with label description CUSTOMER_NOTE' => function () {
-        return getOrderDefaults() + createOrderMeta([
+        return getOrderDefaults() + createDeliveryOptionsMeta([
                 'shipmentOptions' => ['labelDescription' => 'CUSTOMER_NOTE: [CUSTOMER_NOTE]'],
             ]);
     },
 
     'order with label description ORDER_NR' => function () {
-        return getOrderDefaults() + createOrderMeta([
+        return getOrderDefaults() + createDeliveryOptionsMeta([
                 'shipmentOptions' => ['labelDescription' => 'ORDER_NR: [ORDER_NR]'],
             ]);
     },
 
     'order with label description PRODUCT_ID' => function () {
-        return getOrderDefaults() + createOrderMeta([
+        return getOrderDefaults() + createDeliveryOptionsMeta([
                 'shipmentOptions' => ['labelDescription' => 'PRODUCT_ID: [PRODUCT_ID]'],
             ]);
     },
 
     'order with label description PRODUCT_NAME' => function () {
-        return getOrderDefaults() + createOrderMeta([
+        return getOrderDefaults() + createDeliveryOptionsMeta([
                 'shipmentOptions' => ['labelDescription' => 'PRODUCT_NAME: [PRODUCT_NAME]'],
             ]);
     },
 
     'order with label description PRODUCT_QTY' => function () {
-        return getOrderDefaults() + createOrderMeta([
+        return getOrderDefaults() + createDeliveryOptionsMeta([
                 'shipmentOptions' => ['labelDescription' => 'PRODUCT_QTY: [PRODUCT_QTY]'],
             ]);
     },
 
     'order with label description PRODUCT_SKU'           => function () {
-        return getOrderDefaults() + createOrderMeta([
+        return getOrderDefaults() + createDeliveryOptionsMeta([
                 'shipmentOptions' => ['labelDescription' => 'PRODUCT_SKU: [PRODUCT_SKU]'],
             ]);
     },
     'order with multiple label description placeholders' => function () {
-        return getOrderDefaults() + createOrderMeta([
+        return getOrderDefaults() + createDeliveryOptionsMeta([
                 'shipmentOptions' => ['labelDescription' => '[ORDER_NR] | [PRODUCT_ID] | [PRODUCT_NAME] | [PRODUCT_QTY] | [PRODUCT_SKU]'],
             ]);
     },
 
     'order with all shipment options' => function () {
-        return getOrderDefaults() + createOrderMeta([
+        return getOrderDefaults() + createDeliveryOptionsMeta([
                 'shipmentOptions' => [
                     'ageCheck'         => true,
                     'insurance'        => 50000,

@@ -2,33 +2,30 @@
   "externalIdentifier": "1",
   "deliveryOptions": {
     "carrier": {
-      "externalIdentifier": "dhlforyou",
-      "id": 9,
-      "name": "dhlforyou",
-      "human": "DHL For You",
+      "id": 1,
+      "name": "postnl",
+      "human": "PostNL",
       "enabled": false,
       "isDefault": true,
       "optional": false,
       "primary": false,
       "type": "main",
       "capabilities": {
-        "deliveryTypes": ["standard", "pickup"],
+        "deliveryTypes": ["morning", "standard", "evening", "pickup"],
         "features": {
           "labelDescriptionLength": 45
         },
-        "packageTypes": ["package", "mailbox"],
+        "packageTypes": ["package", "mailbox", "letter", "digital_stamp"],
         "shipmentOptions": {
           "ageCheck": true,
-          "largeFormat": false,
+          "largeFormat": true,
           "onlyRecipient": true,
           "return": true,
           "sameDayDelivery": true,
           "signature": true,
-          "saturdayDelivery": true,
-          "hideSender": true,
           "insurance": [
-            0, 50000, 100000, 150000, 200000, 250000, 300000, 350000, 400000,
-            450000, 500000
+            0, 10000, 25000, 50000, 100000, 150000, 200000, 250000, 300000,
+            350000, 400000, 450000, 500000
           ]
         }
       },
@@ -40,7 +37,10 @@
         "packageTypes": ["package"],
         "shipmentOptions": {
           "signature": true,
-          "insurance": [0],
+          "insurance": [
+            0, 10000, 25000, 50000, 100000, 150000, 200000, 250000, 300000,
+            350000, 400000, 450000, 500000
+          ],
           "return": true,
           "ageCheck": true,
           "onlyRecipient": true,
@@ -49,13 +49,9 @@
         }
       }
     },
-    "date": "2024-12-31 12:00:00",
     "labelAmount": 1,
-    "shipmentOptions": {
-      "labelDescription": "PRODUCT_SKU: WVS-0001, WVS-0002",
-      "signature": true
-    },
-    "deliveryType": "morning",
+    "shipmentOptions": [],
+    "deliveryType": "standard",
     "packageType": "package"
   },
   "billingAddress": {
@@ -170,6 +166,14 @@
     }
   ],
   "notes": [
+    {
+      "externalIdentifier": "40",
+      "apiIdentifier": "12345",
+      "author": "customer",
+      "note": "moo",
+      "createdAt": "2021-01-01 18:03:41",
+      "updatedAt": "2021-01-01 18:03:41"
+    },
     {
       "externalIdentifier": "33",
       "apiIdentifier": null,

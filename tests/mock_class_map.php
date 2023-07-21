@@ -121,14 +121,14 @@ function wc_get_order_notes($args = []): array
             (object) [
                 'id'           => 33,
                 'added_by'     => 'admin',
-                'note'         => 'test admin',
+                'content'      => 'test admin',
                 'date_created' => $date,
 
             ],
             (object) [
                 'id'           => 34,
                 'added_by'     => 'system',
-                'note'         => 'test system',
+                'content'      => 'test system',
                 'date_created' => $date,
             ],
         ],
