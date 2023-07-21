@@ -9,6 +9,7 @@ use MyParcelNL\WooCommerce\Hooks\AutomaticOrderExportHooks;
 use MyParcelNL\WooCommerce\Hooks\CartFeesHooks;
 use MyParcelNL\WooCommerce\Hooks\CheckoutScriptHooks;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
+use MyParcelNL\WooCommerce\Hooks\OrderNotesHooks;
 use MyParcelNL\WooCommerce\Hooks\PluginInfoHooks;
 use MyParcelNL\WooCommerce\Hooks\ScheduledMigrationHooks;
 use MyParcelNL\WooCommerce\Hooks\SeparateAddressFieldsHooks;
@@ -53,6 +54,7 @@ final class WordPressHookService
             AutomaticOrderExportHooks::class,
             CartFeesHooks::class,
             CheckoutScriptHooks::class,
+            OrderNotesHooks::class,
             PdkAdminEndpointHooks::class,
             PdkCheckoutPlaceOrderHooks::class,
             PdkCoreHooks::class,
