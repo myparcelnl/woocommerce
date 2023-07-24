@@ -252,27 +252,28 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     private function getDeliveryOptions(array $deliveryOptions, WC_Order $order, Collection $items): array
     {
-        if (isset($deliveryOptions['shipmentOptions'])) {
-            $deliveryOptions['shipmentOptions']['labelDescription'] = $this->getLabelDescription(
-                $order,
-                $items,
-                $deliveryOptions['shipmentOptions']['labelDescription'] ?? null
-            );
+        if (! isset($deliveryOptions['shipmentOptions'])){
+            $deliveryOptions['shipmentOptions'] = ['labelDescription' => ''];
         }
+        $deliveryOptions['shipmentOptions']['labelDescription'] = $this->getLabelDescription(
+            $order,
+            $items,
+            $deliveryOptions['shipmentOptions']['labelDescription']
+        );
 
-        return (array) (Filter::apply('orderDeliveryOptions', $deliveryOptions ?? [], $order) ?? []);
+        return (array) (Filter::apply('orderDeliveryOptions', $deliveryOptions, $order) ?? []);
     }
 
     /**
-     * @param  \WC_Order                                       $order
-     * @param  \MyParcelNL\Pdk\Base\Support\Collection|array[] $items
-     * @param  null|string                                     $labelDescription
+     * @param  \WC_Order                               $order
+     * @param  \MyParcelNL\Pdk\Base\Support\Collection $items
+     * @param  string                                  $labelDescription
      *
      * @return string
      */
-    private function getLabelDescription(WC_Order $order, Collection $items, ?string $labelDescription): string
+    private function getLabelDescription(WC_Order $order, Collection $items, string $labelDescription): string
     {
-        $description = $labelDescription ?? Settings::get(LabelSettings::DESCRIPTION, LabelSettings::ID) ?? '';
+        $description = $labelDescription ?: Settings::get(LabelSettings::DESCRIPTION, LabelSettings::ID) ?? '';
 
         if (! Str::contains($description, self::DESCRIPTION_PLACEHOLDERS)) {
             return $description;
