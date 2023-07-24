@@ -128,7 +128,7 @@ final class ProductSettingsMigration extends AbstractPdkMigration
         // TODO support variants!!
 
         /* empty the woocommerce cart */
-        if (is_null( WC()->cart)) {
+        if (null === WC()->cart) {
             wc_load_cart();
         }
         WC()->cart->empty_cart();
@@ -200,9 +200,9 @@ final class ProductSettingsMigration extends AbstractPdkMigration
 
     private function getMethodsFromPackages(array $cartShippingPackages): array {
         $cartShippingMethods = [];
-        foreach( array_keys( $cartShippingPackages ) as $key ) {
-            if( $shipping_for_package = WC()->session->get('shipping_for_package_'.$key) ) {
-                if( isset($shipping_for_package['rates']) ) {
+        foreach(array_keys($cartShippingPackages) as $key) {
+            if(($shipping_for_package = WC()->session->get('shipping_for_package_'.$key))) {
+                if(isset($shipping_for_package['rates'])) {
                     // Loop through customer available shipping methods
                     foreach ( $shipping_for_package['rates'] as $rate_key => $rate ) {
                         $rate_id = $rate->id; // the shipping method rate ID (or $rate_key)
@@ -216,7 +216,7 @@ final class ProductSettingsMigration extends AbstractPdkMigration
                 }
             }
         }
-        return $cartShippingMethods;;
+        return $cartShippingMethods;
     }
 
     private function scheduleNextRun(): void
