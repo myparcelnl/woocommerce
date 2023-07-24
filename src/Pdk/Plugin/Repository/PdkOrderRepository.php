@@ -401,7 +401,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     private function getWcOrder($input): WC_Order
     {
-        if (method_exists($input, 'get_id')) {
+        if (is_object($input) && method_exists($input, 'get_id')) {
             $id = $input->get_id();
         } elseif (is_object($input) && isset($input->ID)) {
             $id = $input->ID;
