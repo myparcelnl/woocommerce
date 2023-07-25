@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter;
-use MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection;
+use MyParcelNL\Sdk\src\Collection\Fulfilment\OrderNotesCollection;
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
 use MyParcelNL\Sdk\src\Helper\TrackTraceUrl;
-use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\Sdk\src\Support\Arr;
+use MyParcelNL\Sdk\src\Model\Fulfilment\OrderNote;
+use MyParcelNL\Sdk\src\Support\Str;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Validators\WebhookCallbackUrlValidator;
@@ -118,6 +118,7 @@ class WCMYPA_Admin
         add_action("wp_ajax_wcmp_save_shipment_options", [$this, "save_shipment_options_ajax"]);
         add_action("wp_ajax_wcmp_get_shipment_summary_status", [$this, "order_list_ajax_get_shipment_summary"]);
         add_action("wp_ajax_wcmp_get_shipment_options", [$this, "ajaxGetShipmentOptions"]);
+        add_action('woocommerce_order_note_added', [$this, 'saveOrderNote'], 2, 2);
 
         // Add barcode in order grid
         add_filter("manage_edit-shop_order_columns", [$this, "barcode_add_new_order_admin_list_column"], 10, 1);
@@ -1654,6 +1655,46 @@ class WCMYPA_Admin
         }
 
         return false;
+    }
+
+    public function saveOrderNote(int $commentId, WC_Order $order): void
+    {
+        $orderMeta = get_post_meta($order->get_id(), self::META_PPS);
+        $lastOrder = end($orderMeta);
+        $orderUuid = $lastOrder ? $lastOrder[self::META_PPS_UUID] : null;
+
+        if (! $orderUuid) {
+            return;
+        }
+
+        $comment    = get_comment($commentId);
+        $orderNotes = (new OrderNotesCollection())->setApiKey(
+            WCMYPA()->setting_collection->getByName(
+                WCMYPA_Settings::SETTING_API_KEY
+            )
+        );
+        $orderNote  = new OrderNote([
+            'note'      => $comment->comment_content,
+            'author'    => 'webshop',
+            'orderUuid' => $orderUuid,
+        ]);
+
+        try {
+            $orderNote->validate();
+            $orderNotes->push($orderNote);
+        } catch (Exception $e) {
+            WCMP_Log::add(
+                sprintf(
+                    'Note `%s` not exported. %s',
+                    Str::limit($orderNote->getNote(), 30),
+                    $e->getMessage()
+                )
+            );
+
+            return;
+        }
+
+        $orderNotes->save();
     }
 }
 
