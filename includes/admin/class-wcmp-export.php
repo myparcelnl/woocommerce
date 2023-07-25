@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection;
-use MyParcelNL\Sdk\src\Collection\Fulfilment\OrderNotesCollection;
 use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLForYou;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DropOffPoint;
 use MyParcelNL\Sdk\src\Model\CustomsDeclaration;
 use MyParcelNL\Sdk\src\Model\Fulfilment\AbstractOrder;
 use MyParcelNL\Sdk\src\Model\Fulfilment\Order;
-use MyParcelNL\Sdk\src\Model\Fulfilment\OrderNote;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
 use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\Sdk\src\Support\Collection;
@@ -40,29 +39,35 @@ if (class_exists('WCMP_Export')) {
 
 class WCMP_Export
 {
-    public const EXPORT        = 'wcmp_export';
+    public const EXPORT = 'wcmp_export';
+
     public const EXPORT_ORDER  = 'export_order';
     public const EXPORT_RETURN = 'export_return';
     public const GET_LABELS    = 'get_labels';
     public const MODAL_DIALOG  = 'modal_dialog';
+
     /**
      * Maximum characters length of item description.
      */
     public const ITEM_DESCRIPTION_MAX_LENGTH  = 50;
     public const ORDER_DESCRIPTION_MAX_LENGTH = 45;
-    public const COOKIE_EXPIRE_TIME           = 20;
-    public const DEFAULT_POSITIONS            = [2, 4, 1, 3];
-    public const SUFFIX_CHECK_REG             = '~^([a-z]{1}\d{1,3}|-\d{1,4}\d{2}\w{1,2}|[a-z]{1}[a-z\s]{0,3})(?:\W|$)~i';
+
+    public const COOKIE_EXPIRE_TIME = 20;
+
+    public const DEFAULT_POSITIONS = [2, 4, 1, 3];
+    public const SUFFIX_CHECK_REG  = '~^([a-z]{1}\d{1,3}|-\d{1,4}\d{2}\w{1,2}|[a-z]{1}[a-z\s]{0,3})(?:\W|$)~i';
+
     /**
      * Shipping methods that can never have delivery options.
      */
     public const DISALLOWED_SHIPPING_METHODS = [
         WCMP_Shipping_Methods::LOCAL_PICKUP,
     ];
-    public const COUNTRY_CODE_NL             = 'NL';
-    public const COUNTRY_CODE_BE             = 'BE';
-    public const NO                          = 'no';
-    public const YES                         = 'yes';
+
+    public const COUNTRY_CODE_NL = 'NL';
+    public const COUNTRY_CODE_BE = 'BE';
+    public const NO              = 'no';
+    public const YES             = 'yes';
 
     /**
      * @var MyParcelCollection
@@ -91,8 +96,8 @@ class WCMP_Export
     }
 
     /**
-     * @param  int   $order_id
-     * @param  array $track_traces
+     * @param int $order_id
+     * @param array $track_traces
      *
      * @internal param $shipment_ids
      */
@@ -118,7 +123,7 @@ class WCMP_Export
      */
     public static function convertSizeToCm(int $size): int
     {
-        $sizeUnit  = get_option('woocommerce_dimension_unit');
+        $sizeUnit = get_option('woocommerce_dimension_unit');
         $floatSize = (float) $size;
 
         switch ($sizeUnit) {
@@ -145,7 +150,7 @@ class WCMP_Export
     /**
      * Returns the weight in grams.
      *
-     * @param  int|float $weight
+     * @param int|float $weight
      *
      * @return int
      */
@@ -176,15 +181,14 @@ class WCMP_Export
      * Get the value of a shipment option. Check if it was set manually, through the delivery options for example,
      *  if not get the value of the default export setting for given settingName.
      *
-     * @param  mixed  $option      Chosen value.
-     * @param  string $settingName Name of the setting to fall back to if there is no chosen value.
+     * @param mixed  $option      Chosen value.
+     * @param string $settingName Name of the setting to fall back to if there is no chosen value.
      *
      * @return mixed
      */
     public static function getChosenOrDefaultShipmentOption($option, string $settingName, ?string $carrierName = null)
     {
-        return $option ?? WCMYPA()->setting_collection->where('carrier', $carrierName)
-            ->getByName($settingName);
+        return $option ?? WCMYPA()->setting_collection->where('carrier', $carrierName)->getByName($settingName);
     }
 
     /**
@@ -204,7 +208,7 @@ class WCMP_Export
     /**
      * Will convert any package type to a valid string package type.
      *
-     * @param  mixed $packageType
+     * @param mixed $packageType
      *
      * @return string
      */
@@ -258,8 +262,7 @@ class WCMP_Export
             }
         }
 
-        $packageTypes =
-            WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
+        $packageTypes = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
 
         if (! $packageTypes) {
             return $packageType;
@@ -281,7 +284,7 @@ class WCMP_Export
     }
 
     /**
-     * @param  string|int|null $packageType
+     * @param string|int|null $packageType
      *
      * @return string
      */
@@ -342,11 +345,7 @@ class WCMP_Export
 
         // add variation name if available
         $product = $order->get_product_from_item($item);
-        if ($product && isset($item['variation_id']) && $item['variation_id'] > 0
-            && method_exists(
-                $product,
-                'get_variation_attributes'
-            )) {
+        if ($product && isset($item['variation_id']) && $item['variation_id'] > 0 && method_exists($product, 'get_variation_attributes')) {
             $name .= woocommerce_get_formatted_variation($product->get_variation_attributes());
         }
 
@@ -372,7 +371,7 @@ class WCMP_Export
     }
 
     /**
-     * @param  string $chosen_method
+     * @param string $chosen_method
      *
      * @return null|WC_Shipping_Method
      */
@@ -389,10 +388,7 @@ class WCMP_Export
             return null;
         }
 
-        $shipping_methods =
-            WC()
-                ->shipping()
-                ->load_shipping_methods();
+        $shipping_methods = WC()->shipping()->load_shipping_methods();
 
         if (! isset($shipping_methods[$chosen_method])) {
             return null;
@@ -449,17 +445,14 @@ class WCMP_Export
     }
 
     /**
-     * @param  int                 $colloAmount
-     * @param  MyParcelCollection  $collection
-     * @param  AbstractConsignment $consignment
+     * @param int                 $colloAmount
+     * @param MyParcelCollection  $collection
+     * @param AbstractConsignment $consignment
      *
      * @throws MissingFieldException
      */
-    public function addFakeMultiCollo(
-        int                 $colloAmount,
-        MyParcelCollection  $collection,
-        AbstractConsignment $consignment
-    ): void {
+    public function addFakeMultiCollo(int $colloAmount, MyParcelCollection $collection, AbstractConsignment $consignment): void
+    {
         for ($i = 1; $i <= $colloAmount; $i++) {
             $collection->addConsignment($consignment);
         }
@@ -473,10 +466,11 @@ class WCMP_Export
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      */
     public function addMultiCollo(
-        OrderSettings       $orderSettings,
-        MyParcelCollection  $collection,
+        OrderSettings $orderSettings,
+        MyParcelCollection $collection,
         AbstractConsignment $consignment
-    ): void {
+    ): void
+    {
         $isPackage            = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $orderSettings->getPackageType();
         $hasCarrierMultiCollo = $consignment->canHaveExtraOption(AbstractConsignment::EXTRA_OPTION_MULTI_COLLO);
         $isMultiColloCountry  = in_array(
@@ -493,7 +487,7 @@ class WCMP_Export
     }
 
     /**
-     * @param  \MyParcelNL\Sdk\src\Helper\MyParcelCollection $collection
+     * @param  \MyParcelNL\Sdk\src\Helper\MyParcelCollection  $collection
      *
      * @throws \MyParcelNL\Sdk\src\Exception\AccountNotActiveException
      * @throws \MyParcelNL\Sdk\src\Exception\ApiException
@@ -547,8 +541,7 @@ class WCMP_Export
     {
         $return          = [];
         $collection      = new MyParcelCollection();
-        $processDirectly =
-            $process || WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_PROCESS_DIRECTLY);
+        $processDirectly = $process || WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_PROCESS_DIRECTLY);
 
         WCMP_Log::add('*** Creating shipments started ***');
 
@@ -561,12 +554,11 @@ class WCMP_Export
             try {
                 $exportConsignments = new WCMP_Export_Consignments($order);
                 $exportConsignments->validate();
-                $consignment = $exportConsignments->getConsignment();
+                $consignment        = $exportConsignments->getConsignment();
             } catch (Exception $ex) {
                 $errorMessage = sprintf(
                     __('error_export_order_id_failed_because', 'woocommerce-myparcel'),
-                    $order_id,
-                    __($ex->getMessage(), 'woocommerce-myparcel')
+                    $order_id, __($ex->getMessage(), 'woocommerce-myparcel')
                 );
                 Messages::showAdminNotice($errorMessage, Messages::NOTICE_LEVEL_ERROR);
                 WCMP_Log::add($errorMessage);
@@ -584,12 +576,10 @@ class WCMP_Export
         if (0 === count($collection)) {
             WCMP_Log::add('No shipments exported to MyParcel.');
 
-            return [
-                'error' => __(
-                    'error_no_shipments_created',
-                    'woocommerce-myparcel'
-                ),
-            ];
+            return ['error' => __(
+                'error_no_shipments_created',
+                'woocommerce-myparcel'
+            )];
         }
 
         $collection = $collection
@@ -644,18 +634,18 @@ class WCMP_Export
     }
 
     /**
-     * @param  array       $shipment_ids
-     * @param  array       $order_ids
-     * @param  int         $offset
-     * @param  string|null $displayOverride - Overrides display setting.
+     * @param array       $shipment_ids
+     * @param array       $order_ids
+     * @param int         $offset
+     * @param string|null $displayOverride - Overrides display setting.
      *
      * @return array
      * @throws Exception
      */
     public function downloadOrGetUrlOfLabels(
-        array  $shipment_ids,
-        array  $order_ids = [],
-        int    $offset = 0,
+        array $shipment_ids,
+        array $order_ids = [],
+        int $offset = 0,
         string $displayOverride = null
     ) {
         $return = [];
@@ -751,7 +741,7 @@ class WCMP_Export
                     // Creating a return shipment.
                     case self::EXPORT_RETURN:
                         $options = array_map([$this, 'sanitizeOptions'], $requestVars['myparcel_options'] ?? []);
-                        $return  = $this->exportReturn($order_ids, $options);
+                        $return = $this->exportReturn($order_ids, $options);
                         break;
 
                     // Downloading labels.
@@ -782,7 +772,7 @@ class WCMP_Export
     }
 
     /**
-     * @param  int $orderId
+     * @param int $orderId
      *
      * @throws ApiException
      * @throws ErrorException
@@ -803,8 +793,8 @@ class WCMP_Export
     }
 
     /**
-     * @param  array      $order_ids
-     * @param  array|null $options
+     * @param array      $order_ids
+     * @param array|null $options
      *
      * @return array
      */
@@ -862,7 +852,7 @@ class WCMP_Export
     /**
      * Filter out orders shipping to country codes that are not in the allowed list.
      *
-     * @param  array $order_ids
+     * @param array $order_ids
      *
      * @return array
      * @throws Exception
@@ -893,8 +883,7 @@ class WCMP_Export
     public function generateCustomsDeclaration(WC_Order $wcOrder): CustomsDeclaration
     {
         $customsDeclaration = new CustomsDeclaration();
-        $contents           =
-            (int) ($this->getSetting('package_contents') ?? AbstractConsignment::PACKAGE_CONTENTS_COMMERCIAL_GOODS);
+        $contents           = (int) ($this->getSetting('package_contents') ?? AbstractConsignment::PACKAGE_CONTENTS_COMMERCIAL_GOODS);
         $orderSettings      = new OrderSettings($wcOrder);
         $totalWeight        = WCMP_Export::convertWeightToGrams($orderSettings->getWeight());
 
@@ -937,10 +926,11 @@ class WCMP_Export
     }
 
     /**
-     * @param  WC_Order    $order
-     * @param  string|null $packageType
+     * @param WC_Order    $order
+     * @param string|null $packageType
      *
      * @return string|null
+     *
      * @throws Exception
      */
     public function getAllowedPackageType(WC_Order $order, ?string $packageType): ?string
@@ -958,9 +948,9 @@ class WCMP_Export
     }
 
     /**
-     * @param  array       $order_ids
-     * @param  int         $offset
-     * @param  string|null $display
+     * @param array       $order_ids
+     * @param int         $offset
+     * @param string|null $display
      *
      * @return array
      * @throws Exception
@@ -972,12 +962,10 @@ class WCMP_Export
         if (empty($shipment_ids)) {
             WCMP_Log::add(' *** Failed label request(not exported yet) ***');
 
-            throw new Exception(
-                __(
-                    'The selected orders have not been exported to MyParcel yet! ',
-                    'woocommerce-myparcel'
-                )
-            );
+            throw new Exception(__(
+                'The selected orders have not been exported to MyParcel yet! ',
+                'woocommerce-myparcel'
+            ));
         }
 
         return $this->downloadOrGetUrlOfLabels(
@@ -989,8 +977,8 @@ class WCMP_Export
     }
 
     /**
-     * @param  WC_Order $order
-     * @param  string   $shippingMethodId
+     * @param WC_Order $order
+     * @param string   $shippingMethodId
      *
      * @return string|null
      * @throws Exception
@@ -1021,16 +1009,14 @@ class WCMP_Export
     /**
      * Determine appropriate package type for this order.
      *
-     * @param  WC_Order                            $order
-     * @param  AbstractDeliveryOptionsAdapter|null $deliveryOptions
+     * @param WC_Order                            $order
+     * @param AbstractDeliveryOptionsAdapter|null $deliveryOptions
      *
      * @return string
      * @throws Exception
      */
-    public function getPackageTypeFromOrder(
-        WC_Order                       $order,
-        AbstractDeliveryOptionsAdapter $deliveryOptions = null
-    ): string {
+    public function getPackageTypeFromOrder(WC_Order $order, AbstractDeliveryOptionsAdapter $deliveryOptions = null): string
+    {
         $packageTypeFromDeliveryOptions = $deliveryOptions ? $deliveryOptions->getPackageType() : null;
         $allowedPackageType             = $this->getAllowedPackageType($order, $packageTypeFromDeliveryOptions);
 
@@ -1046,12 +1032,7 @@ class WCMP_Export
                 $packageType = WCMP_Data::getPackageTypeId($shipmentOptions['package_type']);
             }
 
-            return (string) apply_filters(
-                'wc_myparcel_order_package_type',
-                ($packageType ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE),
-                $order,
-                $this
-            );
+            return (string) apply_filters('wc_myparcel_order_package_type', ($packageType ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE), $order, $this);
         }
 
         $packageType = AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
@@ -1075,19 +1056,14 @@ class WCMP_Export
             );
         }
 
-        return apply_filters(
-            'wc_myparcel_order_package_type',
-            $this->getAllowedPackageType($order, $packageType),
-            $order,
-            $this
-        );
+        return apply_filters('wc_myparcel_order_package_type', $this->getAllowedPackageType($order, $packageType), $order, $this);
     }
 
     /**
      * Retrieves, updates and returns shipment data for given id.
      *
-     * @param  array    $ids
-     * @param  WC_Order $order
+     * @param array    $ids
+     * @param WC_Order $order
      *
      * @return array
      * @throws Exception
@@ -1129,8 +1105,8 @@ class WCMP_Export
     }
 
     /**
-     * @param  array $order_ids
-     * @param  array $args
+     * @param array $order_ids
+     * @param array $args
      *
      * @return array
      */
@@ -1238,9 +1214,9 @@ class WCMP_Export
 
             $class_cost_string = $shipping_class_term && $shipping_class_term_id ?
                 $shipping_method->get_option(
-                    "class_cost_$shipping_class_term_id",
-                    $shipping_method->get_option("class_cost_$shipping_class", '')
-                ) : $shipping_method->get_option('no_class_cost', '');
+                "class_cost_$shipping_class_term_id",
+                $shipping_method->get_option("class_cost_$shipping_class", '')
+            ) : $shipping_method->get_option('no_class_cost', '');
 
             $class_cost_string = (string) $class_cost_string;
 
@@ -1307,7 +1283,7 @@ class WCMP_Export
     }
 
     /**
-     * @param  string|array $array
+     * @param string|array $array
      *
      * @return array
      */
@@ -1324,8 +1300,8 @@ class WCMP_Export
     /**
      * TODO: There are no options being passed right now but these will be necessary for NL.
      *
-     * @param             $order_id
-     * @param  array|null $options
+     * @param $order_id
+     * @param array|null $options
      *
      * @return array
      * @throws Exception
@@ -1401,8 +1377,8 @@ class WCMP_Export
     }
 
     /**
-     * @param  WC_Order $order
-     * @param  array    $shipment
+     * @param WC_Order $order
+     * @param array    $shipment
      *
      * @return void
      * @throws Exception
@@ -1430,9 +1406,9 @@ class WCMP_Export
      * Adapted from WC_Shipping_Flat_Rate - Protected method
      * Evaluate a cost from a sum/string.
      *
-     * @param  string $sum
-     * @param  array  $args
-     * @param         $flat_rate_method
+     * @param string $sum
+     * @param array  $args
+     * @param        $flat_rate_method
      *
      * @return string
      */
@@ -1485,7 +1461,7 @@ class WCMP_Export
      * Adapted from WC_Shipping_Flat_Rate - Protected method
      * Work out fee (shortcode).
      *
-     * @param  array $atts
+     * @param array $atts
      *
      * @return string
      */
@@ -1542,9 +1518,9 @@ class WCMP_Export
     }
 
     /**
-     * @param  array         $orderIds
-     * @param  int           $offset
-     * @param  string | null $print
+     * @param array         $orderIds
+     * @param int           $offset
+     * @param string | null $print
      *
      * @return array
      * @throws ApiException
@@ -1571,40 +1547,6 @@ class WCMP_Export
     }
 
     /**
-     * @param  \MyParcelNL\Sdk\src\Model\Fulfilment\Order $order
-     *
-     * @return \MyParcelNL\Sdk\src\Collection\Fulfilment\OrderNotesCollection
-     */
-    private function getAllNotesForOrder(Order $order): OrderNotesCollection
-    {
-        $wcOrder              = WCX::get_order($order->getExternalIdentifier());
-        $orderNotesCollection = new OrderNotesCollection();
-        $orderUuid            = $order->getUuid();
-
-        $customerNote           = new stdClass();
-        $customerNote->content  = $wcOrder->get_customer_note();
-        $customerNote->added_by = 'customer';
-        $notes                  = wc_get_order_notes(['order_id' => $wcOrder->get_id()]);
-        $notes[]                = $customerNote;
-
-        foreach ($notes as $note) {
-            if ('system' === $note->added_by) {
-                continue;
-            }
-
-            $orderNotesCollection->push(
-                new OrderNote([
-                    'orderUuid' => $orderUuid,
-                    'note'      => $note->content,
-                    'author'    => 'customer' === $note->added_by ? 'customer' : 'webshop',
-                ])
-            );
-        }
-
-        return $orderNotesCollection;
-    }
-
-    /**
      * @param  null|\MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier $carrier
      *
      * @return null|\MyParcelNL\Sdk\src\Model\Consignment\DropOffPoint
@@ -1615,15 +1557,13 @@ class WCMP_Export
             return null;
         }
 
-        $configuration =
-            AccountSettings::getInstance()
-                ->getCarrierConfigurationByCarrierId($carrier->getId());
+        $configuration = AccountSettings::getInstance()->getCarrierConfigurationByCarrierId($carrier->getId());
 
         return $configuration ? $configuration->getDefaultDropOffPoint() : null;
     }
 
     /**
-     * @param  string $name
+     * @param string $name
      *
      * @return mixed
      */
@@ -1652,9 +1592,9 @@ class WCMP_Export
     }
 
     /**
-     * @param  array $order_ids
-     * @param  array $shipment_ids
-     * @param  int   $offset
+     * @param array $order_ids
+     * @param array $shipment_ids
+     * @param int   $offset
      *
      * @return array
      * @throws Exception
@@ -1676,9 +1616,10 @@ class WCMP_Export
     }
 
     /**
-     * @param  array $orderIds
+     * @param array $orderIds
      *
      * @return array
+     *
      * @throws \Exception
      */
     private function saveOrderCollection(array $orderIds): array
@@ -1724,13 +1665,7 @@ class WCMP_Export
                 $orderLines->push($orderLine);
             }
 
-            $isToRowCountry =
-                ! in_array(
-                    $order->getRecipient()
-                        ->getCc(),
-                    AbstractConsignment::EURO_COUNTRIES,
-                    true
-                );
+            $isToRowCountry = ! in_array($order->getRecipient()->getCc(), AbstractConsignment::EURO_COUNTRIES, true);
 
             if ($isToRowCountry) {
                 $order->setCustomsDeclaration($this->generateCustomsDeclaration($wcOrder));
@@ -1743,8 +1678,6 @@ class WCMP_Export
         try {
             $savedOrderCollection = $this->orderCollection->save();
 
-            $this->saveOrderNotes($savedOrderCollection);
-
             return $this->updateOrderMetaByCollection($savedOrderCollection);
         } catch (Exception $e) {
             Messages::showAdminNotice($e->getMessage());
@@ -1752,39 +1685,14 @@ class WCMP_Export
         }
     }
 
-    private function saveOrderNotes(OrderCollection $savedOrderCollection)
-    {
-        $notes = (new OrderNotesCollection())->setApiKey($this->getSetting(WCMYPA_Settings::SETTING_API_KEY));
-
-        $savedOrderCollection->each(function (Order $order) use ($notes) {
-            $this->getAllNotesForOrder($order)
-                ->each(function (OrderNote $note) use ($notes) {
-                    try {
-                        $note->validate();
-                        $notes->push($note);
-                    } catch (Exception $e) {
-                        WCMP_Log::add(
-                            sprintf(
-                                'Note `%s` not exported. %s',
-                                Str::limit($note->getNote(), 30),
-                                $e->getMessage()
-                            )
-                        );
-                    }
-                });
-        });
-
-        $notes->save();
-    }
-
     /**
      * When adding shipments, store $return for use in admin_notice
      * This way we can refresh the page (JS) to show all new buttons
      *
-     * @param  string $print
-     * @param  int    $offset
-     * @param  array  $orderIds
-     * @param  array  $return
+     * @param string $print
+     * @param int    $offset
+     * @param array  $orderIds
+     * @param array  $return
      *
      * @return array
      */
@@ -1801,7 +1709,7 @@ class WCMP_Export
     }
 
     /**
-     * @param  \MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection $orderCollection
+     * @param \MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection $orderCollection
      *
      * @return array
      */
