@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection;
+use MyParcelNL\Sdk\src\Collection\Fulfilment\OrderNotesCollection;
 use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
@@ -15,6 +16,7 @@ use MyParcelNL\Sdk\src\Model\Consignment\DropOffPoint;
 use MyParcelNL\Sdk\src\Model\CustomsDeclaration;
 use MyParcelNL\Sdk\src\Model\Fulfilment\AbstractOrder;
 use MyParcelNL\Sdk\src\Model\Fulfilment\Order;
+use MyParcelNL\Sdk\src\Model\Fulfilment\OrderNote;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
 use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\Sdk\src\Support\Collection;
@@ -1242,6 +1244,71 @@ class WCMP_Export
     }
 
     /**
+     * @param  \MyParcelNL\Sdk\src\Model\Fulfilment\Order $order
+     *
+     * @return \MyParcelNL\Sdk\src\Collection\Fulfilment\OrderNotesCollection
+     */
+    private function getAllNotesForOrder(Order $order): OrderNotesCollection
+    {
+        $wcOrder              = WCX::get_order($order->getExternalIdentifier());
+        $orderNotesCollection = new OrderNotesCollection();
+        $orderUuid            = $order->getUuid();
+
+        $customerNote           = new stdClass();
+        $customerNote->content  = $wcOrder->get_customer_note();
+        $customerNote->added_by = 'customer';
+        $notes                  = wc_get_order_notes(['order_id' => $wcOrder->get_id()]);
+        $notes[]                = $customerNote;
+
+        foreach ($notes as $note) {
+            if ('system' === $note->added_by) {
+                continue;
+            }
+
+            $orderNotesCollection->push(
+                new OrderNote([
+                    'orderUuid' => $orderUuid,
+                    'note'      => $note->content,
+                    'author'    => 'customer' === $note->added_by ? 'customer' : 'webshop',
+                ])
+            );
+        }
+
+        return $orderNotesCollection;
+    }
+
+    /**
+     * @param  \MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection $savedOrderCollection
+     *
+     * @return void
+     */
+    private function saveOrderNotes(OrderCollection $savedOrderCollection)
+    {
+        $orderNotes = (new OrderNotesCollection())->setApiKey($this->getSetting(WCMYPA_Settings::SETTING_API_KEY));
+
+        $savedOrderCollection->each(function (Order $order) use ($orderNotes) {
+            $this->getAllNotesForOrder($order)
+                ->each(function (OrderNote $note) use ($orderNotes) {
+                    try {
+                        $note->validate();
+                        $orderNotes->push($note);
+                    } catch (Exception $e) {
+                        WCMP_Log::add(
+                            sprintf(
+                                'Note `%s` not exported. %s',
+                                Str::limit($note->getNote(), 30),
+                                $e->getMessage()
+                            )
+                        );
+                    }
+                });
+        });
+
+        $orderNotes->save();
+    }
+
+
+    /**
      * @return WCMP_API
      * @throws Exception
      */
@@ -1677,6 +1744,7 @@ class WCMP_Export
 
         try {
             $savedOrderCollection = $this->orderCollection->save();
+            $this->saveOrderNotes($savedOrderCollection);
 
             return $this->updateOrderMetaByCollection($savedOrderCollection);
         } catch (Exception $e) {
