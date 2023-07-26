@@ -1,7 +1,7 @@
-name: 'Bug report for v5.0.0-alpha.x'
-description: 'This form is for reporting bugs in the alpha version of the plugin. If you are using version 4.x, please choose "Bug report" instead.'
-title: '[ALPHA]: '
-labels: ['alpha']
+name: 'Bug report for v5.0.0-beta.x'
+description: 'This form is for reporting bugs in the beta version of the plugin. If you are using version 4.x, please choose "Bug report" instead.'
+title: '[BETA]: '
+labels: ['beta']
 
 body:
   - type: markdown
@@ -9,14 +9,14 @@ body:
       value: |
         **⚠️ Note: ⚠️**
 
-        This form is for reporting bugs in the alpha version of the plugin (>= v5.0.0-alpha.x). If you are using version 4.x, please use the [regular bug report form](https://github.com/myparcelnl/woocommerce/issues/new?labels=bug&template=BUG-REPORT.yml) instead.
+        This form is for reporting bugs in the beta version of the plugin (>= v5.0.0-beta.x). If you are using version 4.x, please use the [regular bug report form](https://github.com/myparcelnl/woocommerce/issues/new?labels=bug&template=BUG-REPORT.yml) instead.
 
   - type: checkboxes
     id: version-check
     attributes:
       label: 'Version check'
       options:
-        - label: 'My version of the plugin is v5.0.0-alpha.0 or above.'
+        - label: 'My version of the plugin is v5.0.0-beta.0 or above.'
           required: true
 
   - type: markdown
