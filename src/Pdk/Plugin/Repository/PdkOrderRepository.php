@@ -92,29 +92,29 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     }
 
     /**
-     * @param  \MyParcelNL\Pdk\App\Order\Model\PdkOrder $newOrder
+     * @param  \MyParcelNL\Pdk\App\Order\Model\PdkOrder $order
      *
      * @return \MyParcelNL\Pdk\App\Order\Model\PdkOrder
      * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
      */
-    public function update(PdkOrder $newOrder): PdkOrder
+    public function update(PdkOrder $order): PdkOrder
     {
-        $wcOrder = $this->getWcOrder($newOrder->externalIdentifier);
+        $wcOrder = $this->getWcOrder($order->externalIdentifier);
 
-        $newOrder->shipments = $this
+        $order->shipments = $this
             ->getShipments($wcOrder)
-            ->mergeByKey($newOrder->shipments, 'id');
+            ->mergeByKey($order->shipments, 'id');
 
-        $this->addBarcodesToOrderNote($wcOrder, $newOrder);
+        $this->addBarcodesToOrderNote($wcOrder, $order);
 
-        update_post_meta($wcOrder->get_id(), Pdk::get('metaKeyOrderData'), $newOrder->toStorableArray());
+        update_post_meta($wcOrder->get_id(), Pdk::get('metaKeyOrderData'), $order->toStorableArray());
         update_post_meta(
             $wcOrder->get_id(),
             Pdk::get('metaKeyOrderShipments'),
-            $newOrder->shipments->toStorableArray()
+            $order->shipments->toStorableArray()
         );
 
-        return $this->save($newOrder->externalIdentifier, $newOrder);
+        return $this->save($order->externalIdentifier, $order);
     }
 
     /**
