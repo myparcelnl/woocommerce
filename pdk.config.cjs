@@ -1,5 +1,5 @@
 /**
- * @type {import('@myparcel-pdk/app-builder/src').PdkBuilderConfig}
+ * @type {import('@myparcel-pdk/app-builder').PdkBuilderConfig}
  */
 module.exports = {
   name: 'woocommerce',
@@ -40,4 +40,9 @@ module.exports = {
   ],
 
   composerCommand: 'docker compose run --rm -T php composer',
+
+  translations: {
+    // eslint-disable-next-line no-magic-numbers
+    additionalSheet: 535277615,
+  },
 };
