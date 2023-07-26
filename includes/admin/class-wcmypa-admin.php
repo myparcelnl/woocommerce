@@ -1685,18 +1685,7 @@ class WCMYPA_Admin
             'orderUuid' => $orderUuid,
         ]);
 
-        try {
-            $orderNote->validate();
-            $orderNotes->push($orderNote);
-        } catch (Exception $e) {
-            WCMP_Log::add(
-                sprintf(
-                    'Note `%s` not exported. %s',
-                    Str::limit($orderNote->getNote(), 30),
-                    $e->getMessage()
-                )
-            );
-        }
+        WCMP_Export::addValidOrderNote($orderNotes, $orderNote);
 
         $orderNotes->save();
     }

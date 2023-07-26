@@ -1243,6 +1243,30 @@ class WCMP_Export
     }
 
     /**
+     * @param  \MyParcelNL\Sdk\src\Collection\Fulfilment\OrderNotesCollection $orderNotes
+     * @param  \MyParcelNL\Sdk\src\Model\Fulfilment\OrderNote                 $note
+     *
+     * @return \MyParcelNL\Sdk\src\Collection\Fulfilment\OrderNotesCollection
+     */
+    public static function addValidOrderNote(OrderNotesCollection $orderNotes, OrderNote $note): OrderNotesCollection
+    {
+        try {
+            $note->validate();
+            $orderNotes->push($note);
+        } catch (Exception $e) {
+            WCMP_Log::add(
+                sprintf(
+                    'Note `%s` not exported. %s',
+                    Str::limit($note->getNote(), 30),
+                    $e->getMessage()
+                )
+            );
+        }
+
+        return $orderNotes;
+    }
+
+    /**
      * @param  \MyParcelNL\Sdk\src\Model\Fulfilment\Order $order
      *
      * @return \MyParcelNL\Sdk\src\Collection\Fulfilment\OrderNotesCollection
@@ -1288,18 +1312,7 @@ class WCMP_Export
         $savedOrderCollection->each(function (Order $order) use ($orderNotes) {
             $this->getAllNotesForOrder($order)
                 ->each(function (OrderNote $note) use ($orderNotes) {
-                    try {
-                        $note->validate();
-                        $orderNotes->push($note);
-                    } catch (Exception $e) {
-                        WCMP_Log::add(
-                            sprintf(
-                                'Note `%s` not exported. %s',
-                                Str::limit($note->getNote(), 30),
-                                $e->getMessage()
-                            )
-                        );
-                    }
+                    self::addValidOrderNote($orderNotes, $note);
                 });
         });
 
