@@ -178,6 +178,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      *
      * @return \MyParcelNL\Pdk\App\Order\Model\PdkOrder
      * @throws \Exception
+     * @noinspection PhpCastIsUnnecessaryInspection
      */
     private function getDataFromOrder(WC_Order $order): PdkOrder
     {
