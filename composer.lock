@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "490919542b28edb851ce1249ffd0d680",
+    "content-hash": "85e24ede02e7bce7a03936ea7aa2ad66",
     "packages": [
         {
             "name": "doctrine/deprecations",
@@ -510,16 +510,16 @@
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "2.11.1",
+            "version": "2.12.3",
             "source": {
                 "type": "git",
                 "url": "git@github.com:myparcelnl/pdk.git",
-                "reference": "c95d2ba356edef192c03d90f6777c76c681f3524"
+                "reference": "892507178695848469aff5fa5565368023fbd8c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/c95d2ba356edef192c03d90f6777c76c681f3524",
-                "reference": "c95d2ba356edef192c03d90f6777c76c681f3524",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/892507178695848469aff5fa5565368023fbd8c0",
+                "reference": "892507178695848469aff5fa5565368023fbd8c0",
                 "shasum": ""
             },
             "require": {
@@ -557,7 +557,7 @@
             ],
             "description": "MyParcel Plugin Development Kit",
             "homepage": "https://myparcel.nl",
-            "time": "2023-07-18T12:30:08+00:00"
+            "time": "2023-07-26T08:58:18+00:00"
         },
         {
             "name": "myparcelnl/sdk",
