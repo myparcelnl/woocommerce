@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Tests\Mock;
 
 use BadMethodCallException;
+use MyParcelNL\Sdk\src\Support\Str;
 
 abstract class MockWcClass
 {
@@ -18,8 +19,12 @@ abstract class MockWcClass
     /**
      * @param  array|int|string $data - extra types to avoid type errors in real code.
      */
-    public function __construct(array $data = [])
+    public function __construct($data = [])
     {
+        if (is_scalar($data)) {
+            $data = ['id' => $data];
+        }
+
         $this->attributes = $data;
     }
 
@@ -31,7 +36,13 @@ abstract class MockWcClass
      */
     public function __call($name, $arguments)
     {
-        if (strpos($name, self::GETTER_PREFIX) === 0) {
+        if (Str::startsWith($name, ['is_', 'needs_'])) {
+            $method = self::GETTER_PREFIX . $name;
+
+            return $this->{$method}();
+        }
+
+        if (Str::startsWith($name, self::GETTER_PREFIX)) {
             $attribute = substr($name, strlen(self::GETTER_PREFIX));
 
             return $this->attributes[$attribute] ?? null;

@@ -5,8 +5,10 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Tests\Unit\Pdk\Plugin\Repository;
 
+use InvalidArgumentException;
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
+use MyParcelNL\Pdk\App\Order\Model\PdkOrder;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
 use MyParcelNL\WooCommerce\Pdk\Product\Repository\WcPdkProductRepository;
@@ -145,12 +147,48 @@ it('creates a valid pdk order', function (array $input) {
     $wcOrder  = new WC_Order($input);
     $pdkOrder = $orderRepository->get($wcOrder);
 
-    expect($logger->getLogs())->toBeEmpty();
+    expect($logger->getLogs())->toBe([]);
 
     assertMatchesJsonSnapshot(json_encode($pdkOrder->toArrayWithoutNull(), JSON_PRETTY_PRINT));
 })->with([
     'simple order' => function () {
         return getOrderDefaults();
+    },
+
+    'BE order' => function () {
+        return array_replace(getOrderDefaults(), [
+            'shipping_address_1'  => 'Adriaan Brouwerstraat 16',
+            'shipping_city'       => 'Antwerpen',
+            'shipping_company'    => 'MyParcel BE',
+            'shipping_country'    => 'BE',
+            'shipping_first_name' => 'Fomo',
+            'shipping_last_name'  => 'Parcel',
+            'shipping_postcode'   => '1000',
+        ]);
+    },
+
+    'EU order' => function () {
+        return array_replace(getOrderDefaults(), [
+            'shipping_address_1'  => 'Hauptstraße 1',
+            'shipping_city'       => 'Berlin',
+            'shipping_company'    => 'MyParcel DE',
+            'shipping_country'    => 'DE',
+            'shipping_first_name' => 'Bier',
+            'shipping_last_name'  => 'Parcel',
+            'shipping_postcode'   => '10115',
+        ]);
+    },
+
+    'ROW order' => function () {
+        return array_replace(getOrderDefaults(), [
+            'shipping_address_1'  => '123 Fake St',
+            'shipping_city'       => 'New York',
+            'shipping_company'    => 'MyParcel US',
+            'shipping_country'    => 'US',
+            'shipping_first_name' => 'Abe',
+            'shipping_last_name'  => 'Lincoln',
+            'shipping_postcode'   => '10001',
+        ]);
     },
 
     'order with saved notes' => function () {
@@ -185,3 +223,35 @@ it('creates a valid pdk order', function (array $input) {
             ]);
     },
 ]);
+
+it('gets order via various inputs', function ($input) {
+    /** @var \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $orderRepository */
+    $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
+
+    $pdkOrder = $orderRepository->get($input);
+
+    expect($pdkOrder)->toBeInstanceOf(PdkOrder::class);
+})->with([
+    'string id' => ['1'],
+    'int id'    => [1],
+    'wc order'  => [new WC_Order(getOrderDefaults())],
+    'post'      => [(object) ['ID' => 1]],
+]);
+
+it('handles errors', function ($input) {
+    /** @var \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $orderRepository */
+    $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
+
+    $orderRepository->get($input);
+})
+    ->throws(InvalidArgumentException::class)
+    ->with([
+            'unrecognized object input' => function () {
+                return (object) ['foo' => 'bar'];
+            },
+
+            'array' => function () {
+                return ['id' => 1];
+            },
+        ]
+    );
