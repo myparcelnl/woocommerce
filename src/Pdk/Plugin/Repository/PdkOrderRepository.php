@@ -17,12 +17,10 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Fulfilment\Model\OrderNote;
 use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
-use MyParcelNL\Pdk\Settings\Model\LabelSettings;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
 use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
-use MyParcelNL\Sdk\src\Support\Str;
 use MyParcelNL\WooCommerce\Adapter\WcAddressAdapter;
 use MyParcelNL\WooCommerce\Facade\Filter;
 use stdClass;
@@ -30,26 +28,10 @@ use Throwable;
 use WC_DateTime;
 use WC_Order;
 use WC_Order_Item_Product;
-use WC_Product;
 use WP_Post;
 
 class PdkOrderRepository extends AbstractPdkOrderRepository
 {
-    private const DESCRIPTION_CUSTOMER_NOTE = '[CUSTOMER_NOTE]';
-    private const DESCRIPTION_ORDER_NR      = '[ORDER_NR]';
-    private const DESCRIPTION_PLACEHOLDERS  = [
-        self::DESCRIPTION_CUSTOMER_NOTE,
-        self::DESCRIPTION_ORDER_NR,
-        self::DESCRIPTION_PRODUCT_ID,
-        self::DESCRIPTION_PRODUCT_NAME,
-        self::DESCRIPTION_PRODUCT_QTY,
-        self::DESCRIPTION_PRODUCT_SKU,
-    ];
-    private const DESCRIPTION_PRODUCT_ID    = '[PRODUCT_ID]';
-    private const DESCRIPTION_PRODUCT_NAME  = '[PRODUCT_NAME]';
-    private const DESCRIPTION_PRODUCT_QTY   = '[PRODUCT_QTY]';
-    private const DESCRIPTION_PRODUCT_SKU   = '[PRODUCT_SKU]';
-
     /**
      * @var \MyParcelNL\WooCommerce\Adapter\WcAddressAdapter
      */
@@ -136,6 +118,17 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     }
 
     /**
+     * @param  array     $deliveryOptions
+     * @param  \WC_Order $order
+     *
+     * @return array
+     */
+    protected function getDeliveryOptions(array $deliveryOptions, WC_Order $order): array
+    {
+        return (array) (Filter::apply('orderDeliveryOptions', $deliveryOptions, $order) ?? []);
+    }
+
+    /**
      * @param  \WC_Order                                $wcOrder
      * @param  \MyParcelNL\Pdk\App\Order\Model\PdkOrder $order
      *
@@ -199,11 +192,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'customsDeclaration'    => $this->countryService->isRow($shippingAddress['cc'] ?? null)
                 ? $this->createCustomsDeclaration($order, $items)
                 : null,
-            'deliveryOptions'       => $this->getDeliveryOptions(
-                $savedOrderData['deliveryOptions'] ?? [],
-                $order,
-                $items
-            ),
+            'deliveryOptions'       => $this->getDeliveryOptions($savedOrderData['deliveryOptions'] ?? [], $order),
             'lines'                 => $items
                 ->map(function (array $item) {
                     return new PdkOrderLine([
@@ -241,71 +230,6 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         }
 
         return $date->date('Y-m-d H:i:s');
-    }
-
-    /**
-     * @param  array                                   $deliveryOptions
-     * @param  \WC_Order                               $order
-     * @param  \MyParcelNL\Pdk\Base\Support\Collection $items
-     *
-     * @return array
-     */
-    private function getDeliveryOptions(array $deliveryOptions, WC_Order $order, Collection $items): array
-    {
-        if (! isset($deliveryOptions['shipmentOptions'])){
-            $deliveryOptions['shipmentOptions'] = ['labelDescription' => ''];
-        }
-        $deliveryOptions['shipmentOptions']['labelDescription'] = $this->getLabelDescription(
-            $order,
-            $items,
-            $deliveryOptions['shipmentOptions']['labelDescription']
-        );
-
-        return (array) (Filter::apply('orderDeliveryOptions', $deliveryOptions, $order) ?? []);
-    }
-
-    /**
-     * @param  \WC_Order                               $order
-     * @param  \MyParcelNL\Pdk\Base\Support\Collection $items
-     * @param  string                                  $labelDescription
-     *
-     * @return string
-     */
-    private function getLabelDescription(WC_Order $order, Collection $items, string $labelDescription): string
-    {
-        $description = $labelDescription ?: Settings::get(LabelSettings::DESCRIPTION, LabelSettings::ID) ?? '';
-
-        if (! Str::contains($description, self::DESCRIPTION_PLACEHOLDERS)) {
-            return $description;
-        }
-
-        $productDetails = $items
-            ->where('product', '!=', null)
-            ->reduce(function (array $carry, array $item) {
-                /** @var WC_Product $product */
-                $product = $item['product'];
-
-                $sku = $product->get_sku();
-
-                $carry['ids'][]      = $product->get_id();
-                $carry['names'][]    = $product->get_name();
-                $carry['skus'][]     = empty($sku) ? '–' : $sku;
-                $carry['quantity'][] = $item['item']->get_quantity();
-
-                return $carry;
-            }, []);
-
-        return strtr(
-            $description,
-            [
-                self::DESCRIPTION_CUSTOMER_NOTE => $order->get_customer_note(),
-                self::DESCRIPTION_ORDER_NR      => $order->get_id(),
-                self::DESCRIPTION_PRODUCT_ID    => implode(', ', $productDetails['ids'] ?? []),
-                self::DESCRIPTION_PRODUCT_NAME  => implode(', ', $productDetails['names'] ?? []),
-                self::DESCRIPTION_PRODUCT_QTY   => implode(', ', $productDetails['quantity'] ?? []),
-                self::DESCRIPTION_PRODUCT_SKU   => implode(', ', $productDetails['skus'] ?? []),
-            ]
-        );
     }
 
     /**
