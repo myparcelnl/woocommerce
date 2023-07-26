@@ -54,7 +54,7 @@
     "shipmentOptions": {
       "ageCheck": true,
       "insurance": 50000,
-      "labelDescription": "hello",
+      "labelDescription": "test",
       "largeFormat": true,
       "onlyRecipient": true,
       "return": true,

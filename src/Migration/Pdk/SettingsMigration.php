@@ -374,9 +374,12 @@ final class SettingsMigration extends AbstractPdkMigration
         ];
 
         yield [
-            self::TRANSFORM_KEY_SOURCE => 'export_defaults.label_description',
-            self::TRANSFORM_KEY_TARGET => 'label.description',
-            self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_STRING,
+            self::TRANSFORM_KEY_SOURCE    => 'export_defaults.label_description',
+            self::TRANSFORM_KEY_TARGET    => 'label.description',
+            self::TRANSFORM_KEY_CAST      => self::TRANSFORM_CAST_STRING,
+            self::TRANSFORM_KEY_TRANSFORM => function ($value): string {
+                return str_replace('[ORDER_NR]', '[ORDER_ID]', (string) $value);
+            },
         ];
 
         yield [

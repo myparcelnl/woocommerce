@@ -30,7 +30,7 @@
   },
   "label": {
     "id": "label",
-    "description": "[ORDER_NR]- [PRODUCT_NAME] - [PRODUCT_ID]- test",
+    "description": "[ORDER_ID]- [PRODUCT_NAME] - [PRODUCT_ID]- test",
     "format": "a6",
     "output": "open",
     "position": [1, 2, 3, 4],
