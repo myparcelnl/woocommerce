@@ -28,6 +28,8 @@
     "test:coverage": "nx run-many --output-style=stream --target=test:coverage",
     "test:run": "nx run-many --output-style=stream --target=test:run",
     "translations:import": "npx -q @edielemoine/google-docs-importer --documentId 1TPE7gwG2GXtX7vlKIaskwMy0Xr4o_ir-lsedWB86xyc -o config/pdk/translations",
+    "upgrade:js": "yarn pdk-builder upgrade \"@myparcel-pdk/*\" -vvv",
+    "upgrade:php": "yarn pdk-builder upgrade myparcelnl/pdk",
     "watch": "yarn build:js:dev --parallel=99 -- --watch",
     "watch:backend": "yarn build:js:dev:backend --parallel=99 -- --watch",
     "watch:frontend": "yarn build:js:dev:frontend --parallel=99 -- --watch",
