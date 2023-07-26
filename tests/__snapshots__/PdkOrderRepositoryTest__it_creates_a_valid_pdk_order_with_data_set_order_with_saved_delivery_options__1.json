@@ -52,7 +52,6 @@
     "date": "2024-12-31 12:00:00",
     "labelAmount": 1,
     "shipmentOptions": {
-      "labelDescription": "",
       "signature": true
     },
     "deliveryType": "morning",

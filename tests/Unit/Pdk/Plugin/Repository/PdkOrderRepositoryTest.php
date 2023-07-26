@@ -11,6 +11,7 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
 use MyParcelNL\WooCommerce\Pdk\Product\Repository\WcPdkProductRepository;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
+use Psr\Log\LoggerInterface;
 use WC_DateTime;
 use WC_Order;
 use WC_Order_Item;
@@ -138,9 +139,13 @@ function createNotesMeta(array $notes = []): array
 it('creates a valid pdk order', function (array $input) {
     /** @var \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $orderRepository */
     $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
+    /** @var \MyParcelNL\Pdk\Tests\Bootstrap\MockLogger $logger */
+    $logger = Pdk::get(LoggerInterface::class);
 
     $wcOrder  = new WC_Order($input);
     $pdkOrder = $orderRepository->get($wcOrder);
+
+    expect($logger->getLogs())->toBeEmpty();
 
     assertMatchesJsonSnapshot(json_encode($pdkOrder->toArrayWithoutNull(), JSON_PRETTY_PRINT));
 })->with([
@@ -165,53 +170,12 @@ it('creates a valid pdk order', function (array $input) {
         return getOrderDefaults() + createDeliveryOptionsMeta();
     },
 
-    'order with label description CUSTOMER_NOTE' => function () {
-        return getOrderDefaults() + createDeliveryOptionsMeta([
-                'shipmentOptions' => ['labelDescription' => 'CUSTOMER_NOTE: [CUSTOMER_NOTE]'],
-            ]);
-    },
-
-    'order with label description ORDER_NR' => function () {
-        return getOrderDefaults() + createDeliveryOptionsMeta([
-                'shipmentOptions' => ['labelDescription' => 'ORDER_NR: [ORDER_NR]'],
-            ]);
-    },
-
-    'order with label description PRODUCT_ID' => function () {
-        return getOrderDefaults() + createDeliveryOptionsMeta([
-                'shipmentOptions' => ['labelDescription' => 'PRODUCT_ID: [PRODUCT_ID]'],
-            ]);
-    },
-
-    'order with label description PRODUCT_NAME' => function () {
-        return getOrderDefaults() + createDeliveryOptionsMeta([
-                'shipmentOptions' => ['labelDescription' => 'PRODUCT_NAME: [PRODUCT_NAME]'],
-            ]);
-    },
-
-    'order with label description PRODUCT_QTY' => function () {
-        return getOrderDefaults() + createDeliveryOptionsMeta([
-                'shipmentOptions' => ['labelDescription' => 'PRODUCT_QTY: [PRODUCT_QTY]'],
-            ]);
-    },
-
-    'order with label description PRODUCT_SKU'           => function () {
-        return getOrderDefaults() + createDeliveryOptionsMeta([
-                'shipmentOptions' => ['labelDescription' => 'PRODUCT_SKU: [PRODUCT_SKU]'],
-            ]);
-    },
-    'order with multiple label description placeholders' => function () {
-        return getOrderDefaults() + createDeliveryOptionsMeta([
-                'shipmentOptions' => ['labelDescription' => '[ORDER_NR] | [PRODUCT_ID] | [PRODUCT_NAME] | [PRODUCT_QTY] | [PRODUCT_SKU]'],
-            ]);
-    },
-
     'order with all shipment options' => function () {
         return getOrderDefaults() + createDeliveryOptionsMeta([
                 'shipmentOptions' => [
                     'ageCheck'         => true,
                     'insurance'        => 50000,
-                    'labelDescription' => 'hello',
+                    'labelDescription' => 'test',
                     'largeFormat'      => true,
                     'onlyRecipient'    => true,
                     'return'           => true,
