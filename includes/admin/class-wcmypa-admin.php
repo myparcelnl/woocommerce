@@ -1657,6 +1657,12 @@ class WCMYPA_Admin
         return false;
     }
 
+    /**
+     * @param  int       $commentId
+     * @param  \WC_Order $order
+     *
+     * @return void
+     */
     public function saveOrderNote(int $commentId, WC_Order $order): void
     {
         $orderMeta = get_post_meta($order->get_id(), self::META_PPS);
@@ -1690,8 +1696,6 @@ class WCMYPA_Admin
                     $e->getMessage()
                 )
             );
-
-            return;
         }
 
         $orderNotes->save();
