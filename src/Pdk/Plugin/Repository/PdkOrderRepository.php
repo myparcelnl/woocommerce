@@ -14,6 +14,7 @@ use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Facade\Platform;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Fulfilment\Model\OrderNote;
 use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
@@ -190,7 +191,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         $orderData = [
             'externalIdentifier'    => $order->get_id(),
             'billingAddress'        => $this->addressAdapter->fromWcOrder($order, Pdk::get('wcAddressTypeBilling')),
-            'customsDeclaration'    => $this->countryService->isRow($shippingAddress['cc'] ?? null)
+            'customsDeclaration'    => $this->countryService->isRow($shippingAddress['cc'] ?? Platform::get('localCountry'))
                 ? $this->createCustomsDeclaration($order, $items)
                 : null,
             'deliveryOptions'       => $this->getDeliveryOptions($savedOrderData['deliveryOptions'] ?? [], $order),
