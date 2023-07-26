@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - alpha
+      - beta
 
 concurrency:
   group: pull-request-${{ github.event.pull_request.number }}
