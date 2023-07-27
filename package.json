@@ -41,7 +41,7 @@
   },
   "lint-staged": {
     "*.{ts,vue}": "eslint --fix",
-    "*.{md,json,yml,css,scss,html}": "prettier --write",
+    "*.{md,json,yml,css,scss}": "prettier --write",
     "package.json": "npx sort-package-json"
   },
   "prettier": "@myparcel/prettier-config",
