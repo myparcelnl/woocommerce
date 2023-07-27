@@ -72,6 +72,22 @@ final class OrdersMigration extends AbstractPdkMigration
     }
 
     /**
+     * @param  array $recipient
+     *
+     * @return string
+     */
+    protected function getAddress1(array $recipient): string
+    {
+        return trim(
+            implode(' ', [
+                $recipient['street'] ?? '',
+                $recipient['number'] ?? '',
+                $recipient['numberSuffix'] ?? $recipient['boxNumber'] ?? '',
+            ])
+        );
+    }
+
+    /**
      * @return array
      */
     private function getAllOrderIds(): array
@@ -284,38 +300,30 @@ final class OrdersMigration extends AbstractPdkMigration
                     'currency' => $shipment['price']['currency'] ?? null,
                 ] : null,
                 'recipient'                => $shipment['recipient'] ? [
-                    'boxNumber'            => $shipment['recipient']['box_number'] ?? null,
-                    'cc'                   => $shipment['recipient']['cc'] ?? null,
-                    'city'                 => $shipment['recipient']['city'] ?? null,
-                    'fullStreet'           => $shipment['recipient'][''] ?? null,
-                    'number'               => $shipment['recipient']['number'] ?? null,
-                    'numberSuffix'         => $shipment['recipient']['number_suffix'] ?? null,
-                    'postalCode'           => $shipment['recipient']['postal_code'] ?? null,
-                    'region'               => $shipment['recipient']['region'] ?? null,
-                    'state'                => $shipment['recipient']['state'] ?? null,
-                    'street'               => $shipment['recipient']['street'] ?? null,
-                    'streetAdditionalInfo' => $shipment['recipient']['street_additional_info'] ?? null,
-                    'email'                => $shipment['recipient']['email'] ?? null,
-                    'phone'                => $shipment['recipient']['phone'] ?? null,
-                    'person'               => $shipment['recipient']['person'] ?? null,
-                    'company'              => $shipment['recipient']['company'] ?? null,
+                    'cc'         => $shipment['recipient']['cc'] ?? null,
+                    'address1'   => $this->getAddress1($shipment['recipient']),
+                    'address2'   => $shipment['recipient']['street_additional_info'] ?? null,
+                    'city'       => $shipment['recipient']['city'] ?? null,
+                    'company'    => $shipment['recipient']['company'] ?? null,
+                    'email'      => $shipment['recipient']['email'] ?? null,
+                    'person'     => $shipment['recipient']['person'] ?? null,
+                    'phone'      => $shipment['recipient']['phone'] ?? null,
+                    'postalCode' => $shipment['recipient']['postal_code'] ?? null,
+                    'region'     => $shipment['recipient']['region'] ?? null,
+                    'state'      => $shipment['recipient']['state'] ?? null,
                 ] : null,
-                'sender'                   => $shipment['sender'] ? [
-                    'boxNumber'            => $shipment['sender']['box_number'] ?? null,
-                    'cc'                   => $shipment['sender']['cc'] ?? null,
-                    'city'                 => $shipment['sender']['city'] ?? null,
-                    'fullStreet'           => $shipment['sender'][''] ?? null,
-                    'number'               => $shipment['sender']['number'] ?? null,
-                    'numberSuffix'         => $shipment['sender']['number_suffix'] ?? null,
-                    'postalCode'           => $shipment['sender']['postal_code'] ?? null,
-                    'region'               => $shipment['sender']['region'] ?? null,
-                    'state'                => $shipment['sender']['state'] ?? null,
-                    'street'               => $shipment['sender']['street'] ?? null,
-                    'streetAdditionalInfo' => $shipment['sender']['street_additional_info'] ?? null,
-                    'email'                => $shipment['sender']['email'] ?? null,
-                    'phone'                => $shipment['sender']['phone'] ?? null,
-                    'person'               => $shipment['sender']['person'] ?? null,
-                    'company'              => $shipment['sender']['company'] ?? null,
+                'senderAddress'            => $shipment['sender'] ? [
+                    'cc'         => $shipment['sender']['cc'] ?? null,
+                    'address1'   => $this->getAddress1($shipment['sender']),
+                    'address2'   => $shipment['sender']['street_additional_info'] ?? null,
+                    'city'       => $shipment['sender']['city'] ?? null,
+                    'company'    => $shipment['sender']['company'] ?? null,
+                    'email'      => $shipment['sender']['email'] ?? null,
+                    'person'     => $shipment['sender']['person'] ?? null,
+                    'phone'      => $shipment['sender']['phone'] ?? null,
+                    'postalCode' => $shipment['sender']['postal_code'] ?? null,
+                    'region'     => $shipment['sender']['region'] ?? null,
+                    'state'      => $shipment['sender']['state'] ?? null,
                 ] : null,
                 'shipmentType'             => $shipment['shipment_type'] ?? null,
                 'status'                   => $shipment['status'] ?? null,
