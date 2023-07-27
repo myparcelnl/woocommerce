@@ -10,6 +10,7 @@ use MyParcelNL\WooCommerce\Tests\Mock\MockWcCustomer;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcDateTime;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcOrder;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcProduct;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
 
 /** @see \WC_Cart */
 class WC_Cart extends MockWcCart { }
@@ -50,6 +51,24 @@ final class WordPressOptions
     {
         self::$options[$option] = $value;
     }
+}
+
+/**
+ * @see \update_post_meta()
+ */
+function update_post_meta($postId, $metaKey, $metaValue): bool
+{
+    MockWpMeta::update($postId, $metaKey, $metaValue);
+
+    return true;
+}
+
+/**
+ * @see \get_post_meta()
+ */
+function get_post_meta($postId, $metaKey)
+{
+    return MockWpMeta::get($postId, $metaKey);
 }
 
 /**
