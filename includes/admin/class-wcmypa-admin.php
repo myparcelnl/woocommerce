@@ -1665,21 +1665,21 @@ class WCMYPA_Admin
      */
     public function saveOrderNote(int $commentId, WC_Order $order): void
     {
-        $orderMeta = get_post_meta($order->get_id(), self::META_PPS);
-        $lastOrder = end($orderMeta);
-        $orderUuid = $lastOrder ? $lastOrder[self::META_PPS_UUID] : null;
-
-        if (! $orderUuid) {
-            return;
-        }
-
+        $orderMeta  = get_post_meta($order->get_id(), self::META_PPS);
+        $lastOrder  = end($orderMeta);
+        $orderUuid  = $lastOrder ? $lastOrder[self::META_PPS_UUID] : null;
         $comment    = get_comment($commentId);
         $orderNotes = (new OrderNotesCollection())->setApiKey(
             WCMYPA()->setting_collection->getByName(
                 WCMYPA_Settings::SETTING_API_KEY
             )
         );
-        $orderNote  = new OrderNote([
+
+        if (! $orderUuid || 'system' === $comment->comment_author) {
+            return;
+        }
+
+        $orderNote = new OrderNote([
             'note'      => $comment->comment_content,
             'author'    => 'webshop',
             'orderUuid' => $orderUuid,
