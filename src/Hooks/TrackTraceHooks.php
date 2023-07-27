@@ -6,12 +6,14 @@ namespace MyParcelNL\WooCommerce\Hooks;
 
 use Exception;
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
+use MyParcelNL\Pdk\App\Order\Model\PdkOrder;
 use MyParcelNL\Pdk\Facade\Language;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
 use MyParcelNL\Pdk\Shipment\Model\Shipment;
 use MyParcelNL\WooCommerce\Facade\Filter;
+use MyParcelNL\WooCommerce\Facade\WordPress;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use WC_Order;
 
@@ -38,15 +40,13 @@ final class TrackTraceHooks implements WordPressHooksInterface
         add_action(
             'woocommerce_email_before_order_table',
             [$this, 'renderTrackTraceInEmail'],
-            Filter::apply('trackTraceInEmailPriority'),
-            2
+            Filter::apply('trackTraceInEmailPriority')
         );
 
         add_action(
-            'woocommerce_order_details_after_order_table',
-            [$this, 'renderTrackTraceInOrderDetails'],
-            Filter::apply('trackTraceInOrderDetailsPriority'),
-            2
+            'woocommerce_after_order_details',
+            [$this, 'renderTrackTraceInAccountOrderDetails'],
+            Filter::apply('trackTraceInOrderDetailsPriority')
         );
 
         add_filter(
@@ -58,6 +58,16 @@ final class TrackTraceHooks implements WordPressHooksInterface
     }
 
     /**
+     * @param  \WC_Order $wcOrder
+     *
+     * @return \MyParcelNL\Pdk\App\Order\Model\PdkOrder
+     */
+    public function getPdkOrder(WC_Order $wcOrder): PdkOrder
+    {
+        return $this->orderRepository->get($wcOrder);
+    }
+
+    /**
      * @param  array    $actions
      * @param  WC_Order $wcOrder
      *
@@ -66,7 +76,7 @@ final class TrackTraceHooks implements WordPressHooksInterface
      */
     public function registerTrackTraceActions(array $actions, WC_Order $wcOrder): array
     {
-        if (! Settings::get(GeneralSettings::TRACK_TRACE_IN_ACCOUNT, GeneralSettings::ID)) {
+        if (! $this->shouldRender(GeneralSettings::TRACK_TRACE_IN_ACCOUNT, $wcOrder)) {
             return $actions;
         }
 
@@ -88,27 +98,63 @@ final class TrackTraceHooks implements WordPressHooksInterface
      *
      * @return void
      */
-    public function renderTrackTraceInEmail(WC_Order $order): void
+    public function renderTrackTraceInAccountOrderDetails(WC_Order $order): void
     {
-        if (! Settings::get(GeneralSettings::TRACK_TRACE_IN_EMAIL, GeneralSettings::ID)) {
+        if (! $this->shouldRender(GeneralSettings::TRACK_TRACE_IN_ACCOUNT, $order)) {
             return;
         }
 
-        $this->renderTrackTraceLink($order, 'trackTraceInEmailText');
+        $deliveryOptions = $this->getPdkOrder($order)->deliveryOptions;
+        $date            = $deliveryOptions->getDateAsString();
+
+        $rows = [
+            [Language::translate('carrier'), $deliveryOptions->carrier->human],
+            [Language::translate('package_type'), Language::translate("package_type_$deliveryOptions->packageType")],
+        ];
+
+        if ($date) {
+            $rows[] = [Language::translate('delivery_moment'), $date];
+        }
+
+        ob_start();
+
+        printf('<h2>%s</h2>', Language::translate('delivery_options'));
+
+        WordPress::renderTable($rows);
+
+        $this->renderTrackTraceLink($order, 'trackTraceInOrderDetailsText');
+
+        printf('<section class="%s-delivery-options">%s</section>', Pdk::getAppInfo()->name, ob_get_clean());
     }
 
     /**
-     * @param  \WC_Order $order
+     * @param  \WC_Order $wcOrder
      *
      * @return void
      */
-    public function renderTrackTraceInOrderDetails(WC_Order $order): void
+    public function renderTrackTraceInEmail(WC_Order $wcOrder): void
     {
-        if (! Settings::get(GeneralSettings::TRACK_TRACE_IN_ACCOUNT, GeneralSettings::ID)) {
+        if (! $this->shouldRender(GeneralSettings::TRACK_TRACE_IN_EMAIL, $wcOrder)) {
             return;
         }
 
-        $this->renderTrackTraceLink($order, 'trackTraceInOrderDetailsText');
+        $this->renderTrackTraceLink($wcOrder, 'trackTraceInEmailText');
+    }
+
+    /**
+     * @param  string    $setting
+     * @param  \WC_Order $wcOrder
+     *
+     * @return bool
+     */
+    protected function shouldRender(string $setting, WC_Order $wcOrder): bool
+    {
+        if (! Settings::get($setting, GeneralSettings::ID)) {
+            return false;
+        }
+
+        // TODO: Replace with $pdkOrder->isDeliverable() when available
+        return $this->getPdkOrder($wcOrder)->lines->containsStrict('product.isDeliverable', true);
     }
 
     /**
@@ -129,9 +175,8 @@ final class TrackTraceHooks implements WordPressHooksInterface
      */
     private function getLastShipmentWithTrackTrace(WC_Order $wcOrder): ?Shipment
     {
-        $pdkOrder = $this->orderRepository->get($wcOrder);
-
-        return $pdkOrder->shipments
+        return $this->getPdkOrder($wcOrder)
+            ->shipments
             ->where('linkConsumerPortal', '!=', null)
             ->last();
     }
