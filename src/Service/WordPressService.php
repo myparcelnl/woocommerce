@@ -31,7 +31,7 @@ class WordPressService implements WordPressServiceInterface
     public function renderTable(array $rows): void
     {
         printf(
-            "<table>%s</table>",
+            '<table>%s</table>',
             array_reduce($rows, static function (string $carry, array $row): string {
                 return $carry . sprintf('<tr><th>%s</th><td>%s</td></tr>', $row[0], $row[1]);
             }, '')

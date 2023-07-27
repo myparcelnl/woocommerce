@@ -10,6 +10,16 @@ final class MockWpMeta
 {
     public static $meta = [];
 
+    /**
+     * @param $postId
+     *
+     * @return array
+     */
+    public static function all($postId): array
+    {
+        return Arr::get(self::$meta, $postId, []);
+    }
+
     public static function clear(): void
     {
         self::$meta = [];
@@ -22,7 +32,23 @@ final class MockWpMeta
 
     public static function get($postId, $key, $default = null)
     {
-        return Arr::get(self::$meta, "$postId.$key", $default);
+        $data = Arr::get(self::$meta, "$postId.$key", $default);
+
+        if (is_string($data)) {
+            $decoded = json_decode($data, true);
+
+            if (is_array($decoded) && JSON_ERROR_NONE === json_last_error()) {
+                $data = $decoded;
+            } else {
+                $unserialized = @unserialize($data);
+
+                if (false !== $unserialized) {
+                    $data = $unserialized;
+                }
+            }
+        }
+
+        return $data;
     }
 
     public static function update($postId, $key, $value): void

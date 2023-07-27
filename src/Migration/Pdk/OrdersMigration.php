@@ -5,11 +5,23 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use DateTime;
+use MyParcelNL\Pdk\Base\Support\Arr;
+use MyParcelNL\Pdk\Base\Support\Collection;
+use MyParcelNL\Pdk\Base\Support\Utils;
 use MyParcelNL\Pdk\Facade\Pdk;
 use WC_Order;
 
 final class OrdersMigration extends AbstractPdkMigration
 {
+    public const LEGACY_META_DELIVERY_OPTIONS             = '_myparcel_delivery_options';
+    public const LEGACY_META_ORDER_VERSION                = '_myparcel_order_version';
+    public const LEGACY_META_PPS_EXPORTED                 = '_myparcel_pps_exported';
+    public const LEGACY_META_SHIPMENTS                    = '_myparcel_shipments';
+    public const LEGACY_META_SHIPMENT_OPTIONS_EXTRA       = '_myparcel_shipment_options_extra';
+    public const LEGACY_META_SHIPPING_HOUSE_NUMBER        = '_shipping_house_number';
+    public const LEGACY_META_SHIPPING_HOUSE_NUMBER_SUFFIX = '_shipping_house_number_suffix';
+    public const LEGACY_META_SHIPPING_STREET_NAME         = '_shipping_street_name';
+
     public function down(): void
     {
         /*
@@ -40,7 +52,7 @@ final class OrdersMigration extends AbstractPdkMigration
         );
 
         foreach ($orderIds as $orderId) {
-            $this->savePdkData(wc_get_order($orderId));
+            $this->savePdkData(new WC_Order($orderId));
 
             $this->debug("Order $orderId migrated.");
         }
@@ -111,14 +123,12 @@ final class OrdersMigration extends AbstractPdkMigration
      */
     private function getCustomDeclarationItems(?array $items): ?array
     {
-        $customsDeclarationItems = [];
-
         if (! $items) {
             return null;
         }
 
-        foreach ($items as $item) {
-            $customsDeclarationItems[] = $item ? [
+        return array_map(static function ($item) {
+            return Utils::filterNull([
                 'amount'         => $item['amount'] ?? null,
                 'classification' => $item['classification'] ?? null,
                 'country'        => $item['country'] ?? null,
@@ -128,10 +138,8 @@ final class OrdersMigration extends AbstractPdkMigration
                     'currency' => $item['item_value']['currency'] ?? null,
                 ],
                 'weight'         => $item['weight'] ?? null,
-            ] : null;
-        }
-
-        return $customsDeclarationItems;
+            ]);
+        }, array_filter($items));
     }
 
     /**
@@ -141,61 +149,22 @@ final class OrdersMigration extends AbstractPdkMigration
      */
     private function getDeliveryOptions(WC_Order $wcOrder): ?array
     {
-        $deliveryOptions = $this->getMeta($wcOrder, '_myparcel_delivery_options');
-        $extraOptions    = $this->getMeta($wcOrder, '_myparcel_shipment_options_extra');
+        $deliveryOptions = $this->getMeta($wcOrder, self::LEGACY_META_DELIVERY_OPTIONS);
+        $extraOptions    = $this->getMeta($wcOrder, self::LEGACY_META_SHIPMENT_OPTIONS_EXTRA);
 
-        return $deliveryOptions ? [
+        if (! $deliveryOptions && ! $extraOptions) {
+            return null;
+        }
+
+        return Utils::filterNull([
             'carrier'         => $deliveryOptions['carrier'] ?? null,
             'date'            => $deliveryOptions['date'] ?? null,
             'deliveryType'    => $deliveryOptions['deliveryType'] ?? null,
             'labelAmount'     => $extraOptions['collo_amount'] ?? null,
             'packageType'     => $deliveryOptions['packageType'] ?? null,
-            'pickupLocation'  => $deliveryOptions['pickupLocation'] ? [
-                'boxNumber'       => $deliveryOptions['pickupLocation']['box_number'] ?? null,
-                'cc'              => $deliveryOptions['pickupLocation']['cc'] ?? null,
-                'city'            => $deliveryOptions['pickupLocation']['city'] ?? null,
-                'number'          => $deliveryOptions['pickupLocation']['number'] ?? null,
-                'numberSuffix'    => $deliveryOptions['pickupLocation']['number_suffix'] ?? null,
-                'postalCode'      => $deliveryOptions['pickupLocation']['postal_code'] ?? null,
-                'region'          => $deliveryOptions['pickupLocation']['region'] ?? null,
-                'state'           => $deliveryOptions['pickupLocation']['state'] ?? null,
-                'street'          => $deliveryOptions['pickupLocation']['street'] ?? null,
-                'locationCode'    => $deliveryOptions['pickupLocation']['location_code'] ?? null,
-                'locationName'    => $deliveryOptions['pickupLocation']['location_name'] ?? null,
-                'retailNetworkId' => $deliveryOptions['pickupLocation']['retail_network_id'] ?? null,
-            ] : null,
-            'shipmentOptions' => $deliveryOptions['shipmentOptions'] ? [
-                'signature'        => $deliveryOptions['shipmentOptions']['signature'] ?? null,
-                'insurance'        => $deliveryOptions['shipmentOptions']['insurance'] ?? null,
-                'ageCheck'         => $deliveryOptions['shipmentOptions']['age_check'] ?? null,
-                'onlyRecipient'    => $deliveryOptions['shipmentOptions']['only_recipient'] ?? null,
-                'return'           => $deliveryOptions['shipmentOptions']['return'] ?? null,
-                'sameDayDelivery'  => $deliveryOptions['shipmentOptions']['same_day_delivery'] ?? null,
-                'largeFormat'      => $deliveryOptions['shipmentOptions']['large_format'] ?? null,
-                'labelDescription' => $deliveryOptions['shipmentOptions']['label_description'] ?? null,
-            ] : null,
-        ] : null;
-    }
-
-    /**
-     * @param  \WC_Order $wcOrder
-     *
-     * @return null|array
-     */
-    private function getRecipient(WC_Order $wcOrder): ?array
-    {
-        $street = $this->getMeta($wcOrder, Pdk::get('_shipping_street_name'));
-
-        if ($street) {
-            $number       = $this->getMeta($wcOrder, Pdk::get('_shipping_house_number'));
-            $numberSuffix = $this->getMeta($wcOrder, Pdk::get('_shipping_house_number_suffix'));
-
-            return [
-                'address_1' => trim("$street $number $numberSuffix"),
-            ];
-        }
-
-        return null;
+            'pickupLocation'  => $this->mapRetailLocation($deliveryOptions['pickupLocation'] ?? null),
+            'shipmentOptions' => $this->mapShipmentOptions($deliveryOptions['shipmentOptions'] ?? null),
+        ]);
     }
 
     /**
@@ -205,136 +174,185 @@ final class OrdersMigration extends AbstractPdkMigration
      */
     private function getShipments(WC_Order $wcOrder): array
     {
-        $shipmentCollection = [];
-        $shipmentMeta       = $this->getMeta($wcOrder, '_myparcel_shipments');
+        $shipmentMeta = $this->getMeta($wcOrder, self::LEGACY_META_SHIPMENTS);
 
         if (! $shipmentMeta) {
-            return $shipmentCollection;
+            return [];
         }
 
-        foreach ($shipmentMeta as $shipmentObject) {
-            $shipment = $shipmentObject['shipment'];
+        $collection = new Collection(Arr::pluck($shipmentMeta, 'shipment'));
 
-            $shipmentCollection[] = $shipment ? [
+        $newShipments = $collection->map(function (array $shipment) use ($wcOrder) {
+            return [
                 'id'                       => $shipment['id'] ?? null,
                 'parentId'                 => $shipment['parent_id'] ?? null,
                 'shopId'                   => $shipment['shop_id'] ?? null,
                 'orderId'                  => $wcOrder->get_id(),
                 'referenceIdentifier'      => $shipment['reference_identifier'] ?? null,
                 'externalIdentifier'       => $shipment['external_identifier'] ?? null,
-                'apiKey'                   => null,
                 'barcode'                  => $shipment['barcode'] ?? null,
                 'carrier'                  => [
                     'id' => $shipment['carrier_id'] ?? null,
                 ],
-                'collectionContact'        => null,
-                'customsDeclaration'       => [
-                    'contents' => $shipment['customs_declaration']['contents'] ?? null,
-                    'invoice'  => $shipment['customs_declaration']['invoice'] ?? null,
-                    'items'    => $this->getCustomDeclarationItems(
-                        $shipment['customs_declaration']['items'] ?? null
-                    ),
-                    'weight'   => $shipment['customs_declaration']['weight'] ?? null,
-                ],
+                'customsDeclaration'       => $shipment['customs_declaration']
+                    ? [
+                        'contents' => $shipment['customs_declaration']['contents'] ?? null,
+                        'invoice'  => $shipment['customs_declaration']['invoice'] ?? null,
+                        'items'    => $this->getCustomDeclarationItems(
+                            $shipment['customs_declaration']['items'] ?? null
+                        ),
+                        'weight'   => $shipment['customs_declaration']['weight'] ?? null,
+                    ]
+                    : null,
                 'delayed'                  => $shipment['delayed'] ?? null,
                 'delivered'                => $shipment['delivered'] ?? null,
-                'deliveryOptions'          => $shipment['options'] ? [
-                    'carrier'         => [
-                        'id' => $shipment['carrier_id'] ?? null,
-                    ],
-                    'date'            => $shipment['options']['delivery_date'] ?? null,
-                    'deliveryType'    => $shipment['options']['delivery_type'] ?? null,
-                    'labelAmount'     => $shipment['options']['label_amount'] ?? null,
-                    'packageType'     => $shipment['options']['package_type'] ?? null,
-                    'pickupLocation'  => $shipment['pickup'] ? [
-                        'boxNumber'       => $shipment['pickup']['box_number'] ?? null,
-                        'cc'              => $shipment['pickup']['cc'] ?? null,
-                        'city'            => $shipment['pickup']['city'] ?? null,
-                        'number'          => $shipment['pickup']['number'] ?? null,
-                        'numberSuffix'    => $shipment['pickup']['number_suffix'] ?? null,
-                        'postalCode'      => $shipment['pickup']['postal_code'] ?? null,
-                        'region'          => $shipment['pickup']['region'] ?? null,
-                        'state'           => $shipment['pickup']['state'] ?? null,
-                        'street'          => $shipment['pickup']['street'] ?? null,
-                        'locationCode'    => $shipment['pickup']['location_code'] ?? null,
-                        'locationName'    => $shipment['pickup']['location_name'] ?? null,
-                        'retailNetworkId' => $shipment['pickup']['retail_network_id'] ?? null,
-                    ] : null,
-                    'shipmentOptions' => [
-                        'signature'        => $shipment['options']['signature'] ?? null,
-                        'insurance'        => $shipment['options']['insurance']['amount'] ?? null,
-                        'ageCheck'         => $shipment['options']['age_check'] ?? null,
-                        'onlyRecipient'    => $shipment['options']['only_recipient'] ?? null,
-                        'return'           => $shipment['options']['return'] ?? null,
-                        'sameDayDelivery'  => $shipment['options']['same_day_delivery'] ?? null,
-                        'largeFormat'      => $shipment['options']['large_format'] ?? null,
-                        'labelDescription' => $shipment['options']['label_description'] ?? null,
-                    ],
-                ] : null,
-                'dropOffPoint'             => $shipment['drop_off_point'] ? [
-                    'boxNumber'       => $shipment['drop_off_point']['box_number'] ?? null,
-                    'cc'              => $shipment['drop_off_point']['cc'] ?? null,
-                    'city'            => $shipment['drop_off_point']['city'] ?? null,
-                    'number'          => $shipment['drop_off_point']['number'] ?? null,
-                    'numberSuffix'    => $shipment['drop_off_point']['number_suffix'] ?? null,
-                    'postalCode'      => $shipment['drop_off_point']['postal_code'] ?? null,
-                    'region'          => $shipment['drop_off_point']['region'] ?? null,
-                    'state'           => $shipment['drop_off_point']['state'] ?? null,
-                    'street'          => $shipment['drop_off_point']['street'] ?? null,
-                    'locationCode'    => $shipment['drop_off_point']['location_code'] ?? null,
-                    'locationName'    => $shipment['drop_off_point']['location_name'] ?? null,
-                    'retailNetworkId' => $shipment['drop_off_point']['retail_network_id'] ?? null,
-                ] : null,
+                'deliveryOptions'          => $shipment['options']
+                    ? [
+                        'carrier'         => [
+                            'id' => $shipment['carrier_id'] ?? null,
+                        ],
+                        'date'            => $shipment['options']['delivery_date'] ?? null,
+                        'deliveryType'    => $shipment['options']['delivery_type'] ?? null,
+                        'labelAmount'     => $shipment['options']['label_amount'] ?? null,
+                        'packageType'     => $shipment['options']['package_type'] ?? null,
+                        'pickupLocation'  => $this->mapRetailLocation($shipment['pickup'] ?? null),
+                        'shipmentOptions' => $this->mapShipmentOptions($shipment['options']),
+                    ]
+                    : null,
+                'dropOffPoint'             => $this->mapRetailLocation($shipment['drop_off_point'] ?? null),
                 'hidden'                   => $shipment['hidden'] ?? null,
                 'linkConsumerPortal'       => $shipment['link_consumer_portal'] ?? null,
                 'multiColloMainShipmentId' => $shipment['multi_collo_main_shipment_id'] ?? null,
                 'partnerTrackTraces'       => $shipment['partner_track_traces'] ?? null,
-                'physicalProperties'       => $shipment['physical_properties'] ? [
-                    'weight' => $shipment['physical_properties']['weight'] ?? null,
-                    'width'  => $shipment['physical_properties']['width'] ?? null,
-                    'height' => $shipment['physical_properties']['height'] ?? null,
-                    'length' => $shipment['physical_properties']['length'] ?? null,
-                ] : null,
-                'price'                    => $shipment['price'] ? [
-                    'amount'   => $shipment['price']['amount'] ?? null,
-                    'currency' => $shipment['price']['currency'] ?? null,
-                ] : null,
-                'recipient'                => $shipment['recipient'] ? [
-                    'cc'         => $shipment['recipient']['cc'] ?? null,
-                    'address1'   => $this->getAddress1($shipment['recipient']),
-                    'address2'   => $shipment['recipient']['street_additional_info'] ?? null,
-                    'city'       => $shipment['recipient']['city'] ?? null,
-                    'company'    => $shipment['recipient']['company'] ?? null,
-                    'email'      => $shipment['recipient']['email'] ?? null,
-                    'person'     => $shipment['recipient']['person'] ?? null,
-                    'phone'      => $shipment['recipient']['phone'] ?? null,
-                    'postalCode' => $shipment['recipient']['postal_code'] ?? null,
-                    'region'     => $shipment['recipient']['region'] ?? null,
-                    'state'      => $shipment['recipient']['state'] ?? null,
-                ] : null,
-                'senderAddress'            => $shipment['sender'] ? [
-                    'cc'         => $shipment['sender']['cc'] ?? null,
-                    'address1'   => $this->getAddress1($shipment['sender']),
-                    'address2'   => $shipment['sender']['street_additional_info'] ?? null,
-                    'city'       => $shipment['sender']['city'] ?? null,
-                    'company'    => $shipment['sender']['company'] ?? null,
-                    'email'      => $shipment['sender']['email'] ?? null,
-                    'person'     => $shipment['sender']['person'] ?? null,
-                    'phone'      => $shipment['sender']['phone'] ?? null,
-                    'postalCode' => $shipment['sender']['postal_code'] ?? null,
-                    'region'     => $shipment['sender']['region'] ?? null,
-                    'state'      => $shipment['sender']['state'] ?? null,
-                ] : null,
+                'physicalProperties'       => $this->map($shipment['physical_properties'] ?? null, [
+                    'weight' => 'weight',
+                    'width'  => 'width',
+                    'height' => 'height',
+                    'length' => 'length',
+                ]),
+                'price'                    => $this->map($shipment['price'] ?? null, [
+                    'amount'   => 'amount',
+                    'currency' => 'currency',
+                ]),
+                'recipient'                => $this->mapAddress($shipment['recipient'] ?? null),
+                'senderAddress'            => $this->mapAddress($shipment['sender'] ?? null),
                 'shipmentType'             => $shipment['shipment_type'] ?? null,
                 'status'                   => $shipment['status'] ?? null,
                 'created'                  => $shipment['created'] ?? null,
                 'createdBy'                => $shipment['created_by'] ?? null,
                 'modified'                 => $shipment['modified'] ?? null,
                 'modifiedBy'               => $shipment['modified_by'] ?? null,
-            ] : null;
+            ];
+        });
+
+        return $newShipments->toArrayWithoutNull();
+    }
+
+    /**
+     * @param  string $key
+     *
+     * @return string
+     */
+    private function getShippingMetaKey(string $key): string
+    {
+        return sprintf('_%s_%s', Pdk::get('wcAddressTypeShipping'), $key);
+    }
+
+    /**
+     * @param  null|array $input
+     * @param  array      $map
+     *
+     * @return null|array
+     */
+    private function map(?array $input, array $map): ?array
+    {
+        if (! $input) {
+            return null;
         }
 
-        return $shipmentCollection;
+        return Utils::filterNull(
+            array_map(static function ($value) use ($input) {
+                return $input[$value] ?? null;
+            }, $map)
+        );
+    }
+
+    /**
+     * @param  null|array $input
+     *
+     * @return null|array|string[]
+     */
+    private function mapAddress(?array $input): ?array
+    {
+        if (! $input) {
+            return null;
+        }
+
+        return $this->map($input, [
+                'address2'   => 'street_additional_info',
+                'cc'         => 'cc',
+                'city'       => 'city',
+                'company'    => 'company',
+                'email'      => 'email',
+                'person'     => 'person',
+                'phone'      => 'phone',
+                'postalCode' => 'postal_code',
+                'region'     => 'region',
+                'state'      => 'state',
+            ]) + ['address1' => $this->getAddress1($input)];
+    }
+
+    /**
+     * @param  null|array $input
+     *
+     * @return null|array
+     */
+    private function mapRetailLocation(?array $input): ?array
+    {
+        return $this->map($input ?? null, [
+            'boxNumber'       => 'box_number',
+            'cc'              => 'cc',
+            'city'            => 'city',
+            'locationCode'    => 'location_code',
+            'locationName'    => 'location_name',
+            'number'          => 'number',
+            'numberSuffix'    => 'number_suffix',
+            'postalCode'      => 'postal_code',
+            'region'          => 'region',
+            'retailNetworkId' => 'retail_network_id',
+            'state'           => 'state',
+            'street'          => 'street',
+        ]);
+    }
+
+    /**
+     * @param  null|array $input
+     *
+     * @return null|array
+     */
+    private function mapShipmentOptions(?array $input): ?array
+    {
+        if (! $input) {
+            return null;
+        }
+
+        $labelDescription = $input['label_description'];
+
+        $data = $this->map($input, [
+            'ageCheck'        => 'age_check',
+            'insurance'       => 'insurance',
+            'largeFormat'     => 'large_format',
+            'onlyRecipient'   => 'only_recipient',
+            'return'          => 'return',
+            'sameDayDelivery' => 'same_day_delivery',
+            'signature'       => 'signature',
+        ]);
+
+        if ($labelDescription) {
+            $data['labelDescription'] = str_replace('[ORDER_NR]', '[ORDER_ID]', $labelDescription);
+        }
+
+        return Utils::filterNull($data);
     }
 
     /**
@@ -344,13 +362,25 @@ final class OrdersMigration extends AbstractPdkMigration
      */
     private function savePdkData(WC_Order $wcOrder): void
     {
-        $this->updateMeta($wcOrder, Pdk::get('metaKeyOrderData'), [
-            'deliveryOptions' => $this->getDeliveryOptions($wcOrder),
-            'shippingAddress' => $this->getRecipient($wcOrder),
-        ]);
+        $fulfilmentData = $this->getMeta($wcOrder, self::LEGACY_META_PPS_EXPORTED);
+
+        $this->updateMeta(
+            $wcOrder,
+            Pdk::get('metaKeyOrderData'),
+            Utils::filterNull([
+                'apiIdentifier'   => $fulfilmentData['pps_uuid'] ?? null,
+                'exported'        => $fulfilmentData['pps_exported'] ?? false,
+                'deliveryOptions' => $this->getDeliveryOptions($wcOrder),
+            ])
+        );
 
         $this->updateMeta($wcOrder, Pdk::get('metaKeyOrderShipments'), $this->getShipments($wcOrder));
-        $this->updateMeta($wcOrder, Pdk::get('metaKeyVersion'), $this->getMeta($wcOrder, '_myparcel_order_version'));
+
+        $this->updateMeta(
+            $wcOrder,
+            Pdk::get('metaKeyVersion'),
+            $this->getMeta($wcOrder, self::LEGACY_META_ORDER_VERSION)
+        );
 
         $this->markObjectMigrated($wcOrder);
     }

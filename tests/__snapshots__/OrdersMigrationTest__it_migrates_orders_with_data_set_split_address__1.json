@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "_shipping_street_name": "Antareslaan",
+    "_shipping_house_number_suffix": "",
+    "_myparcelnl_order_data": {
+      "exported": false
+    },
+    "_myparcelnl_order_shipments": [],
+    "_myparcelnl_version": "4.20.0",
+    "_myparcelnl_migrated": ["5.0.0-alpha.1"]
+  },
+  "pdkOrder": {
+    "apiIdentifier": null,
+    "exported": false,
+    "deliveryOptions": {
+      "carrier": "postnl",
+      "labelAmount": 1,
+      "shipmentOptions": [],
+      "deliveryType": "standard",
+      "packageType": "package"
+    }
+  },
+  "shipments": []
+}

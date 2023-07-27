@@ -119,17 +119,6 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     }
 
     /**
-     * @param  array     $deliveryOptions
-     * @param  \WC_Order $order
-     *
-     * @return array
-     */
-    protected function getDeliveryOptions(array $deliveryOptions, WC_Order $order): array
-    {
-        return (array) (Filter::apply('orderDeliveryOptions', $deliveryOptions, $order) ?? []);
-    }
-
-    /**
      * @param  \WC_Order                                $wcOrder
      * @param  \MyParcelNL\Pdk\App\Order\Model\PdkOrder $order
      *
@@ -188,13 +177,20 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         $items           = $this->getWcOrderItems($order);
         $shippingAddress = $this->addressAdapter->fromWcOrder($order);
 
+        $savedOrderData['deliveryOptions'] = (array) (Filter::apply(
+            'orderDeliveryOptions',
+            $savedOrderData['deliveryOptions'],
+            $order
+        ) ?? []);
+
+        $isRow = $this->countryService->isRow($shippingAddress['cc'] ?? Platform::get('localCountry'));
+
         $orderData = [
             'externalIdentifier'    => $order->get_id(),
             'billingAddress'        => $this->addressAdapter->fromWcOrder($order, Pdk::get('wcAddressTypeBilling')),
-            'customsDeclaration'    => $this->countryService->isRow($shippingAddress['cc'] ?? Platform::get('localCountry'))
+            'customsDeclaration'    => $isRow
                 ? $this->createCustomsDeclaration($order, $items)
                 : null,
-            'deliveryOptions'       => $this->getDeliveryOptions($savedOrderData['deliveryOptions'] ?? [], $order),
             'lines'                 => $items
                 ->map(function (array $item) {
                     return new PdkOrderLine([
@@ -217,7 +213,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'orderDate'             => $this->getDate($order->get_date_created()),
         ];
 
-        return new PdkOrder($orderData + $savedOrderData);
+        return new PdkOrder(array_replace($savedOrderData, $orderData));
     }
 
     /**

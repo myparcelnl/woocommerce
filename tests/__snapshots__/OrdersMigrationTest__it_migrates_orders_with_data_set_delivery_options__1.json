@@ -1,0 +1,47 @@
+{
+  "meta": {
+    "_myparcelnl_order_data": {
+      "exported": false,
+      "deliveryOptions": {
+        "carrier": "postnl",
+        "date": "2077-10-23T00:00:00.000Z",
+        "deliveryType": "standard",
+        "labelAmount": 2,
+        "packageType": "package",
+        "shipmentOptions": {
+          "ageCheck": false,
+          "insurance": {
+            "amount": 500,
+            "currency": "EUR"
+          },
+          "onlyRecipient": false,
+          "sameDayDelivery": false,
+          "signature": true,
+          "labelDescription": "[ORDER_ID] [DELIVERY_DATE]"
+        }
+      }
+    },
+    "_myparcelnl_order_shipments": [],
+    "_myparcelnl_version": "2.22.0",
+    "_myparcelnl_migrated": ["5.0.0-alpha.1"]
+  },
+  "pdkOrder": {
+    "apiIdentifier": null,
+    "exported": false,
+    "deliveryOptions": {
+      "carrier": "postnl",
+      "labelAmount": 2,
+      "shipmentOptions": {
+        "ageCheck": false,
+        "insurance": 1,
+        "labelDescription": "[ORDER_ID] [DELIVERY_DATE]",
+        "onlyRecipient": false,
+        "sameDayDelivery": false,
+        "signature": true
+      },
+      "deliveryType": "standard",
+      "packageType": "package"
+    }
+  },
+  "shipments": []
+}

@@ -1,0 +1,478 @@
+{
+  "meta": {
+    "_myparcelnl_order_data": {
+      "exported": false,
+      "deliveryOptions": {
+        "labelAmount": 1
+      }
+    },
+    "_myparcelnl_order_shipments": [
+      {
+        "id": 1000001,
+        "shopId": 111359,
+        "orderId": 1,
+        "referenceIdentifier": "1520",
+        "externalIdentifier": "3SMYPA1234567",
+        "barcode": "3SMYPA1234567",
+        "carrier": {
+          "id": 1
+        },
+        "delayed": false,
+        "delivered": false,
+        "deliveryOptions": {
+          "carrier": {
+            "id": 1
+          },
+          "date": "2077-10-23 09:47:51",
+          "deliveryType": 2,
+          "labelAmount": null,
+          "packageType": 1,
+          "pickupLocation": null,
+          "shipmentOptions": {
+            "insurance": {
+              "amount": 50000,
+              "currency": "EUR"
+            },
+            "largeFormat": 0,
+            "onlyRecipient": 1,
+            "signature": 1,
+            "labelDescription": "1520"
+          }
+        },
+        "hidden": 0,
+        "physicalProperties": {
+          "weight": 72
+        },
+        "price": {
+          "amount": 937,
+          "currency": "EUR"
+        },
+        "recipient": {
+          "address2": "",
+          "cc": "BE",
+          "city": "Antwerpen",
+          "email": "test@myparcel.nl",
+          "person": "test test",
+          "phone": "1234567890",
+          "postalCode": "1000",
+          "region": "",
+          "address1": "Adriaan Brouwerstraat 16"
+        },
+        "senderAddress": {
+          "address2": "",
+          "cc": "NL",
+          "city": "Hoofddorp",
+          "company": "",
+          "email": "test@myparcel.nl",
+          "person": "nieuw",
+          "phone": "0612345678",
+          "postalCode": "2132JE",
+          "address1": "Antareslaan 31"
+        },
+        "shipmentType": 1,
+        "status": 2,
+        "created": "2023-07-10 14:11:14",
+        "createdBy": 98133,
+        "modified": "2023-07-10 14:11:41",
+        "modifiedBy": 98133
+      },
+      {
+        "id": 1000002,
+        "shopId": 21523,
+        "orderId": 1,
+        "referenceIdentifier": "1520",
+        "barcode": "3SMYPA1234567",
+        "carrier": {
+          "id": null
+        },
+        "deliveryOptions": {
+          "carrier": {
+            "id": null
+          },
+          "date": "2077-10-23 09:47:51",
+          "deliveryType": 2,
+          "labelAmount": null,
+          "packageType": 1,
+          "pickupLocation": null,
+          "shipmentOptions": {
+            "insurance": {
+              "amount": 50000,
+              "currency": "EUR"
+            },
+            "largeFormat": 0,
+            "onlyRecipient": 1,
+            "signature": 1,
+            "labelDescription": "1520"
+          }
+        },
+        "dropOffPoint": {
+          "cc": "NL",
+          "city": "Hoofddorp",
+          "locationCode": "173804",
+          "locationName": "Primera Sanders Skagerhof Hoofddorp",
+          "number": "218",
+          "postalCode": "2133DW",
+          "street": "Skagerrak"
+        },
+        "hidden": 0,
+        "physicalProperties": {
+          "weight": 72
+        },
+        "price": {
+          "amount": 112,
+          "currency": "EUR"
+        },
+        "recipient": {
+          "address2": "",
+          "cc": "BE",
+          "city": "Antwerpen",
+          "email": "test@myparcel.nl",
+          "person": "test test",
+          "phone": "1234567890",
+          "postalCode": "1000",
+          "region": "",
+          "address1": "Adriaan Brouwerstraat 16"
+        },
+        "senderAddress": {
+          "address2": "",
+          "cc": "NL",
+          "city": "Hoofddorp",
+          "company": "WEBSHOP via MyParcel",
+          "email": "test@myparcel.nl",
+          "person": "WEBSHOP via MyParcel",
+          "phone": "",
+          "postalCode": "2130AK",
+          "address1": "Postbus 442"
+        },
+        "shipmentType": 1,
+        "status": 2,
+        "created": "2023-07-27 15:42:59",
+        "createdBy": 1444,
+        "modified": "2023-07-27 15:42:59",
+        "modifiedBy": 1444
+      }
+    ],
+    "_myparcelnl_version": "3.12.0",
+    "_myparcelnl_migrated": ["5.0.0-alpha.1"]
+  },
+  "pdkOrder": {
+    "apiIdentifier": null,
+    "exported": false,
+    "deliveryOptions": {
+      "carrier": "postnl",
+      "labelAmount": 1,
+      "shipmentOptions": [],
+      "deliveryType": "standard",
+      "packageType": "package"
+    }
+  },
+  "shipments": [
+    {
+      "orderId": "1",
+      "multiCollo": false,
+      "deleted": null,
+      "id": 1000001,
+      "shopId": 111359,
+      "referenceIdentifier": "1520",
+      "externalIdentifier": "3SMYPA1234567",
+      "barcode": "3SMYPA1234567",
+      "carrier": {
+        "externalIdentifier": "postnl",
+        "id": 1,
+        "name": "postnl",
+        "human": "PostNL",
+        "subscriptionId": null,
+        "enabled": false,
+        "isDefault": true,
+        "label": null,
+        "optional": false,
+        "primary": false,
+        "type": "main",
+        "capabilities": null,
+        "returnCapabilities": null
+      },
+      "collectionContact": null,
+      "customsDeclaration": null,
+      "delayed": false,
+      "delivered": false,
+      "deliveryOptions": {
+        "carrier": {
+          "externalIdentifier": "postnl",
+          "id": 1,
+          "name": "postnl",
+          "human": "PostNL",
+          "subscriptionId": null,
+          "enabled": false,
+          "isDefault": true,
+          "label": null,
+          "optional": false,
+          "primary": false,
+          "type": "main",
+          "capabilities": null,
+          "returnCapabilities": null
+        },
+        "date": "2077-10-23 09:47:51",
+        "labelAmount": 1,
+        "pickupLocation": null,
+        "shipmentOptions": {
+          "ageCheck": null,
+          "insurance": 1,
+          "labelDescription": "1520",
+          "largeFormat": false,
+          "onlyRecipient": true,
+          "return": null,
+          "sameDayDelivery": null,
+          "signature": true
+        },
+        "deliveryType": "standard",
+        "packageType": "package"
+      },
+      "dropOffPoint": null,
+      "hidden": false,
+      "isReturn": false,
+      "linkConsumerPortal": null,
+      "multiColloMainShipmentId": null,
+      "partnerTrackTraces": [],
+      "physicalProperties": {
+        "height": null,
+        "length": null,
+        "weight": 72,
+        "width": null
+      },
+      "price": {
+        "amount": 937,
+        "currency": "EUR"
+      },
+      "recipient": {
+        "address1": "Adriaan Brouwerstraat 16",
+        "address2": "",
+        "area": null,
+        "cc": "BE",
+        "city": "Antwerpen",
+        "postalCode": "1000",
+        "region": "",
+        "state": null,
+        "email": "test@myparcel.nl",
+        "phone": "1234567890",
+        "person": "test test",
+        "company": null
+      },
+      "sender": {
+        "address1": null,
+        "address2": null,
+        "area": null,
+        "cc": null,
+        "city": null,
+        "postalCode": null,
+        "region": null,
+        "state": null,
+        "email": null,
+        "phone": null,
+        "person": null,
+        "company": null
+      },
+      "shipmentType": 1,
+      "status": 2,
+      "created": "2023-07-10 14:11:14",
+      "createdBy": 98133,
+      "modified": "2023-07-10 14:11:41",
+      "modifiedBy": 98133
+    },
+    {
+      "orderId": "1",
+      "multiCollo": false,
+      "deleted": null,
+      "id": 1000002,
+      "shopId": 21523,
+      "referenceIdentifier": "1520",
+      "externalIdentifier": null,
+      "barcode": "3SMYPA1234567",
+      "carrier": {
+        "externalIdentifier": "postnl",
+        "id": 1,
+        "name": "postnl",
+        "human": "PostNL",
+        "subscriptionId": null,
+        "enabled": false,
+        "isDefault": true,
+        "label": null,
+        "optional": false,
+        "primary": false,
+        "type": "main",
+        "capabilities": {
+          "deliveryTypes": ["morning", "standard", "evening", "pickup"],
+          "features": {
+            "labelDescriptionLength": 45
+          },
+          "packageTypes": ["package", "mailbox", "letter", "digital_stamp"],
+          "shipmentOptions": {
+            "ageCheck": true,
+            "largeFormat": true,
+            "onlyRecipient": true,
+            "return": true,
+            "sameDayDelivery": true,
+            "signature": true,
+            "insurance": [
+              0, 10000, 25000, 50000, 100000, 150000, 200000, 250000, 300000,
+              350000, 400000, 450000, 500000
+            ]
+          }
+        },
+        "returnCapabilities": {
+          "deliveryTypes": ["standard"],
+          "features": {
+            "labelDescriptionLength": 45
+          },
+          "packageTypes": ["package"],
+          "shipmentOptions": {
+            "signature": true,
+            "insurance": [
+              0, 10000, 25000, 50000, 100000, 150000, 200000, 250000, 300000,
+              350000, 400000, 450000, 500000
+            ],
+            "return": true,
+            "ageCheck": true,
+            "onlyRecipient": true,
+            "sameDayDelivery": true,
+            "largeFormat": true
+          }
+        }
+      },
+      "collectionContact": null,
+      "customsDeclaration": null,
+      "delayed": false,
+      "delivered": false,
+      "deliveryOptions": {
+        "carrier": {
+          "externalIdentifier": "postnl",
+          "id": 1,
+          "name": "postnl",
+          "human": "PostNL",
+          "subscriptionId": null,
+          "enabled": false,
+          "isDefault": true,
+          "label": null,
+          "optional": false,
+          "primary": false,
+          "type": "main",
+          "capabilities": {
+            "deliveryTypes": ["morning", "standard", "evening", "pickup"],
+            "features": {
+              "labelDescriptionLength": 45
+            },
+            "packageTypes": ["package", "mailbox", "letter", "digital_stamp"],
+            "shipmentOptions": {
+              "ageCheck": true,
+              "largeFormat": true,
+              "onlyRecipient": true,
+              "return": true,
+              "sameDayDelivery": true,
+              "signature": true,
+              "insurance": [
+                0, 10000, 25000, 50000, 100000, 150000, 200000, 250000, 300000,
+                350000, 400000, 450000, 500000
+              ]
+            }
+          },
+          "returnCapabilities": {
+            "deliveryTypes": ["standard"],
+            "features": {
+              "labelDescriptionLength": 45
+            },
+            "packageTypes": ["package"],
+            "shipmentOptions": {
+              "signature": true,
+              "insurance": [
+                0, 10000, 25000, 50000, 100000, 150000, 200000, 250000, 300000,
+                350000, 400000, 450000, 500000
+              ],
+              "return": true,
+              "ageCheck": true,
+              "onlyRecipient": true,
+              "sameDayDelivery": true,
+              "largeFormat": true
+            }
+          }
+        },
+        "date": "2077-10-23 09:47:51",
+        "labelAmount": 1,
+        "pickupLocation": null,
+        "shipmentOptions": {
+          "ageCheck": null,
+          "insurance": 1,
+          "labelDescription": "1520",
+          "largeFormat": false,
+          "onlyRecipient": true,
+          "return": null,
+          "sameDayDelivery": null,
+          "signature": true
+        },
+        "deliveryType": "standard",
+        "packageType": "package"
+      },
+      "dropOffPoint": {
+        "locationCode": "173804",
+        "locationName": "Primera Sanders Skagerhof Hoofddorp",
+        "retailNetworkId": null,
+        "boxNumber": null,
+        "cc": "NL",
+        "city": "Hoofddorp",
+        "number": "218",
+        "numberSuffix": null,
+        "postalCode": "2133DW",
+        "region": null,
+        "state": null,
+        "street": "Skagerrak"
+      },
+      "hidden": false,
+      "isReturn": false,
+      "linkConsumerPortal": null,
+      "multiColloMainShipmentId": null,
+      "partnerTrackTraces": [],
+      "physicalProperties": {
+        "height": null,
+        "length": null,
+        "weight": 72,
+        "width": null
+      },
+      "price": {
+        "amount": 112,
+        "currency": "EUR"
+      },
+      "recipient": {
+        "address1": "Adriaan Brouwerstraat 16",
+        "address2": "",
+        "area": null,
+        "cc": "BE",
+        "city": "Antwerpen",
+        "postalCode": "1000",
+        "region": "",
+        "state": null,
+        "email": "test@myparcel.nl",
+        "phone": "1234567890",
+        "person": "test test",
+        "company": null
+      },
+      "sender": {
+        "address1": null,
+        "address2": null,
+        "area": null,
+        "cc": null,
+        "city": null,
+        "postalCode": null,
+        "region": null,
+        "state": null,
+        "email": null,
+        "phone": null,
+        "person": null,
+        "company": null
+      },
+      "shipmentType": 1,
+      "status": 2,
+      "created": "2023-07-27 15:42:59",
+      "createdBy": 1444,
+      "modified": "2023-07-27 15:42:59",
+      "modifiedBy": 1444
+    }
+  ]
+}
