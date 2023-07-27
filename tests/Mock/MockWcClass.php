@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Tests\Mock;
 
 use BadMethodCallException;
+use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Sdk\src\Support\Str;
 
 abstract class MockWcClass
@@ -24,6 +25,12 @@ abstract class MockWcClass
         if (is_scalar($data)) {
             $data = ['id' => $data];
         }
+
+        foreach ($data['meta'] ?? [] as $metaKey => $metaValue) {
+            update_post_meta($data['id'], $metaKey, $metaValue);
+        }
+
+        Arr::forget($data, 'meta');
 
         $this->attributes = $data;
     }
@@ -70,6 +77,6 @@ abstract class MockWcClass
      */
     public function get_meta($key = '', $single = true, $context = 'view')
     {
-        return $this->attributes['meta'][$key] ?? null;
+        return get_post_meta($this->get_id(), $key);
     }
 }
