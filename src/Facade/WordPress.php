@@ -9,6 +9,7 @@ use MyParcelNL\WooCommerce\Contract\WordPressServiceInterface;
 
 /**
  * @method static bool getVersion() Get the WordPress version.
+ * @method static void renderTable(array $rows) Renders a set of rows as a table.
  * @implements WordPressServiceInterface
  */
 final class WordPress extends Facade
