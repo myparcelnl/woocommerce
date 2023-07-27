@@ -6,6 +6,7 @@ namespace MyParcelNL\WooCommerce\Migration;
 
 use MyParcelNL\Pdk\App\Installer\Contract\MigrationInterface;
 use MyParcelNL\Pdk\Facade\Logger;
+use MyParcelNL\Pdk\Facade\Pdk;
 use WC_Data;
 
 abstract class AbstractMigration implements MigrationInterface
@@ -82,12 +83,14 @@ abstract class AbstractMigration implements MigrationInterface
      */
     protected function markObjectMigrated($objectOrId): void
     {
-        $existing = $this->getMeta($objectOrId, 'metaKeyMigrated') ?: [];
+        $migratedKey = Pdk::get('metaKeyMigrated');
+
+        $existing = $this->getMeta($objectOrId, $migratedKey) ?: [];
 
         $executedMigrations   = is_array($existing) ? $existing : [];
         $executedMigrations[] = $this->getVersion();
 
-        $this->updateMeta($objectOrId, 'metaKeyMigrated', $executedMigrations);
+        $this->updateMeta($objectOrId, $migratedKey, $executedMigrations);
     }
 
     /**

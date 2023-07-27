@@ -1,0 +1,224 @@
+{
+  "meta": {
+    "_myparcelnl_order_data": {
+      "exported": false
+    },
+    "_myparcelnl_order_shipments": [
+      {
+        "id": 123456789,
+        "shopId": 5678,
+        "orderId": 1,
+        "referenceIdentifier": "1525",
+        "externalIdentifier": "3SMYPA123456789",
+        "barcode": "3SMYPA123456789",
+        "carrier": {
+          "id": 1
+        },
+        "delayed": false,
+        "delivered": false,
+        "deliveryOptions": {
+          "carrier": {
+            "id": 1
+          },
+          "date": "2077-10-23 09:47:51",
+          "deliveryType": 2,
+          "labelAmount": null,
+          "packageType": 1,
+          "pickupLocation": null,
+          "shipmentOptions": {
+            "insurance": {
+              "amount": 0,
+              "currency": "EUR"
+            },
+            "largeFormat": 0,
+            "labelDescription": "1525"
+          }
+        },
+        "dropOffPoint": {
+          "cc": "NL",
+          "city": "Hoofddorp",
+          "locationCode": "173804",
+          "locationName": "Primera Sanders Skagerhof Hoofddorp",
+          "number": "218",
+          "postalCode": "2133DW",
+          "street": "Skagerrak"
+        },
+        "hidden": 0,
+        "physicalProperties": {
+          "weight": 330
+        },
+        "price": {
+          "amount": 607,
+          "currency": "EUR"
+        },
+        "recipient": {
+          "address2": "",
+          "cc": "NL",
+          "city": "Hoofddorp",
+          "email": "test@myparcel.nl",
+          "person": "hallo test",
+          "phone": "06123456789",
+          "postalCode": "2132 JE",
+          "region": "",
+          "address1": "Antareslaan 31"
+        },
+        "senderAddress": {
+          "address2": "",
+          "cc": "NL",
+          "city": "Hoofddorp",
+          "company": "BEDRIJF via MyParcel",
+          "email": "test@myparcel.nl",
+          "person": "BEDRIJF via MyParcel",
+          "phone": "",
+          "postalCode": "2130AK",
+          "address1": "Postbus 442"
+        },
+        "shipmentType": 1,
+        "status": 2,
+        "created": "2023-07-26 18:03:15",
+        "createdBy": 1234,
+        "modified": "2023-07-26 18:03:45",
+        "modifiedBy": 1234
+      }
+    ],
+    "_myparcelnl_version": "3.12.0",
+    "_myparcelnl_migrated": ["5.0.0-alpha.1"]
+  },
+  "pdkOrder": {
+    "apiIdentifier": null,
+    "exported": false,
+    "deliveryOptions": {
+      "carrier": "postnl",
+      "labelAmount": 1,
+      "shipmentOptions": [],
+      "deliveryType": "standard",
+      "packageType": "package"
+    }
+  },
+  "shipments": [
+    {
+      "orderId": "1",
+      "multiCollo": false,
+      "deleted": null,
+      "id": 123456789,
+      "shopId": 5678,
+      "referenceIdentifier": "1525",
+      "externalIdentifier": "3SMYPA123456789",
+      "barcode": "3SMYPA123456789",
+      "carrier": {
+        "externalIdentifier": "postnl",
+        "id": 1,
+        "name": "postnl",
+        "human": "PostNL",
+        "subscriptionId": null,
+        "enabled": false,
+        "isDefault": true,
+        "label": null,
+        "optional": false,
+        "primary": false,
+        "type": "main",
+        "capabilities": null,
+        "returnCapabilities": null
+      },
+      "collectionContact": null,
+      "customsDeclaration": null,
+      "delayed": false,
+      "delivered": false,
+      "deliveryOptions": {
+        "carrier": {
+          "externalIdentifier": "postnl",
+          "id": 1,
+          "name": "postnl",
+          "human": "PostNL",
+          "subscriptionId": null,
+          "enabled": false,
+          "isDefault": true,
+          "label": null,
+          "optional": false,
+          "primary": false,
+          "type": "main",
+          "capabilities": null,
+          "returnCapabilities": null
+        },
+        "date": "2077-10-23 09:47:51",
+        "labelAmount": 1,
+        "pickupLocation": null,
+        "shipmentOptions": {
+          "ageCheck": null,
+          "insurance": 1,
+          "labelDescription": "1525",
+          "largeFormat": false,
+          "onlyRecipient": null,
+          "return": null,
+          "sameDayDelivery": null,
+          "signature": null
+        },
+        "deliveryType": "standard",
+        "packageType": "package"
+      },
+      "dropOffPoint": {
+        "locationCode": "173804",
+        "locationName": "Primera Sanders Skagerhof Hoofddorp",
+        "retailNetworkId": null,
+        "boxNumber": null,
+        "cc": "NL",
+        "city": "Hoofddorp",
+        "number": "218",
+        "numberSuffix": null,
+        "postalCode": "2133DW",
+        "region": null,
+        "state": null,
+        "street": "Skagerrak"
+      },
+      "hidden": false,
+      "isReturn": false,
+      "linkConsumerPortal": null,
+      "multiColloMainShipmentId": null,
+      "partnerTrackTraces": [],
+      "physicalProperties": {
+        "height": null,
+        "length": null,
+        "weight": 330,
+        "width": null
+      },
+      "price": {
+        "amount": 607,
+        "currency": "EUR"
+      },
+      "recipient": {
+        "address1": "Antareslaan 31",
+        "address2": "",
+        "area": null,
+        "cc": "NL",
+        "city": "Hoofddorp",
+        "postalCode": "2132 JE",
+        "region": "",
+        "state": null,
+        "email": "test@myparcel.nl",
+        "phone": "06123456789",
+        "person": "hallo test",
+        "company": null
+      },
+      "sender": {
+        "address1": null,
+        "address2": null,
+        "area": null,
+        "cc": null,
+        "city": null,
+        "postalCode": null,
+        "region": null,
+        "state": null,
+        "email": null,
+        "phone": null,
+        "person": null,
+        "company": null
+      },
+      "shipmentType": 1,
+      "status": 2,
+      "created": "2023-07-26 18:03:15",
+      "createdBy": 1234,
+      "modified": "2023-07-26 18:03:45",
+      "modifiedBy": 1234
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "meta": {
+    "_myparcelnl_order_data": {
+      "exported": false,
+      "deliveryOptions": {
+        "carrier": "dhlforyou",
+        "date": "",
+        "deliveryType": "standard",
+        "labelAmount": 1,
+        "packageType": "package",
+        "shipmentOptions": {
+          "ageCheck": true,
+          "insurance": 500,
+          "largeFormat": false,
+          "onlyRecipient": true,
+          "return": false,
+          "sameDayDelivery": true,
+          "signature": true,
+          "labelDescription": "[ORDER_ID]"
+        }
+      }
+    },
+    "_myparcelnl_order_shipments": [],
+    "_myparcelnl_version": "2.22.0",
+    "_myparcelnl_migrated": ["5.0.0-alpha.1"]
+  },
+  "pdkOrder": {
+    "apiIdentifier": null,
+    "exported": false,
+    "deliveryOptions": {
+      "carrier": "dhlforyou",
+      "labelAmount": 1,
+      "shipmentOptions": {
+        "ageCheck": true,
+        "insurance": 500,
+        "labelDescription": "[ORDER_ID]",
+        "largeFormat": false,
+        "onlyRecipient": true,
+        "return": false,
+        "sameDayDelivery": true,
+        "signature": true
+      },
+      "deliveryType": "standard",
+      "packageType": "package"
+    }
+  },
+  "shipments": []
+}

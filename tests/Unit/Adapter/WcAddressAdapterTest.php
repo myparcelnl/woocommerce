@@ -51,9 +51,9 @@ dataset('addresses', function () {
                 'shipping_state'      => 'NH',
             ],
             'meta'        => [
-                '_shipping_street'        => 'Siriusdreef',
-                '_shipping_number'        => '66',
-                '_shipping_number_suffix' => '-68',
+                '_shipping_street_name'         => 'Siriusdreef',
+                '_shipping_house_number'        => '66',
+                '_shipping_house_number_suffix' => '-68',
             ],
         ],
 
