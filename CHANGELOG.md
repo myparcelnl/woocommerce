@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.21.0](https://github.com/myparcelnl/woocommerce/compare/v4.20.2...v4.21.0) (2023-07-31)
+
+
+### :sparkles: New Features
+
+* **fulfilment:** add order notes ([#994](https://github.com/myparcelnl/woocommerce/issues/994)) ([33b21f1](https://github.com/myparcelnl/woocommerce/commit/33b21f1a2ff74e743ed5556353a5880011d1e170))
+
 ## [4.20.2](https://github.com/myparcelnl/woocommerce/compare/v4.20.1...v4.20.2) (2023-05-26)
 
 
