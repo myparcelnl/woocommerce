@@ -1,28 +1,43 @@
-.fade-enter-active,
-.fade-leave-active {
-  @apply mypa-transition mypa-duration-100 mypa-ease-in-out;
+.mypa-fade {
+  &-enter-active,
+  &-leave-active {
+    @apply mypa-transition mypa-duration-100 mypa-ease-in-out;
+  }
+
+  &-enter,
+  &-leave-to {
+    @apply mypa-translate-y-1 mypa-opacity-0;
+  }
 }
 
-.fade-enter,
-.fade-leave-to {
-  @apply mypa-translate-y-1 mypa-opacity-0;
-}
+.mypa-table-row {
+  &-enter-active,
+  &-leave-active {
+    @apply mypa-transition-all mypa-duration-1000 mypa-w-full;
+  }
 
-.mypa-shipment-row-enter td,
-.mypa-shipment-row-leave-to td {
-  transform: translateX(-30px);
-  opacity: 0;
-}
+  &-move {
+    @apply mypa-transition-all mypa-duration-200;
+  }
 
-.mypa-shipment-row-leave-active {
-  background-color: var(--danger);
-}
+  &-enter-active {
+    @apply mypa-bg-green-300 #{!important};
+  }
 
-.mypa-shipment-row-leave-active ~ .mypa-shipment-row-move {
-  transition-delay: 2s;
-}
+  &-leave-active {
+    @apply mypa-bg-red-300 #{!important};
+  }
 
-.mypa-shipment-row-enter-active {
-  transition: background 5s;
-  background-color: #abd292;
+  &-enter-from,
+  &-leave-to {
+    @apply mypa-opacity-0 mypa-delay-500 mypa-transform mypa--translate-x-4;
+  }
+
+  &-leave-active + &-enter-active {
+    @apply mypa-absolute mypa-delay-1000 #{!important};
+  }
+
+  &-leave-active {
+    @apply mypa-z-[-1];
+  }
 }
