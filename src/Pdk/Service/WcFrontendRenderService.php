@@ -52,7 +52,7 @@ class WcFrontendRenderService extends FrontendRenderService
 
         return sprintf(
             '<div id="%s" class="panel woocommerce_options_panel">%s</div>',
-            "{$appInfo->name}_product_data",
+            "{$appInfo->name}_product_data_{$product->externalIdentifier}",
             parent::renderProductSettings($product)
         );
     }

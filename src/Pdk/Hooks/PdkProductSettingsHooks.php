@@ -26,6 +26,9 @@ class PdkProductSettingsHooks implements WordPressHooksInterface
 
         // Save pdk product settings
         add_action('woocommerce_process_product_meta', [$this, 'handleSaveProduct']);
+
+        // Variants...
+        add_action('woocommerce_product_after_variable_attributes', [$this, 'renderPdkProductSettingsForVariant'], 99, 3);
     }
 
     /**
@@ -57,11 +60,12 @@ class PdkProductSettingsHooks implements WordPressHooksInterface
     {
         $appInfo    = Pdk::getAppInfo();
         $pluginName = $appInfo->name;
+        $productId  = get_the_ID();
 
         $tabs[$pluginName] = [
             'title'  => $pluginName,
             'label'  => $appInfo->title,
-            'target' => "{$pluginName}_product_data",
+            'target' => "{$pluginName}_product_data_$productId",
             'class'  => ['show_if_simple', 'show_if_variable', 'show_if_grouped', 'show_if_external'],
         ];
 
@@ -76,6 +80,16 @@ class PdkProductSettingsHooks implements WordPressHooksInterface
         /** @var PdkProductRepositoryInterface $productRepository */
         $productRepository = Pdk::get(PdkProductRepositoryInterface::class);
         $product           = $productRepository->getProduct(get_the_ID());
+
+        echo Frontend::renderProductSettings($product);
+    }
+
+    public function renderPdkProductSettingsForVariant(int $a, array $b, \WP_Post $post): void
+    {
+        /** @var PdkProductRepositoryInterface $productRepository */
+        $productRepository = Pdk::get(PdkProductRepositoryInterface::class);
+        $variant           = new \WC_Product_Variation($post->ID);
+        $product           = $productRepository->getProduct($variant);
 
         echo Frontend::renderProductSettings($product);
     }

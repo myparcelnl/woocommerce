@@ -48,7 +48,7 @@ class WcViewService extends AbstractViewService
      */
     public function isProductPage(): bool
     {
-        return 'product' === $this->getScreenId();
+        return in_array($this->getScreenId(), ['product', '']);
     }
 
     /**
@@ -56,6 +56,6 @@ class WcViewService extends AbstractViewService
      */
     private function getScreenId(): string
     {
-        return get_current_screen()->id;
+        return get_current_screen()->id ?? '';
     }
 }
