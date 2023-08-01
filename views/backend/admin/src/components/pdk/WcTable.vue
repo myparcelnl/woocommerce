@@ -7,8 +7,9 @@
     </thead>
 
     <TransitionGroup
-      :name="config?.transitions.tableRow"
-      tag="tbody">
+      :name="config?.transitions?.tableRow"
+      tag="tbody"
+      class="mypa-relative">
       <slot />
     </TransitionGroup>
 

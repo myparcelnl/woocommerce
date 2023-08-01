@@ -48,12 +48,12 @@ import {
   WcTriStateInput,
 } from './components/pdk';
 
-const FADE = 'fade';
+const FADE = 'mypa-fade';
 
 // eslint-disable-next-line max-lines-per-function
 export const initialize = (): void => {
   createPdkAdmin({
-    logLevel: import.meta.env.MODE === 'development' ? LogLevel.Info : LogLevel.Off,
+    logLevel: import.meta.env.MODE === 'development' ? LogLevel.Debug : LogLevel.Info,
 
     formConfig: {
       fieldDefaults: {
@@ -134,6 +134,7 @@ export const initialize = (): void => {
 
     cssUtilities: {
       animationSpin: 'mypa-animate-spin',
+      animationLoading: 'mypa-opacity-50 mypa-pointer-events-none mypa-select-none mypa-animate-pulse',
       cursorDefault: 'mypa-cursor-default',
       displayFlex: 'mypa-flex',
       flexGrow: 'mypa-flex-grow',
@@ -150,9 +151,8 @@ export const initialize = (): void => {
       modalBackdrop: FADE,
       notification: FADE,
       shipmentBox: FADE,
-      shipmentRow: 'mypa-shipment-row',
       tabNavigation: FADE,
-      tableRow: FADE,
+      tableRow: 'mypa-table-row',
     },
 
     onCreateStore() {
