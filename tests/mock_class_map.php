@@ -12,6 +12,8 @@ use MyParcelNL\WooCommerce\Tests\Mock\MockWcOrder;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcProduct;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
 
+class WC_Data {}
+
 /** @see \WC_Cart */
 class WC_Cart extends MockWcCart { }
 

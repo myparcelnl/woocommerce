@@ -64,6 +64,8 @@ final class OrdersMigration extends AbstractPdkMigration
     public function up(): void
     {
         if (! function_exists('wc_get_orders')) {
+            $this->error('WooCommerce is not active, aborting migration.');
+
             return;
         }
 
@@ -73,12 +75,18 @@ final class OrdersMigration extends AbstractPdkMigration
 
         foreach ($chunks as $index => $chunk) {
             $time = time() + $index * 5;
-            wp_schedule_single_event($time, Pdk::get('migrateAction_5_0_0_Orders'), [
-                [
-                    'orderIds'  => $chunk,
-                    'chunk'     => $index,
-                    'lastChunk' => $lastChunk,
-                ],
+
+            $chunkContext = [
+                'orderIds'  => $chunk,
+                'chunk'     => $index,
+                'lastChunk' => $lastChunk,
+            ];
+
+            wp_schedule_single_event($time, Pdk::get('migrateAction_5_0_0_Orders'), [$chunkContext]);
+
+            $this->debug('Scheduled migration for orders', [
+                'time'  => $time,
+                'chunk' => $chunkContext,
             ]);
         }
     }
@@ -108,7 +116,10 @@ final class OrdersMigration extends AbstractPdkMigration
         $date->modify('-3 months');
 
         $allOrders = wc_get_orders([
-            'date_after' => $date->format('Y-m-d'),
+            'date_after'   => $date->format('Y-m-d'),
+            'meta_key'     => Pdk::get('metaKeyMigrated'),
+            'meta_value'   => sprintf('"%s"', $this->getVersion()),
+            'meta_compare' => 'NOT LIKE',
         ]);
 
         return array_map(static function (WC_Order $order) {
@@ -149,8 +160,8 @@ final class OrdersMigration extends AbstractPdkMigration
      */
     private function getDeliveryOptions(WC_Order $wcOrder): ?array
     {
-        $deliveryOptions = $this->getMeta($wcOrder, self::LEGACY_META_DELIVERY_OPTIONS);
-        $extraOptions    = $this->getMeta($wcOrder, self::LEGACY_META_SHIPMENT_OPTIONS_EXTRA);
+        $deliveryOptions = $wcOrder->get_meta(self::LEGACY_META_DELIVERY_OPTIONS);
+        $extraOptions    = $wcOrder->get_meta(self::LEGACY_META_SHIPMENT_OPTIONS_EXTRA);
 
         if (! $deliveryOptions && ! $extraOptions) {
             return null;
@@ -174,7 +185,7 @@ final class OrdersMigration extends AbstractPdkMigration
      */
     private function getShipments(WC_Order $wcOrder): array
     {
-        $shipmentMeta = $this->getMeta($wcOrder, self::LEGACY_META_SHIPMENTS);
+        $shipmentMeta = $wcOrder->get_meta(self::LEGACY_META_SHIPMENTS);
 
         if (! $shipmentMeta) {
             return [];
@@ -246,16 +257,6 @@ final class OrdersMigration extends AbstractPdkMigration
         });
 
         return $newShipments->toArrayWithoutNull();
-    }
-
-    /**
-     * @param  string $key
-     *
-     * @return string
-     */
-    private function getShippingMetaKey(string $key): string
-    {
-        return sprintf('_%s_%s', Pdk::get('wcAddressTypeShipping'), $key);
     }
 
     /**
@@ -362,10 +363,10 @@ final class OrdersMigration extends AbstractPdkMigration
      */
     private function savePdkData(WC_Order $wcOrder): void
     {
-        $fulfilmentData = $this->getMeta($wcOrder, self::LEGACY_META_PPS_EXPORTED);
+        $fulfilmentData = $wcOrder->get_meta(self::LEGACY_META_PPS_EXPORTED);
 
-        $this->updateMeta(
-            $wcOrder,
+        update_post_meta(
+            $wcOrder->get_id(),
             Pdk::get('metaKeyOrderData'),
             Utils::filterNull([
                 'apiIdentifier'   => $fulfilmentData['pps_uuid'] ?? null,
@@ -374,14 +375,14 @@ final class OrdersMigration extends AbstractPdkMigration
             ])
         );
 
-        $this->updateMeta($wcOrder, Pdk::get('metaKeyOrderShipments'), $this->getShipments($wcOrder));
+        update_post_meta($wcOrder->get_id(), Pdk::get('metaKeyOrderShipments'), $this->getShipments($wcOrder));
 
-        $this->updateMeta(
-            $wcOrder,
+        update_post_meta(
+            $wcOrder->get_id(),
             Pdk::get('metaKeyVersion'),
-            $this->getMeta($wcOrder, self::LEGACY_META_ORDER_VERSION)
+            $wcOrder->get_meta(self::LEGACY_META_ORDER_VERSION)
         );
 
-        $this->markObjectMigrated($wcOrder);
+        $this->markMigrated($wcOrder);
     }
 }

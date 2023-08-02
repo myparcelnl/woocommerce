@@ -34,36 +34,6 @@ abstract class AbstractMigration implements MigrationInterface
     }
 
     /**
-     * @param  WC_Data|int $objectOrId
-     * @param  string      $key
-     * @param  bool        $single
-     *
-     * @return mixed
-     */
-    protected function getMeta($objectOrId, string $key = '', bool $single = false)
-    {
-        $value = get_post_meta($this->getPostId($objectOrId), $key, $single);
-
-        if (is_string($value) && preg_match('/^[{\[]/', $value)) {
-            $decoded = json_decode($value, true);
-            // json_decode returns null if there was a syntax error, meaning input was not valid JSON.
-            $value = $decoded ?? $value;
-        }
-
-        return $value;
-    }
-
-    /**
-     * @param  WC_Data|int $objectOrId
-     *
-     * @return int
-     */
-    protected function getPostId($objectOrId): int
-    {
-        return is_int($objectOrId) ? $objectOrId : $objectOrId->get_id();
-    }
-
-    /**
      * @param  string $message
      * @param  array  $context
      *
@@ -77,38 +47,21 @@ abstract class AbstractMigration implements MigrationInterface
     /**
      * Mark an object as migrated by updating the migration meta key with the current version.
      *
-     * @param  int|\WC_Data $objectOrId
+     * @param  \WC_Data $object
      *
      * @return void
      */
-    protected function markObjectMigrated($objectOrId): void
+    protected function markMigrated(WC_Data $object): void
     {
         $migratedKey = Pdk::get('metaKeyMigrated');
 
-        $existing = $this->getMeta($objectOrId, $migratedKey) ?: [];
+        $executedMigrations = $object->get_meta($migratedKey) ?: [];
 
-        $executedMigrations   = is_array($existing) ? $existing : [];
-        $executedMigrations[] = $this->getVersion();
-
-        $this->updateMeta($objectOrId, $migratedKey, $executedMigrations);
-    }
-
-    /**
-     * Update the meta value of an object. Ignores null and encodes non-scalar values as JSON.
-     *
-     * @param  WC_Data|int  $objectOrId
-     * @param  string       $key
-     * @param  string|array $value
-     *
-     * @return void
-     */
-    protected function updateMeta($objectOrId, string $key, $value): void
-    {
-        if (null === $value) {
+        if (in_array($this->getVersion(), $executedMigrations, true)) {
             return;
         }
 
-        update_post_meta($this->getPostId($objectOrId), $key, is_scalar($value) ? $value : json_encode($value));
+        update_post_meta($object->get_id(), $migratedKey, array_merge($executedMigrations, [$this->getVersion()]));
     }
 
     /**

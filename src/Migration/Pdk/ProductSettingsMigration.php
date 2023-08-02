@@ -55,6 +55,7 @@ final class ProductSettingsMigration extends AbstractPdkMigration
     {
         if (! function_exists('wc_get_products')) {
             $this->warning('Could not find function wc_get_products.');
+
             return;
         }
 
@@ -113,7 +114,7 @@ final class ProductSettingsMigration extends AbstractPdkMigration
                 sprintf('Settings for product %s migrated %s', $wcProduct->get_id(), $changed ? '' : '(no data)')
             );
 
-            $this->markObjectMigrated($wcProduct);
+            $this->markMigrated($wcProduct);
         }
     }
 
