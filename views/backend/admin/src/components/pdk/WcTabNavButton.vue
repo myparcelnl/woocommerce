@@ -4,6 +4,8 @@
     :class="{
       'nav-tab-active': active,
     }"
+    role="tab"
+    :aria-selected="active"
     class="nav-tab"
     href="#"
     @click.prevent="$emit('click')">
