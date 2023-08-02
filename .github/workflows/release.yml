@@ -36,6 +36,8 @@ jobs:
           token: ${{ steps.credentials.outputs.token }}
 
       - uses: ./.github/actions/install
+        with:
+          composer-flags: --no-dev
 
       - uses: ./.github/actions/build
 
