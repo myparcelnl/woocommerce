@@ -1,6 +1,12 @@
 name: 'Install'
 description: 'Install dependencies using cache'
 
+inputs:
+  composer-flags:
+    description: 'Flags to use when installing composer dependencies.'
+    required: false
+    default: ''
+
 outputs:
   image:
     description: 'The image name that was used to install composer dependencies. Can be used in subsequent jobs.'
@@ -13,6 +19,7 @@ runs:
       id: composer
       with:
         php-version: 7.4
+        flags: ${{ inputs.composer-flags }}
 
     - uses: myparcelnl/actions/yarn-install@v3
       with:
