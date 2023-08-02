@@ -15,7 +15,7 @@ final class WpInstallerService extends InstallerService
      */
     protected function getInstalledVersion(): ?string
     {
-        return parent::getInstalledVersion() ?? $this->getLegacyInstalledVersion();
+        return parent::getInstalledVersion() ?: $this->getLegacyInstalledVersion();
     }
 
     /**
@@ -38,6 +38,7 @@ final class WpInstallerService extends InstallerService
 
     /**
      * @return null|string
+     * @noinspection MultipleReturnStatementsInspection
      */
     private function getLegacyVersionKey(): ?string
     {

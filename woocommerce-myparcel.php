@@ -31,9 +31,8 @@ final class MyParcelNLWooCommerce
      */
     public function __construct()
     {
-        if (! defined('DOING_AJAX') && is_admin()) {
-            add_action('init', [$this, 'install']);
-        }
+        register_activation_hook(__FILE__, [$this, 'install']);
+        register_deactivation_hook(__FILE__, [$this, 'uninstall']);
 
         add_action('init', [$this, 'initialize'], 9999);
     }
@@ -61,6 +60,17 @@ final class MyParcelNLWooCommerce
         $this->boot();
 
         Installer::install();
+    }
+
+    /**
+     * @return void
+     * @throws \Exception
+     */
+    public function uninstall(): void
+    {
+        $this->boot();
+
+        Installer::uninstall();
     }
 
     /**

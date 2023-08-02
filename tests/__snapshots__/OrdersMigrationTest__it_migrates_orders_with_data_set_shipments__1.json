@@ -99,7 +99,6 @@
     {
       "orderId": "1",
       "multiCollo": false,
-      "deleted": null,
       "id": 123456789,
       "shopId": 5678,
       "referenceIdentifier": "1525",
@@ -110,48 +109,32 @@
         "id": 1,
         "name": "postnl",
         "human": "PostNL",
-        "subscriptionId": null,
         "enabled": false,
         "isDefault": true,
-        "label": null,
         "optional": false,
         "primary": false,
-        "type": "main",
-        "capabilities": null,
-        "returnCapabilities": null
+        "type": "main"
       },
-      "collectionContact": null,
-      "customsDeclaration": null,
       "delayed": false,
       "delivered": false,
       "deliveryOptions": {
+        "date": "2077-10-23 09:47:51",
         "carrier": {
           "externalIdentifier": "postnl",
           "id": 1,
           "name": "postnl",
           "human": "PostNL",
-          "subscriptionId": null,
           "enabled": false,
           "isDefault": true,
-          "label": null,
           "optional": false,
           "primary": false,
-          "type": "main",
-          "capabilities": null,
-          "returnCapabilities": null
+          "type": "main"
         },
-        "date": "2077-10-23 09:47:51",
         "labelAmount": 1,
-        "pickupLocation": null,
         "shipmentOptions": {
-          "ageCheck": null,
           "insurance": 1,
           "labelDescription": "1525",
-          "largeFormat": false,
-          "onlyRecipient": null,
-          "return": null,
-          "sameDayDelivery": null,
-          "signature": null
+          "largeFormat": false
         },
         "deliveryType": "standard",
         "packageType": "package"
@@ -159,27 +142,17 @@
       "dropOffPoint": {
         "locationCode": "173804",
         "locationName": "Primera Sanders Skagerhof Hoofddorp",
-        "retailNetworkId": null,
-        "boxNumber": null,
         "cc": "NL",
         "city": "Hoofddorp",
         "number": "218",
-        "numberSuffix": null,
         "postalCode": "2133DW",
-        "region": null,
-        "state": null,
         "street": "Skagerrak"
       },
       "hidden": false,
       "isReturn": false,
-      "linkConsumerPortal": null,
-      "multiColloMainShipmentId": null,
       "partnerTrackTraces": [],
       "physicalProperties": {
-        "height": null,
-        "length": null,
-        "weight": 330,
-        "width": null
+        "weight": 330
       },
       "price": {
         "amount": 607,
@@ -188,31 +161,15 @@
       "recipient": {
         "address1": "Antareslaan 31",
         "address2": "",
-        "area": null,
         "cc": "NL",
         "city": "Hoofddorp",
         "postalCode": "2132 JE",
         "region": "",
-        "state": null,
         "email": "test@myparcel.nl",
         "phone": "06123456789",
-        "person": "hallo test",
-        "company": null
+        "person": "hallo test"
       },
-      "sender": {
-        "address1": null,
-        "address2": null,
-        "area": null,
-        "cc": null,
-        "city": null,
-        "postalCode": null,
-        "region": null,
-        "state": null,
-        "email": null,
-        "phone": null,
-        "person": null,
-        "company": null
-      },
+      "sender": [],
       "shipmentType": 1,
       "status": 2,
       "created": "2023-07-26 18:03:15",

@@ -170,7 +170,6 @@
     {
       "orderId": "1",
       "multiCollo": false,
-      "deleted": null,
       "id": 1000001,
       "shopId": 111359,
       "referenceIdentifier": "1520",
@@ -181,63 +180,43 @@
         "id": 1,
         "name": "postnl",
         "human": "PostNL",
-        "subscriptionId": null,
         "enabled": false,
         "isDefault": true,
-        "label": null,
         "optional": false,
         "primary": false,
-        "type": "main",
-        "capabilities": null,
-        "returnCapabilities": null
+        "type": "main"
       },
-      "collectionContact": null,
-      "customsDeclaration": null,
       "delayed": false,
       "delivered": false,
       "deliveryOptions": {
+        "date": "2077-10-23 09:47:51",
         "carrier": {
           "externalIdentifier": "postnl",
           "id": 1,
           "name": "postnl",
           "human": "PostNL",
-          "subscriptionId": null,
           "enabled": false,
           "isDefault": true,
-          "label": null,
           "optional": false,
           "primary": false,
-          "type": "main",
-          "capabilities": null,
-          "returnCapabilities": null
+          "type": "main"
         },
-        "date": "2077-10-23 09:47:51",
         "labelAmount": 1,
-        "pickupLocation": null,
         "shipmentOptions": {
-          "ageCheck": null,
           "insurance": 1,
           "labelDescription": "1520",
           "largeFormat": false,
           "onlyRecipient": true,
-          "return": null,
-          "sameDayDelivery": null,
           "signature": true
         },
         "deliveryType": "standard",
         "packageType": "package"
       },
-      "dropOffPoint": null,
       "hidden": false,
       "isReturn": false,
-      "linkConsumerPortal": null,
-      "multiColloMainShipmentId": null,
       "partnerTrackTraces": [],
       "physicalProperties": {
-        "height": null,
-        "length": null,
-        "weight": 72,
-        "width": null
+        "weight": 72
       },
       "price": {
         "amount": 937,
@@ -246,31 +225,15 @@
       "recipient": {
         "address1": "Adriaan Brouwerstraat 16",
         "address2": "",
-        "area": null,
         "cc": "BE",
         "city": "Antwerpen",
         "postalCode": "1000",
         "region": "",
-        "state": null,
         "email": "test@myparcel.nl",
         "phone": "1234567890",
-        "person": "test test",
-        "company": null
+        "person": "test test"
       },
-      "sender": {
-        "address1": null,
-        "address2": null,
-        "area": null,
-        "cc": null,
-        "city": null,
-        "postalCode": null,
-        "region": null,
-        "state": null,
-        "email": null,
-        "phone": null,
-        "person": null,
-        "company": null
-      },
+      "sender": [],
       "shipmentType": 1,
       "status": 2,
       "created": "2023-07-10 14:11:14",
@@ -281,21 +244,17 @@
     {
       "orderId": "1",
       "multiCollo": false,
-      "deleted": null,
       "id": 1000002,
       "shopId": 21523,
       "referenceIdentifier": "1520",
-      "externalIdentifier": null,
       "barcode": "3SMYPA1234567",
       "carrier": {
         "externalIdentifier": "postnl",
         "id": 1,
         "name": "postnl",
         "human": "PostNL",
-        "subscriptionId": null,
         "enabled": false,
         "isDefault": true,
-        "label": null,
         "optional": false,
         "primary": false,
         "type": "main",
@@ -338,20 +297,17 @@
           }
         }
       },
-      "collectionContact": null,
-      "customsDeclaration": null,
       "delayed": false,
       "delivered": false,
       "deliveryOptions": {
+        "date": "2077-10-23 09:47:51",
         "carrier": {
           "externalIdentifier": "postnl",
           "id": 1,
           "name": "postnl",
           "human": "PostNL",
-          "subscriptionId": null,
           "enabled": false,
           "isDefault": true,
-          "label": null,
           "optional": false,
           "primary": false,
           "type": "main",
@@ -394,17 +350,12 @@
             }
           }
         },
-        "date": "2077-10-23 09:47:51",
         "labelAmount": 1,
-        "pickupLocation": null,
         "shipmentOptions": {
-          "ageCheck": null,
           "insurance": 1,
           "labelDescription": "1520",
           "largeFormat": false,
           "onlyRecipient": true,
-          "return": null,
-          "sameDayDelivery": null,
           "signature": true
         },
         "deliveryType": "standard",
@@ -413,27 +364,17 @@
       "dropOffPoint": {
         "locationCode": "173804",
         "locationName": "Primera Sanders Skagerhof Hoofddorp",
-        "retailNetworkId": null,
-        "boxNumber": null,
         "cc": "NL",
         "city": "Hoofddorp",
         "number": "218",
-        "numberSuffix": null,
         "postalCode": "2133DW",
-        "region": null,
-        "state": null,
         "street": "Skagerrak"
       },
       "hidden": false,
       "isReturn": false,
-      "linkConsumerPortal": null,
-      "multiColloMainShipmentId": null,
       "partnerTrackTraces": [],
       "physicalProperties": {
-        "height": null,
-        "length": null,
-        "weight": 72,
-        "width": null
+        "weight": 72
       },
       "price": {
         "amount": 112,
@@ -442,31 +383,15 @@
       "recipient": {
         "address1": "Adriaan Brouwerstraat 16",
         "address2": "",
-        "area": null,
         "cc": "BE",
         "city": "Antwerpen",
         "postalCode": "1000",
         "region": "",
-        "state": null,
         "email": "test@myparcel.nl",
         "phone": "1234567890",
-        "person": "test test",
-        "company": null
+        "person": "test test"
       },
-      "sender": {
-        "address1": null,
-        "address2": null,
-        "area": null,
-        "cc": null,
-        "city": null,
-        "postalCode": null,
-        "region": null,
-        "state": null,
-        "email": null,
-        "phone": null,
-        "person": null,
-        "company": null
-      },
+      "sender": [],
       "shipmentType": 1,
       "status": 2,
       "created": "2023-07-27 15:42:59",

@@ -50,17 +50,7 @@ it('migrates orders', function (array $oldMeta) {
         expect($postMeta[$key])->toEqual($oldMeta[$key]);
     }
 
-    $metaArray = (new Collection(Arr::only($postMeta, array_merge($requiredNewKeys, $optionalNewKeys))))
-        ->map(static function (string $value) {
-            $decoded = json_decode($value, true);
-
-            if (JSON_ERROR_NONE !== json_last_error()) {
-                return $value;
-            }
-
-            return $decoded;
-        })
-        ->toArrayWithoutNull();
+    $filteredMeta  = Arr::only($postMeta, array_merge($requiredNewKeys, $optionalNewKeys));
 
     $pdkOrder      = $pdkOrderRepository->get(1);
     $pdkOrderArray = Arr::only(
@@ -83,7 +73,7 @@ it('migrates orders', function (array $oldMeta) {
 
     assertMatchesJsonSnapshot(
         json_encode([
-            'meta'      => $metaArray,
+            'meta'      => (new Collection($filteredMeta))->toArrayWithoutNull(),
             'pdkOrder'  => $pdkOrderArray,
             'shipments' => $shipmentsArray,
         ])

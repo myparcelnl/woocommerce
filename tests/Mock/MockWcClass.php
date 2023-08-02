@@ -7,8 +7,9 @@ namespace MyParcelNL\WooCommerce\Tests\Mock;
 use BadMethodCallException;
 use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Sdk\src\Support\Str;
+use WC_Data;
 
-abstract class MockWcClass
+abstract class MockWcClass extends WC_Data
 {
     private const GETTER_PREFIX = 'get_';
 
@@ -19,6 +20,8 @@ abstract class MockWcClass
 
     /**
      * @param  array|int|string $data - extra types to avoid type errors in real code.
+     *
+     * @noinspection PhpMissingParentConstructorInspection
      */
     public function __construct($data = [])
     {
@@ -72,8 +75,7 @@ abstract class MockWcClass
      * @param  mixed $context
      *
      * @return null|mixed
-     * @see          \WC_Data::get_meta()
-     * @noinspection PhpUnusedParameterInspection
+     * @see \WC_Data::get_meta()
      */
     public function get_meta($key = '', $single = true, $context = 'view')
     {
