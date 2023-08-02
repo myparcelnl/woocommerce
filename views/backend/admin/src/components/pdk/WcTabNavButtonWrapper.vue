@@ -1,6 +1,7 @@
 <template>
   <nav
     v-test="AdminComponent.TabNavButtonWrapper"
+    role="tablist"
     class="nav-tab-wrapper woo-nav-tab-wrapper">
     <slot />
   </nav>
