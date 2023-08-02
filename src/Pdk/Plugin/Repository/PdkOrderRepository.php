@@ -179,7 +179,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
 
         $savedOrderData['deliveryOptions'] = (array) (Filter::apply(
             'orderDeliveryOptions',
-            $savedOrderData['deliveryOptions'],
+            $savedOrderData['deliveryOptions'] ?? [],
             $order
         ) ?? []);
 
@@ -238,7 +238,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     private function getNotes(WC_Order $order, array $existingNotes): PdkOrderNoteCollection
     {
-        return $this->retrieve(sprintf("notes_%s", $order->get_id()), function () use ($existingNotes, $order) {
+        return $this->retrieve(sprintf('notes_%s', $order->get_id()), function () use ($existingNotes, $order) {
             $collection = new PdkOrderNoteCollection($existingNotes);
 
             $customerNote = $order->get_customer_note();
