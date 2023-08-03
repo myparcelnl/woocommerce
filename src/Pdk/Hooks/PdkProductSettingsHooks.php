@@ -13,8 +13,10 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Sdk\src\Support\Str;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use Throwable;
+use WC_Product_Variation;
+use WP_Post;
 
-class PdkProductSettingsHooks implements WordPressHooksInterface
+final class PdkProductSettingsHooks implements WordPressHooksInterface
 {
     public function apply(): void
     {
@@ -24,11 +26,16 @@ class PdkProductSettingsHooks implements WordPressHooksInterface
         // Render pdk product settings in above custom tab
         add_action('woocommerce_product_data_panels', [$this, 'renderPdkProductSettings']);
 
+        // Render child product settings in above custom tab
+        add_action(
+            'woocommerce_product_after_variable_attributes',
+            [$this, 'renderPdkProductSettingsForVariant'],
+            99,
+            3
+        );
+
         // Save pdk product settings
         add_action('woocommerce_process_product_meta', [$this, 'handleSaveProduct']);
-
-        // Variants...
-        add_action('woocommerce_product_after_variable_attributes', [$this, 'renderPdkProductSettingsForVariant'], 99, 3);
     }
 
     /**
@@ -84,14 +91,22 @@ class PdkProductSettingsHooks implements WordPressHooksInterface
         echo Frontend::renderProductSettings($product);
     }
 
-    public function renderPdkProductSettingsForVariant(int $a, array $b, \WP_Post $post): void
+    /**
+     * @param  mixed    $_
+     * @param  mixed    $__
+     * @param  \WP_Post $post
+     *
+     * @return void
+     * @noinspection PhpUnusedParameterInspection
+     */
+    public function renderPdkProductSettingsForVariant($_, $__, WP_Post $post): void
     {
         /** @var PdkProductRepositoryInterface $productRepository */
         $productRepository = Pdk::get(PdkProductRepositoryInterface::class);
-        $variant           = new \WC_Product_Variation($post->ID);
-        $product           = $productRepository->getProduct($variant);
+        $variation         = new WC_Product_Variation($post->ID);
+        $product           = $productRepository->getProduct($variation);
 
-        echo Frontend::renderProductSettings($product);
+        echo Frontend::renderChildProductSettings($product);
     }
 
     /**
