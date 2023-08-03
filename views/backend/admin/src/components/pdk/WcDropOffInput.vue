@@ -1,5 +1,5 @@
 <template>
-  <PdkTable v-test="AdminComponent.DropOffInput">
+  <PdkTable v-test="[AdminComponent.DropOffInput, element]">
     <template
       v-for="[day, human] in Object.entries(weekdaysObject)"
       :key="day">

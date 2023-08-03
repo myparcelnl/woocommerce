@@ -1,19 +1,18 @@
 <template>
-  <a v-test="AdminComponent.ToggleInput">
+  <a v-test="[AdminComponent.ToggleInput, element]">
     <input
       :id="id"
       v-model="model"
-      :name="id"
       :disabled="element.isDisabled || element.isSuspended || element.isReadOnly"
+      :name="id"
       :readonly="element.isReadOnly"
       :value="true"
       class="!mypa-hidden"
       tabindex="-1"
-      v-bind="$attrs"
-      type="checkbox" />
+      type="checkbox"
+      v-bind="$attrs" />
 
     <label
-      class="!mypa-float-none !mypa-ml-auto !mypa-w-8 woocommerce-input-toggle"
       :class="[
         `woocommerce-input-toggle--${model ? 'enabled' : 'disabled'}`,
         {
@@ -21,6 +20,7 @@
         },
       ]"
       :for="id"
+      class="!mypa-float-none !mypa-ml-auto !mypa-w-8 woocommerce-input-toggle"
       role="switch"
       tabindex="0">
       {{ translate(`toggle_${model ? 'yes' : 'no'}`) }}

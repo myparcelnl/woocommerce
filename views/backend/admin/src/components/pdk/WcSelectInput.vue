@@ -2,7 +2,7 @@
   <select
     :id="id"
     ref="selectElement"
-    v-test="AdminComponent.SelectInput"
+    v-test="[AdminComponent.SelectInput, element]"
     :name="id" />
 </template>
 
