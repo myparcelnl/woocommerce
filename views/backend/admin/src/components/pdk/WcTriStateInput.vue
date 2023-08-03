@@ -1,11 +1,11 @@
 <template>
   <div
-    v-test="AdminComponent.TriStateInput"
+    v-test="[AdminComponent.TriStateInput, element]"
     :class="config?.cssUtilities?.displayFlex">
     <input
       v-model="model"
-      type="hidden"
-      :name="id" />
+      :name="id"
+      type="hidden" />
 
     <PdkToggleInput
       v-model="toggleModel"
@@ -13,13 +13,12 @@
       :element="toggleElement" />
 
     <PdkButton
-      :size="Size.ExtraSmall"
-      class="!mypa-float-none !mypa-ml-1"
       :class="config?.cssUtilities?.displayFlex"
+      :size="Size.ExtraSmall"
       :title="inheritElement?.label"
+      class="!mypa-float-none !mypa-ml-1"
       @click="inheritModel = !inheritModel">
       <span
-        class="dashicons"
         :class="[
           config?.cssUtilities?.marginYAuto,
           {
@@ -27,18 +26,19 @@
             'dashicons-unlock mypa-text-green-600': !inheritModel,
           },
         ]"
+        class="dashicons"
         role="none" />
 
       <PdkCheckboxInput
         v-model="inheritModel"
-        tabindex="-1"
         :element="{...inheritElement, label: undefined}"
-        class="mypa-sr-only" />
+        class="mypa-sr-only"
+        tabindex="-1" />
     </PdkButton>
   </div>
 </template>
 
-<script setup lang="ts" generic="T extends TriStateValue">
+<script generic="T extends TriStateValue" lang="ts" setup>
 import {
   type PdkElementEmits,
   type PdkElementProps,

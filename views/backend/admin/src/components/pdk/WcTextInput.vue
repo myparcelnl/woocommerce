@@ -2,15 +2,15 @@
   <input
     :id="id"
     v-model.trim="model"
-    v-test="AdminComponent.TextInput"
-    :name="id"
-    class="mypa-max-w-full"
+    v-test="[AdminComponent.TextInput, element]"
     :class="{
       'form-required': !element.isValid,
     }"
     :disabled="element.isDisabled || element.isSuspended"
+    :name="id"
     :readonly="element.isReadOnly"
-    :type="element.props?.type ?? 'text'" />
+    :type="element.props?.type ?? 'text'"
+    class="mypa-max-w-full" />
 </template>
 
 <script lang="ts" setup>

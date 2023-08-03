@@ -1,15 +1,15 @@
 <template>
   <div
-    v-test="AdminComponent.RadioInput"
+    v-test="[AdminComponent.RadioInput, element]"
     class="wc-radio-input">
     <input
       :id="id"
       v-model="model"
-      :name="id"
       :class="{
         'form-required': !element.isValid,
       }"
       :disabled="element.isDisabled || element.isSuspended || element.isReadOnly"
+      :name="id"
       :readonly="element.isReadOnly"
       :value="element.props?.value"
       type="radio"

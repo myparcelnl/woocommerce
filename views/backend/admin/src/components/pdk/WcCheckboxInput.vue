@@ -3,14 +3,14 @@
     <input
       :id="id"
       v-model="model"
-      v-test="AdminComponent.CheckboxInput"
-      :name="id"
+      v-test="[AdminComponent.CheckboxInput, element]"
       :class="{
         'form-required': !element.isValid,
       }"
-      :value="element?.props?.value ?? '1'"
       :disabled="element.isDisabled || element.isSuspended || element.isReadOnly"
+      :name="id"
       :readonly="element.isReadOnly"
+      :value="element?.props?.value ?? '1'"
       type="checkbox"
       v-bind="$attrs" />
     <label
