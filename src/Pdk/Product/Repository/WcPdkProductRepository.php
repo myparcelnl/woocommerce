@@ -55,7 +55,9 @@ class WcPdkProductRepository extends AbstractPdkPdkProductRepository
                 'width'              => $product->get_width(),
                 'height'             => $product->get_height(),
                 'settings'           => $this->getProductSettings($product),
-                'parent'             => ($product instanceof WC_Product_Variation)?$this->getProduct($product->get_parent_id()):null,
+                'parent'             => $product instanceof WC_Product_Variation ? $this->getProduct(
+                    $product->get_parent_id()
+                ) : null,
             ]);
         });
     }
