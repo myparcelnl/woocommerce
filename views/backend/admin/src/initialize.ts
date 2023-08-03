@@ -89,6 +89,11 @@ export const initialize = (): void => {
           wrapper: WcProductSettingsFormGroup,
         },
       },
+      childProductSettings: {
+        generateFieldId(field) {
+          return `myparcelnl-${field.form.name}-${field.name}`;
+        },
+      },
     },
 
     components: {
