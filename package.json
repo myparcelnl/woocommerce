@@ -21,6 +21,7 @@
     "build:js:dev": "nx run-many --output-style=stream --target=build:dev",
     "build:js:dev:backend": "yarn build:js:dev --projects='*/backend-*'",
     "build:js:dev:frontend": "yarn build:js:dev --projects='*/frontend-*'",
+    "build:js:test": "nx run-many --output-style=stream --target=build:test",
     "docker:build": "docker build -t myparcelnl/woocommerce .",
     "docker:run": "docker run -it --rm -v $(pwd):/app myparcelnl/woocommerce",
     "prepare": "is-ci || husky install",
@@ -33,8 +34,10 @@
     "watch": "yarn build:js:dev --parallel=99 -- --watch",
     "watch:backend": "yarn build:js:dev:backend --parallel=99 -- --watch",
     "watch:frontend": "yarn build:js:dev:frontend --parallel=99 -- --watch",
+    "watch:test": "yarn build:js:test --parallel=99 -- --watch",
     "ws:build": "vite build",
     "ws:build:dev": "vite build --mode development",
+    "ws:build:test": "vite build --mode test",
     "ws:test": "cd $0 && vitest",
     "ws:test:coverage": "cd $0 && vitest run --coverage",
     "ws:test:run": "cd $0 && vitest run"
