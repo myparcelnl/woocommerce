@@ -46,6 +46,10 @@ final class MyParcelNLWooCommerce
     {
         $this->boot();
 
+        if (! $this->checkPrerequisites()) {
+            return;
+        }
+
         /** @var WordPressHookService $hookService */
         $hookService = Pdk::get(WordPressHookService::class);
         $hookService->applyAll();
@@ -96,8 +100,6 @@ final class MyParcelNLWooCommerce
                 : PdkInstance::MODE_PRODUCTION
         );
 
-        $this->checkPrerequisites();
-
         if (! defined('MYPARCELNL_WC_VERSION')) {
             define('MYPARCELNL_WC_VERSION', $version);
         }
@@ -106,9 +108,9 @@ final class MyParcelNLWooCommerce
     /**
      * Check if the minimum requirements are met and deactivate the plugin if not.
      *
-     * @return void
+     * @return bool whether prerequisites are met
      */
-    private function checkPrerequisites(): void
+    private function checkPrerequisites(): bool
     {
         $appInfo = Pdk::getAppInfo();
         $errors  = [];
@@ -126,8 +128,20 @@ final class MyParcelNLWooCommerce
         }
 
         if (! empty($errors)) {
-            deactivate_plugins(plugin_basename(__FILE__));
+            add_action('admin_notices', static function () use ($errors) {
+                echo '<div class="notice notice-error is-dismissible">';
+                echo '<p>', implode('<br/>', $errors), '</p>';
+                echo '</div>';
+            });
+
+            add_action('admin_init', static function () {
+                deactivate_plugins(plugin_basename(__FILE__));
+            });
+
+            return false;
         }
+
+        return true;
     }
 
     /**
