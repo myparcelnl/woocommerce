@@ -138,9 +138,10 @@ final class PdkProductSettingsHooks implements WordPressHooksInterface
         }
 
         $values = (new Collection($productSettingKeys))
-            ->mapWithKeys(static function ($value, string $key) use ($appInfo) {
+            ->mapWithKeys(static function ($value, string $key) {
+                $keyParts = explode('-', $key);
                 return [
-                    Str::replaceFirst("$appInfo->name-", '', $key) => $value,
+                    end($keyParts) => $value,
                 ];
             })
             ->toArray();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Product\Repository;
 
+use Exception;
 use MyParcelNL\Pdk\App\Order\Collection\PdkProductCollection;
 use MyParcelNL\Pdk\App\Order\Model\PdkProduct;
 use MyParcelNL\Pdk\App\Order\Repository\AbstractPdkPdkProductRepository;
@@ -116,7 +117,13 @@ class WcPdkProductRepository extends AbstractPdkPdkProductRepository
             $product = $identifier;
         } else {
             $product = $this->retrieve('wc_product' . $identifier, function () use ($identifier) {
-                return new WC_Product($identifier);
+                try {
+                    $product = new WC_Product_Variation($identifier);
+                } catch (Exception $e) {
+                    $product = new WC_Product($identifier);
+                }
+
+                return $product;
             });
         }
 
