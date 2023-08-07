@@ -126,12 +126,14 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     private function addBarcodesToOrderNote(WC_Order $wcOrder, PdkOrder $order): void
     {
-        $withBarcodes = $order->shipments->where('barcode', '!=', null);
+        $hasBarcodeAndIsNotReturn =
+            $order->shipments->where('barcode', '!=', null)
+                ->where('isReturn', false);
 
-        if ($withBarcodes->isNotEmpty()) {
+        if ($hasBarcodeAndIsNotReturn->isNotEmpty()) {
             $prefix = Settings::get(GeneralSettings::BARCODE_IN_NOTE_TITLE, GeneralSettings::ID);
 
-            $barcodeArray = $withBarcodes
+            $barcodeArray = $hasBarcodeAndIsNotReturn
                 ->pluck('barcode')
                 ->toArray();
 
