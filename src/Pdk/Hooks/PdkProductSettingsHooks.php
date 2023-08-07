@@ -36,6 +36,8 @@ final class PdkProductSettingsHooks implements WordPressHooksInterface
 
         // Save pdk product settings
         add_action('woocommerce_process_product_meta', [$this, 'handleSaveProduct']);
+
+        add_action('woocommerce_save_product_variation', [$this, 'handleSaveProduct']);
     }
 
     /**
@@ -121,9 +123,15 @@ final class PdkProductSettingsHooks implements WordPressHooksInterface
     {
         $appInfo = Pdk::getAppInfo();
 
-        $productSettingKeys = Arr::where($post, static function ($_, string $key) use ($appInfo) {
-            return Str::startsWith($key, "$appInfo->name-");
+        $productSettingKeys = Arr::where($post, static function ($_, string $key) use ($appInfo, $productId) {
+            return Str::startsWith($key, "$appInfo->name-childProductSettings--$productId-");
         });
+
+        if (empty($productSettingKeys)) {
+            $productSettingKeys = Arr::where($post, static function ($_, string $key) use ($appInfo) {
+                return Str::startsWith($key, "$appInfo->name-");
+            });
+        }
 
         if (empty($productSettingKeys)) {
             return;
@@ -131,11 +139,6 @@ final class PdkProductSettingsHooks implements WordPressHooksInterface
 
         $values = (new Collection($productSettingKeys))
             ->mapWithKeys(static function ($value, string $key) use ($appInfo) {
-                // TODO: can be removed when https://github.com/myparcelnl/pdk/pull/114 is merged
-                if (in_array($value, ['true', 'false'], true)) {
-                    $value = 'true' === $value;
-                }
-
                 return [
                     Str::replaceFirst("$appInfo->name-", '', $key) => $value,
                 ];
