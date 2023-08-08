@@ -18,7 +18,7 @@ class WcLogger extends AbstractLogger
      */
     public function log($level, $message, array $context = []): void
     {
-        $logger = wc_get_logger();
+        $logger = function_exists('wc_get_logger') ? wc_get_logger() : null;
 
         if (! $logger) {
             return;

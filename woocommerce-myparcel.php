@@ -59,6 +59,13 @@ final class MyParcelNLWooCommerce
     {
         $this->boot();
 
+        $errors = $this->checkPrerequisites();
+
+        if (! empty($errors)) {
+            /** @noinspection ForgottenDebugOutputInspection */
+            wp_die(implode('<br>', $errors), '', ['back_link' => true]);
+        }
+
         Installer::install();
     }
 
@@ -96,38 +103,41 @@ final class MyParcelNLWooCommerce
                 : PdkInstance::MODE_PRODUCTION
         );
 
-        $this->checkPrerequisites();
-
         if (! defined('MYPARCELNL_WC_VERSION')) {
             define('MYPARCELNL_WC_VERSION', $version);
+        }
+
+        $errors = $this->checkPrerequisites();
+
+        if (! empty($errors)) {
+            add_action('admin_init', static function () use ($errors) {
+                add_action('admin_notices', static function () use ($errors) {
+                    echo sprintf('<div class="error"><p>%s</p></div>', implode('<br>', $errors));
+                });
+
+                deactivate_plugins(plugin_basename(__FILE__));
+            });
         }
     }
 
     /**
-     * Check if the minimum requirements are met and deactivate the plugin if not.
+     * Check if the minimum requirements are met.
      *
-     * @return void
+     * @return array
      */
-    private function checkPrerequisites(): void
+    private function checkPrerequisites(): array
     {
-        $appInfo = Pdk::getAppInfo();
-        $errors  = [];
+        $errors = [];
 
         if (! Pdk::get('isPhpVersionSupported')) {
-            $errors[] = sprintf('%s requires PHP %s or higher.', $appInfo->title, Pdk::get('minimumPhpVersion'));
+            $errors[] = Pdk::get('errorMessagePhpVersion');
         }
 
         if (! WooCommerce::isActive() || ! Pdk::get('isWooCommerceVersionSupported')) {
-            $errors[] = sprintf(
-                '%s requires WooCommerce %s or higher.',
-                $appInfo->title,
-                Pdk::get('minimumWooCommerceVersion')
-            );
+            $errors[] = Pdk::get('errorMessageWooCommerceVersion');
         }
 
-        if (! empty($errors)) {
-            deactivate_plugins(plugin_basename(__FILE__));
-        }
+        return $errors;
     }
 
     /**

@@ -22,6 +22,8 @@ use MyParcelNL\Pdk\App\Webhook\Contract\PdkWebhooksRepositoryInterface;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Base\Contract\WeightServiceInterface;
 use MyParcelNL\Pdk\Base\Support\Arr;
+use MyParcelNL\Pdk\Facade\Language;
+use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Pdk as PdkFacade;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Frontend\Contract\FrontendRenderServiceInterface;
@@ -82,8 +84,29 @@ return [
 
     'minimumWooCommerceVersion' => value('5.0.0'),
 
-    'isWooCommerceVersionSupported' => factory(function (): bool {
+    'isWooCommerceVersionSupported'  => factory(function (): bool {
         return version_compare(WooCommerce::getVersion(), PdkFacade::get('minimumWooCommerceVersion'), '>=');
+    }),
+
+    /**
+     * Error message to show when the current php version is not supported.
+     */
+    'errorMessagePhpVersion'         => factory(function (): string {
+        return strtr(Language::translate('error_prerequisites_php_version'), [
+            '{name}'    => Pdk::getAppInfo()->title,
+            '{version}' => Pdk::get('minimumPhpVersion'),
+            '{current}' => PHP_VERSION,
+        ]);
+    }),
+
+    /**
+     * Error message to show when the current php version is not supported.
+     */
+    'errorMessageWooCommerceVersion' => factory(function (): string {
+        return strtr(Language::translate('error_prerequisites_woocommerce_version'), [
+            '{name}'    => Pdk::getAppInfo()->title,
+            '{version}' => Pdk::get('minimumWooCommerceVersion'),
+        ]);
     }),
 
     'userAgent' => factory(function (): array {
