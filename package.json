@@ -51,7 +51,8 @@
   "resolutions": {
     "@semantic-release/release-notes-generator": "npm:@myparcel/semantic-release-release-notes-generator@^10.1.0",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "@typescript-eslint/parser": "^5.0.0"
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint-plugin-prettier": "^4.2.0"
   },
   "devDependencies": {
     "@myparcel-eslint/eslint-config-esnext": "^1.2.0",
