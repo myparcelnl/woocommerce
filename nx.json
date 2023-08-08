@@ -24,7 +24,10 @@
       "outputs": ["{projectRoot}/lib"]
     },
     "build:dev": {
-      "inputs": ["production"],
+      "inputs": [
+        "production",
+        "{workspaceRoot}/node_modules/@myparcel-pdk/**/*"
+      ],
       "dependsOn": ["^build:dev"],
       "outputs": ["{projectRoot}/lib"]
     },
