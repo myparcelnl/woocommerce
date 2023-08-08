@@ -43,7 +43,7 @@
       }
     },
     "cloud": {
-      "runner": "@nrwl/nx-cloud",
+      "runner": "nx-cloud",
       "options": {
         "cacheableOperations": ["build"],
         "parallel": 10,
