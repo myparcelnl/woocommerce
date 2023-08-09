@@ -3,6 +3,11 @@
 import {h} from 'vue';
 import {get} from '@vueuse/core';
 import {
+  FORM_KEY_CHILD_PRODUCT_SETTINGS,
+  FORM_KEY_MODAL,
+  FORM_KEY_PRODUCT_SETTINGS,
+} from '@myparcel-pdk/frontend-admin-core';
+import {
   DefaultBadge,
   DefaultCurrencyInput,
   DefaultHeading,
@@ -16,13 +21,13 @@ import {
 import {DashIconsIcon} from '@myparcel-pdk/admin-preset-dashicons';
 import {LogLevel, createPdkAdmin} from '@myparcel-pdk/admin';
 import {closeModalOnEscape, listenForBulkActions} from './hooks';
-import WcProductSettingsFormGroup from './components/pdk/WcProductSettingsFormGroup.vue';
 import {
   WcBox,
   WcButton,
   WcButtonGroup,
   WcCheckboxGroup,
   WcCheckboxInput,
+  WcChildProductSettingsFormGroup,
   WcCodeEditor,
   WcCol,
   WcDropOffInput,
@@ -33,6 +38,7 @@ import {
   WcModal,
   WcNotification,
   WcPluginSettingsWrapper,
+  WcProductSettingsFormGroup,
   WcRadioInput,
   WcRow,
   WcSelectInput,
@@ -73,7 +79,7 @@ export const initialize = (): void => {
     },
 
     formConfigOverrides: {
-      modal: {
+      [FORM_KEY_MODAL]: {
         form: {
           attributes: {
             // Omit the "wrap" class in modal forms to avoid the horizontal padding.
@@ -81,7 +87,8 @@ export const initialize = (): void => {
           },
         },
       },
-      productSettings: {
+
+      [FORM_KEY_PRODUCT_SETTINGS]: {
         form: {
           tag: 'div',
         },
@@ -89,7 +96,11 @@ export const initialize = (): void => {
           wrapper: WcProductSettingsFormGroup,
         },
       },
-      childProductSettings: {
+
+      [FORM_KEY_CHILD_PRODUCT_SETTINGS]: {
+        field: {
+          wrapper: WcChildProductSettingsFormGroup,
+        },
         generateFieldId(field) {
           return `myparcelnl-${field.form.name}-${field.name}`;
         },

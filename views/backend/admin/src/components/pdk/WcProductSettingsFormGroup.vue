@@ -11,32 +11,21 @@
 
       <slot />
 
-      <span
-        v-if="has(element.props?.description)"
-        :data-tip="translate(element.props.description)"
-        class="woocommerce-help-tip" />
-
-      <span
-        v-if="has(element.props?.subtext)"
-        class="description"
-        v-html="translate(element.props.subtext)" />
+      <WcHelpTip :element="element" />
+      <WcDescription :element="element" />
     </p>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {onMounted} from 'vue';
-import {AdminComponent, type ElementInstance, generateFieldId, useLanguage} from '@myparcel-pdk/admin';
+import {toRefs} from 'vue';
+import {AdminComponent, type ElementInstance, generateFieldId} from '@myparcel-pdk/admin';
+import WcHelpTip from '../WcHelpTip.vue';
+import WcDescription from '../WcDescription.vue';
 
 // eslint-disable-next-line vue/no-unused-properties
 const props = defineProps<{modelValue: boolean; element: ElementInstance}>();
+const propRefs = toRefs(props);
 
-const id = generateFieldId(props.element);
-
-onMounted(() => {
-  // Initialize WooCommerce tooltips/"tiptips"
-  document.body.dispatchEvent(new Event('init_tooltips'));
-});
-
-const {translate, has} = useLanguage();
+const id = generateFieldId(propRefs.element.value);
 </script>

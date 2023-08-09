@@ -1,14 +1,3 @@
-// Fix the width of the select2 dropdowns in WooCommerce settings
-.woocommerce table.form-table {
-  .select2-container {
-    min-width: 100% !important;
-  }
-
-  select {
-    @apply mypa-w-full;
-  }
-}
-
 // Legacy and HPOS order list page classes
 .post-type-shop_order,
 .woocommerce_page_wc-orders {
@@ -16,5 +5,13 @@
   // Default is 12ch and causes the shipment buttons to float outside the column.
   .wp-list-table .column-myparcelnl {
     @apply mypa-w-[21ch];
+  }
+}
+
+// Product variations
+[id^='pdk-child-product-settings'] {
+  h2 {
+    // Remove the left padding on the child product settings dividers.
+    @apply mypa-pl-0 #{!important};
   }
 }

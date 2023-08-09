@@ -8,6 +8,8 @@ export {default as WcCheckboxGroup} from './WcCheckboxGroup.vue';
 
 export {default as WcCheckboxInput} from './WcCheckboxInput.vue';
 
+export {default as WcChildProductSettingsFormGroup} from './WcChildProductSettingsFormGroup.vue';
+
 export {default as WcCodeEditor} from './WcCodeEditor.vue';
 
 export {default as WcCol} from './WcCol.vue';
@@ -27,6 +29,8 @@ export {default as WcModal} from './WcModal.vue';
 export {default as WcNotification} from './WcNotification.vue';
 
 export {default as WcPluginSettingsWrapper} from './WcPluginSettingsWrapper.vue';
+
+export {default as WcProductSettingsFormGroup} from './WcProductSettingsFormGroup.vue';
 
 export {default as WcRadioInput} from './WcRadioInput.vue';
 
