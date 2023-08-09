@@ -50,3 +50,11 @@
     @apply mypa-pl-0 #{!important};
   }
 }
+
+// Product variations
+[id^='pdk-child-product-settings'] {
+  h2 {
+    // Remove the left padding on the child product settings dividers.
+    @apply mypa-pl-0 #{!important};
+  }
+}
