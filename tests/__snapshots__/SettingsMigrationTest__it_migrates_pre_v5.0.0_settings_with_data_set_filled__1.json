@@ -1,7 +1,8 @@
 {
   "account": {
     "id": "account",
-    "apiKey": "b183f9372d6f9bd050418e31cc40965360ca814d"
+    "apiKey": "b183f9372d6f9bd050418e31cc40965360ca814d",
+    "apiKeyValid": true
   },
   "general": {
     "id": "general",
@@ -139,6 +140,7 @@
         "dropOffDaysDeviations": []
       },
       "exportAgeCheck": true,
+      "exportHideSender": false,
       "exportInsurance": true,
       "exportInsuranceFromAmount": 1000,
       "exportInsurancePriceFactor": 1,
@@ -240,6 +242,7 @@
         "dropOffDaysDeviations": []
       },
       "exportAgeCheck": false,
+      "exportHideSender": false,
       "exportInsurance": false,
       "exportInsuranceFromAmount": 0,
       "exportInsurancePriceFactor": 1,
@@ -341,6 +344,7 @@
         "dropOffDaysDeviations": []
       },
       "exportAgeCheck": false,
+      "exportHideSender": false,
       "exportInsurance": true,
       "exportInsuranceFromAmount": 10000,
       "exportInsurancePriceFactor": 1,
@@ -442,6 +446,7 @@
         "dropOffDaysDeviations": []
       },
       "exportAgeCheck": false,
+      "exportHideSender": false,
       "exportInsurance": false,
       "exportInsuranceFromAmount": 0,
       "exportInsurancePriceFactor": 1,
