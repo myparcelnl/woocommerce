@@ -1,25 +1,28 @@
 <template>
   <div
     v-test="AdminComponent.Box"
-    :class="cssClasses"
-    class="mypa-border mypa-border-gray-300 mypa-border-solid mypa-relative">
+    class="mypa-relative postbox">
     <WcLoadingOverlay v-show="loading" />
 
-    <div v-if="$slots.header || title">
-      <PdkHeading level="3">
+    <div
+      v-if="$slots.header || title"
+      class="postbox-header">
+      <PdkHeading
+        class="hndle"
+        level="3">
         <slot name="header">
           {{ translate(title) }}
         </slot>
       </PdkHeading>
     </div>
 
-    <div>
+    <div class="inside">
       <slot />
     </div>
 
     <div
       v-if="$slots.footer || actions?.length"
-      class="d-flex">
+      class="d-flex mypa-pb-3 mypa-px-3">
       <!-- Box footer. -->
       <slot name="footer">
         <PdkButtonGroup v-if="actions?.length">
@@ -34,11 +37,11 @@
 </template>
 
 <script lang="ts" setup>
-import {type PropType, computed} from 'vue';
-import {AdminComponent, ActionButton, type ActionDefinition, Size, useLanguage} from '@myparcel-pdk/admin';
+import {type PropType} from 'vue';
+import {ActionButton, AdminComponent, type ActionDefinition, Size, useLanguage} from '@myparcel-pdk/admin';
 import WcLoadingOverlay from '../WcLoadingOverlay.vue';
 
-const props = defineProps({
+defineProps({
   actions: {
     type: Array as PropType<ActionDefinition[]>,
     default: () => [],
@@ -58,14 +61,6 @@ const props = defineProps({
     default: null,
   },
 });
-
-const cssClasses = computed(() => ({
-  'mypa-px-2 mypa-pb-2 mypa-pt-1 mypa-mb-1 mypa-rounded': [Size.Small, Size.ExtraSmall].includes(props.size),
-  'mypa-px-4 mypa-pb-4 mypa-pt-3 mypa-mb-3': [Size.Medium].includes(props.size),
-  'mypa-px-5 mypa-pb-5 mypa-pt-4 mypa-mb-4': [Size.Large].includes(props.size),
-  'mypa-px-6 mypa-pb-6 mypa-pt-5 mypa-mb-5': [Size.ExtraLarge].includes(props.size),
-  'mypa-rounded-xl': [Size.Medium, Size.Large, Size.ExtraLarge].includes(props.size),
-}));
 
 const {translate} = useLanguage();
 </script>

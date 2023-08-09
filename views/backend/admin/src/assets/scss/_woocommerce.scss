@@ -14,8 +14,32 @@
 .woocommerce_page_wc-orders {
   // Increase the width of the MyParcel column in the orders list.
   // Default is 12ch and causes the shipment buttons to float outside the column.
+  // 23ch comfortably fits a 15-character barcode.
   .wp-list-table .column-myparcelnl {
-    @apply mypa-w-[21ch];
+    @apply mypa-w-[23ch];
+
+    .postbox .inside {
+      @apply mypa-py-0;
+    }
+  }
+}
+
+// Disable dragging of the MyParcel box on the order page.
+#myparcelnl_woocommerce_order_data {
+  &.postbox {
+    @apply mypa-p-0 mypa-border-0 mypa-bg-transparent mypa-shadow-none mypa-m-0;
+  }
+
+  & > .postbox-header {
+    @apply mypa-hidden;
+  }
+
+  & > .inside {
+    @apply mypa-p-0 mypa-m-0;
+  }
+
+  .postbox-header {
+    @apply mypa-cursor-default mypa-pointer-events-none;
   }
 }
 
