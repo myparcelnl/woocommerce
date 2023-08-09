@@ -12,6 +12,7 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\ProductSettings;
 use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
 use WC_Product;
+use WC_Product_Variation;
 
 class WcPdkProductRepository extends AbstractPdkPdkProductRepository
 {
@@ -54,6 +55,9 @@ class WcPdkProductRepository extends AbstractPdkPdkProductRepository
                 'width'              => $product->get_width(),
                 'height'             => $product->get_height(),
                 'settings'           => $this->getProductSettings($product),
+                'parent'             => $product instanceof WC_Product_Variation ? $this->getProduct(
+                    $product->get_parent_id()
+                ) : null,
             ]);
         });
     }
@@ -111,8 +115,8 @@ class WcPdkProductRepository extends AbstractPdkPdkProductRepository
         if ($identifier instanceof WC_Product) {
             $product = $identifier;
         } else {
-            $product = $this->retrieve('wc_product' . $identifier, function () use ($identifier) {
-                return new WC_Product($identifier);
+            $product = $this->retrieve("wc_product$identifier", function () use ($identifier) {
+                return wc_get_product($identifier);
             });
         }
 
