@@ -1,23 +1,25 @@
 <template>
   <div
     v-if="isInteractive"
-    v-test="AdminComponent.FormGroup"
-    class="options_group">
-    <p class="form-field">
+    v-test="AdminComponent.FormGroup">
+    <p class="form-field form-row form-row-full">
       <label :for="id">
         <slot name="label">
           {{ element.label }}
         </slot>
       </label>
 
+      <WcHelpTip :element="element" />
+
       <slot />
 
-      <WcHelpTip :element="element" />
       <WcDescription :element="element" />
     </p>
   </div>
 
-  <div v-else>
+  <div
+    v-else
+    class="options">
     <slot />
   </div>
 </template>

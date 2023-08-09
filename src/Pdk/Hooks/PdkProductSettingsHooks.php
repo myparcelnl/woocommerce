@@ -13,8 +13,10 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Sdk\src\Support\Str;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use Throwable;
+use WC_Product_Variation;
+use WP_Post;
 
-class PdkProductSettingsHooks implements WordPressHooksInterface
+final class PdkProductSettingsHooks implements WordPressHooksInterface
 {
     public function apply(): void
     {
@@ -24,8 +26,18 @@ class PdkProductSettingsHooks implements WordPressHooksInterface
         // Render pdk product settings in above custom tab
         add_action('woocommerce_product_data_panels', [$this, 'renderPdkProductSettings']);
 
+        // Render child product settings in above custom tab
+        add_action(
+            'woocommerce_product_after_variable_attributes',
+            [$this, 'renderPdkProductSettingsForVariant'],
+            99,
+            3
+        );
+
         // Save pdk product settings
         add_action('woocommerce_process_product_meta', [$this, 'handleSaveProduct']);
+
+        add_action('woocommerce_save_product_variation', [$this, 'handleSaveProduct']);
     }
 
     /**
@@ -57,11 +69,12 @@ class PdkProductSettingsHooks implements WordPressHooksInterface
     {
         $appInfo    = Pdk::getAppInfo();
         $pluginName = $appInfo->name;
+        $productId  = get_the_ID();
 
         $tabs[$pluginName] = [
             'title'  => $pluginName,
             'label'  => $appInfo->title,
-            'target' => "{$pluginName}_product_data",
+            'target' => Pdk::get('createProductDataIdentifier')((string) $productId),
             'class'  => ['show_if_simple', 'show_if_variable', 'show_if_grouped', 'show_if_external'],
         ];
 
@@ -81,34 +94,46 @@ class PdkProductSettingsHooks implements WordPressHooksInterface
     }
 
     /**
-     * @param      $post
-     * @param  int $productId
+     * @param           $loop
+     * @param           $variationData
+     * @param  \WP_Post $variation
      *
      * @return void
-     * @note public for testing purposes. We can't replace $_POST in the test.
-     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
+     * @noinspection PhpUnusedParameterInspection
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function savePdkProduct($post, int $productId): void
+    public function renderPdkProductSettingsForVariant($loop, $variationData, WP_Post $variation): void
     {
-        $appInfo = Pdk::getAppInfo();
+        /** @var PdkProductRepositoryInterface $productRepository */
+        $productRepository = Pdk::get(PdkProductRepositoryInterface::class);
 
-        $productSettingKeys = Arr::where($post, static function ($_, string $key) use ($appInfo) {
-            return Str::startsWith($key, "$appInfo->name-");
-        });
+        $product = $productRepository->getProduct(new WC_Product_Variation($variation->ID));
+
+        echo Frontend::renderChildProductSettings($product);
+    }
+
+    /**
+     * @param  array $post
+     * @param  int   $productId
+     *
+     * @return void
+     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
+     * @note public for testing purposes. We can't replace $_POST in the test.
+     */
+    public function savePdkProduct(array $post, int $productId): void
+    {
+        $productSettingKeys = $this->getProductSettingsKeys($post, $productId) ?: $this->getProductSettingsKeys($post);
 
         if (empty($productSettingKeys)) {
             return;
         }
 
         $values = (new Collection($productSettingKeys))
-            ->mapWithKeys(static function ($value, string $key) use ($appInfo) {
-                // TODO: can be removed when https://github.com/myparcelnl/pdk/pull/114 is merged
-                if (in_array($value, ['true', 'false'], true)) {
-                    $value = 'true' === $value;
-                }
+            ->mapWithKeys(static function ($value, string $key) {
+                $keyParts = explode('-', $key);
 
                 return [
-                    Str::replaceFirst("$appInfo->name-", '', $key) => $value,
+                    Arr::last($keyParts) => $value,
                 ];
             })
             ->toArray();
@@ -120,5 +145,21 @@ class PdkProductSettingsHooks implements WordPressHooksInterface
         $product->settings->fill($values);
 
         $productRepository->update($product);
+    }
+
+    /**
+     * @param  array    $post
+     * @param  null|int $productId when provided will return childProductSettings
+     *
+     * @return array
+     */
+    private function getProductSettingsKeys(array $post, ?int $productId = null): array
+    {
+        $appInfo = Pdk::getAppInfo();
+        $postKey = $productId ? "$appInfo->name-childProductSettings--$productId-" : "$appInfo->name-";
+
+        return Arr::where($post, static function ($_, string $key) use ($postKey) {
+            return Str::startsWith($key, $postKey);
+        });
     }
 }

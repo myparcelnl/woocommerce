@@ -12,7 +12,7 @@ use MyParcelNL\WooCommerce\Tests\Mock\MockWcOrder;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcProduct;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
 
-class WC_Data {}
+class WC_Data { }
 
 /** @see \WC_Cart */
 class WC_Cart extends MockWcCart { }
@@ -71,6 +71,14 @@ function update_post_meta($postId, $metaKey, $metaValue): bool
 function get_post_meta($postId, $metaKey)
 {
     return MockWpMeta::get($postId, $metaKey);
+}
+
+/**
+ * @see \wc_get_product()
+ */
+function wc_get_product($postId)
+{
+    return new WC_Product($postId);
 }
 
 /**
