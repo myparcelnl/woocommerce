@@ -1,6 +1,7 @@
 {
   "externalIdentifier": "1",
   "deliveryOptions": {
+    "date": "2024-12-31 12:00:00",
     "carrier": {
       "externalIdentifier": "dhlforyou",
       "id": 9,
@@ -49,7 +50,6 @@
         }
       }
     },
-    "date": "2024-12-31 12:00:00",
     "labelAmount": 1,
     "shipmentOptions": {
       "signature": true
@@ -114,6 +114,7 @@
           "disableDeliveryOptions": -1,
           "dropOffDelay": 0,
           "exportAgeCheck": -1,
+          "exportHideSender": -1,
           "exportInsurance": -1,
           "exportLargeFormat": -1,
           "exportOnlyRecipient": -1,
@@ -157,6 +158,7 @@
           "disableDeliveryOptions": -1,
           "dropOffDelay": 0,
           "exportAgeCheck": -1,
+          "exportHideSender": -1,
           "exportInsurance": -1,
           "exportLargeFormat": -1,
           "exportOnlyRecipient": -1,
