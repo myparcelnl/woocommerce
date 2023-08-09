@@ -24,7 +24,7 @@
 
 <script lang="ts" setup>
 import {toRefs} from 'vue';
-import {AdminComponent, type ElementInstance, generateFieldId} from '@myparcel-pdk/admin';
+import {AdminComponent, generateFieldId, type ElementInstance} from '@myparcel-pdk/admin';
 import WcHelpTip from '../WcHelpTip.vue';
 import WcDescription from '../WcDescription.vue';
 import {useElementData} from '../../composables';

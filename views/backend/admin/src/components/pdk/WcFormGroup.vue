@@ -45,14 +45,13 @@
 
 <script lang="ts" setup>
 import {toRefs} from 'vue';
-import {AdminComponent, generateFieldId} from '@myparcel-pdk/admin';
-import {type AnyElementInstance} from '@myparcel/vue-form-builder';
+import {AdminComponent, generateFieldId, type ElementInstance} from '@myparcel-pdk/admin';
 import WcHelpTip from '../WcHelpTip.vue';
 import WcDescription from '../WcDescription.vue';
 import {useElementData} from '../../composables';
 
 // eslint-disable-next-line vue/no-unused-properties
-const props = defineProps<{modelValue: boolean; element: AnyElementInstance}>();
+const props = defineProps<{modelValue: boolean; element: ElementInstance}>();
 const propRefs = toRefs(props);
 
 const id = generateFieldId(propRefs.element.value);
