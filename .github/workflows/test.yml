@@ -52,6 +52,7 @@ jobs:
 
       - uses: ./.github/actions/setup
         if: steps.coverage-cache.outputs.cache-hit != 'true'
+        id: setup
 
       - name: 'Run backend tests'
         if: steps.coverage-cache.outputs.cache-hit != 'true'
@@ -60,7 +61,7 @@ jobs:
         run: |
           docker run \
             --volume $PWD:/app \
-            ${{ inputs.image }} \
+            ${{ steps.setup.outputs.image }} \
             php -dpcov.enabled=1 \
             vendor/bin/pest \
               --colors=always \
