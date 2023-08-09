@@ -1,4 +1,12 @@
 <template>
+  <PdkTableRow v-if="!isInteractiveElement">
+    <!-- This row avoids issues with table-layout: fixed if the first element on the page has colspan="2" -->
+    <PdkTableCol
+      class="!mypa-p-0"
+      component="th" />
+    <PdkTableCol class="!mypa-p-0" />
+  </PdkTableRow>
+
   <PdkTableRow
     v-show="element.isVisible"
     v-test="AdminComponent.FormGroup"
