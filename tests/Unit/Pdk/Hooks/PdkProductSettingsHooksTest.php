@@ -22,7 +22,7 @@ function defaultProductSettings(): array
         'id'                                      => ProductSettings::ID,
         ProductSettings::COUNTRY_OF_ORIGIN        => 'NL',
         ProductSettings::CUSTOMS_CODE             => '0000',
-        ProductSettings::DISABLE_DELIVERY_OPTIONS => AbstractSettingsModel::TRISTATE_VALUE_DEFAULT,
+        ProductSettings::DISABLE_DELIVERY_OPTIONS => false,
         ProductSettings::DROP_OFF_DELAY           => 0,
         ProductSettings::EXPORT_AGE_CHECK         => AbstractSettingsModel::TRISTATE_VALUE_DEFAULT,
         ProductSettings::EXPORT_INSURANCE         => AbstractSettingsModel::TRISTATE_VALUE_DEFAULT,

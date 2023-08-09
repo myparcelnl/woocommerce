@@ -108,7 +108,7 @@
           "id": "product",
           "countryOfOrigin": "NL",
           "customsCode": "0000",
-          "disableDeliveryOptions": -1,
+          "disableDeliveryOptions": false,
           "dropOffDelay": 0,
           "exportAgeCheck": -1,
           "exportHideSender": -1,
@@ -119,7 +119,24 @@
           "exportSignature": -1,
           "fitInMailbox": 0,
           "packageType": "package"
-        }
+        },
+        "mergedSettings": {
+          "id": "product",
+          "countryOfOrigin": "NL",
+          "customsCode": "0000",
+          "disableDeliveryOptions": false,
+          "dropOffDelay": 0,
+          "exportAgeCheck": -1,
+          "exportHideSender": -1,
+          "exportInsurance": -1,
+          "exportLargeFormat": -1,
+          "exportOnlyRecipient": -1,
+          "exportReturn": -1,
+          "exportSignature": -1,
+          "fitInMailbox": 0,
+          "packageType": "package"
+        },
+        "parent": null
       }
     },
     {
@@ -152,7 +169,7 @@
           "id": "product",
           "countryOfOrigin": "NL",
           "customsCode": "0000",
-          "disableDeliveryOptions": -1,
+          "disableDeliveryOptions": false,
           "dropOffDelay": 0,
           "exportAgeCheck": -1,
           "exportHideSender": -1,
@@ -163,7 +180,24 @@
           "exportSignature": -1,
           "fitInMailbox": 0,
           "packageType": "package"
-        }
+        },
+        "mergedSettings": {
+          "id": "product",
+          "countryOfOrigin": "NL",
+          "customsCode": "0000",
+          "disableDeliveryOptions": false,
+          "dropOffDelay": 0,
+          "exportAgeCheck": -1,
+          "exportHideSender": -1,
+          "exportInsurance": -1,
+          "exportLargeFormat": -1,
+          "exportOnlyRecipient": -1,
+          "exportReturn": -1,
+          "exportSignature": -1,
+          "fitInMailbox": 0,
+          "packageType": "package"
+        },
+        "parent": null
       }
     }
   ],
