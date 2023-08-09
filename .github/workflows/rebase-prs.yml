@@ -1,0 +1,21 @@
+name: '♻️ Rebase PRs'
+
+on:
+  workflow_call:
+
+jobs:
+  rebase-prs:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: myparcelnl/actions/setup-git-credentials@v3
+        id: credentials
+        with:
+          app-id: ${{ secrets.MYPARCEL_APP_ID }}
+          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
+
+      - uses: peter-evans/rebase@v2
+        with:
+          token: ${{ steps.credentials.outputs.token }}
+          base: ${{ github.ref_name }}
+          exclude-drafts: true
+          exclude-labels: 'dependencies'

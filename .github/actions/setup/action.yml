@@ -9,18 +9,18 @@ inputs:
 
 outputs:
   image:
-    description: 'The image name that was used to install composer dependencies. Can be used in subsequent jobs.'
+    description: 'The image name that was used to setup composer dependencies. Can be used in subsequent jobs.'
     value: ${{ steps.composer.outputs.image }}
 
 runs:
   using: composite
   steps:
-    - uses: myparcelnl/actions/composer-install@v3
+    - uses: myparcelnl/actions/composer-setup@v3
       id: composer
       with:
         php-version: 7.4
         flags: ${{ inputs.composer-flags }}
 
-    - uses: myparcelnl/actions/yarn-install@v3
+    - uses: myparcelnl/actions/yarn-setup@v3
       with:
         node-version: 18
