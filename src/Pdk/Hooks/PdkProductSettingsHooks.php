@@ -94,19 +94,20 @@ final class PdkProductSettingsHooks implements WordPressHooksInterface
     }
 
     /**
-     * @param  mixed    $_
-     * @param  mixed    $__
-     * @param  \WP_Post $post
+     * @param           $loop
+     * @param           $variationData
+     * @param  \WP_Post $variation
      *
      * @return void
      * @noinspection PhpUnusedParameterInspection
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function renderPdkProductSettingsForVariant($_, $__, WP_Post $post): void
+    public function renderPdkProductSettingsForVariant($loop, $variationData, WP_Post $variation): void
     {
         /** @var PdkProductRepositoryInterface $productRepository */
         $productRepository = Pdk::get(PdkProductRepositoryInterface::class);
-        $variation         = new WC_Product_Variation($post->ID);
-        $product           = $productRepository->getProduct($variation);
+
+        $product = $productRepository->getProduct(new WC_Product_Variation($variation->ID));
 
         echo Frontend::renderChildProductSettings($product);
     }
@@ -130,6 +131,7 @@ final class PdkProductSettingsHooks implements WordPressHooksInterface
         $values = (new Collection($productSettingKeys))
             ->mapWithKeys(static function ($value, string $key) {
                 $keyParts = explode('-', $key);
+
                 return [
                     Arr::last($keyParts) => $value,
                 ];
