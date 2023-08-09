@@ -1,0 +1,21 @@
+name: '⚙️ On push'
+
+on:
+  push:
+    branches:
+      - alpha
+      - beta
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+    secrets: inherit
+
+  rebase-prs:
+    needs: test
+    uses: ./.github/workflows/rebase-prs.yml
+    secrets: inherit

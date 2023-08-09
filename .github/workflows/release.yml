@@ -9,12 +9,12 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   test:
-    uses: ./.github/workflows/--test.yml
+    uses: ./.github/workflows/test.yml
     secrets: inherit
 
   release:
@@ -35,7 +35,7 @@ jobs:
           fetch-depth: 0
           token: ${{ steps.credentials.outputs.token }}
 
-      - uses: ./.github/actions/install
+      - uses: ./.github/actions/setup
         with:
           composer-flags: --no-dev
 
@@ -61,21 +61,7 @@ jobs:
     needs:
       - release
       - rebase-develop
-    if: always()
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: myparcelnl/actions/setup-app-credentials@v3
-        id: credentials
-        with:
-          app-id: ${{ secrets.MYPARCEL_APP_ID }}
-          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
-
-      - uses: peter-evans/rebase@v2
-        with:
-          token: ${{ steps.credentials.outputs.token }}
-          base: ${{ github.ref_name }}
-          exclude-drafts: true
-          exclude-labels: 'hotfix'
+    uses: ./.github/workflows/rebase-prs.yml
 
   prune-releases:
     needs: release

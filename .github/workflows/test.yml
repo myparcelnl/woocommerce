@@ -1,12 +1,84 @@
 name: '🧪 Run tests'
 
 on:
-  workflow_dispatch:
-
-  repository_dispatch:
-    types: [test-command]
+  workflow_call:
 
 jobs:
-  test:
-    uses: ./.github/workflows/--test.yml
-    secrets: inherit
+  test-frontend:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/setup
+
+      - name: 'Run frontend tests'
+        shell: bash
+        #language=sh
+        run: |
+          yarn nx run-many \
+            --output-style=static \
+            --runner=cloud \
+            --parallel=1 \
+            --target=test:coverage
+
+      - name: 'Move coverage files'
+        shell: bash
+        #language=sh
+        run: |
+          yarn workspaces foreach -pv --exclude '@myparcel/woocommerce' exec \
+            bash -c 'if [ -f coverage/clover.xml ]; then mv coverage/clover.xml coverage/$(basename $(pwd)).xml; fi'
+
+      - uses: codecov/codecov-action@v3
+        with:
+          flags: unit,frontend,admin
+          files: views/backend/**/coverage/*.xml
+
+      - uses: codecov/codecov-action@v3
+        with:
+          flags: unit,frontend,checkout
+          files: views/frontend/**/coverage/*.xml
+
+  test-backend:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 'Cache coverage'
+        uses: actions/cache@v3
+        id: coverage-cache
+        with:
+          path: coverage
+          key: coverage-${{ hashFiles('**/composer.json', '**/composer.lock', 'src/**/*', 'tests/**/*') }}
+
+      - uses: ./.github/actions/setup
+        if: steps.coverage-cache.outputs.cache-hit != 'true'
+
+      - name: 'Run backend tests'
+        if: steps.coverage-cache.outputs.cache-hit != 'true'
+        shell: bash
+        #language=sh
+        run: |
+          docker run \
+            --volume $PWD:/app \
+            ${{ inputs.image }} \
+            php -dpcov.enabled=1 \
+            vendor/bin/pest \
+              --colors=always \
+              --coverage-clover=clover.xml \
+              --no-interaction
+
+      - name: 'Move coverage file'
+        if: steps.coverage-cache.outputs.cache-hit != 'true'
+        shell: bash
+        #language=sh
+        run: |
+          mkdir -p coverage
+          docker cp $(docker ps -alq):/app/clover.xml coverage/backend.xml
+
+          # Strip the /app/ prefix from the coverage paths before uploading.
+          sed -i 's/\/app\///g' coverage/backend.xml
+
+      - uses: codecov/codecov-action@v3
+        with:
+          flags: unit,backend
+          files: coverage/*.xml

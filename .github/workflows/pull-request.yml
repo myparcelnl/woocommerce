@@ -1,4 +1,4 @@
-name: 'Pull request'
+name: '⚙️ On pull request'
 
 on:
   pull_request:
@@ -7,10 +7,10 @@ on:
       - beta
 
 concurrency:
-  group: pull-request-${{ github.event.pull_request.number }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
   test:
-    uses: ./.github/workflows/--test.yml
+    uses: ./.github/workflows/test.yml
     secrets: inherit

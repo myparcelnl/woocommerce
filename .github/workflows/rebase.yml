@@ -36,9 +36,6 @@ on:
         required: false
         default: false
 
-  repository_dispatch:
-    types: [ rebase-command ]
-
 jobs:
   rebase:
     runs-on: ubuntu-22.04
@@ -52,6 +49,6 @@ jobs:
       - uses: myparcelnl/actions/rebase@v3
         with:
           token: ${{ steps.credentials.outputs.token }}
-          base: ${{ github.event.client_payload.base || inputs.base || github.ref_name }}
-          target: ${{ github.event.client_payload.target || inputs.target }}
+          base: ${{ inputs.base || github.ref_name }}
+          target: ${{ inputs.target }}
           force: ${{ inputs.force }}
