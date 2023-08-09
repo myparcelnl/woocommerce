@@ -1,3 +1,14 @@
+// Fix the width of the select2 dropdowns in WooCommerce settings
+.woocommerce table.form-table {
+  .select2-container {
+    min-width: 100% !important;
+  }
+
+  select {
+    @apply mypa-w-full;
+  }
+}
+
 // Legacy and HPOS order list page classes
 .post-type-shop_order,
 .woocommerce_page_wc-orders {
