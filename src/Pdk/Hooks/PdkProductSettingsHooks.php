@@ -121,7 +121,7 @@ final class PdkProductSettingsHooks implements WordPressHooksInterface
      */
     public function savePdkProduct($post, int $productId): void
     {
-        $productSettingKeys = $this->getProductSettingsKeys($post, $productId) ?? $this->getProductSettingsKeys($post);
+        $productSettingKeys = $this->getProductSettingsKeys($post, $productId) ?: $this->getProductSettingsKeys($post);
 
         if (empty($productSettingKeys)) {
             return;
