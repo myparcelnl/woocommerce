@@ -1,5 +1,5 @@
-name: 'Install'
-description: 'Install dependencies using cache'
+name: 'Setup'
+description: 'Install dependencies'
 
 inputs:
   composer-flags:
