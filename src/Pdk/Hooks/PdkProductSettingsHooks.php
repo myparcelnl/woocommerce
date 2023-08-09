@@ -113,14 +113,14 @@ final class PdkProductSettingsHooks implements WordPressHooksInterface
     }
 
     /**
-     * @param      $post
-     * @param  int $productId
+     * @param  array $post
+     * @param  int   $productId
      *
      * @return void
-     * @note public for testing purposes. We can't replace $_POST in the test.
      * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
+     * @note public for testing purposes. We can't replace $_POST in the test.
      */
-    public function savePdkProduct($post, int $productId): void
+    public function savePdkProduct(array $post, int $productId): void
     {
         $productSettingKeys = $this->getProductSettingsKeys($post, $productId) ?: $this->getProductSettingsKeys($post);
 
@@ -148,12 +148,12 @@ final class PdkProductSettingsHooks implements WordPressHooksInterface
     }
 
     /**
-     * @param           $post
+     * @param  array    $post
      * @param  null|int $productId when provided will return childProductSettings
      *
      * @return array
      */
-    private function getProductSettingsKeys($post, ?int $productId = null): array
+    private function getProductSettingsKeys(array $post, ?int $productId = null): array
     {
         $appInfo = Pdk::getAppInfo();
         $postKey = $productId ? "$appInfo->name-childProductSettings--$productId-" : "$appInfo->name-";
