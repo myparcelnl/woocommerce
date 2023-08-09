@@ -48,11 +48,9 @@ class WcFrontendRenderService extends FrontendRenderService
      */
     public function renderProductSettings(PdkProduct $product): string
     {
-        $appInfo = Pdk::getAppInfo();
-
         return sprintf(
             '<div id="%s" class="panel woocommerce_options_panel">%s</div>',
-            "{$appInfo->name}_product_data_{$product->externalIdentifier}",
+            Pdk::get('createProductDataIdentifier')($product->externalIdentifier),
             parent::renderProductSettings($product)
         );
     }

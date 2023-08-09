@@ -84,8 +84,16 @@ return [
 
     'minimumWooCommerceVersion' => value('5.0.0'),
 
-    'isWooCommerceVersionSupported'  => factory(function (): bool {
+    'isWooCommerceVersionSupported' => factory(function (): bool {
         return version_compare(WooCommerce::getVersion(), PdkFacade::get('minimumWooCommerceVersion'), '>=');
+    }),
+
+    'createProductDataIdentifier'    => factory(static function (): callable {
+        return static function (string $productId): string {
+            $appInfo = PdkFacade::getAppInfo();
+
+            return sprintf('%s_product_data_%s', $appInfo->name, $productId);
+        };
     }),
 
     /**

@@ -74,7 +74,7 @@ final class PdkProductSettingsHooks implements WordPressHooksInterface
         $tabs[$pluginName] = [
             'title'  => $pluginName,
             'label'  => $appInfo->title,
-            'target' => "{$pluginName}_product_data_$productId",
+            'target' => Pdk::get('createProductDataIdentifier')((string) $productId),
             'class'  => ['show_if_simple', 'show_if_variable', 'show_if_grouped', 'show_if_external'],
         ];
 
@@ -121,17 +121,7 @@ final class PdkProductSettingsHooks implements WordPressHooksInterface
      */
     public function savePdkProduct($post, int $productId): void
     {
-        $appInfo = Pdk::getAppInfo();
-
-        $productSettingKeys = Arr::where($post, static function ($_, string $key) use ($appInfo, $productId) {
-            return Str::startsWith($key, "$appInfo->name-childProductSettings--$productId-");
-        });
-
-        if (empty($productSettingKeys)) {
-            $productSettingKeys = Arr::where($post, static function ($_, string $key) use ($appInfo) {
-                return Str::startsWith($key, "$appInfo->name-");
-            });
-        }
+        $productSettingKeys = $this->getProductSettingsKeys($post, $productId) ?? $this->getProductSettingsKeys($post);
 
         if (empty($productSettingKeys)) {
             return;
@@ -141,7 +131,7 @@ final class PdkProductSettingsHooks implements WordPressHooksInterface
             ->mapWithKeys(static function ($value, string $key) {
                 $keyParts = explode('-', $key);
                 return [
-                    end($keyParts) => $value,
+                    Arr::last($keyParts) => $value,
                 ];
             })
             ->toArray();
@@ -153,5 +143,21 @@ final class PdkProductSettingsHooks implements WordPressHooksInterface
         $product->settings->fill($values);
 
         $productRepository->update($product);
+    }
+
+    /**
+     * @param           $post
+     * @param  null|int $productId when provided will return childProductSettings
+     *
+     * @return array
+     */
+    private function getProductSettingsKeys($post, ?int $productId = null): array
+    {
+        $appInfo = Pdk::getAppInfo();
+        $postKey = $productId ? "$appInfo->name-childProductSettings--$productId-" : "$appInfo->name-";
+
+        return Arr::where($post, static function ($_, string $key) use ($postKey) {
+            return Str::startsWith($key, $postKey);
+        });
     }
 }
