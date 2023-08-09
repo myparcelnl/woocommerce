@@ -22,6 +22,14 @@ class WcViewService extends AbstractViewService
     /**
      * @return bool
      */
+    public function isChildProductPage(): bool
+    {
+        return isset($_POST['action']) && 'woocommerce_load_variations' === $_POST['action'];
+    }
+
+    /**
+     * @return bool
+     */
     public function isOrderListPage(): bool
     {
         return Pdk::get('orderListPageId') === $this->getScreenId();
@@ -48,7 +56,7 @@ class WcViewService extends AbstractViewService
      */
     public function isProductPage(): bool
     {
-        return in_array($this->getScreenId(), ['product', '']);
+        return 'product' === $this->getScreenId();
     }
 
     /**
