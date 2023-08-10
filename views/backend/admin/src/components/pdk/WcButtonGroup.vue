@@ -1,7 +1,7 @@
 <template>
   <div
     v-test="AdminComponent.ButtonGroup"
-    class="mypa-cols-auto mypa-gap-1 mypa-grid-flow-col mypa-inline-grid">
+    class="mypa-flex mypa-flex-wrap mypa-gap-1">
     <slot />
   </div>
 </template>
