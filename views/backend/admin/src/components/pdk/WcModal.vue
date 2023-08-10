@@ -1,6 +1,7 @@
 <template>
   <div
     v-show="isOpen"
+    id="poststuff"
     v-test="AdminComponent.Modal"
     :class="[...backgroundClasses, 'mypa-z-[9999]']"
     role="dialog"
@@ -14,69 +15,53 @@
         @click="close" />
     </Transition>
 
-    <Transition :name="config.transitions?.modal">
-      <div
-        v-show="isOpen"
-        :class="[
-          'mypa-bg-white',
-          'mypa-border',
-          'mypa-border-gray-400',
-          'mypa-fixed',
-          'mypa-left-2',
-          'mypa-m-auto',
-          'mypa-max-w-3xl',
-          'mypa-px-8',
-          'mypa-py-4',
-          'mypa-right-2',
-          'mypa-top-12',
-        ]"
-        role="document"
-        @click.stop>
-        <div class="mypa-relative">
-          <span
-            :aria-label="translate('action_close')"
-            class="mypa--m-4 mypa-absolute mypa-cursor-pointer mypa-right-0 mypa-top-0"
-            role="button"
-            @click="close">
-            <PdkIcon icon="close" />
-          </span>
+    <div
+      v-show="isOpen"
+      :class="['mypa-fixed', 'mypa-left-2', 'mypa-m-auto', 'mypa-max-w-2xl', 'mypa-right-2', 'mypa-top-12']"
+      role="document"
+      @click.stop>
+      <PdkBox :actions="actions">
+        <template #header>
+          <div class="mypa-relative mypa-w-full">
+            <span
+              :aria-label="translate('action_close')"
+              class="mypa-absolute mypa-cursor-pointer mypa-right-0"
+              role="button"
+              @click="close">
+              <PdkIcon icon="close" />
+            </span>
 
-          <PdkHeading level="2">
-            {{ translate(title) }}
-          </PdkHeading>
+            <span v-text="translate(title)" />
+          </div>
+        </template>
 
-          <div v-if="isOpen">
-            <NotificationContainer category="modal" />
+        <template #default>
+          <div
+            v-if="isOpen"
+            class="inside">
+            <NotificationContainer :category="NotificationCategory.Modal" />
 
             <KeepAlive>
               <slot :context="context" />
             </KeepAlive>
           </div>
-
-          <PdkButtonGroup v-if="actions?.length">
-            <ActionButton
-              v-for="(action, index) in actions"
-              :key="`action_${action.id}_${index}`"
-              :action="action"
-              :label="action.label" />
-          </PdkButtonGroup>
-        </div>
-      </div>
-    </Transition>
+        </template>
+      </PdkBox>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {type PropType} from 'vue';
+import {type PropType, toRefs} from 'vue';
 import {
   AdminComponent,
-  ActionButton,
   type ActionDefinition,
   type AdminModalKey,
   NotificationContainer,
   useAdminConfig,
   useLanguage,
   useModalElementContext,
+  NotificationCategory,
 } from '@myparcel-pdk/admin';
 
 const props = defineProps({
@@ -96,9 +81,12 @@ const props = defineProps({
   },
 });
 
+const propRefs = toRefs(props);
+
 const config = useAdminConfig();
 
-const {isOpen, context, close} = useModalElementContext(props.modalKey);
+const {isOpen, context, close} = useModalElementContext(propRefs.modalKey?.value);
+
 const {translate} = useLanguage();
 
 const backgroundClasses = ['mypa-left-0', 'mypa-top-0', 'mypa-h-full', 'mypa-w-full', 'mypa-fixed'];
