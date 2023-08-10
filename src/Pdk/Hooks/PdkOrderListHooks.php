@@ -47,10 +47,11 @@ class PdkOrderListHooks implements WordPressHooksInterface
      */
     public function registerBulkActions(array $actions): array
     {
-        $pluginName = Pdk::getAppInfo()->name;
+        $appInfo    = Pdk::getAppInfo();
+        $pluginName = $appInfo->name;
 
         foreach (Pdk::get('bulkActions') as $action) {
-            $actions["$pluginName.$action"] = Language::translate($action);
+            $actions["$pluginName.$action"] = sprintf('%s: %s', $appInfo->title, Language::translate($action));
         }
 
         return $actions;
