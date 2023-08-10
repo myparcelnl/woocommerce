@@ -193,7 +193,7 @@ class WCMP_Export_Consignments
         $total = (int) $item['line_total'];
         $tax   = (int) $item['line_tax'];
 
-        return ($total + $tax) * 100;
+        return max(($total + $tax) * 100, 100);
     }
 
     /**
