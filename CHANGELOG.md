@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+**🚧 Note: 🚧**
+
+This is a release candidate. It's not fully tested yet, but will be tested thoroughly and released on the [WordPress plugin directory] soon.
+
+You can install this version manually to get a head start on [the new features and improvements]. Please report any issues you encounter using the [Bug report form] or by sending an email to [support@myparcel.nl].
+
+[Bug report form]: https://github.com/myparcelnl/woocommerce/issues/new?labels=bug&template=BUG-REPORT.yml&version=v4.x.x-rc.x
+[WordPress plugin directory]: https://wordpress.org/plugins/woocommerce-myparcel/
+[support@myparcel.nl]: mailto:support@myparcel.nl
+[the new features and improvements]: https://github.com/myparcelnl/woocommerce/compare/main...develop
+
+## [4.21.1-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.21.0...v4.21.1-rc.1) (2023-08-10)
+
+
+### :bug: Bug Fixes
+
+* do not confirm delivery for virtual orders ([#987](https://github.com/myparcelnl/woocommerce/issues/987)) ([2090ac1](https://github.com/myparcelnl/woocommerce/commit/2090ac160b5add0b61bb44c9054e7f8b40bef8d3))
+
 ## [4.21.0](https://github.com/myparcelnl/woocommerce/compare/v4.20.2...v4.21.0) (2023-07-31)
 
 
