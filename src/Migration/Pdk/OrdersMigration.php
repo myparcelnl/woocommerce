@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use DateTime;
+use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Base\Support\Utils;
@@ -21,6 +22,19 @@ final class OrdersMigration extends AbstractPdkMigration
     public const LEGACY_META_SHIPPING_HOUSE_NUMBER        = '_shipping_house_number';
     public const LEGACY_META_SHIPPING_HOUSE_NUMBER_SUFFIX = '_shipping_house_number_suffix';
     public const LEGACY_META_SHIPPING_STREET_NAME         = '_shipping_street_name';
+
+    /**
+     * @var \MyParcelNL\Pdk\Base\Contract\CronServiceInterface
+     */
+    private $cronService;
+
+    /**
+     * @param  \MyParcelNL\Pdk\Base\Contract\CronServiceInterface $cronService
+     */
+    public function __construct(CronServiceInterface $cronService)
+    {
+        $this->cronService = $cronService;
+    }
 
     public function down(): void
     {
@@ -78,11 +92,11 @@ final class OrdersMigration extends AbstractPdkMigration
 
             $chunkContext = [
                 'orderIds'  => $chunk,
-                'chunk'     => $index,
+                'chunk'     => $index + 1,
                 'lastChunk' => $lastChunk,
             ];
 
-            wp_schedule_single_event($time, Pdk::get('migrateAction_5_0_0_Orders'), [$chunkContext]);
+            $this->cronService->schedule(Pdk::get('migrateAction_5_0_0_Orders'), $time, $chunkContext);
 
             $this->debug('Scheduled migration for orders', [
                 'time'  => $time,

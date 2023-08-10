@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
+use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
 use WC_Product;
 
@@ -27,6 +28,19 @@ final class ProductSettingsMigration extends AbstractPdkMigration
     ];
     private const CHUNK_SIZE          = 10;
     private const SECONDS_APART       = 30;
+
+    /**
+     * @var \MyParcelNL\Pdk\Base\Contract\CronServiceInterface
+     */
+    private $cronService;
+
+    /**
+     * @param  \MyParcelNL\Pdk\Base\Contract\CronServiceInterface $cronService
+     */
+    public function __construct(CronServiceInterface $cronService)
+    {
+        $this->cronService = $cronService;
+    }
 
     public function down(): void
     {
@@ -121,6 +135,7 @@ final class ProductSettingsMigration extends AbstractPdkMigration
     private function scheduleNextRun(): void
     {
         $time = time() + self::SECONDS_APART;
-        wp_schedule_single_event($time, Pdk::get('migrateAction_5_0_0_ProductSettings'));
+
+        $this->cronService->schedule($time, Pdk::get('migrateAction_5_0_0_ProductSettings'));
     }
 }
