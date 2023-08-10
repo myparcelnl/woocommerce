@@ -11,12 +11,60 @@ use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
+use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Order;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 
 usesShared(new UsesMockWcPdkInstance());
+
+it('schedules order migration in chunks', function () {
+    /** @var \MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks $tasks */
+    $tasks = Pdk::get(WordPressScheduledTasks::class);
+    /** @var \MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration $orderMigration */
+    $orderMigration = Pdk::get(OrdersMigration::class);
+
+    $orderMigration->up();
+
+    $allTasks = $tasks->all();
+
+    expect($allTasks->count())
+        ->toBe(4)
+        // Expect migration callback to be the order migration
+        ->and($allTasks->pluck('callback'))->each->toBe(Pdk::get('migrateAction_5_0_0_Orders'))
+        // expect the first 3 chunks to each have 100 items
+        ->and(
+            $allTasks->take(3)
+                ->pluck('args.0.orderIds')
+        )
+        ->each->toHaveCount(100)
+        // Expect the last chunk to have 24 items
+        ->and(
+            $allTasks->take(-1)
+                ->pluck('args.0.orderIds')
+        )
+        ->each->toHaveCount(24);
+
+    $timestamps    = $allTasks->pluck('time');
+    $chunkArgs     = $allTasks->pluck('args.0.chunk');
+    $lastChunkArgs = $allTasks->pluck('args.0.lastChunk');
+
+    foreach ($allTasks as $index => $task) {
+        // Expect the chunk counts to be 1, 2, 3, 4 and the "lastChunk" value to be the max chunk count
+        expect($chunkArgs[$index])
+            ->toBe($index + 1)
+            ->and($lastChunkArgs[$index])
+            ->toBe(4);
+
+        if (0 === $index) {
+            continue;
+        }
+
+        // expect each chunk's schedule timestamp to be 5 seconds after the previous chunk's
+        expect($task['time'])->toBe($timestamps[$index - 1] + 5);
+    }
+});
 
 it('migrates orders', function (array $oldMeta) {
     /** @var \MyParcelNL\Pdk\Tests\Bootstrap\MockPdkOrderRepository $pdkOrderRepository */
@@ -50,7 +98,7 @@ it('migrates orders', function (array $oldMeta) {
         expect($postMeta[$key])->toEqual($oldMeta[$key]);
     }
 
-    $filteredMeta  = Arr::only($postMeta, array_merge($requiredNewKeys, $optionalNewKeys));
+    $filteredMeta = Arr::only($postMeta, array_merge($requiredNewKeys, $optionalNewKeys));
 
     $pdkOrder      = $pdkOrderRepository->get(1);
     $pdkOrderArray = Arr::only(
