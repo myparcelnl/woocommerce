@@ -987,6 +987,18 @@ class WCMYPA_Admin
     {
         $deliveryOptions  = self::getDeliveryOptionsFromOrder($order);
         $confirmationData = $this->getConfirmationData($deliveryOptions);
+
+        $isVirtual = true;
+        foreach ($order->get_items() as $item) {
+            $product = $item->get_product();
+            if (! $product || $product->is_virtual()) {
+                continue;
+            }
+            $isVirtual = false;
+            break;
+        }
+        if ($isVirtual) return;
+
         $isEmail
             ? $this->printEmailConfirmation($confirmationData)
             : $this->printThankYouConfirmation($confirmationData);
