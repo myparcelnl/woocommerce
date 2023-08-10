@@ -1,7 +1,8 @@
 <template>
   <PdkBox
     v-test="AdminComponent.ShipmentLabelWrapper"
-    :size="Size.Small">
+    :size="Size.Small"
+    class="mypa-mb-1 mypa-min-w-0">
     <WcLoadingOverlay v-show="loading" />
 
     <slot />
