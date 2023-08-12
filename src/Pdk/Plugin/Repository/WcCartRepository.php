@@ -33,18 +33,18 @@ class WcCartRepository extends AbstractPdkCartRepository
 
     /**
      * @param  \MyParcelNL\Pdk\Storage\Contract\StorageInterface                $storage
-     * @param  \MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface $productRepository
+     * @param  \MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface $pdkProductRepository
      * @param  \MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface           $currencyService
      * @param  \MyParcelNL\WooCommerce\Adapter\WcAddressAdapter                 $addressAdapter
      */
     public function __construct(
         StorageInterface              $storage,
-        PdkProductRepositoryInterface $productRepository,
+        PdkProductRepositoryInterface $pdkProductRepository,
         CurrencyServiceInterface      $currencyService,
         WcAddressAdapter              $addressAdapter
     ) {
         parent::__construct($storage);
-        $this->productRepository = $productRepository;
+        $this->productRepository = $pdkProductRepository;
         $this->currencyService   = $currencyService;
         $this->addressAdapter    = $addressAdapter;
     }

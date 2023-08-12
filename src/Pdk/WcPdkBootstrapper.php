@@ -104,6 +104,11 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'metaKeyOrderShipments' => value("_{$name}_order_shipments"),
 
             /**
+             * The meta key a PdkOrder's notes are saved in.
+             */
+            'metaKeyOrderNotes'     => value("_{$name}_order_notes"),
+
+            /**
              * The meta key a product's MyParcel settings are saved in.
              *
              * @see \MyParcelNL\WooCommerce\Pdk\Product\Repository\WcPdkProductRepository
