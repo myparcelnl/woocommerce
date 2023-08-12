@@ -211,24 +211,6 @@
       }
     }
   ],
-  "notes": [
-    {
-      "externalIdentifier": "33",
-      "apiIdentifier": null,
-      "author": "webshop",
-      "note": "test admin",
-      "createdAt": "2023-01-01 00:00:00",
-      "updatedAt": "2023-01-01 00:00:00"
-    },
-    {
-      "externalIdentifier": "customer_note",
-      "apiIdentifier": null,
-      "author": "customer",
-      "note": "This is a test order",
-      "createdAt": "2021-01-01 18:03:41",
-      "updatedAt": "2021-01-01 18:03:41"
-    }
-  ],
   "orderDate": "2021-01-01 18:03:41",
   "exported": false,
   "shipmentPrice": 0,

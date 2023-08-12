@@ -61,6 +61,8 @@ use MyParcelNL\WooCommerce\Service\WordPressService;
 use MyParcelNL\WooCommerce\Service\WpCronService;
 use MyParcelNL\WooCommerce\Service\WpInstallerService;
 use MyParcelNL\WooCommerce\Service\WpScriptService;
+use MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface;
+use MyParcelNL\WooCommerce\WooCommerce\Repository\WcOrderRepository;
 use Psr\Log\LoggerInterface;
 use function DI\factory;
 use function DI\get;
@@ -179,6 +181,7 @@ return [
     PdkProductRepositoryInterface::class        => get(WcPdkProductRepository::class),
     PdkShippingMethodRepositoryInterface::class => get(WcShippingMethodRepository::class),
     SettingsRepositoryInterface::class          => get(PdkSettingsRepository::class),
+    WcOrderRepositoryInterface::class           => get(WcOrderRepository::class),
 
     /**
      * Services

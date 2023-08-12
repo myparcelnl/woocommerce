@@ -7,6 +7,7 @@ namespace MyParcelNL\WooCommerce\Tests\Mock;
 use BadMethodCallException;
 use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Sdk\src\Support\Str;
+use Throwable;
 use WC_Data;
 
 abstract class MockWcClass extends WC_Data
@@ -33,7 +34,11 @@ abstract class MockWcClass extends WC_Data
             update_post_meta($data['id'], $metaKey, $metaValue);
         }
 
-        Arr::forget($data, 'meta');
+        try {
+            Arr::forget($data, 'meta');
+        } catch (Throwable $th) {
+            throw $th;
+        }
 
         $this->attributes = $data;
     }
