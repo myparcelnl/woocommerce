@@ -7,27 +7,16 @@ namespace MyParcelNL\WooCommerce\Tests\Unit\Pdk\Plugin\Repository;
 
 use InvalidArgumentException;
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
-use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\App\Order\Model\PdkOrder;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
-use MyParcelNL\WooCommerce\Pdk\Product\Repository\WcPdkProductRepository;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use Psr\Log\LoggerInterface;
 use WC_Order;
-use function DI\autowire;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function MyParcelNL\WooCommerce\Tests\getOrderDefaults;
 use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 
-usesShared(
-    new UsesMockWcPdkInstance([
-        PdkProductRepositoryInterface::class => autowire(WcPdkProductRepository::class),
-        PdkOrderRepositoryInterface::class   => autowire(PdkOrderRepository::class),
-    ])
-);
-
-
+usesShared(new UsesMockWcPdkInstance());
 
 it('creates a valid pdk order', function (array $input) {
     /** @var \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $orderRepository */
