@@ -7,10 +7,10 @@ const addressBase = {
   city: `city`,
   country: `country`,
   eoriNumber: `eori_number`,
-  number: `number`,
-  numberSuffix: `number_suffix`,
+  number: `house_number`,
+  numberSuffix: `house_number_suffix`,
   postalCode: `postcode`,
-  street: `street`,
+  street: `street_name`,
   vatNumber: `vat_number`,
 };
 
