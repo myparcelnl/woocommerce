@@ -14,7 +14,7 @@ use MyParcelNL\WooCommerce\Pdk\Product\Repository\WcPdkProductRepository;
 use MyParcelNL\WooCommerce\Service\WpCronService;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkBootstrapper;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
-use function DI\autowire;
+use function DI\get;
 
 final class UsesMockWcPdkInstance extends UsesEachMockPdkInstance
 {
@@ -55,9 +55,9 @@ final class UsesMockWcPdkInstance extends UsesEachMockPdkInstance
         return array_replace(
             $this->config,
             [
-                CronServiceInterface::class          => autowire(WpCronService::class),
-                PdkOrderRepositoryInterface::class   => autowire(PdkOrderRepository::class),
-                PdkProductRepositoryInterface::class => autowire(WcPdkProductRepository::class),
+                CronServiceInterface::class          => get(WpCronService::class),
+                PdkOrderRepositoryInterface::class   => get(PdkOrderRepository::class),
+                PdkProductRepositoryInterface::class => get(WcPdkProductRepository::class),
             ]
         );
     }
