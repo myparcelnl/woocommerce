@@ -7,10 +7,10 @@ namespace MyParcelNL\WooCommerce\Tests\Unit\Pdk\Hooks;
 
 use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Settings\Model\AbstractSettingsModel;
 use MyParcelNL\Pdk\Settings\Model\ProductSettings;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Tests\Bootstrap\MockPdkProductRepository;
-use MyParcelNL\Pdk\Types\Service\TriStateService;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkProductSettingsHooks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use function DI\autowire;
@@ -24,12 +24,12 @@ function defaultProductSettings(): array
         ProductSettings::CUSTOMS_CODE             => '0000',
         ProductSettings::DISABLE_DELIVERY_OPTIONS => false,
         ProductSettings::DROP_OFF_DELAY           => 0,
-        ProductSettings::EXPORT_AGE_CHECK         => TriStateService::INHERIT,
-        ProductSettings::EXPORT_INSURANCE         => TriStateService::INHERIT,
-        ProductSettings::EXPORT_LARGE_FORMAT      => TriStateService::INHERIT,
-        ProductSettings::EXPORT_ONLY_RECIPIENT    => TriStateService::INHERIT,
-        ProductSettings::EXPORT_RETURN            => TriStateService::INHERIT,
-        ProductSettings::EXPORT_SIGNATURE         => TriStateService::INHERIT,
+        ProductSettings::EXPORT_AGE_CHECK         => AbstractSettingsModel::TRISTATE_VALUE_DEFAULT,
+        ProductSettings::EXPORT_INSURANCE         => AbstractSettingsModel::TRISTATE_VALUE_DEFAULT,
+        ProductSettings::EXPORT_LARGE_FORMAT      => AbstractSettingsModel::TRISTATE_VALUE_DEFAULT,
+        ProductSettings::EXPORT_ONLY_RECIPIENT    => AbstractSettingsModel::TRISTATE_VALUE_DEFAULT,
+        ProductSettings::EXPORT_RETURN            => AbstractSettingsModel::TRISTATE_VALUE_DEFAULT,
+        ProductSettings::EXPORT_SIGNATURE         => AbstractSettingsModel::TRISTATE_VALUE_DEFAULT,
         ProductSettings::FIT_IN_MAILBOX           => 0,
         ProductSettings::PACKAGE_TYPE             => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
     ];
@@ -85,8 +85,8 @@ it('saves product data correctly', function (array $postData, array $productSett
             ProductSettings::COUNTRY_OF_ORIGIN  => 'DE',
             ProductSettings::CUSTOMS_CODE       => '1234',
             ProductSettings::DROP_OFF_DELAY     => 0,
-            ProductSettings::EXPORT_HIDE_SENDER => TriStateService::INHERIT,
-            ProductSettings::EXPORT_INSURANCE   => TriStateService::ENABLED,
+            ProductSettings::EXPORT_HIDE_SENDER => AbstractSettingsModel::TRISTATE_VALUE_DEFAULT,
+            ProductSettings::EXPORT_INSURANCE   => AbstractSettingsModel::TRISTATE_VALUE_ENABLED,
             ProductSettings::FIT_IN_MAILBOX     => 10,
             ProductSettings::PACKAGE_TYPE       => DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME,
         ]),
@@ -118,15 +118,15 @@ it('saves product data correctly', function (array $postData, array $productSett
         'productSettings' => array_replace(defaultProductSettings(), [
             ProductSettings::COUNTRY_OF_ORIGIN        => 'BE',
             ProductSettings::CUSTOMS_CODE             => '9422',
-            ProductSettings::DISABLE_DELIVERY_OPTIONS => TriStateService::DISABLED,
+            ProductSettings::DISABLE_DELIVERY_OPTIONS => AbstractSettingsModel::TRISTATE_VALUE_DISABLED,
             ProductSettings::DROP_OFF_DELAY           => 3,
-            ProductSettings::EXPORT_AGE_CHECK         => TriStateService::ENABLED,
-            ProductSettings::EXPORT_HIDE_SENDER       => TriStateService::INHERIT,
-            ProductSettings::EXPORT_INSURANCE         => TriStateService::DISABLED,
-            ProductSettings::EXPORT_LARGE_FORMAT      => TriStateService::ENABLED,
-            ProductSettings::EXPORT_ONLY_RECIPIENT    => TriStateService::DISABLED,
-            ProductSettings::EXPORT_RETURN            => TriStateService::ENABLED,
-            ProductSettings::EXPORT_SIGNATURE         => TriStateService::DISABLED,
+            ProductSettings::EXPORT_AGE_CHECK         => AbstractSettingsModel::TRISTATE_VALUE_ENABLED,
+            ProductSettings::EXPORT_HIDE_SENDER       => AbstractSettingsModel::TRISTATE_VALUE_DEFAULT,
+            ProductSettings::EXPORT_INSURANCE         => AbstractSettingsModel::TRISTATE_VALUE_DISABLED,
+            ProductSettings::EXPORT_LARGE_FORMAT      => AbstractSettingsModel::TRISTATE_VALUE_ENABLED,
+            ProductSettings::EXPORT_ONLY_RECIPIENT    => AbstractSettingsModel::TRISTATE_VALUE_DISABLED,
+            ProductSettings::EXPORT_RETURN            => AbstractSettingsModel::TRISTATE_VALUE_ENABLED,
+            ProductSettings::EXPORT_SIGNATURE         => AbstractSettingsModel::TRISTATE_VALUE_DISABLED,
             ProductSettings::FIT_IN_MAILBOX           => 12,
             ProductSettings::PACKAGE_TYPE             => DeliveryOptions::PACKAGE_TYPE_DIGITAL_STAMP_NAME,
         ]),
