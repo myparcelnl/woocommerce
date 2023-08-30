@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Tests;
 
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWcData;
 use WC_DateTime;
+use WC_Order;
 use WC_Order_Item;
 use WC_Order_Item_Product;
 use WC_Product;
@@ -13,7 +15,6 @@ use WC_Product;
 function getOrderDefaults(): array
 {
     return [
-        'id'                  => 1,
         'billing_address_1'   => 'Antareslaan 31',
         'billing_address_2'   => '',
         'billing_city'        => 'Hoofddorp',
@@ -116,4 +117,9 @@ function createNotesMeta(array $notes = []): array
             ],
         ],
     ];
+}
+
+function createWcOrder(array $data = []): WC_Order
+{
+    return MockWcData::create(new WC_Order(array_replace_recursive(getOrderDefaults(), $data)));
 }

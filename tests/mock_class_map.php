@@ -3,11 +3,11 @@
 
 declare(strict_types=1);
 
-use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcCart;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcClass;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcCustomer;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWcData;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcDateTime;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcOrder;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcProduct;
@@ -107,31 +107,15 @@ function get_woocommerce_currency()
  */
 function wc_get_order_notes($args = []): array
 {
-    if (! isset($args['order_id'])) {
+    $id = $args['order_id'] ?? null;
+
+    if (! $id) {
         return [];
     }
 
-    $date = new WC_DateTime('2023-01-01 00:00:00');
+    $item = MockWcData::get($id);
 
-    $orderNotes = new Collection([
-        '1' => [
-            (object) [
-                'id'           => 33,
-                'added_by'     => 'admin',
-                'content'      => 'test admin',
-                'date_created' => $date,
-
-            ],
-            (object) [
-                'id'           => 34,
-                'added_by'     => 'system',
-                'content'      => 'test system',
-                'date_created' => $date,
-            ],
-        ],
-    ]);
-
-    return $orderNotes->get($args['order_id'], []);
+    return $item->getAttributes()['order_notes'] ?? [];
 }
 
 /**

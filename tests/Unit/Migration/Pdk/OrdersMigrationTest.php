@@ -13,8 +13,8 @@ use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
-use WC_Order;
 use function MyParcelNL\Pdk\Tests\usesShared;
+use function MyParcelNL\WooCommerce\Tests\createWcOrder;
 use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 
 usesShared(new UsesMockWcPdkInstance());
@@ -72,7 +72,7 @@ it('migrates orders', function (array $oldMeta) {
     /** @var \MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration $orderMigration */
     $orderMigration = Pdk::get(OrdersMigration::class);
 
-    new WC_Order(['id' => 1, 'meta' => $oldMeta]);
+    createWcOrder(['id' => 1, 'meta' => $oldMeta]);
 
     $orderMigration->migrateOrder(['orderIds' => [1]]);
 

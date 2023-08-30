@@ -14,7 +14,7 @@ abstract class MockWcClass extends WC_Data
     private const GETTER_PREFIX = 'get_';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $attributes;
 
@@ -22,6 +22,7 @@ abstract class MockWcClass extends WC_Data
      * @param  array|int|string $data - extra types to avoid type errors in real code.
      *
      * @noinspection PhpMissingParentConstructorInspection
+     * @throws \Throwable
      */
     public function __construct($data = [])
     {
@@ -29,13 +30,14 @@ abstract class MockWcClass extends WC_Data
             $data = ['id' => $data];
         }
 
-        foreach ($data['meta'] ?? [] as $metaKey => $metaValue) {
-            update_post_meta($data['id'], $metaKey, $metaValue);
+        $id = $data['id'] ?? null;
+
+        if ($id && MockWcData::has($id)) {
+            $existing = MockWcData::get($id);
+            $data     = $existing->getAttributes();
         }
 
-        Arr::forget($data, 'meta');
-
-        $this->attributes = $data;
+        $this->fill($data);
     }
 
     /**
@@ -62,6 +64,14 @@ abstract class MockWcClass extends WC_Data
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    /**
      * @return null|mixed|string
      */
     public function get_id()
@@ -80,5 +90,31 @@ abstract class MockWcClass extends WC_Data
     public function get_meta($key = '', $single = true, $context = 'view')
     {
         return get_post_meta($this->get_id(), $key);
+    }
+
+    /**
+     * @param  int|string $id
+     *
+     * @return void
+     */
+    public function set_id($id): void
+    {
+        $this->attributes['id'] = $id;
+    }
+
+    /**
+     * @param  array $data
+     *
+     * @return void
+     */
+    private function fill(array $data): void
+    {
+        $this->attributes = Arr::except($data, 'meta');
+
+        $created = MockWcData::create($this);
+
+        foreach ($data['meta'] ?? [] as $metaKey => $metaValue) {
+            update_post_meta($created->get_id(), $metaKey, $metaValue);
+        }
     }
 }
