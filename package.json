@@ -16,12 +16,17 @@
     "views/**"
   ],
   "scripts": {
+    "analyse": "yarn docker composer analyse",
+    "analyse:generate": "yarn docker composer analyse:generate",
+    "analyze": "yarn docker composer analyze",
+    "analyze:generate": "yarn docker composer analyze:generate",
     "build": "yarn build:js && pdk-builder build",
     "build:js": "nx run-many --output-style=stream --target=build --runner=cloud",
     "build:js:dev": "nx run-many --output-style=stream --target=build:dev",
     "build:js:dev:backend": "yarn build:js:dev --projects='*/backend-*'",
     "build:js:dev:frontend": "yarn build:js:dev --projects='*/frontend-*'",
     "build:js:test": "nx run-many --output-style=stream --target=build:test",
+    "docker": "docker compose run --rm -it php",
     "docker:build": "docker build -t myparcelnl/woocommerce .",
     "docker:run": "docker run -it --rm -v $(pwd):/app myparcelnl/woocommerce",
     "prepare": "is-ci || husky install",

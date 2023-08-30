@@ -17,8 +17,14 @@ jobs:
     uses: ./.github/workflows/test.yml
     secrets: inherit
 
+  analyse:
+    uses: ./.github/workflows/analyse.yml
+    secrets: inherit
+
   release:
-    needs: test
+    needs:
+      - test
+      - analyse
     runs-on: ubuntu-22.04
     outputs:
       released: ${{ steps.release.outputs.released }}
