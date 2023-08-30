@@ -18,7 +18,7 @@ use stdClass;
 use WC_DateTime;
 use WC_Order;
 
-class PdkOrderNoteRepository extends AbstractPdkOrderNoteRepository
+class WcOrderNoteRepository extends AbstractPdkOrderNoteRepository
 {
     /**
      * @var \MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface
