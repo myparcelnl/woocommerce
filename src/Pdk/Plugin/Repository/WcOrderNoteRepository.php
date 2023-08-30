@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Repository;
 
 use MyParcelNL\Pdk\App\Order\Collection\PdkOrderNoteCollection;
+use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\App\Order\Model\PdkOrder;
 use MyParcelNL\Pdk\App\Order\Model\PdkOrderNote;
 use MyParcelNL\Pdk\App\Order\Repository\AbstractPdkOrderNoteRepository;
@@ -21,18 +22,28 @@ use WC_Order;
 class WcOrderNoteRepository extends AbstractPdkOrderNoteRepository
 {
     /**
+     * @var \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface
+     */
+    private $pdkOrderRepository;
+
+    /**
      * @var \MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface
      */
     private $wcOrderRepository;
 
     /**
      * @param  \MyParcelNL\Pdk\Storage\Contract\StorageInterface                       $storage
+     * @param  \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface          $pdkOrderRepository
      * @param  \MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface $wcOrderRepository
      */
-    public function __construct(StorageInterface $storage, WcOrderRepositoryInterface $wcOrderRepository)
-    {
+    public function __construct(
+        StorageInterface            $storage,
+        PdkOrderRepositoryInterface $pdkOrderRepository,
+        WcOrderRepositoryInterface  $wcOrderRepository
+    ) {
         parent::__construct($storage);
-        $this->wcOrderRepository = $wcOrderRepository;
+        $this->pdkOrderRepository = $pdkOrderRepository;
+        $this->wcOrderRepository  = $wcOrderRepository;
     }
 
     /**
@@ -59,13 +70,10 @@ class WcOrderNoteRepository extends AbstractPdkOrderNoteRepository
     {
         $wcOrder = $this->wcOrderRepository->get($order->externalIdentifier);
 
-        $existingNotes = $wcOrder->get_meta(Pdk::get('metaKeyOrderNotes')) ?: [];
-
-        return $this->retrieve($order->externalIdentifier, function () use ($existingNotes, $wcOrder) {
-            $collection = new PdkOrderNoteCollection($existingNotes);
-
-            $notes        = wc_get_order_notes(['order_id' => $wcOrder->get_id()]);
-            $customerNote = $wcOrder->get_customer_note();
+        return $this->retrieve($order->externalIdentifier, function () use ($wcOrder) {
+            $existingNotes = new PdkOrderNoteCollection($wcOrder->get_meta(Pdk::get('metaKeyOrderNotes')) ?: []);
+            $notes         = wc_get_order_notes(['order_id' => $wcOrder->get_id()]);
+            $customerNote  = $wcOrder->get_customer_note();
 
             if ($customerNote) {
                 $notes[] = (object) [
@@ -83,7 +91,7 @@ class WcOrderNoteRepository extends AbstractPdkOrderNoteRepository
                     return $this->toPdkOrderNote($note, $wcOrder);
                 });
 
-            return $collection->mergeByKey($newNotes, 'externalIdentifier');
+            return (new PdkOrderNoteCollection($newNotes))->mergeByKey($existingNotes, 'externalIdentifier');
         });
     }
 
@@ -91,7 +99,6 @@ class WcOrderNoteRepository extends AbstractPdkOrderNoteRepository
      * @param  \MyParcelNL\Pdk\App\Order\Model\PdkOrderNote $note
      *
      * @return void
-     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
      */
     public function update(PdkOrderNote $note): void
     {
@@ -99,14 +106,7 @@ class WcOrderNoteRepository extends AbstractPdkOrderNoteRepository
             throw new RuntimeException('Order identifier is missing');
         }
 
-        $wcOrder = $this->wcOrderRepository->get($note->orderIdentifier);
-
-        $existingNotes = $wcOrder->get_meta(Pdk::get('metaKeyOrderNotes')) ?: [];
-
-        $wcOrder->update_meta_data(
-            Pdk::get('metaKeyOrderNotes'),
-            array_merge($existingNotes, [$note->toStorableArray()])
-        );
+        $this->updateMany(new PdkOrderNoteCollection([$note]));
     }
 
     /**
@@ -116,15 +116,13 @@ class WcOrderNoteRepository extends AbstractPdkOrderNoteRepository
      */
     public function updateMany(PdkOrderNoteCollection $notes): void
     {
-        $wcOrder = $this->wcOrderRepository->get($notes->first()->orderIdentifier);
+        $pdkOrder      = $this->pdkOrderRepository->get($notes->first()->orderIdentifier);
+        $existingNotes = $this->getFromOrder($pdkOrder);
 
-        $merged = $this->mergeNotes($wcOrder, $notes);
+        /** @var PdkOrderNoteCollection $mergedNotes */
+        $mergedNotes = $existingNotes->mergeByKey($notes, 'externalIdentifier');
 
-        update_post_meta(
-            $wcOrder->get_id(),
-            Pdk::get('metaKeyOrderNotes'),
-            $merged->toStorableArray()
-        );
+        $this->saveNotes($pdkOrder->externalIdentifier, $mergedNotes->toStorableArray());
     }
 
     /**
@@ -136,20 +134,17 @@ class WcOrderNoteRepository extends AbstractPdkOrderNoteRepository
     }
 
     /**
-     * @param  \WC_Order                                                   $wcOrder
-     * @param  \MyParcelNL\Pdk\App\Order\Collection\PdkOrderNoteCollection $notes
+     * @param  string $orderId
+     * @param  array  $notes
      *
-     * @return \MyParcelNL\Pdk\App\Order\Collection\PdkOrderNoteCollection
+     * @return void
      */
-    private function mergeNotes(WC_Order $wcOrder, PdkOrderNoteCollection $notes): PdkOrderNoteCollection
+    private function saveNotes(string $orderId, array $notes): void
     {
-        // todo: save other information to meta?
-        $existingNotes = new PdkOrderNoteCollection($wcOrder->get_meta(Pdk::get('metaKeyOrderNotes')) ?: []);
+        update_post_meta($orderId, Pdk::get('metaKeyOrderNotes'), $notes);
 
-        /** @var PdkOrderNoteCollection $mergedNotes */
-        $mergedNotes = $existingNotes->mergeByKey($notes, 'externalIdentifier');
-
-        return $mergedNotes;
+        // Invalidate cache
+        $this->storage->delete($this->getKeyPrefix() . $orderId);
     }
 
     /**
