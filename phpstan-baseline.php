@@ -2,21 +2,6 @@
 
 $ignoreErrors = [];
 $ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @implements has invalid value \\(\\\\MyParcelNL\\\\WooCommerce\\\\Service\\\\WpFilterService\\)\\: Unexpected token "\\\\n ", expected \'\\<\' at offset 120$#',
-	'count' => 1,
-	'path' => __DIR__ . '/src/Facade/Filter.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @implements has invalid value \\(WooCommerceServiceInterface\\)\\: Unexpected token "\\\\n ", expected \'\\<\' at offset 264$#',
-	'count' => 1,
-	'path' => __DIR__ . '/src/Facade/WooCommerce.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @implements has invalid value \\(WordPressServiceInterface\\)\\: Unexpected token "\\\\n ", expected \'\\<\' at offset 189$#',
-	'count' => 1,
-	'path' => __DIR__ . '/src/Facade/WordPress.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Callback expects 1 parameter, \\$accepted_args is set to 3\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/src/Hooks/AutomaticOrderExportHooks.php',
