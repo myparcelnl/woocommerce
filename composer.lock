@@ -463,16 +463,16 @@
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "2.16.1",
+            "version": "2.17.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:myparcelnl/pdk.git",
-                "reference": "95ecf652c2a0d717c8ae87f4ff069e27ebdb32ed"
+                "reference": "cf3397c616a5b28c7227d4430aa70a0d3507f4a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/95ecf652c2a0d717c8ae87f4ff069e27ebdb32ed",
-                "reference": "95ecf652c2a0d717c8ae87f4ff069e27ebdb32ed",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/cf3397c616a5b28c7227d4430aa70a0d3507f4a7",
+                "reference": "cf3397c616a5b28c7227d4430aa70a0d3507f4a7",
                 "shasum": ""
             },
             "require": {
@@ -490,6 +490,7 @@
                 "nette/robot-loader": ">= 3",
                 "pestphp/pest": ">= 1",
                 "phpdocumentor/reflection-docblock": "^5",
+                "phpstan/phpstan": ">= 1",
                 "rector/rector": "^0.16.0",
                 "spatie/pest-plugin-snapshots": ">= 1",
                 "symfony/console": "*"
@@ -512,7 +513,7 @@
             ],
             "description": "MyParcel Plugin Development Kit",
             "homepage": "https://myparcel.nl",
-            "time": "2023-08-16T16:04:23+00:00"
+            "time": "2023-08-30T08:24:09+00:00"
         },
         {
             "name": "myparcelnl/sdk",
