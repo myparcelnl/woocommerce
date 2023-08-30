@@ -15,7 +15,13 @@ jobs:
     uses: ./.github/workflows/test.yml
     secrets: inherit
 
+  analyse:
+    uses: ./.github/workflows/analyse.yml
+    secrets: inherit
+
   rebase-prs:
-    needs: test
+    needs:
+      - test
+      - analyse
     uses: ./.github/workflows/rebase-prs.yml
     secrets: inherit

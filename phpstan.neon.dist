@@ -1,0 +1,13 @@
+includes:
+  - vendor/szepeviktor/phpstan-wordpress/extension.neon
+  - phpstan-baseline.php
+
+parameters:
+  level: 5
+  tmpDir: .cache/phpstan
+  parallel:
+    maximumNumberOfProcesses: 4
+  paths:
+    - src
+  bootstrapFiles:
+    - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
