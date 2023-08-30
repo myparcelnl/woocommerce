@@ -25,7 +25,11 @@
     "psr-4": {
       "MyParcelNL\\WooCommerce\\Tests\\": "tests",
       "MyParcelNL\\Pdk\\Tests\\": "vendor/myparcelnl/pdk/tests"
-    }
+    },
+    "files": [
+      "vendor/myparcelnl/pdk/tests/functions.php",
+      "vendor/myparcelnl/pdk/tests/usesShared.php"
+    ]
   },
   "config": {
     "prepend-autoloader": false,
