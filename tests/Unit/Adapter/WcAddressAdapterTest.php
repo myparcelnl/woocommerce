@@ -9,8 +9,8 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Cart;
 use WC_Customer;
-use WC_Order;
 use function MyParcelNL\Pdk\Tests\usesShared;
+use function MyParcelNL\WooCommerce\Tests\createWcOrder;
 use function Spatie\Snapshots\assertMatchesSnapshot;
 
 usesShared(new UsesMockWcPdkInstance());
@@ -99,7 +99,7 @@ it('creates address from WC_Order', function (string $addressType, array $addres
     /** @var WcAddressAdapter $adapter */
     $adapter = Pdk::get(WcAddressAdapter::class);
 
-    $order = new WC_Order(
+    $order = createWcOrder(
         array_merge($address, [
             'id'   => 1233,
             'meta' => $meta,

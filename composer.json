@@ -24,7 +24,8 @@
   "autoload-dev": {
     "psr-4": {
       "MyParcelNL\\WooCommerce\\Tests\\": "tests",
-      "MyParcelNL\\Pdk\\Tests\\": "vendor/myparcelnl/pdk/tests"
+      "MyParcelNL\\Pdk\\Tests\\": "vendor/myparcelnl/pdk/tests",
+      "MyParcelNL\\Pdk\\": "vendor/myparcelnl/pdk/tests/factories"
     },
     "files": [
       "vendor/myparcelnl/pdk/tests/functions.php",

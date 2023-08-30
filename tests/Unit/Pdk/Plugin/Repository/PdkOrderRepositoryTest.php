@@ -13,7 +13,7 @@ use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use Psr\Log\LoggerInterface;
 use WC_Order;
 use function MyParcelNL\Pdk\Tests\usesShared;
-use function MyParcelNL\WooCommerce\Tests\getOrderDefaults;
+use function MyParcelNL\WooCommerce\Tests\createWcOrder;
 use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 
 usesShared(new UsesMockWcPdkInstance());
@@ -24,7 +24,7 @@ it('creates a valid pdk order', function (array $input) {
     /** @var \MyParcelNL\Pdk\Tests\Bootstrap\MockLogger $logger */
     $logger = Pdk::get(LoggerInterface::class);
 
-    $wcOrder  = new WC_Order($input);
+    $wcOrder  = createWcOrder($input);
     $pdkOrder = $orderRepository->get($wcOrder);
 
     expect($logger->getLogs())->toBe([]);
@@ -33,6 +33,8 @@ it('creates a valid pdk order', function (array $input) {
 })->with('orders');
 
 it('gets order via various inputs', function ($input) {
+    createWcOrder(['id' => 123]);
+
     /** @var \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $orderRepository */
     $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
 
@@ -40,10 +42,10 @@ it('gets order via various inputs', function ($input) {
 
     expect($pdkOrder)->toBeInstanceOf(PdkOrder::class);
 })->with([
-    'string id' => ['1'],
-    'int id'    => [1],
-    'wc order'  => [new WC_Order(getOrderDefaults())],
-    'post'      => [(object) ['ID' => 1]],
+    'string id' => ['123'],
+    'int id'    => [123],
+    'wc order'  => [new WC_Order(['id' => 123])],
+    'post'      => [(object) ['ID' => 123]],
 ]);
 
 it('handles errors', function ($input) {

@@ -30,9 +30,16 @@ final class MockWpMeta
         Arr::forget(self::$meta, "$postId.$key");
     }
 
-    public static function get($postId, $key, $default = null)
+    /**
+     * @param  string|int  $postId
+     * @param  string|null $key
+     * @param  mixed       $default
+     *
+     * @return array|\ArrayAccess|mixed|string
+     */
+    public static function get($postId, string $key = null, $default = null)
     {
-        $data = Arr::get(self::$meta, "$postId.$key", $default);
+        $data = Arr::get(self::$meta, implode('.', array_filter([$postId, $key])), $default);
 
         if (is_string($data)) {
             $decoded = json_decode($data, true);

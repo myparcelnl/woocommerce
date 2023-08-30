@@ -7,7 +7,7 @@ cc: BE
 city: Antwerpen
 company: MyParcel
 postalCode: '2000'
-region: null
-state: null
+region: ''
+state: ''
 eoriNumber: null
 vatNumber: null
