@@ -11,7 +11,7 @@ use MyParcelNL\WooCommerce\Contract\WooCommerceServiceInterface;
  * @method static string getVersion() Get the WooCommerce version.
  * @method static bool isActive() Check if WooCommerce is active.
  * @method static bool isUsingHpos() Check if WooCommerce is using the HPOS feature.
- * @implements WooCommerceServiceInterface
+ * @see WooCommerceServiceInterface
  */
 final class WooCommerce extends Facade
 {

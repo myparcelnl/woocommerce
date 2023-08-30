@@ -9,7 +9,7 @@ use MyParcelNL\WooCommerce\Service\WpFilterService;
 
 /**
  * @method static mixed apply(string $name, ...$args)
- * @implements \MyParcelNL\WooCommerce\Service\WpFilterService
+ * @see \MyParcelNL\WooCommerce\Service\WpFilterService
  */
 class Filter extends Facade
 {
