@@ -13,6 +13,7 @@ use MyParcelNL\Pdk\App\DeliveryOptions\Contract\DeliveryOptionsServiceInterface;
 use MyParcelNL\Pdk\App\Installer\Contract\InstallerServiceInterface;
 use MyParcelNL\Pdk\App\Installer\Contract\MigrationServiceInterface;
 use MyParcelNL\Pdk\App\Order\Contract\OrderStatusServiceInterface;
+use MyParcelNL\Pdk\App\Order\Contract\PdkOrderNoteRepositoryInterface;
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\App\ShippingMethod\Contract\PdkShippingMethodRepositoryInterface;
@@ -45,6 +46,7 @@ use MyParcelNL\WooCommerce\Pdk\Plugin\Installer\WcMigrationService;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkAccountRepository;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\WcCartRepository;
+use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\WcOrderNoteRepository;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Service\WcDeliveryOptionsService;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Service\WcStatusService;
 use MyParcelNL\WooCommerce\Pdk\Plugin\WcShippingMethodRepository;
@@ -61,6 +63,8 @@ use MyParcelNL\WooCommerce\Service\WordPressService;
 use MyParcelNL\WooCommerce\Service\WpCronService;
 use MyParcelNL\WooCommerce\Service\WpInstallerService;
 use MyParcelNL\WooCommerce\Service\WpScriptService;
+use MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface;
+use MyParcelNL\WooCommerce\WooCommerce\Repository\WcOrderRepository;
 use Psr\Log\LoggerInterface;
 use function DI\factory;
 use function DI\get;
@@ -175,10 +179,12 @@ return [
 
     PdkAccountRepositoryInterface::class        => get(PdkAccountRepository::class),
     PdkCartRepositoryInterface::class           => get(WcCartRepository::class),
+    PdkOrderNoteRepositoryInterface::class      => get(WcOrderNoteRepository::class),
     PdkOrderRepositoryInterface::class          => get(PdkOrderRepository::class),
     PdkProductRepositoryInterface::class        => get(WcPdkProductRepository::class),
     PdkShippingMethodRepositoryInterface::class => get(WcShippingMethodRepository::class),
     SettingsRepositoryInterface::class          => get(PdkSettingsRepository::class),
+    WcOrderRepositoryInterface::class           => get(WcOrderRepository::class),
 
     /**
      * Services

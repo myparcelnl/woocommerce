@@ -102,11 +102,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/src/Pdk/Hooks/PdkWebhookHooks.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Expression on left side of \\?\\? is not nullable\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/src/Pdk/Plugin/Repository/PdkOrderRepository.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Property MyParcelNL\\\\Pdk\\\\App\\\\Order\\\\Model\\\\PdkOrder\\:\\:\\$shipments \\(MyParcelNL\\\\Pdk\\\\Shipment\\\\Collection\\\\ShipmentCollection\\|null\\) does not accept MyParcelNL\\\\Pdk\\\\Base\\\\Support\\\\Collection\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/src/Pdk/Plugin/Repository/PdkOrderRepository.php',

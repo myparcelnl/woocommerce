@@ -201,7 +201,17 @@
       }
     }
   ],
-  "notes": [],
+  "notes": [
+    {
+      "externalIdentifier": "customer_note",
+      "orderIdentifier": "6",
+      "apiIdentifier": null,
+      "author": "customer",
+      "note": "This is a test order",
+      "createdAt": "2021-01-01 18:03:41",
+      "updatedAt": "2021-01-01 18:03:41"
+    }
+  ],
   "orderDate": "2021-01-01 18:03:41",
   "exported": false,
   "shipmentPrice": 0,
