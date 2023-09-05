@@ -1,7 +1,13 @@
 <template>
+  <input
+    :id="id"
+    :name="id"
+    :value="transformedModel"
+    type="hidden" />
+
   <a v-test="[AdminComponent.ToggleInput, element]">
     <input
-      :id="id"
+      :id="`${id}-toggle`"
       v-model="model"
       :disabled="element.isDisabled || element.isSuspended || element.isReadOnly"
       :readonly="element.isReadOnly"
@@ -18,7 +24,7 @@
           'woocommerce-input-toggle--loading': element.isDisabled || element.isSuspended || element.isReadOnly,
         },
       ]"
-      :for="`${$attrs.id || id}`"
+      :for="`${id}-toggle`"
       class="!mypa-float-none !mypa-ml-auto !mypa-w-8 woocommerce-input-toggle"
       role="switch"
       tabindex="0">
