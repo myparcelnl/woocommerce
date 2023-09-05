@@ -21,7 +21,7 @@
           "largeFormat": true,
           "onlyRecipient": true,
           "return": true,
-          "sameDayDelivery": true,
+          "sameDayDelivery": false,
           "signature": true,
           "insurance": [
             0, 10000, 25000, 50000, 100000, 150000, 200000, 250000, 300000,
@@ -44,13 +44,22 @@
           "return": true,
           "ageCheck": true,
           "onlyRecipient": true,
-          "sameDayDelivery": true,
+          "sameDayDelivery": false,
           "largeFormat": true
         }
       }
     },
     "labelAmount": 1,
-    "shipmentOptions": [],
+    "shipmentOptions": {
+      "insurance": -1,
+      "ageCheck": -1,
+      "hideSender": -1,
+      "largeFormat": -1,
+      "onlyRecipient": -1,
+      "return": -1,
+      "sameDayDelivery": -1,
+      "signature": -1
+    },
     "deliveryType": "standard",
     "packageType": "package"
   },
@@ -106,10 +115,10 @@
         "height": 50,
         "settings": {
           "id": "product",
-          "countryOfOrigin": "NL",
-          "customsCode": "0000",
-          "disableDeliveryOptions": false,
-          "dropOffDelay": 0,
+          "countryOfOrigin": -1,
+          "customsCode": -1,
+          "disableDeliveryOptions": -1,
+          "dropOffDelay": -1,
           "exportAgeCheck": -1,
           "exportHideSender": -1,
           "exportInsurance": -1,
@@ -117,15 +126,16 @@
           "exportOnlyRecipient": -1,
           "exportReturn": -1,
           "exportSignature": -1,
-          "fitInMailbox": 0,
-          "packageType": "package"
+          "fitInDigitalStamp": -1,
+          "fitInMailbox": -1,
+          "packageType": -1
         },
         "mergedSettings": {
           "id": "product",
-          "countryOfOrigin": "NL",
-          "customsCode": "0000",
-          "disableDeliveryOptions": false,
-          "dropOffDelay": 0,
+          "countryOfOrigin": -1,
+          "customsCode": -1,
+          "disableDeliveryOptions": -1,
+          "dropOffDelay": -1,
           "exportAgeCheck": -1,
           "exportHideSender": -1,
           "exportInsurance": -1,
@@ -133,8 +143,9 @@
           "exportOnlyRecipient": -1,
           "exportReturn": -1,
           "exportSignature": -1,
-          "fitInMailbox": 0,
-          "packageType": "package"
+          "fitInDigitalStamp": -1,
+          "fitInMailbox": -1,
+          "packageType": -1
         },
         "parent": null
       }
@@ -167,10 +178,10 @@
         "height": 0,
         "settings": {
           "id": "product",
-          "countryOfOrigin": "NL",
-          "customsCode": "0000",
-          "disableDeliveryOptions": false,
-          "dropOffDelay": 0,
+          "countryOfOrigin": -1,
+          "customsCode": -1,
+          "disableDeliveryOptions": -1,
+          "dropOffDelay": -1,
           "exportAgeCheck": -1,
           "exportHideSender": -1,
           "exportInsurance": -1,
@@ -178,15 +189,16 @@
           "exportOnlyRecipient": -1,
           "exportReturn": -1,
           "exportSignature": -1,
-          "fitInMailbox": 0,
-          "packageType": "package"
+          "fitInDigitalStamp": -1,
+          "fitInMailbox": -1,
+          "packageType": -1
         },
         "mergedSettings": {
           "id": "product",
-          "countryOfOrigin": "NL",
-          "customsCode": "0000",
-          "disableDeliveryOptions": false,
-          "dropOffDelay": 0,
+          "countryOfOrigin": -1,
+          "customsCode": -1,
+          "disableDeliveryOptions": -1,
+          "dropOffDelay": -1,
           "exportAgeCheck": -1,
           "exportHideSender": -1,
           "exportInsurance": -1,
@@ -194,8 +206,9 @@
           "exportOnlyRecipient": -1,
           "exportReturn": -1,
           "exportSignature": -1,
-          "fitInMailbox": 0,
-          "packageType": "package"
+          "fitInDigitalStamp": -1,
+          "fitInMailbox": -1,
+          "packageType": -1
         },
         "parent": null
       }
@@ -203,11 +216,11 @@
   ],
   "notes": [
     {
-      "externalIdentifier": "customer_note",
-      "orderIdentifier": "6",
-      "apiIdentifier": null,
-      "author": "customer",
-      "note": "This is a test order",
+      "externalIdentifier": "40",
+      "orderIdentifier": null,
+      "apiIdentifier": "12345",
+      "author": "webshop",
+      "note": "moo",
       "createdAt": "2021-01-01 18:03:41",
       "updatedAt": "2021-01-01 18:03:41"
     }

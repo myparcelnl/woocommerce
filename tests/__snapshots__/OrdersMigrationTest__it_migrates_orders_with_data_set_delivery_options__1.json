@@ -32,12 +32,15 @@
       "carrier": "postnl",
       "labelAmount": 2,
       "shipmentOptions": {
-        "ageCheck": false,
-        "insurance": 1,
         "labelDescription": "[ORDER_ID] [DELIVERY_DATE]",
-        "onlyRecipient": false,
-        "sameDayDelivery": false,
-        "signature": true
+        "insurance": 1,
+        "ageCheck": 0,
+        "hideSender": -1,
+        "largeFormat": -1,
+        "onlyRecipient": 0,
+        "return": -1,
+        "sameDayDelivery": 0,
+        "signature": 1
       },
       "deliveryType": "standard",
       "packageType": "package"

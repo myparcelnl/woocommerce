@@ -121,14 +121,15 @@
         "street": "Polderplein"
       },
       "shipmentOptions": {
-        "ageCheck": false,
-        "insurance": 0,
         "labelDescription": "[ORDER_ID]",
-        "largeFormat": false,
-        "onlyRecipient": false,
-        "return": false,
-        "sameDayDelivery": false,
-        "signature": false
+        "insurance": 0,
+        "ageCheck": 0,
+        "hideSender": -1,
+        "largeFormat": 0,
+        "onlyRecipient": 0,
+        "return": 0,
+        "sameDayDelivery": 0,
+        "signature": 0
       },
       "deliveryType": "pickup",
       "packageType": "package"
@@ -178,9 +179,15 @@
           "street": "Polderplein"
         },
         "shipmentOptions": {
-          "insurance": 1,
           "labelDescription": "1491",
-          "largeFormat": false
+          "insurance": 1,
+          "ageCheck": -1,
+          "hideSender": -1,
+          "largeFormat": 0,
+          "onlyRecipient": -1,
+          "return": -1,
+          "sameDayDelivery": -1,
+          "signature": -1
         },
         "deliveryType": "pickup",
         "packageType": "package"

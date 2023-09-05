@@ -31,14 +31,15 @@
       "carrier": "dhlforyou",
       "labelAmount": 1,
       "shipmentOptions": {
-        "ageCheck": true,
-        "insurance": 500,
         "labelDescription": "[ORDER_ID]",
-        "largeFormat": false,
-        "onlyRecipient": true,
-        "return": false,
-        "sameDayDelivery": true,
-        "signature": true
+        "insurance": 500,
+        "ageCheck": 1,
+        "hideSender": -1,
+        "largeFormat": 0,
+        "onlyRecipient": 1,
+        "return": 0,
+        "sameDayDelivery": 1,
+        "signature": 1
       },
       "deliveryType": "standard",
       "packageType": "package"

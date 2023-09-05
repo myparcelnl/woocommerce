@@ -7,10 +7,10 @@ namespace MyParcelNL\WooCommerce\Tests\Unit\Pdk\Hooks;
 
 use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Settings\Model\AbstractSettingsModel;
 use MyParcelNL\Pdk\Settings\Model\ProductSettings;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Tests\Bootstrap\MockPdkProductRepository;
+use MyParcelNL\Pdk\Types\Service\TriStateService;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkProductSettingsHooks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use function DI\autowire;
@@ -20,17 +20,18 @@ function defaultProductSettings(): array
 {
     return [
         'id'                                      => ProductSettings::ID,
-        ProductSettings::COUNTRY_OF_ORIGIN        => 'NL',
-        ProductSettings::CUSTOMS_CODE             => '0000',
-        ProductSettings::DISABLE_DELIVERY_OPTIONS => false,
+        ProductSettings::COUNTRY_OF_ORIGIN        => TriStateService::INHERIT,
+        ProductSettings::CUSTOMS_CODE             => TriStateService::INHERIT,
+        ProductSettings::DISABLE_DELIVERY_OPTIONS => TriStateService::INHERIT,
         ProductSettings::DROP_OFF_DELAY           => 0,
-        ProductSettings::EXPORT_AGE_CHECK         => AbstractSettingsModel::TRISTATE_VALUE_DEFAULT,
-        ProductSettings::EXPORT_INSURANCE         => AbstractSettingsModel::TRISTATE_VALUE_DEFAULT,
-        ProductSettings::EXPORT_LARGE_FORMAT      => AbstractSettingsModel::TRISTATE_VALUE_DEFAULT,
-        ProductSettings::EXPORT_ONLY_RECIPIENT    => AbstractSettingsModel::TRISTATE_VALUE_DEFAULT,
-        ProductSettings::EXPORT_RETURN            => AbstractSettingsModel::TRISTATE_VALUE_DEFAULT,
-        ProductSettings::EXPORT_SIGNATURE         => AbstractSettingsModel::TRISTATE_VALUE_DEFAULT,
-        ProductSettings::FIT_IN_MAILBOX           => 0,
+        ProductSettings::EXPORT_AGE_CHECK         => TriStateService::INHERIT,
+        ProductSettings::EXPORT_INSURANCE         => TriStateService::INHERIT,
+        ProductSettings::EXPORT_LARGE_FORMAT      => TriStateService::INHERIT,
+        ProductSettings::EXPORT_ONLY_RECIPIENT    => TriStateService::INHERIT,
+        ProductSettings::EXPORT_RETURN            => TriStateService::INHERIT,
+        ProductSettings::EXPORT_SIGNATURE         => TriStateService::INHERIT,
+        ProductSettings::FIT_IN_DIGITAL_STAMP     => TriStateService::INHERIT,
+        ProductSettings::FIT_IN_MAILBOX           => TriStateService::INHERIT,
         ProductSettings::PACKAGE_TYPE             => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
     ];
 }
@@ -64,31 +65,34 @@ it('saves product data correctly', function (array $postData, array $productSett
 })->with([
     'some settings'       => [
         'postData'        => [
-            'metakeyselect'         => '#NONE#',
-            'metavalue'             => '',
-            'pest-countryOfOrigin'  => 'DE',
-            'pest-customsCode'      => '1234',
-            'pest-dropOffDelay'     => '0',
-            'pest-element'          => '1',
-            'pest-exportInsurance'  => 'true',
-            'pest-fitInMailbox'     => '10',
-            'pest-packageType'      => 'mailbox',
-            'newproduct_cat'        => 'New category name',
-            'newproduct_cat_parent' => '-1',
-            'newtag'                => [],
-            'original_post_status'  => 'publish',
-            'original_post_title'   => 'WordPress Pennant',
-            'original_publish'      => 'Update',
-            'post_ID'               => '7000',
+            'metakeyselect'          => '#NONE#',
+            'metavalue'              => '',
+            'pest-countryOfOrigin'   => 'DE',
+            'pest-customsCode'       => '1234',
+            'pest-dropOffDelay'      => '0',
+            'pest-element'           => '1',
+            'pest-exportInsurance'   => '10000',
+            'pest-fitInDigitalStamp' => '-1',
+            'pest-fitInMailbox'      => '10',
+            'pest-packageType'       => 'mailbox',
+            'newproduct_cat'         => 'New category name',
+            'newproduct_cat_parent'  => '-1',
+            'newtag'                 => [],
+            'original_post_status'   => 'publish',
+            'original_post_title'    => 'WordPress Pennant',
+            'original_publish'       => 'Update',
+            'post_ID'                => '7000',
         ],
         'productSettings' => array_replace(defaultProductSettings(), [
-            ProductSettings::COUNTRY_OF_ORIGIN  => 'DE',
-            ProductSettings::CUSTOMS_CODE       => '1234',
-            ProductSettings::DROP_OFF_DELAY     => 0,
-            ProductSettings::EXPORT_HIDE_SENDER => AbstractSettingsModel::TRISTATE_VALUE_DEFAULT,
-            ProductSettings::EXPORT_INSURANCE   => AbstractSettingsModel::TRISTATE_VALUE_ENABLED,
-            ProductSettings::FIT_IN_MAILBOX     => 10,
-            ProductSettings::PACKAGE_TYPE       => DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME,
+            ProductSettings::COUNTRY_OF_ORIGIN        => 'DE',
+            ProductSettings::CUSTOMS_CODE             => '1234',
+            ProductSettings::DISABLE_DELIVERY_OPTIONS => TriStateService::INHERIT,
+            ProductSettings::DROP_OFF_DELAY           => 0,
+            ProductSettings::EXPORT_HIDE_SENDER       => TriStateService::INHERIT,
+            ProductSettings::EXPORT_INSURANCE         => 1,
+            ProductSettings::FIT_IN_DIGITAL_STAMP     => TriStateService::INHERIT,
+            ProductSettings::FIT_IN_MAILBOX           => 10,
+            ProductSettings::PACKAGE_TYPE             => DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME,
         ]),
     ],
     'change all settings' => [
@@ -105,6 +109,7 @@ it('saves product data correctly', function (array $postData, array $productSett
             'pest-exportOnlyRecipient'    => '0',
             'pest-exportReturn'           => '1',
             'pest-exportSignature'        => '0',
+            'pest-fitInDigitalStamp'      => '-1',
             'pest-fitInMailbox'           => '12',
             'pest-packageType'            => 'digital_stamp',
             'newproduct_cat'              => 'New category name',
@@ -118,15 +123,16 @@ it('saves product data correctly', function (array $postData, array $productSett
         'productSettings' => array_replace(defaultProductSettings(), [
             ProductSettings::COUNTRY_OF_ORIGIN        => 'BE',
             ProductSettings::CUSTOMS_CODE             => '9422',
-            ProductSettings::DISABLE_DELIVERY_OPTIONS => AbstractSettingsModel::TRISTATE_VALUE_DISABLED,
+            ProductSettings::DISABLE_DELIVERY_OPTIONS => TriStateService::DISABLED,
             ProductSettings::DROP_OFF_DELAY           => 3,
-            ProductSettings::EXPORT_AGE_CHECK         => AbstractSettingsModel::TRISTATE_VALUE_ENABLED,
-            ProductSettings::EXPORT_HIDE_SENDER       => AbstractSettingsModel::TRISTATE_VALUE_DEFAULT,
-            ProductSettings::EXPORT_INSURANCE         => AbstractSettingsModel::TRISTATE_VALUE_DISABLED,
-            ProductSettings::EXPORT_LARGE_FORMAT      => AbstractSettingsModel::TRISTATE_VALUE_ENABLED,
-            ProductSettings::EXPORT_ONLY_RECIPIENT    => AbstractSettingsModel::TRISTATE_VALUE_DISABLED,
-            ProductSettings::EXPORT_RETURN            => AbstractSettingsModel::TRISTATE_VALUE_ENABLED,
-            ProductSettings::EXPORT_SIGNATURE         => AbstractSettingsModel::TRISTATE_VALUE_DISABLED,
+            ProductSettings::EXPORT_AGE_CHECK         => TriStateService::ENABLED,
+            ProductSettings::EXPORT_HIDE_SENDER       => TriStateService::INHERIT,
+            ProductSettings::EXPORT_INSURANCE         => TriStateService::DISABLED,
+            ProductSettings::EXPORT_LARGE_FORMAT      => TriStateService::ENABLED,
+            ProductSettings::EXPORT_ONLY_RECIPIENT    => TriStateService::DISABLED,
+            ProductSettings::EXPORT_RETURN            => TriStateService::ENABLED,
+            ProductSettings::EXPORT_SIGNATURE         => TriStateService::DISABLED,
+            ProductSettings::FIT_IN_DIGITAL_STAMP     => TriStateService::INHERIT,
             ProductSettings::FIT_IN_MAILBOX           => 12,
             ProductSettings::PACKAGE_TYPE             => DeliveryOptions::PACKAGE_TYPE_DIGITAL_STAMP_NAME,
         ]),

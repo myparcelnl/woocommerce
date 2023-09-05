@@ -12,6 +12,7 @@
     "exportWithAutomaticStatus": null,
     "orderMode": false,
     "processDirectly": false,
+    "sendReturnEmail": false,
     "shareCustomerInformation": true,
     "trackTraceInAccount": true,
     "trackTraceInEmail": true

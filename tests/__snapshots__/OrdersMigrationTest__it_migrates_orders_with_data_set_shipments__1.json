@@ -90,7 +90,16 @@
     "deliveryOptions": {
       "carrier": "postnl",
       "labelAmount": 1,
-      "shipmentOptions": [],
+      "shipmentOptions": {
+        "insurance": -1,
+        "ageCheck": -1,
+        "hideSender": -1,
+        "largeFormat": -1,
+        "onlyRecipient": -1,
+        "return": -1,
+        "sameDayDelivery": -1,
+        "signature": -1
+      },
       "deliveryType": "standard",
       "packageType": "package"
     }
@@ -132,9 +141,15 @@
         },
         "labelAmount": 1,
         "shipmentOptions": {
-          "insurance": 1,
           "labelDescription": "1525",
-          "largeFormat": false
+          "insurance": 1,
+          "ageCheck": -1,
+          "hideSender": -1,
+          "largeFormat": 0,
+          "onlyRecipient": -1,
+          "return": -1,
+          "sameDayDelivery": -1,
+          "signature": -1
         },
         "deliveryType": "standard",
         "packageType": "package"
