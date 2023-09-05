@@ -5,7 +5,7 @@ vendor/
 lib/
 dist/
 coverage/
-coverage.xml
+clover.xml
 
 docker-compose.override.yml
 
