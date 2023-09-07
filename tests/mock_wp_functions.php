@@ -4,6 +4,7 @@
 declare(strict_types=1);
 
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
@@ -59,4 +60,34 @@ function wp_schedule_single_event($timestamp, $callback, $args)
 function plugin_dir_path($file): string
 {
     return __DIR__ . '/../';
+}
+
+/**@see \plugin_basename() */
+function plugin_basename($file): string
+{
+    return basename($file, '.php');
+}
+
+/**@see \add_filter() */
+function add_filter($tag, $functionToAdd, $priority = 10, $acceptedArgs = 1)
+{
+    MockWpActions::add($tag, $functionToAdd, $priority, $acceptedArgs);
+}
+
+/**@see \add_action() */
+function add_action($tag, $functionToAdd, $priority = 10, $acceptedArgs = 1)
+{
+    add_filter($tag, $functionToAdd, $priority, $acceptedArgs);
+}
+
+/**@see \register_activation_hook() */
+function register_activation_hook($file, $function)
+{
+    add_action(sprintf('activate_%s', plugin_basename($file)), $function);
+}
+
+/**@see \register_deactivation_hook() */
+function register_deactivation_hook($file, $function)
+{
+    add_action(sprintf('deactivate_%s', plugin_basename($file)), $function);
 }

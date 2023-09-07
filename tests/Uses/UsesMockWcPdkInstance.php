@@ -16,6 +16,7 @@ use MyParcelNL\WooCommerce\Pdk\Product\Repository\WcPdkProductRepository;
 use MyParcelNL\WooCommerce\Service\WpCronService;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcData;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkBootstrapper;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
 use function DI\get;
 
@@ -29,6 +30,7 @@ final class UsesMockWcPdkInstance extends UsesEachMockPdkInstance
     {
         MockWcPdkBootstrapper::reset();
 
+        MockWpActions::reset();
         MockWcData::reset();
         MockWpMeta::reset();
 
