@@ -14,6 +14,7 @@ use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\WcOrderNoteRepository;
 use MyParcelNL\WooCommerce\Pdk\Product\Repository\WcPdkProductRepository;
 use MyParcelNL\WooCommerce\Service\WpCronService;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWcData;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkBootstrapper;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
 use function DI\get;
@@ -22,11 +23,14 @@ final class UsesMockWcPdkInstance extends UsesEachMockPdkInstance
 {
     /**
      * @return void
+     * @throws \Exception
      */
     public function afterEach(): void
     {
         MockWcPdkBootstrapper::reset();
-        MockWpMeta::clear();
+
+        MockWcData::reset();
+        MockWpMeta::reset();
 
         parent::afterEach();
     }

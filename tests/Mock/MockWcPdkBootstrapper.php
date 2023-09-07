@@ -6,7 +6,7 @@ namespace MyParcelNL\WooCommerce\Tests\Mock;
 
 use MyParcelNL\WooCommerce\Pdk\WcPdkBootstrapper;
 
-final class MockWcPdkBootstrapper extends WcPdkBootstrapper
+final class MockWcPdkBootstrapper extends WcPdkBootstrapper implements StaticMockInterface
 {
     /**
      * @var array
