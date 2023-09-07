@@ -22,12 +22,6 @@ function get_post_meta(int $postId, string $metaKey)
     return MockWpMeta::get($postId, $metaKey);
 }
 
-/** @see \wc_get_product() */
-function wc_get_product(int $postId): WC_Product
-{
-    return new WC_Product($postId);
-}
-
 /** @see \get_bloginfo() */
 function get_bloginfo(string $name): string
 {
