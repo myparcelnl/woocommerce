@@ -117,11 +117,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/src/Pdk/Plugin/WcShippingMethodRepository.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$post_id of function update_post_meta expects int, string\\|null given\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/src/Pdk/Product/Repository/WcPdkProductRepository.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Property MyParcelNL\\\\WooCommerce\\\\Pdk\\\\Product\\\\Repository\\\\WcPdkProductRepository\\:\\:\\$weightService \\(MyParcelNL\\\\WooCommerce\\\\Pdk\\\\Service\\\\WcWeightService\\) does not accept MyParcelNL\\\\Pdk\\\\Base\\\\Contract\\\\WeightServiceInterface\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/src/Pdk/Product/Repository/WcPdkProductRepository.php',
