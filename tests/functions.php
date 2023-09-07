@@ -8,6 +8,7 @@ namespace MyParcelNL\WooCommerce\Tests;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Tests\Factory\WpFactoryFactory;
 use WC_Order;
+use WC_Product;
 
 /**
  * @param  class-string<\WC_Data> $class
@@ -51,6 +52,13 @@ function createNotesMeta(array $notes = []): array
 function createWcOrder(array $data = []): WC_Order
 {
     return wpFactory(WC_Order::class)
+        ->with($data)
+        ->make();
+}
+
+function createWcProduct(array $data = []): WC_Product
+{
+    return wpFactory(WC_Product::class)
         ->with($data)
         ->make();
 }

@@ -57,11 +57,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/src/Migration/Migration5_0_0.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$callback of method MyParcelNL\\\\Pdk\\\\Base\\\\Contract\\\\CronServiceInterface\\:\\:schedule\\(\\) expects \\(callable\\(\\)\\: mixed\\)\\|string, int\\<31, max\\> given\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/src/Migration/Pdk/ProductSettingsMigration.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method MyParcelNL\\\\Pdk\\\\Base\\\\Contract\\\\WeightServiceInterface\\:\\:convertToGrams\\(\\) invoked with 1 parameter, 2 required\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/src/Migration/Pdk/SettingsMigration.php',
