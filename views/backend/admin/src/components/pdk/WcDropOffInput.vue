@@ -10,9 +10,8 @@
 
         <PdkTableCol>
           <PdkToggleInput
-            :id="`${id}_toggle_${day}`"
             v-model="toggleRefs[day]"
-            :element="toggleElements[day]" />
+            :element="{...toggleElements[day], props: {...toggleElements[day], id: `${id}_toggle_${day}`}}" />
         </PdkTableCol>
       </PdkTableRow>
 
@@ -23,9 +22,8 @@
 
         <PdkTableCol>
           <PdkTimeInput
-            :id="`${id}_time_${day}`"
             v-model="cutoffRefs[day]"
-            :element="cutoffElements[day]" />
+            :element="{...cutoffElements[day], props: {...cutoffElements[day], id: `${id}_time_${day}`}}" />
         </PdkTableCol>
       </PdkTableRow>
     </template>
@@ -33,11 +31,12 @@
 </template>
 
 <script lang="ts" setup>
+import {toRefs} from 'vue';
 import {
   AdminComponent,
   type ElementInstance,
-  type Settings,
   generateFieldId,
+  type Settings,
   useDropOffInputContext,
   useLanguage,
 } from '@myparcel-pdk/admin';
@@ -47,11 +46,12 @@ const props = defineProps<{
   element: ElementInstance;
   modelValue: Settings.ModelDropOffPossibilities;
 }>();
+const emit = defineEmits<(e: 'update:modelValue', value: Settings.ModelDropOffPossibilities) => void>();
 
-const emit = defineEmits(['update:modelValue']);
+const propRefs = toRefs(props);
 
 const {weekdaysObject, cutoffElements, toggleElements, toggleRefs, cutoffRefs} = useDropOffInputContext(
-  props.modelValue,
+  propRefs.modelValue?.value,
   emit,
 );
 
