@@ -69,6 +69,7 @@ final class MockWpMeta implements StaticMockInterface
      * @param  int $postId
      *
      * @return WC_Meta_Data[]
+     * @throws \Throwable
      */
     public static function toWcMetaData(int $postId): array
     {
