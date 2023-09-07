@@ -18,6 +18,13 @@ final class WordPressScheduledTasks
         self::$tasks = new Collection();
     }
 
+    /**
+     * @param $callback
+     * @param $time
+     * @param $args
+     *
+     * @return void
+     */
     public function add($callback, $time, $args): void
     {
         self::$tasks->push([
@@ -27,6 +34,9 @@ final class WordPressScheduledTasks
         ]);
     }
 
+    /**
+     * @return \MyParcelNL\Pdk\Base\Support\Collection
+     */
     public function all(): Collection
     {
         return self::$tasks;

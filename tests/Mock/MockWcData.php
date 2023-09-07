@@ -44,6 +44,18 @@ final class MockWcData implements StaticMockInterface
     }
 
     /**
+     * @param  class-string<\WC_Data> $class
+     *
+     * @return array
+     */
+    public static function getByClass(string $class): array
+    {
+        return array_filter(self::$items, static function (MockWcClass $data) use ($class) {
+            return get_class($data) === $class;
+        });
+    }
+
+    /**
      * @param  string|int $id
      *
      * @return bool

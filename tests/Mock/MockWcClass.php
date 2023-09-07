@@ -16,7 +16,7 @@ abstract class MockWcClass extends WC_Data
     /**
      * @var array<string, mixed>
      */
-    protected $attributes;
+    protected $attributes = [];
 
     /**
      * @param  array|int|string $data - extra types to avoid type errors in real code.
@@ -66,17 +66,19 @@ abstract class MockWcClass extends WC_Data
     /**
      * @return array<string, mixed>
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->attributes;
     }
 
     /**
-     * @return null|mixed|string
+     * @return null|int
      */
-    public function get_id()
+    public function get_id(): ?int
     {
-        return $this->attributes['id'] ?? null;
+        $id = $this->attributes['id'] ?? null;
+
+        return is_numeric($id) ? (int) $id : null;
     }
 
     /**
@@ -90,6 +92,15 @@ abstract class MockWcClass extends WC_Data
     public function get_meta($key = '', $single = true, $context = 'view')
     {
         return get_post_meta($this->get_id(), $key);
+    }
+
+    /**
+     * @return array of objects.
+     * @see \WC_Product::get_meta_data()
+     */
+    public function get_meta_data(): array
+    {
+        return MockWpMeta::toWcMetaData($this->get_id());
     }
 
     /**
@@ -109,7 +120,7 @@ abstract class MockWcClass extends WC_Data
      */
     private function fill(array $data): void
     {
-        $this->attributes = Arr::except($data, 'meta');
+        $this->attributes = array_replace($this->attributes, Arr::except($data, 'meta'));
 
         $created = MockWcData::create($this);
 

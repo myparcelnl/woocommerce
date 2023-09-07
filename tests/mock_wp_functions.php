@@ -10,7 +10,7 @@ use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
 
 /** @see \update_post_meta() */
-function update_post_meta($postId, $metaKey, $metaValue): bool
+function update_post_meta(int $postId, string $metaKey, $metaValue): bool
 {
     MockWpMeta::update($postId, $metaKey, $metaValue);
 
@@ -18,13 +18,13 @@ function update_post_meta($postId, $metaKey, $metaValue): bool
 }
 
 /** @see \get_post_meta() */
-function get_post_meta($postId, $metaKey)
+function get_post_meta(int $postId, string $metaKey)
 {
     return MockWpMeta::get($postId, $metaKey);
 }
 
 /** @see \wc_get_product() */
-function wc_get_product($postId): WC_Product
+function wc_get_product(int $postId): WC_Product
 {
     return new WC_Product($postId);
 }
@@ -42,7 +42,7 @@ function get_option(string $name, $default = false)
 }
 
 /** @see \update_option() */
-function update_option($option, $value, $autoload = null)
+function update_option(string $option, $value, $autoload = null)
 {
     WordPressOptions::updateOption($option, $value, $autoload);
 }

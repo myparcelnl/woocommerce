@@ -5,22 +5,29 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Tests\Mock;
 
 use MyParcelNL\Pdk\Base\Support\Arr;
+use WC_Meta_Data;
 
 final class MockWpMeta implements StaticMockInterface
 {
     public static $meta = [];
 
     /**
-     * @param $postId
+     * @param  int $postId
      *
      * @return array
      */
-    public static function all($postId): array
+    public static function all(int $postId): array
     {
-        return Arr::get(self::$meta, $postId, []);
+        return self::$meta[$postId] ?? [];
     }
 
-    public static function delete($postId, $key): void
+    /**
+     * @param  int    $postId
+     * @param  string $key
+     *
+     * @return void
+     */
+    public static function delete(int $postId, string $key): void
     {
         Arr::forget(self::$meta, "$postId.$key");
     }
@@ -58,7 +65,39 @@ final class MockWpMeta implements StaticMockInterface
         self::$meta = [];
     }
 
-    public static function update($postId, $key, $value): void
+    /**
+     * @param  int $postId
+     *
+     * @return WC_Meta_Data[]
+     */
+    public static function toWcMetaData(int $postId): array
+    {
+        $all = self::all($postId);
+
+        return array_map(static function ($key, $value) {
+            return new WC_Meta_Data([
+                'current_data' => [
+                    'id'    => 0,
+                    'key'   => $key,
+                    'value' => $value,
+                ],
+                'data'         => [
+                    'id'    => 0,
+                    'key'   => $key,
+                    'value' => $value,
+                ],
+            ]);
+        }, array_keys($all), array_values($all));
+    }
+
+    /**
+     * @param  int    $postId
+     * @param  string $key
+     * @param  mixed  $value
+     *
+     * @return void
+     */
+    public static function update(int $postId, string $key, $value): void
     {
         Arr::set(self::$meta, "$postId.$key", $value);
     }
