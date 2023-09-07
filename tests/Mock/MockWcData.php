@@ -7,7 +7,7 @@ namespace MyParcelNL\WooCommerce\Tests\Mock;
 use MyParcelNL\Pdk\Base\Support\Arr;
 use RuntimeException;
 
-final class MockWcData
+final class MockWcData implements StaticMockInterface
 {
     /**
      * @var array<int, \WC_Data>

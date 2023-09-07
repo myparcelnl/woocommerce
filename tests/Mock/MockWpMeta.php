@@ -6,7 +6,7 @@ namespace MyParcelNL\WooCommerce\Tests\Mock;
 
 use MyParcelNL\Pdk\Base\Support\Arr;
 
-final class MockWpMeta
+final class MockWpMeta implements StaticMockInterface
 {
     public static $meta = [];
 
@@ -18,11 +18,6 @@ final class MockWpMeta
     public static function all($postId): array
     {
         return Arr::get(self::$meta, $postId, []);
-    }
-
-    public static function clear(): void
-    {
-        self::$meta = [];
     }
 
     public static function delete($postId, $key): void
@@ -56,6 +51,11 @@ final class MockWpMeta
         }
 
         return $data;
+    }
+
+    public static function reset(): void
+    {
+        self::$meta = [];
     }
 
     public static function update($postId, $key, $value): void
