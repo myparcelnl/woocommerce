@@ -4,7 +4,6 @@
 declare(strict_types=1);
 
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\WooCommerce\Tests\Mock\MockWcData;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
@@ -53,29 +52,6 @@ function apply_filters($tag, $value)
     return $value;
 }
 
-/** @see \get_woocommerce_currency() */
-function get_woocommerce_currency(): string
-{
-    return 'EUR';
-}
-
-/**
- * @return \stdClass[]
- * @see \wc_get_order_notes()
- */
-function wc_get_order_notes($args = []): array
-{
-    $id = $args['order_id'] ?? null;
-
-    if (! $id) {
-        return [];
-    }
-
-    $item = MockWcData::get($id);
-
-    return $item->getAttributes()['order_notes'] ?? [];
-}
-
 /** @see \wp_schedule_single_event() */
 function wp_schedule_single_event($timestamp, $callback, $args)
 {
@@ -83,18 +59,6 @@ function wp_schedule_single_event($timestamp, $callback, $args)
     $tasks = Pdk::get(WordPressScheduledTasks::class);
 
     $tasks->add($callback, $timestamp, $args);
-}
-
-/** @see \wc_get_orders() */
-function wc_get_orders($args)
-{
-    // create array of 324 wc_orders
-    return array_map(
-        static function () {
-            return new WC_Order(['id' => random_int(1, 10000)]);
-        },
-        range(1, 324)
-    );
 }
 
 /**@see \plugin_dir_path() */
