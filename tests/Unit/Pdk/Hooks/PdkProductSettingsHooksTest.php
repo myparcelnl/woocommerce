@@ -9,12 +9,12 @@ use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\ProductSettings;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
-use MyParcelNL\Pdk\Tests\Bootstrap\MockPdkProductRepository;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkProductSettingsHooks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
-use function DI\autowire;
+use WC_Product;
 use function MyParcelNL\Pdk\Tests\usesShared;
+use function MyParcelNL\WooCommerce\Tests\wpFactory;
 
 function defaultProductSettings(): array
 {
@@ -36,16 +36,7 @@ function defaultProductSettings(): array
     ];
 }
 
-usesShared(
-    new UsesMockWcPdkInstance([
-        PdkProductRepositoryInterface::class => autowire(MockPdkProductRepository::class)->constructor([
-            [
-                'externalIdentifier' => '7000',
-                'settings'           => defaultProductSettings(),
-            ],
-        ]),
-    ])
-);
+usesShared(new UsesMockWcPdkInstance());
 
 it('saves product data correctly', function (array $postData, array $productSettings) {
     /** @var PdkProductRepositoryInterface $productRepository */
@@ -54,6 +45,10 @@ it('saves product data correctly', function (array $postData, array $productSett
     /** @var \MyParcelNL\WooCommerce\Pdk\Hooks\PdkProductSettingsHooks $hooks */
     $hooks = Pdk::get(PdkProductSettingsHooks::class);
 
+    wpFactory(WC_Product::class)
+        ->withId(7000)
+        ->make();
+
     $hooks->savePdkProduct($postData, 7000);
 
     $savedProductSettings = $productRepository
@@ -61,9 +56,9 @@ it('saves product data correctly', function (array $postData, array $productSett
         ->settings
         ->toArray();
 
-    expect($savedProductSettings)->toEqual($productSettings);
+    expect($savedProductSettings)->toEqual(array_replace(defaultProductSettings(), $productSettings));
 })->with([
-    'some settings'       => [
+    'some settings' => [
         'postData'        => [
             'metakeyselect'          => '#NONE#',
             'metavalue'              => '',
@@ -83,7 +78,7 @@ it('saves product data correctly', function (array $postData, array $productSett
             'original_publish'       => 'Update',
             'post_ID'                => '7000',
         ],
-        'productSettings' => array_replace(defaultProductSettings(), [
+        'productSettings' => [
             ProductSettings::COUNTRY_OF_ORIGIN        => 'DE',
             ProductSettings::CUSTOMS_CODE             => '1234',
             ProductSettings::DISABLE_DELIVERY_OPTIONS => TriStateService::INHERIT,
@@ -93,8 +88,9 @@ it('saves product data correctly', function (array $postData, array $productSett
             ProductSettings::FIT_IN_DIGITAL_STAMP     => TriStateService::INHERIT,
             ProductSettings::FIT_IN_MAILBOX           => 10,
             ProductSettings::PACKAGE_TYPE             => DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME,
-        ]),
+        ],
     ],
+
     'change all settings' => [
         'postData'        => [
             'metakeyselect'               => '#NONE#',
@@ -120,7 +116,7 @@ it('saves product data correctly', function (array $postData, array $productSett
             'original_publish'            => 'Update',
             'post_ID'                     => '7000',
         ],
-        'productSettings' => array_replace(defaultProductSettings(), [
+        'productSettings' => [
             ProductSettings::COUNTRY_OF_ORIGIN        => 'BE',
             ProductSettings::CUSTOMS_CODE             => '9422',
             ProductSettings::DISABLE_DELIVERY_OPTIONS => TriStateService::DISABLED,
@@ -135,6 +131,6 @@ it('saves product data correctly', function (array $postData, array $productSett
             ProductSettings::FIT_IN_DIGITAL_STAMP     => TriStateService::INHERIT,
             ProductSettings::FIT_IN_MAILBOX           => 12,
             ProductSettings::PACKAGE_TYPE             => DeliveryOptions::PACKAGE_TYPE_DIGITAL_STAMP_NAME,
-        ]),
+        ],
     ],
 ]);

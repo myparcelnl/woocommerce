@@ -25,6 +25,11 @@ it('schedules order migration in chunks', function () {
     /** @var \MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration $orderMigration */
     $orderMigration = Pdk::get(OrdersMigration::class);
 
+    // create 324 orders
+    for ($i = 92000; $i < 92324; $i++) {
+        createWcOrder(['id' => $i]);
+    }
+
     $orderMigration->up();
 
     $allTasks = $tasks->all();

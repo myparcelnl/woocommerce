@@ -31,17 +31,11 @@ function wc_get_order_notes($args = []): array
 /** @see \wc_get_orders() */
 function wc_get_orders($args)
 {
-    // create array of 324 wc_orders
-    return array_map(
-        static function () {
-            return new WC_Order(['id' => random_int(1, 10000)]);
-        },
-        range(1, 324)
-    );
+    return MockWcData::getByClass(WC_Order::class);
 }
 
-/** @see \wc_get_product() */
-function wc_get_product(int $postId): WC_Product
+/**  @see \wc_get_product() */
+function wc_get_product($postId)
 {
-    return new WC_Product($postId);
+    return MockWcData::get($postId);
 }
