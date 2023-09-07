@@ -39,3 +39,9 @@ function wc_get_orders($args)
         range(1, 324)
     );
 }
+
+/** @see \wc_get_product() */
+function wc_get_product(int $postId): WC_Product
+{
+    return new WC_Product($postId);
+}
