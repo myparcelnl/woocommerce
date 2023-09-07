@@ -1,12 +1,15 @@
 {
-  "name": "@myparcel/woocommerce",
+  "name": "@myparcel-woocommerce/monorepo",
   "version": "5.0.0-alpha.16",
   "private": true,
   "homepage": "https://github.com/myparcelnl/woocommerce#readme",
   "bugs": {
     "url": "https://github.com/myparcelnl/woocommerce/issues"
   },
-  "repository": "github:myparcelnl/woocommerce",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/myparcelnl/woocommerce"
+  },
   "license": "MIT",
   "type": "module",
   "main": "lib/index.js",
@@ -78,12 +81,15 @@
     "husky": "^8.0.3",
     "is-ci": "^3.0.1",
     "lint-staged": "^13.1.2",
-    "nx": "16.5.3",
-    "nx-cloud": "16.2.0",
+    "nx": "^16.5.3",
+    "nx-cloud": "^16.2.0",
     "prettier": "^2.8.4",
     "semantic-release": "^21.0.1",
     "typescript": "^5.1.6",
     "vitest": ">= 0.30.0 < 1"
   },
-  "packageManager": "yarn@3.5.1"
+  "packageManager": "yarn@3.5.1",
+  "volta": {
+    "node": "18.17.1"
+  }
 }
