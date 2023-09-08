@@ -95,7 +95,6 @@ final class SettingsMigration extends AbstractPdkMigration
         }
 
         $settings = new Settings($newSettings);
-
         $settingsRepository->storeAllSettings($settings);
     }
 
@@ -354,7 +353,7 @@ final class SettingsMigration extends AbstractPdkMigration
                         $method = sprintf('%s:%s', $parts[0], $parts[1]);
                     }
 
-                    if ($parts[1] > 10 && Str::startsWith($item, self::PREFIX_FLAT_RATE)) {
+                    if (isset($parts[1]) && $parts[1] > 10 && Str::startsWith($item, self::PREFIX_FLAT_RATE)) {
                         $carry[] = $method;
                         $method  = sprintf('%s%s', self::PREFIX_FLAT_RATE, $parts[1][0]);
                     }
