@@ -135,7 +135,11 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                         return $item['product'] && ! $item['product']->is_virtual();
                     })
                     ->map(function ($item) {
-                        return CustomsDeclarationItem::fromProduct($item['pdkProduct']);
+                        return array_merge(
+                            CustomsDeclarationItem::fromProduct($item['pdkProduct'])
+                                ->toArray(),
+                            ['amount' => $item['item']->get_quantity()]
+                        );
                     })
                     ->toArray()
             ),
