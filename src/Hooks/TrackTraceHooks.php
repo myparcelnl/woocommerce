@@ -10,7 +10,7 @@ use MyParcelNL\Pdk\App\Order\Model\PdkOrder;
 use MyParcelNL\Pdk\Facade\Language;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
-use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
+use MyParcelNL\Pdk\Settings\Model\OrderSettings;
 use MyParcelNL\Pdk\Shipment\Model\Shipment;
 use MyParcelNL\WooCommerce\Facade\Filter;
 use MyParcelNL\WooCommerce\Facade\WordPress;
@@ -76,7 +76,7 @@ final class TrackTraceHooks implements WordPressHooksInterface
      */
     public function registerTrackTraceActions(array $actions, WC_Order $wcOrder): array
     {
-        if (! $this->shouldRender(GeneralSettings::TRACK_TRACE_IN_ACCOUNT, $wcOrder)) {
+        if (! $this->shouldRender(OrderSettings::TRACK_TRACE_IN_ACCOUNT, $wcOrder)) {
             return $actions;
         }
 
@@ -100,7 +100,7 @@ final class TrackTraceHooks implements WordPressHooksInterface
      */
     public function renderTrackTraceInAccountOrderDetails(WC_Order $order): void
     {
-        if (! $this->shouldRender(GeneralSettings::TRACK_TRACE_IN_ACCOUNT, $order)) {
+        if (! $this->shouldRender(OrderSettings::TRACK_TRACE_IN_ACCOUNT, $order)) {
             return;
         }
 
@@ -134,7 +134,7 @@ final class TrackTraceHooks implements WordPressHooksInterface
      */
     public function renderTrackTraceInEmail(WC_Order $wcOrder): void
     {
-        if (! $this->shouldRender(GeneralSettings::TRACK_TRACE_IN_EMAIL, $wcOrder)) {
+        if (! $this->shouldRender(OrderSettings::TRACK_TRACE_IN_EMAIL, $wcOrder)) {
             return;
         }
 
@@ -149,7 +149,7 @@ final class TrackTraceHooks implements WordPressHooksInterface
      */
     protected function shouldRender(string $setting, WC_Order $wcOrder): bool
     {
-        if (! Settings::get($setting, GeneralSettings::ID)) {
+        if (! Settings::get($setting, OrderSettings::ID)) {
             return false;
         }
 
