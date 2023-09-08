@@ -17,18 +17,25 @@ use MyParcelNL\Sdk\src\Support\Str;
 
 final class SettingsMigration extends AbstractPdkMigration
 {
-    private const OLD_CARRIERS            = ['postnl', 'dhlforyou', 'dhlparcelconnect', 'dhleuroplus'];
-    private const PREFIX_FLAT_RATE        = 'flat_rate:';
-    private const TRANSFORM_CAST_BOOL     = 'bool';
-    private const TRANSFORM_CAST_CENTS    = 'cents';
-    private const TRANSFORM_CAST_FLOAT    = 'float';
-    private const TRANSFORM_CAST_GRAMS    = 'grams';
-    private const TRANSFORM_CAST_INT      = 'int';
-    private const TRANSFORM_CAST_STRING   = 'string';
-    private const TRANSFORM_KEY_CAST      = 'cast';
-    private const TRANSFORM_KEY_SOURCE    = 'source';
-    private const TRANSFORM_KEY_TARGET    = 'target';
-    private const TRANSFORM_KEY_TRANSFORM = 'transform';
+    public const  LEGACY_OPTION_GENERAL_SETTINGS          = 'woocommerce_myparcel_general_settings';
+    public const  LEGACY_OPTION_CHECKOUT_SETTINGS         = 'woocommerce_myparcel_checkout_settings';
+    public const  LEGACY_OPTION_EXPORT_DEFAULTS_SETTINGS  = 'woocommerce_myparcel_export_defaults_settings';
+    public const  LEGACY_OPTION_POSTNL_SETTINGS           = 'woocommerce_myparcel_postnl_settings';
+    public const  LEGACY_OPTION_DHLEUROPLUS_SETTINGS      = 'woocommerce_myparcel_dhleuroplus_settings';
+    public const  LEGACY_OPTION_DHLFORYOU_SETTINGS        = 'woocommerce_myparcel_dhlforyou_settings';
+    public const  LEGACY_OPTION_DHLPARCELCONNECT_SETTINGS = 'woocommerce_myparcel_dhlparcelconnect_settings';
+    private const OLD_CARRIERS                            = ['postnl', 'dhlforyou', 'dhlparcelconnect', 'dhleuroplus'];
+    private const PREFIX_FLAT_RATE                        = 'flat_rate:';
+    private const TRANSFORM_CAST_BOOL                     = 'bool';
+    private const TRANSFORM_CAST_CENTS                    = 'cents';
+    private const TRANSFORM_CAST_FLOAT                    = 'float';
+    private const TRANSFORM_CAST_GRAMS                    = 'grams';
+    private const TRANSFORM_CAST_INT                      = 'int';
+    private const TRANSFORM_CAST_STRING                   = 'string';
+    private const TRANSFORM_KEY_CAST                      = 'cast';
+    private const TRANSFORM_KEY_SOURCE                    = 'source';
+    private const TRANSFORM_KEY_TARGET                    = 'target';
+    private const TRANSFORM_KEY_TRANSFORM                 = 'transform';
 
     /**
      * @var \MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface
@@ -135,15 +142,15 @@ final class SettingsMigration extends AbstractPdkMigration
     private function getOldSettings(): array
     {
         return [
-            'general'          => $this->getSettings('woocommerce_myparcel_general_settings'),
-            'checkout'         => $this->getSettings('woocommerce_myparcel_checkout_settings'),
-            'export_defaults'  => $this->getSettings('woocommerce_myparcel_export_defaults_settings'),
+            'general'          => $this->getSettings(self::LEGACY_OPTION_GENERAL_SETTINGS),
+            'checkout'         => $this->getSettings(self::LEGACY_OPTION_CHECKOUT_SETTINGS),
+            'export_defaults'  => $this->getSettings(self::LEGACY_OPTION_EXPORT_DEFAULTS_SETTINGS),
 
             // Carriers
-            'postnl'           => $this->getSettings('woocommerce_myparcel_postnl_settings'),
-            'dhleuroplus'      => $this->getSettings('woocommerce_myparcel_dhleuroplus_settings'),
-            'dhlforyou'        => $this->getSettings('woocommerce_myparcel_dhlforyou_settings'),
-            'dhlparcelconnect' => $this->getSettings('woocommerce_myparcel_dhlparcelconnect_settings'),
+            'postnl'           => $this->getSettings(self::LEGACY_OPTION_POSTNL_SETTINGS),
+            'dhleuroplus'      => $this->getSettings(self::LEGACY_OPTION_DHLEUROPLUS_SETTINGS),
+            'dhlforyou'        => $this->getSettings(self::LEGACY_OPTION_DHLFORYOU_SETTINGS),
+            'dhlparcelconnect' => $this->getSettings(self::LEGACY_OPTION_DHLPARCELCONNECT_SETTINGS),
         ];
     }
 
@@ -180,9 +187,9 @@ final class SettingsMigration extends AbstractPdkMigration
 
         yield [
             self::TRANSFORM_KEY_SOURCE    => 'general.export_mode',
-            self::TRANSFORM_KEY_TARGET    => 'general.orderMode',
+            self::TRANSFORM_KEY_TARGET    => 'order.orderMode',
             self::TRANSFORM_KEY_TRANSFORM => function ($value): bool {
-                return $value === 'pps';
+                return 'pps' === $value;
             },
         ];
 
@@ -190,7 +197,7 @@ final class SettingsMigration extends AbstractPdkMigration
             self::TRANSFORM_KEY_SOURCE    => 'general.download_display',
             self::TRANSFORM_KEY_TARGET    => 'label.output',
             self::TRANSFORM_KEY_TRANSFORM => function ($value): string {
-                return $value === 'display' ? 'open' : 'download';
+                return 'display' === $value ? 'open' : 'download';
             },
         ];
 
@@ -198,7 +205,7 @@ final class SettingsMigration extends AbstractPdkMigration
             self::TRANSFORM_KEY_SOURCE    => 'general.label_format',
             self::TRANSFORM_KEY_TARGET    => 'label.format',
             self::TRANSFORM_KEY_TRANSFORM => function ($value): string {
-                return $value === 'A6' ? 'a6' : 'a4';
+                return 'A6' === $value ? 'a6' : 'a4';
             },
         ];
 
@@ -210,13 +217,13 @@ final class SettingsMigration extends AbstractPdkMigration
 
         yield [
             self::TRANSFORM_KEY_SOURCE => 'general.track_trace_email',
-            self::TRANSFORM_KEY_TARGET => 'general.trackTraceInEmail',
+            self::TRANSFORM_KEY_TARGET => 'order.trackTraceInEmail',
             self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
         ];
 
         yield [
             self::TRANSFORM_KEY_SOURCE => 'general.track_trace_my_account',
-            self::TRANSFORM_KEY_TARGET => 'general.trackTraceInAccount',
+            self::TRANSFORM_KEY_TARGET => 'order.trackTraceInAccount',
             self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
         ];
 
@@ -228,7 +235,7 @@ final class SettingsMigration extends AbstractPdkMigration
 
         yield [
             self::TRANSFORM_KEY_SOURCE    => 'general.process_directly',
-            self::TRANSFORM_KEY_TARGET    => 'general.conceptShipments',
+            self::TRANSFORM_KEY_TARGET    => 'order.conceptShipments',
             self::TRANSFORM_KEY_TRANSFORM => function ($value): bool {
                 return ! $value;
             },
@@ -236,19 +243,19 @@ final class SettingsMigration extends AbstractPdkMigration
 
         yield [
             self::TRANSFORM_KEY_SOURCE => 'general.barcode_in_note',
-            self::TRANSFORM_KEY_TARGET => 'general.barcodeInNote',
+            self::TRANSFORM_KEY_TARGET => 'order.barcodeInNote',
             self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
         ];
 
         yield [
             self::TRANSFORM_KEY_SOURCE => 'general.barcode_in_note_title',
-            self::TRANSFORM_KEY_TARGET => 'general.barcodeInNoteTitle',
+            self::TRANSFORM_KEY_TARGET => 'order.barcodeInNoteTitle',
             self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_STRING,
         ];
 
         yield [
             self::TRANSFORM_KEY_SOURCE => 'general.error_logging',
-            self::TRANSFORM_KEY_TARGET => 'general.apiLogging',
+            self::TRANSFORM_KEY_TARGET => 'order.apiLogging',
             self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
         ];
 
@@ -257,12 +264,12 @@ final class SettingsMigration extends AbstractPdkMigration
             self::TRANSFORM_KEY_TARGET    => 'order.statusOnLabelCreate',
             self::TRANSFORM_KEY_TRANSFORM => function ($value, array $oldSettings) {
                 if ('1' !== $value) {
-                    return -1; // "None"
+                    return Settings::OPTION_NONE;
                 }
 
                 $oldOrderStatus = Arr::get($oldSettings, 'general.automatic_order_status');
 
-                return sprintf("wc-%s", $oldOrderStatus ?? 'processing');
+                return sprintf('wc-%s', $oldOrderStatus ?? 'processing');
             },
         ];
 
@@ -299,7 +306,7 @@ final class SettingsMigration extends AbstractPdkMigration
             self::TRANSFORM_KEY_SOURCE    => 'checkout.delivery_options_price_format',
             self::TRANSFORM_KEY_TARGET    => 'checkout.priceType',
             self::TRANSFORM_KEY_TRANSFORM => function ($value): string {
-                return $value === 'total_price' ? 'included' : 'excluded';
+                return 'total_price' === $value ? 'included' : 'excluded';
             },
         ];
 
@@ -307,7 +314,7 @@ final class SettingsMigration extends AbstractPdkMigration
             self::TRANSFORM_KEY_SOURCE    => 'checkout.pickup_locations_default_view',
             self::TRANSFORM_KEY_TARGET    => 'checkout.pickupLocationsDefaultView',
             self::TRANSFORM_KEY_TRANSFORM => function ($value): string {
-                return $value === 'map' ? 'map' : 'list';
+                return 'map' === $value ? 'map' : 'list';
             },
         ];
 
@@ -339,7 +346,7 @@ final class SettingsMigration extends AbstractPdkMigration
                     $parts  = explode(':', $item);
                     $method = $item;
 
-                    if (count($parts) === 1) {
+                    if (1 === count($parts)) {
                         $method = $parts[0] . ':1';
                     }
 
@@ -363,7 +370,7 @@ final class SettingsMigration extends AbstractPdkMigration
 
         yield [
             self::TRANSFORM_KEY_SOURCE => 'export_defaults.connect_email',
-            self::TRANSFORM_KEY_TARGET => 'general.shareCustomerInformation',
+            self::TRANSFORM_KEY_TARGET => 'order.shareCustomerInformation',
             self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
         ];
 

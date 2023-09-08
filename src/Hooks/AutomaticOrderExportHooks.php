@@ -7,7 +7,7 @@ namespace MyParcelNL\WooCommerce\Hooks;
 use MyParcelNL\Pdk\App\Api\Backend\PdkBackendActions;
 use MyParcelNL\Pdk\Facade\Actions;
 use MyParcelNL\Pdk\Facade\Settings;
-use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
+use MyParcelNL\Pdk\Settings\Model\OrderSettings;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 
 final class AutomaticOrderExportHooks implements WordPressHooksInterface
@@ -25,7 +25,7 @@ final class AutomaticOrderExportHooks implements WordPressHooksInterface
      */
     public function automaticExportOrder(int $orderId): void
     {
-        if (! Settings::get(GeneralSettings::PROCESS_DIRECTLY, GeneralSettings::ID)) {
+        if (! Settings::get(OrderSettings::PROCESS_DIRECTLY, OrderSettings::ID)) {
             return;
         }
 

@@ -7,7 +7,7 @@ namespace MyParcelNL\WooCommerce\Tests\Unit\Hooks;
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Contract\SettingsRepositoryInterface;
-use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
+use MyParcelNL\Pdk\Settings\Model\OrderSettings;
 use MyParcelNL\Pdk\Tests\Bootstrap\MockSettingsRepository;
 use MyParcelNL\WooCommerce\Hooks\TrackTraceHooks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
@@ -19,9 +19,9 @@ use function Spatie\Snapshots\assertMatchesHtmlSnapshot;
 usesShared(
     new UsesMockWcPdkInstance([
         SettingsRepositoryInterface::class => autowire(MockSettingsRepository::class)->constructor([
-            GeneralSettings::ID => [
-                GeneralSettings::TRACK_TRACE_IN_ACCOUNT => true,
-                GeneralSettings::TRACK_TRACE_IN_EMAIL   => true,
+            OrderSettings::ID => [
+                OrderSettings::TRACK_TRACE_IN_ACCOUNT => true,
+                OrderSettings::TRACK_TRACE_IN_EMAIL   => true,
             ],
         ]),
     ])

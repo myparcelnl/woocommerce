@@ -32,7 +32,7 @@ use MyParcelNL\Pdk\Frontend\Contract\ScriptServiceInterface;
 use MyParcelNL\Pdk\Frontend\Contract\ViewServiceInterface;
 use MyParcelNL\Pdk\Language\Contract\LanguageServiceInterface;
 use MyParcelNL\Pdk\Settings\Contract\SettingsRepositoryInterface;
-use MyParcelNL\Pdk\Settings\Model\GeneralSettings;
+use MyParcelNL\Pdk\Settings\Model\OrderSettings;
 use MyParcelNL\WooCommerce\Contract\WooCommerceServiceInterface;
 use MyParcelNL\WooCommerce\Contract\WordPressServiceInterface;
 use MyParcelNL\WooCommerce\Facade\WooCommerce;
@@ -130,7 +130,7 @@ return [
     }),
 
     'bulkActions' => factory(static function (): array {
-        $orderModeEnabled = Settings::get(GeneralSettings::ORDER_MODE, GeneralSettings::ID);
+        $orderModeEnabled = Settings::get(OrderSettings::ORDER_MODE, OrderSettings::ID);
         $all              = PdkFacade::get('allBulkActions');
 
         return $orderModeEnabled
