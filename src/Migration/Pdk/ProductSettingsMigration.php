@@ -20,27 +20,26 @@ use WC_Product;
 
 final class ProductSettingsMigration extends AbstractPdkMigration
 {
-    public const  PACKAGE_TYPES                          = [
+    public const  PACKAGE_TYPES                     = [
         DeliveryOptions::PACKAGE_TYPE_DIGITAL_STAMP_NAME,
         DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME,
         DeliveryOptions::PACKAGE_TYPE_LETTER_NAME,
     ];
-    public const  LEGACY_OPTION_EXPORT_DEFAULTS_SETTINGS = 'woocommerce_myparcel_export_defaults_settings';
-    private const CHUNK_SIZE                             = 100;
-    private const FIT_IN_PACKAGE_AMOUNT_LIMIT            = 1000;
-    private const LEGACY_META_KEY_HS_CODE                = '_myparcel_hs_code';
-    private const LEGACY_META_KEY_COUNTRY                = '_myparcel_country_of_origin';
-    private const LEGACY_META_KEY_AGE_CHECK              = '_myparcel_age_check';
-    private const LEGACY_META_KEY_HS_VARIATION           = '_myparcel_hs_code_variation';
-    private const LEGACY_META_KEY_COUNTRY_VARIATION      = '_myparcel_country_of_origin_variation';
-    private const PRODUCT_SETTINGS_MAP                   = [
+    private const CHUNK_SIZE                        = 100;
+    private const FIT_IN_PACKAGE_AMOUNT_LIMIT       = 1000;
+    private const LEGACY_META_KEY_HS_CODE           = '_myparcel_hs_code';
+    private const LEGACY_META_KEY_COUNTRY           = '_myparcel_country_of_origin';
+    private const LEGACY_META_KEY_AGE_CHECK         = '_myparcel_age_check';
+    private const LEGACY_META_KEY_HS_VARIATION      = '_myparcel_hs_code_variation';
+    private const LEGACY_META_KEY_COUNTRY_VARIATION = '_myparcel_country_of_origin_variation';
+    private const PRODUCT_SETTINGS_MAP              = [
         self::LEGACY_META_KEY_HS_CODE           => CustomsSettings::CUSTOMS_CODE,
         self::LEGACY_META_KEY_COUNTRY           => CustomsSettings::COUNTRY_OF_ORIGIN,
         self::LEGACY_META_KEY_AGE_CHECK         => ProductSettings::EXPORT_AGE_CHECK,
         self::LEGACY_META_KEY_HS_VARIATION      => CustomsSettings::CUSTOMS_CODE,
         self::LEGACY_META_KEY_COUNTRY_VARIATION => CustomsSettings::COUNTRY_OF_ORIGIN,
     ];
-    private const SECONDS_APART                          = 5;
+    private const SECONDS_APART                     = 5;
 
     /**
      * @var \MyParcelNL\Pdk\Base\Contract\CronServiceInterface
@@ -332,7 +331,7 @@ final class ProductSettingsMigration extends AbstractPdkMigration
      */
     private function getShippingMethodsForPackageType(string $packageType): ?array
     {
-        $legacySettings = get_option(self::LEGACY_OPTION_EXPORT_DEFAULTS_SETTINGS) ?: [];
+        $legacySettings = get_option(SettingsMigration::LEGACY_OPTION_EXPORT_DEFAULTS_SETTINGS) ?: [];
 
         $shippingMethods = $legacySettings['shipping_methods_package_types'] ?? [];
 

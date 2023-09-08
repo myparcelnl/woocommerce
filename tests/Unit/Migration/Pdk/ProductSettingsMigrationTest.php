@@ -10,6 +10,7 @@ use MyParcelNL\Pdk\Base\Service\CountryCodes;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\WooCommerce\Migration\Pdk\ProductSettingsMigration;
+use MyParcelNL\WooCommerce\Migration\Pdk\SettingsMigration;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
@@ -124,7 +125,7 @@ it('migrates pre v5.0.0 product settings', function (array $product, ?array $par
     /** @var \MyParcelNL\WooCommerce\Migration\Pdk\ProductSettingsMigration $migration */
     $migration = Pdk::get(ProductSettingsMigration::class);
 
-    WordPressOptions::updateOption(ProductSettingsMigration::LEGACY_OPTION_EXPORT_DEFAULTS_SETTINGS, [
+    WordPressOptions::updateOption(SettingsMigration::LEGACY_OPTION_EXPORT_DEFAULTS_SETTINGS, [
         'shipping_methods_package_types' => [
             DeliveryOptions::PACKAGE_TYPE_DIGITAL_STAMP_NAME => ['flat_rate:0'],
             DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME       => ['flat_rate:0'],
@@ -202,7 +203,7 @@ it('migrates a product when legacy default export settings are empty', function 
     /** @var \MyParcelNL\WooCommerce\Migration\Pdk\ProductSettingsMigration $migration */
     $migration = Pdk::get(ProductSettingsMigration::class);
 
-    WordPressOptions::updateOption(ProductSettingsMigration::LEGACY_OPTION_EXPORT_DEFAULTS_SETTINGS, [
+    WordPressOptions::updateOption(SettingsMigration::LEGACY_OPTION_EXPORT_DEFAULTS_SETTINGS, [
         'shipping_methods_package_types' => [
         ],
     ]);
