@@ -3,11 +3,10 @@
 
 declare(strict_types=1);
 
-namespace MyParcelNL\WooCommerce\Tests\Unit\Migration\Pdk;
+namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
-use MyParcelNL\WooCommerce\Migration\Pdk\SettingsMigration;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function Spatie\Snapshots\assertMatchesJsonSnapshot;
@@ -15,7 +14,7 @@ use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 usesShared(new UsesMockWcPdkInstance());
 
 dataset('oldPluginSettings', [
-    'empty' => [[]],
+    'empty'  => [[]],
     'filled' => [
         [
             'general'          => [

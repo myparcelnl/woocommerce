@@ -3,13 +3,12 @@
 
 declare(strict_types=1);
 
-namespace MyParcelNL\WooCommerce\Tests\Unit\Hooks;
+namespace MyParcelNL\WooCommerce\Hooks;
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Contract\SettingsRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\OrderSettings;
 use MyParcelNL\Pdk\Tests\Bootstrap\MockSettingsRepository;
-use MyParcelNL\WooCommerce\Hooks\TrackTraceHooks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use function DI\autowire;
 use function MyParcelNL\Pdk\Tests\usesShared;

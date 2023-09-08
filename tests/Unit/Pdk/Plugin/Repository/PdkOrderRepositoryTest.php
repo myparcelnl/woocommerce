@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-namespace MyParcelNL\WooCommerce\Tests\Unit\Pdk\Plugin\Repository;
+namespace MyParcelNL\WooCommerce\Pdk\Plugin\Repository;
 
 use InvalidArgumentException;
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;

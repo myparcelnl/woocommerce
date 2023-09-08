@@ -3,14 +3,12 @@
 
 declare(strict_types=1);
 
-namespace MyParcelNL\WooCommerce\Tests\Unit\Migration\Pdk;
+namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\Base\Service\CountryCodes;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
-use MyParcelNL\WooCommerce\Migration\Pdk\ProductSettingsMigration;
-use MyParcelNL\WooCommerce\Migration\Pdk\SettingsMigration;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;

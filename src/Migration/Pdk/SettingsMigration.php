@@ -73,7 +73,7 @@ final class SettingsMigration extends AbstractPdkMigration
      * @param  array $oldSettings
      *
      * @return void
-     * @see  \MyParcelNL\WooCommerce\Tests\Unit\Migration\Pdk\SettingsMigrationTest
+     * @see  \MyParcelNL\WooCommerce\Pdk\SettingsMigrationTest
      */
     public function migrateSettings(array $oldSettings): void
     {
