@@ -21,6 +21,7 @@ use MyParcelNL\WooCommerce\Facade\WooCommerce;
 use MyParcelNL\WooCommerce\Pdk\WcPdkBootstrapper;
 use MyParcelNL\WooCommerce\Service\WordPressHookService;
 use function DI\value;
+use function MyParcelNL\WooCommerce\bootPdk;
 
 require(plugin_dir_path(__FILE__) . 'vendor/autoload.php');
 
@@ -92,7 +93,7 @@ final class MyParcelNLWooCommerce
             'pluginBasename' => value(plugin_basename(__FILE__)),
         ]);
 
-        WcPdkBootstrapper::boot(
+        bootPdk(
             'myparcelnl',
             'MyParcel',
             $version,

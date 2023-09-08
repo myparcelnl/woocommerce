@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Tests\Mock;
 
-/**
- * @extends \WC_Cart
- */
-class MockWc extends MockWcClass
+class MockWc extends MockWcClass implements StaticMockInterface
 {
     /**
-     * @var self
+     * @var null|self
      */
     private static $instance;
 
@@ -23,6 +20,11 @@ class MockWc extends MockWcClass
      * @var \MyParcelNL\WooCommerce\Tests\Mock\MockWcSession
      */
     public $session;
+
+    /**
+     * @var string
+     */
+    public $version = '5.0.0';
 
     /**
      * @throws \Throwable
@@ -41,5 +43,10 @@ class MockWc extends MockWcClass
         }
 
         return self::$instance;
+    }
+
+    public static function reset(): void
+    {
+        self::$instance = null;
     }
 }
