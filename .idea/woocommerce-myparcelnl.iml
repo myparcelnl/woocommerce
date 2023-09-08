@@ -7,6 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/vendor/myparcelnl/pdk/tests" isTestSource="true" packagePrefix="MyParcelNL\Pdk\Tests\" />
       <sourceFolder url="file://$MODULE_DIR$/vendor/myparcelnl/pdk/tests/factories" isTestSource="true" packagePrefix="MyParcelNL\Pdk\" />
       <sourceFolder url="file://$MODULE_DIR$/tests/factories" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/tests/Unit" isTestSource="true" packagePrefix="MyParcelNL\WooCommerce\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/justinrainbow/json-schema" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/laravel/serializable-closure" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />

@@ -30,10 +30,11 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "MyParcelNL\\WooCommerce\\Tests\\": "tests",
-      "MyParcelNL\\Pdk\\Tests\\": "vendor/myparcelnl/pdk/tests",
+      "": "tests/factories",
       "MyParcelNL\\Pdk\\": "vendor/myparcelnl/pdk/tests/factories",
-      "": "tests/factories"
+      "MyParcelNL\\Pdk\\Tests\\": "vendor/myparcelnl/pdk/tests",
+      "MyParcelNL\\WooCommerce\\": "tests/Unit",
+      "MyParcelNL\\WooCommerce\\Tests\\": "tests"
     },
     "files": [
       "vendor/myparcelnl/pdk/tests/functions.php",
