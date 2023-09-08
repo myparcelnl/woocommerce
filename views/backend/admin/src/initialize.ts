@@ -3,11 +3,6 @@
 import {h} from 'vue';
 import {get} from '@vueuse/core';
 import {
-  FORM_KEY_CHILD_PRODUCT_SETTINGS,
-  FORM_KEY_MODAL,
-  FORM_KEY_PRODUCT_SETTINGS,
-} from '@myparcel-pdk/frontend-admin-core';
-import {
   DefaultBadge,
   DefaultCurrencyInput,
   DefaultHeading,
@@ -19,7 +14,13 @@ import {
   DefaultTimeInput,
 } from '@myparcel-pdk/admin-preset-default';
 import {DashIconsIcon} from '@myparcel-pdk/admin-preset-dashicons';
-import {LogLevel, createPdkAdmin} from '@myparcel-pdk/admin';
+import {
+  FORM_KEY_CHILD_PRODUCT_SETTINGS,
+  FORM_KEY_MODAL,
+  FORM_KEY_PRODUCT_SETTINGS,
+  LogLevel,
+  createPdkAdmin,
+} from '@myparcel-pdk/admin';
 import {closeModalOnEscape, listenForBulkActions} from './hooks';
 import {
   WcBox,
