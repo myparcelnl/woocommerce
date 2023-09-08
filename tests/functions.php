@@ -62,3 +62,14 @@ function createWcProduct(array $data = []): WC_Product
         ->with($data)
         ->make();
 }
+
+namespace MyParcelNL\WooCommerce;
+
+use MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkBootstrapper;
+
+if (! function_exists('\MyParcelNL\WooCommerce\bootPdk')) {
+    function bootPdk(): void
+    {
+        MockWcPdkBootstrapper::boot(...func_get_args());
+    }
+}

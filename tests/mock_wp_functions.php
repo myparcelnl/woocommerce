@@ -4,6 +4,7 @@
 declare(strict_types=1);
 
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\WooCommerce\Tests\Exception\DieException;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
@@ -27,6 +28,18 @@ function get_post_meta(int $postId, string $metaKey)
 function get_bloginfo(string $name): string
 {
     return '';
+}
+
+/** @see \get_locale() */
+function get_locale(): string
+{
+    return 'nl_NL';
+}
+
+/** @see \wp_die() */
+function wp_die(string $message = '', string $title = '', array $args = [])
+{
+    throw new DieException($message, $title);
 }
 
 /** @see \get_option() */
@@ -60,6 +73,12 @@ function wp_schedule_single_event($timestamp, $callback, $args)
 function plugin_dir_path($file): string
 {
     return __DIR__ . '/../';
+}
+
+/**@see \plugin_dir_url() */
+function plugin_dir_url($file): string
+{
+    return sprintf('https://example.com/plugins/%s', plugin_basename($file));
 }
 
 /**@see \plugin_basename() */

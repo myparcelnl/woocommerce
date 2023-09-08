@@ -11,7 +11,17 @@ final class MockWcPdkBootstrapper extends WcPdkBootstrapper implements StaticMoc
     /**
      * @var array
      */
-    private static $config;
+    private static $config = [];
+
+    /**
+     * @param  array $config
+     *
+     * @return void
+     */
+    public static function addConfig(array $config): void
+    {
+        self::$config = array_replace(self::$config, $config);
+    }
 
     /**
      * @return void

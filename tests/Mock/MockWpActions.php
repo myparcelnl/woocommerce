@@ -14,11 +14,6 @@ final class MockWpActions implements StaticMockInterface
      */
     public static $actions;
 
-    public function __construct()
-    {
-        self::reset();
-    }
-
     /**
      * @param  string          $tag
      * @param  callable|string $functionToAdd
@@ -64,6 +59,19 @@ final class MockWpActions implements StaticMockInterface
         foreach ($actions as $action) {
             call_user_func_array($action['function'], $args);
         }
+
+        self::$actions->put($tag, []);
+    }
+
+    /**
+     * @param  string $tag
+     *
+     * @return array
+     */
+    public static function get(string $tag): array
+    {
+        return self::getActions()
+            ->get($tag, []);
     }
 
     public static function reset(): void
@@ -84,17 +92,6 @@ final class MockWpActions implements StaticMockInterface
                 });
             })
             ->toArray();
-    }
-
-    /**
-     * @param  string $tag
-     *
-     * @return array
-     */
-    protected static function get(string $tag): array
-    {
-        return self::getActions()
-            ->get($tag, []);
     }
 
     /**
