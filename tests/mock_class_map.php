@@ -3,12 +3,14 @@
 
 declare(strict_types=1);
 
+use MyParcelNL\WooCommerce\Tests\Mock\MockWc;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcCart;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcClass;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcCustomer;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcDateTime;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcOrder;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcProduct;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWcSession;
 
 class WC_Data { }
 
@@ -30,5 +32,15 @@ class WC_Order_Item_Product extends WC_Order_Item { }
 /** @see \WC_Product */
 class WC_Product extends MockWcProduct { }
 
-/**  @see \WC_DateTime */
+/** @see \WC_DateTime */
 class WC_DateTime extends MockWcDateTime { }
+
+/** @see \WC_Meta_Data */
+class WC_Meta_Data extends MockWcClass { }
+
+/** @see \WC */
+class WC extends MockWc { }
+
+/** @see \WC_Session */
+class WC_Session extends MockWcSession { }
+
