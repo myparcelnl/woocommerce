@@ -8,18 +8,11 @@ namespace MyParcelNL\WooCommerce\Tests\Unit;
 use MyParcelNL\WooCommerce\Tests\Exception\DieException;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkBootstrapper;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
-use MyParcelNLWooCommerce;
+use MyParcelNL\WooCommerce\Tests\Uses\UseInstantiatePlugin;
+use function MyParcelNL\Pdk\Tests\usesShared;
 use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 
-uses()->beforeEach(function () {
-    if (class_exists(MyParcelNLWooCommerce::class)) {
-        new MyParcelNLWooCommerce();
-
-        return;
-    }
-
-    require __DIR__ . '/../../woocommerce-myparcel.php';
-});
+usesShared(new UseInstantiatePlugin());
 
 it('instantiates the plugin', function () {
     assertMatchesJsonSnapshot(json_encode(MockWpActions::toArray()));
@@ -55,4 +48,11 @@ it('runs uninstall on deactivate', function () {
     MockWpActions::execute('deactivate_woocommerce-myparcel');
 
     expect(MockWpActions::get('deactivate_woocommerce-myparcel'))->toBe([]);
+});
+
+it('adds all hooks on plugin init', function () {
+    MockWpActions::execute('init');
+
+    expect(MockWpActions::get('init'))->toBe([]);
+    assertMatchesJsonSnapshot(json_encode(MockWpActions::toArray()));
 });
