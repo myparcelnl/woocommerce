@@ -9,10 +9,12 @@ use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\ProductSettings;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
+use MyParcelNL\Pdk\Tests\Bootstrap\MockPdkProductRepository;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkProductSettingsHooks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Product;
+use function DI\autowire;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function MyParcelNL\WooCommerce\Tests\wpFactory;
 
@@ -36,7 +38,16 @@ function defaultProductSettings(): array
     ];
 }
 
-usesShared(new UsesMockWcPdkInstance());
+usesShared(
+    new UsesMockWcPdkInstance([
+        PdkProductRepositoryInterface::class => autowire(MockPdkProductRepository::class)->constructor([
+            [
+                'externalIdentifier' => '7000',
+                'settings'           => defaultProductSettings(),
+            ],
+        ]),
+    ])
+);
 
 it('saves product data correctly', function (array $postData, array $productSettings) {
     /** @var PdkProductRepositoryInterface $productRepository */
@@ -47,6 +58,7 @@ it('saves product data correctly', function (array $postData, array $productSett
 
     wpFactory(WC_Product::class)
         ->withId(7000)
+        ->withSettings($productSettings)
         ->make();
 
     $hooks->savePdkProduct($postData, 7000);
@@ -56,9 +68,9 @@ it('saves product data correctly', function (array $postData, array $productSett
         ->settings
         ->toArray();
 
-    expect($savedProductSettings)->toEqual(array_replace(defaultProductSettings(), $productSettings));
+    expect($savedProductSettings)->toEqual($productSettings);
 })->with([
-    'some settings' => [
+    'some settings'       => [
         'postData'        => [
             'metakeyselect'          => '#NONE#',
             'metavalue'              => '',
@@ -78,19 +90,18 @@ it('saves product data correctly', function (array $postData, array $productSett
             'original_publish'       => 'Update',
             'post_ID'                => '7000',
         ],
-        'productSettings' => [
+        'productSettings' => array_replace(defaultProductSettings(), [
             ProductSettings::COUNTRY_OF_ORIGIN        => 'DE',
             ProductSettings::CUSTOMS_CODE             => '1234',
             ProductSettings::DISABLE_DELIVERY_OPTIONS => TriStateService::INHERIT,
             ProductSettings::DROP_OFF_DELAY           => 0,
             ProductSettings::EXPORT_HIDE_SENDER       => TriStateService::INHERIT,
-            ProductSettings::EXPORT_INSURANCE         => 1,
-            ProductSettings::FIT_IN_DIGITAL_STAMP     => TriStateService::INHERIT,
+            ProductSettings::EXPORT_INSURANCE         => TriStateService::ENABLED,
             ProductSettings::FIT_IN_MAILBOX           => 10,
+            ProductSettings::FIT_IN_DIGITAL_STAMP     => TriStateService::INHERIT,
             ProductSettings::PACKAGE_TYPE             => DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME,
-        ],
+        ]),
     ],
-
     'change all settings' => [
         'postData'        => [
             'metakeyselect'               => '#NONE#',
@@ -116,7 +127,7 @@ it('saves product data correctly', function (array $postData, array $productSett
             'original_publish'            => 'Update',
             'post_ID'                     => '7000',
         ],
-        'productSettings' => [
+        'productSettings' => array_replace(defaultProductSettings(), [
             ProductSettings::COUNTRY_OF_ORIGIN        => 'BE',
             ProductSettings::CUSTOMS_CODE             => '9422',
             ProductSettings::DISABLE_DELIVERY_OPTIONS => TriStateService::DISABLED,
@@ -128,9 +139,9 @@ it('saves product data correctly', function (array $postData, array $productSett
             ProductSettings::EXPORT_ONLY_RECIPIENT    => TriStateService::DISABLED,
             ProductSettings::EXPORT_RETURN            => TriStateService::ENABLED,
             ProductSettings::EXPORT_SIGNATURE         => TriStateService::DISABLED,
-            ProductSettings::FIT_IN_DIGITAL_STAMP     => TriStateService::INHERIT,
             ProductSettings::FIT_IN_MAILBOX           => 12,
+            ProductSettings::FIT_IN_DIGITAL_STAMP     => TriStateService::INHERIT,
             ProductSettings::PACKAGE_TYPE             => DeliveryOptions::PACKAGE_TYPE_DIGITAL_STAMP_NAME,
-        ],
+        ]),
     ],
 ]);
