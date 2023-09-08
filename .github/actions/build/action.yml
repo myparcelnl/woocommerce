@@ -4,12 +4,6 @@ description: ''
 runs:
   using: composite
   steps:
-    - name: 'Import translations'
-      shell: bash
-      #language=sh
-      run: |
-        yarn translations:import
-
     - name: 'Build JavaScript bundles'
       shell: bash
       #language=sh
