@@ -78,7 +78,7 @@ final class Migration5_0_0 extends AbstractPdkMigration
         try {
             Actions::execute($request);
         } catch (Throwable $e) {
-            // Ignore
+            $this->warning($e->getMessage(), ['action' => PdkBackendActions::UPDATE_ACCOUNT]);
         }
     }
 }
