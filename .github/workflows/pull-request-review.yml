@@ -1,0 +1,19 @@
+name: 'Label pull request'
+
+on:
+  pull_request_review:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+
+jobs:
+  label:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: myparcelnl/actions/pr-label-by-review@v3
+        with:
+          app-id: ${{ secrets.MYPARCEL_APP_ID }}
+          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
+          label-approved: 'approved'
+          label-changes-requested: 'changes requested'
+          protection-type: 'rulesets'
