@@ -305,6 +305,9 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                 return $acc;
             }, 0);
 
-        return $this->weightService->convertToGrams($itemsWeight) + $this->getPackageWeight($packageType);
+        return $this->weightService->convertToGrams(
+                $itemsWeight,
+                get_option('woocommerce_weight_unit', Pdk::get('defaultWeightUnit'))
+            ) + $this->getPackageWeight($packageType);
     }
 }
