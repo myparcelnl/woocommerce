@@ -14,9 +14,11 @@ use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Platform;
 use MyParcelNL\Pdk\Facade\Settings;
+use MyParcelNL\Pdk\Settings\Model\OrderSettings;
 use MyParcelNL\Pdk\Settings\Model\CustomsSettings;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
+use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
 use MyParcelNL\WooCommerce\Adapter\WcAddressAdapter;
 use MyParcelNL\WooCommerce\Facade\Filter;
@@ -122,10 +124,11 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     /**
      * @param  \WC_Order                               $order
      * @param  \MyParcelNL\Pdk\Base\Support\Collection $items
+     * @param  string                                  $packageType
      *
      * @return array
      */
-    private function createCustomsDeclaration(WC_Order $order, Collection $items): array
+    private function createCustomsDeclaration(WC_Order $order, Collection $items, string $packageType): array
     {
         return [
             'contents' => Settings::get(CustomsSettings::PACKAGE_CONTENTS, CustomsSettings::ID),
@@ -144,6 +147,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                     })
                     ->toArray()
             ),
+            'weight'   => $this->getTotalWeight($items, $packageType),
         ];
     }
 
@@ -156,9 +160,8 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     private function getDataFromOrder(WC_Order $order): PdkOrder
     {
-        $savedOrderData = $order->get_meta(Pdk::get('metaKeyOrderData')) ?: [];
-        $items          = $this->getOrderItems($order);
-
+        $savedOrderData  = $order->get_meta(Pdk::get('metaKeyOrderData')) ?: [];
+        $items           = $this->getOrderItems($order);
         $shippingAddress = $this->addressAdapter->fromWcOrder($order);
 
         $savedOrderData['deliveryOptions'] = (array) (Filter::apply(
@@ -167,13 +170,14 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             $order
         ) ?? []);
 
-        $isRow = $this->countryService->isRow($shippingAddress['cc'] ?? Platform::get('localCountry'));
+        $packageType = $savedOrderData['deliveryOptions']['package_type'] ?? DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME;
+        $isRow       = $this->countryService->isRow($shippingAddress['cc'] ?? Platform::get('localCountry'));
 
         $orderData = [
             'externalIdentifier'    => $order->get_id(),
             'billingAddress'        => $this->addressAdapter->fromWcOrder($order, Pdk::get('wcAddressTypeBilling')),
             'customsDeclaration'    => $isRow
-                ? $this->createCustomsDeclaration($order, $items)
+                ? $this->createCustomsDeclaration($order, $items, $packageType)
                 : null,
             'lines'                 => $items
                 ->map(function (array $item) {
@@ -184,7 +188,9 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                     ]);
                 })
                 ->all(),
-            'physicalProperties'    => $this->getPhysicalProperties($items),
+            'physicalProperties'    => [
+                'weight' => $this->getTotalWeight($items, $packageType),
+            ],
             'shippingAddress'       => $shippingAddress,
             'orderPrice'            => $order->get_total(),
             'orderPriceAfterVat'    => (float) $order->get_total() + (float) $order->get_cart_tax(),
@@ -234,26 +240,22 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     }
 
     /**
-     * @param  \MyParcelNL\Pdk\Base\Support\Collection $items
+     * @param  string $packageType
      *
-     * @return array
+     * @return int
      */
-    private function getPhysicalProperties(Collection $items): array
+    private function getPackageWeight(string $packageType): int
     {
-        return [
-            'weight' => $items
-                ->where('product', '!=', null)
-                ->reduce(static function (float $acc, $item) {
-                    $quantity = $item['item']->get_quantity();
-                    $weight   = $item['product']->get_weight();
-
-                    if (is_numeric($quantity) && is_numeric($weight)) {
-                        $acc += $quantity * $weight;
-                    }
-
-                    return $acc;
-                }, 0),
-        ];
+        switch ($packageType) {
+            case DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME:
+                return Settings::get(OrderSettings::EMPTY_PARCEL_WEIGHT, OrderSettings::ID);
+            case DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME:
+                return Settings::get(OrderSettings::EMPTY_MAILBOX_WEIGHT, OrderSettings::ID);
+            case DeliveryOptions::PACKAGE_TYPE_DIGITAL_STAMP_NAME:
+                return Settings::get(OrderSettings::EMPTY_DIGITAL_STAMP_WEIGHT, OrderSettings::ID);
+            default:
+                return 0;
+        }
     }
 
     /**
@@ -271,5 +273,29 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                 return new ShipmentCollection($shipments);
             }
         );
+    }
+
+    /**
+     * @param  \MyParcelNL\Pdk\Base\Support\Collection $items
+     * @param  string                                  $packageType
+     *
+     * @return int
+     */
+    private function getTotalWeight(Collection $items, string $packageType): int
+    {
+        $itemsWeight = $items
+            ->where('product', '!=', null)
+            ->reduce(static function (float $acc, $item) {
+                $quantity = $item['item']->get_quantity();
+                $weight   = $item['product']->get_weight();
+
+                if (is_numeric($quantity) && is_numeric($weight)) {
+                    $acc += $quantity * $weight;
+                }
+
+                return $acc;
+            }, 0);
+
+        return (int) ($itemsWeight + $this->getPackageWeight($packageType));
     }
 }
