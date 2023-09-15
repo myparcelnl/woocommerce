@@ -248,11 +248,11 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     {
         switch ($packageType) {
             case DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME:
-                return Settings::get(OrderSettings::EMPTY_PARCEL_WEIGHT, OrderSettings::ID);
+                return (int) Settings::get(OrderSettings::EMPTY_PARCEL_WEIGHT, OrderSettings::ID);
             case DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME:
-                return Settings::get(OrderSettings::EMPTY_MAILBOX_WEIGHT, OrderSettings::ID);
+                return (int) Settings::get(OrderSettings::EMPTY_MAILBOX_WEIGHT, OrderSettings::ID);
             case DeliveryOptions::PACKAGE_TYPE_DIGITAL_STAMP_NAME:
-                return Settings::get(OrderSettings::EMPTY_DIGITAL_STAMP_WEIGHT, OrderSettings::ID);
+                return (int) Settings::get(OrderSettings::EMPTY_DIGITAL_STAMP_WEIGHT, OrderSettings::ID);
             default:
                 return 0;
         }
