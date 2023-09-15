@@ -8,6 +8,7 @@ use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\App\Order\Model\PdkOrder;
 use MyParcelNL\Pdk\App\Order\Model\PdkOrderLine;
 use MyParcelNL\Pdk\App\Order\Repository\AbstractPdkOrderRepository;
+use MyParcelNL\Pdk\Base\Contract\WeightServiceInterface;
 use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\Logger;
@@ -51,24 +52,32 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     private $wcOrderRepository;
 
     /**
+     * @var \MyParcelNL\Pdk\Base\Contract\WeightServiceInterface
+     */
+    private $weightService;
+
+    /**
      * @param  \MyParcelNL\Pdk\Storage\Contract\StorageInterface                       $storage
      * @param  \MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface        $pdkProductRepository
      * @param  \MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface $wcOrderRepository
      * @param  \MyParcelNL\Pdk\Base\Service\CountryService                             $countryService
      * @param  \MyParcelNL\WooCommerce\Adapter\WcAddressAdapter                        $addressAdapter
+     * @param  \MyParcelNL\Pdk\Base\Contract\WeightServiceInterface                    $weightService
      */
     public function __construct(
         StorageInterface              $storage,
         PdkProductRepositoryInterface $pdkProductRepository,
         WcOrderRepositoryInterface    $wcOrderRepository,
         CountryService                $countryService,
-        WcAddressAdapter              $addressAdapter
+        WcAddressAdapter              $addressAdapter,
+        WeightServiceInterface        $weightService
     ) {
         parent::__construct($storage);
         $this->pdkProductRepository = $pdkProductRepository;
         $this->wcOrderRepository    = $wcOrderRepository;
         $this->countryService       = $countryService;
         $this->addressAdapter       = $addressAdapter;
+        $this->weightService        = $weightService;
     }
 
     /**
@@ -296,6 +305,6 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                 return $acc;
             }, 0);
 
-        return (int) ($itemsWeight + $this->getPackageWeight($packageType));
+        return $this->weightService->convertToGrams($itemsWeight) + $this->getPackageWeight($packageType);
     }
 }
