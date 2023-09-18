@@ -28,9 +28,11 @@ final class WpInstallerService extends InstallerService
      */
     protected function updateInstalledVersion(?string $version): void
     {
-        if ($version) {
-            parent::updateInstalledVersion($version);
+        if (! $version) {
+            return;
         }
+
+        parent::updateInstalledVersion($version);
     }
 
     /**
