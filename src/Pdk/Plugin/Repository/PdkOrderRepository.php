@@ -13,8 +13,9 @@ use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Platform;
+use MyParcelNL\Pdk\Facade\Settings;
+use MyParcelNL\Pdk\Settings\Model\CustomsSettings;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
-use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
 use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
 use MyParcelNL\WooCommerce\Adapter\WcAddressAdapter;
@@ -127,7 +128,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     private function createCustomsDeclaration(WC_Order $order, Collection $items): array
     {
         return [
-            'contents' => CustomsDeclaration::CONTENTS_COMMERCIAL_GOODS,
+            'contents' => Settings::get(CustomsSettings::PACKAGE_CONTENTS, CustomsSettings::ID),
             'invoice'  => $order->get_id(),
             'items'    => array_values(
                 $items
