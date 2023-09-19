@@ -12,4 +12,17 @@ class WcStatusService implements OrderStatusServiceInterface
     {
         return wc_get_order_statuses();
     }
+
+    public function updateStatus(array $orderIds, string $status)
+    {
+        foreach ($orderIds as $orderId) {
+            $order = wc_get_order($orderId);
+
+            if (false === $order) {
+                continue;
+            }
+
+            $order->update_status($status);
+        }
+    }
 }
