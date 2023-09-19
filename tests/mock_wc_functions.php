@@ -29,6 +29,16 @@ function wc_get_order_notes($args = []): array
     return $item->getAttributes()['order_notes'] ?? [];
 }
 
+/**
+ * @param  int $id
+ *
+ * @return \MyParcelNL\WooCommerce\Tests\Mock\MockWcClass
+ */
+function wc_get_order(int $id)
+{
+    return MockWcData::get($id);
+}
+
 /** @see \wc_get_orders() */
 function wc_get_orders($args)
 {

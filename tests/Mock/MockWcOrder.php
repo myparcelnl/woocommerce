@@ -35,4 +35,22 @@ class MockWcOrder extends MockWcClass
 
         return count($notes) - 1;
     }
+
+    /**
+     * @return string
+     */
+    public function get_status(): string
+    {
+        return $this->attributes['status'] ?? '';
+    }
+
+    /**
+     * @param  string $status
+     *
+     * @return void
+     */
+    public function update_status(string $status): void
+    {
+        $this->attributes['status'] = $status;
+    }
 }
