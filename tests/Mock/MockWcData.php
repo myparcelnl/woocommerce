@@ -32,12 +32,12 @@ final class MockWcData implements StaticMockInterface
     /**
      * @param  string|int $id
      *
-     * @return \MyParcelNL\WooCommerce\Tests\Mock\MockWcClass
+     * @return null|\MyParcelNL\WooCommerce\Tests\Mock\MockWcClass
      */
-    public static function get($id): MockWcClass
+    public static function get($id): ?MockWcClass
     {
         if (! self::has($id)) {
-            throw new RuntimeException("Post $id not found");
+            return null;
         }
 
         return Arr::get(self::$items, (string) $id);
