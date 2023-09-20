@@ -6,6 +6,7 @@ namespace MyParcelNL\WooCommerce;
 
 use MyParcelNL\Pdk\Base\Pdk;
 use MyParcelNL\WooCommerce\Pdk\WcPdkBootstrapper;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkBootstrapper;
 
 if (! function_exists('\MyParcelNL\WooCommerce\bootPdk')) {
     /**
@@ -27,6 +28,13 @@ if (! function_exists('\MyParcelNL\WooCommerce\bootPdk')) {
         string $url,
         string $mode = Pdk::MODE_PRODUCTION
     ): void {
-        WcPdkBootstrapper::boot($name, $title, $version, $path, $url, $mode);
+        // TODO: find a way to make this work without having this in production code
+        if (! defined('PEST')) {
+            WcPdkBootstrapper::boot(...func_get_args());
+
+            return;
+        }
+
+        MockWcPdkBootstrapper::boot(...func_get_args());
     }
 }

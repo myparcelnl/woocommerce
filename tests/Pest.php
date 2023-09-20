@@ -17,6 +17,9 @@ use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
 use function MyParcelNL\Pdk\Tests\usesShared;
 
+/** @see \MyParcelNL\WooCommerce\bootPdk() */
+const PEST = true;
+
 require __DIR__ . '/../vendor/myparcelnl/pdk/tests/Pest.php';
 require __DIR__ . '/mock_class_map.php';
 require __DIR__ . '/mock_wp_functions.php';
