@@ -9,7 +9,7 @@ use MyParcelNL\Pdk\App\Order\Contract\OrderStatusServiceInterface;
 class WcStatusService implements OrderStatusServiceInterface
 {
     /**
-     * @return array|string[]
+     * @return array<string, string>
      */
     public function all(): array
     {
