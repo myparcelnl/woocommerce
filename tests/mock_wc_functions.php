@@ -29,6 +29,29 @@ function wc_get_order_notes($args = []): array
     return $item->getAttributes()['order_notes'] ?? [];
 }
 
+/**
+ * @param  int $id
+ *
+ * @return \MyParcelNL\WooCommerce\Tests\Mock\MockWcClass
+ */
+function wc_get_order(int $id)
+{
+    return MockWcData::get($id);
+}
+
+function wc_get_order_statuses()
+{
+    return [
+        'wc-pending'    => 'Pending payment',
+        'wc-processing' => 'Processing',
+        'wc-on-hold'    => 'On hold',
+        'wc-completed'  => 'Completed',
+        'wc-cancelled'  => 'Cancelled',
+        'wc-refunded'   => 'Refunded',
+        'wc-failed'     => 'Failed',
+    ];
+}
+
 /** @see \wc_get_orders() */
 function wc_get_orders($args)
 {
