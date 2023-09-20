@@ -20,7 +20,7 @@ usesShared(
     ])
 );
 
-it('changes order status', function () {
+it('changes order status', function (bool $validOrder, int $orderId, $result) {
     /** @var OrderStatusServiceInterface $statusService */
     $statusService = Pdk::get(OrderStatusServiceInterface::class);
 
@@ -28,11 +28,49 @@ it('changes order status', function () {
         ->withId(33)
         ->store();
 
-    $statusService->updateStatus([33], 'completed');
+    $statusService->updateStatus([$orderId], 'completed');
 
     $updatedOrder = wc_get_order(33);
 
-    expect($updatedOrder->get_status())
-        ->toBe('completed');
-});
+    if (! $validOrder) {
+        expect($updatedOrder->get_status())
+            ->toThrow('');
 
+        return;
+    }
+
+    expect($updatedOrder->get_status())
+        ->toBe($result);
+})->with([
+        'valid order'   => [
+            true,
+            33,
+            'completed',
+        ],
+        'invalid order' => [
+            false,
+            34,
+            false,
+        ],
+    ]
+);
+
+it('returns all order statuses', function () {
+    /** @var OrderStatusServiceInterface $statusService */
+    $statusService = Pdk::get(OrderStatusServiceInterface::class);
+
+    $statuses = $statusService->all();
+
+    expect($statuses)
+        ->toBe(
+            [
+                'wc-pending'    => 'Pending payment',
+                'wc-processing' => 'Processing',
+                'wc-on-hold'    => 'On hold',
+                'wc-completed'  => 'Completed',
+                'wc-cancelled'  => 'Cancelled',
+                'wc-refunded'   => 'Refunded',
+                'wc-failed'     => 'Failed',
+            ]
+        );
+});

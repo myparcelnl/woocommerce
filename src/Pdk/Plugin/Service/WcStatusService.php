@@ -27,7 +27,7 @@ class WcStatusService implements OrderStatusServiceInterface
         foreach ($orderIds as $orderId) {
             $order = wc_get_order($orderId);
 
-            if (false === $order) {
+            if (! $order) {
                 continue;
             }
 
