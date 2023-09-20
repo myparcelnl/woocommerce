@@ -82,6 +82,8 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/yaml" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/szepeviktor/phpstan-wordpress" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/theseer/tokenizer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/guzzle/parser" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/myparcelnl/pdk" />
       <excludePattern pattern="dist" />
       <excludePattern pattern="cache" />
       <excludePattern pattern="lib" />
