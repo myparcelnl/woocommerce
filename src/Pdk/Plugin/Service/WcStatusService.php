@@ -8,11 +8,20 @@ use MyParcelNL\Pdk\App\Order\Contract\OrderStatusServiceInterface;
 
 class WcStatusService implements OrderStatusServiceInterface
 {
+    /**
+     * @return array|string[]
+     */
     public function all(): array
     {
         return wc_get_order_statuses();
     }
 
+    /**
+     * @param  array  $orderIds
+     * @param  string $status
+     *
+     * @return void
+     */
     public function updateStatus(array $orderIds, string $status): void
     {
         foreach ($orderIds as $orderId) {
