@@ -132,8 +132,8 @@
         "items": [
             {
                 "amount": 2,
-                "classification": "-1",
-                "country": "-1",
+                "classification": null,
+                "country": "NL",
                 "description": "Test product",
                 "itemValue": {
                     "amount": 50000,
@@ -143,8 +143,8 @@
             },
             {
                 "amount": 2,
-                "classification": "-1",
-                "country": "-1",
+                "classification": null,
+                "country": "NL",
                 "description": "Test digital product",
                 "itemValue": {
                     "amount": 0,
