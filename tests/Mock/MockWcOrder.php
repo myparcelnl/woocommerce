@@ -37,14 +37,6 @@ class MockWcOrder extends MockWcClass
     }
 
     /**
-     * @return string
-     */
-    public function get_status(): string
-    {
-        return $this->attributes['status'] ?? '';
-    }
-
-    /**
      * @param  string $status
      *
      * @return void

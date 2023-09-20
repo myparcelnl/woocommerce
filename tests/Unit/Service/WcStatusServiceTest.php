@@ -9,9 +9,10 @@ use MyParcelNL\Pdk\App\Order\Contract\OrderStatusServiceInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Tests\Uses\UsesMockPdkInstance;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Service\WcStatusService;
+use WC_Order;
 use function DI\get;
 use function MyParcelNL\Pdk\Tests\usesShared;
-use function MyParcelNL\WooCommerce\Tests\createWcOrder;
+use function MyParcelNL\WooCommerce\Tests\wpFactory;
 
 usesShared(
     new UsesMockPdkInstance([
@@ -23,7 +24,9 @@ it('changes order status', function () {
     /** @var OrderStatusServiceInterface $statusService */
     $statusService = Pdk::get(OrderStatusServiceInterface::class);
 
-    createWcOrder(['id' => 33]);
+    wpFactory(WC_Order::class)
+        ->withId(33)
+        ->store();
 
     $statusService->updateStatus([33], 'completed');
 
