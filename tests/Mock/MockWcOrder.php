@@ -37,6 +37,14 @@ class MockWcOrder extends MockWcClass
     }
 
     /**
+     * @return bool
+     */
+    public function has_shipping_address(): bool
+    {
+        return isset($this->attributes['shipping_address_1']);
+    }
+
+    /**
      * @param  string $status
      *
      * @return void
