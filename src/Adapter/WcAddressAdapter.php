@@ -42,7 +42,11 @@ class WcAddressAdapter
      */
     public function fromWcOrder(WC_Order $order, ?string $addressType = null): array
     {
-        $resolvedAddressType = $this->getAddressType($addressType);
+        $orderAddressType = $order->has_shipping_address()
+            ? Pdk::get('wcAddressTypeShipping')
+            : Pdk::get('wcAddressTypeBilling');
+
+        $resolvedAddressType = $this->getAddressType($addressType ?? $orderAddressType);
 
         return array_merge(
             $this->getAddressFields($order, $resolvedAddressType),
