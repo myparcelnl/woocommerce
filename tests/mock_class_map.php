@@ -12,6 +12,9 @@ use MyParcelNL\WooCommerce\Tests\Mock\MockWcOrder;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcProduct;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcSession;
 
+/** @see \MyParcelNL\WooCommerce\bootPdk() */
+const PEST = true;
+
 class WC_Data { }
 
 /** @see \WC_Cart */
