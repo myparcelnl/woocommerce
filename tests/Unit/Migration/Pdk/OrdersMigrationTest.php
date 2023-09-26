@@ -113,13 +113,6 @@ it('migrates orders', function (array $oldMeta) {
 
     $shipmentsArray = $pdkOrder->shipments->toStorableArray();
 
-    /**
-     * @todo put dates back in when it's fixed in the pdk
-     * @see  https://github.com/myparcelnl/pdk/pulls/139
-     * @see  https://github.com/myparcelnl/pdk/pulls/138
-     */
-    Arr::forget($pdkOrderArray, ['deliveryOptions.date']);
-
     foreach ($shipmentsArray as $key => $shipment) {
         Arr::forget($shipmentsArray[$key], ['updated']);
     }
