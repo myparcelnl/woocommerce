@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Adapter;
 
+use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Facade\Pdk;
 use WC_Cart;
 use WC_Customer;
@@ -30,7 +31,7 @@ class WcAddressAdapter
      */
     public function fromWcCustomer(WC_Customer $customer, ?string $addressType = null): array
     {
-        return $this->getAddressFields($customer, $this->getAddressType($addressType));
+        return $this->getAddressFields($customer, $this->resolveAddressType($customer, $addressType));
     }
 
     /**
@@ -42,7 +43,7 @@ class WcAddressAdapter
      */
     public function fromWcOrder(WC_Order $order, ?string $addressType = null): array
     {
-        $resolvedAddressType = $this->getAddressType($addressType);
+        $resolvedAddressType = $this->resolveAddressType($order, $addressType);
 
         return array_merge(
             $this->getAddressFields($order, $resolvedAddressType),
@@ -76,6 +77,8 @@ class WcAddressAdapter
      */
     private function getAddressFields($class, string $addressType): array
     {
+        $state = $this->getState($class, $addressType);
+
         return [
             'email' => $class->get_billing_email(),
             'phone' => $class->get_billing_phone(),
@@ -88,27 +91,9 @@ class WcAddressAdapter
             'city'       => $this->getAddressField($class, Pdk::get('fieldCity'), $addressType),
             'company'    => $this->getAddressField($class, Pdk::get('fieldCompany'), $addressType),
             'postalCode' => $this->getAddressField($class, Pdk::get('fieldPostalCode'), $addressType),
-            'region'     => $this->getAddressField($class, Pdk::get('fieldRegion'), $addressType),
-            'state'      => $this->getAddressField($class, Pdk::get('fieldState'), $addressType),
+            'region'     => $state,
+            'state'      => $state,
         ];
-    }
-
-    /**
-     * @param  null|string $addressType
-     *
-     * @return string
-     */
-    private function getAddressType(?string $addressType): string
-    {
-        return $addressType ?? $this->getDefaultAddressType();
-    }
-
-    /**
-     * @return string
-     */
-    private function getDefaultAddressType(): string
-    {
-        return Pdk::get('wcAddressTypeShipping');
     }
 
     /**
@@ -164,12 +149,33 @@ class WcAddressAdapter
         $hasSeparateAddress = $street || $number || $numberSuffix;
 
         return $hasSeparateAddress && in_array($country, Pdk::get('countriesWithSeparateAddressFields'), true)
-            ? [
-                'fullStreet' => trim("{$street} {$number} {$numberSuffix}"),
-                //                'street'       => $street,
-                //                'number'       => $number,
-                //                'numberSuffix' => $numberSuffix,
-            ]
+            ? ['fullStreet' => trim("$street $number $numberSuffix")]
             : [];
+    }
+
+    /**
+     * @param  \WC_Customer|\WC_Order $class
+     * @param  string                 $addressType
+     *
+     * @return string
+     */
+    private function getState($class, string $addressType): string
+    {
+        $value = $this->getAddressField($class, Pdk::get('fieldState'), $addressType);
+
+        return $value ? Arr::last(explode('-', $value)) : '';
+    }
+
+    /**
+     * @param  WC_Order|WC_Customer $object
+     * @param  null|string          $addressType
+     *
+     * @return string
+     */
+    private function resolveAddressType($object, ?string $addressType): string
+    {
+        return $addressType ?? ($object->has_shipping_address()
+            ? Pdk::get('wcAddressTypeShipping')
+            : Pdk::get('wcAddressTypeBilling'));
     }
 }

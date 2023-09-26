@@ -9,8 +9,9 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Cart;
 use WC_Customer;
+use WC_Order;
 use function MyParcelNL\Pdk\Tests\usesShared;
-use function MyParcelNL\WooCommerce\Tests\createWcOrder;
+use function MyParcelNL\WooCommerce\Tests\wpFactory;
 use function Spatie\Snapshots\assertMatchesSnapshot;
 
 usesShared(new UsesMockWcPdkInstance());
@@ -30,7 +31,7 @@ dataset('addresses', function () {
                 'shipping_first_name' => 'Felicia',
                 'shipping_last_name'  => 'Parcel',
                 'shipping_postcode'   => '2132JE',
-                'shipping_state'      => 'NH',
+                'shipping_state'      => 'NL-NH',
             ],
             'meta'        => [],
         ],
@@ -48,7 +49,7 @@ dataset('addresses', function () {
                 'shipping_first_name' => 'Sirius',
                 'shipping_last_name'  => 'Parcel',
                 'shipping_postcode'   => '2132WT',
-                'shipping_state'      => 'NH',
+                'shipping_state'      => 'NL-NH',
             ],
             'meta'        => [
                 '_shipping_street_name'         => 'Siriusdreef',
@@ -68,7 +69,7 @@ dataset('addresses', function () {
                 'shipping_first_name' => 'Eori',
                 'shipping_last_name'  => 'Parcel',
                 'shipping_postcode'   => '2131 BC',
-                'shipping_state'      => 'NH',
+                'shipping_state'      => 'NL-NH',
             ],
             'meta'        => [
                 '_shipping_vat_number'  => 'NL123456789B01',
@@ -92,6 +93,23 @@ dataset('addresses', function () {
             ],
             'meta'        => [],
         ],
+
+        'german address' => [
+            'addressType' => 'shipping',
+            'address'     => [
+                'shipping_email'      => 'de@myparcel.nl',
+                'shipping_phone'      => '0698765432',
+                'shipping_address_1'  => 'Straßmannstraße 2',
+                'shipping_address_2'  => '',
+                'shipping_city'       => 'Berlin',
+                'shipping_country'    => 'DE',
+                'shipping_first_name' => 'Rolli',
+                'shipping_last_name'  => 'Rita',
+                'shipping_postcode'   => '10249',
+                'shipping_state'      => 'DE-BE',
+            ],
+            'meta'        => [],
+        ],
     ];
 });
 
@@ -99,12 +117,10 @@ it('creates address from WC_Order', function (string $addressType, array $addres
     /** @var WcAddressAdapter $adapter */
     $adapter = Pdk::get(WcAddressAdapter::class);
 
-    $order = createWcOrder(
-        array_merge($address, [
-            'id'   => 1233,
-            'meta' => $meta,
-        ])
-    );
+    $order = wpFactory(WC_Order::class)
+        ->fromScratch()
+        ->with(array_merge($address, ['id' => 1233, 'meta' => $meta]))
+        ->make();
 
     assertMatchesSnapshot($adapter->fromWcOrder($order, $addressType));
 })->with('addresses');
