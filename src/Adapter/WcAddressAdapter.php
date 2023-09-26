@@ -31,7 +31,7 @@ class WcAddressAdapter
      */
     public function fromWcCustomer(WC_Customer $customer, ?string $addressType = null): array
     {
-        return $this->getAddressFields($customer, $this->getAddressType($addressType));
+        return $this->getAddressFields($customer, $this->resolveAddressType($customer, $addressType));
     }
 
     /**
@@ -43,11 +43,7 @@ class WcAddressAdapter
      */
     public function fromWcOrder(WC_Order $order, ?string $addressType = null): array
     {
-        $orderAddressType = $order->has_shipping_address()
-            ? Pdk::get('wcAddressTypeShipping')
-            : Pdk::get('wcAddressTypeBilling');
-
-        $resolvedAddressType = $this->getAddressType($addressType ?? $orderAddressType);
+        $resolvedAddressType = $this->resolveAddressType($order, $addressType);
 
         return array_merge(
             $this->getAddressFields($order, $resolvedAddressType),
@@ -98,24 +94,6 @@ class WcAddressAdapter
             'region'     => $state,
             'state'      => $state,
         ];
-    }
-
-    /**
-     * @param  null|string $addressType
-     *
-     * @return string
-     */
-    private function getAddressType(?string $addressType): string
-    {
-        return $addressType ?? $this->getDefaultAddressType();
-    }
-
-    /**
-     * @return string
-     */
-    private function getDefaultAddressType(): string
-    {
-        return Pdk::get('wcAddressTypeShipping');
     }
 
     /**
@@ -186,5 +164,18 @@ class WcAddressAdapter
         $value = $this->getAddressField($class, Pdk::get('fieldState'), $addressType);
 
         return $value ? Arr::last(explode('-', $value)) : '';
+    }
+
+    /**
+     * @param  WC_Order|WC_Customer $object
+     * @param  null|string          $addressType
+     *
+     * @return string
+     */
+    private function resolveAddressType($object, ?string $addressType): string
+    {
+        return $addressType ?? ($object->has_shipping_address()
+            ? Pdk::get('wcAddressTypeShipping')
+            : Pdk::get('wcAddressTypeBilling'));
     }
 }
