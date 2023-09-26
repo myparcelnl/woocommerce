@@ -39,7 +39,7 @@
     },
     "customs": {
         "id": "customs",
-        "countryOfOrigin": "NL",
+        "countryOfOrigin": null,
         "customsCode": "0",
         "packageContents": "1"
     },
