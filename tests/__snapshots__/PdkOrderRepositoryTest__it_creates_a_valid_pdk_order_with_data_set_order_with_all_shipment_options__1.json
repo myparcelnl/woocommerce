@@ -1,7 +1,7 @@
 {
   "externalIdentifier": "6",
   "deliveryOptions": {
-    "date": "2024-12-31 12:00:00",
+    "date": "2039-12-31 12:00:00",
     "carrier": {
       "externalIdentifier": "dhlforyou",
       "id": 9,
@@ -53,9 +53,9 @@
     "labelAmount": 1,
     "shipmentOptions": {
       "labelDescription": "test",
-      "insurance": 50000,
+      "insurance": 100,
       "ageCheck": 1,
-      "hideSender": -1,
+      "hideSender": 1,
       "largeFormat": 1,
       "onlyRecipient": 1,
       "return": 1,

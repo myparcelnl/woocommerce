@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use MyParcelNL\Pdk\Base\Contract\Arrayable;
+use MyParcelNL\Pdk\Base\Service\CountryCodes;
 use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Tests\Factory\Contract\FactoryInterface;
 use MyParcelNL\WooCommerce\Tests\Factory\AbstractWcDataFactory;
@@ -33,7 +34,6 @@ use function MyParcelNL\WooCommerce\Tests\wpFactory;
  * @method $this withShippingPostcode(string $shippingPostcode)
  * @method $this withShippingState(string $shippingState)
  * @method $this withStatus(string $value)
- * @method $this withMeta(array $meta)
  */
 final class WC_Order_Factory extends AbstractWcDataFactory
 {
@@ -82,6 +82,44 @@ final class WC_Order_Factory extends AbstractWcDataFactory
     public function withShippingAddress2(string $shippingAddress2): self
     {
         return $this->with(['shipping_address_2' => $shippingAddress2]);
+    }
+
+    public function withShippingAddressInBelgium(): self
+    {
+        return $this
+            ->withShippingAddress1('Adriaan Brouwerstraat 16')
+            ->withShippingCity('Antwerpen')
+            ->withShippingCompany('MyParcel BE')
+            ->withShippingCountry('BE')
+            ->withShippingFirstName('Fomo')
+            ->withShippingLastName('Parcel')
+            ->withShippingPostcode('1000');
+    }
+
+    public function withShippingAddressInGermany(): self
+    {
+        return $this
+            ->withShippingAddress1('Straßmannstraße 2')
+            ->withShippingCity('Berlin')
+            ->withShippingCompany('MyParcel DE')
+            ->withShippingCountry(CountryCodes::CC_DE)
+            ->withShippingFirstName('Bier')
+            ->withShippingLastName('Parcel')
+            ->withShippingPostcode('10249')
+            ->withShippingState('DE-BE');
+    }
+
+    public function withShippingAddressInTheUsa(): self
+    {
+        return $this
+            ->withShippingAddress1('123 Fake St')
+            ->withShippingCity('New York')
+            ->withShippingCompany('MyParcel US')
+            ->withShippingCountry(CountryCodes::CC_US)
+            ->withShippingFirstName('Abe')
+            ->withShippingLastName('Lincoln')
+            ->withShippingPostcode('10001')
+            ->withShippingState('NY');
     }
 
     protected function createDefault(): FactoryInterface
