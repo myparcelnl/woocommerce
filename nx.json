@@ -8,14 +8,17 @@
   },
   "namedInputs": {
     "production": [
-      "{projectRoot}/src/**/*.ts",
-      "!{projectRoot}/src/**/*.spec.ts",
-      "!{projectRoot}/src/__tests__/**/*"
+      "{workspaceRoot}/package.json",
+      "{workspaceRoot}/yarn.lock",
+      "{projectRoot}/package.json",
+      "{projectRoot}/views/**/*.ts",
+      "!{projectRoot}/views/**/*.spec.ts",
+      "!{projectRoot}/views/__tests__/**/*"
     ],
     "test": [
       "production",
-      "{projectRoot}/src/**/*.spec.ts",
-      "{projectRoot}/src/__tests__/**/*"
+      "{projectRoot}/views/**/*.spec.ts",
+      "{projectRoot}/views/__tests__/**/*"
     ]
   },
   "targetDefaults": {
@@ -36,20 +39,33 @@
       "inputs": ["test"],
       "dependsOn": ["^build:test"],
       "outputs": ["{projectRoot}/lib"]
+    },
+    "test:coverage": {
+      "inputs": ["test"],
+      "outputs": ["{projectRoot}/coverage"]
+    },
+    "test:run": {
+      "inputs": ["test"]
     }
   },
   "tasksRunnerOptions": {
     "default": {
       "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "build:dev", "build:test"],
+        "cacheableOperations": [
+          "build",
+          "build:dev",
+          "build:test",
+          "test:coverage",
+          "test:run"
+        ],
         "parallel": 10
       }
     },
     "cloud": {
       "runner": "nx-cloud",
       "options": {
-        "cacheableOperations": ["build"],
+        "cacheableOperations": ["build", "test:coverage"],
         "parallel": 10,
         "accessToken": "MGU3Y2FiOWItMzJhNC00M2MwLWIwZmItNGQ0Nzg2N2ZlYjNlfHJlYWQtd3JpdGU="
       }
