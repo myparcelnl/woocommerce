@@ -43,9 +43,12 @@ jobs:
 
       - name: 'Determine version'
         id: version
+        #language=sh
         run: |
-          version="$(npm pkg get version)-${{ github.event.pull_request.number}}.${{ github.event.pull_request.head.sha }}"
-          echo "version=$version" >> $GITHUB_OUTPUT
+          version=$(npm pkg get version | sed 's/"//g') 
+          releaseVersion="$version-${{ github.event.pull_request.number}}.${{ github.event.pull_request.head.sha }}"
+
+          echo "version=$releaseVersion" >> $GITHUB_OUTPUT
 
       - name: 'Create release packages'
         #language=sh
