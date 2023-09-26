@@ -75,4 +75,14 @@ abstract class AbstractWcDataFactory extends AbstractFactory implements WcDataFa
 
         return $this;
     }
+
+    /**
+     * @param  array $meta
+     *
+     * @return $this
+     */
+    public function withMeta(array $meta): self
+    {
+        return $this->with(['meta' => array_replace($this->attributes['meta'] ?? [], $meta)]);
+    }
 }

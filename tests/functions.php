@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Tests;
 
-use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Tests\Factory\WpFactoryFactory;
 use WC_Order;
 use WC_Product;
@@ -17,35 +16,6 @@ use WC_Product;
 function wpFactory(string $class, ...$args)
 {
     return WpFactoryFactory::create($class, ...$args);
-}
-
-function createDeliveryOptionsMeta(array $deliveryOptions = []): array
-{
-    return [
-        'meta' => [
-            Pdk::get('metaKeyOrderData') => [
-                'deliveryOptions' => array_replace_recursive([
-                    'carrier'         => 'dhlforyou',
-                    'deliveryType'    => 'morning',
-                    'date'            => '2024-12-31 12:00:00',
-                    'shipmentOptions' => [
-                        'signature' => true,
-                    ],
-                ], $deliveryOptions),
-            ],
-        ],
-    ];
-}
-
-function createNotesMeta(array $notes = []): array
-{
-    return [
-        'meta' => [
-            Pdk::get('metaKeyOrderData') => [
-                'notes' => $notes,
-            ],
-        ],
-    ];
 }
 
 /** @deprecated use factory directly */

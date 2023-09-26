@@ -12,19 +12,20 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use Psr\Log\LoggerInterface;
 use WC_Order;
+use WC_Order_Factory;
 use function MyParcelNL\Pdk\Tests\usesShared;
-use function MyParcelNL\WooCommerce\Tests\createWcOrder;
+use function MyParcelNL\WooCommerce\Tests\wpFactory;
 use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 
 usesShared(new UsesMockWcPdkInstance());
 
-it('creates a valid pdk order', function (array $input) {
+it('creates a valid pdk order', function (WC_Order_Factory $factory) {
     /** @var \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $orderRepository */
     $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
     /** @var \MyParcelNL\Pdk\Tests\Bootstrap\MockLogger $logger */
     $logger = Pdk::get(LoggerInterface::class);
 
-    $wcOrder  = createWcOrder($input);
+    $wcOrder  = $factory->make();
     $pdkOrder = $orderRepository->get($wcOrder);
 
     expect($logger->getLogs())->toBe([]);
@@ -33,7 +34,9 @@ it('creates a valid pdk order', function (array $input) {
 })->with('orders');
 
 it('gets order via various inputs', function ($input) {
-    createWcOrder(['id' => 123]);
+    wpFactory(WC_Order::class)
+        ->with(['id' => 123])
+        ->make();
 
     /** @var \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $orderRepository */
     $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
@@ -42,10 +45,18 @@ it('gets order via various inputs', function ($input) {
 
     expect($pdkOrder)->toBeInstanceOf(PdkOrder::class);
 })->with([
-    'string id' => ['123'],
-    'int id'    => [123],
-    'wc order'  => [new WC_Order(['id' => 123])],
-    'post'      => [(object) ['ID' => 123]],
+    'string id' => function () {
+        return '123';
+    },
+    'int id'    => function () {
+        return 123;
+    },
+    'wc order'  => function () {
+        return new WC_Order(['id' => 123]);
+    },
+    'post'      => function () {
+        return (object) ['ID' => 123];
+    },
 ]);
 
 it('handles errors', function ($input) {

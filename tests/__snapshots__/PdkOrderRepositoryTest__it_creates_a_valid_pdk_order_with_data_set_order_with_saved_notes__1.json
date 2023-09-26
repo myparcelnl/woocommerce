@@ -220,9 +220,9 @@
       "orderIdentifier": null,
       "apiIdentifier": "12345",
       "author": "webshop",
-      "note": "moo",
-      "createdAt": "2021-01-01 18:03:41",
-      "updatedAt": "2021-01-01 18:03:41"
+      "note": "test note",
+      "createdAt": "2023-01-01 12:00:00",
+      "updatedAt": "2023-01-01 12:00:00"
     }
   ],
   "orderDate": "2021-01-01 18:03:41",
