@@ -25,12 +25,17 @@ it('creates a valid pdk order', function (WC_Order_Factory $factory) {
     /** @var \MyParcelNL\Pdk\Tests\Bootstrap\MockLogger $logger */
     $logger = Pdk::get(LoggerInterface::class);
 
-    $wcOrder  = $factory->make();
+    $wcOrder = $factory->make();
     $pdkOrder = $orderRepository->get($wcOrder);
 
     expect($logger->getLogs())->toBe([]);
 
-    assertMatchesJsonSnapshot(json_encode($pdkOrder->toArrayWithoutNull(), JSON_PRETTY_PRINT));
+    $orderArray = array_replace(
+        $pdkOrder->toArrayWithoutNull(),
+        ['deliveryOptions' => $pdkOrder->deliveryOptions->toStorableArray()]
+    );
+
+    assertMatchesJsonSnapshot(json_encode($orderArray, JSON_PRETTY_PRINT));
 })->with('orders');
 
 it('gets order via various inputs', function ($input) {
