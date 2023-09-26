@@ -2,54 +2,7 @@
   "externalIdentifier": "6",
   "deliveryOptions": {
     "date": "2039-12-31 12:00:00",
-    "carrier": {
-      "externalIdentifier": "dhlforyou",
-      "id": 9,
-      "name": "dhlforyou",
-      "human": "DHL For You",
-      "enabled": false,
-      "isDefault": true,
-      "optional": false,
-      "primary": false,
-      "type": "main",
-      "capabilities": {
-        "deliveryTypes": ["standard", "pickup"],
-        "features": {
-          "labelDescriptionLength": 45
-        },
-        "packageTypes": ["package", "mailbox"],
-        "shipmentOptions": {
-          "ageCheck": true,
-          "largeFormat": false,
-          "onlyRecipient": true,
-          "return": true,
-          "sameDayDelivery": true,
-          "signature": true,
-          "saturdayDelivery": true,
-          "hideSender": true,
-          "insurance": [
-            0, 50000, 100000, 150000, 200000, 250000, 300000, 350000, 400000,
-            450000, 500000
-          ]
-        }
-      },
-      "returnCapabilities": {
-        "deliveryTypes": ["standard"],
-        "features": {
-          "labelDescriptionLength": 45
-        },
-        "packageTypes": ["package"],
-        "shipmentOptions": {
-          "signature": true,
-          "insurance": [0],
-          "return": true,
-          "ageCheck": true,
-          "onlyRecipient": true,
-          "sameDayDelivery": true,
-          "largeFormat": true
-        }
-      }
-    },
+    "carrier": "dhlforyou",
     "labelAmount": 1,
     "shipmentOptions": {
       "insurance": -1,
