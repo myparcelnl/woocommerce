@@ -9,9 +9,18 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: 'Cache coverage'
+        uses: actions/cache@v3
+        id: coverage-cache
+        with:
+          path: views/**/coverage
+          key: coverage-${{ hashFiles('**/package.json', '**/yarn.lock', 'views/**/*') }}
+
       - uses: ./.github/actions/setup
+        if: steps.coverage-cache.outputs.cache-hit != 'true'
 
       - name: 'Run frontend tests'
+        if: steps.coverage-cache.outputs.cache-hit != 'true'
         shell: bash
         #language=sh
         run: |
@@ -22,6 +31,7 @@ jobs:
             --target=test:coverage
 
       - name: 'Move coverage files'
+        if: steps.coverage-cache.outputs.cache-hit != 'true'
         shell: bash
         #language=sh
         run: |
