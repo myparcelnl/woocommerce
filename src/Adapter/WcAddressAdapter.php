@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Adapter;
 
+use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Facade\Pdk;
 use WC_Cart;
 use WC_Customer;
@@ -80,6 +81,8 @@ class WcAddressAdapter
      */
     private function getAddressFields($class, string $addressType): array
     {
+        $state = $this->getState($class, $addressType);
+
         return [
             'email' => $class->get_billing_email(),
             'phone' => $class->get_billing_phone(),
@@ -92,8 +95,8 @@ class WcAddressAdapter
             'city'       => $this->getAddressField($class, Pdk::get('fieldCity'), $addressType),
             'company'    => $this->getAddressField($class, Pdk::get('fieldCompany'), $addressType),
             'postalCode' => $this->getAddressField($class, Pdk::get('fieldPostalCode'), $addressType),
-            'region'     => $this->getAddressField($class, Pdk::get('fieldRegion'), $addressType),
-            'state'      => $this->getAddressField($class, Pdk::get('fieldState'), $addressType),
+            'region'     => $state,
+            'state'      => $state,
         ];
     }
 
@@ -168,12 +171,20 @@ class WcAddressAdapter
         $hasSeparateAddress = $street || $number || $numberSuffix;
 
         return $hasSeparateAddress && in_array($country, Pdk::get('countriesWithSeparateAddressFields'), true)
-            ? [
-                'fullStreet' => trim("{$street} {$number} {$numberSuffix}"),
-                //                'street'       => $street,
-                //                'number'       => $number,
-                //                'numberSuffix' => $numberSuffix,
-            ]
+            ? ['fullStreet' => trim("$street $number $numberSuffix")]
             : [];
+    }
+
+    /**
+     * @param  \WC_Customer|\WC_Order $class
+     * @param  string                 $addressType
+     *
+     * @return string
+     */
+    private function getState($class, string $addressType): string
+    {
+        $value = $this->getAddressField($class, Pdk::get('fieldState'), $addressType);
+
+        return $value ? Arr::last(explode('-', $value)) : '';
     }
 }
