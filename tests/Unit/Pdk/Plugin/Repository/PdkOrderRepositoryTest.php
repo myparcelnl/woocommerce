@@ -67,12 +67,11 @@ it('handles errors', function ($input) {
 })
     ->throws(InvalidArgumentException::class)
     ->with([
-            'unrecognized object input' => function () {
-                return (object) ['foo' => 'bar'];
-            },
+        'unrecognized object input' => function () {
+            return (object) ['foo' => 'bar'];
+        },
 
-            'array' => function () {
-                return ['id' => 1];
-            },
-        ]
-    );
+        'array' => function () {
+            return ['id' => 1];
+        },
+    ]);
