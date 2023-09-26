@@ -23,7 +23,7 @@
     "analyse:generate": "yarn docker composer analyse:generate",
     "analyze": "yarn docker composer analyze",
     "analyze:generate": "yarn docker composer analyze:generate",
-    "build": "yarn build:js && pdk-builder build",
+    "build": "yarn build:js",
     "build:js": "nx run-many --output-style=stream --target=build --runner=cloud",
     "build:js:dev": "nx run-many --output-style=stream --target=build:dev",
     "build:js:dev:backend": "yarn build:js:dev --projects='backend-*'",
