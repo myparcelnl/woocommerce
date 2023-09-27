@@ -4,7 +4,6 @@
       "exported": false,
       "deliveryOptions": {
         "carrier": "postnl",
-        "date": "",
         "deliveryType": "pickup",
         "labelAmount": 1,
         "packageType": "package",

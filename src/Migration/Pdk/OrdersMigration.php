@@ -183,7 +183,7 @@ final class OrdersMigration extends AbstractPdkMigration
 
         return Utils::filterNull([
             'carrier'         => $deliveryOptions['carrier'] ?? null,
-            'date'            => $deliveryOptions['date'] ?? null,
+            'date'            => $deliveryOptions['date'] ?: null,
             'deliveryType'    => $deliveryOptions['deliveryType'] ?? null,
             'labelAmount'     => $extraOptions['collo_amount'] ?? null,
             'packageType'     => $deliveryOptions['packageType'] ?? null,
