@@ -9,16 +9,19 @@
   "namedInputs": {
     "production": [
       "{workspaceRoot}/package.json",
+      "{workspaceRoot}/tsconfig.base.json",
       "{workspaceRoot}/yarn.lock",
+      "{projectRoot}/*.config.*",
       "{projectRoot}/package.json",
-      "{projectRoot}/views/**/*.ts",
-      "!{projectRoot}/views/**/*.spec.ts",
-      "!{projectRoot}/views/__tests__/**/*"
+      "{projectRoot}/src/**/*",
+      "{projectRoot}/tsconfig.build.json",
+      "!{projectRoot}/**/*.spec.ts",
+      "!{projectRoot}/**/__tests__/**/*"
     ],
     "test": [
       "production",
-      "{projectRoot}/views/**/*.spec.ts",
-      "{projectRoot}/views/__tests__/**/*"
+      "{projectRoot}/**/*.spec.ts",
+      "{projectRoot}/**/__tests__/**/*"
     ]
   },
   "targetDefaults": {
