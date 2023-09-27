@@ -65,17 +65,17 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     public function __construct(
         StorageInterface              $storage,
         PdkProductRepositoryInterface $pdkProductRepository,
+        WeightServiceInterface        $weightService,
         WcOrderRepositoryInterface    $wcOrderRepository,
         CountryService                $countryService,
-        WcAddressAdapter              $addressAdapter,
-        WeightServiceInterface        $weightService
+        WcAddressAdapter              $addressAdapter
     ) {
         parent::__construct($storage);
         $this->pdkProductRepository = $pdkProductRepository;
+        $this->weightService        = $weightService;
         $this->wcOrderRepository    = $wcOrderRepository;
         $this->countryService       = $countryService;
         $this->addressAdapter       = $addressAdapter;
-        $this->weightService        = $weightService;
     }
 
     /**
@@ -245,10 +245,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                 return $acc;
             }, 0);
 
-        return $this->weightService->convertToGrams(
-            $itemsWeight,
-            get_option('woocommerce_weight_unit', Pdk::get('defaultWeightUnit'))
-        );
+        return $this->weightService->convertToGrams($itemsWeight);
     }
 
     /**
