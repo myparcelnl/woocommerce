@@ -245,7 +245,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                 return $acc;
             }, 0);
 
-        return $this->weightService->convertToGrams($itemsWeight);
+        return $this->weightService->convertToGrams($itemsWeight, '');
     }
 
     /**
