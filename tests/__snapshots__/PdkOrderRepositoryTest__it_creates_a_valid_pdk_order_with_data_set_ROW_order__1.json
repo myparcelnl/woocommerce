@@ -49,7 +49,7 @@
     "items": [
       {
         "amount": 2,
-        "classification": null,
+        "classification": "",
         "country": "NL",
         "description": "Test product",
         "itemValue": {
@@ -60,7 +60,7 @@
       },
       {
         "amount": 2,
-        "classification": null,
+        "classification": "",
         "country": "NL",
         "description": "Test digital product",
         "itemValue": {
