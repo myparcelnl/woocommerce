@@ -1,0 +1,23 @@
+name: 'Create release artifacts'
+description: 'Requires package to have been built'
+
+inputs:
+  version:
+    description: 'Version to release'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: 'Create release packages'
+      shell: bash
+      #language=sh
+      run: |
+        yarn pdk-builder release --version ${{ inputs.version }} -vvv
+
+    - name: 'Upload build artifacts'
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-${{ inputs.version }}
+        path: |
+          dist/*.zip

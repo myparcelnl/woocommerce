@@ -1,9 +1,38 @@
 name: 'Create build'
 description: ''
 
+inputs:
+  app-id:
+    description: 'GitHub App ID'
+    required: true
+
+  private-key:
+    description: 'GitHub App Private Key'
+    required: true
+
+outputs:
+  token:
+    description: 'GitHub Token'
+    value: ${{ steps.credentials.outputs.token }}
+
 runs:
   using: composite
   steps:
+    - uses: myparcelnl/actions/setup-git-credentials@v3
+      id: credentials
+      with:
+        app-id: ${{ inputs.app-id }}
+        private-key: ${{ inputs.private-key }}
+
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        token: ${{ steps.credentials.outputs.token }}
+
+    - uses: ./.github/actions/setup
+      with:
+        composer-flags: --no-dev
+
     - name: 'Build frontend'
       shell: bash
       #language=sh

@@ -25,21 +25,15 @@ jobs:
       - test
       - analyse
     steps:
-      - uses: myparcelnl/actions/setup-git-credentials@v3
-        id: credentials
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/build
+        id: build
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
-
-      - uses: actions/checkout@v3
-        with:
-          token: ${{ steps.credentials.outputs.token }}
-
-      - uses: ./.github/actions/setup
-        with:
-          composer-flags: --no-dev
-
-      - uses: ./.github/actions/build
 
       - name: 'Determine version'
         id: version
@@ -50,14 +44,7 @@ jobs:
 
           echo "version=$releaseVersion" >> $GITHUB_OUTPUT
 
-      - name: 'Create release packages'
-        #language=sh
-        run: |
-          yarn pdk-builder release --version ${{ steps.version.outputs.version }} -vvv
-
-      - name: 'Upload build artifacts'
-        uses: actions/upload-artifact@v3
+      - uses: ./.github/actions/release
+        id: release
         with:
-          name: release-${{ steps.version.outputs.version }}
-          path: |
-            dist/*.zip
+          version: ${{ steps.version.outputs.version }}

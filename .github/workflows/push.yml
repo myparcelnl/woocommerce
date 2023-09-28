@@ -19,9 +19,37 @@ jobs:
     uses: ./.github/workflows/analyse.yml
     secrets: inherit
 
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/build
+        id: build
+        with:
+          app-id: ${{ secrets.MYPARCEL_APP_ID }}
+          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
+
+      - name: 'Determine version'
+        id: version
+        #language=sh
+        run: |
+          version=$(npm pkg get version | sed 's/"//g')
+          releaseVersion="$version-${{ github.sha }}"
+
+          echo "version=$releaseVersion" >> $GITHUB_OUTPUT
+
+      - uses: ./.github/actions/release
+        id: release
+        with:
+          version: ${{ steps.version.outputs.version }}
+
   rebase-prs:
     needs:
       - test
       - analyse
+      - build
     uses: ./.github/workflows/rebase-prs.yml
     secrets: inherit

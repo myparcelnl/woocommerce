@@ -30,27 +30,20 @@ jobs:
       released: ${{ steps.release.outputs.released }}
       version: ${{ steps.release.outputs.version }}
     steps:
-      - uses: myparcelnl/actions/setup-git-credentials@v3
-        id: credentials
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/build
+        id: build
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
 
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          token: ${{ steps.credentials.outputs.token }}
-
-      - uses: ./.github/actions/setup
-        with:
-          composer-flags: --no-dev
-
-      - uses: ./.github/actions/build
-
       - uses: myparcelnl/actions/semantic-release@v3
         id: release
         with:
-          token: ${{ steps.credentials.outputs.token }}
+          token: ${{ steps.build.outputs.token }}
           write-summary: true
 
   rebase-develop:
