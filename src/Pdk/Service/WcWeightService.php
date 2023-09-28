@@ -10,7 +10,7 @@ use MyParcelNL\Pdk\Facade\Pdk;
 class WcWeightService extends WeightService
 {
     /**
-     * @param  int|float $weight
+     * @param  int|float   $weight
      * @param  null|string $unit
      *
      * @return int
