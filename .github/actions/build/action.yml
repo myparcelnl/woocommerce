@@ -4,7 +4,7 @@ description: ''
 runs:
   using: composite
   steps:
-    - name: 'Build JavaScript bundles'
+    - name: 'Build frontend'
       shell: bash
       #language=sh
       run: |
