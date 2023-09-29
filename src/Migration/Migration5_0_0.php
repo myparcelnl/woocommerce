@@ -13,6 +13,7 @@ use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
 use MyParcelNL\WooCommerce\Migration\Pdk\ProductSettingsMigration;
 use MyParcelNL\WooCommerce\Migration\Pdk\SettingsMigration;
 use Symfony\Component\HttpFoundation\Request;
+use Throwable;
 
 /**
  * The PDK upgrade.
@@ -74,6 +75,13 @@ final class Migration5_0_0 extends AbstractPdkMigration
             ])
         );
 
-        Actions::execute($request);
+        try {
+            Actions::execute($request);
+        } catch (Throwable $e) {
+            $this->warning(
+                'Migration 5.0.0 (PDK) error',
+                ['action' => PdkBackendActions::UPDATE_ACCOUNT, 'exception' => $e->getMessage()]
+            );
+        }
     }
 }
