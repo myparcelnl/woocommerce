@@ -1,11 +1,6 @@
 name: '🚀 Release'
 
 on:
-  push:
-    branches:
-      - main
-      - develop
-
   workflow_dispatch:
 
 concurrency:
