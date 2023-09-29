@@ -12,7 +12,7 @@ export default createViteConfig({
       formats: ['iife'],
     },
     rollupOptions: {
-      external: ['vue', 'vue-demi'],
+      external: ['vue', 'vue-demi', 'vitest'],
       output: {
         globals: {
           vue: 'Vue',
