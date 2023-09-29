@@ -13,15 +13,11 @@ use MyParcelNL\Pdk\Tests\Bootstrap\MockApi;
 use MyParcelNL\WooCommerce\Migration\Migration5_0_0;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
-use function MyParcelNL\Pdk\Tests\factory;
 use function MyParcelNL\Pdk\Tests\usesShared;
 
 usesShared(new UsesMockWcPdkInstance());
 
 it('runs up migrations', function () {
-    factory(AccountSettings::class)
-        ->withApiKey('zomerhoed')
-        ->make();
     WordPressOptions::updateOption('woocommerce_myparcel_general_settings', ['api_key' => 'zomerhoed']);
 
     $migration5 = Pdk::get(Migration5_0_0::class);
@@ -31,9 +27,6 @@ it('runs up migrations', function () {
 });
 
 it('completes even when api returns error', function () {
-    factory(AccountSettings::class)
-        ->withApiKey('winterpeen')
-        ->make();
     WordPressOptions::updateOption('woocommerce_myparcel_general_settings', ['api_key' => 'winterpeen']);
     MockApi::enqueue(new Response(403, [], '[\'request_id\' => \'1\', \'errors\' => []]'));
 
