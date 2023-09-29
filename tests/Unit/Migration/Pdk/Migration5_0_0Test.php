@@ -8,27 +8,20 @@ use GuzzleHttp\Psr7\Response;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
-use MyParcelNL\Pdk\Settings\Contract\SettingsRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\AccountSettings;
 use MyParcelNL\Pdk\Tests\Bootstrap\MockApi;
-use MyParcelNL\Pdk\Tests\Bootstrap\MockSettingsRepository;
 use MyParcelNL\WooCommerce\Migration\Migration5_0_0;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
-use function DI\autowire;
+use function MyParcelNL\Pdk\Tests\factory;
 use function MyParcelNL\Pdk\Tests\usesShared;
 
-usesShared(
-    new UsesMockWcPdkInstance([
-        SettingsRepositoryInterface::class => autowire(MockSettingsRepository::class)->constructor([
-            AccountSettings::ID => [
-                AccountSettings::API_KEY => 'winterpeen',
-            ],
-        ]),
-    ])
-);
+usesShared(new UsesMockWcPdkInstance());
 
 it('runs up migrations', function () {
+    factory(AccountSettings::class)
+        ->withApiKey('winterpeen')
+        ->make();
     WordPressOptions::updateOption('woocommerce_myparcel_general_settings', ['api_key' => 'winterpeen']);
 
     $migration5 = Pdk::get(Migration5_0_0::class);
@@ -38,6 +31,9 @@ it('runs up migrations', function () {
 });
 
 it('completes even when api returns error', function () {
+    factory(AccountSettings::class)
+        ->withApiKey('winterpeen')
+        ->make();
     WordPressOptions::updateOption('woocommerce_myparcel_general_settings', ['api_key' => 'winterpeen']);
     MockApi::enqueue(new Response(403, [], '[\'request_id\' => \'1\', \'errors\' => []]'));
 
