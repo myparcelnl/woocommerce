@@ -20,6 +20,7 @@ module.exports = {
     {name: 'main'},
     {name: 'develop', prerelease: 'rc', channel: 'rc'},
     {name: 'alpha', prerelease: 'alpha', channel: 'alpha'},
+    {name: 'beta', prerelease: 'beta', channel: 'beta'},
   ],
   plugins: [
     addCommitAnalyzerPlugin(),
