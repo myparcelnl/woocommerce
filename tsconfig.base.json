@@ -7,5 +7,5 @@
     "preserveValueImports": false,
     "types": ["node", "vite/client"]
   },
-  "exclude": ["../**/__tests__/*", "../**/*.spec.*"]
+  "exclude": ["**/__tests__/*", "**/*.spec.*"]
 }

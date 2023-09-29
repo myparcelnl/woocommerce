@@ -6,6 +6,6 @@
       "@myparcel-woocommerce/backend-*": ["./views/backend/*/src"]
     }
   },
-  "include": ["./**/*"],
+  "include": ["**/*"],
   "exclude": []
 }
