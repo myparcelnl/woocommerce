@@ -20,14 +20,14 @@ usesShared(new UsesMockWcPdkInstance());
 
 it('runs up migrations', function () {
     factory(AccountSettings::class)
-        ->withApiKey('winterpeen')
+        ->withApiKey('zomerhoed')
         ->make();
-    WordPressOptions::updateOption('woocommerce_myparcel_general_settings', ['api_key' => 'winterpeen']);
+    WordPressOptions::updateOption('woocommerce_myparcel_general_settings', ['api_key' => 'zomerhoed']);
 
     $migration5 = Pdk::get(Migration5_0_0::class);
     $migration5->up();
 
-    expect(Settings::get(AccountSettings::API_KEY, AccountSettings::ID))->toBe('winterpeen');
+    expect(Settings::get(AccountSettings::API_KEY, AccountSettings::ID))->toBe('zomerhoed');
 });
 
 it('completes even when api returns error', function () {
