@@ -49,6 +49,7 @@ jobs:
           version: ${{ steps.version.outputs.version }}
 
   rebase-prs:
+    if: github.event_name == 'push'
     needs:
       - test
       - analyse
