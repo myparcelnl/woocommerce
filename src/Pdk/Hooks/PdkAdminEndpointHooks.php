@@ -36,6 +36,14 @@ final class PdkAdminEndpointHooks extends AbstractPdkEndpointHooks
             'methods'             => WP_REST_Server::ALLMETHODS,
             'callback'            => [$this, 'processBackendRequest'],
             'permission_callback' => function () {
+                if (! is_user_logged_in()) {
+                    return false;
+                }
+                
+                if ('shop_manager' === (wp_get_current_user()->roles[0] ?? '')) {
+                    return true;
+                }
+
                 return current_user_can('manage_options');
             },
         ]);
