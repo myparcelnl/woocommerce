@@ -180,7 +180,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         $isRow = $this->countryService->isRow($shippingAddress['cc'] ?? Platform::get('localCountry'));
 
         $orderData = [
-            'externalIdentifier'    => $order->get_id(),
+            'externalIdentifier'    => $order->get_order_number(),
             'billingAddress'        => $this->addressAdapter->fromWcOrder($order, Pdk::get('wcAddressTypeBilling')),
             'customsDeclaration'    => $isRow
                 ? $this->createCustomsDeclaration($order, $items)
