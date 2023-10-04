@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
-use MyParcelNL\Pdk\App\Webhook\PdkWebhook;
+use MyParcelNL\Pdk\App\Webhook\PdkWebhookManager;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Hooks\Concern\UsesPdkRequestConverter;
@@ -29,12 +29,13 @@ final class PdkWebhookHooks implements WordPressHooksInterface
     {
         Logger::info('Webhook received', ['request' => $request->get_params()]);
 
-        /** @var PdkWebhook $webhooks */
-        $webhooks = Pdk::get(PdkWebhook::class);
+        /** @var \MyParcelNL\Pdk\App\Webhook\PdkWebhookManager $webhooks */
+        $webhooks = Pdk::get(PdkWebhookManager::class);
         $webhooks->call($this->convertRequest($request));
 
         $response = new WP_REST_Response();
         $response->set_status(202);
+
         return $response;
     }
 
