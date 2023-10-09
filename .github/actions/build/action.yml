@@ -55,7 +55,15 @@ runs:
       with:
         composer-flags: --no-dev
 
+    - name: 'Cache compiled php'
+      uses: actions/cache@v3
+      id: compiled-php-cache
+      with:
+        path: .cache/build
+        key: compiled-php-${{ hashFiles('**/composer.lock', 'src/**/*', 'config/**/*', '*.php') }}
+
     - name: 'Compile php'
+      if: steps.compiled-php-cache.outputs.cache-hit != 'true'
       shell: bash
       # language=sh
       run: |
