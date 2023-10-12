@@ -4,6 +4,7 @@ import {type AddressFields} from '@myparcel-pdk/checkout';
 
 const addressBase = {
   address1: `address_1`,
+  address2: `address_2`,
   city: `city`,
   country: `country`,
   eoriNumber: `eori_number`,
