@@ -77,22 +77,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/src/Pdk/Hooks/PdkFrontendEndpointHooks.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to method call\\(\\) on an unknown class MyParcelNL\\\\Pdk\\\\App\\\\Webhook\\\\PdkWebhook\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/src/Pdk/Hooks/PdkWebhookHooks.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class MyParcelNL\\\\Pdk\\\\App\\\\Webhook\\\\PdkWebhook not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/src/Pdk/Hooks/PdkWebhookHooks.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^PHPDoc tag @return with type void is incompatible with native type WP_REST_Response\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/src/Pdk/Hooks/PdkWebhookHooks.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @var for variable \\$webhooks contains unknown class MyParcelNL\\\\Pdk\\\\App\\\\Webhook\\\\PdkWebhook\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/src/Pdk/Hooks/PdkWebhookHooks.php',
 ];
