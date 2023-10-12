@@ -15,7 +15,6 @@ final class AutomaticOrderExportHooks implements WordPressHooksInterface
     public function apply(): void
     {
         add_action('woocommerce_payment_complete', [$this, 'automaticExportOrder'], 1000);
-        add_action('woocommerce_order_status_changed', [$this, 'automaticExportOrder'], 1000, 3);
     }
 
     /**
