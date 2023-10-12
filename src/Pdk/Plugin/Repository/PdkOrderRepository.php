@@ -181,6 +181,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
 
         $orderData = [
             'externalIdentifier'    => $order->get_id(),
+            'referenceIdentifier'   => $order->get_order_number(),
             'billingAddress'        => $this->addressAdapter->fromWcOrder($order, Pdk::get('wcAddressTypeBilling')),
             'customsDeclaration'    => $isRow
                 ? $this->createCustomsDeclaration($order, $items)
