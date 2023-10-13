@@ -1,6 +1,11 @@
 <component name="InspectionProjectProfileManager">
   <profile version="1.0">
     <option name="myName" value="Project Default" />
+    <inspection_tool class="BadExceptionsProcessingInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="ClassOverridesFieldOfSuperClassInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="ComparisonOperandsOrderInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="EfferentObjectCouplingInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="EmptyClassInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="Eslint" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ForgottenDebugOutputInspection" enabled="true" level="ERROR" enabled_by_default="true">
       <option name="configuration">
@@ -84,10 +89,33 @@
       </option>
       <option name="myCustomValuesEnabled" value="true" />
     </inspection_tool>
-    <inspection_tool class="PhpClassConstantAccessedViaChildClassInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="InvertedIfElseConstructsInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="IsNullFunctionUsageInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="LongInheritanceChainInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpAccessStaticViaInstanceInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpComposerExtensionStubsInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="PhpCompoundNamespaceDepthInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpLongTypeFormInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpMethodOrClassCallIsNotCaseSensitiveInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpMissingStrictTypesDeclarationInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpMissingVisibilityInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpModifierOrderInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpMultipleClassDeclarationsInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="PhpNewClassMissingParameterListInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpNonCanonicalElementsOrderInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpOverridingMethodVisibilityInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpSeparateElseIfInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpStanGlobal" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpStaticAsDynamicMethodCallInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpTooManyParametersInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpTraditionalSyntaxArrayLiteralInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpTraitsUseListInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpUnnecessaryDoubleQuotesInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpUnnecessaryParenthesesInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" editorAttributes="INFO_ATTRIBUTES" />
+    <inspection_tool class="PhpUsageOfSilenceOperatorInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpVarUsageInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpVariableVariableInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PropertyCanBeStaticInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="SecurityAdvisoriesInspection" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="optionConfiguration">
         <list>
@@ -143,7 +171,7 @@
         </list>
       </option>
     </inspection_tool>
+    <inspection_tool class="UnNecessaryDoubleQuotesInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="UnknownInspectionInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
-    <inspection_tool class="WebpackConfigHighlighting" enabled="false" level="WARNING" enabled_by_default="false" />
   </profile>
 </component>

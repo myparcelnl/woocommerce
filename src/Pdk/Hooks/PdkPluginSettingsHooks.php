@@ -28,9 +28,9 @@ class PdkPluginSettingsHooks implements WordPressHooksInterface
     /**
      * @param  bool $isConnected
      *
-     * @return true
+     * @return bool
      */
-    public function connectPageToWooCommerce(bool $isConnected):bool
+    public function connectPageToWooCommerce(bool $isConnected): bool
     {
         $page = $_GET['page'];
 
