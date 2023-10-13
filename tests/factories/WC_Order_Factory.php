@@ -157,8 +157,8 @@ final class WC_Order_Factory extends AbstractWcDataFactory
                     ->withProduct(
                         wpFactory(WC_Product::class)
                             ->withId(3214)
-                            ->withPrice(500)
-                            ->withWeight(1000)
+                            ->withPrice(14.99) // euro
+                            ->withWeight(0.25) // kilograms
                             ->withLength(100)
                             ->withWidth(80)
                             ->withHeight(50)
