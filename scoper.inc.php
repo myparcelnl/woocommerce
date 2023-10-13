@@ -6,8 +6,8 @@ use Isolated\Symfony\Component\Finder\Finder;
 
 // For more see: https://github.com/humbug/php-scoper/blob/master/docs/configuration.md
 return [
-    'prefix'             => 'MyParcelNL',
-    'finders'            => [
+    'prefix'  => 'MyParcelNL',
+    'finders' => [
         Finder::create()
             ->append([
                 'woocommerce-myparcel.php',
@@ -29,6 +29,11 @@ return [
             ->in('vendor'),
     ],
 
-    // Exclude global namespace
-    'exclude-namespaces' => ['/^$/', 'WP', 'Automattic'],
+    'exclude-namespaces' => [
+        // Exclude global namespace
+        '/^$/',
+        'WP',
+        'Automattic',
+        'MyParcelNL',
+    ],
 ];

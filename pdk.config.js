@@ -11,17 +11,17 @@ export default {
   platforms: ['myparcelnl', 'myparcelbe'],
   source: [
     '!**/node_modules/**',
-    '.cache/build/vendor/**/*',
-    'views/**/lib/**/*',
+    '.cache/build/composer.json',
     '.cache/build/config/**/*',
     '.cache/build/src/**/*',
+    '.cache/build/vendor/**/*',
+    '.cache/build/woocommerce-myparcel.php',
+    'views/**/lib/**/*',
     'CONTRIBUTING.md',
     'LICENSE.txt',
     'README.md',
-    '.cache/build/composer.json',
     'readme.txt',
     'wpm-config.json',
-    '.cache/build/woocommerce-myparcel.php',
   ],
 
   platformFolderName(platform) {
@@ -37,9 +37,9 @@ export default {
   },
 
   versionSource: [
-    { path: 'package.json' },
-    { path: 'composer.json' },
-    { path: 'woocommerce-myparcel.php', regex: /Version:\s*(.+)/ },
+    {path: 'package.json'},
+    {path: 'composer.json'},
+    {path: 'woocommerce-myparcel.php', regex: /Version:\s*(.+)/},
     // TODO: Uncomment when this version is stable.
     // {path: 'readme.txt', regex: /Stable tag:\s*(.+)/},
   ],
@@ -53,16 +53,16 @@ export default {
 
   hooks: {
     async afterCopy(args) {
-      const { config, env, debug } = args.context;
+      const {config, env, debug} = args.context;
 
       debug('Copying scoped build files to root');
 
       await executePromises(
         args,
         config.platforms.map(async(platform) => {
-          const platformDistPath = getPlatformDistPath({ config, env, platform });
+          const platformDistPath = getPlatformDistPath({config, env, platform});
 
-          const files = glob.sync('.cache/build/**/*', { cwd: platformDistPath });
+          const files = glob.sync('.cache/build/**/*', {cwd: platformDistPath});
 
           await Promise.all(
             files.map(async(file) => {
@@ -70,12 +70,13 @@ export default {
               const newPath = oldPath.replace('.cache/build/', '');
 
               if (!args.dryRun) {
-                await fs.promises.mkdir(path.dirname(newPath), { recursive: true });
+                await fs.promises.mkdir(path.dirname(newPath), {recursive: true});
                 await fs.promises.rename(oldPath, newPath);
               }
             }),
           );
 
+          await fs.promises.rm(`${platformDistPath}/.cache`, {recursive: true});
         }));
 
       debug('Copied scoped build files to root.');
