@@ -21,7 +21,7 @@ return [
         Finder::create()
             ->files()
             ->ignoreVCS(true)
-            ->notName('/LICENSE|.*\\.md|.*\\.dist|Makefile|composer\\.json|composer\\.lock/')
+            ->notName('/LICENSE|.*\\.md|.*\\.dist|Makefile|composer\\.lock/')
             ->exclude(
                 [
                     'test',
