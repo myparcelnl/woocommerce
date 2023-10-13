@@ -10,6 +10,10 @@ inputs:
     description: 'GitHub App Private Key'
     required: true
 
+  php-scoper-version:
+    description: 'PHP Scoper Version'
+    required: true
+
 outputs:
   token:
     description: 'GitHub Token'
@@ -29,9 +33,43 @@ runs:
         fetch-depth: 0
         token: ${{ steps.credentials.outputs.token }}
 
+    - name: 'Cache php-scoper'
+      uses: actions/cache@v3
+      id: php-scoper-cache
+      with:
+        path: .cache/php-scoper
+        key: php-scoper-${{ inputs.php-scoper-version }}
+        restore-keys: php-scoper-
+
+    - name: 'Install php-scoper'
+      shell: bash
+      # language=sh
+      run: |
+        mkdir -p .cache/php-scoper
+        mkdir -p .cache/build
+        composer require --no-interaction --no-progress --no-suggest --no-scripts --no-plugins \
+          --working-dir=.cache/php-scoper \
+          "humbug/php-scoper:${{ inputs.php-scoper-version }}"
+
     - uses: ./.github/actions/setup
       with:
         composer-flags: --no-dev
+
+    - name: 'Cache compiled php'
+      uses: actions/cache@v3
+      id: compiled-php-cache
+      with:
+        path: .cache/build
+        key: compiled-php-${{ hashFiles('**/composer.lock', 'src/**/*', 'config/**/*', '*.php') }}
+
+    - name: 'Compile php'
+      if: steps.compiled-php-cache.outputs.cache-hit != 'true'
+      shell: bash
+      # language=sh
+      run: |
+        php -d memory_limit=-1 ./.cache/php-scoper/vendor/bin/php-scoper add-prefix --output-dir=.cache/build --force --no-ansi --no-interaction
+
+        composer dump-autoload --working-dir .cache/build --classmap-authoritative
 
     - name: 'Build frontend'
       shell: bash
