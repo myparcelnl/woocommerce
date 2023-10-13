@@ -177,6 +177,7 @@
       <path value="$PROJECT_DIR$/.cache/build/vendor/justinrainbow/json-schema" />
       <path value="$PROJECT_DIR$/.cache/build/vendor/symfony/polyfill-php80" />
       <path value="$PROJECT_DIR$/.cache/build/vendor/myparcelnl/pdk" />
+      <path value="$PROJECT_DIR$/vendor/guzzle/parser" />
     </include_path>
   </component>
   <component name="PhpInterpreters">
