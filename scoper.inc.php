@@ -9,10 +9,12 @@ return [
     'prefix'  => 'MyParcelNL',
     'finders' => [
         Finder::create()
-            ->append([
-                'woocommerce-myparcel.php',
-                'composer.json',
-            ]),
+            ->append(
+                [
+                    'woocommerce-myparcel.php',
+                    'composer.json',
+                ]
+            ),
         Finder::create()
             ->files()
             ->in(['src', 'config']),
@@ -20,12 +22,14 @@ return [
             ->files()
             ->ignoreVCS(true)
             ->notName('/LICENSE|.*\\.md|.*\\.dist|Makefile|composer\\.json|composer\\.lock/')
-            ->exclude([
-                'test',
-                'tests',
-                'Tests',
-                'vendor-bin',
-            ])
+            ->exclude(
+                [
+                    'test',
+                    'tests',
+                    'Tests',
+                    'vendor-bin',
+                ]
+            )
             ->in('vendor'),
     ],
 
