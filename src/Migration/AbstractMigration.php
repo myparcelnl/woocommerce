@@ -61,7 +61,7 @@ abstract class AbstractMigration implements MigrationInterface
             return;
         }
 
-        update_post_meta($object->get_id(), $migratedKey, array_merge($executedMigrations, [$this->getVersion()]));
+        $object->update_meta_data($migratedKey, array_merge($executedMigrations, [$this->getVersion()]));
     }
 
     /**
