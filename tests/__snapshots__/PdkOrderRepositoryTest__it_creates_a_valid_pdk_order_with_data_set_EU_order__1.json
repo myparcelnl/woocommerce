@@ -44,7 +44,9 @@
   },
   "shipments": [],
   "physicalProperties": {
-    "weight": 2000000
+    "initialWeight": 2000000,
+    "manualWeight": -1,
+    "totalWeight": 2000000
   },
   "lines": [
     {

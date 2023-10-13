@@ -26,7 +26,6 @@
     "_myparcelnl_migrated": ["5.0.0-alpha.1"]
   },
   "pdkOrder": {
-    "apiIdentifier": null,
     "exported": false,
     "deliveryOptions": {
       "date": "2077-10-23 00:00:00",

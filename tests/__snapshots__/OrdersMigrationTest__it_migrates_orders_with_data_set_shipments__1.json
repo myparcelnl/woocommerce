@@ -85,7 +85,6 @@
     "_myparcelnl_migrated": ["5.0.0-alpha.1"]
   },
   "pdkOrder": {
-    "apiIdentifier": null,
     "exported": false,
     "deliveryOptions": {
       "carrier": "postnl",
@@ -167,7 +166,9 @@
       "isReturn": false,
       "partnerTrackTraces": [],
       "physicalProperties": {
-        "weight": 330
+        "initialWeight": 0,
+        "manualWeight": -1,
+        "totalWeight": 0
       },
       "price": {
         "amount": 607,
