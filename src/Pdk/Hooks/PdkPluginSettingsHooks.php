@@ -20,6 +20,21 @@ class PdkPluginSettingsHooks implements WordPressHooksInterface
 
         // Add our settings page to woocommerce screens
         add_filter('woocommerce_screen_ids', [$this, 'registerSettingsScreenInWooCommerce']);
+
+        // Mark our page as connected to WooCommerce to render the Woo admin header and styles
+        add_filter('woocommerce_navigation_is_connected_page', [$this, 'connectPageToWooCommerce'], 99, 1);
+    }
+
+    /**
+     * @param  bool $isConnected
+     *
+     * @return true
+     */
+    public function connectPageToWooCommerce(bool $isConnected):bool
+    {
+        $page = $_GET['page'];
+
+        return Pdk::get('settingsMenuSlugShort') === $page ? true : $isConnected;
     }
 
     /**
