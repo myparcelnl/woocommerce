@@ -41,7 +41,7 @@ jobs:
         #language=sh
         run: |
           version=$(npm pkg get version | sed 's/"//g') 
-          releaseVersion="$version-${{ github.event.pull_request.number}}.${{ github.event.pull_request.head.sha }}"
+          releaseVersion="$version-${{ github.event.pull_request.number}}"
 
           echo "version=$releaseVersion" >> $GITHUB_OUTPUT
 
