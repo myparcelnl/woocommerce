@@ -215,9 +215,22 @@ class WcPdkBootstrapper extends PdkBootstrapper
             # Routes
             ###
 
-            'routeBackend'        => value("$name/backend/v1"),
-            'routeBackendPdk'     => value('pdk'),
-            'routeBackendWebhook' => value('webhook/(?P<hash>.+)'),
+            'routeBackend'                   => value("$name/backend/v1"),
+            'routeBackendPdk'                => value('pdk'),
+            'routeBackendWebhook'            => value('webhook/(?P<hash>.+)'),
+            'routeBackendPermissionCallback' => factory(static function (): string {
+                $callback = '__return_false';
+
+                if (is_user_logged_in() && 'shop_manager' === (wp_get_current_user()->roles[0] ?? '')) {
+                    $callback = '__return_true';
+                }
+
+                if (current_user_can('manage_options')) {
+                    $callback = '__return_true';
+                }
+                
+                return $callback;
+            }),
 
             'routeFrontend'         => value("$name/frontend/v1"),
             'routeFrontendMyParcel' => value($name),

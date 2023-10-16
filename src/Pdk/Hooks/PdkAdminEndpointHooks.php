@@ -35,9 +35,7 @@ final class PdkAdminEndpointHooks extends AbstractPdkEndpointHooks
         register_rest_route(Pdk::get('routeBackend'), Pdk::get('routeBackendPdk'), [
             'methods'             => WP_REST_Server::ALLMETHODS,
             'callback'            => [$this, 'processBackendRequest'],
-            'permission_callback' => function () {
-                return current_user_can('manage_options');
-            },
+            'permission_callback' => Pdk::get('routeBackendPermissionCallback'),
         ]);
     }
 }
