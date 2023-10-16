@@ -59,6 +59,9 @@
   "woocommerce_screen_ids": [
     "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkPluginSettingsHooks::registerSettingsScreenInWooCommerce"
   ],
+  "woocommerce_navigation_is_connected_page": [
+    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkPluginSettingsHooks::connectPageToWooCommerce"
+  ],
   "woocommerce_product_data_tabs": [
     "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkProductSettingsHooks::registerProductSettingsTab"
   ],

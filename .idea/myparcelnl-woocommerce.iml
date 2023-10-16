@@ -8,6 +8,24 @@
       <sourceFolder url="file://$MODULE_DIR$/vendor/myparcelnl/pdk/tests/factories" isTestSource="true" packagePrefix="MyParcelNL\Pdk\" />
       <sourceFolder url="file://$MODULE_DIR$/tests/factories" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests/Unit" isTestSource="true" packagePrefix="MyParcelNL\WooCommerce\" />
+      <sourceFolder url="file://$MODULE_DIR$/.cache/build/src" isTestSource="false" packagePrefix="MyParcelNL\WooCommerce\" />
+      <sourceFolder url="file://$MODULE_DIR$/.cache/build/tests" isTestSource="true" packagePrefix="MyParcelNL\WooCommerce\Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/.cache/build/tests/Unit" isTestSource="true" packagePrefix="MyParcelNL\WooCommerce\" />
+      <sourceFolder url="file://$MODULE_DIR$/.cache/build/tests/factories" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/.cache/build/vendor/myparcelnl/pdk/tests" isTestSource="true" packagePrefix="MyParcelNL\Pdk\Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/.cache/build/vendor/myparcelnl/pdk/tests/factories" isTestSource="true" packagePrefix="MyParcelNL\Pdk\" />
+      <sourceFolder url="file://$MODULE_DIR$/dist/wc-myparcel-belgium/src" isTestSource="false" packagePrefix="MyParcelBE\WooCommerce\" />
+      <sourceFolder url="file://$MODULE_DIR$/dist/wc-myparcel-belgium/tests" isTestSource="true" packagePrefix="MyParcelBE\WooCommerce\Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/dist/wc-myparcel-belgium/tests/Unit" isTestSource="true" packagePrefix="MyParcelBE\WooCommerce\" />
+      <sourceFolder url="file://$MODULE_DIR$/dist/wc-myparcel-belgium/tests/factories" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/dist/wc-myparcel-belgium/vendor/myparcelnl/pdk/tests" isTestSource="true" packagePrefix="MyParcelNL\Pdk\Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/dist/wc-myparcel-belgium/vendor/myparcelnl/pdk/tests/factories" isTestSource="true" packagePrefix="MyParcelNL\Pdk\" />
+      <sourceFolder url="file://$MODULE_DIR$/dist/woocommerce-myparcel/src" isTestSource="false" packagePrefix="MyParcelNL\WooCommerce\" />
+      <sourceFolder url="file://$MODULE_DIR$/dist/woocommerce-myparcel/tests" isTestSource="true" packagePrefix="MyParcelNL\WooCommerce\Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/dist/woocommerce-myparcel/tests/Unit" isTestSource="true" packagePrefix="MyParcelNL\WooCommerce\" />
+      <sourceFolder url="file://$MODULE_DIR$/dist/woocommerce-myparcel/tests/factories" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/dist/woocommerce-myparcel/vendor/myparcelnl/pdk/tests" isTestSource="true" packagePrefix="MyParcelNL\Pdk\Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/dist/woocommerce-myparcel/vendor/myparcelnl/pdk/tests/factories" isTestSource="true" packagePrefix="MyParcelNL\Pdk\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/justinrainbow/json-schema" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/laravel/serializable-closure" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />

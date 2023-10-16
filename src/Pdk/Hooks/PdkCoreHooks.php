@@ -67,8 +67,6 @@ final class PdkCoreHooks implements WordPressHooksInterface
             return;
         }
 
-        wp_enqueue_style('woocommerce_admin_styles');
-
         $this->service->enqueueVue(Pdk::get('vueVersion'));
         $this->service->enqueueVueDemi(Pdk::get('vueDemiVersion'));
 
