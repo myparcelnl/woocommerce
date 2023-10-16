@@ -2,11 +2,6 @@
 
 $ignoreErrors = [];
 $ignoreErrors[] = [
-	'message' => '#^Callback expects 1 parameter, \\$accepted_args is set to 3\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/src/Hooks/AutomaticOrderExportHooks.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Ternary operator condition is always true\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/src/Hooks/CartFeesHooks.php',
