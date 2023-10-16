@@ -33,6 +33,10 @@ return [
             ->in('vendor'),
     ],
 
+    'exclude-files' => [
+        'vendor/php-di/php-di/src/Compiler/Template.php',
+    ],
+
     'exclude-namespaces' => [
         // Exclude global namespace
         '/^$/',
