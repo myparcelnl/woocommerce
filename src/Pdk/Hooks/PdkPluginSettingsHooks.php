@@ -32,7 +32,7 @@ class PdkPluginSettingsHooks implements WordPressHooksInterface
      */
     public function connectPageToWooCommerce(bool $isConnected): bool
     {
-        $page = $_GET['page'];
+        $page = $_GET['page'] ?? '';
 
         return Pdk::get('settingsMenuSlugShort') === $page ? true : $isConnected;
     }
