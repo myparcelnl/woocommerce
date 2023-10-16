@@ -2,13 +2,13 @@ version: '3.9'
 
 services:
   php:
-    image: ghcr.io/myparcelnl/php-xd:7.4-alpine
+    image: ghcr.io/myparcelnl/php-xd:7.4-cli-alpine
     volumes:
       - .:/app
     command: ['composer', 'install']
 
   test:
-    image: ghcr.io/myparcelnl/php-xd:7.4-alpine
+    image: ghcr.io/myparcelnl/php-xd:7.4-cli-alpine
     volumes:
       - .:/app
     command: ['php', 'vendor/bin/pest']

@@ -40,8 +40,9 @@ return [
     'exclude-namespaces' => [
         // Exclude global namespace
         '/^$/',
-        'WP',
         'Automattic',
+        'Composer',
         'MyParcelNL',
+        'WP',
     ],
 ];

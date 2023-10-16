@@ -40,7 +40,8 @@ jobs:
         #language=sh
         run: |
           version=$(npm pkg get version | sed 's/"//g')
-          releaseVersion="$version-${{ github.sha }}"
+          commitsSinceTag=$(git log --oneline v$version.. | wc -l)
+          releaseVersion="$version-$commitsSinceTag"
 
           echo "version=$releaseVersion" >> $GITHUB_OUTPUT
 
@@ -48,6 +49,7 @@ jobs:
         id: release
         with:
           version: ${{ steps.version.outputs.version }}
+          image: ${{ steps.build.outputs.image }}
 
   rebase-prs:
     if: github.event_name == 'push'

@@ -38,6 +38,8 @@ jobs:
 
       - uses: myparcelnl/actions/semantic-release@v3
         id: release
+        env:
+          PDK_ROOT_COMMAND: 'docker run --rm -v $PWD:/app -w /app ${{ steps.build.outputs.image }}'
         with:
           token: ${{ steps.build.outputs.token }}
           write-summary: true

@@ -1,6 +1,6 @@
 import fs from 'fs';
 import glob from 'fast-glob';
-import {getPlatformDistPath, executePromises} from '@myparcel-pdk/app-builder';
+import {getPlatformDistPath, executePromises, executeCommand} from '@myparcel-pdk/app-builder';
 import path from 'path';
 
 /**
@@ -42,9 +42,13 @@ export default {
     {path: 'woocommerce-myparcel.php', regex: /Version:\s*(.+)/},
     // TODO: Uncomment when this version is stable.
     // {path: 'readme.txt', regex: /Stable tag:\s*(.+)/},
+    {path: 'dist/*/composer.json'},
+    {path: 'dist/*/package.json'},
+    {path: 'dist/wc-myparcel-belgium/wc-myparcel-belgium.php', regex: /Version:\s*(.+)/},
+    {path: 'dist/woocommerce-myparcel/woocommerce-myparcel.php', regex: /Version:\s*(.+)/},
   ],
 
-  composerCommand: 'docker compose run --rm -T php composer',
+  rootCommand: 'docker compose run --rm -T php',
 
   translations: {
     // eslint-disable-next-line no-magic-numbers
@@ -52,6 +56,47 @@ export default {
   },
 
   hooks: {
+    /**
+     * Prefix the vendor and source php files.
+     */
+    async beforeCopy(args) {
+      const { debug } = args.context;
+
+      debug('Prefixing build files...');
+
+      if (fs.existsSync('.cache/build/composer.json')) {
+        debug('Build files already exist, skipping prefixing.');
+        return;
+      }
+
+      if (!args.dryRun) {
+        await executeCommand(args.context,
+          'php',
+          [
+            '-d memory_limit=-1',
+            '.cache/php-scoper/vendor/bin/php-scoper',
+            'add-prefix',
+            '--output-dir=.cache/build',
+            '--force',
+            '--no-ansi',
+            '--no-interaction',
+          ],
+          { stdio: 'inherit' },
+        );
+
+        await executeCommand(args.context, 'composer',
+          [
+            'dump-autoload',
+            '--working-dir=.cache/build',
+            '--classmap-authoritative',
+          ],
+          { stdio: 'inherit' },
+        );
+      }
+
+      debug('Finished prefixing build files.');
+    },
+
     async afterCopy(args) {
       const {config, env, debug} = args.context;
 
