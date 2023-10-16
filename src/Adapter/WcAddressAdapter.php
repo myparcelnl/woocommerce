@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Adapter;
 
-use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Facade\Pdk;
 use WC_Cart;
 use WC_Customer;
@@ -161,9 +160,11 @@ class WcAddressAdapter
      */
     private function getState($class, string $addressType): string
     {
-        $value = $this->getAddressField($class, Pdk::get('fieldState'), $addressType);
+        $value = $this->getAddressField($class, Pdk::get('fieldState'), $addressType) ?? '';
 
-        return $value ? Arr::last(explode('-', $value)) : '';
+        preg_match('/^([A-Z]{2})(?:-([A-Z]{2}))?$/', $value, $matches);
+
+        return $matches[2] ?? $matches[1] ?? '';
     }
 
     /**
