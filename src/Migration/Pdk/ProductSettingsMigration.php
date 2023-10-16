@@ -365,6 +365,8 @@ final class ProductSettingsMigration extends AbstractPdkMigration
 
         $this->debug(sprintf('Settings for product %s migrated', $wcProduct->get_id()));
         $this->markMigrated($wcProduct);
+
+        $wcProduct->save();
     }
 
     /**

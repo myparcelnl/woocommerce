@@ -96,11 +96,17 @@ abstract class MockWcClass extends WC_Data
 
     /**
      * @return array of objects.
+     * @throws \Throwable
      * @see \WC_Product::get_meta_data()
      */
     public function get_meta_data(): array
     {
         return MockWpMeta::toWcMetaData($this->get_id());
+    }
+
+    public function save(): void
+    {
+        // do nothing
     }
 
     /**
@@ -111,6 +117,18 @@ abstract class MockWcClass extends WC_Data
     public function set_id($id): void
     {
         $this->attributes['id'] = $id;
+    }
+
+    /**
+     * @param  string       $key
+     * @param  array|string $value
+     * @param  int          $meta_id
+     *
+     * @return void
+     */
+    public function update_meta_data($key, $value, $meta_id = 0): void
+    {
+        MockWpMeta::update($this->get_id(), $key, $value);
     }
 
     /**

@@ -379,8 +379,7 @@ final class OrdersMigration extends AbstractPdkMigration
     {
         $fulfilmentData = $wcOrder->get_meta(self::LEGACY_META_PPS_EXPORTED);
 
-        update_post_meta(
-            $wcOrder->get_id(),
+        $wcOrder->update_meta_data(
             Pdk::get('metaKeyOrderData'),
             Utils::filterNull([
                 'apiIdentifier'   => $fulfilmentData['pps_uuid'] ?? null,
@@ -389,14 +388,15 @@ final class OrdersMigration extends AbstractPdkMigration
             ])
         );
 
-        update_post_meta($wcOrder->get_id(), Pdk::get('metaKeyOrderShipments'), $this->getShipments($wcOrder));
+        $wcOrder->update_meta_data(Pdk::get('metaKeyOrderShipments'), $this->getShipments($wcOrder));
 
-        update_post_meta(
-            $wcOrder->get_id(),
+        $wcOrder->update_meta_data(
             Pdk::get('metaKeyVersion'),
             $wcOrder->get_meta(self::LEGACY_META_ORDER_VERSION)
         );
 
         $this->markMigrated($wcOrder);
+
+        $wcOrder->save();
     }
 }

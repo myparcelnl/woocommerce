@@ -141,7 +141,10 @@ class WcOrderNoteRepository extends AbstractPdkOrderNoteRepository
      */
     private function saveNotes(string $orderId, array $notes): void
     {
-        update_post_meta((int) $orderId, Pdk::get('metaKeyOrderNotes'), $notes);
+        $wcOrder = $this->wcOrderRepository->get($orderId);
+
+        $wcOrder->update_meta_data(Pdk::get('metaKeyOrderNotes'), $notes);
+        $wcOrder->save();
 
         // Invalidate cache
         $this->storage->delete($this->getKeyPrefix() . $orderId);
