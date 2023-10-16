@@ -9,11 +9,9 @@ use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\ProductSettings;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
-use MyParcelNL\Pdk\Tests\Bootstrap\MockPdkProductRepository;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Product;
-use function DI\autowire;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function MyParcelNL\WooCommerce\Tests\wpFactory;
 
@@ -37,16 +35,7 @@ function defaultProductSettings(): array
     ];
 }
 
-usesShared(
-    new UsesMockWcPdkInstance([
-        PdkProductRepositoryInterface::class => autowire(MockPdkProductRepository::class)->constructor([
-            [
-                'externalIdentifier' => '7000',
-                'settings'           => defaultProductSettings(),
-            ],
-        ]),
-    ])
-);
+usesShared(new UsesMockWcPdkInstance());
 
 it('saves product data correctly', function (array $postData, array $productSettings) {
     /** @var PdkProductRepositoryInterface $productRepository */
