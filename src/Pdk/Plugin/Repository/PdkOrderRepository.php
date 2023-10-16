@@ -109,12 +109,10 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             ->getShipments($wcOrder)
             ->mergeByKey($order->shipments, 'id');
 
-        update_post_meta($wcOrder->get_id(), Pdk::get('metaKeyOrderData'), $order->toStorableArray());
-        update_post_meta(
-            $wcOrder->get_id(),
-            Pdk::get('metaKeyOrderShipments'),
-            $order->shipments->toStorableArray()
-        );
+        $wcOrder->update_meta_data(Pdk::get('metaKeyOrderData'), $order->toStorableArray());
+        $wcOrder->update_meta_data(Pdk::get('metaKeyOrderShipments'), $order->shipments->toStorableArray());
+
+        $wcOrder->save();
 
         return $this->save($order->externalIdentifier, $order);
     }
