@@ -43,6 +43,7 @@ return [
         'Automattic',
         'Composer',
         'MyParcelNL',
+        'MyParcelBE',
         'WP',
     ],
 ];
