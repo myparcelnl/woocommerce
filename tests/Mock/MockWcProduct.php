@@ -23,9 +23,4 @@ class MockWcProduct extends MockWcClass
     {
         return $this->attributes['shipping_class_id'];
     }
-
-    /**
-     * @return void
-     */
-    public function save_meta_data() {}
 }

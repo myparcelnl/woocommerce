@@ -104,7 +104,18 @@ abstract class MockWcClass extends WC_Data
         return MockWpMeta::toWcMetaData($this->get_id());
     }
 
+    /**
+     * @return void
+     */
     public function save(): void
+    {
+        // do nothing
+    }
+
+    /**
+     * @return void
+     */
+    public function save_meta_data()
     {
         // do nothing
     }
