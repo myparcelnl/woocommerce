@@ -155,8 +155,7 @@ final class PdkProductSettingsHooks implements WordPressHooksInterface
      */
     private function getProductSettingsKeys(array $post, ?int $productId = null): array
     {
-        $appInfo = Pdk::getAppInfo();
-        $postKey = $productId ? "$appInfo->name-childProductSettings--$productId-" : "$appInfo->name-";
+        $postKey = $productId ? "myparcelnl-childProductSettings--$productId-" : "myparcelnl-";
 
         return Arr::where($post, static function ($_, string $key) use ($postKey) {
             return Str::startsWith($key, $postKey);
