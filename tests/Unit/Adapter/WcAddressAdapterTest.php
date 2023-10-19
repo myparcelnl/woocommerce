@@ -36,6 +36,42 @@ dataset('addresses', function () {
             'meta'        => [],
         ],
 
+        '2 letter state' => [
+            'addressType' => 'shipping',
+            'address'     => [
+                'billing_email'       => 'test@test.com',
+                'billing_phone'       => '0612345678',
+                'shipping_address_1'  => 'Antareslaan 31',
+                'shipping_address_2'  => '',
+                'shipping_city'       => 'Hoofddorp',
+                'shipping_company'    => 'MyParcel',
+                'shipping_country'    => 'NL',
+                'shipping_first_name' => 'Felicia',
+                'shipping_last_name'  => 'Parcel',
+                'shipping_postcode'   => '2132JE',
+                'shipping_state'      => 'NH',
+            ],
+            'meta'        => [],
+        ],
+
+        'unrecognized state' => [
+            'addressType' => 'shipping',
+            'address'     => [
+                'billing_email'       => 'test@test.com',
+                'billing_phone'       => '0612345678',
+                'shipping_address_1'  => 'Antareslaan 31',
+                'shipping_address_2'  => '',
+                'shipping_city'       => 'Hoofddorp',
+                'shipping_company'    => 'MyParcel',
+                'shipping_country'    => 'NL',
+                'shipping_first_name' => 'Felicia',
+                'shipping_last_name'  => 'Parcel',
+                'shipping_postcode'   => '2132JE',
+                'shipping_state'      => 'Noord-Holland',
+            ],
+            'meta'        => [],
+        ],
+
         'separate address fields' => [
             'addressType' => 'shipping',
             'address'     => [
