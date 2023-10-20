@@ -395,7 +395,11 @@ final class OrdersMigration extends AbstractPdkMigration
             $wcOrder->get_meta(self::LEGACY_META_ORDER_VERSION)
         );
 
-        $this->markMigrated($wcOrder);
+        $migrationMeta = $this->getMigrationMeta($wcOrder);
+
+        if ($migrationMeta) {
+            $wcOrder->update_meta_data(Pdk::get('metaKeyMigrated'), $migrationMeta);
+        }
 
         $wcOrder->save();
     }

@@ -98,8 +98,11 @@ class WcPdkProductRepository extends AbstractPdkPdkProductRepository
     {
         $wcProduct = $this->getWcProduct($product->externalIdentifier);
 
-        $wcProduct->update_meta_data(Pdk::get('metaKeyProductSettings'), $product->settings->toStorableArray());
-        $wcProduct->save();
+        update_post_meta(
+            $wcProduct->get_id(),
+            Pdk::get('metaKeyProductSettings'),
+            $product->settings->toStorableArray()
+        );
 
         $this->save($product->externalIdentifier, $product);
     }
