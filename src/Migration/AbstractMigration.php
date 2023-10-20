@@ -45,23 +45,21 @@ abstract class AbstractMigration implements MigrationInterface
     }
 
     /**
-     * Mark an object as migrated by updating the migration meta key with the current version.
-     *
      * @param  \WC_Data $object
      *
-     * @return void
+     * @return null|array
      */
-    protected function markMigrated(WC_Data $object): void
+    protected function getMigrationMeta(WC_Data $object): ?array
     {
         $migratedKey = Pdk::get('metaKeyMigrated');
 
         $executedMigrations = $object->get_meta($migratedKey) ?: [];
 
         if (in_array($this->getVersion(), $executedMigrations, true)) {
-            return;
+            return null;
         }
 
-        $object->update_meta_data($migratedKey, array_merge($executedMigrations, [$this->getVersion()]));
+        return array_merge($executedMigrations, [$this->getVersion()]);
     }
 
     /**

@@ -363,10 +363,13 @@ final class ProductSettingsMigration extends AbstractPdkMigration
 
         $this->pdkProductRepository->update($pdkProduct);
 
-        $this->debug(sprintf('Settings for product %s migrated', $wcProduct->get_id()));
-        $this->markMigrated($wcProduct);
+        $migrationMeta = $this->getMigrationMeta($wcProduct);
 
-        $wcProduct->save_meta_data();
+        if ($migrationMeta) {
+            update_post_meta($wcProduct->get_id(), Pdk::get('metaKeyMigrated'), $migrationMeta);
+        }
+
+        $this->debug(sprintf('Settings for product %s migrated', $wcProduct->get_id()));
     }
 
     /**
