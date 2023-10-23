@@ -40,6 +40,7 @@ return [
     'exclude-namespaces' => [
         // Exclude global namespace
         '/^$/',
+        'Symfony',
         'Automattic',
         'Composer',
         'MyParcelNL',
