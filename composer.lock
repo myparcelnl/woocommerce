@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c42b296eced311ca5e7b07818aedd4d1",
+    "content-hash": "f9429e53daf5d8e6fc032e665918e005",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -463,16 +463,16 @@
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "2.28.0",
+            "version": "2.28.2",
             "source": {
                 "type": "git",
                 "url": "git@github.com:myparcelnl/pdk.git",
-                "reference": "e7356afdfd04c8405277981a9eda073b0a8a78d1"
+                "reference": "65c5496b00d6d2cb0fd9c60cf302ba26773528a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/e7356afdfd04c8405277981a9eda073b0a8a78d1",
-                "reference": "e7356afdfd04c8405277981a9eda073b0a8a78d1",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/65c5496b00d6d2cb0fd9c60cf302ba26773528a9",
+                "reference": "65c5496b00d6d2cb0fd9c60cf302ba26773528a9",
                 "shasum": ""
             },
             "require": {
@@ -480,18 +480,19 @@
                 "myparcelnl/sdk": ">= 7",
                 "php": ">=7.1.0",
                 "php-di/php-di": ">= 6",
+                "psr/log": "^1 || ^2 || ^3",
                 "symfony/http-foundation": ">= 2 || >= 3 || >= 4 || >= 5"
             },
             "require-dev": {
                 "behat/behat": "^3.13",
-                "brick/varexporter": "^0.3.8",
+                "brick/varexporter": "^0.4",
                 "guzzlehttp/guzzle": "^7.5",
                 "myparcelnl/devtools": ">= 1",
                 "nette/robot-loader": ">= 3",
                 "pestphp/pest": ">= 1",
                 "phpdocumentor/reflection-docblock": "^5",
                 "phpstan/phpstan": ">= 1",
-                "rector/rector": "^0.16.0",
+                "rector/rector": "^0.18",
                 "spatie/pest-plugin-snapshots": ">= 1",
                 "symfony/console": "*"
             },
@@ -513,7 +514,7 @@
             ],
             "description": "MyParcel Plugin Development Kit",
             "homepage": "https://myparcel.nl",
-            "time": "2023-10-13T12:23:44+00:00"
+            "time": "2023-10-24T08:59:00+00:00"
         },
         {
             "name": "myparcelnl/sdk",
