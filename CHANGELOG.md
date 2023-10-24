@@ -17,6 +17,34 @@ If you do choose to install this version, we would love to hear your feedback. P
 [releases]: https://github.com/myparcelnl/woocommerce/releases
 [support@myparcel.nl]: mailto:support@myparcel.nl
 
+## [5.0.0-beta.3](https://github.com/myparcelnl/woocommerce/compare/v5.0.0-beta.2...v5.0.0-beta.3) (2023-10-24)
+
+
+### :bug: Bug Fixes
+
+* **orders:** fix error when state does not match XX-XX format ([#1038](https://github.com/myparcelnl/woocommerce/issues/1038)) ([1c7023f](https://github.com/myparcelnl/woocommerce/commit/1c7023f72c5581c19811c35d0e8f8b200c0369cd))
+* **product-settings:** fix updating without hpos ([#1040](https://github.com/myparcelnl/woocommerce/issues/1040)) ([e179184](https://github.com/myparcelnl/woocommerce/commit/e179184df07eebcc8ff02d7882438155f213c4dc))
+
+
+### :sparkles: New Features
+
+* **deps:** upgrade @myparcel-pdk/* ([d673174](https://github.com/myparcelnl/woocommerce/commit/d673174f722d0e27e7c1dfc02fc8f004038aee8f))
+* **deps:** upgrade myparcelnl/pdk to v2.28.2 ([e3a7c47](https://github.com/myparcelnl/woocommerce/commit/e3a7c47ded24e26ea025b1faa1074661afeb706b))
+
+## 🚧 This version is not ready for production use 🚧
+
+This is the beta release of MyParcel WooCommerce v5.x. We've rewritten the entire plugin from scratch, using the [MyParcel Plugin Development Kit].
+
+For a less bug-prone experience, we recommend you use the stable or release candidate versions of the plugin instead. You can find the stable version in the [WordPress plugin directory]. The release candidate versions can be found in the [releases] section of this repository. They are versioned with a `-rc` suffix.
+
+If you do choose to install this version, we would love to hear your feedback. Please report any issues you encounter using the [Bug report for v5.0.0-beta.x form] or by sending an email to [support@myparcel.nl]. Use it in production at your own risk.
+
+[Bug report for v5.0.0-beta.x form]: https://github.com/myparcelnl/woocommerce/issues/new?labels=beta&template=ZZ-BUG-REPORT-v5.yml
+[MyParcel Plugin Development Kit]: https://developer.myparcel.nl/documentation/52.pdk/
+[WordPress plugin directory]: https://wordpress.org/plugins/woocommerce-myparcel/
+[releases]: https://github.com/myparcelnl/woocommerce/releases
+[support@myparcel.nl]: mailto:support@myparcel.nl
+
 ## [5.0.0-beta.2](https://github.com/myparcelnl/woocommerce/compare/v5.0.0-beta.1...v5.0.0-beta.2) (2023-10-16)
 
 
