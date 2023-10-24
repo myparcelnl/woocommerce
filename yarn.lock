@@ -931,8 +931,8 @@ __metadata:
   linkType: hard
 
 "@myparcel-pdk/app-builder@npm:^1.0.0-alpha.1":
-  version: 1.0.0-alpha.42
-  resolution: "@myparcel-pdk/app-builder@npm:1.0.0-alpha.42"
+  version: 1.0.0-alpha.48
+  resolution: "@myparcel-pdk/app-builder@npm:1.0.0-alpha.48"
   dependencies:
     "@edielemoine/google-docs-importer": ^1.1.1
     "@yarnpkg/parsers": ^3.0.0-rc.48.1
@@ -946,7 +946,7 @@ __metadata:
     supports-color: ^9.3.1
   bin:
     pdk-builder: ./bin/index.js
-  checksum: 1c6c28654881e9cee8cc826c0669108b63bfe81ebd9f8579d878280f8a73fa8dc47caafad44b9f37133584c545f67d92243dc5e413f5bd9fd20caeeace29791e
+  checksum: e9bbc61ea3aed8cb360d3797df1b0fde6664e4d03eec85e4534457c37828e33c9f498f11b7c73dcc8492784324994a06ca263e7d3c872f30b606afab0b40a4ba
   languageName: node
   linkType: hard
 
@@ -1000,15 +1000,15 @@ __metadata:
   linkType: hard
 
 "@myparcel-pdk/checkout@npm:^1.0.0-alpha.1":
-  version: 1.0.0-alpha.72
-  resolution: "@myparcel-pdk/checkout@npm:1.0.0-alpha.72"
+  version: 1.0.0-alpha.73
+  resolution: "@myparcel-pdk/checkout@npm:1.0.0-alpha.73"
   dependencies:
     "@myparcel-pdk/checkout-core": ^1.0.0-alpha.37
     "@myparcel-pdk/checkout-delivery-options": ^1.0.0-alpha.36
     "@myparcel-pdk/checkout-separate-address-fields": ^1.0.0-alpha.37
     "@myparcel-pdk/checkout-tax-fields": ^1.0.0-alpha.38
     "@myparcel-pdk/common": ^1.0.0-alpha.57
-  checksum: 07c04df8231784334fa124719a66a2280edb3ce65a9feb3460ddba58d85cb526083c9be629208f61e9dd34865e5b57e1fe000cb8abd75880f208fecb85be63a9
+  checksum: 2c59ca6eae60f95ca4803598e1395cc2b2c1b8d0c3ce7863dfd5d3be9d8da0d835374fff3de3b7406b5d939605fe0a479ca47509d9d6f3b356a1a3fe35d0ef5b
   languageName: node
   linkType: hard
 
