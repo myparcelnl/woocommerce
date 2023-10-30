@@ -215,12 +215,13 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'routeBackendPermissionCallback' => factory(static function (): string {
                 $callback = '__return_false';
 
-                if (is_user_logged_in() && 'shop_manager' === (wp_get_current_user()->roles[0] ?? '')) {
-                    $callback = '__return_true';
-                }
-
-                if (current_user_can('manage_options')) {
-                    $callback = '__return_true';
+                if (is_user_logged_in()) {
+                    $roles = wp_get_current_user()->roles ?? [];
+                    array_map(static function (string $role) use (&$callback): void {
+                        if (true === in_array($role, ['shop_manager', 'administrator'])) {
+                            $callback = '__return_true';
+                        }
+                    }, $roles);
                 }
 
                 return $callback;
