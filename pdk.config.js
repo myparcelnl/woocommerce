@@ -14,6 +14,7 @@ export default {
     '.cache/build/composer.json',
     '.cache/build/config/**/*',
     '.cache/build/src/**/*',
+    '!cache/build/vendor/autoload.php',
     '.cache/build/vendor/**/*',
     '.cache/build/woocommerce-myparcel.php',
     'views/**/lib/**/*',
@@ -37,15 +38,15 @@ export default {
   },
 
   versionSource: [
-    {path: 'package.json'},
-    {path: 'composer.json'},
-    {path: 'woocommerce-myparcel.php', regex: /Version:\s*(.+)/},
+    { path: 'package.json' },
+    { path: 'composer.json' },
+    { path: 'woocommerce-myparcel.php', regex: /Version:\s*(.+)/ },
     // TODO: Uncomment when this version is stable.
     // {path: 'readme.txt', regex: /Stable tag:\s*(.+)/},
-    {path: 'dist/*/composer.json'},
-    {path: 'dist/*/package.json'},
-    {path: 'dist/wc-myparcel-belgium/wc-myparcel-belgium.php', regex: /Version:\s*(.+)/},
-    {path: 'dist/woocommerce-myparcel/woocommerce-myparcel.php', regex: /Version:\s*(.+)/},
+    { path: 'dist/*/composer.json' },
+    { path: 'dist/*/package.json' },
+    { path: 'dist/wc-myparcel-belgium/wc-myparcel-belgium.php', regex: /Version:\s*(.+)/ },
+    { path: 'dist/woocommerce-myparcel/woocommerce-myparcel.php', regex: /Version:\s*(.+)/ },
   ],
 
   rootCommand: 'docker compose run --rm -T php',
@@ -98,16 +99,16 @@ export default {
     },
 
     async afterCopy(args) {
-      const {config, env, debug} = args.context;
+      const { config, env, debug } = args.context;
 
       debug('Copying scoped build files to root');
 
       await executePromises(
         args,
         config.platforms.map(async(platform) => {
-          const platformDistPath = getPlatformDistPath({config, env, platform});
+          const platformDistPath = getPlatformDistPath({ config, env, platform });
 
-          const files = glob.sync('.cache/build/**/*', {cwd: platformDistPath});
+          const files = glob.sync('.cache/build/**/*', { cwd: platformDistPath });
 
           await Promise.all(
             files.map(async(file) => {
@@ -115,13 +116,13 @@ export default {
               const newPath = oldPath.replace('.cache/build/', '');
 
               if (!args.dryRun) {
-                await fs.promises.mkdir(path.dirname(newPath), {recursive: true});
+                await fs.promises.mkdir(path.dirname(newPath), { recursive: true });
                 await fs.promises.rename(oldPath, newPath);
               }
             }),
           );
 
-          await fs.promises.rm(`${platformDistPath}/.cache`, {recursive: true});
+          await fs.promises.rm(`${platformDistPath}/.cache`, { recursive: true });
         }));
 
       debug('Copied scoped build files to root.');
