@@ -12,7 +12,9 @@
   "pdkOrder": {
     "exported": false,
     "deliveryOptions": {
-      "carrier": "postnl",
+      "carrier": {
+        "externalIdentifier": "postnl"
+      },
       "labelAmount": 1,
       "shipmentOptions": {
         "insurance": -1,

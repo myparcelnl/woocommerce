@@ -158,7 +158,9 @@
   "pdkOrder": {
     "exported": false,
     "deliveryOptions": {
-      "carrier": "postnl",
+      "carrier": {
+        "externalIdentifier": "postnl"
+      },
       "labelAmount": 1,
       "shipmentOptions": {
         "insurance": -1,
@@ -184,30 +186,14 @@
       "externalIdentifier": "3SMYPA1234567",
       "barcode": "3SMYPA1234567",
       "carrier": {
-        "externalIdentifier": "postnl",
-        "id": 1,
-        "name": "postnl",
-        "human": "PostNL",
-        "enabled": false,
-        "isDefault": true,
-        "optional": false,
-        "primary": false,
-        "type": "main"
+        "externalIdentifier": "postnl"
       },
       "delayed": false,
       "delivered": false,
       "deliveryOptions": {
         "date": "2077-10-23 09:47:51",
         "carrier": {
-          "externalIdentifier": "postnl",
-          "id": 1,
-          "name": "postnl",
-          "human": "PostNL",
-          "enabled": false,
-          "isDefault": true,
-          "optional": false,
-          "primary": false,
-          "type": "main"
+          "externalIdentifier": "postnl"
         },
         "labelAmount": 1,
         "shipmentOptions": {
@@ -228,9 +214,7 @@
       "isReturn": false,
       "partnerTrackTraces": [],
       "physicalProperties": {
-        "initialWeight": 0,
-        "manualWeight": -1,
-        "totalWeight": 0
+        "weight": 72
       },
       "price": {
         "amount": 937,
@@ -263,106 +247,14 @@
       "referenceIdentifier": "1520",
       "barcode": "3SMYPA1234567",
       "carrier": {
-        "externalIdentifier": "postnl",
-        "id": 1,
-        "name": "postnl",
-        "human": "PostNL",
-        "enabled": false,
-        "isDefault": true,
-        "optional": false,
-        "primary": false,
-        "type": "main",
-        "capabilities": {
-          "deliveryTypes": ["morning", "standard", "evening", "pickup"],
-          "features": {
-            "labelDescriptionLength": 45
-          },
-          "packageTypes": ["package", "mailbox", "letter", "digital_stamp"],
-          "shipmentOptions": {
-            "ageCheck": true,
-            "largeFormat": true,
-            "onlyRecipient": true,
-            "return": true,
-            "sameDayDelivery": false,
-            "signature": true,
-            "insurance": [
-              0, 10000, 25000, 50000, 100000, 150000, 200000, 250000, 300000,
-              350000, 400000, 450000, 500000
-            ]
-          }
-        },
-        "returnCapabilities": {
-          "deliveryTypes": ["standard"],
-          "features": {
-            "labelDescriptionLength": 45
-          },
-          "packageTypes": ["package"],
-          "shipmentOptions": {
-            "signature": true,
-            "insurance": [
-              0, 10000, 25000, 50000, 100000, 150000, 200000, 250000, 300000,
-              350000, 400000, 450000, 500000
-            ],
-            "return": true,
-            "ageCheck": true,
-            "onlyRecipient": true,
-            "sameDayDelivery": false,
-            "largeFormat": true
-          }
-        }
+        "externalIdentifier": "postnl"
       },
       "delayed": false,
       "delivered": false,
       "deliveryOptions": {
         "date": "2077-10-23 09:47:51",
         "carrier": {
-          "externalIdentifier": "postnl",
-          "id": 1,
-          "name": "postnl",
-          "human": "PostNL",
-          "enabled": false,
-          "isDefault": true,
-          "optional": false,
-          "primary": false,
-          "type": "main",
-          "capabilities": {
-            "deliveryTypes": ["morning", "standard", "evening", "pickup"],
-            "features": {
-              "labelDescriptionLength": 45
-            },
-            "packageTypes": ["package", "mailbox", "letter", "digital_stamp"],
-            "shipmentOptions": {
-              "ageCheck": true,
-              "largeFormat": true,
-              "onlyRecipient": true,
-              "return": true,
-              "sameDayDelivery": false,
-              "signature": true,
-              "insurance": [
-                0, 10000, 25000, 50000, 100000, 150000, 200000, 250000, 300000,
-                350000, 400000, 450000, 500000
-              ]
-            }
-          },
-          "returnCapabilities": {
-            "deliveryTypes": ["standard"],
-            "features": {
-              "labelDescriptionLength": 45
-            },
-            "packageTypes": ["package"],
-            "shipmentOptions": {
-              "signature": true,
-              "insurance": [
-                0, 10000, 25000, 50000, 100000, 150000, 200000, 250000, 300000,
-                350000, 400000, 450000, 500000
-              ],
-              "return": true,
-              "ageCheck": true,
-              "onlyRecipient": true,
-              "sameDayDelivery": false,
-              "largeFormat": true
-            }
-          }
+          "externalIdentifier": "postnl"
         },
         "labelAmount": 1,
         "shipmentOptions": {
@@ -392,9 +284,7 @@
       "isReturn": false,
       "partnerTrackTraces": [],
       "physicalProperties": {
-        "initialWeight": 0,
-        "manualWeight": -1,
-        "totalWeight": 0
+        "weight": 72
       },
       "price": {
         "amount": 112,

@@ -1,7 +1,9 @@
 {
   "externalIdentifier": "6",
   "deliveryOptions": {
-    "carrier": "postnl",
+    "carrier": {
+      "externalIdentifier": "postnl"
+    },
     "labelAmount": 1,
     "shipmentOptions": {
       "insurance": -1,
@@ -57,7 +59,6 @@
       "product": {
         "externalIdentifier": "3214",
         "sku": "WVS-0001",
-        "ean": null,
         "isDeliverable": true,
         "name": "Test product",
         "price": {
@@ -101,16 +102,14 @@
           "fitInDigitalStamp": -1,
           "fitInMailbox": -1,
           "packageType": -1
-        },
-        "parent": null
+        }
       }
     },
     {
       "quantity": 1,
       "price": 100000,
       "vat": 0,
-      "priceAfterVat": 100000,
-      "product": null
+      "priceAfterVat": 100000
     },
     {
       "quantity": 2,
@@ -120,7 +119,6 @@
       "product": {
         "externalIdentifier": "2324",
         "sku": "WVS-0002",
-        "ean": null,
         "isDeliverable": false,
         "name": "Test digital product",
         "price": {
@@ -164,8 +162,7 @@
           "fitInDigitalStamp": -1,
           "fitInMailbox": -1,
           "packageType": -1
-        },
-        "parent": null
+        }
       }
     }
   ],
