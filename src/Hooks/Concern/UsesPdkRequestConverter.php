@@ -23,7 +23,7 @@ trait UsesPdkRequestConverter
         $request = Request::create(
             $wpRestRequest->get_route(),
             $wpRestRequest->get_method(),
-            $wpRestRequest->get_query_params(),
+            $wpRestRequest->get_params(),
             $_COOKIE,
             $wpRestRequest->get_file_params(),
             $_SERVER,
