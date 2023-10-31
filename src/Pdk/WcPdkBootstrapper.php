@@ -216,11 +216,12 @@ class WcPdkBootstrapper extends PdkBootstrapper
                 $callback = '__return_false';
 
                 if (is_user_logged_in()) {
-                    array_map(static function (string $role) use (&$callback): void {
-                        if (true === in_array($role, ['shop_manager', 'administrator'])) {
+                    foreach (wp_get_current_user()->roles as $role) {
+                        if (in_array($role, ['shop_manager', 'administrator'])) {
                             $callback = '__return_true';
+                            break;
                         }
-                    }, wp_get_current_user()->roles);
+                    }
                 }
 
                 return $callback;
