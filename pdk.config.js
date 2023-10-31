@@ -128,14 +128,12 @@ export default {
           const distPath = getPlatformDistPath({ config, env, platform });
           const platformDistPath = path.relative(env.cwd, distPath);
 
-          if (!args.dryRun) {
-            await executeCommand(
-              context,
-              'composer',
-              ['dump-autoload', `--working-dir=${platformDistPath}`, '--classmap-authoritative'],
-              args.verbose >= 1 ? { stdio: 'inherit' } : {},
-            );
-          }
+          await executeCommand(
+            context,
+            'composer',
+            ['dump-autoload', `--working-dir=${platformDistPath}`, '--classmap-authoritative'],
+            args.verbose >= 1 ? { stdio: 'inherit' } : {},
+          );
         }),
       );
     },
