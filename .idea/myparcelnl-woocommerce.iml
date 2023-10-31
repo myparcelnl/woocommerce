@@ -8,24 +8,12 @@
       <sourceFolder url="file://$MODULE_DIR$/vendor/myparcelnl/pdk/tests/factories" isTestSource="true" packagePrefix="MyParcelNL\Pdk\" />
       <sourceFolder url="file://$MODULE_DIR$/tests/factories" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests/Unit" isTestSource="true" packagePrefix="MyParcelNL\WooCommerce\" />
-      <sourceFolder url="file://$MODULE_DIR$/.cache/build/src" isTestSource="false" packagePrefix="MyParcelNL\WooCommerce\" />
-      <sourceFolder url="file://$MODULE_DIR$/.cache/build/tests" isTestSource="true" packagePrefix="MyParcelNL\WooCommerce\Tests\" />
-      <sourceFolder url="file://$MODULE_DIR$/.cache/build/tests/Unit" isTestSource="true" packagePrefix="MyParcelNL\WooCommerce\" />
-      <sourceFolder url="file://$MODULE_DIR$/.cache/build/tests/factories" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/.cache/build/vendor/myparcelnl/pdk/tests" isTestSource="true" packagePrefix="MyParcelNL\Pdk\Tests\" />
-      <sourceFolder url="file://$MODULE_DIR$/.cache/build/vendor/myparcelnl/pdk/tests/factories" isTestSource="true" packagePrefix="MyParcelNL\Pdk\" />
       <sourceFolder url="file://$MODULE_DIR$/dist/wc-myparcel-belgium/src" isTestSource="false" packagePrefix="MyParcelBE\WooCommerce\" />
       <sourceFolder url="file://$MODULE_DIR$/dist/wc-myparcel-belgium/tests" isTestSource="true" packagePrefix="MyParcelBE\WooCommerce\Tests\" />
       <sourceFolder url="file://$MODULE_DIR$/dist/wc-myparcel-belgium/tests/Unit" isTestSource="true" packagePrefix="MyParcelBE\WooCommerce\" />
       <sourceFolder url="file://$MODULE_DIR$/dist/wc-myparcel-belgium/tests/factories" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/dist/wc-myparcel-belgium/vendor/myparcelnl/pdk/tests" isTestSource="true" packagePrefix="MyParcelNL\Pdk\Tests\" />
       <sourceFolder url="file://$MODULE_DIR$/dist/wc-myparcel-belgium/vendor/myparcelnl/pdk/tests/factories" isTestSource="true" packagePrefix="MyParcelNL\Pdk\" />
-      <sourceFolder url="file://$MODULE_DIR$/dist/woocommerce-myparcel/src" isTestSource="false" packagePrefix="MyParcelNL\WooCommerce\" />
-      <sourceFolder url="file://$MODULE_DIR$/dist/woocommerce-myparcel/tests" isTestSource="true" packagePrefix="MyParcelNL\WooCommerce\Tests\" />
-      <sourceFolder url="file://$MODULE_DIR$/dist/woocommerce-myparcel/tests/Unit" isTestSource="true" packagePrefix="MyParcelNL\WooCommerce\" />
-      <sourceFolder url="file://$MODULE_DIR$/dist/woocommerce-myparcel/tests/factories" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/dist/woocommerce-myparcel/vendor/myparcelnl/pdk/tests" isTestSource="true" packagePrefix="MyParcelNL\Pdk\Tests\" />
-      <sourceFolder url="file://$MODULE_DIR$/dist/woocommerce-myparcel/vendor/myparcelnl/pdk/tests/factories" isTestSource="true" packagePrefix="MyParcelNL\Pdk\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/justinrainbow/json-schema" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/laravel/serializable-closure" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
@@ -49,59 +37,10 @@
       <excludeFolder url="file://$MODULE_DIR$/.wordpress-assets" />
       <excludeFolder url="file://$MODULE_DIR$/.yarn" />
       <excludeFolder url="file://$MODULE_DIR$/config/pdk/translations" />
-      <excludeFolder url="file://$MODULE_DIR$/.cache" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/instantiator" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/facade/ignition-contracts" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/filp/whoops" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/myclabs/deep-copy" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/nikic/php-parser" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/nunomaduro/collision" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/pestphp/pest" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/pestphp/pest-plugin" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/phar-io/manifest" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/phar-io/version" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/php-stubs/woocommerce-stubs" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/php-stubs/wordpress-stubs" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/phpstan/phpstan" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/php-code-coverage" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/php-file-iterator" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/php-invoker" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/php-text-template" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/php-timer" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/phpunit" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/cli-parser" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/code-unit" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/code-unit-reverse-lookup" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/comparator" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/complexity" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/diff" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/environment" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/exporter" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/global-state" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/lines-of-code" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/object-enumerator" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/object-reflector" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/recursion-context" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/resource-operations" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/type" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/version" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/spatie/pest-plugin-snapshots" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/spatie/phpunit-snapshot-assertions" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/console" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-ctype" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-intl-grapheme" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-intl-normalizer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php73" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/property-access" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/property-info" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/serializer" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/service-contracts" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/string" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/yaml" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/szepeviktor/phpstan-wordpress" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/theseer/tokenizer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/guzzle/parser" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/myparcelnl/pdk" />
+      <excludeFolder url="file://$MODULE_DIR$/.tmp" />
       <excludePattern pattern="dist" />
       <excludePattern pattern="cache" />
       <excludePattern pattern="lib" />

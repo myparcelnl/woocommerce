@@ -1,11 +1,6 @@
 /** @type {import('eslint').Linter.Config} */
 module.exports = {
   root: true,
-  parserOptions: {
-    dir: __dirname,
-    project: 'tsconfig.json',
-    extraFileExtensions: ['.vue'],
-  },
   globals: {
     jQuery: false,
     JQuery: false,
@@ -49,6 +44,12 @@ module.exports = {
         '@myparcel-eslint/eslint-config-esnext',
         '@myparcel-eslint/eslint-config-prettier',
       ],
+    },
+    {
+      files: ['./**/*.js', './**/*.mjs'],
+      parserOptions: {
+        sourceType: 'module',
+      },
     },
     {
       files: ['./**/*.spec.*', './**/*.test.*', './**/__tests__/**'],

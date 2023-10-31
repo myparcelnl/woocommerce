@@ -1,4 +1,4 @@
-.cache/
+.tmp/
 node_modules/
 vendor/
 lib/
