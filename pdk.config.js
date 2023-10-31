@@ -1,12 +1,11 @@
-import * as fs from 'fs';
 import {
   PdkPlatformName,
   addPlatformToContext,
   defineConfig,
   exists,
   getPlatformDistPath,
-  logSourcePath,
-  logTargetPath,
+  renameFile,
+  reportFileDoesNotExist,
   resolvePath,
   resolveString,
 } from '@myparcel-pdk/app-builder';
@@ -55,7 +54,7 @@ export default defineConfig({
 
   hooks: {
     async afterCopy({context}) {
-      const {args, config, debug, env} = context;
+      const {config} = context;
 
       await Promise.all(
         config.platforms.map(async (platform) => {
@@ -64,20 +63,13 @@ export default defineConfig({
           const sourcePath = resolvePath([platformDistPath, ENTRY_FILE], context);
 
           if (!(await exists(sourcePath))) {
-            debug(`Skipping ${logSourcePath(env, sourcePath)} because it does not exist`);
+            reportFileDoesNotExist(sourcePath, platformContext);
             return;
           }
 
-          const distPath = sourcePath.replace(
-            ENTRY_FILE,
-            `${resolveString(config.platformFolderName, platformContext)}.php`,
-          );
+          const newFilename = `${resolveString(config.platformFolderName, platformContext)}.php`;
 
-          debug(`Renaming ${logSourcePath(env, sourcePath)} to ${logTargetPath(env, distPath)}`);
-
-          if (!args.dryRun) {
-            await fs.promises.rename(sourcePath, distPath);
-          }
+          await renameFile(sourcePath, sourcePath.replace(ENTRY_FILE, newFilename), platformContext);
         }),
       );
     },
