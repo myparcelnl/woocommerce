@@ -18,9 +18,7 @@ use MyParcelNL\Pdk\Base\Pdk as PdkInstance;
 use MyParcelNL\Pdk\Facade\Installer;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Facade\WooCommerce;
-use MyParcelNL\WooCommerce\Pdk\WcPdkBootstrapper;
 use MyParcelNL\WooCommerce\Service\WordPressHookService;
-use function DI\value;
 use function MyParcelNL\WooCommerce\bootPdk;
 
 require(plugin_dir_path(__FILE__) . 'vendor/autoload.php');
@@ -88,10 +86,6 @@ final class MyParcelNLWooCommerce
     private function boot(): void
     {
         $version = $this->getVersion();
-
-        WcPdkBootstrapper::setAdditionalConfig([
-            'pluginBasename' => value(plugin_basename(__FILE__)),
-        ]);
 
         bootPdk(
             'myparcelnl',

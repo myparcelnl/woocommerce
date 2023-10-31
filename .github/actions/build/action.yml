@@ -26,53 +26,10 @@ outputs:
 runs:
   using: composite
   steps:
-    - uses: myparcelnl/actions/setup-git-credentials@v3
-      id: credentials
-      with:
-        app-id: ${{ inputs.app-id }}
-        private-key: ${{ inputs.private-key }}
-
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-        token: ${{ steps.credentials.outputs.token }}
-
     - uses: ./.github/actions/setup
       id: setup
       with:
         composer-flags: --no-dev
-
-    - name: 'Cache php-scoper'
-      uses: actions/cache@v3
-      id: php-scoper-cache
-      with:
-        path: .cache/php-scoper
-        key: php-scoper-${{ inputs.php-scoper-version }}
-
-    - name: 'Install php-scoper'
-      if: steps.php-scoper-cache.outputs.cache-hit != 'true'
-      shell: bash
-      # language=sh
-      run: |
-        mkdir -p .cache/php-scoper
-
-        docker run \
-          --volume $PWD/.cache/php-scoper:/app \
-          ${{ steps.setup.outputs.image }} \
-          composer require \
-          --no-interaction \
-          --no-plugins \
-          --no-progress \
-          --no-scripts \
-          "humbug/php-scoper:${{ inputs.php-scoper-version }}"
-
-    # The actual compilation is done in pdk.config.js
-    - name: 'Cache compiled php'
-      uses: actions/cache@v3
-      id: compiled-php-cache
-      with:
-        path: .cache/build
-        key: compiled-php-${{ hashFiles('**/composer.json', '**/composer.lock', 'src/**/*', 'config/**/*', '*.php') }}
 
     - name: 'Build frontend'
       shell: bash
@@ -82,3 +39,23 @@ runs:
           --output-style=static \
           --runner=cloud \
           --target=build
+
+    # The scoper is installed and run in pdk.config.js
+    - name: 'Cache php-scoper'
+      uses: actions/cache@v3
+      id: php-scoper-cache
+      with:
+        path: .tmp/php-scoper
+        key: php-scoper-${{ inputs.php-scoper-version }}
+
+    - name: 'Cache scoped source php'
+      uses: actions/cache@v3
+      with:
+        path: .tmp/scoped/source
+        key: scoped-php-src-${{ hashFiles('src/**/*', 'config/**/*', 'woocommerce-myparcel.php', 'scoper.inc.php') }}
+
+    - name: 'Cache scoped vendor php'
+      uses: actions/cache@v3
+      with:
+        path: .tmp/scoped/vendor
+        key: scoped-php-vendor-${{ hashFiles('**/composer.json', '**/composer.lock', 'scoper.inc.php', 'scoper.vendor.inc.php') }}

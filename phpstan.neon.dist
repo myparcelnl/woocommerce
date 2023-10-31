@@ -4,7 +4,7 @@ includes:
 
 parameters:
   level: 5
-  tmpDir: .cache/phpstan
+  tmpDir: .tmp/phpstan
   parallel:
     maximumNumberOfProcesses: 4
   paths:

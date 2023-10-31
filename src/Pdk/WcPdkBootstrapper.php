@@ -21,16 +21,6 @@ class WcPdkBootstrapper extends PdkBootstrapper
     private static $config = [];
 
     /**
-     * @param  array $config
-     *
-     * @return void
-     */
-    public static function setAdditionalConfig(array $config): void
-    {
-        self::$config = $config;
-    }
-
-    /**
      * @param  string $name
      * @param  string $title
      * @param  string $version
@@ -50,6 +40,10 @@ class WcPdkBootstrapper extends PdkBootstrapper
             ###
             # General
             ###
+
+            'pluginBasename' => factory(function (): string {
+                return plugin_basename(Pdk::getAppInfo()->path);
+            }),
 
             'urlDocumentation' => value('https://developer.myparcel.nl/nl/documentatie/10.woocommerce.html'),
             'urlReleaseNotes'  => value('https://github.com/myparcelnl/woocommerce/releases'),
@@ -228,7 +222,7 @@ class WcPdkBootstrapper extends PdkBootstrapper
                 if (current_user_can('manage_options')) {
                     $callback = '__return_true';
                 }
-                
+
                 return $callback;
             }),
 

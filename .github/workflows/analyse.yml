@@ -23,7 +23,7 @@ jobs:
         uses: actions/cache@v3
         id: phpstan-cache
         with:
-          path: './.cache/phpstan'
+          path: './.tmp/phpstan'
           key: phpstan-cache-${{ hashFiles('phpstan.neon.dist', 'composer.json') }}-${{ hashFiles('**/*.php') }}
           restore-keys: |
             phpstan-cache-${{ hashFiles('phpstan.neon.dist', 'composer.json') }}-

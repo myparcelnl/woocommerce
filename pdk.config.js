@@ -1,21 +1,23 @@
-import fs from 'fs';
-import glob from 'fast-glob';
-import {getPlatformDistPath, executePromises, executeCommand} from '@myparcel-pdk/app-builder';
-import path from 'path';
+import * as fs from 'fs';
+import {
+  PdkPlatformName,
+  addPlatformToContext,
+  defineConfig,
+  exists,
+  getPlatformDistPath,
+  logSourcePath,
+  logTargetPath,
+  resolvePath,
+  resolveString,
+} from '@myparcel-pdk/app-builder';
 
-/**
- * @type {import('@myparcel-pdk/app-builder').PdkBuilderConfig}
- */
-export default {
+const ENTRY_FILE = 'woocommerce-myparcel.php';
+
+export default defineConfig({
   name: 'woocommerce',
-  platforms: ['myparcelnl', 'myparcelbe'],
+  platforms: [PdkPlatformName.MyParcelNl, PdkPlatformName.MyParcelBe],
   source: [
     '!**/node_modules/**',
-    '.cache/build/composer.json',
-    '.cache/build/config/**/*',
-    '.cache/build/src/**/*',
-    '.cache/build/vendor/**/*',
-    '.cache/build/woocommerce-myparcel.php',
     'views/**/lib/**/*',
     'CONTRIBUTING.md',
     'LICENSE.txt',
@@ -26,10 +28,10 @@ export default {
 
   platformFolderName(platform) {
     switch (platform) {
-      case 'myparcelnl':
+      case PdkPlatformName.MyParcelNl:
         return 'woocommerce-myparcel';
 
-      case 'myparcelbe':
+      case PdkPlatformName.MyParcelBe:
         return 'wc-myparcel-belgium';
     }
 
@@ -39,13 +41,9 @@ export default {
   versionSource: [
     {path: 'package.json'},
     {path: 'composer.json'},
-    {path: 'woocommerce-myparcel.php', regex: /Version:\s*(.+)/},
+    {path: ENTRY_FILE, regex: /Version:\s*(.+)/},
     // TODO: Uncomment when this version is stable.
     // {path: 'readme.txt', regex: /Stable tag:\s*(.+)/},
-    {path: 'dist/*/composer.json'},
-    {path: 'dist/*/package.json'},
-    {path: 'dist/wc-myparcel-belgium/wc-myparcel-belgium.php', regex: /Version:\s*(.+)/},
-    {path: 'dist/woocommerce-myparcel/woocommerce-myparcel.php', regex: /Version:\s*(.+)/},
   ],
 
   rootCommand: 'docker compose run --rm -T php',
@@ -56,75 +54,32 @@ export default {
   },
 
   hooks: {
-    /**
-     * Prefix the vendor and source php files.
-     */
-    async beforeCopy(args) {
-      const { debug } = args.context;
+    async afterCopy({context}) {
+      const {args, config, debug, env} = context;
 
-      debug('Prefixing build files...');
+      await Promise.all(
+        config.platforms.map(async (platform) => {
+          const platformContext = addPlatformToContext(context, platform);
+          const platformDistPath = getPlatformDistPath(platformContext);
+          const sourcePath = resolvePath([platformDistPath, ENTRY_FILE], context);
 
-      if (fs.existsSync('.cache/build/composer.json')) {
-        debug('Build files already exist, skipping prefixing.');
-        return;
-      }
+          if (!(await exists(sourcePath))) {
+            debug(`Skipping ${logSourcePath(env, sourcePath)} because it does not exist`);
+            return;
+          }
 
-      if (!args.dryRun) {
-        await executeCommand(args.context,
-          'php',
-          [
-            '-d memory_limit=-1',
-            '.cache/php-scoper/vendor/bin/php-scoper',
-            'add-prefix',
-            '--output-dir=.cache/build',
-            '--force',
-            '--no-ansi',
-            '--no-interaction',
-          ],
-          { stdio: 'inherit' },
-        );
-
-        await executeCommand(args.context, 'composer',
-          [
-            'dump-autoload',
-            '--working-dir=.cache/build',
-            '--classmap-authoritative',
-          ],
-          { stdio: 'inherit' },
-        );
-      }
-
-      debug('Finished prefixing build files.');
-    },
-
-    async afterCopy(args) {
-      const {config, env, debug} = args.context;
-
-      debug('Copying scoped build files to root');
-
-      await executePromises(
-        args,
-        config.platforms.map(async(platform) => {
-          const platformDistPath = getPlatformDistPath({config, env, platform});
-
-          const files = glob.sync('.cache/build/**/*', {cwd: platformDistPath});
-
-          await Promise.all(
-            files.map(async(file) => {
-              const oldPath = `${platformDistPath}/${file}`;
-              const newPath = oldPath.replace('.cache/build/', '');
-
-              if (!args.dryRun) {
-                await fs.promises.mkdir(path.dirname(newPath), {recursive: true});
-                await fs.promises.rename(oldPath, newPath);
-              }
-            }),
+          const distPath = sourcePath.replace(
+            ENTRY_FILE,
+            `${resolveString(config.platformFolderName, platformContext)}.php`,
           );
 
-          await fs.promises.rm(`${platformDistPath}/.cache`, {recursive: true});
-        }));
+          debug(`Renaming ${logSourcePath(env, sourcePath)} to ${logTargetPath(env, distPath)}`);
 
-      debug('Copied scoped build files to root.');
+          if (!args.dryRun) {
+            await fs.promises.rename(sourcePath, distPath);
+          }
+        }),
+      );
     },
   },
-};
+});
