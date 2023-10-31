@@ -213,18 +213,17 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'routeBackendPdk'                => value('pdk'),
             'routeBackendWebhook'            => value('webhook/(?P<hash>.+)'),
             'routeBackendPermissionCallback' => factory(static function (): string {
-                $callback = '__return_false';
-
-                if (is_user_logged_in()) {
-                    foreach (wp_get_current_user()->roles as $role) {
-                        if (in_array($role, ['shop_manager', 'administrator'])) {
-                            $callback = '__return_true';
-                            break;
-                        }
+                if (! is_user_logged_in()) {
+                    return '__return_false';
+                }
+                
+                foreach (wp_get_current_user()->roles as $role) {
+                    if (in_array($role, ['shop_manager', 'administrator'])) {
+                        return '__return_true';
                     }
                 }
 
-                return $callback;
+                return '__return_false';
             }),
 
             'routeFrontend'         => value("$name/frontend/v1"),
