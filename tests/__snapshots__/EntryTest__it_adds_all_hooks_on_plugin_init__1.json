@@ -74,7 +74,7 @@
   "woocommerce_save_product_variation": [
     "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkProductSettingsHooks::handleSaveProduct"
   ],
-  "plugin_action_links_woocommerce-myparcel": [
+  "plugin_action_links_..": [
     "MyParcelNL\\WooCommerce\\Hooks\\PluginInfoHooks::setPluginActionLinks"
   ],
   "plugin_row_meta": [

@@ -106,7 +106,9 @@
   "pdkOrder": {
     "exported": false,
     "deliveryOptions": {
-      "carrier": "postnl",
+      "carrier": {
+        "externalIdentifier": "postnl"
+      },
       "labelAmount": 1,
       "pickupLocation": {
         "locationCode": "8004-NL-213209",
@@ -142,29 +144,13 @@
       "referenceIdentifier": "1491",
       "barcode": "3SMYPA681084449",
       "carrier": {
-        "externalIdentifier": "postnl",
-        "id": 1,
-        "name": "postnl",
-        "human": "PostNL",
-        "enabled": false,
-        "isDefault": true,
-        "optional": false,
-        "primary": false,
-        "type": "main"
+        "externalIdentifier": "postnl"
       },
       "delayed": false,
       "delivered": false,
       "deliveryOptions": {
         "carrier": {
-          "externalIdentifier": "postnl",
-          "id": 1,
-          "name": "postnl",
-          "human": "PostNL",
-          "enabled": false,
-          "isDefault": true,
-          "optional": false,
-          "primary": false,
-          "type": "main"
+          "externalIdentifier": "postnl"
         },
         "labelAmount": 1,
         "pickupLocation": {
@@ -194,9 +180,7 @@
       "isReturn": false,
       "partnerTrackTraces": [],
       "physicalProperties": {
-        "initialWeight": 0,
-        "manualWeight": -1,
-        "totalWeight": 0
+        "weight": 6030
       },
       "price": {
         "amount": 637,

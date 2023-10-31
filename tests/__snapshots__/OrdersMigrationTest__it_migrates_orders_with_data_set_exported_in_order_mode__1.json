@@ -12,7 +12,9 @@
     "apiIdentifier": "f146efee-a7e2-47cc-9369-e1b65a37aff9",
     "exported": true,
     "deliveryOptions": {
-      "carrier": "postnl",
+      "carrier": {
+        "externalIdentifier": "postnl"
+      },
       "labelAmount": 1,
       "shipmentOptions": {
         "insurance": -1,

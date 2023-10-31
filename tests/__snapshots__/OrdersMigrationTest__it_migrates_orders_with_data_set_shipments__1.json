@@ -87,7 +87,9 @@
   "pdkOrder": {
     "exported": false,
     "deliveryOptions": {
-      "carrier": "postnl",
+      "carrier": {
+        "externalIdentifier": "postnl"
+      },
       "labelAmount": 1,
       "shipmentOptions": {
         "insurance": -1,
@@ -113,30 +115,14 @@
       "externalIdentifier": "3SMYPA123456789",
       "barcode": "3SMYPA123456789",
       "carrier": {
-        "externalIdentifier": "postnl",
-        "id": 1,
-        "name": "postnl",
-        "human": "PostNL",
-        "enabled": false,
-        "isDefault": true,
-        "optional": false,
-        "primary": false,
-        "type": "main"
+        "externalIdentifier": "postnl"
       },
       "delayed": false,
       "delivered": false,
       "deliveryOptions": {
         "date": "2077-10-23 09:47:51",
         "carrier": {
-          "externalIdentifier": "postnl",
-          "id": 1,
-          "name": "postnl",
-          "human": "PostNL",
-          "enabled": false,
-          "isDefault": true,
-          "optional": false,
-          "primary": false,
-          "type": "main"
+          "externalIdentifier": "postnl"
         },
         "labelAmount": 1,
         "shipmentOptions": {
@@ -166,9 +152,7 @@
       "isReturn": false,
       "partnerTrackTraces": [],
       "physicalProperties": {
-        "initialWeight": 0,
-        "manualWeight": -1,
-        "totalWeight": 0
+        "weight": 330
       },
       "price": {
         "amount": 607,
