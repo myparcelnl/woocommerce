@@ -138,8 +138,6 @@ export default {
           }
         }),
       );
-
-      debug('Dumped composer autoloader for all platforms.');
     },
   },
 };
