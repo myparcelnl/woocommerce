@@ -35,7 +35,7 @@ jobs:
         shell: bash
         #language=sh
         run: |
-          yarn workspaces foreach -pv --exclude '@myparcel/woocommerce' exec \
+          yarn workspaces foreach -Ap --exclude . exec \
             bash -c 'if [ -f coverage/clover.xml ]; then mv coverage/clover.xml coverage/$(basename $(pwd)).xml; fi'
 
       - uses: codecov/codecov-action@v3
