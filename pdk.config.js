@@ -84,15 +84,6 @@ export default {
           ],
           { stdio: 'inherit' },
         );
-
-        await executeCommand(args.context, 'composer',
-          [
-            'dump-autoload',
-            '--working-dir=.cache/build',
-            '--classmap-authoritative',
-          ],
-          { stdio: 'inherit' },
-        );
       }
 
       debug('Finished prefixing build files.');
@@ -126,6 +117,29 @@ export default {
         }));
 
       debug('Copied scoped build files to root.');
+    },
+
+    async afterTransform({ context }) {
+      const { config, env, args } = context;
+
+      await Promise.all(
+        config.platforms.map(async(platform) => {
+
+          const distPath = getPlatformDistPath({ config, env, platform });
+          const platformDistPath = path.relative(env.cwd, distPath);
+
+          if (!args.dryRun) {
+            await executeCommand(
+              context,
+              'composer',
+              ['dump-autoload', `--working-dir=${platformDistPath}`, '--classmap-authoritative'],
+              args.verbose >= 1 ? { stdio: 'inherit' } : {},
+            );
+          }
+        }),
+      );
+
+      debug('Dumped composer autoloader for all platforms.');
     },
   },
 };
