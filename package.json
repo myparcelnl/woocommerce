@@ -90,7 +90,7 @@
     "typescript": "^5.1.6",
     "vitest": "^0.34.4"
   },
-  "packageManager": "yarn@3.6.3",
+  "packageManager": "yarn@4.0.1",
   "volta": {
     "node": "18.17.1"
   }
