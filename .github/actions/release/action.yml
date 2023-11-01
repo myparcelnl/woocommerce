@@ -18,7 +18,7 @@ runs:
       #language=sh
       run: |
         yarn pdk-builder release \
-          --root-command="docker run --rm -v $PWD:/app -w /app ${{ inputs.image }}" \
+          --root-command="docker run --user $(id -u):$(id -g) -T -v $PWD:/app -w /app ${{ inputs.image }}" \
           --version ${{ inputs.version }} -vvv
 
     - name: 'Upload build artifacts'

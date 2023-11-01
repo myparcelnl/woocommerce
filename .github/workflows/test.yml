@@ -70,6 +70,7 @@ jobs:
         #language=sh
         run: |
           docker run \
+            --user $(id -u):$(id -g) \
             --volume $PWD:/app \
             ${{ steps.setup.outputs.image }} \
             php -dpcov.enabled=1 \
