@@ -30,7 +30,7 @@ module.exports = {
     // TODO: Uncomment when this version is stable.
     // '@myparcel/semantic-release-wordpress-readme-generator',
     addExecPlugin({
-      prepareCmd: `yarn pdk-builder release --root-command "${process.env.PDK_ROOT_COMMAND}" --version $\{nextRelease.version} -vvv`,
+      prepareCmd: `yarn pdk-builder release --root-command "${process.env.PDK_ROOT_COMMAND}" --version $\{nextRelease.version} -v`,
     }),
     addGitHubPlugin({
       assets: [
