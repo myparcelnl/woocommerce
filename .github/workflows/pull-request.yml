@@ -50,3 +50,9 @@ jobs:
         with:
           version: ${{ steps.version.outputs.version }}
           image: ${{ steps.build.outputs.image }}
+
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1
+        if: failure()
+        with:
+          wait-timeout-minutes: 5
