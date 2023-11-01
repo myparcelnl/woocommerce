@@ -38,9 +38,7 @@ jobs:
         shell: bash
         #language=sh
         run: |
-          docker run \
-            -t \
-            --user $(id -u):$(id -g) \
+          docker run -t \
             --volume $PWD:/app \
             ${{ steps.setup.outputs.image }} \
             php -dmemory_limit=-1 vendor/bin/phpstan \
