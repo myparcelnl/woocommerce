@@ -15,11 +15,11 @@ runs:
   steps:
     - name: 'Create release packages'
       shell: bash
+      env:
+        PDK_ROOT_COMMAND: 'docker run -t --user $(id -u):$(id -g) -v $PWD:/app -w /app ${{ inputs.image }}'
       #language=sh
       run: |
-        yarn pdk-builder release \
-          --root-command="docker run --rm -v $PWD:/app -w /app ${{ inputs.image }}" \
-          --version ${{ inputs.version }} -vvv
+        yarn pdk-builder release --version ${{ inputs.version }} -v
 
     - name: 'Upload build artifacts'
       uses: actions/upload-artifact@v3
