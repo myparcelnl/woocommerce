@@ -7,6 +7,7 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Tests\Exception\DieException;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpUser;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
 
@@ -109,4 +110,28 @@ function register_activation_hook($file, $function)
 function register_deactivation_hook($file, $function)
 {
     add_action(sprintf('deactivate_%s', plugin_basename($file)), $function);
+}
+
+/**@see \is_user_logged_in() */
+function is_user_logged_in()
+{
+    return MockWpUser::isLoggedIn();
+}
+
+/**@see \wp_get_current_user() */
+function wp_get_current_user()
+{
+    return MockWpUser::get();
+}
+
+/**@see \__return_false() */
+function __return_false(): bool
+{
+    return false;
+}
+
+/**@see \__return_true() */
+function __return_true(): bool
+{
+    return true;
 }
