@@ -2,7 +2,12 @@
   "externalIdentifier": "6",
   "deliveryOptions": {
     "carrier": {
-      "externalIdentifier": "postnl"
+      "enabled": false,
+      "externalIdentifier": "postnl",
+      "isDefault": true,
+      "optional": false,
+      "primary": false,
+      "type": "main"
     },
     "labelAmount": 1,
     "shipmentOptions": {
@@ -45,34 +50,6 @@
     "company": "MyParcel US"
   },
   "shipments": [],
-  "customsDeclaration": {
-    "contents": 1,
-    "invoice": "6",
-    "items": [
-      {
-        "amount": 2,
-        "classification": "",
-        "country": "NL",
-        "description": "Test product",
-        "itemValue": {
-          "amount": 1499,
-          "currency": "EUR"
-        },
-        "weight": 250
-      },
-      {
-        "amount": 2,
-        "classification": "",
-        "country": "NL",
-        "description": "Test digital product",
-        "itemValue": {
-          "amount": 0,
-          "currency": "EUR"
-        },
-        "weight": 0
-      }
-    ]
-  },
   "physicalProperties": {
     "initialWeight": 500,
     "manualWeight": -1,

@@ -159,7 +159,12 @@
     "exported": false,
     "deliveryOptions": {
       "carrier": {
-        "externalIdentifier": "postnl"
+        "enabled": false,
+        "externalIdentifier": "postnl",
+        "isDefault": true,
+        "optional": false,
+        "primary": false,
+        "type": "main"
       },
       "labelAmount": 1,
       "shipmentOptions": {
@@ -186,14 +191,24 @@
       "externalIdentifier": "3SMYPA1234567",
       "barcode": "3SMYPA1234567",
       "carrier": {
-        "externalIdentifier": "postnl"
+        "enabled": false,
+        "externalIdentifier": "postnl",
+        "isDefault": true,
+        "optional": false,
+        "primary": false,
+        "type": "main"
       },
       "delayed": false,
       "delivered": false,
       "deliveryOptions": {
         "date": "2077-10-23 09:47:51",
         "carrier": {
-          "externalIdentifier": "postnl"
+          "enabled": false,
+          "externalIdentifier": "postnl",
+          "isDefault": true,
+          "optional": false,
+          "primary": false,
+          "type": "main"
         },
         "labelAmount": 1,
         "shipmentOptions": {
@@ -213,25 +228,10 @@
       "hidden": false,
       "isReturn": false,
       "partnerTrackTraces": [],
-      "physicalProperties": {
-        "weight": 72
-      },
       "price": {
         "amount": 937,
         "currency": "EUR"
       },
-      "recipient": {
-        "address1": "Adriaan Brouwerstraat 16",
-        "address2": "",
-        "cc": "BE",
-        "city": "Antwerpen",
-        "postalCode": "1000",
-        "region": "",
-        "email": "test@myparcel.nl",
-        "phone": "1234567890",
-        "person": "test test"
-      },
-      "sender": [],
       "shipmentType": 1,
       "status": 2,
       "created": "2023-07-10 14:11:14",
@@ -247,14 +247,24 @@
       "referenceIdentifier": "1520",
       "barcode": "3SMYPA1234567",
       "carrier": {
-        "externalIdentifier": "postnl"
+        "enabled": false,
+        "externalIdentifier": "postnl",
+        "isDefault": true,
+        "optional": false,
+        "primary": false,
+        "type": "main"
       },
       "delayed": false,
       "delivered": false,
       "deliveryOptions": {
         "date": "2077-10-23 09:47:51",
         "carrier": {
-          "externalIdentifier": "postnl"
+          "enabled": false,
+          "externalIdentifier": "postnl",
+          "isDefault": true,
+          "optional": false,
+          "primary": false,
+          "type": "main"
         },
         "labelAmount": 1,
         "shipmentOptions": {
@@ -283,25 +293,10 @@
       "hidden": false,
       "isReturn": false,
       "partnerTrackTraces": [],
-      "physicalProperties": {
-        "weight": 72
-      },
       "price": {
         "amount": 112,
         "currency": "EUR"
       },
-      "recipient": {
-        "address1": "Adriaan Brouwerstraat 16",
-        "address2": "",
-        "cc": "BE",
-        "city": "Antwerpen",
-        "postalCode": "1000",
-        "region": "",
-        "email": "test@myparcel.nl",
-        "phone": "1234567890",
-        "person": "test test"
-      },
-      "sender": [],
       "shipmentType": 1,
       "status": 2,
       "created": "2023-07-27 15:42:59",

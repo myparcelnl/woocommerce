@@ -30,7 +30,12 @@
     "deliveryOptions": {
       "date": "2077-10-23 00:00:00",
       "carrier": {
-        "externalIdentifier": "postnl"
+        "enabled": false,
+        "externalIdentifier": "postnl",
+        "isDefault": true,
+        "optional": false,
+        "primary": false,
+        "type": "main"
       },
       "labelAmount": 2,
       "shipmentOptions": {

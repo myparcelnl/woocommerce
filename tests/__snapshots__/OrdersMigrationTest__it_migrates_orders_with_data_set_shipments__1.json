@@ -88,7 +88,12 @@
     "exported": false,
     "deliveryOptions": {
       "carrier": {
-        "externalIdentifier": "postnl"
+        "enabled": false,
+        "externalIdentifier": "postnl",
+        "isDefault": true,
+        "optional": false,
+        "primary": false,
+        "type": "main"
       },
       "labelAmount": 1,
       "shipmentOptions": {
@@ -115,14 +120,24 @@
       "externalIdentifier": "3SMYPA123456789",
       "barcode": "3SMYPA123456789",
       "carrier": {
-        "externalIdentifier": "postnl"
+        "enabled": false,
+        "externalIdentifier": "postnl",
+        "isDefault": true,
+        "optional": false,
+        "primary": false,
+        "type": "main"
       },
       "delayed": false,
       "delivered": false,
       "deliveryOptions": {
         "date": "2077-10-23 09:47:51",
         "carrier": {
-          "externalIdentifier": "postnl"
+          "enabled": false,
+          "externalIdentifier": "postnl",
+          "isDefault": true,
+          "optional": false,
+          "primary": false,
+          "type": "main"
         },
         "labelAmount": 1,
         "shipmentOptions": {
@@ -151,25 +166,10 @@
       "hidden": false,
       "isReturn": false,
       "partnerTrackTraces": [],
-      "physicalProperties": {
-        "weight": 330
-      },
       "price": {
         "amount": 607,
         "currency": "EUR"
       },
-      "recipient": {
-        "address1": "Antareslaan 31",
-        "address2": "",
-        "cc": "NL",
-        "city": "Hoofddorp",
-        "postalCode": "2132 JE",
-        "region": "",
-        "email": "test@myparcel.nl",
-        "phone": "06123456789",
-        "person": "hallo test"
-      },
-      "sender": [],
       "shipmentType": 1,
       "status": 2,
       "created": "2023-07-26 18:03:15",

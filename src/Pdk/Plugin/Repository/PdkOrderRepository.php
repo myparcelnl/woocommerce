@@ -8,15 +8,10 @@ use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\App\Order\Model\PdkOrder;
 use MyParcelNL\Pdk\App\Order\Model\PdkOrderLine;
 use MyParcelNL\Pdk\App\Order\Repository\AbstractPdkOrderRepository;
-use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Facade\Platform;
-use MyParcelNL\Pdk\Facade\Settings;
-use MyParcelNL\Pdk\Settings\Model\CustomsSettings;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
-use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
 use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
 use MyParcelNL\WooCommerce\Adapter\WcAddressAdapter;
 use MyParcelNL\WooCommerce\Facade\Filter;
@@ -34,11 +29,6 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     private $addressAdapter;
 
     /**
-     * @var \MyParcelNL\Pdk\Base\Service\CountryService
-     */
-    private $countryService;
-
-    /**
      * @var \MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface
      */
     private $pdkProductRepository;
@@ -52,20 +42,17 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      * @param  \MyParcelNL\Pdk\Storage\Contract\StorageInterface                       $storage
      * @param  \MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface        $pdkProductRepository
      * @param  \MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface $wcOrderRepository
-     * @param  \MyParcelNL\Pdk\Base\Service\CountryService                             $countryService
      * @param  \MyParcelNL\WooCommerce\Adapter\WcAddressAdapter                        $addressAdapter
      */
     public function __construct(
         StorageInterface              $storage,
         PdkProductRepositoryInterface $pdkProductRepository,
         WcOrderRepositoryInterface    $wcOrderRepository,
-        CountryService                $countryService,
         WcAddressAdapter              $addressAdapter
     ) {
         parent::__construct($storage);
         $this->pdkProductRepository = $pdkProductRepository;
         $this->wcOrderRepository    = $wcOrderRepository;
-        $this->countryService       = $countryService;
         $this->addressAdapter       = $addressAdapter;
     }
 
@@ -118,34 +105,6 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     }
 
     /**
-     * @param  \WC_Order                               $order
-     * @param  \MyParcelNL\Pdk\Base\Support\Collection $items
-     *
-     * @return array
-     */
-    private function createCustomsDeclaration(WC_Order $order, Collection $items): array
-    {
-        return [
-            'contents' => Settings::get(CustomsSettings::PACKAGE_CONTENTS, CustomsSettings::ID),
-            'invoice'  => $order->get_id(),
-            'items'    => array_values(
-                $items
-                    ->filter(function ($item) {
-                        return $item['product'] && ! $item['product']->is_virtual();
-                    })
-                    ->map(function ($item) {
-                        return array_merge(
-                            CustomsDeclarationItem::fromProduct($item['pdkProduct'])
-                                ->toArray(),
-                            ['amount' => $item['item']->get_quantity()]
-                        );
-                    })
-                    ->toArray()
-            ),
-        ];
-    }
-
-    /**
      * @param  \WC_Order $order
      *
      * @return \MyParcelNL\Pdk\App\Order\Model\PdkOrder
@@ -165,15 +124,10 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             $order
         ) ?? []);
 
-        $isRow = $this->countryService->isRow($shippingAddress['cc'] ?? Platform::get('localCountry'));
-
         $orderData = [
             'externalIdentifier'    => $order->get_id(),
             'referenceIdentifier'   => $order->get_order_number(),
             'billingAddress'        => $this->addressAdapter->fromWcOrder($order, Pdk::get('wcAddressTypeBilling')),
-            'customsDeclaration'    => $isRow
-                ? $this->createCustomsDeclaration($order, $items)
-                : null,
             'lines'                 => $items
                 ->map(function (array $item) {
                     return new PdkOrderLine([
