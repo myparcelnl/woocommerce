@@ -2,7 +2,12 @@
   "externalIdentifier": "6",
   "deliveryOptions": {
     "carrier": {
-      "externalIdentifier": "postnl"
+      "enabled": false,
+      "externalIdentifier": "postnl",
+      "isDefault": true,
+      "optional": false,
+      "primary": false,
+      "type": "main"
     },
     "labelAmount": 1,
     "shipmentOptions": {
