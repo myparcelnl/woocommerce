@@ -933,8 +933,8 @@ __metadata:
   linkType: hard
 
 "@myparcel-pdk/app-builder@npm:^1.0.0-alpha.1":
-  version: 1.0.0-alpha.60
-  resolution: "@myparcel-pdk/app-builder@npm:1.0.0-alpha.60"
+  version: 1.0.0-alpha.62
+  resolution: "@myparcel-pdk/app-builder@npm:1.0.0-alpha.62"
   dependencies:
     "@edielemoine/google-docs-importer": "npm:^1.1.1"
     "@yarnpkg/parsers": "npm:^3.0.0-rc.48.1"
@@ -948,7 +948,7 @@ __metadata:
     supports-color: "npm:^9.3.1"
   bin:
     pdk-builder: ./bin/index.js
-  checksum: 71bc146a20fdfb8756e576c6d72b8bd06921711e85ae17a66744372a3db56e0852e37e3e6c6d9ef2df7efc5f053d4a7d3fed58ec2c57e49ed979d600b70ea055
+  checksum: f48b8e82de9bb79f7223b91ce8904cee0279fff554377263d11e193fe65b98a5cfcfe3f96a4c0c2a823eee239d8272718136076153dd7442a65fa50902987837
   languageName: node
   linkType: hard
 
