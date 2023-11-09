@@ -3,12 +3,7 @@
   "deliveryOptions": {
     "date": "2039-12-31 12:00:00",
     "carrier": {
-      "enabled": false,
-      "externalIdentifier": "dhlforyou",
-      "isDefault": true,
-      "optional": false,
-      "primary": false,
-      "type": "main"
+      "externalIdentifier": "dhlforyou"
     },
     "labelAmount": 1,
     "shipmentOptions": {

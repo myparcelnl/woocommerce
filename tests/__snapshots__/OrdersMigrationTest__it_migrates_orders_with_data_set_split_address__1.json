@@ -13,12 +13,7 @@
     "exported": false,
     "deliveryOptions": {
       "carrier": {
-        "enabled": false,
-        "externalIdentifier": "postnl",
-        "isDefault": true,
-        "optional": false,
-        "primary": false,
-        "type": "main"
+        "externalIdentifier": "postnl"
       },
       "labelAmount": 1,
       "shipmentOptions": {

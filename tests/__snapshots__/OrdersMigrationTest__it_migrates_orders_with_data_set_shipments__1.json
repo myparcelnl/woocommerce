@@ -88,12 +88,7 @@
     "exported": false,
     "deliveryOptions": {
       "carrier": {
-        "enabled": false,
-        "externalIdentifier": "postnl",
-        "isDefault": true,
-        "optional": false,
-        "primary": false,
-        "type": "main"
+        "externalIdentifier": "postnl"
       },
       "labelAmount": 1,
       "shipmentOptions": {
@@ -120,24 +115,14 @@
       "externalIdentifier": "3SMYPA123456789",
       "barcode": "3SMYPA123456789",
       "carrier": {
-        "enabled": false,
-        "externalIdentifier": "postnl",
-        "isDefault": true,
-        "optional": false,
-        "primary": false,
-        "type": "main"
+        "externalIdentifier": "postnl"
       },
       "delayed": false,
       "delivered": false,
       "deliveryOptions": {
         "date": "2077-10-23 09:47:51",
         "carrier": {
-          "enabled": false,
-          "externalIdentifier": "postnl",
-          "isDefault": true,
-          "optional": false,
-          "primary": false,
-          "type": "main"
+          "externalIdentifier": "postnl"
         },
         "labelAmount": 1,
         "shipmentOptions": {
