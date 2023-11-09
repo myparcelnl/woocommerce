@@ -27,12 +27,7 @@
     "exported": false,
     "deliveryOptions": {
       "carrier": {
-        "enabled": false,
-        "externalIdentifier": "dhlforyou",
-        "isDefault": true,
-        "optional": false,
-        "primary": false,
-        "type": "main"
+        "externalIdentifier": "dhlforyou"
       },
       "labelAmount": 1,
       "shipmentOptions": {
