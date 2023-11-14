@@ -28,6 +28,11 @@ class WpCronService implements CronServiceInterface
      */
     public function schedule($callback, int $timestamp, ...$args): void
     {
-        wp_schedule_single_event($timestamp, $callback, $args);
+        if (is_callable($callback)) {
+            $hookName = md5(serialize($callback));
+            add_action($hookName, $callback);
+        }
+
+        wp_schedule_single_event($timestamp, $hookName ?? $callback, $args);
     }
 }
