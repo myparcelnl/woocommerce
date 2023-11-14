@@ -62,3 +62,32 @@ it('schedules jobs', function () {
         ->and($firstTask['args'])
         ->toBe(['arg1', 'arg2']);
 });
+
+it('can call a callable', function () {
+    /** @var \MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks $tasks */
+    $tasks = Pdk::get(WordPressScheduledTasks::class);
+    /** @var \MyParcelNL\Pdk\Base\Contract\CronServiceInterface $cronService */
+    $cronService = Pdk::get(CronServiceInterface::class);
+
+    $cronService->dispatch(static function () { return 'perenboom'; }, 'arg', true);
+    $cronService->dispatch(static function () { return 'wijnstok'; }, 'arg', true);
+
+    $firstTask = $tasks
+        ->all()
+        ->first();
+    $lastTask  = $tasks
+        ->all()
+        ->last();
+
+    expect($tasks->all())
+        ->toHaveLength(2)
+        ->and($firstTask['callback'])
+        ->toBeString()
+        ->and($lastTask['callback'])
+        ->toBeString()
+        ->and($firstTask['callback'])
+        ->not()
+        ->toBe($lastTask['callback'])
+        ->and($firstTask['args'])
+        ->toBe(['arg', true]);
+});

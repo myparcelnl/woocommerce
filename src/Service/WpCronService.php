@@ -28,11 +28,13 @@ class WpCronService implements CronServiceInterface
      */
     public function schedule($callback, int $timestamp, ...$args): void
     {
+        $hook = $callback;
+
         if (is_callable($callback)) {
-            $hookName = md5(serialize($callback));
-            add_action($hookName, $callback);
+            $hook = md5(serialize($callback)); // TODO static closure is not serializable
+            add_action($hook, $callback); //  TODO the add_action for 'hook' must be present for EVERY request
         }
 
-        wp_schedule_single_event($timestamp, $hookName ?? $callback, $args);
+        wp_schedule_single_event($timestamp, $hook, $args);
     }
 }
