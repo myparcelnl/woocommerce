@@ -31,8 +31,11 @@ class WpCronService implements CronServiceInterface
         $hook = $callback;
 
         if (is_callable($callback)) {
-            $hook = md5(serialize($callback)); // TODO static closure is not serializable
-            add_action($hook, $callback); //  TODO the add_action for 'hook' must be present for EVERY request
+            $hook                                  =
+                md5(serialize($callback)); // TODO static closure is not serializable
+            $allActions                            = get_option('my_parcel_all_actions', []);
+            $allActions['my_parcel_hook_' . $hook] = $callback;
+            update_option('my_parcel_all_actions', $allActions);
         }
 
         wp_schedule_single_event($timestamp, $hook, $args);
