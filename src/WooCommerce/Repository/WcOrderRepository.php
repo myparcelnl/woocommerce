@@ -61,7 +61,7 @@ final class WcOrderRepository extends Repository implements WcOrderRepositoryInt
                         'item'    => $item,
                         'product' => $product,
                     ];
-                }, array_values($order->get_items() ?? []))
+                }, array_values($order->get_items() ?: []))
             );
         });
     }
