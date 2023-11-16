@@ -22,4 +22,11 @@ interface WcOrderRepositoryInterface
      * @return \MyParcelNL\Pdk\Base\Support\Collection<\WC_Order_Item>
      */
     public function getItems($input): Collection;
+
+    /**
+     * @param $input
+     *
+     * @return bool
+     */
+    public function hasLocalPickup($input): bool;
 }

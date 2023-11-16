@@ -66,6 +66,18 @@ final class WcOrderRepository extends Repository implements WcOrderRepositoryInt
         });
     }
 
+    /**
+     * @param  int|string|WC_Order|\WP_Post $input
+     *
+     * @return bool
+     * @throws \Throwable
+     */
+    public function hasLocalPickup($input): bool
+    {
+        return $this->get($input)
+            ->has_shipping_method('local_pickup');
+    }
+
     protected function getKeyPrefix(): string
     {
         return WC_Order::class;

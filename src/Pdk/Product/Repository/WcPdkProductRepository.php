@@ -17,7 +17,7 @@ use WC_Product_Variation;
 class WcPdkProductRepository extends AbstractPdkPdkProductRepository
 {
     /**
-     * @var \MyParcelNL\WooCommerce\Pdk\Service\WcWeightService
+     * @var \MyParcelNL\Pdk\Base\Contract\WeightServiceInterface
      */
     protected $weightService;
 

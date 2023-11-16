@@ -111,6 +111,14 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'metaKeyProductSettings' => value("_{$name}_product_settings"),
 
             /**
+             * The database table audits are saved in.
+             *
+             * @see \MyParcelNL\WooCommerce\Pdk\Audit\Repository\WcPdkAuditRepository
+             */
+
+            'tableNameAudits' => value("_{$name}_audits"),
+
+            /**
              * The meta key that stores the version of the plugin the resource was last saved with.
              */
 
