@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Service;
 
+use InvalidArgumentException;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
@@ -37,7 +38,7 @@ it('dispatches jobs', function () {
         ->toBe(['arg1', 2, 'arg3']);
 });
 
-it('schedules jobs', function () {
+it('schedules jobs', function ($callback) {
     /** @var \MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks $tasks */
     $tasks = Pdk::get(WordPressScheduledTasks::class);
     /** @var \MyParcelNL\Pdk\Base\Contract\CronServiceInterface $cronService */
@@ -45,49 +46,33 @@ it('schedules jobs', function () {
 
     $dispatchTimestamp = time() + 1000;
 
-    $cronService->schedule('my_schedule_func', $dispatchTimestamp, 'arg1', 'arg2');
+    $cronService->schedule($callback, $dispatchTimestamp, 'arg1', 'arg2');
 
-    $firstTask = $tasks
+    $task = $tasks
         ->all()
         ->first();
 
-    expect($tasks->all())
-        ->toHaveLength(1)
-        ->and($firstTask['callback'])
-        ->toBe('my_schedule_func')
-        ->and($firstTask['time'])
-        ->toBeLessThanOrEqual($dispatchTimestamp + 5)
-        ->and($firstTask['time'])
-        ->toBeGreaterThanOrEqual($dispatchTimestamp - 5)
-        ->and($firstTask['args'])
-        ->toBe(['arg1', 'arg2']);
-});
+    $actions = get_option(Pdk::get('webhookAddActions'), []);
+    $keys    = array_keys($actions);
 
-it('can call a callable', function () {
-    /** @var \MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks $tasks */
-    $tasks = Pdk::get(WordPressScheduledTasks::class);
+    expect(Pdk::get('webhookActionName') . $task['callback'])
+        ->toBe($keys[0])
+        ->and($task['time'])
+        ->toBeLessThanOrEqual($dispatchTimestamp + 5)
+        ->and($task['time'])
+        ->toBeGreaterThanOrEqual($dispatchTimestamp - 5)
+        ->and($task['args'])
+        ->toBe(['arg1', 'arg2']);
+
+    unset($actions[Pdk::get('webhookActionName') . $task['callback']]);
+    update_option(Pdk::get('webhookAddActions'), $actions);
+})->with('callbacks');
+
+it('throws exception when input is not a string or array', function () {
     /** @var \MyParcelNL\Pdk\Base\Contract\CronServiceInterface $cronService */
     $cronService = Pdk::get(CronServiceInterface::class);
 
-    $cronService->dispatch(static function () { return 'perenboom'; }, 'arg', true);
-    $cronService->dispatch(static function () { return 'wijnstok'; }, 'arg', true);
-
-    $firstTask = $tasks
-        ->all()
-        ->first();
-    $lastTask  = $tasks
-        ->all()
-        ->last();
-
-    expect($tasks->all())
-        ->toHaveLength(2)
-        ->and($firstTask['callback'])
-        ->toBeString()
-        ->and($lastTask['callback'])
-        ->toBeString()
-        ->and($firstTask['callback'])
-        ->not()
-        ->toBe($lastTask['callback'])
-        ->and($firstTask['args'])
-        ->toBe(['arg', true]);
-});
+    $cronService->dispatch(static function () {
+        return 'test';
+    }, 'arg', true);
+})->throws(InvalidArgumentException::class);

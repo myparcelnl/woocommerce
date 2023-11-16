@@ -32,3 +32,8 @@ function createWcProduct(array $data = []): WC_Product
         ->with($data)
         ->make();
 }
+
+function mockFunction(): string
+{
+    return 'mocked';
+}

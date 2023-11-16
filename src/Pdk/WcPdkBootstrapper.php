@@ -216,7 +216,7 @@ class WcPdkBootstrapper extends PdkBootstrapper
                 if (! is_user_logged_in()) {
                     return '__return_false';
                 }
-                
+
                 foreach (wp_get_current_user()->roles as $role) {
                     if (in_array($role, ['shop_manager', 'administrator'])) {
                         return '__return_true';
@@ -304,6 +304,11 @@ class WcPdkBootstrapper extends PdkBootstrapper
 
             'migrateAction_5_0_0_Orders'          => value("{$name}_migrate_5_0_0_orders"),
             'migrateAction_5_0_0_ProductSettings' => value("{$name}_migrate_5_0_0_product_settings"),
+
+            # WP Cron actions
+
+            'webhookAddActions' => value("{$name}_all_actions"),
+            'webhookActionName' => value("{$name}_hook_"),
         ]);
     }
 }

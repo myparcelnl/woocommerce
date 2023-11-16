@@ -11,10 +11,12 @@ use MyParcelNL\WooCommerce\Hooks\CheckoutScriptHooks;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Hooks\OrderNotesHooks;
 use MyParcelNL\WooCommerce\Hooks\PluginInfoHooks;
+use MyParcelNL\WooCommerce\Hooks\RanWebhookActions;
 use MyParcelNL\WooCommerce\Hooks\ScheduledMigrationHooks;
 use MyParcelNL\WooCommerce\Hooks\SeparateAddressFieldsHooks;
 use MyParcelNL\WooCommerce\Hooks\TaxFieldsHooks;
 use MyParcelNL\WooCommerce\Hooks\TrackTraceHooks;
+use MyParcelNL\WooCommerce\Hooks\WebhookActions;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkAdminEndpointHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkCheckoutPlaceOrderHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkCoreHooks;
@@ -69,6 +71,8 @@ final class WordPressHookService
             SeparateAddressFieldsHooks::class,
             TaxFieldsHooks::class,
             TrackTraceHooks::class,
+            WebhookActions::class,
+            RanWebhookActions::class,
         ];
     }
 }
