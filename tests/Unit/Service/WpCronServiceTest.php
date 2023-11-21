@@ -41,6 +41,7 @@ it('dispatches jobs', function () {
 it('schedules jobs', function ($callback) {
     /** @var \MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks $tasks */
     $tasks = Pdk::get(WordPressScheduledTasks::class);
+
     /** @var \MyParcelNL\Pdk\Base\Contract\CronServiceInterface $cronService */
     $cronService = Pdk::get(CronServiceInterface::class);
 
@@ -60,7 +61,7 @@ it('schedules jobs', function ($callback) {
         ->and($tasks->all())
         ->toHaveLength(1)
         ->and(Pdk::get('webhookActionName') . $task['callback'])
-        ->toBe($keys[0])
+        ->toBe(end($keys))
         ->and($task['time'])
         ->toBeLessThanOrEqual($dispatchTimestamp + 5)
         ->and($task['time'])
@@ -79,4 +80,6 @@ it('throws exception when input is not a string or array', function () {
     $cronService->dispatch(static function () {
         return 'test';
     }, 'arg', true);
+
+    update_option(Pdk::get('webhookAddActions'), []);
 })->throws(InvalidArgumentException::class);
