@@ -48,6 +48,17 @@ final class MockWpActions implements StaticMockInterface
 
     /**
      * @param  string $tag
+     *
+     * @return bool
+     */
+    public static function didAction(string $tag): bool
+    {
+        return self::getActions()
+            ->has($tag);
+    }
+
+    /**
+     * @param  string $tag
      * @param  mixed  ...$args
      *
      * @return void

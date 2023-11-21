@@ -100,6 +100,12 @@ function add_action($tag, $functionToAdd, $priority = 10, $acceptedArgs = 1)
     add_filter($tag, $functionToAdd, $priority, $acceptedArgs);
 }
 
+/**@see \did_action() */
+function did_action($tag): bool
+{
+    return MockWpActions::didAction($tag);
+}
+
 /**@see \register_activation_hook() */
 function register_activation_hook($file, $function)
 {
