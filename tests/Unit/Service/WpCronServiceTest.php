@@ -55,7 +55,11 @@ it('schedules jobs', function ($callback) {
     $actions = get_option(Pdk::get('webhookAddActions'), []);
     $keys    = array_keys($actions);
 
-    expect(Pdk::get('webhookActionName') . $task['callback'])
+    expect($actions)
+        ->toHaveLength(count($actions))
+        ->and($tasks->all())
+        ->toHaveLength(1)
+        ->and(Pdk::get('webhookActionName') . $task['callback'])
         ->toBe($keys[0])
         ->and($task['time'])
         ->toBeLessThanOrEqual($dispatchTimestamp + 5)
