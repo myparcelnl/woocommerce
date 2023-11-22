@@ -600,7 +600,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ljharb/through@npm:^2.3.9":
+"@ljharb/through@npm:^2.3.11":
   version: 2.3.11
   resolution: "@ljharb/through@npm:2.3.11"
   dependencies:
@@ -933,8 +933,8 @@ __metadata:
   linkType: hard
 
 "@myparcel-pdk/app-builder@npm:^1.0.0-alpha.1":
-  version: 1.0.0-alpha.62
-  resolution: "@myparcel-pdk/app-builder@npm:1.0.0-alpha.62"
+  version: 1.0.0-alpha.64
+  resolution: "@myparcel-pdk/app-builder@npm:1.0.0-alpha.64"
   dependencies:
     "@edielemoine/google-docs-importer": "npm:^1.1.1"
     "@yarnpkg/parsers": "npm:^3.0.0-rc.48.1"
@@ -945,10 +945,11 @@ __metadata:
     inquirer: "npm:^9.1.4"
     interpret: "npm:^3.1.1"
     liftoff: "npm:^4.0.0"
+    semver: "npm:^7.5.4"
     supports-color: "npm:^9.3.1"
   bin:
     pdk-builder: ./bin/index.js
-  checksum: f48b8e82de9bb79f7223b91ce8904cee0279fff554377263d11e193fe65b98a5cfcfe3f96a4c0c2a823eee239d8272718136076153dd7442a65fa50902987837
+  checksum: 666ed737400c5cdfe9b158c7712d5ebd365c5302af2036fd0595790c7bd6df7ede0694bb1aeff50ad24b807fdd229f1c0a3e431b397a89798c56a7fbdce23eeb
   languageName: node
   linkType: hard
 
@@ -3609,9 +3610,9 @@ __metadata:
   linkType: hard
 
 "async@npm:^3.2.4":
-  version: 3.2.4
-  resolution: "async@npm:3.2.4"
-  checksum: b5d02fed64717edf49e35b2b156debd9cf524934ea670108fa5528e7615ed66a5e0bf6c65f832c9483b63aa7f0bffe3e588ebe8d58a539b833798d324516e1c9
+  version: 3.2.5
+  resolution: "async@npm:3.2.5"
+  checksum: 1408287b26c6db67d45cb346e34892cee555b8b59e6c68e6f8c3e495cad5ca13b4f218180e871f3c2ca30df4ab52693b66f2f6ff43644760cab0b2198bda79c1
   languageName: node
   linkType: hard
 
@@ -6675,10 +6676,10 @@ __metadata:
   linkType: hard
 
 "inquirer@npm:^9.1.4":
-  version: 9.2.11
-  resolution: "inquirer@npm:9.2.11"
+  version: 9.2.12
+  resolution: "inquirer@npm:9.2.12"
   dependencies:
-    "@ljharb/through": "npm:^2.3.9"
+    "@ljharb/through": "npm:^2.3.11"
     ansi-escapes: "npm:^4.3.2"
     chalk: "npm:^5.3.0"
     cli-cursor: "npm:^3.1.0"
@@ -6693,7 +6694,7 @@ __metadata:
     string-width: "npm:^4.2.3"
     strip-ansi: "npm:^6.0.1"
     wrap-ansi: "npm:^6.2.0"
-  checksum: 4bc2db9a3c04432ba6f10b236b1975c5e112d42c2364ffa62e1b5bca5d3d358e7bee0c4d2b5b50294d05a8b452b66cf274b25b5d3c4a71df6c90c372102dee8a
+  checksum: efc19864bea5f4b22a47e686aa88684ee42352db4e96dd6307da7140496c16e5ef0e74be664fba490b068714dc24d72f66dc1907a1ccbaf9d58d6156cbdc5908
   languageName: node
   linkType: hard
 
