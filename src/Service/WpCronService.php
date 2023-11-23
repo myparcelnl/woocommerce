@@ -72,9 +72,9 @@ class WpCronService implements CronServiceInterface
     /**
      * @param  array $callback
      *
-     * @return callable
+     * @return array
      */
-    private function validateArrayCallback(array $callback): callable
+    private function validateArrayCallback(array $callback): array
     {
         $class  = $callback[0] ?? null;
         $method = $callback[1] ?? null;
