@@ -25,7 +25,7 @@ CREATE TABLE $tableName (
   modelIdentifier tinytext NOT NULL,
   action tinytext NOT NULL,
   type tinytext NOT NULL,
-  created datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+  created tinytext NOT NULL,
   PRIMARY KEY  (id)
 ) $charsetCollate;
 EOF;

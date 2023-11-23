@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Audit\Repository;
 
+use DateTime;
 use MyParcelNL\Pdk\Audit\Collection\AuditCollection;
 use MyParcelNL\Pdk\Audit\Contract\AuditRepositoryInterface;
 use MyParcelNL\Pdk\Audit\Model\Audit;
@@ -14,6 +15,7 @@ class WcPdkAuditRepository extends Repository implements AuditRepositoryInterfac
 {
     /**
      * @return \MyParcelNL\Pdk\Audit\Collection\AuditCollection
+     * @throws \Exception
      */
     public function all(): AuditCollection
     {
@@ -25,7 +27,23 @@ class WcPdkAuditRepository extends Repository implements AuditRepositoryInterfac
             'ARRAY_A'
         );
 
-        return new AuditCollection($audits);
+        $auditsCollection = new AuditCollection();
+
+        foreach ($audits as $audit) {
+            $auditsCollection->push(
+                new Audit([
+                    'id'              => $audit['auditId'],
+                    'arguments'       => json_decode($audit['arguments'], true),
+                    'action'          => $audit['action'],
+                    'model'           => $audit['model'],
+                    'modelIdentifier' => $audit['modelIdentifier'],
+                    'created'         => new DateTime($audit['created']),
+                    'type'            => $audit['type'],
+                ])
+            );
+        }
+
+        return $auditsCollection;
     }
 
     /**
@@ -42,12 +60,12 @@ class WcPdkAuditRepository extends Repository implements AuditRepositoryInterfac
         $wpdb->insert(
             $tableName,
             [
-                'id'              => $audit->id,
+                'auditId'         => $audit->id,
                 'arguments'       => json_encode($audit->arguments),
                 'action'          => $audit->action,
                 'model'           => $audit->model,
                 'modelIdentifier' => $audit->modelIdentifier,
-                'created'         => $audit->created,
+                'created'         => $audit->created->format('Y-m-d H:i:s'),
                 'type'            => $audit->type,
             ]
         );

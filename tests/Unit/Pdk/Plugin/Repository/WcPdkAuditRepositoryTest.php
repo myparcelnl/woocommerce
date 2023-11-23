@@ -42,9 +42,8 @@ it('adds audits', function () {
 
     $auditRepository = Pdk::get(AuditRepositoryInterface::class);
 
-    $audit =
-        $auditRepository->all()
-            ->first();
+    $audit = $auditRepository->all()
+        ->first();
 
     expect($audit->action)
         ->toBe(PdkBackendActions::EXPORT_ORDERS)
