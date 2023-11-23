@@ -13,7 +13,7 @@
     "emptyMailboxWeight": 0,
     "emptyParcelWeight": 0,
     "orderMode": false,
-    "processDirectly": false,
+    "processDirectly": "-1",
     "saveCustomerAddress": false,
     "sendNotificationAfter": -1,
     "sendReturnEmail": false,
