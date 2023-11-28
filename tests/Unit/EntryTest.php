@@ -28,7 +28,7 @@ it('throws error if woocommerce is not enabled', function () {
     WC()->version = '';
 
     MockWpActions::execute('activate_woocommerce-myparcel');
-})->throws(DieException::class, 'WooCommerce');
+})->throws(DieException::class, 'woocommerce');
 
 it('activates plugin if prerequisites are met', function () {
     MockWcPdkBootstrapper::addConfig([

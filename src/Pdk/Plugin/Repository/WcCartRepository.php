@@ -68,7 +68,7 @@ class WcCartRepository extends AbstractPdkCartRepository
     /**
      * @param  \WC_Cart $cart
      *
-     * @return mixed
+     * @return \MyParcelNL\Pdk\App\Cart\Model\PdkCart
      */
     protected function fromWcCart(WC_Cart $cart): PdkCart
     {

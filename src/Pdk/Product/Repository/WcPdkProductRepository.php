@@ -17,7 +17,7 @@ use WC_Product_Variation;
 class WcPdkProductRepository extends AbstractPdkPdkProductRepository
 {
     /**
-     * @var \MyParcelNL\WooCommerce\Pdk\Service\WcWeightService
+     * @var \MyParcelNL\Pdk\Base\Contract\WeightServiceInterface
      */
     protected $weightService;
 
@@ -50,7 +50,10 @@ class WcPdkProductRepository extends AbstractPdkPdkProductRepository
                     'amount'   => (float) $product->get_price() * 100,
                     'currency' => get_woocommerce_currency(),
                 ],
-                'weight'             => $this->weightService->convertToGrams((float) $product->get_weight()),
+                'weight'             => $this->weightService->convertToGrams(
+                    (float) $product->get_weight(),
+                    get_option('woocommerce_weight_unit', Pdk::get('defaultWeightUnit'))
+                ),
                 'length'             => $product->get_length(),
                 'width'              => $product->get_width(),
                 'height'             => $product->get_height(),

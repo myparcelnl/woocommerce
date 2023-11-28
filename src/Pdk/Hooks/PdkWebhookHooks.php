@@ -23,7 +23,9 @@ final class PdkWebhookHooks implements WordPressHooksInterface
     }
 
     /**
-     * @return void
+     * @param  \WP_REST_Request $request
+     *
+     * @return \WP_REST_Response
      */
     public function processWebhookRequest(WP_REST_Request $request): WP_REST_Response
     {

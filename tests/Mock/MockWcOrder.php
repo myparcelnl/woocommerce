@@ -44,6 +44,11 @@ class MockWcOrder extends MockWcClass
         return isset($this->attributes['shipping_address_1']);
     }
 
+    public function has_shipping_method(string $shippingMethod): bool
+    {
+        return 'local_pickup' !== $shippingMethod;
+    }
+
     /**
      * @param  string $status
      *

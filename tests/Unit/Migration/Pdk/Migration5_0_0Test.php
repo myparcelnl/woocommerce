@@ -11,11 +11,14 @@ use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Settings\Model\AccountSettings;
 use MyParcelNL\Pdk\Tests\Bootstrap\MockApi;
 use MyParcelNL\WooCommerce\Migration\Migration5_0_0;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpGlobal;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use function MyParcelNL\Pdk\Tests\usesShared;
 
 usesShared(new UsesMockWcPdkInstance());
+
+$GLOBALS['wpdb'] = new MockWpGlobal();
 
 it('runs up migrations', function () {
     WordPressOptions::updateOption('woocommerce_myparcel_general_settings', ['api_key' => 'zomerhoed']);

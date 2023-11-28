@@ -50,6 +50,6 @@ class Guzzle7ClientAdapter implements ClientAdapterInterface
             ? $responseBody->getContents()
             : null;
 
-        return new ClientResponse($body, $response->getStatusCode() ?? 500, $response->getHeaders());
+        return new ClientResponse($body, $response->getStatusCode(), $response->getHeaders());
     }
 }
