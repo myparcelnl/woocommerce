@@ -20,7 +20,7 @@ usesShared(new UsesMockWcPdkInstance());
 
 it('exports order automatically', function () {
     factory(OrderSettings::class)
-        ->withProcessDirectly('completed')
+        ->withProcessDirectly('wc-completed')
         ->store();
 
     $orderFactory = wpFactory(WC_Order::class)->withShippingAddressInBelgium();
