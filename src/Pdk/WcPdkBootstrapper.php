@@ -116,7 +116,7 @@ class WcPdkBootstrapper extends PdkBootstrapper
              * @see \MyParcelNL\WooCommerce\Pdk\Audit\Repository\WcPdkAuditRepository
              */
 
-            'tableNameAudits' => value("_{$name}_audits"),
+            'tableNameAudits' => value("{$name}_audits"),
 
             /**
              * The meta key that stores the version of the plugin the resource was last saved with.
