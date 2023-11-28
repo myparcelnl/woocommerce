@@ -71,10 +71,5 @@ $ignoreErrors[] = [
 	'count' => 1,
 	'path' => __DIR__ . '/src/Pdk/Plugin/WcShippingMethodRepository.php',
 ];
-$ignoreErrors[] = [
-	'message' => '#^Method MyParcelNL\\\\Pdk\\\\Base\\\\Contract\\\\WeightServiceInterface\\:\\:convertToGrams\\(\\) invoked with 1 parameter, 2 required\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/src/Pdk/Product/Repository/WcPdkProductRepository.php',
-];
 
 return ['parameters' => ['ignoreErrors' => $ignoreErrors]];
