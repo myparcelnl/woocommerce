@@ -19,7 +19,8 @@ class DatabaseService implements DatabaseServiceInterface
         // phpcs:ignore
         $sql = <<<EOF
 CREATE TABLE $tableName (
-  id tinytext NOT NULL,
+  id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  auditId tinytext NOT NULL,
   arguments text NOT NULL,
   model tinytext NOT NULL,
   modelIdentifier tinytext NOT NULL,
