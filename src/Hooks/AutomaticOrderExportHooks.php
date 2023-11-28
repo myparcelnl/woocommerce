@@ -39,8 +39,9 @@ final class AutomaticOrderExportHooks implements WordPressHooksInterface
     public function automaticExportOrder(int $orderId, string $oldStatus, string $newStatus): void
     {
         $automaticExportStatus = Settings::get(OrderSettings::PROCESS_DIRECTLY, OrderSettings::ID);
+        $prefixedNewStatus     = sprintf('wc-%s', $newStatus);
 
-        if ($newStatus !== $automaticExportStatus || $this->wcOrderRepository->hasLocalPickup($orderId)) {
+        if ($prefixedNewStatus !== $automaticExportStatus || $this->wcOrderRepository->hasLocalPickup($orderId)) {
             return;
         }
 
