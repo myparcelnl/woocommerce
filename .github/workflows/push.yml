@@ -32,8 +32,6 @@ jobs:
       - uses: ./.github/actions/build
         id: build
         with:
-          app-id: ${{ secrets.MYPARCEL_APP_ID }}
-          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
           php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
 
       - name: 'Determine version'

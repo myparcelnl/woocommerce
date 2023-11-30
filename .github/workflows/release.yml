@@ -32,8 +32,8 @@ jobs:
       - uses: myparcelnl/actions/setup-git-credentials@v3
         id: credentials
         with:
-          app-id: ${{ inputs.app-id }}
-          private-key: ${{ inputs.private-key }}
+          app-id: ${{ secrets.MYPARCEL_APP_ID }}
+          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
 
       - uses: actions/checkout@v3
         with:
@@ -43,8 +43,6 @@ jobs:
       - uses: ./.github/actions/build
         id: build
         with:
-          app-id: ${{ secrets.MYPARCEL_APP_ID }}
-          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
           php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
 
       - uses: myparcelnl/actions/semantic-release@v3

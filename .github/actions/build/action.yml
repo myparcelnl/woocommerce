@@ -2,23 +2,11 @@ name: 'Create build'
 description: ''
 
 inputs:
-  app-id:
-    description: 'GitHub App ID'
-    required: true
-
-  private-key:
-    description: 'GitHub App Private Key'
-    required: true
-
   php-scoper-version:
     description: 'PHP Scoper Version'
     required: true
 
 outputs:
-  token:
-    description: 'GitHub Token'
-    value: ${{ steps.credentials.outputs.token }}
-
   image:
     description: 'Docker image to use'
     value: ${{ steps.setup.outputs.image }}
