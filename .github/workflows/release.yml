@@ -29,6 +29,17 @@ jobs:
         with:
           persist-credentials: false
 
+      - uses: myparcelnl/actions/setup-git-credentials@v3
+        id: credentials
+        with:
+          app-id: ${{ inputs.app-id }}
+          private-key: ${{ inputs.private-key }}
+
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ steps.credentials.outputs.token }}
+
       - uses: ./.github/actions/build
         id: build
         with:
@@ -41,7 +52,7 @@ jobs:
         env:
           PDK_ROOT_COMMAND: 'docker run -t --user $(id -u):$(id -g) -v $PWD:/app -w /app ${{ steps.build.outputs.image }}'
         with:
-          token: ${{ steps.build.outputs.token }}
+          token: ${{ steps.credentials.outputs.token }}
           write-summary: true
 
   rebase-develop:
