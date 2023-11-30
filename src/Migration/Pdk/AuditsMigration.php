@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
-use MyParcelNL\WooCommerce\Database\Contract\DatabaseServiceInterface;
+use MyParcelNL\WooCommerce\Database\Contract\WpDatabaseServiceInterface;
 
 final class AuditsMigration extends AbstractPdkMigration
 {
     /**
-     * @var \MyParcelNL\WooCommerce\Database\Contract\DatabaseServiceInterface
+     * @var \MyParcelNL\WooCommerce\Database\Contract\WpDatabaseServiceInterface
      */
     private $databaseService;
 
-    public function __construct(DatabaseServiceInterface $databaseService)
+    public function __construct(WpDatabaseServiceInterface $databaseService)
     {
         $this->databaseService = $databaseService;
     }

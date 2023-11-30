@@ -7,18 +7,18 @@ namespace MyParcelNL\WooCommerce\Tests\Uses;
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderNoteRepositoryInterface;
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
-use MyParcelNL\Pdk\Audit\Contract\AuditRepositoryInterface;
+use MyParcelNL\Pdk\Audit\Contract\PdkAuditRepositoryInterface;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Tests\Bootstrap\MockPdkConfig;
 use MyParcelNL\Pdk\Tests\Uses\UsesEachMockPdkInstance;
-use MyParcelNL\WooCommerce\Database\Contract\DatabaseServiceInterface;
+use MyParcelNL\WooCommerce\Database\Contract\WpDatabaseServiceInterface;
 use MyParcelNL\WooCommerce\Pdk\Audit\Repository\WcPdkAuditRepository;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\WcOrderNoteRepository;
 use MyParcelNL\WooCommerce\Pdk\Product\Repository\WcPdkProductRepository;
 use MyParcelNL\WooCommerce\Service\WpCronService;
-use MyParcelNL\WooCommerce\Tests\Mock\MockDatabaseService;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkBootstrapper;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpDatabaseService;
 use function DI\get;
 
 final class UsesMockWcPdkInstance extends UsesEachMockPdkInstance
@@ -50,9 +50,9 @@ final class UsesMockWcPdkInstance extends UsesEachMockPdkInstance
             $this->config,
             [
                 CronServiceInterface::class            => get(WpCronService::class),
-                DatabaseServiceInterface::class        => get(MockDatabaseService::class),
+                WpDatabaseServiceInterface::class      => get(MockWpDatabaseService::class),
                 PdkOrderNoteRepositoryInterface::class => get(WcOrderNoteRepository::class),
-                AuditRepositoryInterface::class        => get(WcPdkAuditRepository::class),
+                PdkAuditRepositoryInterface::class     => get(WcPdkAuditRepository::class),
                 PdkOrderRepositoryInterface::class     => get(PdkOrderRepository::class),
                 PdkProductRepositoryInterface::class   => get(WcPdkProductRepository::class),
             ]

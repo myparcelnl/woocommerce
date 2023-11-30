@@ -10,7 +10,7 @@ use MyParcelNL\Pdk\Base\Contract\WeightServiceInterface;
 use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Collection\SettingsModelCollection;
-use MyParcelNL\Pdk\Settings\Contract\SettingsRepositoryInterface;
+use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\Settings;
 use MyParcelNL\Pdk\Shipment\Model\DropOffDay;
 use MyParcelNL\Sdk\src\Support\Str;
@@ -77,8 +77,8 @@ final class SettingsMigration extends AbstractPdkMigration
      */
     public function migrateSettings(array $oldSettings): void
     {
-        /** @var \MyParcelNL\Pdk\Settings\Contract\SettingsRepositoryInterface $settingsRepository */
-        $settingsRepository = Pdk::get(SettingsRepositoryInterface::class);
+        /** @var \MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface $settingsRepository */
+        $settingsRepository = Pdk::get(PdkSettingsRepositoryInterface::class);
 
         $newSettings = $this->transformSettings($oldSettings);
 

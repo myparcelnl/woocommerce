@@ -1,10 +1,12 @@
 <?php
+/** @noinspection StaticClosureCanBeUsedInspection */
 
 declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use GuzzleHttp\Psr7\Response;
+use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
@@ -18,8 +20,6 @@ use function MyParcelNL\Pdk\Tests\usesShared;
 
 usesShared(new UsesMockWcPdkInstance());
 
-$GLOBALS['wpdb'] = new MockWpGlobal();
-
 it('runs up migrations', function () {
     WordPressOptions::updateOption('woocommerce_myparcel_general_settings', ['api_key' => 'zomerhoed']);
 
@@ -31,12 +31,13 @@ it('runs up migrations', function () {
 
 it('completes even when api returns error', function () {
     WordPressOptions::updateOption('woocommerce_myparcel_general_settings', ['api_key' => 'winterpeen']);
-    MockApi::enqueue(new Response(403, [], '[\'request_id\' => \'1\', \'errors\' => []]'));
+    MockApi::enqueue(new Response(403, [], "['request_id' => '1', 'errors' => []]"));
 
+    /** @var \MyParcelNL\WooCommerce\Migration\Migration5_0_0 $migration5 */
     $migration5 = Pdk::get(Migration5_0_0::class);
     $migration5->up();
 
-    expect(end(Logger::getLogs()))->toEqual([
+    expect(Arr::last(Logger::getLogs()))->toEqual([
         'level'   => 'warning',
         'message' => '[PDK]: Migration 5.0.0 (PDK) error',
         'context' => [

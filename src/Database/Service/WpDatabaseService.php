@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Database\Service;
 
+use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\WooCommerce\Database\Contract\DatabaseServiceInterface;
+use MyParcelNL\WooCommerce\Database\Contract\WpDatabaseServiceInterface;
 
-class DatabaseService implements DatabaseServiceInterface
+class WpDatabaseService implements WpDatabaseServiceInterface
 {
     public function createAuditsTable(): void
     {
@@ -44,5 +45,41 @@ EOF;
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
         return dbDelta($sql);
+    }
+
+    /**
+     * @param  string $table
+     *
+     * @return \MyParcelNL\Pdk\Base\Support\Collection
+     * @throws \Exception
+     */
+    public function getAll(string $table): Collection
+    {
+        global $wpdb;
+
+        $tableName = $wpdb->prefix . $table;
+
+        return new Collection(
+            $wpdb->get_results(
+                "SELECT * FROM $tableName ORDER BY created DESC",
+                'ARRAY_A'
+            )
+        );
+    }
+
+    /**
+     * @param  string $table
+     * @param  array  $array
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function insert(string $table, array $array): void
+    {
+        global $wpdb;
+
+        $tableName = $wpdb->prefix . $table;
+
+        $wpdb->insert($tableName, $array);
     }
 }

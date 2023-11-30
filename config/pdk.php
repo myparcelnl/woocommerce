@@ -20,10 +20,7 @@ use MyParcelNL\Pdk\App\ShippingMethod\Contract\PdkShippingMethodRepositoryInterf
 use MyParcelNL\Pdk\App\Tax\Contract\TaxServiceInterface;
 use MyParcelNL\Pdk\App\Webhook\Contract\PdkWebhookServiceInterface;
 use MyParcelNL\Pdk\App\Webhook\Contract\PdkWebhooksRepositoryInterface;
-use MyParcelNL\Pdk\Audit\Contract\AuditRepositoryInterface;
-use MyParcelNL\Pdk\Audit\Contract\AuditServiceInterface;
-use MyParcelNL\Pdk\Audit\Contract\AuditsRepositoryInterface;
-use MyParcelNL\Pdk\Audit\Service\AuditService;
+use MyParcelNL\Pdk\Audit\Contract\PdkAuditRepositoryInterface;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Base\Contract\WeightServiceInterface;
 use MyParcelNL\Pdk\Base\Support\Arr;
@@ -35,12 +32,12 @@ use MyParcelNL\Pdk\Frontend\Contract\FrontendRenderServiceInterface;
 use MyParcelNL\Pdk\Frontend\Contract\ScriptServiceInterface;
 use MyParcelNL\Pdk\Frontend\Contract\ViewServiceInterface;
 use MyParcelNL\Pdk\Language\Contract\LanguageServiceInterface;
-use MyParcelNL\Pdk\Settings\Contract\SettingsRepositoryInterface;
+use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\OrderSettings;
 use MyParcelNL\WooCommerce\Contract\WooCommerceServiceInterface;
 use MyParcelNL\WooCommerce\Contract\WordPressServiceInterface;
-use MyParcelNL\WooCommerce\Database\Contract\DatabaseServiceInterface;
-use MyParcelNL\WooCommerce\Database\Service\DatabaseService;
+use MyParcelNL\WooCommerce\Database\Contract\WpDatabaseServiceInterface;
+use MyParcelNL\WooCommerce\Database\Service\WpDatabaseService;
 use MyParcelNL\WooCommerce\Facade\WooCommerce;
 use MyParcelNL\WooCommerce\Facade\WordPress;
 use MyParcelNL\WooCommerce\Logger\WcLogger;
@@ -190,8 +187,8 @@ return [
     PdkOrderRepositoryInterface::class          => get(PdkOrderRepository::class),
     PdkProductRepositoryInterface::class        => get(WcPdkProductRepository::class),
     PdkShippingMethodRepositoryInterface::class => get(WcShippingMethodRepository::class),
-    AuditRepositoryInterface::class             => get(WcPdkAuditRepository::class),
-    SettingsRepositoryInterface::class          => get(PdkSettingsRepository::class),
+    PdkAuditRepositoryInterface::class          => get(WcPdkAuditRepository::class),
+    PdkSettingsRepositoryInterface::class       => get(PdkSettingsRepository::class),
     WcOrderRepositoryInterface::class           => get(WcOrderRepository::class),
 
     /**
@@ -199,9 +196,8 @@ return [
      */
 
     ApiServiceInterface::class            => get(MyParcelApiService::class),
-    AuditServiceInterface::class          => get(AuditService::class),
     CronServiceInterface::class           => get(WpCronService::class),
-    DatabaseServiceInterface::class       => get(DatabaseService::class),
+    WpDatabaseServiceInterface::class     => get(WpDatabaseService::class),
     InstallerServiceInterface::class      => get(WpInstallerService::class),
     LanguageServiceInterface::class       => get(LanguageService::class),
     OrderStatusServiceInterface::class    => get(WcStatusService::class),
