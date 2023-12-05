@@ -171,7 +171,11 @@ class CarrierSettings
     private function createDefaultExportSettingsArray(string $option, AbstractCarrier $carrier): array
     {
         $settings           = [];
-        $euInsuranceAmounts = [0  => __('no_insurance', 'woocommerce-myparcel')] + WCMP_Data::getInsuranceAmounts('FR', $carrier->getName());
+        $euInsuranceAmounts =
+            [0 => __('no_insurance', 'woocommerce-myparcel')] + WCMP_Data::getInsuranceAmounts(
+                'FR',
+                $carrier->getName()
+            );
         $nlInsuranceAmounts = WCMP_Data::getInsuranceAmounts(AbstractConsignment::CC_NL, $carrier->getName());
 
         switch ($option) {
@@ -332,40 +336,40 @@ class CarrierSettings
                     ]
                 );
                 break;
-//            case AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY:
-//                $settings[] = [
-//                    'name'      => WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY,
-//                    'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-//                    'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
-//                    'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
-//                    'type'      => 'toggle',
-//                ];
-//                $settings[] = WCMP_Settings_Data::getFeeField(
-//                    WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY_FEE,
-//                    [
-//                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-//                        WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY,
-//                    ]
-//                );
-//                $settings[] = [
-//                    'name'              => WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY_CUTOFF_TIME,
-//                    'type'              => 'time',
-//                    'class'             => ['wcmp__child'],
-//                    'condition'         => [
-//                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-//                        WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY,
-//                    ],
-//                    'label'             => __('setting_carrier_cut_off_time_title', 'woocommerce-myparcel'),
-//                    'help_text'         => __(
-//                        'shipment_options_same_day_delivery_cutoff_time_help_text',
-//                        'woocommerce-myparcel'
-//                    ),
-//                    'default'           => '09:00',
-//                    'custom_attributes' => [
-//                        'min' => '00:00',
-//                        'max' => '10:00',
-//                    ],
-//                ];
+                //            case AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY:
+                //                $settings[] = [
+                //                    'name'      => WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY,
+                //                    'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                //                    'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
+                //                    'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
+                //                    'type'      => 'toggle',
+                //                ];
+                //                $settings[] = WCMP_Settings_Data::getFeeField(
+                //                    WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY_FEE,
+                //                    [
+                //                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                //                        WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY,
+                //                    ]
+                //                );
+                //                $settings[] = [
+                //                    'name'              => WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY_CUTOFF_TIME,
+                //                    'type'              => 'time',
+                //                    'class'             => ['wcmp__child'],
+                //                    'condition'         => [
+                //                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                //                        WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY,
+                //                    ],
+                //                    'label'             => __('setting_carrier_cut_off_time_title', 'woocommerce-myparcel'),
+                //                    'help_text'         => __(
+                //                        'shipment_options_same_day_delivery_cutoff_time_help_text',
+                //                        'woocommerce-myparcel'
+                //                    ),
+                //                    'default'           => '09:00',
+                //                    'custom_attributes' => [
+                //                        'min' => '00:00',
+                //                        'max' => '10:00',
+                //                    ],
+                //                ];
                 break;
         }
 
@@ -535,13 +539,16 @@ class CarrierSettings
 
         $settings = [
             [
-                'name'  => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                'label' => sprintf(
+                'name'      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                'label'     => sprintf(
                     __('setting_carrier_delivery_enabled', 'woocommerce-myparcel'),
                     $carrier->getHuman()
                 ),
-                'help_text' => CarrierDHLForYou::NAME === $carrier->getName() ? __('carrier_dhl_for_you_today_help_text', 'woocommerce-myparcel') : '',
-                'type'  => 'toggle',
+                'help_text' => CarrierDHLForYou::NAME === $carrier->getName() ? __(
+                    'carrier_dhl_for_you_today_help_text',
+                    'woocommerce-myparcel'
+                ) : '',
+                'type'      => 'toggle',
             ],
             WCMP_Settings_Data::getFeeField(
                 WCMYPA_Settings::SETTING_CARRIER_DELIVERY_STANDARD_FEE,
@@ -587,9 +594,8 @@ class CarrierSettings
                     null                                          => __('no_default_weight', 'woocommerce-myparcel'),
                     WCMP_Data::DIGITAL_STAMP_RANGES[0]['average'] => '0 - 20 gram',
                     WCMP_Data::DIGITAL_STAMP_RANGES[1]['average'] => '20 - 50 gram',
-                    WCMP_Data::DIGITAL_STAMP_RANGES[2]['average'] => '50 - 100 gram',
-                    WCMP_Data::DIGITAL_STAMP_RANGES[3]['average'] => '100 - 350 gram',
-                    WCMP_Data::DIGITAL_STAMP_RANGES[4]['average'] => '350 - 2000 gram',
+                    WCMP_Data::DIGITAL_STAMP_RANGES[2]['average'] => '50 - 350 gram',
+                    WCMP_Data::DIGITAL_STAMP_RANGES[3]['average'] => '350 - 2000 gram',
                 ],
                 'help_text' => __('setting_carrier_digital_stamp_help_text', 'woocommerce-myparcel'),
             ];

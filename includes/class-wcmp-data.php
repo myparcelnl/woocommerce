@@ -34,13 +34,8 @@ class WCMP_Data
         ],
         [
             'min'     => 50,
-            'max'     => 100,
-            'average' => 75
-        ],
-        [
-            'min'     => 100,
             'max'     => 350,
-            'average' => 225
+            'average' => 200,
         ],
         [
             'min'     => 350,
