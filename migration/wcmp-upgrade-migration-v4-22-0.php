@@ -13,9 +13,8 @@ if (class_exists('WCMP_Upgrade_Migration_v4_22_0')) {
 }
 
 /**
- * Migrates pre v4.4.1 settings
- *  - move show delivery day setting from checkout to general
- *  - add per carrier feature allow show delivery date, set to on when delivery days window > 0, else off
+ * Migrates pre v4.22.0 settings
+ *  - move digital stamp weight ranges 50-100g adn 100-350g to 50-350g
  */
 class WCMP_Upgrade_Migration_v4_22_0 extends WCMP_Upgrade_Migration
 {
