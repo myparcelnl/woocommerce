@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use migration\WCMP_Upgrade_Migration;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -83,13 +84,11 @@ class WCMP_Upgrade_Migration_v4_22_0 extends WCMP_Upgrade_Migration
      */
     protected function migrateCarrierSettings(): void
     {
-        foreach (WCMP_Data::getCarriers() as $carrier) {
-            $keyDpzDefaultWeight = $carrier . '_' . WCMYPA_Settings::SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT;
-            $settingsName        = sprintf('new%ssettings', $carrier);
+        $keyDpzDefaultWeight =
+            sprintf('%s_%s', CarrierPostNL::NAME, WCMYPA_Settings::SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT);
 
-            if (in_array($this->{$settingsName}[$keyDpzDefaultWeight], [75, 225], true)) {
-                $this->{$settingsName}[$keyDpzDefaultWeight] = 200;
-            }
+        if (in_array($this->newPostNlSettings[$keyDpzDefaultWeight], [75, 225], true)) {
+            $this->newPostNlSettings[$keyDpzDefaultWeight] = 200;
         }
     }
 
