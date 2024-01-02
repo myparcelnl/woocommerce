@@ -296,7 +296,7 @@ if (! class_exists('WCMYPA')) :
             $installed_version = get_option($version_setting) ?: '0';
 
             // installed version lower than plugin version?
-            if (true) {
+            if (version_compare($installed_version, $this->version, '<')) {
                 if (! $installed_version) {
                     $this->install();
                 } else {
