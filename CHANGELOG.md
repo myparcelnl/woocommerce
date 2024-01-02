@@ -14,6 +14,30 @@ You can install this version manually to get a head start on [the new features a
 [support@myparcel.nl]: mailto:support@myparcel.nl
 [the new features and improvements]: https://github.com/myparcelnl/woocommerce/compare/main...develop
 
+## [4.22.0-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.21.0...v4.22.0-rc.1) (2024-01-02)
+
+
+### :bug: Bug Fixes
+
+* **customs:** conform to minimum item value of api ([#991](https://github.com/myparcelnl/woocommerce/issues/991)) ([c2d99a1](https://github.com/myparcelnl/woocommerce/commit/c2d99a16ba875ff602dbab7726b266b7009a60a8))
+* do not confirm delivery for virtual orders ([#987](https://github.com/myparcelnl/woocommerce/issues/987)) ([d7d863e](https://github.com/myparcelnl/woocommerce/commit/d7d863e4357e59a15effd876e4e36cb9eab8f37a))
+
+
+### :sparkles: New Features
+
+* change digital stamp weight range ([#1061](https://github.com/myparcelnl/woocommerce/issues/1061)) ([7413d70](https://github.com/myparcelnl/woocommerce/commit/7413d70604179ec528d433eec09815eb5f38b9c6))
+
+**🚧 Note: 🚧**
+
+This is a release candidate. It's not fully tested yet, but will be tested thoroughly and released on the [WordPress plugin directory] soon.
+
+You can install this version manually to get a head start on [the new features and improvements]. Please report any issues you encounter using the [Bug report form] or by sending an email to [support@myparcel.nl].
+
+[Bug report form]: https://github.com/myparcelnl/woocommerce/issues/new?labels=bug&template=BUG-REPORT.yml&version=v4.x.x-rc.x
+[WordPress plugin directory]: https://wordpress.org/plugins/woocommerce-myparcel/
+[support@myparcel.nl]: mailto:support@myparcel.nl
+[the new features and improvements]: https://github.com/myparcelnl/woocommerce/compare/main...develop
+
 ## [4.21.1-rc.2](https://github.com/myparcelnl/woocommerce/compare/v4.21.1-rc.1...v4.21.1-rc.2) (2023-08-10)
 
 
