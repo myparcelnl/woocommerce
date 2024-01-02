@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+**🚧 Note: 🚧**
+
+This is a release candidate. It's not fully tested yet, but will be tested thoroughly and released on the [WordPress plugin directory] soon.
+
+You can install this version manually to get a head start on [the new features and improvements]. Please report any issues you encounter using the [Bug report form] or by sending an email to [support@myparcel.nl].
+
+[Bug report form]: https://github.com/myparcelnl/woocommerce/issues/new?labels=bug&template=BUG-REPORT.yml&version=v4.x.x-rc.x
+[WordPress plugin directory]: https://wordpress.org/plugins/woocommerce-myparcel/
+[support@myparcel.nl]: mailto:support@myparcel.nl
+[the new features and improvements]: https://github.com/myparcelnl/woocommerce/compare/main...develop
+
+## [4.22.1-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.22.0...v4.22.1-rc.1) (2024-01-02)
+
+
+### :bug: Bug Fixes
+
+* compare versions for upgrade or install ([#1063](https://github.com/myparcelnl/woocommerce/issues/1063)) ([4a9d724](https://github.com/myparcelnl/woocommerce/commit/4a9d7241106942261b5c61105c01210d1b6f6164))
+
 ## [4.22.0](https://github.com/myparcelnl/woocommerce/compare/v4.21.0...v4.22.0) (2024-01-02)
 
 
