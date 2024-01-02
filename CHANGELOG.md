@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.22.1](https://github.com/myparcelnl/woocommerce/compare/v4.22.0...v4.22.1) (2024-01-02)
+
+
+### :bug: Bug Fixes
+
+* compare versions for upgrade or install ([#1063](https://github.com/myparcelnl/woocommerce/issues/1063)) ([4a9d724](https://github.com/myparcelnl/woocommerce/commit/4a9d7241106942261b5c61105c01210d1b6f6164))
+
 **🚧 Note: 🚧**
 
 This is a release candidate. It's not fully tested yet, but will be tested thoroughly and released on the [WordPress plugin directory] soon.
