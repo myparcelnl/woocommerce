@@ -14,10 +14,12 @@ License: MIT
 License URI: http://www.opensource.org/licenses/mit-license.php
 */
 
+use Automattic\WooCommerce\Blocks\Integrations\IntegrationRegistry;
 use MyParcelNL\Pdk\Base\Pdk as PdkInstance;
 use MyParcelNL\Pdk\Facade\Installer;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Facade\WooCommerce;
+use MyParcelNL\WooCommerce\Integration\WcBlocksLoader;
 use MyParcelNL\WooCommerce\Service\WordPressHookService;
 use function MyParcelNL\WooCommerce\bootPdk;
 
@@ -32,8 +34,8 @@ final class MyParcelNLWooCommerce
     {
         register_activation_hook(__FILE__, [$this, 'install']);
         register_deactivation_hook(__FILE__, [$this, 'uninstall']);
-
         add_action('init', [$this, 'initialize'], 9999);
+        add_action('woocommerce_blocks_checkout_block_registration', [$this, 'registerCheckoutBlocks']);
     }
 
     /**
@@ -66,6 +68,22 @@ final class MyParcelNLWooCommerce
         }
 
         Installer::install();
+    }
+
+    /**
+     * @param  \Automattic\WooCommerce\Blocks\Integrations\IntegrationRegistry $integrationRegistry
+     *
+     * @return void
+     * @throws \Throwable
+     */
+    public function registerCheckoutBlocks(IntegrationRegistry $integrationRegistry): void
+    {
+        $this->initialize();
+        /** @var \MyParcelNL\WooCommerce\Integration\WcBlocksLoader $loader */
+        $loader = Pdk::get(WcBlocksLoader::class);
+        $loader->setRegistry($integrationRegistry);
+
+        $loader->registerCheckoutBlocks();
     }
 
     /**

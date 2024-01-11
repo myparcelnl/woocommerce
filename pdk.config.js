@@ -18,6 +18,8 @@ export default defineConfig({
   source: [
     '!**/node_modules/**',
     'views/**/lib/**/*',
+    'views/**/dist/**/*',
+    'views/blocks/*/block.json',
     'CONTRIBUTING.md',
     'LICENSE.txt',
     'README.md',

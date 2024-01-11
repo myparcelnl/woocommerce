@@ -141,3 +141,13 @@ function __return_true(): bool
 {
     return true;
 }
+
+/**
+ * @param $value
+ *
+ * @return mixed
+ */
+function wp_unslash($value)
+{
+    return $value;
+}

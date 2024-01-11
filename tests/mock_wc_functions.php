@@ -12,6 +12,9 @@ function get_woocommerce_currency(): string
     return 'EUR';
 }
 
+/** @see \register_block_type() */
+function register_block_type($blockType, $args = []): void {}
+
 /**
  * @return \stdClass[]
  * @see \wc_get_order_notes()
