@@ -29,9 +29,7 @@ jobs:
             phpstan-cache-${{ hashFiles('phpstan.neon.dist', 'composer.json') }}-
             phpstan-cache-
 
-      - uses: ./.github/actions/setup
-        if: steps.phpstan-cache.outputs.cache-hit != 'true'
-        id: setup
+      - uses: ./.github/actions/composer-install
 
       - name: 'Run PHPStan analysis'
         if: steps.phpstan-cache.outputs.cache-hit != 'true'

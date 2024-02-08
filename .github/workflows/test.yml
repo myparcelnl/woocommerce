@@ -16,7 +16,7 @@ jobs:
           path: views/**/coverage
           key: coverage-${{ hashFiles('**/package.json', '**/yarn.lock', 'views/**/*') }}
 
-      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/yarn-install
         if: steps.coverage-cache.outputs.cache-hit != 'true'
 
       - name: 'Run frontend tests'
@@ -60,8 +60,7 @@ jobs:
           path: coverage
           key: coverage-${{ hashFiles('**/composer.json', '**/composer.lock', 'src/**/*', 'tests/**/*') }}
 
-      - uses: ./.github/actions/setup
-        if: steps.coverage-cache.outputs.cache-hit != 'true'
+      - uses: ./.github/actions/composer-install
         id: setup
 
       - name: 'Run backend tests'

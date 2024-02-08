@@ -14,7 +14,9 @@ outputs:
 runs:
   using: composite
   steps:
-    - uses: ./.github/actions/setup
+    - uses: ./.github/actions/yarn-install
+
+    - uses: ./.github/actions/composer-install
       id: setup
       with:
         composer-flags: --no-dev

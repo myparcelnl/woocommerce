@@ -1,0 +1,15 @@
+name: 'Yarn install'
+description: 'Install yarn dependencies'
+
+runs:
+  using: composite
+  steps:
+    - uses: myparcelnl/actions/yarn-install@v3
+      with:
+        node-version: ${{ vars.NODE_VERSION }}
+
+    - name: 'Import translations'
+      shell: bash
+      #language=sh
+      run: |
+        yarn translations:import

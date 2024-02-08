@@ -1,5 +1,5 @@
-name: 'Setup'
-description: 'Install dependencies'
+name: 'Composer install'
+description: 'Install composer dependencies'
 
 inputs:
   composer-flags:
@@ -18,15 +18,5 @@ runs:
     - uses: myparcelnl/actions/composer-install@v3
       id: composer
       with:
-        php-version: 7.4
+        php-version: ${{ vars.PHP_VERSION }}
         flags: ${{ inputs.composer-flags }}
-
-    - uses: myparcelnl/actions/yarn-install@v3
-      with:
-        node-version: 18
-
-    - name: 'Import translations'
-      shell: bash
-      #language=sh
-      run: |
-        yarn translations:import
