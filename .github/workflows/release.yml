@@ -25,17 +25,17 @@ jobs:
       released: ${{ steps.release.outputs.released }}
       version: ${{ steps.release.outputs.version }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           persist-credentials: false
 
-      - uses: myparcelnl/actions/setup-git-credentials@v3
+      - uses: myparcelnl/actions/setup-git-credentials@v4
         id: credentials
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ steps.credentials.outputs.token }}
@@ -45,7 +45,7 @@ jobs:
         with:
           php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
 
-      - uses: myparcelnl/actions/semantic-release@v3
+      - uses: myparcelnl/actions/semantic-release@v4
         id: release
         env:
           PDK_ROOT_COMMAND: 'docker run -t --user $(id -u):$(id -g) -v $PWD:/app -w /app ${{ steps.build.outputs.image }}'

@@ -7,13 +7,13 @@ jobs:
   rebase-prs:
     runs-on: ubuntu-22.04
     steps:
-      - uses: myparcelnl/actions/setup-git-credentials@v3
+      - uses: myparcelnl/actions/setup-git-credentials@v4
         id: credentials
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
 
-      - uses: peter-evans/rebase@v2
+      - uses: peter-evans/rebase@v3
         with:
           token: ${{ steps.credentials.outputs.token }}
           base: ${{ github.ref_name }}

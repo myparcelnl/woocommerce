@@ -4,7 +4,7 @@ description: 'Install yarn dependencies'
 runs:
   using: composite
   steps:
-    - uses: myparcelnl/actions/yarn-install@v3
+    - uses: myparcelnl/actions/yarn-install@v4
       with:
         node-version: ${{ vars.NODE_VERSION }}
 

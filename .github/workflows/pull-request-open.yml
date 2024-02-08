@@ -13,7 +13,7 @@ jobs:
   assign-author:
     runs-on: ubuntu-22.04
     steps:
-      - uses: myparcelnl/actions/pr-assign-author@v3
+      - uses: myparcelnl/actions/pr-assign-author@v4
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}

@@ -32,20 +32,20 @@ runs:
 
     # The scoper is installed and run in pdk.config.js
     - name: 'Cache php-scoper'
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       id: php-scoper-cache
       with:
         path: .tmp/php-scoper
         key: php-scoper-${{ inputs.php-scoper-version }}
 
     - name: 'Cache scoped source php'
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: .tmp/scoped/source
         key: scoped-php-src-${{ hashFiles('src/**/*', 'config/**/*', 'woocommerce-myparcel.php', 'scoper.inc.php') }}
 
     - name: 'Cache scoped vendor php'
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: .tmp/scoped/vendor
         key: scoped-php-vendor-${{ hashFiles('**/composer.json', '**/composer.lock', 'scoper.inc.php', 'scoper.vendor.inc.php') }}

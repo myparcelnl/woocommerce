@@ -7,10 +7,10 @@ jobs:
   test-frontend:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: 'Cache coverage'
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: coverage-cache
         with:
           path: views/**/coverage
@@ -38,23 +38,25 @@ jobs:
           yarn workspaces foreach -Ap --exclude . exec \
             bash -c 'if [ -f coverage/clover.xml ]; then mv coverage/clover.xml coverage/$(basename $(pwd)).xml; fi'
 
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
         with:
           flags: unit,frontend,admin
           files: views/backend/**/coverage/*.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
 
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
         with:
           flags: unit,frontend,checkout
           files: views/frontend/**/coverage/*.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   test-backend:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: 'Cache coverage'
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: coverage-cache
         with:
           path: coverage
@@ -88,7 +90,8 @@ jobs:
           # Strip the /app/ prefix from the coverage paths before uploading.
           sed -i 's/\/app\///g' coverage/backend.xml
 
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
         with:
           flags: unit,backend
           files: coverage/*.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
