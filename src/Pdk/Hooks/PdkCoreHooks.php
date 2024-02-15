@@ -84,14 +84,7 @@ final class PdkCoreHooks implements WordPressHooksInterface
             ]
         );
 
-        $appInfo = Pdk::getAppInfo();
-
-        $this->service->enqueueStyle(
-            WpScriptService::HANDLE_PDK_ADMIN,
-            'views/backend/admin/lib/style.css',
-            [],
-            $appInfo->version
-        );
+        $this->service->enqueueLocalStyle(WpScriptService::HANDLE_PDK_ADMIN, 'views/backend/admin/lib/style.css');
     }
 
     /**

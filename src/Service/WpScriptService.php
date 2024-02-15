@@ -40,7 +40,7 @@ class WpScriptService extends ScriptService
         );
     }
 
-    /**`
+    /**
      * @param  string $handle
      * @param  string $src
      * @param  array  $deps
@@ -57,8 +57,26 @@ class WpScriptService extends ScriptService
     }
 
     /**
-     * Enqueue a script.
+     * @param  string $handle
+     * @param  string $src
+     * @param  array  $deps
+     * @param  string $media
      *
+     * @return void
+     */
+    public function enqueueLocalStyle(
+        string $handle,
+        string $src,
+        array  $deps = [],
+        string $media = 'all'
+    ): void {
+        $appInfo = Pdk::getAppInfo();
+        $url     = sprintf('%s/%s', $appInfo->url, $src);
+
+        $this->enqueueStyle($handle, $url, $deps, $appInfo->version, $media);
+    }
+
+    /**
      * @param  string      $handle
      * @param  string      $src
      * @param  array       $deps
@@ -78,8 +96,6 @@ class WpScriptService extends ScriptService
     }
 
     /**
-     * Enqueue a style.
-     *
      * @param  string      $handle
      * @param  string      $src
      * @param  array       $deps
@@ -95,10 +111,7 @@ class WpScriptService extends ScriptService
         string $version = null,
         string $media = 'all'
     ): void {
-        $appInfo = Pdk::getAppInfo();
-        $url     = sprintf('%s/%s', $appInfo->url, $src);
-
-        wp_enqueue_style($handle, $url, $deps, $this->getVersion($version), $media);
+        wp_enqueue_style($handle, $src, $deps, $this->getVersion($version), $media);
     }
 
     /**
