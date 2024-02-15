@@ -4,6 +4,9 @@ vendor/
 lib/
 dist/
 coverage/
+.nx-cache/
+.nx/
+
 clover.xml
 
 docker-compose.override.yml

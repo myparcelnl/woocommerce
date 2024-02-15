@@ -7,5 +7,8 @@
     "test": "run ws:test \"$(pwd)\"",
     "test:coverage": "run ws:test:coverage \"$(pwd)\"",
     "test:run": "run ws:test:run \"$(pwd)\""
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
   }
 }
