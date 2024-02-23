@@ -18,6 +18,8 @@ jobs:
 
       - uses: ./.github/actions/yarn-install
         if: steps.coverage-cache.outputs.cache-hit != 'true'
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
 
       - name: 'Run frontend tests'
         if: steps.coverage-cache.outputs.cache-hit != 'true'
