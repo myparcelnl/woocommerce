@@ -327,9 +327,9 @@ final class ProductSettingsMigration extends AbstractPdkMigration
     /**
      * @param  string $packageType
      *
-     * @return null|array
+     * @return array
      */
-    private function getShippingMethodsForPackageType(string $packageType): ?array
+    private function getShippingMethodsForPackageType(string $packageType): array
     {
         $legacySettings = get_option(SettingsMigration::LEGACY_OPTION_EXPORT_DEFAULTS_SETTINGS) ?: [];
 
