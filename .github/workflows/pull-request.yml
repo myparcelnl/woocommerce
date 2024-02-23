@@ -29,6 +29,11 @@ jobs:
         with:
           persist-credentials: false
 
+      - uses: ./.github/actions/setup
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+          php-version: ${{ vars.PHP_VERSION }}
+
       - uses: ./.github/actions/build
         id: build
         with:

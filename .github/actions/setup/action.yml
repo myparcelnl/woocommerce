@@ -1,7 +1,11 @@
-name: 'Composer install'
-description: 'Install composer dependencies'
+name: 'Setup'
+description: 'Install dependencies'
 
 inputs:
+  node-version:
+    description: 'Node version'
+    required: true
+
   php-version:
     description: 'PHP version'
     required: true
@@ -24,3 +28,13 @@ runs:
       with:
         php-version: ${{ inputs.php-version }}
         flags: ${{ inputs.composer-flags }}
+
+    - uses: myparcelnl/actions/yarn-install@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: 'Import translations'
+      shell: bash
+      #language=sh
+      run: |
+        yarn translations:import

@@ -14,16 +14,6 @@ outputs:
 runs:
   using: composite
   steps:
-    - uses: ./.github/actions/yarn-install
-      with:
-        node-version: ${{ vars.NODE_VERSION }}
-
-    - uses: ./.github/actions/composer-install
-      id: setup
-      with:
-        php-version: ${{ vars.PHP_VERSION }}
-        composer-flags: --no-dev
-
     - name: 'Build frontend'
       shell: bash
       #language=sh

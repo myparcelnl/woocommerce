@@ -29,8 +29,9 @@ jobs:
             phpstan-cache-${{ hashFiles('phpstan.neon.dist', 'composer.json') }}-
             phpstan-cache-
 
-      - uses: ./.github/actions/composer-install
+      - uses: ./.github/actions/setup
         with:
+          node-version: ${{ vars.NODE_VERSION }}
           php-version: ${{ vars.PHP_VERSION }}
 
       - name: 'Run PHPStan analysis'
