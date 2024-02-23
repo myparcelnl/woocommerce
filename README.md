@@ -13,7 +13,6 @@ This WooCommerce extension allows you to export your orders to the MyParcel [Bac
 - [Manual](#manual)
 - [Installation](#installation)
 - [Contributing](#contributing)
-  - [Making JavaScript or CSS changes](#making-javascript-or-css-changes)
 
 ## Main features
 
