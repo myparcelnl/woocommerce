@@ -21,6 +21,7 @@ runs:
     - uses: ./.github/actions/composer-install
       id: setup
       with:
+        php-version: ${{ vars.PHP_VERSION }}
         composer-flags: --no-dev
 
     - name: 'Build frontend'

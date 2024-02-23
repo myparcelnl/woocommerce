@@ -30,6 +30,8 @@ jobs:
             phpstan-cache-
 
       - uses: ./.github/actions/composer-install
+        with:
+          php-version: ${{ vars.PHP_VERSION }}
 
       - name: 'Run PHPStan analysis'
         if: steps.phpstan-cache.outputs.cache-hit != 'true'

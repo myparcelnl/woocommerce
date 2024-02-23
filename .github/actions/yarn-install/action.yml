@@ -11,7 +11,7 @@ runs:
   steps:
     - uses: myparcelnl/actions/yarn-install@v4
       with:
-        node-version: ${{ inputs.NODE_VERSION }}
+        node-version: ${{ inputs.node-version }}
 
     - name: 'Import translations'
       shell: bash

@@ -2,6 +2,10 @@ name: 'Composer install'
 description: 'Install composer dependencies'
 
 inputs:
+  php-version:
+    description: 'PHP version'
+    required: true
+
   composer-flags:
     description: 'Flags to use when installing composer dependencies.'
     required: false
@@ -18,5 +22,5 @@ runs:
     - uses: myparcelnl/actions/composer-install@v4
       id: composer
       with:
-        php-version: ${{ vars.PHP_VERSION }}
+        php-version: ${{ inputs.php-version }}
         flags: ${{ inputs.composer-flags }}

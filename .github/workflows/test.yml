@@ -66,6 +66,8 @@ jobs:
 
       - uses: ./.github/actions/composer-install
         id: setup
+        with:
+          php-version: ${{ vars.PHP_VERSION }}
 
       - name: 'Run backend tests'
         if: steps.coverage-cache.outputs.cache-hit != 'true'
