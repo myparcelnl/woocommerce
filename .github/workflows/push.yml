@@ -30,12 +30,12 @@ jobs:
           fetch-depth: 0
 
       - uses: ./.github/actions/setup
+        id: setup
         with:
           node-version: ${{ vars.NODE_VERSION }}
           php-version: ${{ vars.PHP_VERSION }}
 
       - uses: ./.github/actions/build
-        id: build
         with:
           php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
 
@@ -53,7 +53,7 @@ jobs:
         id: release
         with:
           version: ${{ steps.version.outputs.version }}
-          image: ${{ steps.build.outputs.image }}
+          image: ${{ steps.setup.outputs.image }}
 
   rebase-prs:
     if: github.event_name == 'push'
