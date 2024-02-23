@@ -37,6 +37,7 @@ jobs:
 
       - uses: ./.github/actions/build
         with:
+          php-version: ${{ vars.PHP_VERSION }}
           php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
 
       - name: 'Determine version'

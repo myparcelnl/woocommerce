@@ -47,8 +47,8 @@ jobs:
           php-version: ${{ vars.PHP_VERSION }}
 
       - uses: ./.github/actions/build
-        id: build
         with:
+          php-version: ${{ vars.PHP_VERSION }}
           php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
 
       - uses: myparcelnl/actions/semantic-release@v4

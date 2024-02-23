@@ -2,6 +2,10 @@ name: 'Create build'
 description: ''
 
 inputs:
+  php-version:
+    description: 'PHP Version'
+    required: true
+
   php-scoper-version:
     description: 'PHP Scoper Version'
     required: true
@@ -24,16 +28,16 @@ runs:
       id: php-scoper-cache
       with:
         path: .tmp/php-scoper
-        key: php-scoper-${{ inputs.php-scoper-version }}
+        key: php-scoper-${{ inputs.php-version }}-${{ inputs.php-scoper-version }}
 
     - name: 'Cache scoped source php'
       uses: actions/cache@v4
       with:
         path: .tmp/scoped/source
-        key: scoped-php-src-${{ hashFiles('src/**/*', 'config/**/*', 'woocommerce-myparcel.php', 'scoper.inc.php') }}
+        key: scoped-php-src-${{ inputs.php-version }}-${{ hashFiles('src/**/*', 'config/**/*', 'woocommerce-myparcel.php', 'scoper.inc.php') }}
 
     - name: 'Cache scoped vendor php'
       uses: actions/cache@v4
       with:
         path: .tmp/scoped/vendor
-        key: scoped-php-vendor-${{ hashFiles('**/composer.json', '**/composer.lock', 'scoper.inc.php', 'scoper.vendor.inc.php') }}
+        key: scoped-php-vendor-${{ inputs.php-version }}-${{ hashFiles('**/composer.json', '**/composer.lock', 'scoper.inc.php', 'scoper.vendor.inc.php') }}
