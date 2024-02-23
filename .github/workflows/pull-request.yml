@@ -41,7 +41,7 @@ jobs:
 
       - name: 'Determine version'
         id: version
-        #language=sh
+        #language=bash
         run: |
           version=$(npm pkg get version | sed 's/"//g') 
           releaseVersion="$version-${{ github.event.pull_request.number}}"

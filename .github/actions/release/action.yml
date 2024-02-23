@@ -15,7 +15,7 @@ runs:
   steps:
     - name: 'Create release packages'
       shell: bash
-      #language=sh
+      #language=bash
       run: |
         yarn pdk-builder release \
           --version ${{ inputs.version }} \

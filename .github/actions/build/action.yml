@@ -16,7 +16,7 @@ runs:
   steps:
     - name: 'Build frontend'
       shell: bash
-      #language=sh
+      #language=bash
       run: |
         yarn nx run-many \
           --output-style=static \

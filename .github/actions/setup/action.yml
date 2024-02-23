@@ -35,6 +35,6 @@ runs:
 
     - name: 'Import translations'
       shell: bash
-      #language=sh
+      #language=bash
       run: |
         yarn translations:import

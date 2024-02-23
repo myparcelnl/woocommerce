@@ -30,6 +30,7 @@ jobs:
             phpstan-cache-
 
       - uses: ./.github/actions/setup
+        if: steps.phpstan-cache.outputs.cache-hit != 'true'
         with:
           node-version: ${{ vars.NODE_VERSION }}
           php-version: ${{ vars.PHP_VERSION }}
@@ -37,7 +38,7 @@ jobs:
       - name: 'Run PHPStan analysis'
         if: steps.phpstan-cache.outputs.cache-hit != 'true'
         shell: bash
-        #language=sh
+        #language=bash
         run: |
           docker run -t \
             --volume $PWD:/app \
