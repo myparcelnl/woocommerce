@@ -17,7 +17,7 @@ use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 class ExportRow
 {
     public const DEFAULT_PRODUCT_QUANTITY = 1;
-    public const CURRENCY_EURO = 'EUR';
+    public const CURRENCY_EURO            = 'EUR';
 
     /**
      * @var \WC_Order
@@ -56,11 +56,18 @@ class ExportRow
         }
 
         if (! $cc) {
-             $cc = WC()->countries->get_base_country() ?? AbstractConsignment::CC_NL;
+            $cc = WC()->countries->get_base_country() ?? AbstractConsignment::CC_NL;
         }
 
         return $cc;
+    }
 
+    /**
+     * @return string
+     */
+    public function getCurrency(): string
+    {
+        return get_woocommerce_currency();
     }
 
     /**
@@ -127,20 +134,11 @@ class ExportRow
      */
     public function getValueOfItem(): array
     {
-        $total = $this->order->get_subtotal();
-        $tax   = $this->order->get_cart_tax();
+        $total = $this->product->get_price();
 
         return [
-            'amount'   => (int) (($total + $tax) * 100),
+            'amount'   => (int) ($total * 100),
             'currency' => $this->getCurrency(),
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getCurrency(): string
-    {
-      return get_woocommerce_currency();
     }
 }
