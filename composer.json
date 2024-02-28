@@ -1,6 +1,6 @@
 {
   "name": "myparcelnl/woocommerce",
-  "version": "4.22.1",
+  "version": "4.22.2-rc.1",
   "require": {
     "myparcelnl/sdk": "~7.8.0"
   },
