@@ -46,4 +46,3 @@ class WC extends MockWc { }
 
 /** @see \WC_Session */
 class WC_Session extends MockWcSession { }
-

@@ -5,10 +5,12 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Tests\Unit;
 
+use Automattic\WooCommerce\Blocks\Integrations\IntegrationRegistry;
 use MyParcelNL\WooCommerce\Tests\Exception\DieException;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkBootstrapper;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
 use MyParcelNL\WooCommerce\Tests\Uses\UseInstantiatePlugin;
+use MyParcelNLWooCommerce;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 
@@ -56,3 +58,10 @@ it('adds all hooks on plugin init', function () {
     expect(MockWpActions::get('init'))->toBe([]);
     assertMatchesJsonSnapshot(json_encode(MockWpActions::toArray()));
 });
+
+it('registers checkout blocks', function () {
+    $plugin              = new MyParcelNLWooCommerce();
+    $integrationRegistry = new IntegrationRegistry();
+
+    $plugin->registerCheckoutBlocks($integrationRegistry);
+})->expectNotToPerformAssertions();

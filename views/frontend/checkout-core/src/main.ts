@@ -1,28 +1,24 @@
-import {Util, createPdkCheckout, useUtil, useSettings} from '@myparcel-pdk/checkout';
-import {AddressType, PdkField} from '@myparcel-pdk/checkout-common';
-import {createFields} from './utils/createFields';
+import {PdkField, AddressType} from '@myparcel-pdk/checkout-common';
+import {createPdkCheckout, useSettings} from '@myparcel-pdk/checkout';
+import {isClassicCheckout, createName, createId, createFields} from './utils';
+import {getClassicCheckoutConfig} from './classic';
+import {getBlocksCheckoutConfig} from './blocks';
 
-const PREFIX_BILLING = 'billing_';
-const PREFIX_SHIPPING = 'shipping_';
-
-const FIELD_SHIPPING_METHOD = 'shipping_method';
-
-const createName = (name: string) => `[name="${name}"]`;
-const createId = (name: string) => `#${name}`;
+const config = isClassicCheckout() ? getClassicCheckoutConfig() : getBlocksCheckoutConfig();
 
 createPdkCheckout({
   fields: {
-    [PdkField.AddressType]: createId('ship-to-different-address-checkbox'),
-    [PdkField.ShippingMethod]: createId(FIELD_SHIPPING_METHOD),
-    [AddressType.Billing]: createFields(PREFIX_BILLING, createName),
-    [AddressType.Shipping]: createFields(PREFIX_SHIPPING, createName),
+    [PdkField.AddressType]: createId('checkbox-control-0'),
+    [PdkField.ShippingMethod]: createId(config.fieldShippingMethod),
+    [AddressType.Billing]: createFields(config.addressFields, config.prefixBilling, createName),
+    [AddressType.Shipping]: createFields(config.addressFields, config.prefixShipping, createName),
   },
 
   formData: {
     [PdkField.AddressType]: 'ship_to_different_address',
-    [PdkField.ShippingMethod]: `${FIELD_SHIPPING_METHOD}[0]`,
-    [AddressType.Billing]: createFields(PREFIX_BILLING),
-    [AddressType.Shipping]: createFields(PREFIX_SHIPPING),
+    [PdkField.ShippingMethod]: config.shippingMethodFormField,
+    [AddressType.Billing]: createFields(config.addressFields, config.prefixBilling),
+    [AddressType.Shipping]: createFields(config.addressFields, config.prefixShipping),
   },
 
   selectors: {
@@ -42,27 +38,8 @@ createPdkCheckout({
     }
   },
 
-  formChange(callback) {
-    jQuery(this.getForm()).on('change', () => {
-      callback();
-    });
-  },
-
   getAddressType(value) {
     return value === '1' ? AddressType.Shipping : AddressType.Billing;
-  },
-
-  getForm() {
-    const getElement = useUtil(Util.GetElement);
-
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return getElement('form[name="checkout"]')!;
-  },
-
-  hasAddressType(addressType: AddressType) {
-    const billingElement = document.querySelector('.woocommerce-billing-fields__field-wrapper');
-
-    return AddressType.Shipping === addressType || billingElement !== null;
   },
 
   hasDeliveryOptions(shippingMethod) {
@@ -71,14 +48,6 @@ createPdkCheckout({
     return settings.allowedShippingMethods.some(
       (method) => shippingMethod === method || shippingMethod.startsWith(`${method}:`),
     );
-  },
-
-  initialize() {
-    return new Promise((resolve) => {
-      jQuery(() => {
-        resolve();
-      });
-    });
   },
 
   toggleField(field: HTMLInputElement, show: boolean): void {
@@ -91,4 +60,6 @@ createPdkCheckout({
       $wrapper.hide();
     }
   },
+
+  ...config.config,
 });

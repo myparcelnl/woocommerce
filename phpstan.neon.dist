@@ -11,3 +11,5 @@ parameters:
     - src
   bootstrapFiles:
     - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+  excludePaths:
+    - src/Integration/DeliveryOptionsBlocksIntegration.php

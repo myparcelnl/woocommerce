@@ -6,11 +6,17 @@
         "MyParcelNLWooCommerce::uninstall"
     ],
     "init": [],
+    "woocommerce_blocks_checkout_block_registration": [
+        "MyParcelNLWooCommerce::registerCheckoutBlocks"
+    ],
     "admin_init": [
         {}
     ],
     "woocommerce_order_status_changed": [
         "MyParcelNL\\WooCommerce\\Hooks\\AutomaticOrderExportHooks::automaticExportOrder"
+    ],
+    "before_woocommerce_init": [
+        "MyParcelNL\\WooCommerce\\Hooks\\BlocksIntegrationHooks::declareCheckoutBlocksCompatibility"
     ],
     "woocommerce_cart_calculate_fees": [
         "MyParcelNL\\WooCommerce\\Hooks\\CartFeesHooks::calculateDeliveryOptionsFees"
@@ -28,6 +34,9 @@
     ],
     "woocommerce_checkout_order_processed": [
         "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCheckoutPlaceOrderHooks::saveDeliveryOptions"
+    ],
+    "woocommerce_blocks_checkout_order_processed": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCheckoutPlaceOrderHooks::saveBlocksDeliveryOptions"
     ],
     "admin_enqueue_scripts": [
         "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCoreHooks::registerPdkScripts"

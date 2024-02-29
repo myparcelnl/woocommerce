@@ -33,6 +33,45 @@ final class PdkCheckoutPlaceOrderHooks implements WordPressHooksInterface
     public function apply(): void
     {
         add_action('woocommerce_checkout_order_processed', [$this, 'saveDeliveryOptions'], 10, 3);
+        add_action('woocommerce_blocks_checkout_order_processed', [$this, 'saveBlocksDeliveryOptions'], 10, 1);
+    }
+
+    /**
+     * Saves the delivery options to the new PDK order.
+     *
+     * @param  WC_Order $wcOrder
+     *
+     * @return void
+     */
+    public function saveBlocksDeliveryOptions(WC_Order $wcOrder): void
+    {
+        // eslint-disable-next-line camelcase
+        global $HTTP_RAW_POST_DATA;
+
+        try {
+            $postData            = json_decode(wp_unslash($HTTP_RAW_POST_DATA), true);
+            $deliveryOptionsData = $postData['extensions']['myparcelnl-delivery-options'] ?? null;
+
+            if (empty($deliveryOptionsData)) {
+                return;
+            }
+
+            $deliveryOptions = new DeliveryOptions($deliveryOptionsData);
+
+            $pdkOrder = $this->repository->get($wcOrder);
+
+            $pdkOrder->deliveryOptions = $deliveryOptions;
+
+            $this->repository->update($pdkOrder);
+        } catch (Exception $e) {
+            Logger::error(
+                'Error saving pdk order data during checkout.',
+                [
+                    'exception'       => $e,
+                    'deliveryOptions' => $deliveryOptionsData ?? null,
+                ]
+            );
+        }
     }
 
     /**

@@ -1,21 +1,7 @@
 import {type AddressFields} from '@myparcel-pdk/checkout';
 
-// TODO: Get fields from the backend
-
-const addressBase = {
-  address1: `address_1`,
-  address2: `address_2`,
-  city: `city`,
-  country: `country`,
-  eoriNumber: `eori_number`,
-  number: `house_number`,
-  numberSuffix: `house_number_suffix`,
-  postalCode: `postcode`,
-  street: `street_name`,
-  vatNumber: `vat_number`,
-};
-
 export const createFields = (
+  addressBase: Record<string, string>,
   prefix: string,
   callback: (string: string) => string = (string: string) => string,
 ): AddressFields =>
