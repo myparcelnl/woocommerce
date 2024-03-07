@@ -1,180 +1,181 @@
 {
-  "externalIdentifier": "6",
-  "deliveryOptions": {
-    "carrier": {
-      "externalIdentifier": "postnl"
-    },
-    "labelAmount": 1,
-    "shipmentOptions": {
-      "insurance": -1,
-      "ageCheck": -1,
-      "hideSender": -1,
-      "largeFormat": -1,
-      "onlyRecipient": -1,
-      "return": -1,
-      "sameDayDelivery": -1,
-      "signature": -1
-    },
-    "deliveryType": "standard",
-    "packageType": "package"
-  },
-  "billingAddress": {
-    "address1": "Antareslaan 31",
-    "address2": "",
-    "cc": "NL",
-    "city": "Hoofddorp",
-    "postalCode": "2132 JE",
-    "region": "",
-    "state": "",
-    "email": "test@myparcel.nl",
-    "phone": "0612345678",
-    "person": "John Doe",
-    "company": "MyParcel"
-  },
-  "shippingAddress": {
-    "address1": "Antareslaan 31",
-    "address2": "",
-    "cc": "NL",
-    "city": "Hoofddorp",
-    "postalCode": "2132 JE",
-    "region": "",
-    "state": "",
-    "email": "test@myparcel.nl",
-    "phone": "0612345678",
-    "person": "John Doe",
-    "company": "MyParcel"
-  },
-  "shipments": [],
-  "physicalProperties": {
-    "initialWeight": 500,
-    "manualWeight": -1,
-    "totalWeight": 500
-  },
-  "lines": [
-    {
-      "quantity": 2,
-      "price": 100000,
-      "vat": 0,
-      "priceAfterVat": 100000,
-      "product": {
-        "externalIdentifier": "3214",
-        "sku": "WVS-0001",
-        "isDeliverable": true,
-        "name": "Test product",
-        "price": {
-          "amount": 1499,
-          "currency": "EUR"
+    "externalIdentifier": "6",
+    "deliveryOptions": {
+        "carrier": {
+            "externalIdentifier": "postnl"
         },
-        "weight": 250,
-        "length": 100,
-        "width": 80,
-        "height": 50,
-        "settings": {
-          "id": "product",
-          "countryOfOrigin": -1,
-          "customsCode": -1,
-          "disableDeliveryOptions": -1,
-          "dropOffDelay": -1,
-          "exportAgeCheck": -1,
-          "exportHideSender": -1,
-          "exportInsurance": -1,
-          "exportLargeFormat": -1,
-          "exportOnlyRecipient": -1,
-          "exportReturn": -1,
-          "exportSignature": -1,
-          "fitInDigitalStamp": -1,
-          "fitInMailbox": -1,
-          "packageType": -1
+        "labelAmount": 1,
+        "shipmentOptions": {
+            "insurance": -1,
+            "ageCheck": -1,
+            "hideSender": -1,
+            "largeFormat": -1,
+            "onlyRecipient": -1,
+            "return": -1,
+            "sameDayDelivery": -1,
+            "signature": -1,
+            "tracked": -1
         },
-        "mergedSettings": {
-          "id": "product",
-          "countryOfOrigin": -1,
-          "customsCode": -1,
-          "disableDeliveryOptions": -1,
-          "dropOffDelay": -1,
-          "exportAgeCheck": -1,
-          "exportHideSender": -1,
-          "exportInsurance": -1,
-          "exportLargeFormat": -1,
-          "exportOnlyRecipient": -1,
-          "exportReturn": -1,
-          "exportSignature": -1,
-          "fitInDigitalStamp": -1,
-          "fitInMailbox": -1,
-          "packageType": -1
+        "deliveryType": "standard",
+        "packageType": "package"
+    },
+    "billingAddress": {
+        "address1": "Antareslaan 31",
+        "address2": "",
+        "cc": "NL",
+        "city": "Hoofddorp",
+        "postalCode": "2132 JE",
+        "region": "",
+        "state": "",
+        "email": "test@myparcel.nl",
+        "phone": "0612345678",
+        "person": "John Doe",
+        "company": "MyParcel"
+    },
+    "shippingAddress": {
+        "address1": "Antareslaan 31",
+        "address2": "",
+        "cc": "NL",
+        "city": "Hoofddorp",
+        "postalCode": "2132 JE",
+        "region": "",
+        "state": "",
+        "email": "test@myparcel.nl",
+        "phone": "0612345678",
+        "person": "John Doe",
+        "company": "MyParcel"
+    },
+    "shipments": [],
+    "physicalProperties": {
+        "initialWeight": 500,
+        "manualWeight": -1,
+        "totalWeight": 500
+    },
+    "lines": [
+        {
+            "quantity": 2,
+            "price": 100000,
+            "vat": 0,
+            "priceAfterVat": 100000,
+            "product": {
+                "externalIdentifier": "3214",
+                "sku": "WVS-0001",
+                "isDeliverable": true,
+                "name": "Test product",
+                "price": {
+                    "amount": 1499,
+                    "currency": "EUR"
+                },
+                "weight": 250,
+                "length": 100,
+                "width": 80,
+                "height": 50,
+                "settings": {
+                    "id": "product",
+                    "countryOfOrigin": -1,
+                    "customsCode": -1,
+                    "disableDeliveryOptions": -1,
+                    "dropOffDelay": -1,
+                    "exportAgeCheck": -1,
+                    "exportHideSender": -1,
+                    "exportInsurance": -1,
+                    "exportLargeFormat": -1,
+                    "exportOnlyRecipient": -1,
+                    "exportReturn": -1,
+                    "exportSignature": -1,
+                    "fitInDigitalStamp": -1,
+                    "fitInMailbox": -1,
+                    "packageType": -1
+                },
+                "mergedSettings": {
+                    "id": "product",
+                    "countryOfOrigin": -1,
+                    "customsCode": -1,
+                    "disableDeliveryOptions": -1,
+                    "dropOffDelay": -1,
+                    "exportAgeCheck": -1,
+                    "exportHideSender": -1,
+                    "exportInsurance": -1,
+                    "exportLargeFormat": -1,
+                    "exportOnlyRecipient": -1,
+                    "exportReturn": -1,
+                    "exportSignature": -1,
+                    "fitInDigitalStamp": -1,
+                    "fitInMailbox": -1,
+                    "packageType": -1
+                }
+            }
+        },
+        {
+            "quantity": 1,
+            "price": 100000,
+            "vat": 0,
+            "priceAfterVat": 100000
+        },
+        {
+            "quantity": 2,
+            "price": 100000,
+            "vat": 0,
+            "priceAfterVat": 100000,
+            "product": {
+                "externalIdentifier": "2324",
+                "sku": "WVS-0002",
+                "isDeliverable": false,
+                "name": "Test digital product",
+                "price": {
+                    "amount": 0,
+                    "currency": "EUR"
+                },
+                "weight": 0,
+                "length": 0,
+                "width": 0,
+                "height": 0,
+                "settings": {
+                    "id": "product",
+                    "countryOfOrigin": -1,
+                    "customsCode": -1,
+                    "disableDeliveryOptions": -1,
+                    "dropOffDelay": -1,
+                    "exportAgeCheck": -1,
+                    "exportHideSender": -1,
+                    "exportInsurance": -1,
+                    "exportLargeFormat": -1,
+                    "exportOnlyRecipient": -1,
+                    "exportReturn": -1,
+                    "exportSignature": -1,
+                    "fitInDigitalStamp": -1,
+                    "fitInMailbox": -1,
+                    "packageType": -1
+                },
+                "mergedSettings": {
+                    "id": "product",
+                    "countryOfOrigin": -1,
+                    "customsCode": -1,
+                    "disableDeliveryOptions": -1,
+                    "dropOffDelay": -1,
+                    "exportAgeCheck": -1,
+                    "exportHideSender": -1,
+                    "exportInsurance": -1,
+                    "exportLargeFormat": -1,
+                    "exportOnlyRecipient": -1,
+                    "exportReturn": -1,
+                    "exportSignature": -1,
+                    "fitInDigitalStamp": -1,
+                    "fitInMailbox": -1,
+                    "packageType": -1
+                }
+            }
         }
-      }
-    },
-    {
-      "quantity": 1,
-      "price": 100000,
-      "vat": 0,
-      "priceAfterVat": 100000
-    },
-    {
-      "quantity": 2,
-      "price": 100000,
-      "vat": 0,
-      "priceAfterVat": 100000,
-      "product": {
-        "externalIdentifier": "2324",
-        "sku": "WVS-0002",
-        "isDeliverable": false,
-        "name": "Test digital product",
-        "price": {
-          "amount": 0,
-          "currency": "EUR"
-        },
-        "weight": 0,
-        "length": 0,
-        "width": 0,
-        "height": 0,
-        "settings": {
-          "id": "product",
-          "countryOfOrigin": -1,
-          "customsCode": -1,
-          "disableDeliveryOptions": -1,
-          "dropOffDelay": -1,
-          "exportAgeCheck": -1,
-          "exportHideSender": -1,
-          "exportInsurance": -1,
-          "exportLargeFormat": -1,
-          "exportOnlyRecipient": -1,
-          "exportReturn": -1,
-          "exportSignature": -1,
-          "fitInDigitalStamp": -1,
-          "fitInMailbox": -1,
-          "packageType": -1
-        },
-        "mergedSettings": {
-          "id": "product",
-          "countryOfOrigin": -1,
-          "customsCode": -1,
-          "disableDeliveryOptions": -1,
-          "dropOffDelay": -1,
-          "exportAgeCheck": -1,
-          "exportHideSender": -1,
-          "exportInsurance": -1,
-          "exportLargeFormat": -1,
-          "exportOnlyRecipient": -1,
-          "exportReturn": -1,
-          "exportSignature": -1,
-          "fitInDigitalStamp": -1,
-          "fitInMailbox": -1,
-          "packageType": -1
-        }
-      }
-    }
-  ],
-  "orderDate": "2021-01-01 18:03:41",
-  "exported": false,
-  "shipmentPrice": 0,
-  "shipmentPriceAfterVat": 0,
-  "shipmentVat": 0,
-  "orderPrice": 500000,
-  "orderPriceAfterVat": 500000,
-  "orderVat": 0,
-  "totalPrice": 500000,
-  "totalVat": 0,
-  "totalPriceAfterVat": 500000
+    ],
+    "orderDate": "2021-01-01 18:03:41",
+    "exported": false,
+    "shipmentPrice": 0,
+    "shipmentPriceAfterVat": 0,
+    "shipmentVat": 0,
+    "orderPrice": 500000,
+    "orderPriceAfterVat": 500000,
+    "orderVat": 0,
+    "totalPrice": 500000,
+    "totalVat": 0,
+    "totalPriceAfterVat": 500000
 }

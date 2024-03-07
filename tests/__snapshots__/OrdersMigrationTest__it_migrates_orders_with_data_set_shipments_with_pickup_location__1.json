@@ -1,194 +1,198 @@
 {
-  "meta": {
-    "_myparcelnl_order_data": {
-      "exported": false,
-      "deliveryOptions": {
-        "carrier": "postnl",
-        "deliveryType": "pickup",
-        "labelAmount": 1,
-        "packageType": "package",
-        "pickupLocation": {
-          "cc": "NL",
-          "city": "Hoofddorp",
-          "locationCode": "8004-NL-213209",
-          "locationName": "Jeans Centre Hoofddorp",
-          "number": "222",
-          "postalCode": "2132BG",
-          "retailNetworkId": "",
-          "street": "Polderplein"
+    "meta": {
+        "_myparcelnl_order_data": {
+            "exported": false,
+            "deliveryOptions": {
+                "carrier": "postnl",
+                "deliveryType": "pickup",
+                "labelAmount": 1,
+                "packageType": "package",
+                "pickupLocation": {
+                    "cc": "NL",
+                    "city": "Hoofddorp",
+                    "locationCode": "8004-NL-213209",
+                    "locationName": "Jeans Centre Hoofddorp",
+                    "number": "222",
+                    "postalCode": "2132BG",
+                    "retailNetworkId": "",
+                    "street": "Polderplein"
+                },
+                "shipmentOptions": {
+                    "ageCheck": false,
+                    "insurance": 0,
+                    "largeFormat": false,
+                    "onlyRecipient": false,
+                    "return": false,
+                    "sameDayDelivery": false,
+                    "signature": false,
+                    "labelDescription": "[ORDER_ID]"
+                }
+            }
         },
-        "shipmentOptions": {
-          "ageCheck": false,
-          "insurance": 0,
-          "largeFormat": false,
-          "onlyRecipient": false,
-          "return": false,
-          "sameDayDelivery": false,
-          "signature": false,
-          "labelDescription": "[ORDER_ID]"
-        }
-      }
+        "_myparcelnl_order_shipments": [
+            {
+                "id": 162218123,
+                "shopId": 111359,
+                "orderId": 1,
+                "referenceIdentifier": "1491",
+                "barcode": "3SMYPA681084449",
+                "carrier": {
+                    "id": 1
+                },
+                "deliveryOptions": {
+                    "carrier": {
+                        "id": 1
+                    },
+                    "date": null,
+                    "deliveryType": 4,
+                    "labelAmount": null,
+                    "packageType": 1,
+                    "pickupLocation": {
+                        "cc": "NL",
+                        "city": "Hoofddorp",
+                        "locationCode": "8004-NL-213209",
+                        "locationName": "Jeans Centre Hoofddorp",
+                        "number": "222",
+                        "postalCode": "2132BG",
+                        "street": "Polderplein"
+                    },
+                    "shipmentOptions": {
+                        "insurance": {
+                            "amount": 0,
+                            "currency": "EUR"
+                        },
+                        "largeFormat": 0,
+                        "labelDescription": "1491"
+                    }
+                },
+                "hidden": 0,
+                "physicalProperties": {
+                    "weight": 6030
+                },
+                "price": {
+                    "amount": 637,
+                    "currency": "EUR"
+                },
+                "recipient": {
+                    "cc": "NL",
+                    "city": "Hoofddorp",
+                    "company": "MyParcel NL",
+                    "email": "test@myparcel.nl",
+                    "person": "kw test",
+                    "phone": "06123456789",
+                    "postalCode": "2132 JE",
+                    "address1": "Antareslaan 31"
+                },
+                "senderAddress": {
+                    "cc": "NL",
+                    "city": "Hoofddorp",
+                    "email": "test@myparcel.nl",
+                    "person": "nieuw",
+                    "phone": "0612345678",
+                    "postalCode": "2132JE",
+                    "address1": "Antareslaan 31"
+                },
+                "shipmentType": 1,
+                "status": 7,
+                "created": "2023-06-15 16:16:03",
+                "createdBy": 98133,
+                "modified": "2023-06-15 16:16:13",
+                "modifiedBy": 98133
+            }
+        ],
+        "_myparcelnl_version": "4.20.2",
+        "_myparcelnl_migrated": [
+            "5.0.0-alpha.1"
+        ]
     },
-    "_myparcelnl_order_shipments": [
-      {
-        "id": 162218123,
-        "shopId": 111359,
-        "orderId": 1,
-        "referenceIdentifier": "1491",
-        "barcode": "3SMYPA681084449",
-        "carrier": {
-          "id": 1
-        },
+    "pdkOrder": {
+        "exported": false,
         "deliveryOptions": {
-          "carrier": {
-            "id": 1
-          },
-          "date": null,
-          "deliveryType": 4,
-          "labelAmount": null,
-          "packageType": 1,
-          "pickupLocation": {
-            "cc": "NL",
-            "city": "Hoofddorp",
-            "locationCode": "8004-NL-213209",
-            "locationName": "Jeans Centre Hoofddorp",
-            "number": "222",
-            "postalCode": "2132BG",
-            "street": "Polderplein"
-          },
-          "shipmentOptions": {
-            "insurance": {
-              "amount": 0,
-              "currency": "EUR"
+            "carrier": {
+                "externalIdentifier": "postnl"
             },
-            "largeFormat": 0,
-            "labelDescription": "1491"
-          }
-        },
-        "hidden": 0,
-        "physicalProperties": {
-          "weight": 6030
-        },
-        "price": {
-          "amount": 637,
-          "currency": "EUR"
-        },
-        "recipient": {
-          "cc": "NL",
-          "city": "Hoofddorp",
-          "company": "MyParcel NL",
-          "email": "test@myparcel.nl",
-          "person": "kw test",
-          "phone": "06123456789",
-          "postalCode": "2132 JE",
-          "address1": "Antareslaan 31"
-        },
-        "senderAddress": {
-          "cc": "NL",
-          "city": "Hoofddorp",
-          "email": "test@myparcel.nl",
-          "person": "nieuw",
-          "phone": "0612345678",
-          "postalCode": "2132JE",
-          "address1": "Antareslaan 31"
-        },
-        "shipmentType": 1,
-        "status": 7,
-        "created": "2023-06-15 16:16:03",
-        "createdBy": 98133,
-        "modified": "2023-06-15 16:16:13",
-        "modifiedBy": 98133
-      }
-    ],
-    "_myparcelnl_version": "4.20.2",
-    "_myparcelnl_migrated": ["5.0.0-alpha.1"]
-  },
-  "pdkOrder": {
-    "exported": false,
-    "deliveryOptions": {
-      "carrier": {
-        "externalIdentifier": "postnl"
-      },
-      "labelAmount": 1,
-      "pickupLocation": {
-        "locationCode": "8004-NL-213209",
-        "locationName": "Jeans Centre Hoofddorp",
-        "retailNetworkId": "",
-        "cc": "NL",
-        "city": "Hoofddorp",
-        "number": "222",
-        "postalCode": "2132BG",
-        "street": "Polderplein"
-      },
-      "shipmentOptions": {
-        "labelDescription": "[ORDER_ID]",
-        "insurance": 0,
-        "ageCheck": 0,
-        "hideSender": -1,
-        "largeFormat": 0,
-        "onlyRecipient": 0,
-        "return": 0,
-        "sameDayDelivery": 0,
-        "signature": 0
-      },
-      "deliveryType": "pickup",
-      "packageType": "package"
-    }
-  },
-  "shipments": [
-    {
-      "orderId": "1",
-      "multiCollo": false,
-      "id": 162218123,
-      "shopId": 111359,
-      "referenceIdentifier": "1491",
-      "barcode": "3SMYPA681084449",
-      "carrier": {
-        "externalIdentifier": "postnl"
-      },
-      "delayed": false,
-      "delivered": false,
-      "deliveryOptions": {
-        "carrier": {
-          "externalIdentifier": "postnl"
-        },
-        "labelAmount": 1,
-        "pickupLocation": {
-          "locationCode": "8004-NL-213209",
-          "locationName": "Jeans Centre Hoofddorp",
-          "cc": "NL",
-          "city": "Hoofddorp",
-          "number": "222",
-          "postalCode": "2132BG",
-          "street": "Polderplein"
-        },
-        "shipmentOptions": {
-          "labelDescription": "1491",
-          "insurance": 1,
-          "ageCheck": -1,
-          "hideSender": -1,
-          "largeFormat": 0,
-          "onlyRecipient": -1,
-          "return": -1,
-          "sameDayDelivery": -1,
-          "signature": -1
-        },
-        "deliveryType": "pickup",
-        "packageType": "package"
-      },
-      "hidden": false,
-      "isReturn": false,
-      "partnerTrackTraces": [],
-      "price": {
-        "amount": 637,
-        "currency": "EUR"
-      },
-      "shipmentType": 1,
-      "status": 7,
-      "created": "2023-06-15 16:16:03",
-      "createdBy": 98133,
-      "modified": "2023-06-15 16:16:13",
-      "modifiedBy": 98133
-    }
-  ]
+            "labelAmount": 1,
+            "pickupLocation": {
+                "locationCode": "8004-NL-213209",
+                "locationName": "Jeans Centre Hoofddorp",
+                "retailNetworkId": "",
+                "cc": "NL",
+                "city": "Hoofddorp",
+                "number": "222",
+                "postalCode": "2132BG",
+                "street": "Polderplein"
+            },
+            "shipmentOptions": {
+                "labelDescription": "[ORDER_ID]",
+                "insurance": 0,
+                "ageCheck": 0,
+                "hideSender": -1,
+                "largeFormat": 0,
+                "onlyRecipient": 0,
+                "return": 0,
+                "sameDayDelivery": 0,
+                "signature": 0,
+                "tracked": -1
+            },
+            "deliveryType": "pickup",
+            "packageType": "package"
+        }
+    },
+    "shipments": [
+        {
+            "orderId": "1",
+            "multiCollo": false,
+            "id": 162218123,
+            "shopId": 111359,
+            "referenceIdentifier": "1491",
+            "barcode": "3SMYPA681084449",
+            "carrier": {
+                "externalIdentifier": "postnl"
+            },
+            "delayed": false,
+            "delivered": false,
+            "deliveryOptions": {
+                "carrier": {
+                    "externalIdentifier": "postnl"
+                },
+                "labelAmount": 1,
+                "pickupLocation": {
+                    "locationCode": "8004-NL-213209",
+                    "locationName": "Jeans Centre Hoofddorp",
+                    "cc": "NL",
+                    "city": "Hoofddorp",
+                    "number": "222",
+                    "postalCode": "2132BG",
+                    "street": "Polderplein"
+                },
+                "shipmentOptions": {
+                    "labelDescription": "1491",
+                    "insurance": 1,
+                    "ageCheck": -1,
+                    "hideSender": -1,
+                    "largeFormat": 0,
+                    "onlyRecipient": -1,
+                    "return": -1,
+                    "sameDayDelivery": -1,
+                    "signature": -1,
+                    "tracked": -1
+                },
+                "deliveryType": "pickup",
+                "packageType": "package"
+            },
+            "hidden": false,
+            "isReturn": false,
+            "partnerTrackTraces": [],
+            "price": {
+                "amount": 637,
+                "currency": "EUR"
+            },
+            "shipmentType": 1,
+            "status": 7,
+            "created": "2023-06-15 16:16:03",
+            "createdBy": 98133,
+            "modified": "2023-06-15 16:16:13",
+            "modifiedBy": 98133
+        }
+    ]
 }
