@@ -9,6 +9,7 @@ use MyParcelNL\Pdk\Facade\Actions;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Settings\Model\AccountSettings;
 use MyParcelNL\WooCommerce\Migration\Pdk\AbstractPdkMigration;
+use MyParcelNL\WooCommerce\Migration\Pdk\AuditsMigration;
 use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
 use MyParcelNL\WooCommerce\Migration\Pdk\ProductSettingsMigration;
 use MyParcelNL\WooCommerce\Migration\Pdk\SettingsMigration;
@@ -29,16 +30,19 @@ final class Migration5_0_0 extends AbstractPdkMigration
      * @param  \MyParcelNL\WooCommerce\Migration\Pdk\SettingsMigration        $settingsMigration
      * @param  \MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration          $ordersMigration
      * @param  \MyParcelNL\WooCommerce\Migration\Pdk\ProductSettingsMigration $productSettingsMigration
+     * @param  \MyParcelNL\WooCommerce\Migration\Pdk\AuditsMigration          $auditsMigration
      */
     public function __construct(
         SettingsMigration        $settingsMigration,
         OrdersMigration          $ordersMigration,
         ProductSettingsMigration $productSettingsMigration,
+        AuditsMigration          $auditsMigration
     ) {
         $this->migrations = [
             $settingsMigration,
             $ordersMigration,
             $productSettingsMigration,
+            $auditsMigration,
         ];
     }
 
