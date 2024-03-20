@@ -12,6 +12,7 @@
     "emptyDigitalStampWeight": 200,
     "emptyMailboxWeight": 0,
     "emptyParcelWeight": 1100,
+    "emptyPackageSmallWeight": 0,
     "orderMode": false,
     "processDirectly": "-1",
     "saveCustomerAddress": true,
