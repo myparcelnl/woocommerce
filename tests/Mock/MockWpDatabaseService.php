@@ -10,7 +10,7 @@ final class MockWpDatabaseService extends WpDatabaseService
 {
     public function __construct()
     {
-        $GLOBALS['wpdb'] = new MockWpGlobal();
+        $GLOBALS['wpdb'] = new MockWpdb();
     }
 
     /**

@@ -13,7 +13,6 @@ use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Settings\Model\AccountSettings;
 use MyParcelNL\Pdk\Tests\Bootstrap\MockApi;
 use MyParcelNL\WooCommerce\Migration\Migration5_0_0;
-use MyParcelNL\WooCommerce\Tests\Mock\MockWpGlobal;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use function MyParcelNL\Pdk\Tests\usesShared;
