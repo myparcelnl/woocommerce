@@ -13,10 +13,93 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: 'Build frontend'
-      uses: myparcelnl/actions/nx-run-many@v4
+    - name: 'Cache Nx'
+      uses: actions/cache@v4
+      id: cache
       with:
-        target: 'build'
+        path: |
+          node_modules/.cache/nx
+          .nx
+        key: ${{ runner.os }}-nx-cache-${{ hashFiles('nx.json', '**/project.json') }}
+        restore-keys: |
+          ${{ runner.os }}-nx-cache-
+
+    - name: 'Prune cache'
+      if: steps.cache.outputs.cache-hit == 'true'
+      shell: bash
+      env:
+        MAX_CACHE_SIZE: ${{ inputs.max-cache-size }}
+      #language=bash
+      run: |
+        set -x
+
+        maxSizeKB=$(($MAX_CACHE_SIZE))
+
+        function size() {
+          (du -sk "$1" 2>/dev/null || echo 0) | cut -f 1
+        }
+
+        # Sort files by modification time, oldest first
+        taskHashes=$(ls -trF .nx/cache 2>/dev/null || echo "" | grep "\d\+/$" | sed 's/\///')
+
+        # Calculate current total size
+        totalSize=0
+
+        for hash in "${taskHashes[@]}"; do
+          totalSize=$((totalSize + $(size ".nx/cache/$hash")))
+
+          if [ -f ".nx/cache/$hash.commit" ]; then
+            totalSize=$((totalSize + $(size ".nx/cache/$hash.commit")))
+          fi
+
+          if [ -f ".nx/cache/terminalOutputs/$hash" ]; then
+            totalSize=$((totalSize + $(size ".nx/cache/terminalOutputs/$hash")))
+          fi
+        done
+
+        if [ "$totalSize" -lt "$maxSizeKB" ]; then
+          echo "Cache size is already below the threshold."
+          exit 0
+        fi
+
+        startSize=$totalSize
+
+        echo "Starting total size: $startSize KB, requested max size: $maxSizeKB KB"
+
+        i=0
+
+        # Delete oldest files until the total size is below the threshold
+        while [ "$totalSize" -gt "$maxSizeKB" ]; do
+          hash=${taskHashes[$i]}
+
+          if [ "$hash" == "" ]; then
+            break
+          fi
+
+          totalSize=$((totalSize - $(size ".nx/cache/$hash")))
+          totalSize=$((totalSize - $(size ".nx/cache/$hash.commit")))
+          totalSize=$((totalSize - $(size ".nx/cache/terminalOutputs/$hash")))
+
+          rm -rf ".nx/cache/$hash"
+          rm -f  ".nx/cache/$hash.commit"
+          rm -f  ".nx/cache/terminalOutputs/$hash"
+
+          echo "Deleted files associated with hash $hash; Total size is now $totalSize KB."
+          i=$((i + 1))
+        done
+
+        echo "Pruned cache from $startSize KB to $totalSize KB by deleting $i items."
+
+    - name: 'Build frontend'
+      shell: bash
+      #language=bash
+      run: |
+        yarn nx run-many --target=build --output-style=static
+
+    #    - name: 'Build frontend'
+    #      uses: myparcelnl/actions/nx-run-many@v4
+    #      with:
+    #        target: 'build'
 
     # The scoper is installed and run in pdk.config.js
     - name: 'Cache php-scoper'
