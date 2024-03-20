@@ -46,7 +46,7 @@ jobs:
           issue-number: ${{ steps.info.outputs.pr-number }}
           comment-author: ${{ steps.credentials.outputs.git-name }}
 
-      - uses: peter-evans/create-or-update-comment@v3
+      - uses: peter-evans/create-or-update-comment@v4
         env:
           JOB_PATH: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ steps.info.outputs.previous-job-id }}
           ARTIFACT_URL: ${{ github.server_url }}/${{ github.repository }}/suites/${{ steps.info.outputs.suite-id }}/artifacts/${{ steps.info.outputs.artifact-id }}
@@ -100,7 +100,7 @@ jobs:
           issue-number: ${{ steps.info.outputs.pr-number }}
           comment-author: ${{ steps.credentials.outputs.git-name }}
 
-      - uses: peter-evans/create-or-update-comment@v3
+      - uses: peter-evans/create-or-update-comment@v4
         env:
           JOB_PATH: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ steps.info.outputs.previous-job-id }}
           HEAD_SHA: ${{ steps.info.outputs.head-sha }}
