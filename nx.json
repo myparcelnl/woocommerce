@@ -64,14 +64,6 @@
         ],
         "parallel": 10
       }
-    },
-    "cloud": {
-      "runner": "@nrwl/nx-cloud",
-      "options": {
-        "cacheableOperations": ["build", "test:coverage"],
-        "parallel": 10,
-        "accessToken": "MGU3Y2FiOWItMzJhNC00M2MwLWIwZmItNGQ0Nzg2N2ZlYjNlfHJlYWQtd3JpdGU="
-      }
     }
   }
 }

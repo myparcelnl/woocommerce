@@ -24,14 +24,10 @@ jobs:
 
       - name: 'Run frontend tests'
         if: steps.coverage-cache.outputs.cache-hit != 'true'
-        shell: bash
-        #language=bash
-        run: |
-          yarn nx run-many \
-            --output-style=static \
-            --runner=cloud \
-            --parallel=1 \
-            --target=test:coverage
+        uses: myparcelnl/actions/nx-run-many@v4
+        with:
+          target: 'test:coverage'
+          args: '--parallel=1'
 
       - name: 'Move coverage files'
         if: steps.coverage-cache.outputs.cache-hit != 'true'
