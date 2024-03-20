@@ -19,7 +19,9 @@ final class WcMigrationService implements MigrationServiceInterface
 {
     public function all(): array
     {
+        // @codeCoverageIgnoreStart
         return [];
+        // @codeCoverageIgnoreEnd
     }
 
     public function getInstallationMigrations(): array
