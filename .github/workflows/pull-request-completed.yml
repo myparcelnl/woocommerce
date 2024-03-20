@@ -1,0 +1,120 @@
+name: 'Post PR Artifacts'
+
+on:
+  workflow_run:
+    types:
+      - completed
+
+    workflows:
+      - '⚙️ On pull request'
+
+jobs:
+  comment-success:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: myparcelnl/actions/setup-app-credentials@v3
+        id: credentials
+        with:
+          app-id: ${{ secrets.MYPARCEL_APP_ID }}
+          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
+
+      - name: 'Get artifact and PR info'
+        id: info
+        env:
+          GITHUB_TOKEN: ${{ steps.credentials.outputs.token }}
+          WORKFLOW_RUN_EVENT_OBJ: ${{ toJSON(github.event.workflow_run) }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+        #language=sh
+        run: |
+          HEAD_SHA=$(jq -r '.pull_requests[0].head.sha' <<< "$WORKFLOW_RUN_EVENT_OBJ")
+          PREVIOUS_JOB_ID=$(jq -r '.id' <<< "$WORKFLOW_RUN_EVENT_OBJ")
+          PR_NUMBER=$(jq -r '.pull_requests[0].number' <<< "$WORKFLOW_RUN_EVENT_OBJ")
+          SUITE_ID=$(jq -r '.check_suite_id' <<< "$WORKFLOW_RUN_EVENT_OBJ")
+          ARTIFACT_ID=$(gh api "/repos/$OWNER/$REPO/actions/artifacts" --jq ".artifacts.[] | select(.workflow_run.id==${PREVIOUS_JOB_ID}) | select(.expired==false) | .id")
+
+          echo "artifact-id=$ARTIFACT_ID"         >> $GITHUB_OUTPUT
+          echo "head-sha=$HEAD_SHA"               >> $GITHUB_OUTPUT
+          echo "pr-number=$PR_NUMBER"             >> $GITHUB_OUTPUT
+          echo "previous-job-id=$PREVIOUS_JOB_ID" >> $GITHUB_OUTPUT
+          echo "suite-id=$SUITE_ID"               >> $GITHUB_OUTPUT
+
+      - uses: peter-evans/find-comment@v2
+        id: find-comment
+        with:
+          issue-number: ${{ steps.info.outputs.pr-number }}
+          comment-author: ${{ steps.credentials.outputs.git-name }}
+
+      - uses: peter-evans/create-or-update-comment@v3
+        env:
+          JOB_PATH: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ steps.info.outputs.previous-job-id }}
+          ARTIFACT_URL: ${{ github.server_url }}/${{ github.repository }}/suites/${{ steps.info.outputs.suite-id }}/artifacts/${{ steps.info.outputs.artifact-id }}
+          HEAD_SHA: ${{ steps.info.outputs.head-sha }}
+        with:
+          token: ${{ steps.credentials.outputs.token }}
+          issue-number: ${{ steps.info.outputs.pr-number }}
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |-
+            ✅ Build successful!
+
+            You can find a link to the downloadable artifact below.
+
+            | Name     | Link                    |
+            | -------- | ----------------------- |
+            | Commit   | ${{ env.HEAD_SHA }}     |
+            | Logs     | ${{ env.JOB_PATH }}     |
+            | Download | ${{ env.ARTIFACT_URL }} |
+
+  comment-failure:
+    if: github.event.workflow_run.conclusion == 'failure'
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: myparcelnl/actions/setup-app-credentials@v3
+        id: credentials
+        with:
+          app-id: ${{ secrets.MYPARCEL_APP_ID }}
+          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
+
+      - name: 'Get PR info'
+        id: info
+        env:
+          GITHUB_TOKEN: ${{ steps.credentials.outputs.token }}
+          WORKFLOW_RUN_EVENT_OBJ: ${{ toJSON(github.event.workflow_run) }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+        #language=sh
+        run: |
+          HEAD_SHA=$(jq -r '.pull_requests[0].head.sha' <<< "$WORKFLOW_RUN_EVENT_OBJ")
+          PREVIOUS_JOB_ID=$(jq -r '.id' <<< "$WORKFLOW_RUN_EVENT_OBJ")
+          PR_NUMBER=$(jq -r '.pull_requests[0].number' <<< "$WORKFLOW_RUN_EVENT_OBJ")
+
+          echo "head-sha=$HEAD_SHA"               >> $GITHUB_OUTPUT
+          echo "pr-number=$PR_NUMBER"             >> $GITHUB_OUTPUT
+          echo "previous-job-id=$PREVIOUS_JOB_ID" >> $GITHUB_OUTPUT
+
+      - uses: peter-evans/find-comment@v2
+        id: find-comment
+        with:
+          issue-number: ${{ steps.info.outputs.pr-number }}
+          comment-author: ${{ steps.credentials.outputs.git-name }}
+
+      - uses: peter-evans/create-or-update-comment@v3
+        env:
+          JOB_PATH: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ steps.info.outputs.previous-job-id }}
+          HEAD_SHA: ${{ steps.info.outputs.head-sha }}
+        with:
+          token: ${{ steps.credentials.outputs.token }}
+          issue-number: ${{ steps.info.outputs.pr-number }}
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |-
+            ❌ Build failed!
+
+            You can find a link to the logs below.
+
+            | Name     | Link                    |
+            | -------- | ----------------------- |
+            | Commit   | ${{ env.HEAD_SHA }}     |
+            | Logs     | ${{ env.JOB_PATH }}     |
