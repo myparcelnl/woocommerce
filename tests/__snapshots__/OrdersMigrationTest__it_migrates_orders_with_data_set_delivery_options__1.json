@@ -42,7 +42,8 @@
         "onlyRecipient": 0,
         "return": -1,
         "sameDayDelivery": 0,
-        "signature": 1
+        "signature": 1,
+        "tracked": -1
       },
       "deliveryType": "standard",
       "packageType": "package"
