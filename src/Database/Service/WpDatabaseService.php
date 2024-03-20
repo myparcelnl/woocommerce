@@ -17,6 +17,10 @@ class WpDatabaseService implements WpDatabaseServiceInterface
         $tableName      = $wpdb->prefix . Pdk::get('tableNameAudits');
         $charsetCollate = $wpdb->get_charset_collate();
 
+        if ($this->tableExists($tableName)) {
+            return;
+        }
+
         // phpcs:ignore
         $sql = <<<EOF
 CREATE TABLE $tableName (
@@ -81,5 +85,17 @@ EOF;
         $tableName = $wpdb->prefix . $table;
 
         $wpdb->insert($tableName, $array);
+    }
+
+    /**
+     * @param  string $tableName
+     *
+     * @return bool
+     */
+    protected function tableExists(string $tableName): bool
+    {
+        global $wpdb;
+
+        return $wpdb->get_var("SHOW TABLES LIKE '$tableName'") === $tableName;
     }
 }
