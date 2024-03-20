@@ -13,7 +13,7 @@ jobs:
     if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-22.04
     steps:
-      - uses: myparcelnl/actions/setup-app-credentials@v3
+      - uses: myparcelnl/actions/setup-app-credentials@v4
         id: credentials
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
@@ -71,7 +71,7 @@ jobs:
     if: github.event.workflow_run.conclusion == 'failure'
     runs-on: ubuntu-22.04
     steps:
-      - uses: myparcelnl/actions/setup-app-credentials@v3
+      - uses: myparcelnl/actions/setup-app-credentials@v4
         id: credentials
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
