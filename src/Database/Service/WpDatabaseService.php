@@ -14,12 +14,13 @@ class WpDatabaseService implements WpDatabaseServiceInterface
     {
         global $wpdb;
 
-        $tableName      = $wpdb->prefix . Pdk::get('tableNameAudits');
-        $charsetCollate = $wpdb->get_charset_collate();
+        $tableName = $wpdb->prefix . Pdk::get('tableNameAudits');
 
         if ($this->tableExists($tableName)) {
             return;
         }
+
+        $charsetCollate = $wpdb->get_charset_collate();
 
         // phpcs:ignore
         $sql = <<<EOF

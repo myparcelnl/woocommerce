@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Tests\Mock;
 
 use MyParcelNL\Pdk\Base\Concern\PdkInterface;
+use MyParcelNL\WooCommerce\Database\Contract\WpDatabaseServiceInterface;
 use MyParcelNL\WooCommerce\Pdk\WcPdkBootstrapper;
+use function DI\get;
 
 final class MockWcPdkBootstrapper extends WcPdkBootstrapper implements StaticMockInterface
 {
@@ -91,6 +93,12 @@ final class MockWcPdkBootstrapper extends WcPdkBootstrapper implements StaticMoc
         string $path,
         string $url
     ): array {
-        return array_replace(parent::getAdditionalConfig($name, $title, $version, $path, $url), self::$config);
+        return array_replace(
+            parent::getAdditionalConfig($name, $title, $version, $path, $url),
+            self::$config,
+            [
+                WpDatabaseServiceInterface::class => get(MockWpDatabaseService::class),
+            ]
+        );
     }
 }
