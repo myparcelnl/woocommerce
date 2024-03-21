@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a1bd411e9ed49df5c76f2a3fec180e50",
+    "content-hash": "4e832c8908f95cad13a2ee1069911972",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -463,16 +463,16 @@
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "2.31.3",
+            "version": "2.34.0",
             "source": {
                 "type": "git",
-                "url": "git@github.com:myparcelnl/pdk.git",
-                "reference": "6f0b27094a944fdaa32aeeeb88d186325386bf1f"
+                "url": "https://github.com/myparcelnl/pdk.git",
+                "reference": "182a66ccfb363a937b5db87bd990a3dc1e430179"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/6f0b27094a944fdaa32aeeeb88d186325386bf1f",
-                "reference": "6f0b27094a944fdaa32aeeeb88d186325386bf1f",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/182a66ccfb363a937b5db87bd990a3dc1e430179",
+                "reference": "182a66ccfb363a937b5db87bd990a3dc1e430179",
                 "shasum": ""
             },
             "require": {
@@ -492,7 +492,7 @@
                 "pestphp/pest": ">= 1",
                 "phpdocumentor/reflection-docblock": "^5",
                 "phpstan/phpstan": ">= 1",
-                "rector/rector": "^0.18",
+                "rector/rector": "^0.19",
                 "spatie/pest-plugin-snapshots": ">= 1",
                 "symfony/console": "*"
             },
@@ -514,7 +514,11 @@
             ],
             "description": "MyParcel Plugin Development Kit",
             "homepage": "https://myparcel.nl",
-            "time": "2023-11-27T16:03:36+00:00"
+            "support": {
+                "issues": "https://github.com/myparcelnl/pdk/issues",
+                "source": "https://github.com/myparcelnl/pdk/tree/v2.34.0"
+            },
+            "time": "2024-03-21T13:10:29+00:00"
         },
         {
             "name": "myparcelnl/sdk",
