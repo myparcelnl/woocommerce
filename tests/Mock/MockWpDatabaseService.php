@@ -8,9 +8,16 @@ use MyParcelNL\WooCommerce\Database\Service\WpDatabaseService;
 
 final class MockWpDatabaseService extends WpDatabaseService
 {
+    /**
+     * @var \MyParcelNL\WooCommerce\Tests\Mock\MockWpdb
+     */
+    protected $database;
+
     public function __construct()
     {
-        $GLOBALS['wpdb'] = new MockWpGlobal();
+        $this->database = new MockWpdb();
+
+        $GLOBALS['wpdb'] = $this->database;
     }
 
     /**
@@ -21,5 +28,13 @@ final class MockWpDatabaseService extends WpDatabaseService
     public function executeSql($sql): array
     {
         return [];
+    }
+
+    /**
+     * @return \MyParcelNL\WooCommerce\Tests\Mock\MockWpdb
+     */
+    public function getDb(): MockWpdb
+    {
+        return $this->database;
     }
 }

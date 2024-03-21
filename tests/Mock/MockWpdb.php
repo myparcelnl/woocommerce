@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Tests\Mock;
 
-final class MockWpGlobal
+final class MockWpdb
 {
     private const AUDITS = 'wp_myparcelnl_audits';
 
@@ -44,6 +44,16 @@ final class MockWpGlobal
         }
 
         return [];
+    }
+
+    /**
+     * @param  string $query
+     *
+     * @return null|string
+     */
+    public function get_var(string $query): ?string
+    {
+        return $query;
     }
 
     /**
