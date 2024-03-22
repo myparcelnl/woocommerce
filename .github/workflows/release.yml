@@ -25,10 +25,6 @@ jobs:
       released: ${{ steps.release.outputs.released }}
       version: ${{ steps.release.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-
       - uses: myparcelnl/actions/setup-git-credentials@v4
         id: credentials
         with:

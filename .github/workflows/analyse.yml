@@ -7,8 +7,6 @@ jobs:
   analyse:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-
       - uses: myparcelnl/actions/setup-git-credentials@v4
         id: credentials
         with:
