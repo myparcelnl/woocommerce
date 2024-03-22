@@ -29,15 +29,16 @@ class WpScriptService extends ScriptService
      */
     public function enqueueDeliveryOptions(): void
     {
-        $this->enqueueVue(Pdk::get('deliveryOptionsVueVersion'));
-        $this->enqueueScript(
-            self::HANDLE_DELIVERY_OPTIONS,
-            sprintf(
-                'https://unpkg.com/@myparcel/delivery-options@%s/dist/myparcel.lib.js',
-                Pdk::get('deliveryOptionsVersion')
-            ),
-            [self::HANDLE_VUE]
+        $baseUrl = sprintf(
+            'https://unpkg.com/@myparcel/delivery-options@%s',
+            // TODO: change to Pdk::get('deliveryOptionsVersion') when updated
+            'beta'
         );
+
+        $this->enqueueStyle(self::HANDLE_DELIVERY_OPTIONS, "$baseUrl/dist/style.css");
+
+        $this->enqueueVue(Pdk::get('vueVersion'));
+        $this->enqueueScript(self::HANDLE_DELIVERY_OPTIONS, "$baseUrl/dist/myparcel.lib.js", [self::HANDLE_VUE]);
     }
 
     /**
