@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@myparcel-pdk/checkout": "^1.0.0-alpha.1",
-    "@myparcel/delivery-options": "^5.5.0",
     "@myparcel/ts-utils": "^1.8.0"
   },
   "devDependencies": {

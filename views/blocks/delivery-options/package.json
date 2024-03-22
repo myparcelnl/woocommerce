@@ -26,6 +26,8 @@
     "@wordpress/icons": "^9.0.0",
     "@wordpress/plugins": "^6.0.0",
     "@wordpress/scripts": "^27.0.0",
-    "react": "^18.0.0"
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "webpack": "^5.90.0"
   }
 }

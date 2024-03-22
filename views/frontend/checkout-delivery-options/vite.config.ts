@@ -8,13 +8,5 @@ export default createViteConfig({
       entry: 'src/main.ts',
       formats: ['iife'],
     },
-    rollupOptions: {
-      external: ['@myparcel/delivery-options'],
-      output: {
-        globals: {
-          '@myparcel/delivery-options': 'MyParcelDeliveryOptions',
-        },
-      },
-    },
   },
 });
