@@ -2,7 +2,8 @@
   "name": "@myparcel-woocommerce/vite-config",
   "version": "1.0.0",
   "private": true,
-  "main": "index.cjs",
+  "type": "module",
+  "main": "index.js",
   "types": "index.d.ts",
   "dependencies": {
     "@vitest/coverage-v8": "^1.0.0",

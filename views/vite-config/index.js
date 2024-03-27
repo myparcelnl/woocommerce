@@ -1,5 +1,5 @@
-const customTsConfig = require('vite-plugin-custom-tsconfig');
-const {mergeConfig} = require('vite');
+import customTsConfig from 'vite-plugin-custom-tsconfig';
+import {mergeConfig} from 'vite';
 
 /**
  * @type createDefaultConfig {import('vitest/config').UserConfigExport}
@@ -31,7 +31,7 @@ const createDefaultConfig = (env) => {
  *  @param config {import('vitest/config').UserConfigExport}
  *  @returns {import('vitest/config').UserConfigFn}
  */
-const createViteConfig = (config) => async (env) => {
+export const createViteConfig = (config) => async (env) => {
   let resolvedConfig = config ?? {};
 
   if (typeof config === 'function') {
@@ -40,5 +40,3 @@ const createViteConfig = (config) => async (env) => {
 
   return mergeConfig(createDefaultConfig(env), resolvedConfig);
 };
-
-module.exports = {createViteConfig};

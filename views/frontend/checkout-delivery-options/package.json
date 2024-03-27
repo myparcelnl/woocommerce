@@ -2,6 +2,7 @@
   "name": "@myparcel-woocommerce/frontend-checkout-delivery-options",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "run ws:build \"$(pwd)\"",
     "build:dev": "run ws:build:dev \"$(pwd)\"",
