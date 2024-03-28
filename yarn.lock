@@ -2412,12 +2412,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ljharb/through@npm:^2.3.12":
-  version: 2.3.12
-  resolution: "@ljharb/through@npm:2.3.12"
+"@ljharb/through@npm:^2.3.13":
+  version: 2.3.13
+  resolution: "@ljharb/through@npm:2.3.13"
   dependencies:
-    call-bind: "npm:^1.0.5"
-  checksum: 10c0/7560aaef7b6ef88c16783ffde37278e2177c7f0f5427400059a8a7687b144dc711bf5b2347ab27e858a29f25e4b868d77c915c9614bc399b82b8123430614653
+    call-bind: "npm:^1.0.7"
+  checksum: 10c0/fb60b2fb2c674a674d8ebdb8972ccf52f8a62a9c1f5a2ac42557bc0273231c65d642aa2d7627cbb300766a25ae4642acd0f95fba2f8a1ff891086f0cb15807c3
   languageName: node
   linkType: hard
 
@@ -2725,10 +2725,11 @@ __metadata:
   linkType: hard
 
 "@myparcel-pdk/app-builder@npm:^1.0.0-alpha.1":
-  version: 1.0.0-beta.2
-  resolution: "@myparcel-pdk/app-builder@npm:1.0.0-beta.2"
+  version: 1.0.0-beta.3
+  resolution: "@myparcel-pdk/app-builder@npm:1.0.0-beta.3"
   dependencies:
     "@edielemoine/google-docs-importer": "npm:^1.1.1"
+    "@myparcel/ts-utils": "npm:^1.9.0"
     "@yarnpkg/parsers": "npm:^3.0.0-rc.48.1"
     archiver: "npm:^5.3.1"
     chalk: "npm:^5.2.0"
@@ -2741,7 +2742,7 @@ __metadata:
     supports-color: "npm:^9.3.1"
   bin:
     pdk-builder: ./bin/index.js
-  checksum: 10c0/c6b187ccb7bad82c69239dca8659d7236b818b40e433532e9808b497000ca43f02ea2046587da3dbd05b8944a863f04ca30b521780290073b6867145d6a38ea5
+  checksum: 10c0/2fa8c614e1752ade5a5c9d8bafecaa4c86d04aec1d5680adf02cd508dde566a5a2d2d00f62167a732b0311ee2d3939f2d89f2670642e427248d057a18448e298
   languageName: node
   linkType: hard
 
@@ -10605,9 +10606,9 @@ __metadata:
   linkType: hard
 
 "csv-parse@npm:^5.3.0":
-  version: 5.5.3
-  resolution: "csv-parse@npm:5.5.3"
-  checksum: 10c0/2f85cd52ea11b08d85cb97a1c90db6ed52f9d3c4e3805831da8c59c589e04870adff067ac88855deb9863a16649b3827a1ed576fd021bdf3937b1cf4de8a03ba
+  version: 5.5.5
+  resolution: "csv-parse@npm:5.5.5"
+  checksum: 10c0/717d8e66386cbeed9baea93f231efd3aff967a9b70c27f0c8bb19fa5a723d01b2d426b6728e8f1e5e26731ec4371a5f513e1a524344411735fc8d3848770409e
   languageName: node
   linkType: hard
 
@@ -14242,10 +14243,10 @@ __metadata:
   linkType: hard
 
 "inquirer@npm:^9.1.4":
-  version: 9.2.15
-  resolution: "inquirer@npm:9.2.15"
+  version: 9.2.16
+  resolution: "inquirer@npm:9.2.16"
   dependencies:
-    "@ljharb/through": "npm:^2.3.12"
+    "@ljharb/through": "npm:^2.3.13"
     ansi-escapes: "npm:^4.3.2"
     chalk: "npm:^5.3.0"
     cli-cursor: "npm:^3.1.0"
@@ -14260,7 +14261,7 @@ __metadata:
     string-width: "npm:^4.2.3"
     strip-ansi: "npm:^6.0.1"
     wrap-ansi: "npm:^6.2.0"
-  checksum: 10c0/c94d5863d4d05aeb1c6acfd30416037da03ecc1d7a9be099faf746000cd17ea134038b46888f5baed7abc0fa8efc1918029db896048d9dfa93610b7c999a1b71
+  checksum: 10c0/85b67a6c035e601f5f72803353ad8400a1eb738762137b092f06bc84fd480cb1faba5161e0b514a00935f73c9b46869af1d4f3cad08138f1c5d37388b01111dd
   languageName: node
   linkType: hard
 
