@@ -17,7 +17,7 @@ runs:
       shell: bash
       #language=bash
       run: |
-        yarn pdk-builder release \
+        yarn pdk-builder prerelease \
           --version ${{ inputs.version }} \
           --root-command="docker run -t --user $(id -u):$(id -g) -v $PWD:/app -w /app ${{ inputs.image }}" \
           -v

@@ -47,6 +47,7 @@ jobs:
           php-version: ${{ vars.PHP_VERSION }}
           php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
 
+      # The pdk-builder release step is run in release.config.cjs
       - uses: myparcelnl/actions/semantic-release@v4
         id: release
         env:
