@@ -24,21 +24,10 @@ class WpScriptService extends ScriptService
     public const HANDLE_WC_CHECKOUT       = 'wc-checkout';
     public const HANDLE_JQUERY            = 'jquery';
 
-    /**
-     * @return void
-     */
     public function enqueueDeliveryOptions(): void
     {
-        $baseUrl = sprintf(
-            'https://unpkg.com/@myparcel/delivery-options@%s',
-            // TODO: change to Pdk::get('deliveryOptionsVersion') when updated
-            'beta'
-        );
-
-        $this->enqueueStyle(self::HANDLE_DELIVERY_OPTIONS, "$baseUrl/dist/style.css");
-
-        $this->enqueueVue(Pdk::get('vueVersion'));
-        $this->enqueueScript(self::HANDLE_DELIVERY_OPTIONS, "$baseUrl/dist/myparcel.lib.js", [self::HANDLE_VUE]);
+        $this->enqueueStyle(self::HANDLE_DELIVERY_OPTIONS, Pdk::get('deliveryOptionsCdnUrlCss'));
+        $this->enqueueScript(self::HANDLE_DELIVERY_OPTIONS, Pdk::get('deliveryOptionsCdnUrlJs'));
     }
 
     /**
@@ -122,9 +111,7 @@ class WpScriptService extends ScriptService
      */
     public function enqueueVue(string $version): void
     {
-        $isVue3   = version_compare($version, '3.0.0', '>=');
-        $file     = $isVue3 ? 'vue.global' : 'vue';
-        $filename = Pdk::isDevelopment() ? "$file.js" : "$file.min.js";
+        $filename = Pdk::isDevelopment() ? 'vue.global.js' : 'vue.global.min.js';
 
         $this->enqueueScript(self::HANDLE_VUE, $this->createCdnUrl('vue', $version, $filename));
     }
