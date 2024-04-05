@@ -68,7 +68,6 @@ final class PdkCoreHooks implements WordPressHooksInterface
         }
 
         $this->service->enqueueVue(Pdk::get('vueVersion'));
-        $this->service->enqueueVueDemi(Pdk::get('vueDemiVersion'));
 
         $select = version_compare(WC()->version, '3.2.0', '>=') ? 'selectWoo' : 'select2';
 
@@ -79,7 +78,6 @@ final class PdkCoreHooks implements WordPressHooksInterface
                 WpScriptService::HANDLE_JQUERY,
                 WpScriptService::HANDLE_WOOCOMMERCE_ADMIN,
                 WpScriptService::HANDLE_VUE,
-                WpScriptService::HANDLE_VUE_DEMI,
                 $select,
             ]
         );

@@ -18,7 +18,6 @@ class WpScriptService extends ScriptService
     // External dependencies
     public const HANDLE_DELIVERY_OPTIONS = 'myparcelnl-delivery-options';
     public const HANDLE_VUE              = 'vue';
-    public const HANDLE_VUE_DEMI         = 'vue-demi';
     // Scripts that are already present in WooCommerce
     public const HANDLE_WOOCOMMERCE_ADMIN = 'woocommerce_admin';
     public const HANDLE_WC_CHECKOUT       = 'wc-checkout';
@@ -113,23 +112,7 @@ class WpScriptService extends ScriptService
     {
         $filename = Pdk::isDevelopment() ? 'vue.global.js' : 'vue.global.min.js';
 
-        $this->enqueueScript(self::HANDLE_VUE, $this->createCdnUrl('vue', $version, $filename));
-    }
-
-    /**
-     * @param  string $version
-     *
-     * @return void
-     */
-    public function enqueueVueDemi(string $version): void
-    {
-        $filename = Pdk::isDevelopment() ? 'index.iife.js' : 'index.iife.min.js';
-
-        $this->enqueueScript(
-            self::HANDLE_VUE_DEMI,
-            $this->createCdnUrl('vue-demi', $version, $filename),
-            [self::HANDLE_VUE]
-        );
+        $this->enqueueScript(self::HANDLE_VUE, $this->createCdnUrl('vue', $version, "dist/$filename"));
     }
 
     /**
