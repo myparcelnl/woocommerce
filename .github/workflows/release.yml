@@ -71,3 +71,4 @@ jobs:
       - release
       - rebase-develop
     uses: ./.github/workflows/rebase-prs.yml
+    secrets: inherit
