@@ -7,7 +7,7 @@
         <option name="TAB_SIZE" value="2" />
       </value>
     </option>
-    <option name="LINE_SEPARATOR" value="&#10;" />
+    <option name="LINE_SEPARATOR" />
     <option name="SOFT_MARGINS" value="80,120" />
     <CssCodeStyleSettings>
       <option name="HEX_COLOR_UPPER_CASE" value="true" />
@@ -76,8 +76,8 @@
       <option name="FORCE_QUOTE_STYlE" value="true" />
       <option name="ENFORCE_TRAILING_COMMA" value="WhenMultiline" />
       <option name="OBJECT_LITERAL_WRAP" value="1" />
-      <option name="SPACES_WITHIN_OBJECT_LITERAL_BRACES" value="true" />
       <option name="SPACE_BEFORE_ASYNC_ARROW_LPAREN" value="false" />
+      <option name="SPACES_WITHIN_OBJECT_TYPE_BRACES" value="false" />
       <option name="IMPORT_SORT_MEMBERS" value="false" />
     </JSCodeStyleSettings>
     <LessCodeStyleSettings>
@@ -231,6 +231,7 @@
     <TypeScriptCodeStyleSettings version="0">
       <option name="JSDOC_INCLUDE_TYPES" value="true" />
       <option name="FORCE_SEMICOLON_STYLE" value="true" />
+      <option name="SPACE_BEFORE_FUNCTION_LEFT_PARENTH" value="false" />
       <option name="USE_PUBLIC_MODIFIER" value="true" />
       <option name="PREFER_AS_TYPE_CAST" value="true" />
       <option name="USE_DOUBLE_QUOTES" value="false" />
@@ -240,6 +241,10 @@
       <option name="SPACES_WITHIN_OBJECT_TYPE_BRACES" value="false" />
       <option name="IMPORT_SORT_MEMBERS" value="false" />
     </TypeScriptCodeStyleSettings>
+    <VueCodeStyleSettings>
+      <option name="INTERPOLATION_NEW_LINE_AFTER_START_DELIMITER" value="false" />
+      <option name="INTERPOLATION_NEW_LINE_BEFORE_END_DELIMITER" value="false" />
+    </VueCodeStyleSettings>
     <XML>
       <option name="XML_SPACE_INSIDE_EMPTY_TAG" value="true" />
     </XML>
@@ -1287,6 +1292,7 @@
       </indentOptions>
     </codeStyleSettings>
     <codeStyleSettings language="HTML">
+      <option name="SOFT_MARGINS" value="80" />
       <indentOptions>
         <option name="INDENT_SIZE" value="2" />
         <option name="CONTINUATION_INDENT_SIZE" value="2" />
@@ -1315,6 +1321,7 @@
       <option name="ARRAY_INITIALIZER_RBRACE_ON_NEXT_LINE" value="true" />
       <option name="ASSIGNMENT_WRAP" value="5" />
       <option name="WRAP_COMMENTS" value="true" />
+      <option name="SOFT_MARGINS" value="80" />
       <indentOptions>
         <option name="INDENT_SIZE" value="2" />
         <option name="CONTINUATION_INDENT_SIZE" value="2" />
@@ -2706,6 +2713,7 @@
       <option name="DOWHILE_BRACE_FORCE" value="3" />
       <option name="WHILE_BRACE_FORCE" value="3" />
       <option name="FOR_BRACE_FORCE" value="3" />
+      <option name="SOFT_MARGINS" value="80" />
       <indentOptions>
         <option name="INDENT_SIZE" value="2" />
         <option name="CONTINUATION_INDENT_SIZE" value="2" />
@@ -2968,6 +2976,7 @@
       </arrangement>
     </codeStyleSettings>
     <codeStyleSettings language="Vue">
+      <option name="SOFT_MARGINS" value="80" />
       <indentOptions>
         <option name="CONTINUATION_INDENT_SIZE" value="2" />
       </indentOptions>
