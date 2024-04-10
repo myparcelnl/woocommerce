@@ -56,6 +56,8 @@ jobs:
           version: ${{ steps.version.outputs.version }}
           image: ${{ steps.setup.outputs.image }}
 
+      - uses: mxschmitt/action-tmate@v3
+
   rebase-prs:
     if: github.event_name == 'push'
     needs:
