@@ -36,12 +36,12 @@
         "{workspaceRoot}/node_modules/@myparcel-pdk/**/*"
       ],
       "dependsOn": ["^build:dev"],
-      "outputs": ["{projectRoot}/lib"]
+      "outputs": ["{projectRoot}/dist"]
     },
     "build:test": {
       "inputs": ["test"],
       "dependsOn": ["^build:test"],
-      "outputs": ["{projectRoot}/lib"]
+      "outputs": ["{projectRoot}/dist"]
     },
     "test:coverage": {
       "inputs": ["test"],

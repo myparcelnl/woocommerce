@@ -17,7 +17,6 @@ export default defineConfig({
   platforms: [PdkPlatformName.MyParcelNl, PdkPlatformName.MyParcelBe],
   source: [
     '!**/node_modules/**',
-    'views/**/lib/**/*',
     'views/**/dist/**/*',
     'views/blocks/*/block.json',
     'CONTRIBUTING.md',

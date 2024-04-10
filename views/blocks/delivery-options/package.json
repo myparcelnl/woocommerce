@@ -7,7 +7,6 @@
     "type": "git",
     "url": "https://github.com/myparcelnl/woocommerce"
   },
-  "main": "index.js",
   "scripts": {
     "build": "wp-scripts build",
     "build:dev": "webpack build --mode development"

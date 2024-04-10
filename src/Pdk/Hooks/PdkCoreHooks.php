@@ -74,7 +74,7 @@ final class PdkCoreHooks implements WordPressHooksInterface
 
         $this->service->enqueueLocalScript(
             WpScriptService::HANDLE_PDK_ADMIN,
-            'views/backend/admin/lib/admin',
+            'views/backend/admin/dist/admin',
             [
                 WpScriptService::HANDLE_JQUERY,
                 WpScriptService::HANDLE_WOOCOMMERCE_ADMIN,
@@ -84,7 +84,7 @@ final class PdkCoreHooks implements WordPressHooksInterface
             ]
         );
 
-        $this->service->enqueueLocalStyle(WpScriptService::HANDLE_PDK_ADMIN, 'views/backend/admin/lib/style.css');
+        $this->service->enqueueLocalStyle(WpScriptService::HANDLE_PDK_ADMIN, 'views/backend/admin/dist/style.css');
     }
 
     /**

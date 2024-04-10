@@ -104,7 +104,7 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
     {
         $this->service->enqueueLocalScript(
             WpScriptService::HANDLE_CHECKOUT_CORE,
-            'views/frontend/checkout-core/lib/checkout-core',
+            'views/frontend/checkout-core/dist/checkout-core',
             $this->getWcCheckoutDependencies()
         );
     }
@@ -124,7 +124,7 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
 
         $this->service->enqueueLocalScript(
             WpScriptService::HANDLE_CHECKOUT_DELIVERY_OPTIONS,
-            'views/frontend/checkout-delivery-options/lib/delivery-options',
+            'views/frontend/checkout-delivery-options/dist/delivery-options',
             $this->getWcCheckoutDependencies() + [
                 WpScriptService::HANDLE_CHECKOUT_CORE,
                 WpScriptService::HANDLE_DELIVERY_OPTIONS,
@@ -133,7 +133,7 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
 
         $this->service->enqueueLocalStyle(
             WpScriptService::HANDLE_CHECKOUT_DELIVERY_OPTIONS,
-            'views/frontend/checkout-delivery-options/lib/style.css'
+            'views/frontend/checkout-delivery-options/dist/style.css'
         );
     }
 
@@ -148,7 +148,7 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
 
         $this->service->enqueueLocalScript(
             WpScriptService::HANDLE_SEPARATE_ADDRESS_FIELDS,
-            'views/frontend/checkout-separate-address-fields/lib/separate-address-fields',
+            'views/frontend/checkout-separate-address-fields/dist/separate-address-fields',
             $this->getWcCheckoutDependencies() + [
                 WpScriptService::HANDLE_CHECKOUT_CORE,
             ]
@@ -156,7 +156,7 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
 
         $this->service->enqueueLocalStyle(
             WpScriptService::HANDLE_SEPARATE_ADDRESS_FIELDS,
-            'views/frontend/checkout-separate-address-fields/lib/style.css'
+            'views/frontend/checkout-separate-address-fields/dist/style.css'
         );
     }
 
@@ -171,7 +171,7 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
 
         $this->service->enqueueLocalScript(
             WpScriptService::HANDLE_TAX_FIELDS,
-            'views/frontend/checkout-tax-fields/lib/tax-fields',
+            'views/frontend/checkout-tax-fields/dist/tax-fields',
             array_merge(
                 $this->getWcCheckoutDependencies(),
                 [
