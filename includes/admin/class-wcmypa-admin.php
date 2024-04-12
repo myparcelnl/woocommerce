@@ -1075,29 +1075,19 @@ class WCMYPA_Admin
         $country  = WCX_Order::get_prop($order, 'shipping_country');
         $postcode = preg_replace('/\s+/', '', WCX_Order::get_prop($order, 'shipping_postcode'));
 
-        // set url for NL or foreign orders
-        if ('NL' === $country) {
-            $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
+        $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
 
-            // use billing postcode for pickup/pakjegemak
-            if ($deliveryOptions->isPickup()) {
-                $postcode = preg_replace('/\s+/', '', WCX_Order::get_prop($order, 'billing_postcode'));
-            }
-
-            $trackTraceUrl = sprintf(
-                'https://myparcel.me/track-trace/%s/%s/%s',
-                $track_trace,
-                $postcode,
-                $country
-            );
-        } else {
-            $trackTraceUrl = sprintf(
-                'https://www.internationalparceltracking.com/Main.aspx#/track/%s/%s/%s',
-                $track_trace,
-                $country,
-                $postcode
-            );
+        // use billing postcode for pickup/pakjegemak
+        if ('NL' === $country && $deliveryOptions->isPickup()) {
+            $postcode = preg_replace('/\s+/', '', WCX_Order::get_prop($order, 'billing_postcode'));
         }
+
+        $trackTraceUrl = sprintf(
+            'https://myparcel.me/track-trace/%s/%s/%s',
+            $track_trace,
+            $postcode,
+            $country
+        );
 
         return esc_url($trackTraceUrl);
     }
