@@ -2,12 +2,19 @@ name: '🧪 Run tests'
 
 on:
   workflow_call:
+    inputs:
+      ref:
+        description: 'Ref to run on'
+        type: string
+        required: false
 
 jobs:
   test-frontend:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 'Cache coverage'
         uses: actions/cache@v4
@@ -53,6 +60,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 'Cache coverage'
         uses: actions/cache@v4

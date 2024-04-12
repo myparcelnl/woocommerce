@@ -53,10 +53,9 @@ jobs:
       - uses: ./.github/actions/release
         id: release
         with:
+          command: 'prerelease'
           version: ${{ steps.version.outputs.version }}
           image: ${{ steps.setup.outputs.image }}
-
-      - uses: mxschmitt/action-tmate@v3
 
   rebase-prs:
     if: github.event_name == 'push'
