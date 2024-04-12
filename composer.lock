@@ -4,14 +4,14 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ad08e563ec147cc53b57243a8f3afc3b",
+    "content-hash": "5d8c7f21a139dcb0c41283559061ad8f",
     "packages": [
         {
             "name": "myparcelnl/sdk",
             "version": "7.8.5",
             "source": {
                 "type": "git",
-                "url": "git@github.com:myparcelnl/sdk.git",
+                "url": "https://github.com/myparcelnl/sdk.git",
                 "reference": "6c572caae0bc11c5865704f2cf2c2a67f3393cc8"
             },
             "dist": {
@@ -64,6 +64,10 @@
                 "myparcel",
                 "postnl"
             ],
+            "support": {
+                "issues": "https://github.com/myparcelnl/sdk/issues",
+                "source": "https://github.com/myparcelnl/sdk/tree/v7.8.5"
+            },
             "time": "2023-12-04T10:22:49+00:00"
         }
     ],

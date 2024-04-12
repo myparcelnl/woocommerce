@@ -14,6 +14,24 @@ You can install this version manually to get a head start on [the new features a
 [support@myparcel.nl]: mailto:support@myparcel.nl
 [the new features and improvements]: https://github.com/myparcelnl/woocommerce/compare/main...develop
 
+## [4.22.2-rc.2](https://github.com/myparcelnl/woocommerce/compare/v4.22.2-rc.1...v4.22.2-rc.2) (2024-04-12)
+
+
+### :bug: Bug Fixes
+
+* **tracktrace:** use correct url for foreign shipments ([#1088](https://github.com/myparcelnl/woocommerce/issues/1088)) ([619b28d](https://github.com/myparcelnl/woocommerce/commit/619b28d829d82df63c96278a7301d42abdcf86bb))
+
+**🚧 Note: 🚧**
+
+This is a release candidate. It's not fully tested yet, but will be tested thoroughly and released on the [WordPress plugin directory] soon.
+
+You can install this version manually to get a head start on [the new features and improvements]. Please report any issues you encounter using the [Bug report form] or by sending an email to [support@myparcel.nl].
+
+[Bug report form]: https://github.com/myparcelnl/woocommerce/issues/new?labels=bug&template=BUG-REPORT.yml&version=v4.x.x-rc.x
+[WordPress plugin directory]: https://wordpress.org/plugins/woocommerce-myparcel/
+[support@myparcel.nl]: mailto:support@myparcel.nl
+[the new features and improvements]: https://github.com/myparcelnl/woocommerce/compare/main...develop
+
 ## [4.22.2-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.22.1...v4.22.2-rc.1) (2024-02-28)
 
 
