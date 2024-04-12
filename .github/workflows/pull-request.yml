@@ -6,14 +6,19 @@ on:
       - alpha
       - beta
 
+  repository_dispatch:
+    types: [trigger-pr-build]
+
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  group: '${{ github.workflow }}-${{ github.event.client_payload.number || github.event.pull_request.number }}'
   cancel-in-progress: true
 
 jobs:
   test:
     uses: ./.github/workflows/test.yml
     secrets: inherit
+    with:
+      ref: ${{ github.event.client_payload.ref || github.ref }}
 
   analyse:
     uses: ./.github/workflows/analyse.yml
@@ -45,12 +50,13 @@ jobs:
         #language=bash
         run: |
           version=$(npm pkg get version | sed 's/"//g') 
-          releaseVersion="$version-${{ github.event.pull_request.number}}"
+          releaseVersion="$version-${{ github.event.client_payload.number || github.event.pull_request.number }}"
 
           echo "version=$releaseVersion" >> $GITHUB_OUTPUT
 
       - uses: ./.github/actions/release
         id: release
         with:
+          command: 'prerelease'
           version: ${{ steps.version.outputs.version }}
           image: ${{ steps.setup.outputs.image }}

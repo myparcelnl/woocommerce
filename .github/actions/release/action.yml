@@ -2,6 +2,11 @@ name: 'Create release artifacts'
 description: 'Requires package to have been built'
 
 inputs:
+  command:
+    description: 'Command to run'
+    required: false
+    default: 'release'
+
   version:
     description: 'Version to release'
     required: true
@@ -15,12 +20,10 @@ runs:
   steps:
     - name: 'Create release packages'
       shell: bash
-      env:
-        FORCE_COLOR: '1'
       #language=bash
       run: |
-        yarn pdk-builder prerelease \
-          --version="${{ inputs.version }}" \
+        yarn pdk-builder ${{ inputs.command }} \
+          --version ${{ inputs.version }} \
           --root-command="docker run -t --user $(id -u):$(id -g) -v $PWD:/app -w /app ${{ inputs.image }}" \
           -v
 
