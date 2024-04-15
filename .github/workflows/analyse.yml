@@ -27,21 +27,22 @@ jobs:
             phpstan-cache-${{ hashFiles('phpstan.neon.dist', 'composer.json') }}-
             phpstan-cache-
 
-      - uses: ./.github/actions/setup
+      - uses: myparcelnl/actions/pdk-setup-backend@v4
         id: setup
         if: steps.phpstan-cache.outputs.cache-hit != 'true'
         with:
-          node-version: ${{ vars.NODE_VERSION }}
           php-version: ${{ vars.PHP_VERSION }}
 
       - name: 'Run PHPStan analysis'
         if: steps.phpstan-cache.outputs.cache-hit != 'true'
+        env:
+          IMAGE: ${{ steps.setup.outputs.image }}
         shell: bash
         #language=bash
         run: |
           docker run -t \
             --volume $PWD:/app \
-            ${{ steps.setup.outputs.image }} \
+            $IMAGE \
             php -dmemory_limit=-1 vendor/bin/phpstan \
               analyse \
               --no-progress \

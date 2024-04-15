@@ -40,15 +40,10 @@ jobs:
   rebase:
     runs-on: ubuntu-22.04
     steps:
-      - uses: myparcelnl/actions/setup-git-credentials@v4
-        id: credentials
+      - uses: myparcelnl/actions/rebase@v4
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
-
-      - uses: myparcelnl/actions/rebase@v4
-        with:
-          token: ${{ steps.credentials.outputs.token }}
           base: ${{ inputs.base || github.ref_name }}
           target: ${{ inputs.target }}
           force: ${{ inputs.force }}

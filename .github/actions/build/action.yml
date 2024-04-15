@@ -2,38 +2,45 @@ name: 'Create build'
 description: ''
 
 inputs:
+  node-version:
+    description: 'Node version to use.'
+    required: true
+
   php-version:
-    description: 'PHP Version'
+    description: 'PHP version to use.'
     required: true
 
   php-scoper-version:
-    description: 'PHP Scoper Version'
+    description: 'PHP Scoper version to use.'
     required: true
+
+  composer-flags:
+    description: 'Flags to use when installing composer dependencies.'
+    required: false
+    default: ''
+
+outputs:
+  image:
+    description: 'Docker image that is used'
+    value: ${{ steps.setup.outputs.image }}
 
 runs:
   using: composite
   steps:
+    - uses: myparcelnl/actions/pdk-setup@v4
+      id: setup
+      with:
+        composer-flags: ${{ inputs.composer-flags }}
+        node-version: ${{ inputs.node-version }}
+        php-version: ${{ inputs.php-version }}
+
+    - uses: myparcelnl/actions/pdk-cache@v4
+      with:
+        php-version: ${{ inputs.php-version }}
+        php-scoper-version: ${{ inputs.php-scoper-version }}
+        source-hash: ${{ hashFiles('src/**/*', 'config/**/*', 'woocommerce-myparcel.php', '**/scoper.inc.php', '**/scoper.*.inc.php') }}
+
     - name: 'Build frontend'
       uses: myparcelnl/actions/nx-run-many@v4
       with:
         target: 'build'
-
-    # The scoper is installed and run in pdk.config.js
-    - name: 'Cache php-scoper'
-      uses: actions/cache@v4
-      id: php-scoper-cache
-      with:
-        path: .tmp/php-scoper
-        key: php-scoper-${{ inputs.php-version }}-${{ inputs.php-scoper-version }}
-
-    - name: 'Cache scoped source php'
-      uses: actions/cache@v4
-      with:
-        path: .tmp/scoped/source
-        key: scoped-php-src-${{ inputs.php-version }}-${{ hashFiles('src/**/*', 'config/**/*', 'woocommerce-myparcel.php', 'scoper.inc.php') }}
-
-    - name: 'Cache scoped vendor php'
-      uses: actions/cache@v4
-      with:
-        path: .tmp/scoped/vendor
-        key: scoped-php-vendor-${{ inputs.php-version }}-${{ hashFiles('**/composer.json', '**/composer.lock', 'scoper.inc.php', 'scoper.vendor.inc.php') }}
