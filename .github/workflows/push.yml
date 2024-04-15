@@ -6,10 +6,8 @@ on:
       - alpha
       - beta
 
-  workflow_dispatch:
-
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: '${{ github.workflow }}-${{ github.ref }}'
   cancel-in-progress: true
 
 jobs:
@@ -32,8 +30,9 @@ jobs:
       - uses: ./.github/actions/build
         id: build
         with:
-          composer-flags: '--no-dev'
+          node-version: ${{ vars.NODE_VERSION }}
           php-version: ${{ vars.PHP_VERSION }}
+          composer-flags: '--no-dev'
           php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
 
       - uses: myparcelnl/actions/pdk-prerelease-push@v4
@@ -41,7 +40,6 @@ jobs:
           image: ${{ steps.build.outputs.image }}
 
   rebase-prs:
-    if: github.event_name == 'push'
     needs:
       - test
       - analyse

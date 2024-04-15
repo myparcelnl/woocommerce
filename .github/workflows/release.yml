@@ -39,6 +39,7 @@ jobs:
       - uses: ./.github/actions/build
         id: build
         with:
+          node-version: ${{ vars.NODE_VERSION }}
           php-version: ${{ vars.PHP_VERSION }}
           php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
 
@@ -46,7 +47,6 @@ jobs:
       - uses: myparcelnl/actions/semantic-release@v4
         id: release
         env:
-          FORCE_COLOR: '1'
           PDK_ROOT_COMMAND: 'docker run -t --user $(id -u):$(id -g) -v $PWD:/app -w /app ${{ steps.build.outputs.image }}'
         with:
           token: ${{ steps.credentials.outputs.token }}

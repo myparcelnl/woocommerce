@@ -7,6 +7,7 @@ on:
         description: 'Ref to run on'
         type: string
         required: false
+        default: ${{ github.ref }}
 
 jobs:
   test-frontend:
