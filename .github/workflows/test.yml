@@ -7,6 +7,7 @@ on:
         description: 'Ref to run on'
         type: string
         required: false
+        default: ${{ github.ref }}
 
 jobs:
   test-frontend:
@@ -23,11 +24,10 @@ jobs:
           path: views/**/coverage
           key: coverage-${{ hashFiles('**/package.json', '**/yarn.lock', 'views/**/*') }}
 
-      - uses: ./.github/actions/setup
+      - uses: myparcelnl/actions/pdk-setup-frontend@v4
         if: steps.coverage-cache.outputs.cache-hit != 'true'
         with:
           node-version: ${{ vars.NODE_VERSION }}
-          php-version: ${{ vars.PHP_VERSION }}
 
       - name: 'Run frontend tests'
         if: steps.coverage-cache.outputs.cache-hit != 'true'
@@ -70,25 +70,16 @@ jobs:
           path: coverage
           key: coverage-${{ hashFiles('**/composer.json', '**/composer.lock', 'src/**/*', 'tests/**/*') }}
 
-      - uses: ./.github/actions/setup
+      - uses: myparcelnl/actions/pdk-setup@v4
         id: setup
         with:
           node-version: ${{ vars.NODE_VERSION }}
           php-version: ${{ vars.PHP_VERSION }}
 
-      - name: 'Run backend tests'
+      - uses: myparcelnl/actions/composer-pest@v4
         if: steps.coverage-cache.outputs.cache-hit != 'true'
-        shell: bash
-        #language=bash
-        run: |
-          docker run -t \
-            --volume $PWD:/app \
-            ${{ steps.setup.outputs.image }} \
-            php -dpcov.enabled=1 \
-            vendor/bin/pest \
-              --colors=always \
-              --coverage-clover=clover.xml \
-              --no-interaction
+        with:
+          image: ${{ steps.setup.outputs.image }}
 
       - name: 'Move coverage file'
         if: steps.coverage-cache.outputs.cache-hit != 'true'

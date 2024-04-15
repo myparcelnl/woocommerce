@@ -4,7 +4,7 @@ on:
   pull_request_review:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  group: '${{ github.workflow }}-${{ github.event.pull_request.number }}'
 
 jobs:
   label:
@@ -14,6 +14,4 @@ jobs:
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
-          label-approved: 'approved'
-          label-changes-requested: 'changes requested'
           protection-type: 'rulesets'

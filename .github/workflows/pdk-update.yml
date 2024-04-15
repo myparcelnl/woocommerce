@@ -39,16 +39,11 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        pr: ${{ fromJson(needs.prepare.outputs.pr-data) }}
+        pr: ${{ fromJSON(needs.prepare.outputs.pr-data) }}
     steps:
-      - uses: myparcelnl/actions/get-github-token@v4
-        id: token
+      - uses: myparcelnl/actions/repository-dispatch@v4
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
-
-      - uses: peter-evans/repository-dispatch@v3
-        with:
-          token: ${{ steps.token.outputs.token }}
           event-type: trigger-pr-build
-          client-payload: ${{ toJSON (matrix.pr) }}
+          client-payload: ${{ toJSON(matrix.pr) }}

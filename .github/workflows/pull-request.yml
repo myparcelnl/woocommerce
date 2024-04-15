@@ -23,6 +23,8 @@ jobs:
   analyse:
     uses: ./.github/workflows/analyse.yml
     secrets: inherit
+    with:
+      ref: ${{ github.event.client_payload.ref || github.ref }}
 
   build:
     runs-on: ubuntu-22.04
@@ -32,31 +34,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          ref: ${{ github.event.client_payload.ref || github.ref }}
 
-      - uses: ./.github/actions/setup
-        id: setup
+      - uses: ./.github/actions/build
+        id: build
         with:
           node-version: ${{ vars.NODE_VERSION }}
           php-version: ${{ vars.PHP_VERSION }}
-
-      - uses: ./.github/actions/build
-        with:
-          php-version: ${{ vars.PHP_VERSION }}
+          composer-flags: '--no-dev'
           php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
 
-      - name: 'Determine version'
-        id: version
-        #language=bash
-        run: |
-          version=$(npm pkg get version | sed 's/"//g') 
-          releaseVersion="$version-${{ github.event.client_payload.number || github.event.pull_request.number }}"
-
-          echo "version=$releaseVersion" >> $GITHUB_OUTPUT
-
-      - uses: ./.github/actions/release
-        id: release
+      - uses: myparcelnl/actions/pdk-prerelease-pr@v4
         with:
-          command: 'prerelease'
-          version: ${{ steps.version.outputs.version }}
-          image: ${{ steps.setup.outputs.image }}
+          image: ${{ steps.build.outputs.image }}
+          pr-number: ${{ github.event.client_payload.number || github.event.pull_request.number }}

@@ -6,10 +6,8 @@ on:
       - alpha
       - beta
 
-  workflow_dispatch:
-
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: '${{ github.workflow }}-${{ github.ref }}'
   cancel-in-progress: true
 
 jobs:
@@ -29,36 +27,19 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - uses: ./.github/actions/setup
-        id: setup
+      - uses: ./.github/actions/build
+        id: build
         with:
           node-version: ${{ vars.NODE_VERSION }}
           php-version: ${{ vars.PHP_VERSION }}
-
-      - uses: ./.github/actions/build
-        with:
-          php-version: ${{ vars.PHP_VERSION }}
+          composer-flags: '--no-dev'
           php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
 
-      - name: 'Determine version'
-        id: version
-        #language=bash
-        run: |
-          version=$(npm pkg get version | sed 's/"//g')
-          commitsSinceTag=$(git log --oneline v$version.. | wc -l)
-          releaseVersion="$version-$commitsSinceTag"
-
-          echo "version=$releaseVersion" >> $GITHUB_OUTPUT
-
-      - uses: ./.github/actions/release
-        id: release
+      - uses: myparcelnl/actions/pdk-prerelease-push@v4
         with:
-          command: 'prerelease'
-          version: ${{ steps.version.outputs.version }}
-          image: ${{ steps.setup.outputs.image }}
+          image: ${{ steps.build.outputs.image }}
 
   rebase-prs:
-    if: github.event_name == 'push'
     needs:
       - test
       - analyse
