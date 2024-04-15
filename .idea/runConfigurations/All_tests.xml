@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="true" type="PestRunConfigurationType">
+  <configuration default="false" name="All tests" type="PestRunConfigurationType">
     <CommandLine workingDirectory="$PROJECT_DIR$">
       <PhpTestInterpreterSettings>
         <option name="interpreterName" value="php" />
