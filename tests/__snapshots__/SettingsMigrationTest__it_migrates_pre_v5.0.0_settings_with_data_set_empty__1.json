@@ -56,6 +56,7 @@
       "id": "postnl",
       "carrierName": null,
       "allowDeliveryOptions": false,
+      "allowStandardDelivery": false,
       "allowEveningDelivery": false,
       "allowMondayDelivery": false,
       "allowMorningDelivery": false,
@@ -151,13 +152,13 @@
       "priceOnlyRecipient": 0,
       "pricePackageTypeDigitalStamp": 0,
       "pricePackageTypeMailbox": 0,
-      "priceSignature": 0,
-      "showDeliveryDay": true
+      "priceSignature": 0
     },
     "dhlforyou": {
       "id": "dhlforyou",
       "carrierName": null,
       "allowDeliveryOptions": false,
+      "allowStandardDelivery": false,
       "allowEveningDelivery": false,
       "allowMondayDelivery": false,
       "allowMorningDelivery": false,
@@ -253,13 +254,13 @@
       "priceOnlyRecipient": 0,
       "pricePackageTypeDigitalStamp": 0,
       "pricePackageTypeMailbox": 0,
-      "priceSignature": 0,
-      "showDeliveryDay": true
+      "priceSignature": 0
     },
     "dhlparcelconnect": {
       "id": "dhlparcelconnect",
       "carrierName": null,
       "allowDeliveryOptions": false,
+      "allowStandardDelivery": false,
       "allowEveningDelivery": false,
       "allowMondayDelivery": false,
       "allowMorningDelivery": false,
@@ -355,13 +356,13 @@
       "priceOnlyRecipient": 0,
       "pricePackageTypeDigitalStamp": 0,
       "pricePackageTypeMailbox": 0,
-      "priceSignature": 0,
-      "showDeliveryDay": true
+      "priceSignature": 0
     },
     "dhleuroplus": {
       "id": "dhleuroplus",
       "carrierName": null,
       "allowDeliveryOptions": false,
+      "allowStandardDelivery": false,
       "allowEveningDelivery": false,
       "allowMondayDelivery": false,
       "allowMorningDelivery": false,
@@ -457,8 +458,7 @@
       "priceOnlyRecipient": 0,
       "pricePackageTypeDigitalStamp": 0,
       "pricePackageTypeMailbox": 0,
-      "priceSignature": 0,
-      "showDeliveryDay": true
+      "priceSignature": 0
     }
   }
 }
