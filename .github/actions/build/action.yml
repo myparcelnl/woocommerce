@@ -10,10 +10,6 @@ inputs:
     description: 'PHP version to use.'
     required: true
 
-  php-scoper-version:
-    description: 'PHP Scoper version to use.'
-    required: true
-
   composer-flags:
     description: 'Flags to use when installing composer dependencies.'
     required: false
@@ -33,12 +29,6 @@ runs:
         composer-flags: ${{ inputs.composer-flags }}
         node-version: ${{ inputs.node-version }}
         php-version: ${{ inputs.php-version }}
-
-    - uses: myparcelnl/actions/pdk-cache@v4
-      with:
-        php-version: ${{ inputs.php-version }}
-        php-scoper-version: ${{ inputs.php-scoper-version }}
-        source-hash: ${{ hashFiles('src/**/*', 'config/**/*', 'woocommerce-myparcel.php', '**/scoper.inc.php', '**/scoper.*.inc.php') }}
 
     - name: 'Build frontend'
       uses: myparcelnl/actions/nx-run-many@v4

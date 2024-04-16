@@ -36,12 +36,17 @@ jobs:
           fetch-depth: 0
           token: ${{ steps.credentials.outputs.token }}
 
+      - uses: myparcelnl/actions/pdk-cache@v4
+        with:
+          php-version: ${{ vars.PHP_VERSION }}
+          php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
+          source-hash: ${{ hashFiles('src/**/*', 'config/**/*', 'woocommerce-myparcel.php', '**/scoper.inc.php', '**/scoper.*.inc.php') }}
+
       - uses: ./.github/actions/build
         id: build
         with:
           node-version: ${{ vars.NODE_VERSION }}
           php-version: ${{ vars.PHP_VERSION }}
-          php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
 
       # The pdk-builder release step is run in release.config.cjs
       - uses: myparcelnl/actions/semantic-release@v4
