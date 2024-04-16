@@ -9,6 +9,8 @@ on:
   repository_dispatch:
     types: [trigger-pr-build]
 
+run-name: 'PR #${{ github.event.client_payload.number || github.event.pull_request.number }}'
+
 concurrency:
   group: '${{ github.workflow }}-${{ github.event.client_payload.number || github.event.pull_request.number }}'
   cancel-in-progress: true
