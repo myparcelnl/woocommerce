@@ -13,4 +13,3 @@ jobs:
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
           base: ${{ github.ref_name }}
           exclude-drafts: true
-          exclude-labels: 'dependencies'
