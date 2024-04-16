@@ -43,10 +43,9 @@ jobs:
         with:
           node-version: ${{ vars.NODE_VERSION }}
           php-version: ${{ vars.PHP_VERSION }}
-          composer-flags: '--no-dev'
-          php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
 
       - uses: myparcelnl/actions/pdk-prerelease-pr@v4
         with:
           image: ${{ steps.build.outputs.image }}
           pr-number: ${{ github.event.client_payload.number || github.event.pull_request.number }}
+          source-hash: ${{ hashFiles('src/**/*', 'config/**/*', 'woocommerce-myparcel.php', '**/scoper.inc.php', '**/scoper.*.inc.php') }}
