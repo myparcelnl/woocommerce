@@ -4,6 +4,8 @@ on:
   repository_dispatch:
     types: [pdk-update]
 
+run-name: 'Trigger from PDK release ${{ github.event.client_payload.version }}'
+
 jobs:
   prepare:
     runs-on: ubuntu-22.04
