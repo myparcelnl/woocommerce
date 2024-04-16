@@ -12,7 +12,7 @@
     "build:dev": "webpack build --mode development"
   },
   "dependencies": {
-    "@myparcel-pdk/checkout": "^1.0.0-alpha.78"
+    "@myparcel-pdk/checkout": "^1.0.0"
   },
   "devDependencies": {
     "@woocommerce/block-library": "^2.0.0",

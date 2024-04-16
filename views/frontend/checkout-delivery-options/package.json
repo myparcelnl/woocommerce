@@ -12,7 +12,7 @@
     "test:run": "run ws:test:run \"$(pwd)\""
   },
   "dependencies": {
-    "@myparcel-pdk/checkout": "^1.0.0-alpha.1",
+    "@myparcel-pdk/checkout": "^1.0.0",
     "@myparcel/ts-utils": "^1.8.0"
   },
   "devDependencies": {
