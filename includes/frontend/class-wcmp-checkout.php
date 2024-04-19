@@ -41,7 +41,7 @@ class WCMP_Checkout
 
     public function __construct()
     {
-        add_action('wp_enqueue_scripts', [$this, 'enqueue_frontend_scripts'], 100);
+        add_action('wp', [$this, 'enqueue_frontend_scripts'], 100);
 
         // Save delivery options data
         add_action('woocommerce_checkout_update_order_meta', [$this, 'save_delivery_options'], 10, 2);
