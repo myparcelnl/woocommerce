@@ -206,10 +206,10 @@ class WCMP_Shipping_Methods
         WC_Shipping_Method $zoneShippingMethod
     ): void {
         foreach ($zoneShippingMethod->get_normalized_shipping_rates() as $zoneShippingRate) {
-            $label = $zoneShippingRate['rate_label'] ?? "{$zoneShippingMethod['title']} ({$zoneShippingRate['rate_id']})";
+            $label = $zoneShippingRate['rate_label'] ?? "$zoneShippingMethod->title ({$zoneShippingRate['rate_id']})";
 
             $this->addShippingMethod(
-                self::TABLE_RATES_WOOCOMMERCE . ":{$zoneShippingMethod['instance_id']}:{$zoneShippingRate['rate_id']}",
+                self::TABLE_RATES_WOOCOMMERCE . ":$zoneShippingMethod->instance_id:{$zoneShippingRate['rate_id']}",
                 "{$zone->get_zone_name()} - $label"
             );
         }
