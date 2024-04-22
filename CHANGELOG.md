@@ -14,6 +14,24 @@ You can install this version manually to get a head start on [the new features a
 [support@myparcel.nl]: mailto:support@myparcel.nl
 [the new features and improvements]: https://github.com/myparcelnl/woocommerce/compare/main...develop
 
+## [4.22.2-rc.4](https://github.com/myparcelnl/woocommerce/compare/v4.22.2-rc.3...v4.22.2-rc.4) (2024-04-22)
+
+
+### :bug: Bug Fixes
+
+* **checkout:** fix myparcel div not found ([#1091](https://github.com/myparcelnl/woocommerce/issues/1091)) ([e7d75d2](https://github.com/myparcelnl/woocommerce/commit/e7d75d25387f3bd60b60d432c3e680464188cea9))
+
+**🚧 Note: 🚧**
+
+This is a release candidate. It's not fully tested yet, but will be tested thoroughly and released on the [WordPress plugin directory] soon.
+
+You can install this version manually to get a head start on [the new features and improvements]. Please report any issues you encounter using the [Bug report form] or by sending an email to [support@myparcel.nl].
+
+[Bug report form]: https://github.com/myparcelnl/woocommerce/issues/new?labels=bug&template=BUG-REPORT.yml&version=v4.x.x-rc.x
+[WordPress plugin directory]: https://wordpress.org/plugins/woocommerce-myparcel/
+[support@myparcel.nl]: mailto:support@myparcel.nl
+[the new features and improvements]: https://github.com/myparcelnl/woocommerce/compare/main...develop
+
 ## [4.22.2-rc.3](https://github.com/myparcelnl/woocommerce/compare/v4.22.2-rc.2...v4.22.2-rc.3) (2024-04-19)
 
 
