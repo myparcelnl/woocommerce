@@ -17,6 +17,29 @@ If you do choose to install this version, we would love to hear your feedback. P
 [releases]: https://github.com/myparcelnl/woocommerce/releases
 [support@myparcel.nl]: mailto:support@myparcel.nl
 
+## [5.0.0-beta.6](https://github.com/myparcelnl/woocommerce/compare/v5.0.0-beta.5...v5.0.0-beta.6) (2024-04-25)
+
+
+### :sparkles: New Features
+
+* **deps:** upgrade @myparcel-pdk/* ([f30713f](https://github.com/myparcelnl/woocommerce/commit/f30713f92274d98c85c9de0ccc9822a44048997d))
+* **deps:** upgrade myparcelnl/pdk to v2.36.1 ([7a32728](https://github.com/myparcelnl/woocommerce/commit/7a32728aaf1d615ed046d931b9e62123332bfc32))
+* update to latest delivery options ([#1085](https://github.com/myparcelnl/woocommerce/issues/1085)) ([69b24b9](https://github.com/myparcelnl/woocommerce/commit/69b24b998700973f8badbc033cb75917a8d595dc))
+
+## 🚧 This version is not ready for production use 🚧
+
+This is the beta release of MyParcel WooCommerce v5.x. We've rewritten the entire plugin from scratch, using the [MyParcel Plugin Development Kit].
+
+For a less bug-prone experience, we recommend you use the stable or release candidate versions of the plugin instead. You can find the stable version in the [WordPress plugin directory]. The release candidate versions can be found in the [releases] section of this repository. They are versioned with a `-rc` suffix.
+
+If you do choose to install this version, we would love to hear your feedback. Please report any issues you encounter using the [Bug report for v5.0.0-beta.x form] or by sending an email to [support@myparcel.nl]. Use it in production at your own risk.
+
+[Bug report for v5.0.0-beta.x form]: https://github.com/myparcelnl/woocommerce/issues/new?labels=beta&template=ZZ-BUG-REPORT-v5.yml
+[MyParcel Plugin Development Kit]: https://developer.myparcel.nl/documentation/52.pdk/
+[WordPress plugin directory]: https://wordpress.org/plugins/woocommerce-myparcel/
+[releases]: https://github.com/myparcelnl/woocommerce/releases
+[support@myparcel.nl]: mailto:support@myparcel.nl
+
 ## [5.0.0-beta.5](https://github.com/myparcelnl/woocommerce/compare/v5.0.0-beta.4...v5.0.0-beta.5) (2024-03-27)
 
 
