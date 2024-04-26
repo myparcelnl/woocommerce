@@ -33,7 +33,7 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
 
     public function apply(): void
     {
-        add_action('wp_enqueue_scripts', [$this, 'enqueueFrontendScripts'], 100);
+        add_action('wp', [$this, 'enqueueFrontendScripts'], 100);
     }
 
     /**

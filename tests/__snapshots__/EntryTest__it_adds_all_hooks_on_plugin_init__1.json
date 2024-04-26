@@ -15,7 +15,7 @@
   "woocommerce_cart_calculate_fees": [
     "MyParcelNL\\WooCommerce\\Hooks\\CartFeesHooks::calculateDeliveryOptionsFees"
   ],
-  "wp_enqueue_scripts": [
+  "wp": [
     "MyParcelNL\\WooCommerce\\Hooks\\CheckoutScriptHooks::enqueueFrontendScripts"
   ],
   "woocommerce_order_note_added": [
