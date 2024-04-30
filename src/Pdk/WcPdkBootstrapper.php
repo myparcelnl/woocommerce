@@ -7,6 +7,10 @@ namespace MyParcelNL\WooCommerce\Pdk;
 use MyParcelNL\Pdk\Base\PdkBootstrapper;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
+use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
+use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
+use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
+use MyParcelNL\Sdk\src\Support\Str;
 use function DI\factory;
 use function DI\value;
 
@@ -96,6 +100,8 @@ class WcPdkBootstrapper extends PdkBootstrapper
              */
 
             'metaKeyOrderShipments' => value("_{$name}_order_shipments"),
+
+            'metaKeyLegacyDeliveryOptions' => value('_myparcel_delivery_options'),
 
             /**
              * The meta key a PdkOrder's notes are saved in.

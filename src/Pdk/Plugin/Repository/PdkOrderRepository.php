@@ -8,11 +8,18 @@ use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\App\Order\Model\PdkOrder;
 use MyParcelNL\Pdk\App\Order\Model\PdkOrderLine;
 use MyParcelNL\Pdk\App\Order\Repository\AbstractPdkOrderRepository;
+use MyParcelNL\Pdk\Base\Exception\InvalidCastException;
 use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
+use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
+use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
+use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptionsV3Adapter;
+use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
+use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+use MyParcelNL\WooCommerce\Adapter\LegacyDeliveryOptionsAdapter;
 use MyParcelNL\WooCommerce\Adapter\WcAddressAdapter;
 use MyParcelNL\WooCommerce\Facade\Filter;
 use MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface;
@@ -39,21 +46,29 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     private $wcOrderRepository;
 
     /**
+     * @var LegacyDeliveryOptionsAdapter
+     */
+    private $legacyDOAdapter;
+
+    /**
      * @param  \MyParcelNL\Pdk\Storage\Contract\StorageInterface                       $storage
      * @param  \MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface        $pdkProductRepository
      * @param  \MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface $wcOrderRepository
      * @param  \MyParcelNL\WooCommerce\Adapter\WcAddressAdapter                        $addressAdapter
+     * @param  \MyParcelNL\WooCommerce\Adapter\LegacyDeliveryOptionsAdapter            $legacyDOAdapter
      */
     public function __construct(
         StorageInterface              $storage,
         PdkProductRepositoryInterface $pdkProductRepository,
         WcOrderRepositoryInterface    $wcOrderRepository,
-        WcAddressAdapter              $addressAdapter
+        WcAddressAdapter              $addressAdapter,
+        LegacyDeliveryOptionsAdapter  $legacyDOAdapter
     ) {
         parent::__construct($storage);
         $this->pdkProductRepository = $pdkProductRepository;
         $this->wcOrderRepository    = $wcOrderRepository;
         $this->addressAdapter       = $addressAdapter;
+        $this->legacyDOAdapter      = $legacyDOAdapter;
     }
 
     /**
@@ -98,6 +113,14 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
 
         $wcOrder->update_meta_data(Pdk::get('metaKeyOrderData'), $order->toStorableArray());
         $wcOrder->update_meta_data(Pdk::get('metaKeyOrderShipments'), $order->shipments->toStorableArray());
+
+        /**
+         * Preserve Legacy Delivery Options in original Meta Key for compatibility with external systems.
+         */
+        $wcOrder->update_meta_data(
+            Pdk::get('metaKeyLegacyDeliveryOptions'),
+            $this->legacyDOAdapter->fromDeliveryOptions($order->deliveryOptions)->toArray()
+        );
 
         $wcOrder->save();
 
