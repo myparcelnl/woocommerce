@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.22.2](https://github.com/myparcelnl/woocommerce/compare/v4.22.1...v4.22.2) (2024-04-30)
+
+
+### :bug: Bug Fixes
+
+* **checkout:** fix myparcel div not found ([#1091](https://github.com/myparcelnl/woocommerce/issues/1091)) ([e7d75d2](https://github.com/myparcelnl/woocommerce/commit/e7d75d25387f3bd60b60d432c3e680464188cea9))
+* **compatibility:** restore compatibility with wooc table rate ([#1090](https://github.com/myparcelnl/woocommerce/issues/1090)) ([ca95eae](https://github.com/myparcelnl/woocommerce/commit/ca95eaeaef7d2c1591df87f24cbc1bcfb4dcc12d))
+* **order-mode:** fix item value on customs declaration ([#1066](https://github.com/myparcelnl/woocommerce/issues/1066)) ([49c379a](https://github.com/myparcelnl/woocommerce/commit/49c379a6f2530365377eacc73dae077bcd096c06))
+* **tracktrace:** use correct url for foreign shipments ([#1088](https://github.com/myparcelnl/woocommerce/issues/1088)) ([619b28d](https://github.com/myparcelnl/woocommerce/commit/619b28d829d82df63c96278a7301d42abdcf86bb))
+
 **🚧 Note: 🚧**
 
 This is a release candidate. It's not fully tested yet, but will be tested thoroughly and released on the [WordPress plugin directory] soon.
