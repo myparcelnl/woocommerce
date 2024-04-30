@@ -1,0 +1,17 @@
+carrier: postnl
+date: null
+deliveryType: standard
+packageType: package
+isPickup: false
+pickupLocation: null
+shipmentOptions:
+    signature: true
+    insurance: null
+    age_check: true
+    only_recipient: true
+    return: null
+    same_day_delivery: null
+    large_format: null
+    label_description: null
+    hide_sender: null
+    extra_assurance: null

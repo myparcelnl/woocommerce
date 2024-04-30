@@ -1,0 +1,17 @@
+carrier: dhlforyou
+date: null
+deliveryType: standard
+packageType: mailbox
+isPickup: false
+pickupLocation: null
+shipmentOptions:
+    signature: null
+    insurance: null
+    age_check: null
+    only_recipient: null
+    return: null
+    same_day_delivery: null
+    large_format: null
+    label_description: null
+    hide_sender: null
+    extra_assurance: null
