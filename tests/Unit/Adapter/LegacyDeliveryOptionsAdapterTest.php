@@ -20,14 +20,14 @@ usesShared(new UsesMockWcPdkInstance());
 dataset('deliveryOptions', function () {
     return [
         'carrier' => [
-            new DeliveryOptions([
+            [
                 'deliveryType' => 'standard',
                 'packageType' => 'mailbox',
                 'carrier' => 'dhlforyou',
-            ])
+            ]
         ],
         'shipment options' => [
-            new DeliveryOptions([
+            [
                 'deliveryType' => 'standard',
                 'packageType' => 'package',
                 'carrier' => 'postnl',
@@ -35,11 +35,11 @@ dataset('deliveryOptions', function () {
                     'ageCheck' => true,
                     'signature' => true,
                     'onlyRecipient' => true,
-                ],
-            ])
+                ]
+            ]
         ],
         'pickup location' => [
-            new DeliveryOptions([
+            [
                 'deliveryType' => 'pickup',
                 'packageType' => 'package',
                 'carrier' => 'dpd',
@@ -52,18 +52,18 @@ dataset('deliveryOptions', function () {
                     'postalCode' => '1212DP',
                     'city' => 'Hoofddorp',
                     'country' => 'NL',
-               ],
-            ])
+               ]
+            ]
         ],
     ];
 });
 
-it('creates legacy options', function (DeliveryOptions $options) {
+it('creates legacy options', function (array $options) {
     /** @var LegacyDeliveryOptionsAdapter $adapter */
     $adapter = Pdk::get(LegacyDeliveryOptionsAdapter::class);
 
     /**
      * In the snapshots, properties in pickupLocation and shipmentOptions must be snake_case (part of the legacy)
      */
-    assertMatchesSnapshot($adapter->fromDeliveryOptions($options)->toArray());
+    assertMatchesSnapshot($adapter->fromDeliveryOptions(new DeliveryOptions($options))->toArray());
 })->with('deliveryOptions');
