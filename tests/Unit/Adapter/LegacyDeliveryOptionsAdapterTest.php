@@ -19,14 +19,14 @@ usesShared(new UsesMockWcPdkInstance());
 
 dataset('deliveryOptions', function () {
     return [
-        'default' => [
+        'carrier' => [
             new DeliveryOptions([
                 'deliveryType' => 'standard',
                 'packageType' => 'mailbox',
                 'carrier' => 'dhlforyou',
             ])
         ],
-        'with shipment options' => [
+        'shipment options' => [
             new DeliveryOptions([
                 'deliveryType' => 'standard',
                 'packageType' => 'package',
@@ -38,7 +38,7 @@ dataset('deliveryOptions', function () {
                 ]
             ])
         ],
-        'with pickup location' => [
+        'pickup location' => [
             new DeliveryOptions([
                 'deliveryType' => 'pickup',
                 'packageType' => 'package',
