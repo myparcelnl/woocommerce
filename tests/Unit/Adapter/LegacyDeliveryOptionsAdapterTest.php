@@ -8,12 +8,9 @@ namespace MyParcelNL\WooCommerce\Adapter;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
-use WC_Cart;
-use WC_Customer;
-use WC_Order;
 use function MyParcelNL\Pdk\Tests\usesShared;
-use function MyParcelNL\WooCommerce\Tests\wpFactory;
 use function Spatie\Snapshots\assertMatchesSnapshot;
+use function MyParcelNL\Pdk\Tests\factory;
 
 usesShared(new UsesMockWcPdkInstance());
 
@@ -62,8 +59,11 @@ it('creates legacy options', function (array $options) {
     /** @var LegacyDeliveryOptionsAdapter $adapter */
     $adapter = Pdk::get(LegacyDeliveryOptionsAdapter::class);
 
+    $boo = factory(DeliveryOptions::class)
+        ->with($options)
+        ->make();
     /**
      * In the snapshots, properties in pickupLocation and shipmentOptions must be snake_case (part of the legacy)
      */
-    assertMatchesSnapshot($adapter->fromDeliveryOptions(new DeliveryOptions($options))->toArray());
+    assertMatchesSnapshot($adapter->fromDeliveryOptions($boo)->toArray());
 })->with('deliveryOptions');
