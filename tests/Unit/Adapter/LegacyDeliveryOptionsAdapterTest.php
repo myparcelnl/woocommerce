@@ -16,54 +16,54 @@ usesShared(new UsesMockWcPdkInstance());
 
 dataset('deliveryOptions', function () {
     return [
-        'carrier' => [
-            [
-                'deliveryType' => 'standard',
-                'packageType' => 'mailbox',
-                'carrier' => 'dhlforyou',
-            ]
-        ],
-        'shipment options' => [
-            [
-                'deliveryType' => 'standard',
-                'packageType' => 'package',
-                'carrier' => 'postnl',
-                'shipmentOptions' => [
-                    'ageCheck' => true,
-                    'signature' => true,
-                    'onlyRecipient' => true,
-                ]
-            ]
-        ],
-        'pickup location' => [
-            [
-                'deliveryType' => 'pickup',
-                'packageType' => 'package',
-                'carrier' => 'dpd',
-                'pickupLocation' => [
-                    'locationCode' => 'DPD-12',
-                    'locationName' => 'DPD Pakketshop',
-                    'retailNetworkId' => '123',
-                    'street' => 'Deepeedee',
-                    'number' => '12',
-                    'postalCode' => '1212DP',
-                    'city' => 'Hoofddorp',
-                    'country' => 'NL',
-               ]
-            ]
-        ],
+        'carrier' => function() {
+            return factory(DeliveryOptions::class)
+                ->with([
+                    'deliveryType' => 'standard',
+                    'packageType' => 'mailbox',
+                    'carrier' => 'dhlforyou',
+                ])->make();
+        },
+        'shipment options' => function() {
+            return factory(DeliveryOptions::class)
+                ->with([
+                    'deliveryType' => 'standard',
+                    'packageType' => 'package',
+                    'carrier' => 'postnl',
+                    'shipmentOptions' => [
+                        'ageCheck' => true,
+                        'signature' => true,
+                        'onlyRecipient' => true,
+                    ]
+                ])->make();
+        },
+        'pickup location' => function() {
+            return factory(DeliveryOptions::class)
+                ->with([
+                    'deliveryType' => 'pickup',
+                    'packageType' => 'package',
+                    'carrier' => 'dpd',
+                    'pickupLocation' => [
+                        'locationCode' => 'DPD-12',
+                        'locationName' => 'DPD Pakketshop',
+                        'retailNetworkId' => '123',
+                        'street' => 'Deepeedee',
+                        'number' => '12',
+                        'postalCode' => '1212DP',
+                        'city' => 'Hoofddorp',
+                        'country' => 'NL',
+                    ]
+                ])->make();
+        },
     ];
 });
 
-it('creates legacy options', function (array $options) {
+it('creates legacy options', function (DeliveryOptions $options) {
     /** @var LegacyDeliveryOptionsAdapter $adapter */
     $adapter = Pdk::get(LegacyDeliveryOptionsAdapter::class);
 
-    $boo = factory(DeliveryOptions::class)
-        ->with($options)
-        ->make();
     /**
      * In the snapshots, properties in pickupLocation and shipmentOptions must be snake_case (part of the legacy)
      */
-    assertMatchesSnapshot($adapter->fromDeliveryOptions($boo)->toArray());
+    assertMatchesSnapshot($adapter->fromDeliveryOptions($options)->toArray());
 })->with('deliveryOptions');
