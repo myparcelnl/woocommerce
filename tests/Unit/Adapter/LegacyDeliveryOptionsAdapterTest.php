@@ -35,7 +35,7 @@ dataset('deliveryOptions', function () {
                     'ageCheck' => true,
                     'signature' => true,
                     'onlyRecipient' => true,
-                ]
+                ],
             ])
         ],
         'pickup location' => [
@@ -52,7 +52,7 @@ dataset('deliveryOptions', function () {
                     'postalCode' => '1212DP',
                     'city' => 'Hoofddorp',
                     'country' => 'NL',
-               ]
+               ],
             ])
         ],
     ];
