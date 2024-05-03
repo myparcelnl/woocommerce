@@ -45,7 +45,7 @@ class LegacyDeliveryOptionsAdapter
      */
     public function fixBool($value): ?bool
     {
-        switch ((int)$value) {
+        switch ((int) $value) {
             case 1:
                 return true;
             case 0:
