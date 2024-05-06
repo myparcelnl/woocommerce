@@ -2,7 +2,7 @@
   "name": "myparcelnl/woocommerce",
   "version": "5.0.0-beta.6",
   "require": {
-    "myparcelnl/pdk": "^2.0.0",
+    "myparcelnl/pdk": "2.36.3",
     "guzzlehttp/guzzle": "^7.5.0",
     "psr/log": "*"
   },
