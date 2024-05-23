@@ -13,7 +13,7 @@ use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 
 usesShared(new UsesMockWcPdkInstance());
 
-dataset('oldPluginSettings', [
+dataset('old plugin settings', [
     'empty'  => [[]],
     'filled' => [
         [
@@ -57,10 +57,16 @@ dataset('oldPluginSettings', [
             ],
             'export_defaults'  => [
                 'shipping_methods_package_types' => [
-                    'package'       => ['flat_rate:32', 'free_shipping', 'local_pickup', 'table_rate:5:2'],
+                    'package'       => [
+                        'flat_rate:32',
+                        'free_shipping',
+                        'local_pickup',
+                        'table_rate:5:1',
+                        'table_rate:5:2',
+                    ],
                     'mailbox'       => ['flat_rate:30', 'table_rate:5:1'],
+                    'digital_stamp' => ['flat_rate:31', 'flat_rate:30'],
                     'letter'        => ['flat_rate:33'],
-                    'digital_stamp' => ['flat_rate:31'],
                 ],
                 'connect_email'                  => '1',
                 'connect_phone'                  => '1',
@@ -156,4 +162,4 @@ it('migrates pre v5.0.0 settings', function (array $settings) {
     $allSettings = Settings::all();
 
     assertMatchesJsonSnapshot(json_encode($allSettings->toArray()));
-})->with('oldPluginSettings');
+})->with('old plugin settings');
