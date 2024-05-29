@@ -9,11 +9,6 @@ This WooCommerce extension allows you to export your orders to the MyParcel [Bac
 
 > :warning: A MyParcel API key is required for this plugin. You can [generate one] in your [Backoffice].
 
-- [Main features](#main-features)
-- [Manual](#manual)
-- [Installation](#installation)
-- [Contributing](#contributing)
-
 ## Main features
 
 - [Delivery options] integrated in your checkout

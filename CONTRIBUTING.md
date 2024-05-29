@@ -3,62 +3,98 @@
 ## Prerequisites
 
 - [Docker]
+- [Volta] or [Node]
+
+> If you don't want to use Volta, make sure to use the Node version in the `volta.node` key in [./package.json].
 
 ## Steps
 
-### Build and run the image
+### Install dependencies
+
+Install composer dependencies with Docker:
 
 ```shell
-docker build -t myparcelnl/woocommerce:dev --target=dev .
-docker run --rm myparcelnl/woocommerce:dev
+docker compose up php
 ```
 
-This will install Node and Composer dependencies and build the plugin. The compiled plugins will be available as folders and zip files in the `dist` folder.
-
-### Make your changes
-
-- Please try to conform to our existing code style.
-- For frontend code, we use [ESLint] to format the code. Make sure it's enabled in your editor.
-
-### Test your changes
-
-**Easiest method**
-
-This is only sufficient if you're running WordPress locally and your source directory is inside your `wp-content` folder. If this is not the case, continue to the next section.
-
-Run this after every change:
+Install yarn dependencies:
 
 ```shell
-docker run -it --rm -v $(pwd):/app myparcelnl/woocommerce
+yarn
 ```
 
-Or run this to monitor your changes and rebuild automatically:
-
-```shell
-docker run -it --rm -v $(pwd):/app myparcelnl/woocommerce yarn serve
-```
-
-**If your WordPress instance is hosted somewhere else**
-
-Build zip files:
+### Build the plugin
 
 ```shell
 yarn build
 ```
 
-Then upload this file on the plugins page of your WordPress website to install the plugin.
+This will build the plugin and output a version for each platform to the `dist` folder.
 
-You can also upload the plugin folder manually.
+### Make your changes
 
-> Note: We don't recommend uploading the whole source folder to your website's `wp-content` folder, but it does work. A better solution is to extract the created .zip file and upload its contents to your website.
+Follow our [Developer Guide for contributing to MyParcel repositories].
 
-### Make a pull request
+### Test your changes
 
-- Make sure your code is formatted correctly.
-- Make sure your code is tested.
-- Make sure your code is documented if necessary.
-- Conform to [conventional commits] standards.
+#### Automated tests
 
+You should always run the automated tests.
+
+To run the frontend tests:
+
+```shell
+yarn test:run
+```
+
+To run the PHP tests:
+
+```shell
+docker compose run php composer test
+```
+
+These will also be run automatically on GitHub when you create a pull request and must pass before your changes can be merged.
+
+#### Manual testing
+
+##### Using a local WordPress instance
+
+This is only sufficient if you're running WordPress locally and your source directory is inside your `wp-content/plugins` folder. If this is not the case, continue to [the next section](#using-a-remote-wordpress-instance).
+
+Run this after every change:
+
+```shell
+yarn build
+```
+
+Or run this to monitor your changes and rebuild automatically:
+
+```shell
+yarn watch
+```
+
+##### Using a remote WordPress instance
+
+Build plugin files:
+
+```shell
+yarn build
+```
+
+The folder structure should look like this:
+
+```
+dist
+├── myparcelbe
+└── myparcelnl
+```
+
+Now zip the plugin folder you want to use, then upload the zip file on the plugins page of your WordPress website to install it.
+
+You can also upload the plugin folder manually using FTP.
+
+[Developer Guide for contributing to MyParcel repositories ]: https://github.com/myparcelnl/developer/blob/main/DEVELOPERS.md#developer-guide-for-contributing-to-myparcel-repositories
 [conventional commits]: https://www.conventionalcommits.org/
 [docker]: https://www.docker.com/
-[eslint]: https://eslint.org/
+[volta]: https://volta.sh/
+[node]: https://nodejs.org/
