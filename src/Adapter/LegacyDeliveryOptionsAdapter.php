@@ -6,11 +6,12 @@ namespace MyParcelNL\WooCommerce\Adapter;
 
 use Exception;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
+use MyParcelNL\Pdk\Types\Service\TriStateService;
 use MyParcelNL\Sdk\src\Support\Str;
 
 class LegacyDeliveryOptionsAdapter
 {
-    private const STRUCT = [
+    private const LEGACY_OPTIONS = [
         'shipmentOptions' => [
             'signature'         => 'bool',
             'insurance'         => 'int',
@@ -52,16 +53,26 @@ class LegacyDeliveryOptionsAdapter
         }
     }
 
-    public function fixItems(array $arr, array $model): array
+    /**
+     * @param  array $arr
+     * @param  array $model
+     *
+     * @return array
+     */
+    public function fixOptions(array $arr, array $model): array
     {
         $result = [];
 
         foreach ($model as $key => $type) {
             $value = $arr[$key] ?? $arr[Str::camel($key)] ?? null;
 
+            /**
+             * Boolean values must be returned as actual boolean for legacy values.
+             * INHERIT ('-1') is converted to null (not set).
+             */
             if ('bool' === $type) {
                 $value = $this->fixBool($value);
-            } elseif ('-1' === (string) $value) {
+            } elseif (((string) TriStateService::INHERIT) === (string) $value) {
                 $value = null;
             }
 
@@ -93,11 +104,10 @@ class LegacyDeliveryOptionsAdapter
             /**
              * To ensure backwards compatibility in consuming applications, we convert camelCase to snake_case
              * for shipmentOptions and pickupLocation. Everything else should remain camelCased.
-             * In addition, the boolean values must be returned as actual booleans.
              */
-            foreach (self::STRUCT as $item => $model) {
+            foreach (self::LEGACY_OPTIONS as $item => $model) {
                 if (isset($arr[$item]) && is_array($arr[$item])) {
-                    $arr[$item] = $this->fixItems($arr[$item], $model);
+                    $arr[$item] = $this->fixOptions($arr[$item], $model);
                 } else {
                     $arr[$item] = null;
                 }
