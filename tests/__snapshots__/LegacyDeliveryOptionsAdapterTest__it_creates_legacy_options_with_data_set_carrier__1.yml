@@ -1,9 +1,5 @@
 carrier: dhlforyou
-date: null
-deliveryType: standard
-packageType: mailbox
-isPickup: false
-pickupLocation: null
+labelAmount: 1
 shipmentOptions:
     signature: null
     insurance: null
@@ -15,3 +11,8 @@ shipmentOptions:
     label_description: null
     hide_sender: null
     extra_assurance: null
+deliveryType: standard
+packageType: mailbox
+isPickup: false
+date: null
+pickupLocation: null

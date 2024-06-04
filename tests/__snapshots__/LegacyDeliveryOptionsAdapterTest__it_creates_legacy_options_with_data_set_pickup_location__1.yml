@@ -1,17 +1,14 @@
 carrier: dpd
-date: null
-deliveryType: pickup
-packageType: package
-isPickup: true
+labelAmount: 1
 pickupLocation:
-    location_name: 'DPD Pakketshop'
-    location_code: DPD-12
-    retail_network_id: '123'
+    postal_code: 1212DP
     street: Deepeedee
     number: '12'
-    postal_code: 1212DP
     city: Hoofddorp
+    location_code: DPD-12
+    location_name: 'DPD Pakketshop'
     cc: null
+    retail_network_id: '123'
 shipmentOptions:
     signature: null
     insurance: null
@@ -23,3 +20,7 @@ shipmentOptions:
     label_description: null
     hide_sender: null
     extra_assurance: null
+deliveryType: pickup
+packageType: package
+isPickup: true
+date: null
