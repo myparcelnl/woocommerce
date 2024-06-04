@@ -10,27 +10,29 @@ use MyParcelNL\Sdk\src\Support\Str;
 
 class LegacyDeliveryOptionsAdapter
 {
-    private const SHIPPING_OPTIONS = [
-        'signature'         => 'bool',
-        'insurance'         => 'int',
-        'age_check'         => 'bool',
-        'only_recipient'    => 'bool',
-        'return'            => 'bool',
-        'same_day_delivery' => 'bool',
-        'large_format'      => 'bool',
-        'label_description' => 'string',
-        'hide_sender'       => 'bool',
-        'extra_assurance'   => 'bool',
-    ];
-    private const PICKUP_LOCATION  = [
-        'postal_code'       => 'string',
-        'street'            => 'string',
-        'number'            => 'string',
-        'city'              => 'string',
-        'location_code'     => 'string',
-        'location_name'     => 'string',
-        'cc'                => 'string',
-        'retail_network_id' => 'string',
+    private const STRUCT = [
+        'shipmentOptions' => [
+            'signature'         => 'bool',
+            'insurance'         => 'int',
+            'age_check'         => 'bool',
+            'only_recipient'    => 'bool',
+            'return'            => 'bool',
+            'same_day_delivery' => 'bool',
+            'large_format'      => 'bool',
+            'label_description' => 'string',
+            'hide_sender'       => 'bool',
+            'extra_assurance'   => 'bool',
+        ],
+        'pickupLocation'  => [
+            'postal_code'       => 'string',
+            'street'            => 'string',
+            'number'            => 'string',
+            'city'              => 'string',
+            'location_code'     => 'string',
+            'location_name'     => 'string',
+            'cc'                => 'string',
+            'retail_network_id' => 'string',
+        ],
     ];
 
     /**
@@ -93,14 +95,12 @@ class LegacyDeliveryOptionsAdapter
              * for shipmentOptions and pickupLocation. Everything else should remain camelCased.
              * In addition, the boolean values must be returned as actual booleans.
              */
-            if (isset($arr['shipmentOptions']) && is_array($arr['shipmentOptions'])) {
-                $arr['shipmentOptions'] = $this->fixItems($arr['shipmentOptions'], self::SHIPPING_OPTIONS);
-            }
-
-            if (isset($arr['pickupLocation']) && is_array($arr['pickupLocation'])) {
-                $arr['pickupLocation'] = $this->fixItems($arr['pickupLocation'], self::PICKUP_LOCATION);
-            } else {
-                $arr['pickupLocation'] = null;
+            foreach (self::STRUCT as $item => $model) {
+                if (isset($arr[$item]) && is_array($arr[$item])) {
+                    $arr[$item] = $this->fixItems($arr[$item], $model);
+                } else {
+                    $arr[$item] = null;
+                }
             }
 
             return $arr;
