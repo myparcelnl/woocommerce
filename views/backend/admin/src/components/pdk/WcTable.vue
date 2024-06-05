@@ -1,22 +1,24 @@
 <template>
-  <table
+  <div
     v-test="AdminComponent.Table"
-    class="striped widefat">
-    <thead v-if="$slots.header">
-      <slot name="header" />
-    </thead>
+    class="mypa-overflow-scroll">
+    <table class="striped widefat">
+      <thead v-if="$slots.header">
+        <slot name="header" />
+      </thead>
 
-    <TransitionGroup
-      :name="config?.transitions?.tableRow"
-      tag="tbody"
-      class="mypa-relative">
-      <slot />
-    </TransitionGroup>
+      <TransitionGroup
+        :name="config?.transitions?.tableRow"
+        class="mypa-relative"
+        tag="tbody">
+        <slot />
+      </TransitionGroup>
 
-    <tfoot v-if="$slots.footer">
-      <slot name="footer" />
-    </tfoot>
-  </table>
+      <tfoot v-if="$slots.footer">
+        <slot name="footer" />
+      </tfoot>
+    </table>
+  </div>
 </template>
 
 <script lang="ts" setup>

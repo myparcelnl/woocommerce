@@ -1,7 +1,8 @@
 <template>
   <component
     :is="component"
-    v-test="AdminComponent.TableCol">
+    v-test="AdminComponent.TableCol"
+    class="mypa-table-cell">
     <slot />
   </component>
 </template>
