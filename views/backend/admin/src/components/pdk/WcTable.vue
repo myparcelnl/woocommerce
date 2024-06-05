@@ -8,11 +8,18 @@
       </thead>
 
       <TransitionGroup
-        :name="config?.transitions?.tableRow"
+        v-if="transitionName"
+        :name="transitionName"
         class="mypa-relative"
         tag="tbody">
         <slot />
       </TransitionGroup>
+
+      <tbody
+        v-else
+        class="mypa-relative">
+        <slot />
+      </tbody>
 
       <tfoot v-if="$slots.footer">
         <slot name="footer" />
@@ -22,7 +29,14 @@
 </template>
 
 <script lang="ts" setup>
+import {computed} from 'vue';
 import {useAdminConfig, AdminComponent} from '@myparcel-pdk/admin';
 
+const props = defineProps<{transition?: false | string}>();
+
 const config = useAdminConfig();
+
+const transitionName = computed(() => {
+  return props.transition === false ? undefined : props.transition ?? config?.transitions?.tableRow;
+});
 </script>
