@@ -1,20 +1,19 @@
 <template>
-  <PdkTableRow v-if="!isInteractive">
-    <!-- This row avoids issues with table-layout: fixed if the first element on the page has colspan="2" -->
-    <PdkTableCol
-      class="!mypa-p-0"
-      component="th" />
-    <PdkTableCol class="!mypa-p-0" />
-  </PdkTableRow>
+  <!-- Not using PdkCol and PdkRow on purpose, the form groups need to be styled separately from other tables. -->
 
-  <PdkTableRow
+  <tr v-if="!isInteractive">
+    <!-- This row avoids issues with table-layout: fixed if the first element on the page has colspan="2" -->
+    <th class="!mypa-p-0" />
+    <td class="!mypa-p-0" />
+  </tr>
+
+  <tr
     v-show="element.isVisible"
     v-test="AdminComponent.FormGroup"
     valign="top">
     <template v-if="isInteractive">
-      <PdkTableCol
+      <th
         class="titledesc"
-        component="th"
         scope="row">
         <label :for="id">
           <slot name="label">
@@ -23,24 +22,24 @@
 
           <WcHelpTip :element="element" />
         </label>
-      </PdkTableCol>
+      </th>
 
-      <PdkTableCol>
-        <div class="mypa-max-w-md">
+      <td>
+        <div>
           <slot />
         </div>
 
         <WcDescription :element="element" />
-      </PdkTableCol>
+      </td>
     </template>
 
-    <PdkTableCol
+    <td
       v-else
       class="!mypa-p-0 mypa-border-b mypa-border-gray-500"
       colspan="2">
       <slot />
-    </PdkTableCol>
-  </PdkTableRow>
+    </td>
+  </tr>
 </template>
 
 <script lang="ts" setup>
