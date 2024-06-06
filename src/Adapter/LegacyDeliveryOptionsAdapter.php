@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Adapter;
 
-use Exception;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
 use MyParcelNL\Sdk\src\Support\Str;
@@ -86,36 +85,33 @@ class LegacyDeliveryOptionsAdapter
      * @param  DeliveryOptions $deliveryOptions
      *
      * @return array
+     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
      */
     public function fromDeliveryOptions(DeliveryOptions $deliveryOptions): array
     {
-        try {
-            $arr = $deliveryOptions->toStorableArray();
+        $arr = $deliveryOptions->toStorableArray();
 
-            $arr['carrier']  = $arr['carrier']['externalIdentifier'];
-            $arr['isPickup'] = 'pickup' === $arr['deliveryType'];
+        $arr['carrier']  = $arr['carrier']['externalIdentifier'];
+        $arr['isPickup'] = 'pickup' === $arr['deliveryType'];
 
-            if (is_string($arr['date'])) {
-                $arr['date'] = substr($arr['date'], 0, 10) . 'T00:00:00.000Z';
-            } else {
-                $arr['date'] = null;
-            }
-
-            /**
-             * To ensure backwards compatibility in consuming applications, we convert camelCase to snake_case
-             * for shipmentOptions and pickupLocation. Everything else should remain camelCased.
-             */
-            foreach (self::LEGACY_OPTIONS as $item => $model) {
-                if (isset($arr[$item]) && is_array($arr[$item])) {
-                    $arr[$item] = $this->fixOptions($arr[$item], $model);
-                } else {
-                    $arr[$item] = null;
-                }
-            }
-
-            return $arr;
-        } catch (Exception $e) {
-            return [];
+        if (is_string($arr['date'])) {
+            $arr['date'] = substr($arr['date'], 0, 10) . 'T00:00:00.000Z';
+        } else {
+            $arr['date'] = null;
         }
+
+        /**
+         * To ensure backwards compatibility in consuming applications, we convert camelCase to snake_case
+         * for shipmentOptions and pickupLocation. Everything else should remain camelCased.
+         */
+        foreach (self::LEGACY_OPTIONS as $item => $model) {
+            if (isset($arr[$item]) && is_array($arr[$item])) {
+                $arr[$item] = $this->fixOptions($arr[$item], $model);
+            } else {
+                $arr[$item] = null;
+            }
+        }
+
+        return $arr;
     }
 }

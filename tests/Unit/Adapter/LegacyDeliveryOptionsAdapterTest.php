@@ -16,6 +16,16 @@ usesShared(new UsesMockWcPdkInstance());
 
 dataset('deliveryOptions', function () {
     return [
+        'with date'        => function () {
+            return factory(DeliveryOptions::class)
+                ->with([
+                    'deliveryType' => 'standard',
+                    'packageType'  => 'package',
+                    'carrier'      => 'postnl',
+                    'date'         => '2037-12-31',
+                ])
+                ->make();
+        },
         'carrier'          => function () {
             return factory(DeliveryOptions::class)
                 ->with([

@@ -1,0 +1,18 @@
+date: '2037-12-31T00:00:00.000Z'
+carrier: postnl
+labelAmount: 1
+shipmentOptions:
+    signature: null
+    insurance: null
+    age_check: null
+    only_recipient: null
+    return: null
+    same_day_delivery: null
+    large_format: null
+    label_description: null
+    hide_sender: null
+    extra_assurance: null
+deliveryType: standard
+packageType: package
+isPickup: false
+pickupLocation: null
