@@ -49,20 +49,20 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      * @param  \MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface        $pdkProductRepository
      * @param  \MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface $wcOrderRepository
      * @param  \MyParcelNL\WooCommerce\Adapter\WcAddressAdapter                        $addressAdapter
-     * @param  \MyParcelNL\WooCommerce\Adapter\LegacyDeliveryOptionsAdapter            $legacyDOAdapter
+     * @param  \MyParcelNL\WooCommerce\Adapter\LegacyDeliveryOptionsAdapter            $legacyDeliveryOptionsAdapter
      */
     public function __construct(
         StorageInterface              $storage,
         PdkProductRepositoryInterface $pdkProductRepository,
         WcOrderRepositoryInterface    $wcOrderRepository,
         WcAddressAdapter              $addressAdapter,
-        LegacyDeliveryOptionsAdapter  $legacyDOAdapter
+        LegacyDeliveryOptionsAdapter  $legacyDeliveryOptionsAdapter
     ) {
         parent::__construct($storage);
         $this->pdkProductRepository = $pdkProductRepository;
         $this->wcOrderRepository    = $wcOrderRepository;
         $this->addressAdapter       = $addressAdapter;
-        $this->legacyDOAdapter      = $legacyDOAdapter;
+        $this->legacyDOAdapter      = $legacyDeliveryOptionsAdapter;
     }
 
     /**

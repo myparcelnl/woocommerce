@@ -36,52 +36,6 @@ class LegacyDeliveryOptionsAdapter
     ];
 
     /**
-     * @param  mixed $value
-     *
-     * @return null|bool
-     */
-    public function fixBool($value): ?bool
-    {
-        switch ((string) $value) {
-            case '1':
-                return true;
-            case '0':
-                return false;
-            default:
-                return null;
-        }
-    }
-
-    /**
-     * @param  array $arr
-     * @param  array $model
-     *
-     * @return array
-     */
-    public function fixOptions(array $arr, array $model): array
-    {
-        $result = [];
-
-        foreach ($model as $key => $type) {
-            $value = $arr[$key] ?? $arr[Str::camel($key)] ?? null;
-
-            /**
-             * Boolean values must be returned as actual boolean for legacy values.
-             * INHERIT ('-1') is converted to null (not set).
-             */
-            if ('bool' === $type) {
-                $value = $this->fixBool($value);
-            } elseif (((string) TriStateService::INHERIT) === (string) $value) {
-                $value = null;
-            }
-
-            $result[$key] = $value;
-        }
-
-        return $result;
-    }
-
-    /**
      * @param  DeliveryOptions $deliveryOptions
      *
      * @return array
@@ -91,8 +45,12 @@ class LegacyDeliveryOptionsAdapter
     {
         $arr = $deliveryOptions->toStorableArray();
 
+        if (! isset($arr['carrier']['externalIdentifier'])) {
+            return [];
+        }
+
         $arr['carrier']  = $arr['carrier']['externalIdentifier'];
-        $arr['isPickup'] = 'pickup' === $arr['deliveryType'];
+        $arr['isPickup'] = DeliveryOptions::DELIVERY_TYPE_PICKUP_NAME === $arr['deliveryType'];
 
         if (is_string($arr['date'])) {
             $arr['date'] = substr($arr['date'], 0, 10) . 'T00:00:00.000Z';
@@ -113,5 +71,51 @@ class LegacyDeliveryOptionsAdapter
         }
 
         return $arr;
+    }
+
+    /**
+     * @param  mixed $value
+     *
+     * @return null|bool
+     */
+    private function fixBool($value): ?bool
+    {
+        switch ((string) $value) {
+            case (string) TriStateService::ENABLED:
+                return true;
+            case (string) TriStateService::DISABLED:
+                return false;
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * @param  array $arr
+     * @param  array $model
+     *
+     * @return array
+     */
+    private function fixOptions(array $arr, array $model): array
+    {
+        $result = [];
+
+        foreach ($model as $key => $type) {
+            $value = $arr[$key] ?? $arr[Str::camel($key)] ?? null;
+
+            /**
+             * Boolean values must be returned as actual boolean for legacy values.
+             * INHERIT ('-1') is converted to null (not set).
+             */
+            if ('bool' === $type) {
+                $value = $this->fixBool($value);
+            } elseif (((string) TriStateService::INHERIT) === (string) $value) {
+                $value = null;
+            }
+
+            $result[$key] = $value;
+        }
+
+        return $result;
     }
 }
