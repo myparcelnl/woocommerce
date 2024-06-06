@@ -10,9 +10,8 @@ Text Domain: woocommerce-myparcel
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
-Requires at least: 5.6
-Tested up to: 6.2
-WC tested up to: 7.5
+Tested up to: 6.5.4
+WC tested up to: 8.9.1
 Requires PHP: 7.4
 */
 
@@ -91,8 +90,6 @@ if (! class_exists('WCMYPA')) :
             $this->define('WC_MYPARCEL_NL_VERSION', $this->version);
             $this->plugin_basename = plugin_basename(__FILE__);
 
-            // load the localisation & classes
-
             // Incompatibility HPOS check
             add_action( 'before_woocommerce_init', function() {
                 if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
@@ -100,6 +97,7 @@ if (! class_exists('WCMYPA')) :
                 }
             } );
 
+            // load the localisation & classes
             add_action('plugins_loaded', [$this, 'translations']);
             add_action('init', [$this, 'initialize'], 9999);
 
