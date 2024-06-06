@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Adapter;
 
+use MyParcelNL\Pdk\Carrier\Model\Carrier;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
@@ -19,9 +20,9 @@ dataset('deliveryOptions', function () {
         'with date'        => function () {
             return factory(DeliveryOptions::class)
                 ->with([
-                    'deliveryType' => 'standard',
-                    'packageType'  => 'package',
-                    'carrier'      => 'postnl',
+                    'deliveryType' => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
+                    'packageType'  => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
+                    'carrier'      => Carrier::CARRIER_POSTNL_NAME,
                     'date'         => '2037-12-31',
                 ])
                 ->make();
@@ -29,22 +30,29 @@ dataset('deliveryOptions', function () {
         'carrier'          => function () {
             return factory(DeliveryOptions::class)
                 ->with([
-                    'deliveryType' => 'standard',
-                    'packageType'  => 'mailbox',
-                    'carrier'      => 'dhlforyou',
+                    'deliveryType' => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
+                    'packageType'  => DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME,
+                    'carrier'      => Carrier::CARRIER_DHL_FOR_YOU_NAME,
                 ])
                 ->make();
         },
         'shipment options' => function () {
             return factory(DeliveryOptions::class)
                 ->with([
-                    'deliveryType'    => 'standard',
-                    'packageType'     => 'package',
-                    'carrier'         => 'postnl',
+                    'deliveryType'    => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
+                    'packageType'     => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
+                    'carrier'         => Carrier::CARRIER_POSTNL_NAME,
                     'shipmentOptions' => [
-                        'ageCheck'      => true,
-                        'signature'     => true,
-                        'onlyRecipient' => false,
+                        'ageCheck'          => true,
+                        'signature'         => true,
+                        'onlyRecipient'     => false,
+                        'insurance'         => 0,
+                        'return'            => false,
+                        'same_day_delivery' => false,
+                        'large_format'      => true,
+                        'label_description' => 'test',
+                        'hide_sender'       => false,
+                        'extra_assurance'   => false,
                     ],
                 ])
                 ->make();
@@ -52,9 +60,9 @@ dataset('deliveryOptions', function () {
         'pickup location'  => function () {
             return factory(DeliveryOptions::class)
                 ->with([
-                    'deliveryType'   => 'pickup',
-                    'packageType'    => 'package',
-                    'carrier'        => 'dpd',
+                    'deliveryType'   => DeliveryOptions::DELIVERY_TYPE_PICKUP_NAME,
+                    'packageType'    => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
+                    'carrier'        => Carrier::CARRIER_DPD_NAME,
                     'pickupLocation' => [
                         'locationCode'    => 'DPD-12',
                         'locationName'    => 'DPD Pakketshop',

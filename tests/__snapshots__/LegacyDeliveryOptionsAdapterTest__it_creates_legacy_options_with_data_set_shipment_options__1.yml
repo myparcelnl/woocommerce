@@ -2,14 +2,14 @@ carrier: postnl
 labelAmount: 1
 shipmentOptions:
     signature: true
-    insurance: null
+    insurance: 0
     age_check: true
     only_recipient: false
-    return: null
-    same_day_delivery: null
-    large_format: null
-    label_description: null
-    hide_sender: null
+    return: false
+    same_day_delivery: false
+    large_format: true
+    label_description: test
+    hide_sender: false
     extra_assurance: null
 deliveryType: standard
 packageType: package
