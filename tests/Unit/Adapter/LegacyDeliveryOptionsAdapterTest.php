@@ -17,6 +17,15 @@ usesShared(new UsesMockWcPdkInstance());
 
 dataset('deliveryOptions', function () {
     return [
+        'carrier'          => function () {
+            return factory(DeliveryOptions::class)
+                ->with([
+                    'deliveryType' => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
+                    'packageType'  => DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME,
+                    'carrier'      => Carrier::CARRIER_DHL_FOR_YOU_NAME,
+                ])
+                ->make();
+        },
         'with date'        => function () {
             return factory(DeliveryOptions::class)
                 ->with([
@@ -27,15 +36,6 @@ dataset('deliveryOptions', function () {
                 ])
                 ->make();
         },
-        'carrier'          => function () {
-            return factory(DeliveryOptions::class)
-                ->with([
-                    'deliveryType' => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
-                    'packageType'  => DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME,
-                    'carrier'      => Carrier::CARRIER_DHL_FOR_YOU_NAME,
-                ])
-                ->make();
-        },
         'shipment options' => function () {
             return factory(DeliveryOptions::class)
                 ->with([
@@ -43,16 +43,16 @@ dataset('deliveryOptions', function () {
                     'packageType'     => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
                     'carrier'         => Carrier::CARRIER_POSTNL_NAME,
                     'shipmentOptions' => [
-                        'ageCheck'          => true,
-                        'signature'         => true,
-                        'onlyRecipient'     => false,
-                        'insurance'         => 0,
-                        'return'            => false,
-                        'same_day_delivery' => false,
-                        'large_format'      => true,
-                        'label_description' => 'test',
-                        'hide_sender'       => false,
-                        'extra_assurance'   => false,
+                        'ageCheck'         => true,
+                        'signature'        => true,
+                        'onlyRecipient'    => false,
+                        'insurance'        => 0,
+                        'return'           => false,
+                        'sameDayDelivery'  => false,
+                        'largeFormat'      => true,
+                        'labelDescription' => 'test',
+                        'hideSender'       => false,
+                        'extraAssurance'   => false,
                     ],
                 ])
                 ->make();
