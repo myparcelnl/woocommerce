@@ -11,80 +11,142 @@ use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use function MyParcelNL\Pdk\Tests\factory;
 use function MyParcelNL\Pdk\Tests\usesShared;
-use function Spatie\Snapshots\assertMatchesSnapshot;
 
 usesShared(new UsesMockWcPdkInstance());
 
-dataset('deliveryOptions', function () {
-    return [
-        'carrier'          => function () {
-            return factory(DeliveryOptions::class)
-                ->with([
-                    'deliveryType' => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
-                    'packageType'  => DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME,
-                    'carrier'      => Carrier::CARRIER_DHL_FOR_YOU_NAME,
-                ])
-                ->make();
-        },
-        'with date'        => function () {
-            return factory(DeliveryOptions::class)
-                ->with([
-                    'deliveryType' => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
-                    'packageType'  => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
-                    'carrier'      => Carrier::CARRIER_POSTNL_NAME,
-                    'date'         => '2037-12-31',
-                ])
-                ->make();
-        },
-        'shipment options' => function () {
-            return factory(DeliveryOptions::class)
-                ->with([
-                    'deliveryType'    => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
-                    'packageType'     => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
-                    'carrier'         => Carrier::CARRIER_POSTNL_NAME,
-                    'shipmentOptions' => [
-                        'ageCheck'         => true,
-                        'signature'        => true,
-                        'onlyRecipient'    => false,
-                        'insurance'        => 0,
-                        'return'           => false,
-                        'sameDayDelivery'  => false,
-                        'largeFormat'      => true,
-                        'labelDescription' => 'test',
-                        'hideSender'       => false,
-                        'extraAssurance'   => false,
-                    ],
-                ])
-                ->make();
-        },
-        'pickup location'  => function () {
-            return factory(DeliveryOptions::class)
-                ->with([
-                    'deliveryType'   => DeliveryOptions::DELIVERY_TYPE_PICKUP_NAME,
-                    'packageType'    => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
-                    'carrier'        => Carrier::CARRIER_DPD_NAME,
-                    'pickupLocation' => [
-                        'locationCode'    => 'DPD-12',
-                        'locationName'    => 'DPD Pakketshop',
-                        'retailNetworkId' => '123',
-                        'street'          => 'Deepeedee',
-                        'number'          => '12',
-                        'postalCode'      => '1212DP',
-                        'city'            => 'Hoofddorp',
-                        'country'         => 'NL',
-                    ],
-                ])
-                ->make();
-        },
-    ];
-});
-
-it('creates legacy options', function (DeliveryOptions $options) {
+it('creates legacy options', function (DeliveryOptions $options, array $expected) {
     /** @var LegacyDeliveryOptionsAdapter $adapter */
     $adapter = Pdk::get(LegacyDeliveryOptionsAdapter::class);
 
-    /**
-     * In the snapshots, properties in pickupLocation and shipmentOptions must be snake_case (part of the legacy)
-     */
-    assertMatchesSnapshot($adapter->fromDeliveryOptions($options));
-})->with('deliveryOptions');
+    expect($adapter->fromDeliveryOptions($options))->toBe($expected);
+})->with([
+        'with carrier and date' => [
+            function () {
+                return factory(DeliveryOptions::class)
+                    ->with([
+                        'deliveryType' => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
+                        'packageType'  => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
+                        'carrier'      => Carrier::CARRIER_POSTNL_NAME,
+                        'date'         => '2037-12-31',
+                    ])
+                    ->make();
+            },
+            [
+                'date'            => '2037-12-31T00:00:00.000Z',
+                'carrier'         => 'postnl',
+                'labelAmount'     => 1,
+                'shipmentOptions' => [
+                    'signature'         => null,
+                    'insurance'         => null,
+                    'age_check'         => null,
+                    'only_recipient'    => null,
+                    'return'            => null,
+                    'same_day_delivery' => null,
+                    'large_format'      => null,
+                    'label_description' => null,
+                    'hide_sender'       => null,
+                    'extra_assurance'   => null,
+                ],
+                'deliveryType'    => 'standard',
+                'packageType'     => 'package',
+                'isPickup'        => false,
+                'pickupLocation'  => null,
+            ],
+        ],
+        'shipment options'      => [
+            function () {
+                return factory(DeliveryOptions::class)
+                    ->with([
+                        'deliveryType'    => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
+                        'packageType'     => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
+                        'carrier'         => Carrier::CARRIER_POSTNL_NAME,
+                        'shipmentOptions' => [
+                            'ageCheck'         => true,
+                            'signature'        => true,
+                            'onlyRecipient'    => false,
+                            'insurance'        => 0,
+                            'return'           => false,
+                            'sameDayDelivery'  => false,
+                            'largeFormat'      => true,
+                            'labelDescription' => 'test',
+                            'hideSender'       => false,
+                            'extraAssurance'   => false,
+                        ],
+                    ])
+                    ->make();
+            },
+            [
+                'carrier'         => 'postnl',
+                'labelAmount'     => 1,
+                'shipmentOptions' => [
+                    'signature'         => true,
+                    'insurance'         => 0,
+                    'age_check'         => true,
+                    'only_recipient'    => false,
+                    'return'            => false,
+                    'same_day_delivery' => false,
+                    'large_format'      => true,
+                    'label_description' => 'test',
+                    'hide_sender'       => false,
+                    'extra_assurance'   => null,
+                ],
+                'deliveryType'    => 'standard',
+                'packageType'     => 'package',
+                'isPickup'        => false,
+                'date'            => null,
+                'pickupLocation'  => null,
+            ],
+        ],
+        'pickup location'       => [
+            function () {
+                return factory(DeliveryOptions::class)
+                    ->with([
+                        'deliveryType'   => DeliveryOptions::DELIVERY_TYPE_PICKUP_NAME,
+                        'packageType'    => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
+                        'carrier'        => Carrier::CARRIER_DPD_NAME,
+                        'pickupLocation' => [
+                            'locationCode'    => 'DPD-12',
+                            'locationName'    => 'DPD Pakketshop',
+                            'retailNetworkId' => '123',
+                            'street'          => 'Deepeedee',
+                            'number'          => '12',
+                            'postalCode'      => '1212DP',
+                            'city'            => 'Hoofddorp',
+                            'country'         => 'NL',
+                        ],
+                    ])
+                    ->make();
+            },
+            [
+                'carrier'         => 'dpd',
+                'labelAmount'     => 1,
+                'pickupLocation'  => [
+                    'postal_code'       => '1212DP',
+                    'street'            => 'Deepeedee',
+                    'number'            => '12',
+                    'city'              => 'Hoofddorp',
+                    'location_code'     => 'DPD-12',
+                    'location_name'     => 'DPD Pakketshop',
+                    'cc'                => null,
+                    'retail_network_id' => '123',
+                ],
+                'shipmentOptions' => [
+                    'signature'         => null,
+                    'insurance'         => null,
+                    'age_check'         => null,
+                    'only_recipient'    => null,
+                    'return'            => null,
+                    'same_day_delivery' => null,
+                    'large_format'      => null,
+                    'label_description' => null,
+                    'hide_sender'       => null,
+                    'extra_assurance'   => null,
+                ],
+                'deliveryType'    => 'pickup',
+                'packageType'     => 'package',
+                'isPickup'        => true,
+                'date'            => null,
+            ],
+        ],
+    ]
+);
