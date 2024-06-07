@@ -33,7 +33,7 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
             },
             'expected' => [
                 'date'            => '2037-12-31T00:00:00.000Z',
-                'carrier'         => 'postnl',
+                'carrier'         => Carrier::CARRIER_POSTNL_NAME,
                 'labelAmount'     => 1,
                 'shipmentOptions' => [
                     'signature'         => null,
@@ -47,8 +47,8 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     'hide_sender'       => null,
                     'extra_assurance'   => null,
                 ],
-                'deliveryType'    => 'standard',
-                'packageType'     => 'package',
+                'deliveryType'    => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
+                'packageType'     => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
                 'isPickup'        => false,
                 'pickupLocation'  => null,
             ],
@@ -76,7 +76,7 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     ->make();
             },
             'expected' => [
-                'carrier'         => 'postnl',
+                'carrier'         => Carrier::CARRIER_POSTNL_NAME,
                 'labelAmount'     => 1,
                 'shipmentOptions' => [
                     'signature'         => true,
@@ -90,8 +90,8 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     'hide_sender'       => false,
                     'extra_assurance'   => null, // null because the option does not exist anymore
                 ],
-                'deliveryType'    => 'standard',
-                'packageType'     => 'package',
+                'deliveryType'    => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
+                'packageType'     => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
                 'isPickup'        => false,
                 'date'            => null,
                 'pickupLocation'  => null,
@@ -118,7 +118,7 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     ->make();
             },
             'expected' => [
-                'carrier'         => 'dpd',
+                'carrier'         => Carrier::CARRIER_DPD_NAME,
                 'labelAmount'     => 1,
                 'pickupLocation'  => [
                     'postal_code'       => '1212DP',
@@ -142,8 +142,8 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     'hide_sender'       => null,
                     'extra_assurance'   => null,
                 ],
-                'deliveryType'    => 'pickup',
-                'packageType'     => 'package',
+                'deliveryType'    => DeliveryOptions::DELIVERY_TYPE_PICKUP_NAME,
+                'packageType'     => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
                 'isPickup'        => true,
                 'date'            => null,
             ],

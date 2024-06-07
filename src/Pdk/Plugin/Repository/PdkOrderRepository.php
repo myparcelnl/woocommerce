@@ -32,7 +32,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     /**
      * @var LegacyDeliveryOptionsAdapter
      */
-    private $legacyDOAdapter;
+    private $legacyDeliveryOptionsAdapter;
 
     /**
      * @var \MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface
@@ -59,10 +59,10 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         LegacyDeliveryOptionsAdapter  $legacyDeliveryOptionsAdapter
     ) {
         parent::__construct($storage);
-        $this->pdkProductRepository = $pdkProductRepository;
-        $this->wcOrderRepository    = $wcOrderRepository;
-        $this->addressAdapter       = $addressAdapter;
-        $this->legacyDOAdapter      = $legacyDeliveryOptionsAdapter;
+        $this->pdkProductRepository         = $pdkProductRepository;
+        $this->wcOrderRepository            = $wcOrderRepository;
+        $this->addressAdapter               = $addressAdapter;
+        $this->legacyDeliveryOptionsAdapter = $legacyDeliveryOptionsAdapter;
     }
 
     /**
@@ -113,7 +113,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
          */
         $wcOrder->update_meta_data(
             Pdk::get('metaKeyLegacyDeliveryOptions'),
-            $this->legacyDOAdapter->fromDeliveryOptions($order->deliveryOptions)
+            $this->legacyDeliveryOptionsAdapter->fromDeliveryOptions($order->deliveryOptions)
         );
 
         $wcOrder->save();
