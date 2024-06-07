@@ -21,7 +21,7 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
     expect($adapter->fromDeliveryOptions($options))->toBe($expected);
 })->with([
         'with carrier and date' => [
-            function () {
+            'options'  => function () {
                 return factory(DeliveryOptions::class)
                     ->with([
                         'deliveryType' => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
@@ -31,7 +31,7 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     ])
                     ->make();
             },
-            [
+            'expected' => [
                 'date'            => '2037-12-31T00:00:00.000Z',
                 'carrier'         => 'postnl',
                 'labelAmount'     => 1,
@@ -54,7 +54,7 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
             ],
         ],
         'shipment options'      => [
-            function () {
+            'options'  => function () {
                 return factory(DeliveryOptions::class)
                     ->with([
                         'deliveryType'    => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
@@ -75,7 +75,7 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     ])
                     ->make();
             },
-            [
+            'expected' => [
                 'carrier'         => 'postnl',
                 'labelAmount'     => 1,
                 'shipmentOptions' => [
@@ -88,7 +88,7 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     'large_format'      => true,
                     'label_description' => 'test',
                     'hide_sender'       => false,
-                    'extra_assurance'   => null,
+                    'extra_assurance'   => null, // null because the option does not exist anymore
                 ],
                 'deliveryType'    => 'standard',
                 'packageType'     => 'package',
@@ -98,7 +98,7 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
             ],
         ],
         'pickup location'       => [
-            function () {
+            'options'  => function () {
                 return factory(DeliveryOptions::class)
                     ->with([
                         'deliveryType'   => DeliveryOptions::DELIVERY_TYPE_PICKUP_NAME,
@@ -117,7 +117,7 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     ])
                     ->make();
             },
-            [
+            'expected' => [
                 'carrier'         => 'dpd',
                 'labelAmount'     => 1,
                 'pickupLocation'  => [
