@@ -31,29 +31,23 @@
 </template>
 
 <script lang="ts" setup>
-import {toRefs} from 'vue';
 import {
   AdminComponent,
   type ElementInstance,
   generateFieldId,
-  type Settings,
   useDropOffInputContext,
   useLanguage,
+  type DropOffInputModelValue,
 } from '@myparcel-pdk/admin';
 
 const props = defineProps<{
-  // eslint-disable-next-line vue/no-unused-properties
   element: ElementInstance;
-  modelValue: Settings.ModelDropOffPossibilities;
+  // eslint-disable-next-line vue/no-unused-properties
+  modelValue: DropOffInputModelValue;
 }>();
-const emit = defineEmits<(e: 'update:modelValue', value: Settings.ModelDropOffPossibilities) => void>();
+const emit = defineEmits<(e: 'update:modelValue', value: DropOffInputModelValue) => void>();
 
-const propRefs = toRefs(props);
-
-const {weekdaysObject, cutoffElements, toggleElements, toggleRefs, cutoffRefs} = useDropOffInputContext(
-  propRefs.modelValue?.value,
-  emit,
-);
+const {weekdaysObject, cutoffElements, toggleElements, toggleRefs, cutoffRefs} = useDropOffInputContext(props, emit);
 
 const id = generateFieldId();
 
