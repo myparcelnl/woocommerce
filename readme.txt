@@ -3,7 +3,7 @@ Contributors: richardperdaan, edielemoine, joerimyparcel
 Tags: woocommerce, export, delivery, packages, myparcel, flespakket, postnl
 Requires at least: 5.2.0
 Tested up to: 6.2
-Stable tag: 4.22.2
+Stable tag: 4.23.0-rc.1
 Requires PHP: 7.1
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
@@ -102,6 +102,10 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 6. MyParcel pickup delivery options
 
 == Changelog ==
+
+= 4.23.0-rc.1 (2024-06-11) =
+
+* New: add hpos incompatibility warning (#1109)
 
 = 4.22.2 (2024-04-30) =
 
