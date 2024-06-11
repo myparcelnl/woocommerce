@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.23.0](https://github.com/myparcelnl/woocommerce/compare/v4.22.2...v4.23.0) (2024-06-11)
+
+
+### :sparkles: New Features
+
+* add hpos incompatibility warning ([#1109](https://github.com/myparcelnl/woocommerce/issues/1109)) ([1fcfb20](https://github.com/myparcelnl/woocommerce/commit/1fcfb20b3830341bf653a7c56661dc4ffc887a42))
+
 **🚧 Note: 🚧**
 
 This is a release candidate. It's not fully tested yet, but will be tested thoroughly and released on the [WordPress plugin directory] soon.
