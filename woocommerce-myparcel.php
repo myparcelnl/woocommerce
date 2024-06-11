@@ -7,9 +7,12 @@ Author: MyParcel
 Author URI: https://myparcel.nl
 Version: 4.22.2
 Text Domain: woocommerce-myparcel
-
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
+
+Tested up to: 6.5
+WC tested up to: 8.9.1
+Requires PHP: 7.4
 */
 
 declare(strict_types=1);
@@ -86,6 +89,13 @@ if (! class_exists('WCMYPA')) :
             $this->version         = $this->getVersion();
             $this->define('WC_MYPARCEL_NL_VERSION', $this->version);
             $this->plugin_basename = plugin_basename(__FILE__);
+
+            // Incompatibility HPOS check
+            add_action( 'before_woocommerce_init', function() {
+                if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+                    \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, false );
+                }
+            } );
 
             // load the localisation & classes
             add_action('plugins_loaded', [$this, 'translations']);
