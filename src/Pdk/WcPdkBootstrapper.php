@@ -95,12 +95,17 @@ class WcPdkBootstrapper extends PdkBootstrapper
              * @see \MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection
              */
 
-            'metaKeyOrderShipments' => value("_{$name}_order_shipments"),
+            'metaKeyOrderShipments'        => value("_{$name}_order_shipments"),
+
+            /**
+             * The meta key legacy delivery options are saved in, for compatibility with external systems.
+             */
+            'metaKeyLegacyDeliveryOptions' => value('_myparcel_delivery_options'),
 
             /**
              * The meta key a PdkOrder's notes are saved in.
              */
-            'metaKeyOrderNotes'     => value("_{$name}_order_notes"),
+            'metaKeyOrderNotes'            => value("_{$name}_order_notes"),
 
             /**
              * The meta key a product's MyParcel settings are saved in.
