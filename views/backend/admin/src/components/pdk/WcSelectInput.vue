@@ -42,7 +42,6 @@ onMounted(() => {
 
   get($select)
     ?.selectWoo({
-      width: 'auto',
       data: get(options).map((option) => ({
         id: option.value as string | number,
         text: option.label,

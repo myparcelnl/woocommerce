@@ -7,4 +7,5 @@ module.exports = {
     preflight: false,
   },
   prefix: 'mypa-',
+  important: true,
 };

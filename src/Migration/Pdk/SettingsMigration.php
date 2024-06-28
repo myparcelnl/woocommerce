@@ -13,29 +13,32 @@ use MyParcelNL\Pdk\Settings\Collection\SettingsModelCollection;
 use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\Settings;
 use MyParcelNL\Pdk\Shipment\Model\DropOffDay;
-use MyParcelNL\Sdk\src\Support\Str;
 
-final class SettingsMigration extends AbstractPdkMigration
+class SettingsMigration extends AbstractPdkMigration
 {
-    public const  LEGACY_OPTION_GENERAL_SETTINGS          = 'woocommerce_myparcel_general_settings';
-    public const  LEGACY_OPTION_CHECKOUT_SETTINGS         = 'woocommerce_myparcel_checkout_settings';
-    public const  LEGACY_OPTION_EXPORT_DEFAULTS_SETTINGS  = 'woocommerce_myparcel_export_defaults_settings';
-    public const  LEGACY_OPTION_POSTNL_SETTINGS           = 'woocommerce_myparcel_postnl_settings';
-    public const  LEGACY_OPTION_DHLEUROPLUS_SETTINGS      = 'woocommerce_myparcel_dhleuroplus_settings';
-    public const  LEGACY_OPTION_DHLFORYOU_SETTINGS        = 'woocommerce_myparcel_dhlforyou_settings';
-    public const  LEGACY_OPTION_DHLPARCELCONNECT_SETTINGS = 'woocommerce_myparcel_dhlparcelconnect_settings';
-    private const OLD_CARRIERS                            = ['postnl', 'dhlforyou', 'dhlparcelconnect', 'dhleuroplus'];
-    private const PREFIX_FLAT_RATE                        = 'flat_rate:';
-    private const TRANSFORM_CAST_BOOL                     = 'bool';
-    private const TRANSFORM_CAST_CENTS                    = 'cents';
-    private const TRANSFORM_CAST_FLOAT                    = 'float';
-    private const TRANSFORM_CAST_GRAMS                    = 'grams';
-    private const TRANSFORM_CAST_INT                      = 'int';
-    private const TRANSFORM_CAST_STRING                   = 'string';
-    private const TRANSFORM_KEY_CAST                      = 'cast';
-    private const TRANSFORM_KEY_SOURCE                    = 'source';
-    private const TRANSFORM_KEY_TARGET                    = 'target';
-    private const TRANSFORM_KEY_TRANSFORM                 = 'transform';
+    public const    LEGACY_OPTION_GENERAL_SETTINGS          = 'woocommerce_myparcel_general_settings';
+    public const    LEGACY_OPTION_CHECKOUT_SETTINGS         = 'woocommerce_myparcel_checkout_settings';
+    public const    LEGACY_OPTION_EXPORT_DEFAULTS_SETTINGS  = 'woocommerce_myparcel_export_defaults_settings';
+    public const    LEGACY_OPTION_POSTNL_SETTINGS           = 'woocommerce_myparcel_postnl_settings';
+    public const    LEGACY_OPTION_DHLEUROPLUS_SETTINGS      = 'woocommerce_myparcel_dhleuroplus_settings';
+    public const    LEGACY_OPTION_DHLFORYOU_SETTINGS        = 'woocommerce_myparcel_dhlforyou_settings';
+    public const    LEGACY_OPTION_DHLPARCELCONNECT_SETTINGS = 'woocommerce_myparcel_dhlparcelconnect_settings';
+    protected const TRANSFORM_CAST_BOOL                     = 'bool';
+    protected const TRANSFORM_CAST_CENTS                    = 'cents';
+    protected const TRANSFORM_CAST_FLOAT                    = 'float';
+    protected const TRANSFORM_CAST_GRAMS                    = 'grams';
+    protected const TRANSFORM_CAST_INT                      = 'int';
+    protected const TRANSFORM_CAST_STRING                   = 'string';
+    protected const TRANSFORM_KEY_CAST                      = 'cast';
+    protected const TRANSFORM_KEY_SOURCE                    = 'source';
+    protected const TRANSFORM_KEY_TARGET                    = 'target';
+    protected const TRANSFORM_KEY_TRANSFORM                 = 'transform';
+    private const   OLD_CARRIERS                            = [
+        'postnl',
+        'dhlforyou',
+        'dhlparcelconnect',
+        'dhleuroplus',
+    ];
 
     /**
      * @var \MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface
@@ -80,12 +83,13 @@ final class SettingsMigration extends AbstractPdkMigration
         /** @var \MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface $settingsRepository */
         $settingsRepository = Pdk::get(PdkSettingsRepositoryInterface::class);
 
-        $newSettings = $this->transformSettings($oldSettings);
+        $newSettings = $this->transformSettings($oldSettings, $this->getTransformationMap());
 
         $newSettings['carrier'] = new SettingsModelCollection();
 
         foreach (self::OLD_CARRIERS as $carrier) {
-            $transformed                            = $this->transformSettings($oldSettings[$carrier] ?? []);
+            $transformed                            =
+                $this->transformSettings($oldSettings[$carrier] ?? [], $this->getTransformationMap());
             $transformed['dropOffPossibilities']    =
                 $this->transformDropOffPossibilities($oldSettings[$carrier] ?? []);
             $transformed['defaultPackageType']      = 'package';
@@ -105,6 +109,38 @@ final class SettingsMigration extends AbstractPdkMigration
     public function up(): void
     {
         $this->migrateSettings($this->getOldSettings());
+    }
+
+    /**
+     * @param  array      $oldSettings
+     * @param  \Generator $map
+     *
+     * @return array
+     */
+    protected function transformSettings(array $oldSettings, Generator $map): array
+    {
+        $newSettings = [];
+
+        foreach ($map as $item) {
+            if (! Arr::has($oldSettings, $item[self::TRANSFORM_KEY_SOURCE])) {
+                continue;
+            }
+
+            $value    = Arr::get($oldSettings, $item[self::TRANSFORM_KEY_SOURCE]);
+            $newValue = $value;
+
+            if ($item[self::TRANSFORM_KEY_TRANSFORM] ?? false) {
+                $newValue = $item[self::TRANSFORM_KEY_TRANSFORM]($newValue, $oldSettings);
+            }
+
+            if ($item[self::TRANSFORM_KEY_CAST] ?? false) {
+                $newValue = $this->castValue($item[self::TRANSFORM_KEY_CAST], $newValue);
+            }
+
+            Arr::set($newSettings, $item[self::TRANSFORM_KEY_TARGET], $newValue);
+        }
+
+        return $newSettings;
     }
 
     /**
@@ -338,33 +374,28 @@ final class SettingsMigration extends AbstractPdkMigration
             self::TRANSFORM_KEY_SOURCE    => 'export_defaults.shipping_methods_package_types',
             self::TRANSFORM_KEY_TARGET    => 'checkout.allowedShippingMethods',
             self::TRANSFORM_KEY_TRANSFORM => function ($value): array {
+                /** @var string[] $keys */
+                $keys = Pdk::get('allowedShippingMethodsKeys');
+                // Create a new empty shipping methods map
+                $newValue = array_combine($keys, array_fill(0, count($keys), []));
+
                 if (! is_array($value)) {
-                    return [];
+                    return $newValue;
                 }
 
-                $shippingMethods = array_reduce(Arr::flatten($value), static function ($carry, $item) {
-                    $parts  = explode(':', $item);
-                    $method = $item;
+                $allShippingMethods = array_unique(Arr::flatten($value));
 
-                    if (1 === count($parts)) {
-                        $method = $parts[0] . ':1';
-                    }
+                // Find the smallest enabled package type for each shipping method, and add it to the new map.
+                foreach ($allShippingMethods as $shippingMethod) {
+                    $packageTypes = array_keys(array_filter($value, static function ($methods) use ($shippingMethod) {
+                        return in_array($shippingMethod, $methods, true);
+                    }));
 
-                    if (count($parts) > 2) {
-                        $method = sprintf('%s:%s', $parts[0], $parts[1]);
-                    }
+                    $smallestPackageType              = Arr::last($packageTypes);
+                    $newValue[$smallestPackageType][] = $shippingMethod;
+                }
 
-                    if (($parts[1] ?? 0) > 10 && Str::startsWith($item, self::PREFIX_FLAT_RATE)) {
-                        $carry[] = $method;
-                        $method  = sprintf('%s%s', self::PREFIX_FLAT_RATE, $parts[1][0]);
-                    }
-
-                    $carry[] = $method;
-
-                    return $carry;
-                }, []);
-
-                return array_values(array_unique($shippingMethods));
+                return $newValue;
             },
         ];
 
@@ -614,36 +645,5 @@ final class SettingsMigration extends AbstractPdkMigration
                 ];
             }, DropOffDay::WEEKDAYS),
         ];
-    }
-
-    /**
-     * @param  array $oldSettings
-     *
-     * @return array
-     */
-    private function transformSettings(array $oldSettings): array
-    {
-        $newSettings = [];
-
-        foreach ($this->getTransformationMap() as $item) {
-            if (! Arr::has($oldSettings, $item[self::TRANSFORM_KEY_SOURCE])) {
-                continue;
-            }
-
-            $value    = Arr::get($oldSettings, $item[self::TRANSFORM_KEY_SOURCE]);
-            $newValue = $value;
-
-            if ($item[self::TRANSFORM_KEY_TRANSFORM] ?? false) {
-                $newValue = $item[self::TRANSFORM_KEY_TRANSFORM]($newValue, $oldSettings);
-            }
-
-            if ($item[self::TRANSFORM_KEY_CAST] ?? false) {
-                $newValue = $this->castValue($item[self::TRANSFORM_KEY_CAST], $newValue);
-            }
-
-            Arr::set($newSettings, $item[self::TRANSFORM_KEY_TARGET], $newValue);
-        }
-
-        return $newSettings;
     }
 }
