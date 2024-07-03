@@ -7,6 +7,7 @@
     "build": "run ws:build \"$(pwd)\"",
     "build:dev": "run ws:build:dev \"$(pwd)\"",
     "build:test": "run ws:build:test \"$(pwd)\"",
+    "clean": "run ws:clean \"$(pwd)\"",
     "test": "run ws:test \"$(pwd)\" || true",
     "test:coverage": "run ws:test:coverage \"$(pwd)\" || true",
     "test:run": "run ws:test:run \"$(pwd)\" || true"

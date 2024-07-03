@@ -26,6 +26,7 @@
     "build:js:dev:backend": "yarn build:js:dev --projects='*/backend-*'",
     "build:js:dev:frontend": "yarn build:js:dev --projects='*/frontend-*'",
     "build:js:test": "nx run-many --output-style=stream --target=build:test",
+    "clean": "nx run-many --output-style=stream --parallel=99 --target=clean",
     "docker": "docker compose run --rm -it php",
     "docker:build": "docker build -t myparcelnl/woocommerce .",
     "docker:run": "docker run -it --rm -v $(pwd):/app myparcelnl/woocommerce",
@@ -42,6 +43,7 @@
     "ws:build": "vite build",
     "ws:build:dev": "vite build --mode development",
     "ws:build:test": "vite build --mode test",
+    "ws:clean": "cd $0 && rimraf dist lib coverage",
     "ws:test": "cd $0 && vitest",
     "ws:test:coverage": "cd $0 && vitest run --coverage",
     "ws:test:run": "cd $0 && vitest run"
@@ -80,6 +82,7 @@
     "lint-staged": "^15.0.0",
     "nx": "^18.0.0",
     "prettier": "^2.8.4",
+    "rimraf": "^5.0.7",
     "semantic-release": "^23.0.0",
     "typescript": "^5.2.2",
     "vitest": "^1.0.0"
