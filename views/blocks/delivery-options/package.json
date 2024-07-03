@@ -9,7 +9,8 @@
   },
   "scripts": {
     "build": "wp-scripts build",
-    "build:dev": "webpack build --mode development"
+    "build:dev": "webpack build --mode development",
+    "clean": "run ws:clean \"$(pwd)\""
   },
   "dependencies": {
     "@myparcel-pdk/checkout": "^1.0.0"
