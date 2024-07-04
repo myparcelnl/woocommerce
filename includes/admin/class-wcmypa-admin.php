@@ -1188,15 +1188,16 @@ class WCMYPA_Admin
 
                 if (isset($lastOrder[self::META_PPS_UUID])) {
 
-                    echo $lastOrder[self::META_TRACK_TRACE] ? sprintf(
-                        '<a href="%s">%s</a>',
-                        TrackTraceUrl::create(
-                            $lastOrder[self::META_TRACK_TRACE],
-                            $order->get_shipping_postcode(),
-                            $order->get_shipping_country()
-                        ),
-                        $lastOrder[self::META_TRACK_TRACE]
-                    ) : esc_html(__('Concept created but not printed.', 'woocommerce-myparcel'));
+                    echo (isset($lastOrder[self::META_TRACK_TRACE]) && $lastOrder[self::META_TRACK_TRACE])
+                        ? sprintf(
+                            '<a href="%s">%s</a>',
+                            TrackTraceUrl::create(
+                                $lastOrder[self::META_TRACK_TRACE],
+                                $order->get_shipping_postcode(),
+                                $order->get_shipping_country()
+                            ),
+                            $lastOrder[self::META_TRACK_TRACE]
+                        ) : esc_html(__('Concept created but not printed.', 'woocommerce-myparcel'));
                 }
             } else {
                 esc_html_e('export_hint_not_exported', 'woocommerce-myparcel');
