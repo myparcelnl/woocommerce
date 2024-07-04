@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+**🚧 Note: 🚧**
+
+This is a release candidate. It's not fully tested yet, but will be tested thoroughly and released on the [WordPress plugin directory] soon.
+
+You can install this version manually to get a head start on [the new features and improvements]. Please report any issues you encounter using the [Bug report form] or by sending an email to [support@myparcel.nl].
+
+[Bug report form]: https://github.com/myparcelnl/woocommerce/issues/new?labels=bug&template=BUG-REPORT.yml&version=v4.x.x-rc.x
+[WordPress plugin directory]: https://wordpress.org/plugins/woocommerce-myparcel/
+[support@myparcel.nl]: mailto:support@myparcel.nl
+[the new features and improvements]: https://github.com/myparcelnl/woocommerce/compare/main...develop
+
+## [4.23.1-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.23.0...v4.23.1-rc.1) (2024-07-04)
+
+
+### :bug: Bug Fixes
+
+* **ordergrid:** prevent warning undefined array key ([#1122](https://github.com/myparcelnl/woocommerce/issues/1122)) ([b8048cc](https://github.com/myparcelnl/woocommerce/commit/b8048cca0329df887629b7d6149d775b1c9f6110))
+
 ## [4.23.0](https://github.com/myparcelnl/woocommerce/compare/v4.22.2...v4.23.0) (2024-06-11)
 
 
