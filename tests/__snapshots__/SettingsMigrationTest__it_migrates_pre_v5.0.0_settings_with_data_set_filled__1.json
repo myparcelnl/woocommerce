@@ -41,16 +41,19 @@
   },
   "checkout": {
     "id": "checkout",
-    "allowedShippingMethods": [
-      "flat_rate:32",
-      "flat_rate:3",
-      "free_shipping:1",
-      "local_pickup:1",
-      "table_rate:5",
-      "flat_rate:30",
-      "flat_rate:33",
-      "flat_rate:31"
-    ],
+    "allowedShippingMethods": {
+      "-1": [],
+      "package": [
+        "flat_rate:32",
+        "free_shipping",
+        "local_pickup",
+        "table_rate:5:2"
+      ],
+      "package_small": [],
+      "mailbox": ["table_rate:5:1"],
+      "digital_stamp": ["flat_rate:30", "flat_rate:31"],
+      "letter": ["flat_rate:33"]
+    },
     "deliveryOptionsCustomCss": "/* Storefront preset */",
     "deliveryOptionsHeader": "Kop",
     "deliveryOptionsPosition": "woocommerce_after_checkout_billing_form",
