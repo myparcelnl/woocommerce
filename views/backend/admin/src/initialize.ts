@@ -12,6 +12,7 @@ import {
   DefaultRadioGroup,
   DefaultSettingsDivider,
   DefaultTimeInput,
+  DefaultShippingMethodsInput,
 } from '@myparcel-pdk/admin-preset-default';
 import {DashIconsIcon} from '@myparcel-pdk/admin-preset-dashicons';
 import {
@@ -137,6 +138,7 @@ export const initialize = (): void => {
       PdkSelectInput: WcSelectInput,
       PdkSettingsDivider: DefaultSettingsDivider,
       PdkShipmentLabelWrapper: WcShipmentLabelWrapper,
+      PdkShippingMethodsInput: DefaultShippingMethodsInput,
       PdkTabNavButton: WcTabNavButton,
       PdkTabNavButtonWrapper: WcTabNavButtonWrapper,
       PdkTable: WcTable,

@@ -1,5 +1,5 @@
 import {PdkField, AddressType} from '@myparcel-pdk/checkout-common';
-import {createPdkCheckout, useSettings} from '@myparcel-pdk/checkout';
+import {createPdkCheckout, getEnabledShippingMethods} from '@myparcel-pdk/checkout';
 import {isClassicCheckout, createName, createId, createFields} from './utils';
 import {getClassicCheckoutConfig} from './classic';
 import {getBlocksCheckoutConfig} from './blocks';
@@ -43,11 +43,9 @@ createPdkCheckout({
   },
 
   hasDeliveryOptions(shippingMethod) {
-    const settings = useSettings();
+    const shippingMethods = getEnabledShippingMethods();
 
-    return settings.allowedShippingMethods.some(
-      (method) => shippingMethod === method || shippingMethod.startsWith(`${method}:`),
-    );
+    return shippingMethods.some((method) => shippingMethod === method || shippingMethod.startsWith(`${method}:`));
   },
 
   toggleField(field: HTMLInputElement, show: boolean): void {
