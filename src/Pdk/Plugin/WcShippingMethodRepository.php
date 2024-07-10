@@ -6,50 +6,84 @@ namespace MyParcelNL\WooCommerce\Pdk\Plugin;
 
 use InvalidArgumentException;
 use MyParcelNL\Pdk\App\ShippingMethod\Collection\PdkShippingMethodCollection;
+use MyParcelNL\Pdk\App\ShippingMethod\Contract\PdkShippingMethodRepositoryInterface;
 use MyParcelNL\Pdk\App\ShippingMethod\Model\PdkShippingMethod;
-use MyParcelNL\Pdk\App\ShippingMethod\Repository\AbstractPdkShippingMethodRepository;
 use WC_Shipping;
+use WC_Shipping_Local_Pickup;
 use WC_Shipping_Method;
+use WC_Shipping_Zone;
 use WC_Shipping_Zones;
+use function implode;
 
-class WcShippingMethodRepository extends AbstractPdkShippingMethodRepository
+class WcShippingMethodRepository implements PdkShippingMethodRepositoryInterface
 {
     /**
      * Get all available shipping methods from WooCommerce.
      */
     public function all(): PdkShippingMethodCollection
     {
+        /** @var WC_Shipping $wcShipping */
+        $wcShipping = WC_Shipping::instance();
+
         // The "0" zone is the "Rest of the World" zone in WooCommerce.
         $zoneIds = array_merge([0], array_keys(WC_Shipping_Zones::get_zones()));
 
-        return new PdkShippingMethodCollection(
-            array_reduce(
-                $zoneIds,
-                function (array $carry, $zoneId): array {
-                    $zoneInstance = WC_Shipping_Zones::get_zone($zoneId);
+        $array = array_reduce($zoneIds, function (array $carry, $zoneId): array {
+            $zoneInstance = WC_Shipping_Zones::get_zone($zoneId);
+            /** @var WC_Shipping_Method[] $shippingMethods */
+            $shippingMethods = $zoneInstance->get_shipping_methods(true);
 
-                    foreach ($zoneInstance->get_shipping_methods() as $shippingMethod) {
-                        $carry[] = $this->get($shippingMethod);
-                    }
+            foreach ($shippingMethods as $shippingMethod) {
+                $carry[] = $this->createPdkShippingMethod($shippingMethod, $zoneInstance);
+            }
 
-                    return $carry;
-                },
-                []
-            )
-        );
+            return $carry;
+        }, []);
+
+        /** @var \WP_Term $shippingClass */
+        foreach ($wcShipping->get_shipping_classes() as $shippingClass) {
+            $array[] = new PdkShippingMethod([
+                'id'          => $shippingClass->slug,
+                'name'        => "📦️ $shippingClass->name (Shipping class)",
+                'description' => $shippingClass->description,
+                'isEnabled'   => true,
+            ]);
+        }
+
+        return new PdkShippingMethodCollection($array);
     }
 
     /**
-     * @param  \WC_Shipping_Method|PdkShippingMethod|string $input
+     * @param  \WC_Shipping_Method|string $input
+     * @param  \WC_Shipping_Zone          $zone
      *
      * @return \MyParcelNL\Pdk\App\ShippingMethod\Model\PdkShippingMethod
      */
-    public function get($input): PdkShippingMethod
+    private function createPdkShippingMethod($input, WC_Shipping_Zone $zone): PdkShippingMethod
     {
-        if ($input instanceof PdkShippingMethod) {
-            return $input;
-        }
+        $method   = $this->get($input);
+        $zoneName = $zone->get_data()['zone_name'];
 
+        $description = [
+            'ID: ' . $method->get_rate_id(),
+            'Zone: ' . $zoneName,
+        ];
+
+        return new PdkShippingMethod([
+            'id'          => $method->get_rate_id(),
+            'name'        => $this->getShippingMethodTitle($method),
+            'description' => implode('<br>', $description),
+            'isEnabled'   => 'yes' === $method->enabled && ! $method instanceof WC_Shipping_Local_Pickup,
+        ]);
+    }
+
+    /**
+     * @param  \WC_Shipping_Method|string $input
+     *
+     * @return \WC_Shipping_Method
+     */
+    private function get($input): WC_Shipping_Method
+    {
         if ($input instanceof WC_Shipping_Method) {
             $method = $input;
         } else {
@@ -61,11 +95,7 @@ class WcShippingMethodRepository extends AbstractPdkShippingMethodRepository
             throw new InvalidArgumentException('Shipping method not found');
         }
 
-        return new PdkShippingMethod([
-            'id'        => "$method->id:$method->instance_id",
-            'name'      => $this->getShippingMethodTitle($method),
-            'isEnabled' => $method->enabled === 'yes',
-        ]);
+        return $method;
     }
 
     /**
