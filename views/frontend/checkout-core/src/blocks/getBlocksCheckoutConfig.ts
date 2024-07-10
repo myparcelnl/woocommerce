@@ -1,19 +1,7 @@
 import {AddressType, PdkField} from '@myparcel-pdk/checkout-common';
-import {PdkUtil, useUtil} from '@myparcel-pdk/checkout';
+import {PdkUtil, useUtil, type PdkFormData} from '@myparcel-pdk/checkout';
+import {useCartStore, getShippingRate} from '../utils';
 import {type CheckoutConfig} from '../types';
-
-function useCartStore() {
-  const {CART_STORE_KEY} = window.wc.wcBlocksData;
-
-  return wp.data.select(CART_STORE_KEY);
-}
-
-const getShippingRate = () => {
-  const cartStore = useCartStore();
-  const shippingRates = cartStore.getShippingRates();
-
-  return shippingRates[0].shipping_rates.find((rate) => rate.selected);
-};
 
 export const getBlocksCheckoutConfig = () => {
   const addressFields = {
@@ -51,7 +39,7 @@ export const getBlocksCheckoutConfig = () => {
           const currentShippingRate = getShippingRate();
           const currentCustomerData = cartStore.getCustomerData();
 
-          const shippingMethodChanged = previousShippingRate.rate_id !== currentShippingRate.rate_id;
+          const shippingMethodChanged = previousShippingRate?.rate_id !== currentShippingRate?.rate_id;
           const customerDataChanged = previousCustomerData !== JSON.stringify(currentCustomerData);
 
           if (!shippingMethodChanged && !customerDataChanged) {
@@ -73,7 +61,7 @@ export const getBlocksCheckoutConfig = () => {
       getFormData() {
         const cartStore = useCartStore();
         const customerData = cartStore.getCustomerData();
-        const formData = {};
+        const formData: PdkFormData = {};
 
         [AddressType.Shipping, AddressType.Billing].forEach((addressType) => {
           Object.keys(addressFields).forEach((field) => {

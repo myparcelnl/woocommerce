@@ -1,3 +1,4 @@
+import {getHighestShippingClass} from '@myparcel-woocommerce/frontend-checkout-delivery-options/src/utils/getHighestShippingClass';
 import {PdkField, AddressType} from '@myparcel-pdk/checkout-common';
 import {createPdkCheckout, getEnabledShippingMethods} from '@myparcel-pdk/checkout';
 import {isClassicCheckout, createName, createId, createFields} from './utils';
@@ -45,7 +46,19 @@ createPdkCheckout({
   hasDeliveryOptions(shippingMethod) {
     const shippingMethods = getEnabledShippingMethods();
 
-    return shippingMethods.some((method) => shippingMethod === method || shippingMethod.startsWith(`${method}:`));
+    const shippingMethodHasDeliveryOptions = shippingMethods.some((method) => {
+      return shippingMethod === method || shippingMethod.startsWith(`${method}:`);
+    });
+
+    if (shippingMethodHasDeliveryOptions) {
+      return true;
+    }
+
+    const shippingClass = getHighestShippingClass();
+
+    console.log(shippingClass, shippingMethods);
+
+    return shippingClass !== undefined && shippingMethods.includes(shippingClass);
   },
 
   toggleField(field: HTMLInputElement, show: boolean): void {
