@@ -13,7 +13,6 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\CustomsSettings;
 use MyParcelNL\Pdk\Settings\Model\ProductSettings;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
-use MyParcelNL\Sdk\src\Support\Str;
 use WC_Data;
 use WC_Meta_Data;
 use WC_Product;
@@ -26,7 +25,6 @@ final class ProductSettingsMigration extends AbstractPdkMigration
         DeliveryOptions::PACKAGE_TYPE_LETTER_NAME,
     ];
     private const CHUNK_SIZE                        = 100;
-    private const FIT_IN_PACKAGE_AMOUNT_LIMIT       = 1000;
     private const LEGACY_META_KEY_HS_CODE           = '_myparcel_hs_code';
     private const LEGACY_META_KEY_COUNTRY           = '_myparcel_country_of_origin';
     private const LEGACY_META_KEY_AGE_CHECK         = '_myparcel_age_check';
@@ -137,89 +135,6 @@ final class ProductSettingsMigration extends AbstractPdkMigration
     }
 
     /**
-     * @param  array       $cartShippingMethods
-     * @param  \WC_Product $wcProduct
-     *
-     * @return array
-     */
-    private function addFlatRateShippingClass(array $cartShippingMethods, WC_Product $wcProduct): array
-    {
-        $shippingClassId = $wcProduct->get_shipping_class_id();
-
-        if ($shippingClassId) {
-            foreach ($cartShippingMethods as $cartShippingMethod) {
-                if (! Str::startsWith($cartShippingMethod, 'flat_rate:')) {
-                    continue;
-                }
-
-                $cartShippingMethods[] = "flat_rate:$shippingClassId";
-
-                break;
-            }
-        }
-
-        return $cartShippingMethods;
-    }
-
-    /**
-     * @param  string      $packageType
-     * @param  \WC_Product $wcProduct
-     * @param  int         $amountInPackageType
-     * @param  int         $increment
-     * @param  int         $previousIncrement
-     *
-     * @return int
-     * @throws \Exception
-     */
-    private function calculateAmountFitInPackageType(
-        string     $packageType,
-        WC_Product $wcProduct,
-        int        $amountInPackageType = 0,
-        int        $increment = 1,
-        int        $previousIncrement = 0
-    ): int {
-        if ($amountInPackageType > self::FIT_IN_PACKAGE_AMOUNT_LIMIT) {
-            return self::FIT_IN_PACKAGE_AMOUNT_LIMIT;
-        }
-
-        WC()->cart->add_to_cart($wcProduct->get_id(), $increment);
-
-        $fitsInPackageType = array_intersect(
-            $this->getShippingMethodsForPackageType($packageType),
-            $this->getCartShippingMethods($wcProduct)
-        );
-
-        if (! $fitsInPackageType && $previousIncrement > 1) {
-            WC()->cart->empty_cart();
-            WC()->cart->add_to_cart($wcProduct->get_id(), $amountInPackageType - $previousIncrement);
-
-            return $this->calculateAmountFitInPackageType(
-                $packageType,
-                $wcProduct,
-                $amountInPackageType,
-                1,
-                $increment
-            );
-        }
-
-        if ($fitsInPackageType) {
-            $amountInPackageType += $increment;
-
-            return $this->calculateAmountFitInPackageType(
-                $packageType,
-                $wcProduct,
-                $amountInPackageType,
-                $increment * 2,
-                $increment
-            );
-        }
-
-        WC()->cart->empty_cart();
-
-        return $amountInPackageType;
-    }
-
-    /**
      * @return array
      */
     private function getAllProductIds(): array
@@ -236,36 +151,6 @@ final class ProductSettingsMigration extends AbstractPdkMigration
     }
 
     /**
-     * @param  \WC_Product $product
-     *
-     * @return array
-     */
-    private function getCartShippingMethods(WC_Product $product): array
-    {
-        $cartShippingPackages = WC()->cart->get_shipping_packages();
-
-        return $this->addFlatRateShippingClass($this->getMethodsFromPackages($cartShippingPackages), $product);
-    }
-
-    /**
-     * @param  array $cartShippingMethods
-     *
-     * @return string
-     */
-    private function getMatchingPackageType(array $cartShippingMethods): string
-    {
-        foreach (self::PACKAGE_TYPES as $packageType) {
-            if (! array_intersect($this->getShippingMethodsForPackageType($packageType), $cartShippingMethods)) {
-                continue;
-            }
-
-            return $packageType;
-        }
-
-        return 'package';
-    }
-
-    /**
      * @param  \WC_Data $data
      *
      * @return \MyParcelNL\Pdk\Base\Support\Collection
@@ -277,65 +162,6 @@ final class ProductSettingsMigration extends AbstractPdkMigration
                 return $entry->get_data();
             }, $data->get_meta_data())
         );
-    }
-
-    /**
-     * @param  array $cartShippingPackages
-     *
-     * @return array
-     */
-    private function getMethodsFromPackages(array $cartShippingPackages): array
-    {
-        $cartShippingMethods = [];
-
-        foreach (array_keys($cartShippingPackages) as $key) {
-            $shippingForPackage = WC()->session->get("shipping_for_package_$key");
-
-            $cartShippingMethods += array_keys($shippingForPackage['rates'] ?? []);
-        }
-
-        return $cartShippingMethods;
-    }
-
-    /**
-     * @throws \Exception
-     */
-    private function getSettingsForPackageType(WC_Product $wcProduct): array
-    {
-        if (null === WC()->cart) {
-            wc_load_cart();
-        }
-
-        WC()->cart->empty_cart();
-        WC()->cart->add_to_cart($wcProduct->get_id());
-
-        return [
-            ProductSettings::FIT_IN_MAILBOX       => $this->calculateAmountFitInPackageType(
-                DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME,
-                $wcProduct
-            ),
-            ProductSettings::FIT_IN_DIGITAL_STAMP => $this->calculateAmountFitInPackageType(
-                DeliveryOptions::PACKAGE_TYPE_DIGITAL_STAMP_NAME,
-                $wcProduct
-            ),
-            ProductSettings::PACKAGE_TYPE         => $this->getMatchingPackageType(
-                $this->getCartShippingMethods($wcProduct)
-            ),
-        ];
-    }
-
-    /**
-     * @param  string $packageType
-     *
-     * @return array
-     */
-    private function getShippingMethodsForPackageType(string $packageType): array
-    {
-        $legacySettings = get_option(SettingsMigration::LEGACY_OPTION_EXPORT_DEFAULTS_SETTINGS) ?: [];
-
-        $shippingMethods = $legacySettings['shipping_methods_package_types'] ?? [];
-
-        return $shippingMethods[$packageType] ?? [];
     }
 
     /**
@@ -358,8 +184,6 @@ final class ProductSettingsMigration extends AbstractPdkMigration
 
             $pdkProduct->settings->setAttribute($newKey, $this->normalizeValue($metaData['value']));
         }
-
-        $pdkProduct->settings->fill($this->getSettingsForPackageType($wcProduct));
 
         $this->pdkProductRepository->update($pdkProduct);
 

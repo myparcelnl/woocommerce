@@ -48,7 +48,6 @@ it(
             ->toHaveKeys($expected['toContain'])
             ->and($all)->not->toHaveKeys($expected['notToContain']);
 
-        MockWpEnqueue::reset();
         WC()->cart->empty_cart();
     }
 )

@@ -24,6 +24,7 @@ use MyParcelNL\Pdk\Audit\Contract\PdkAuditRepositoryInterface;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Base\Contract\WeightServiceInterface;
 use MyParcelNL\Pdk\Base\Support\Arr;
+use MyParcelNL\Pdk\Context\Contract\ContextServiceInterface;
 use MyParcelNL\Pdk\Facade\Language;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Pdk as PdkFacade;
@@ -41,7 +42,9 @@ use MyParcelNL\WooCommerce\Database\Service\WpDatabaseService;
 use MyParcelNL\WooCommerce\Facade\WooCommerce;
 use MyParcelNL\WooCommerce\Facade\WordPress;
 use MyParcelNL\WooCommerce\Logger\WcLogger;
+use MyParcelNL\WooCommerce\Pdk\Action\Frontend\Context\WcFetchCheckoutContextAction;
 use MyParcelNL\WooCommerce\Pdk\Audit\Repository\WcPdkAuditRepository;
+use MyParcelNL\WooCommerce\Pdk\Context\Service\WcContextService;
 use MyParcelNL\WooCommerce\Pdk\Guzzle7ClientAdapter;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcBackendEndpointService;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcFrontendEndpointService;
@@ -68,7 +71,9 @@ use MyParcelNL\WooCommerce\Service\WpCronService;
 use MyParcelNL\WooCommerce\Service\WpInstallerService;
 use MyParcelNL\WooCommerce\Service\WpScriptService;
 use MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface;
+use MyParcelNL\WooCommerce\WooCommerce\Contract\WcShippingRepositoryInterface;
 use MyParcelNL\WooCommerce\WooCommerce\Repository\WcOrderRepository;
+use MyParcelNL\WooCommerce\WooCommerce\Repository\WcShippingRepository;
 use Psr\Log\LoggerInterface;
 use function DI\factory;
 use function DI\get;
@@ -170,8 +175,9 @@ return [
     # Custom services
     ###
 
-    WordPressServiceInterface::class   => get(WordPressService::class),
-    WooCommerceServiceInterface::class => get(WooCommerceService::class),
+    WcShippingRepositoryInterface::class => get(WcShippingRepository::class),
+    WooCommerceServiceInterface::class   => get(WooCommerceService::class),
+    WordPressServiceInterface::class     => get(WordPressService::class),
 
     ###
     # PDK services
@@ -196,6 +202,7 @@ return [
      */
 
     ApiServiceInterface::class            => get(MyParcelApiService::class),
+    ContextServiceInterface::class        => get(WcContextService::class),
     CronServiceInterface::class           => get(WpCronService::class),
     WpDatabaseServiceInterface::class     => get(WpDatabaseService::class),
     InstallerServiceInterface::class      => get(WpInstallerService::class),

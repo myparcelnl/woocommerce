@@ -4,10 +4,19 @@ import {
   initializeCheckoutDeliveryOptions as initialize,
   useEvent,
   usePdkCheckout,
+  getPackageTypeFromShippingMethod,
+  defaultGetPackageType,
 } from '@myparcel-pdk/checkout';
+import {getHighestShippingClass} from './utils';
 
 const initializeCheckoutDeliveryOptions = () => {
-  void initialize();
+  initialize({
+    getPackageType() {
+      const shippingClass = getHighestShippingClass();
+
+      return shippingClass ? getPackageTypeFromShippingMethod(shippingClass) : defaultGetPackageType();
+    },
+  });
 
   document.addEventListener(useEvent(PdkDeliveryOptionsEvent.DeliveryOptionsUpdated), () => {
     jQuery(document.body).trigger('update_checkout');

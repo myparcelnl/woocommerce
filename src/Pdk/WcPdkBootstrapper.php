@@ -324,8 +324,17 @@ class WcPdkBootstrapper extends PdkBootstrapper
 
             # WP Cron actions
 
-            'webhookAddActions' => value("{$name}_all_actions"),
-            'webhookActionName' => value("{$name}_hook_"),
+            'webhookAddActions'       => value("{$name}_all_actions"),
+            'webhookActionName'       => value("{$name}_hook_"),
+
+            /**
+             * Generate a name for a shipping class by its term id
+             */
+            'createShippingClassName' => factory(function () {
+                return static function (int $id): string {
+                    return "shipping_class:$id";
+                };
+            }),
         ]);
     }
 }

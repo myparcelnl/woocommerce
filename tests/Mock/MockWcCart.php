@@ -14,7 +14,7 @@ class MockWcCart extends MockWcClass
     /**
      * @var \WC_Product[]
      */
-    private $items = [];
+    public $cart_contents = [];
 
     /**
      * @param  int   $productId
@@ -38,9 +38,11 @@ class MockWcCart extends MockWcClass
         $cartItemKey = $this->find_product_in_cart($cartId);
 
         if ($cartItemKey) {
-            $this->items[$cartItemKey]['quantity'] += $quantity;
+            $this->cart_contents[$cartItemKey]['quantity'] += $quantity;
         } else {
-            $this->items[] = [
+            $cartItemKey = $cartId;
+
+            $this->cart_contents[$cartItemKey] = [
                 'data'     => new WC_Product($productId),
                 'quantity' => $quantity,
             ];
@@ -49,7 +51,7 @@ class MockWcCart extends MockWcClass
 
     public function get_cart()
     {
-        return $this->items;
+        return $this->cart_contents;
     }
 
     /**
@@ -57,7 +59,7 @@ class MockWcCart extends MockWcClass
      */
     public function empty_cart(): void
     {
-        $this->items = [];
+        $this->cart_contents = [];
     }
 
     /**
@@ -65,21 +67,14 @@ class MockWcCart extends MockWcClass
      */
     public function get_shipping_packages(): array
     {
-        // calculate weight of all products in cart
-        $weight = 0;
-        foreach ($this->items as $item) {
-            /** @var \WC_Product $wcProduct */
-            $wcProduct = $item['data'];
-            $weight    += $wcProduct->get_weight() * $item['quantity'];
-        }
-
-        if ($weight > 10) {
-            return [];
-        }
-
-        return [
-            'flat_rate:0' => [],
+        $shippingPackages = [
+            ['contents' => $this->cart_contents],
         ];
+
+        return apply_filters(
+            'woocommerce_cart_shipping_packages',
+            $shippingPackages
+        );
     }
 
     /**
@@ -140,8 +135,8 @@ class MockWcCart extends MockWcClass
      */
     public function find_product_in_cart($cartId = false): string
     {
-        $thisItemsIsArray  = is_array($this->items);
-        $itemAlreadyExists = isset($this->items[$cartId]);
+        $thisItemsIsArray  = is_array($this->cart_contents);
+        $itemAlreadyExists = isset($this->cart_contents[$cartId]);
 
         if ($cartId !== false && $thisItemsIsArray && $itemAlreadyExists) {
             return $cartId;

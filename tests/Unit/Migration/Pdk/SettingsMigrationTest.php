@@ -8,7 +8,12 @@ namespace MyParcelNL\WooCommerce\Migration\Pdk;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
+use WC_Shipping;
+use WC_Shipping_Method;
+use WC_Shipping_Zone;
+use WP_Term;
 use function MyParcelNL\Pdk\Tests\usesShared;
+use function MyParcelNL\WooCommerce\Tests\wpFactory;
 use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 
 usesShared(new UsesMockWcPdkInstance());
@@ -155,6 +160,59 @@ dataset('old plugin settings', [
 ]);
 
 it('migrates pre v5.0.0 settings', function (array $settings) {
+    wpFactory(WC_Shipping_Zone::class)
+        ->withId(1)
+        ->withData([
+            'zone_name'      => 'Nederland',
+            'zone_order'     => 1,
+            'zone_locations' => [],
+        ])
+        ->store();
+
+    wpFactory(WC_Shipping_Method::class)
+        ->withSupports([
+            'settings' => [
+                'shipping_zone_id' => 1,
+            ],
+        ])
+        ->withId('flat_rate')
+        ->withInstanceId('32')
+        ->withMethodTitle('Flat rate Nederland')
+        ->withEnabled('yes')
+        ->store();
+
+    wpFactory(WC_Shipping_Zone::class)
+        ->withId(2)
+        ->withData([
+            'zone_name'      => 'België',
+            'zone_order'     => 1,
+            'zone_locations' => [],
+        ])
+        ->store();
+
+    wpFactory(WC_Shipping_Method::class)
+        ->withSupports([
+            'settings' => [
+                'shipping_zone_id' => 2,
+            ],
+        ])
+        ->withId('flat_rate')
+        ->withInstanceId('33')
+        ->withMethodTitle('Flat rate België')
+        ->withEnabled('yes')
+        ->store();
+
+    $wpTerm          = new WP_Term();
+    $wpTerm->term_id = 5;
+    $wpTerm->name = 'table rate';
+    $wpTerm->slug = 'table-rate';
+
+    wp_cache_add((string) $wpTerm->term_id, $wpTerm, 'terms');
+
+    $wcShipping                   = WC_Shipping::instance();
+    $wcShipping->enabled          = true;
+    $wcShipping->shipping_classes = [$wpTerm];
+
     /** @var \MyParcelNL\WooCommerce\Migration\Pdk\SettingsMigration $migration */
     $migration = Pdk::get(SettingsMigration::class);
     $migration->migrateSettings($settings);

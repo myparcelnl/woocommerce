@@ -12,7 +12,10 @@ namespace MyParcelNL\WooCommerce\Tests;
 
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcData;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkBootstrapper;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWcSession;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpCache;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpEnqueue;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
 
 require __DIR__ . '/../vendor/myparcelnl/pdk/tests/Pest.php';
@@ -25,10 +28,21 @@ define('WP_DEBUG', true);
 
 uses()
     ->afterEach(function () {
-        MockWcPdkBootstrapper::reset();
+        /**
+         * @var $resetInterfaces class-string<\MyParcelNL\WooCommerce\Tests\Mock\StaticMockInterface>[]
+         */
+        $resetInterfaces = [
+            MockWcData::class,
+            MockWcPdkBootstrapper::class,
+            MockWcSession::class,
+            MockWpActions::class,
+            MockWpEnqueue::class,
+            MockWpMeta::class,
+            MockWpCache::class,
+        ];
 
-        MockWpActions::reset();
-        MockWcData::reset();
-        MockWpMeta::reset();
+        foreach ($resetInterfaces as $class) {
+            $class::reset();
+        }
     })
     ->in(__DIR__);
