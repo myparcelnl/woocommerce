@@ -72,6 +72,7 @@ jobs:
 
       - uses: myparcelnl/actions/pdk-setup@v4
         id: setup
+        if: steps.coverage-cache.outputs.cache-hit != 'true'
         with:
           node-version: ${{ vars.NODE_VERSION }}
           php-version: ${{ vars.PHP_VERSION }}
