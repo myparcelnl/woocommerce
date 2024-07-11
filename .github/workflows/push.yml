@@ -42,9 +42,5 @@ jobs:
           source-hash: ${{ hashFiles('src/**/*', 'config/**/*', 'woocommerce-myparcel.php', '**/scoper.inc.php', '**/scoper.*.inc.php') }}
 
   rebase-prs:
-    needs:
-      - test
-      - analyse
-      - build
     uses: ./.github/workflows/rebase-prs.yml
     secrets: inherit
