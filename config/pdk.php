@@ -71,7 +71,9 @@ use MyParcelNL\WooCommerce\Service\WpCronService;
 use MyParcelNL\WooCommerce\Service\WpInstallerService;
 use MyParcelNL\WooCommerce\Service\WpScriptService;
 use MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface;
+use MyParcelNL\WooCommerce\WooCommerce\Contract\WcShippingRepositoryInterface;
 use MyParcelNL\WooCommerce\WooCommerce\Repository\WcOrderRepository;
+use MyParcelNL\WooCommerce\WooCommerce\Repository\WcShippingRepository;
 use Psr\Log\LoggerInterface;
 use function DI\factory;
 use function DI\get;
@@ -173,8 +175,9 @@ return [
     # Custom services
     ###
 
-    WordPressServiceInterface::class   => get(WordPressService::class),
-    WooCommerceServiceInterface::class => get(WooCommerceService::class),
+    WcShippingRepositoryInterface::class => get(WcShippingRepository::class),
+    WooCommerceServiceInterface::class   => get(WooCommerceService::class),
+    WordPressServiceInterface::class     => get(WordPressService::class),
 
     ###
     # PDK services
