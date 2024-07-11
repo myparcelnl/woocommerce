@@ -36,6 +36,8 @@ jobs:
 
       - uses: myparcelnl/actions/pdk-prerelease-push@v4
         with:
+          app-id: ${{ secrets.MYPARCEL_APP_ID }}
+          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
           image: ${{ steps.build.outputs.image }}
           source-hash: ${{ hashFiles('src/**/*', 'config/**/*', 'woocommerce-myparcel.php', '**/scoper.inc.php', '**/scoper.*.inc.php') }}
 
