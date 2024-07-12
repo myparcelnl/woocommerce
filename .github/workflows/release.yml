@@ -47,11 +47,6 @@ jobs:
         with:
           php-version: ${{ vars.PHP_VERSION }}
 
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
-        with:
-          limit-access-to-actor: true
-
       # The pdk-builder release step is run in release.config.cjs
       - uses: myparcelnl/actions/semantic-release@v4
         id: release
