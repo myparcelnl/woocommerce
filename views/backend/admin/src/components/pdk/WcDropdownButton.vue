@@ -33,17 +33,19 @@
 
       <div
         v-show="toggled"
-        class="mypa-absolute mypa-bg-white mypa-border mypa-border-solid mypa-flex mypa-flex-col mypa-right-0 mypa-rounded mypa-top-full mypa-z-50">
-        <ActionButton
-          v-for="(action, index) in dropdownActions.hidden"
-          :key="`${index}_${action.id}`"
-          :action="action"
-          :disabled="disabled"
-          :icon="action.icon"
-          :variant="action.variant as Variant"
-          class="!mypa-px-2 button-link">
-          {{ translate(action.label) }}
-        </ActionButton>
+        class="mypa-absolute mypa-bg-white mypa-border mypa-border-solid mypa-right-0 mypa-rounded mypa-top-full mypa-z-50">
+        <div class="mypa-flex mypa-flex-col">
+          <ActionButton
+            v-for="(action, index) in dropdownActions.hidden"
+            :key="`${index}_${action.id}`"
+            :action="action"
+            :disabled="disabled"
+            :icon="action.icon"
+            :variant="action.variant as Variant"
+            class="!mypa-px-2 button-link">
+            {{ translate(action.label) }}
+          </ActionButton>
+        </div>
       </div>
     </PdkButton>
   </div>
@@ -69,6 +71,8 @@ const props = defineProps<{
 }>();
 
 const {dropdownActions, toggled, dropdownIcon} = useDropdownData(props);
+
+console.log('initialize', {dropdownIcon, toggled, dropdownActions});
 
 const {translate} = useLanguage();
 </script>
