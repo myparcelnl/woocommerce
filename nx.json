@@ -7,40 +7,37 @@
     "libsDir": "views"
   },
   "namedInputs": {
-    "production": [
+    "sharedDefaults": [
       "{workspaceRoot}/package.json",
       "{workspaceRoot}/tsconfig.base.json",
       "{workspaceRoot}/yarn.lock",
-      "{projectRoot}/*.config.*",
-      "{projectRoot}/package.json",
-      "{projectRoot}/src/**/*",
-      "{projectRoot}/tsconfig.build.json",
+      "{projectRoot}/**/*"
+    ],
+    "production": [
+      "sharedDefaults",
       "!{projectRoot}/**/*.spec.ts",
+      "!{projectRoot}/**/*.snap",
       "!{projectRoot}/**/__tests__/**/*"
     ],
-    "test": [
-      "production",
-      "{projectRoot}/**/*.spec.ts",
-      "{projectRoot}/**/__tests__/**/*"
-    ]
+    "test": ["sharedDefaults"]
   },
   "targetDefaults": {
     "build": {
-      "inputs": ["production"],
       "dependsOn": ["^build"],
-      "outputs": ["{projectRoot}/lib"]
+      "inputs": ["production"],
+      "outputs": ["{projectRoot}/lib", "{projectRoot}/dist"]
     },
     "build:dev": {
+      "dependsOn": ["^build:dev"],
       "inputs": [
         "production",
         "{workspaceRoot}/node_modules/@myparcel-pdk/**/*"
       ],
-      "dependsOn": ["^build:dev"],
-      "outputs": ["{projectRoot}/dist"]
+      "outputs": ["{projectRoot}/lib", "{projectRoot}/dist"]
     },
     "build:test": {
-      "inputs": ["test"],
       "dependsOn": ["^build:test"],
+      "inputs": ["test"],
       "outputs": ["{projectRoot}/dist"]
     },
     "test:coverage": {
