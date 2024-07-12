@@ -2,10 +2,6 @@ name: 'Create build'
 description: ''
 
 inputs:
-  node-version:
-    description: 'Node version to use.'
-    required: true
-
   php-version:
     description: 'PHP version to use.'
     required: true
@@ -27,7 +23,6 @@ runs:
       id: setup
       with:
         composer-flags: ${{ inputs.composer-flags }}
-        node-version: ${{ inputs.node-version }}
         php-version: ${{ inputs.php-version }}
 
     - name: 'Build frontend'

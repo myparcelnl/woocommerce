@@ -30,7 +30,6 @@ jobs:
       - uses: ./.github/actions/build
         id: build
         with:
-          node-version: ${{ vars.NODE_VERSION }}
           php-version: ${{ vars.PHP_VERSION }}
           composer-flags: '--no-dev'
 

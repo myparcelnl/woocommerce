@@ -45,7 +45,6 @@ jobs:
       - uses: ./.github/actions/build
         id: build
         with:
-          node-version: ${{ vars.NODE_VERSION }}
           php-version: ${{ vars.PHP_VERSION }}
 
       # The pdk-builder release step is run in release.config.cjs
