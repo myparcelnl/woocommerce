@@ -1,0 +1,41 @@
+name: '🔨 Build with custom pdk versions'
+run-name: 'Build with pdk@${{ inputs.php-pdk-ref }} and js-pdk@${{ inputs.js-pdk-ref }}'
+
+on:
+  workflow_dispatch:
+    inputs:
+      php-pdk-ref:
+        default: 'main'
+        description: 'Ref of myparcelnl/pdk to use'
+
+      js-pdk-ref:
+        default: 'main'
+        description: 'Ref of myparcelnl/js-pdk to use'
+
+concurrency:
+  group: '${{ github.workflow }}-${{ github.ref }}-${{ inputs.php-pdk-ref }}-${{ inputs.js-pdk-ref }}'
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: myparcelnl/actions/pdk-custom-build-prepare@v4
+        id: prepare
+        with:
+          js-pdk-ref: ${{ inputs.js-pdk-ref }}
+          php-pdk-ref: ${{ inputs.php-pdk-ref }}
+          source-hash: ${{ hashFiles('yarn.lock', 'composer.lock', 'src/**/*', 'config/**/*', 'woocommerce-myparcel.php', '**/scoper.inc.php', '**/scoper.*.inc.php') }}
+
+      - name: 'Build frontend'
+        uses: myparcelnl/actions/nx-run-many@v4
+        with:
+          target: 'build'
+
+      - uses: myparcelnl/actions/pdk-custom-build@v4
+        with:
+          image: ${{ steps.prepare.outputs.image }}
+          js-pdk-ref: ${{ inputs.js-pdk-ref }}
+          php-pdk-ref: ${{ inputs.php-pdk-ref }}
