@@ -1,0 +1,104 @@
+name: '🔨 Build with specific pdk versions'
+
+on:
+  workflow_dispatch:
+    inputs:
+      php-pdk-ref:
+        default: 'main'
+        description: 'Ref of myparcelnl/pdk to use'
+
+      js-pdk-ref:
+        default: 'main'
+        description: 'Ref of myparcelnl/js-pdk to use'
+
+concurrency:
+  group: '${{ github.workflow }}-${{ github.ref }}-${{ inputs.php-pdk-ref }}-${{ inputs.js-pdk-ref }}'
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 'Checkout myparcelnl/js-pdk'
+        if: inputs.php-pdk-ref != 'main'
+        uses: actions/checkout@v4
+        with:
+          path: '/tmp/js-pdk'
+          ref: ${{ inputs.js-pdk-ref }}
+
+      - name: 'Link myparcelnl/js-pdk'
+        if: inputs.js-pdk-ref != 'main'
+        shell: bash
+        #language=bash
+        run: |
+          npm pkg set \
+            "resolutions.@myparcel-pdk/admin=portal:/tmp/js-pdk/apps/admin" \
+            "resolutions.@myparcel-pdk/admin-component-tests=portal:/tmp/js-pdk/apps/admin-component-tests" \
+            "resolutions.@myparcel-pdk/admin-js=portal:/tmp/js-pdk/apps/admin-js" \
+            "resolutions.@myparcel-pdk/admin-preset-bootstrap4=portal:/tmp/js-pdk/apps/admin-preset-bootstrap4" \
+            "resolutions.@myparcel-pdk/admin-preset-dashicons=portal:/tmp/js-pdk/apps/admin-preset-dashicons" \
+            "resolutions.@myparcel-pdk/admin-preset-default=portal:/tmp/js-pdk/apps/admin-preset-default" \
+            "resolutions.@myparcel-pdk/admin-preset-fontawesome=portal:/tmp/js-pdk/apps/admin-preset-fontawesome" \
+            "resolutions.@myparcel-pdk/checkout=portal:/tmp/js-pdk/apps/checkout" \
+            "resolutions.@myparcel-pdk/checkout-js=portal:/tmp/js-pdk/apps/checkout-js" \
+            "resolutions.@myparcel-pdk/checkout-common=portal:/tmp/js-pdk/libs/checkout-common" \
+            "resolutions.@myparcel-pdk/checkout-delivery-options=portal:/tmp/js-pdk/libs/checkout-delivery-options" \
+            "resolutions.@myparcel-pdk/checkout-separate-address-fields=portal:/tmp/js-pdk/libs/checkout-separate-address-fields" \
+            "resolutions.@myparcel-pdk/checkout-tax-fields=portal:/tmp/js-pdk/libs/checkout-tax-fields" \
+            "resolutions.@myparcel-pdk/common=portal:/tmp/js-pdk/libs/common"
+
+      - name: 'Link myparcelnl/pdk'
+        if: inputs.php-pdk-ref != 'main'
+        env:
+          REF: ${{ inputs.php-pdk-ref }}
+        shell: bash
+        #language=bash
+        run: |
+          jq '.require["myparcelnl/pdk"] = "myparcelnl/pdk:dev-'$REF'"' composer.json > composer.json.tmp
+          mv composer.json.tmp composer.json
+
+      - uses: myparcelnl/actions/pdk-cache@v4
+        with:
+          php-version: ${{ vars.PHP_VERSION }}
+          php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
+          source-hash: ${{ hashFiles('yarn.lock', 'composer.lock', 'src/**/*', 'config/**/*', 'woocommerce-myparcel.php', '**/scoper.inc.php', '**/scoper.*.inc.php') }}
+
+      - uses: ./.github/actions/build
+        id: build
+        with:
+          php-version: ${{ vars.PHP_VERSION }}
+          composer-flags: '--no-dev'
+
+      - name: 'Determine version'
+        id: version
+        shell: bash
+        env:
+          RUN_ID: ${{ github.run_id }}
+        #language=bash
+        run: |
+          version=$(npm pkg get version | sed 's/"//g')
+          releaseVersion="$version-$RUN_ID"
+
+          echo "version=$releaseVersion" >> $GITHUB_OUTPUT
+
+      - uses: myparcelnl/actions/pdk-release@v4
+        with:
+          command: 'prerelease'
+          image: ${{ steps.build.outputs.image }}
+          version: ${{ steps.version.outputs.version }}
+
+      - name: 'Write summary'
+        shell: bash
+        env:
+          JS_PDK_REF: ${{ inputs.js-pdk-ref }}
+          PHP_PDK_REF: ${{ inputs.php-pdk-ref }}
+          VERSION: ${{ steps.version.outputs.version }}
+        #language=bash
+        run: |
+          echo "# Build summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Generated version**: $VERSION" >> $GITHUB_STEP_SUMMARY
+          echo "- `myparcelnl/pdk`: [$PHP_PDK_REF](https://github.com/myparcelnl/pdk/commits/$PHP_PDK_REF/)" >> $GITHUB_STEP_SUMMARY
+          echo "- `myparcelnl/js-pdk`: [$JS_PDK_REF](https://github.com/myparcelnl/js-pdk/commits/$JS_PDK_REF/)" >> $GITHUB_STEP_SUMMARY
