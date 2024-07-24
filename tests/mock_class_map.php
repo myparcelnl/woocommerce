@@ -11,6 +11,9 @@ use MyParcelNL\WooCommerce\Tests\Mock\MockWcDateTime;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcOrder;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcProduct;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcSession;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpRestRequest;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpRestResponse;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpRestServer;
 
 /** @see \MyParcelNL\WooCommerce\bootPdk() */
 const PEST = true;
@@ -46,3 +49,12 @@ class WC extends MockWc { }
 
 /** @see \WC_Session */
 class WC_Session extends MockWcSession { }
+
+/** @see \WP_REST_Server */
+class WP_REST_Server extends MockWpRestServer { }
+
+/** @see \WP_REST_Request */
+class WP_REST_Request extends MockWpRestRequest { }
+
+/** @see \WP_REST_Response */
+class WP_REST_Response extends MockWpRestResponse { }

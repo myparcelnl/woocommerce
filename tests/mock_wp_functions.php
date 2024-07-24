@@ -162,3 +162,20 @@ function wp_enqueue_style($handle, $src, $deps, $version, $media)
 {
     MockWpEnqueue::add($handle, $src, $deps, $version, $media);
 }
+
+/**
+ * @return \WP_REST_Server|MockWpRestServer
+ * @see \rest_get_server()
+ */
+function rest_get_server(): MockWpRestServer
+{
+    return MockWpRestServer::getInstance();
+}
+
+/**
+ * @see \register_rest_route()
+ */
+function register_rest_route(...$args): void
+{
+    rest_get_server()->register_route(...$args);
+}

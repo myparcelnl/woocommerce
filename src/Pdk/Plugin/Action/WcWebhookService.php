@@ -16,7 +16,7 @@ class WcWebhookService extends AbstractPdkWebhookService
     {
         return get_rest_url(
             null,
-            sprintf('%s/%s', Pdk::get('routeBackend'), Pdk::get('routeBackendWebhook'))
+            sprintf('%s/%s', Pdk::get('routeBackend'), Pdk::get('routeBackendWebhookBase'))
         );
     }
 }
