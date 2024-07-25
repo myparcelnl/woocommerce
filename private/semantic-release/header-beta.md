@@ -1,6 +1,6 @@
 ## 🚧 This version is not ready for production use 🚧
 
-This is the beta release of MyParcel WooCommerce v5.x. We've rewritten the entire plugin from scratch, using the [MyParcel Plugin Development Kit].
+This is the beta release of MyParcel for WooCommerce v5.x. We've rewritten the entire plugin from scratch, using the [MyParcel Plugin Development Kit].
 
 For a less bug-prone experience, we recommend you use the stable or release candidate versions of the plugin instead. You can find the stable version in the [WordPress plugin directory]. The release candidate versions can be found in the [releases] section of this repository. They are versioned with a `-rc` suffix.
 
