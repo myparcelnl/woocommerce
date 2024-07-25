@@ -49,4 +49,9 @@ jobs:
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
           image: ${{ steps.build.outputs.image }}
           pr-number: ${{ github.event.client_payload.number || github.event.pull_request.number }}
-          source-hash: ${{ hashFiles('src/**/*', 'config/**/*', 'woocommerce-myparcel.php', '**/scoper.inc.php', '**/scoper.*.inc.php') }}
+          source-files: |
+            **/scoper.*.inc.php
+            **/scoper.inc.php
+            config/**/*
+            src/**/*
+            woocommerce-myparcel.php

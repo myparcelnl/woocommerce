@@ -38,7 +38,12 @@ jobs:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
           image: ${{ steps.build.outputs.image }}
-          source-hash: ${{ hashFiles('src/**/*', 'config/**/*', 'woocommerce-myparcel.php', '**/scoper.inc.php', '**/scoper.*.inc.php') }}
+          source-files: |
+            **/scoper.*.inc.php
+            **/scoper.inc.php
+            config/**/*
+            src/**/*
+            woocommerce-myparcel.php
 
   rebase-prs:
     uses: ./.github/workflows/rebase-prs.yml
