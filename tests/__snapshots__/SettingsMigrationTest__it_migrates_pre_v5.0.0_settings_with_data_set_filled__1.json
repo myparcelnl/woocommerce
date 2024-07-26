@@ -1,7 +1,7 @@
 {
   "account": {
     "id": "account",
-    "apiKey": "b183f9372d6f9bd050418e31cc40965360ca814d",
+    "apiKey": "some-fake-api-key",
     "apiKeyValid": true
   },
   "order": {

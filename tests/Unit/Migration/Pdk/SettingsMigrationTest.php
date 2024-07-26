@@ -18,7 +18,7 @@ dataset('old plugin settings', [
     'filled' => [
         [
             'general'          => [
-                'api_key'                   => 'b183f9372d6f9bd050418e31cc40965360ca814d',
+                'api_key'                   => 'some-fake-api-key',
                 'trigger_manual_update'     => '',
                 'export_mode'               => 'shipments',
                 'download_display'          => 'display',
