@@ -153,9 +153,9 @@ function wp_unslash($value)
     return $value;
 }
 
-function wp_enqueue_script($handle, $src = '', $deps = array(), $ver = false, $in_footer = false)
+function wp_enqueue_script($handle, $src = '', $deps = [], $ver = false, $in_footer = false)
 {
-    MockWpEnqueue::add($handle, $src , $deps , $ver, $in_footer );
+    MockWpEnqueue::add($handle, $src, $deps, $ver, $in_footer);
 }
 
 function wp_enqueue_style($handle, $src, $deps, $version, $media)
