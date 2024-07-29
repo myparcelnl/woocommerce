@@ -40,8 +40,8 @@
         "exportOnlyRecipient": -1,
         "exportReturn": -1,
         "exportSignature": -1,
-        "fitInDigitalStamp": 7,
-        "fitInMailbox": 7,
+        "fitInDigitalStamp": 0,
+        "fitInMailbox": 1000,
         "packageType": "digital_stamp"
       }
     },
@@ -51,8 +51,8 @@
       "value": ["5.0.0-alpha.1"]
     }
   ],
+  "parentProduct": null,
   "product": {
-    "id": "product",
     "countryOfOrigin": "BB",
     "customsCode": "1234",
     "disableDeliveryOptions": -1,
@@ -64,9 +64,9 @@
     "exportOnlyRecipient": -1,
     "exportReturn": -1,
     "exportSignature": -1,
-    "fitInDigitalStamp": 7,
-    "fitInMailbox": 7,
+    "fitInDigitalStamp": 0,
+    "fitInMailbox": 1000,
+    "id": "product",
     "packageType": "digital_stamp"
-  },
-  "parentProduct": null
+  }
 }
