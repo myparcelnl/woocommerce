@@ -6,6 +6,7 @@ declare(strict_types=1);
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Tests\Exception\DieException;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpEnqueue;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpUser;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
@@ -150,4 +151,14 @@ function __return_true(): bool
 function wp_unslash($value)
 {
     return $value;
+}
+
+function wp_enqueue_script($handle, $src = '', $deps = array(), $ver = false, $in_footer = false)
+{
+    MockWpEnqueue::add($handle, $src , $deps , $ver, $in_footer );
+}
+
+function wp_enqueue_style($handle, $src, $deps, $version, $media)
+{
+    MockWpEnqueue::add($handle, $src, $deps, $version, $media);
 }

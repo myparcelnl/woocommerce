@@ -34,9 +34,15 @@ class MockWcCart extends MockWcClass
         array $variation = [],
         array $cartItemData = []
     ): void {
-        for ($i = 0; $i < $quantity; $i++) {
-            $this->items[] = new WC_Product($productId);
-        }
+        $this->items[] = [
+            'data' => new WC_Product($productId),
+            'quantity'  => $quantity,
+        ];
+    }
+
+    public function get_cart()
+    {
+        return $this->items;
     }
 
     /**
@@ -55,8 +61,11 @@ class MockWcCart extends MockWcClass
         // calculate weight of all products in cart
         $weight = array_reduce(
             $this->items,
-            static function (float $carry, WC_Product $item) {
-                return $carry + (float) $item->get_weight();
+            static function (float $carry, array $item) {
+                /** @var \WC_Product $wcProduct */
+                $wcProduct = $item['data'];
+
+                return $carry + (float) $wcProduct->get_weight();
             },
             0
         );
