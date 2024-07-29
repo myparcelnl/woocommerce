@@ -12,7 +12,7 @@ final class MockWpEnqueue implements StaticMockInterface
     /**
      * @var \MyParcelNL\Pdk\Base\Support\Collection
      */
-    public static $queuedItems;
+    private static $queuedItems;
 
     /**
      * @param $handle
@@ -69,11 +69,11 @@ final class MockWpEnqueue implements StaticMockInterface
         return self::getQueuedItems()
             ->map(static function (array $actions) {
                 return (new Collection(Arr::pluck($actions, 'function')))->map(static function ($function) {
-                    if (is_array($function)) {
-                        return implode('::', [get_class($function[0]), $function[1]]);
+                    if (! is_array($function)) {
+                        return $function;
                     }
 
-                    return $function;
+                    return implode('::', [get_class($function[0]), $function[1]]);
                 });
             })
             ->toArray();
@@ -82,7 +82,7 @@ final class MockWpEnqueue implements StaticMockInterface
     /**
      * @return \MyParcelNL\Pdk\Base\Support\Collection
      */
-    protected static function getQueuedItems(): Collection
+    private static function getQueuedItems(): Collection
     {
         if (null === self::$queuedItems) {
             self::reset();
