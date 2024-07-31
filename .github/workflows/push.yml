@@ -27,6 +27,7 @@ jobs:
           fetch-depth: 0
 
       - uses: myparcelnl/actions/pdk-prerelease-push@v4
+        continue-on-error: true
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
@@ -38,6 +39,10 @@ jobs:
             config/**/*
             src/**/*
             woocommerce-myparcel.php
+
+      - uses: lhotari/action-upterm@v1
+        with:
+          limit-access-to-actor: true
 
   rebase-prs:
     uses: ./.github/workflows/rebase-prs.yml
