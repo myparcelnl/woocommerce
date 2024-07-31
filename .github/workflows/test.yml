@@ -73,6 +73,7 @@ jobs:
         if: steps.coverage-cache.outputs.cache-hit != 'true'
         with:
           php-version: ${{ vars.PHP_VERSION }}
+          composer-dev: 'true'
 
       - uses: myparcelnl/actions/composer-pest@v4
         if: steps.coverage-cache.outputs.cache-hit != 'true'

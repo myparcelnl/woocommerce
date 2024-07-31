@@ -23,21 +23,13 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-
-      - uses: ./.github/actions/build
-        id: build
-        with:
-          php-version: ${{ vars.PHP_VERSION }}
-          composer-flags: '--no-dev'
 
       - uses: myparcelnl/actions/pdk-prerelease-push@v4
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
-          image: ${{ steps.build.outputs.image }}
+          php-version: ${{ vars.PHP_VERSION }}
+          php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
           source-files: |
             **/scoper.*.inc.php
             **/scoper.inc.php

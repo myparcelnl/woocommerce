@@ -9,6 +9,7 @@ import {
   resolvePath,
   resolveString,
 } from '@myparcel-pdk/app-builder';
+import {spawnSync} from 'node:child_process';
 
 const ENTRY_FILE = 'woocommerce-myparcel.php';
 
@@ -54,6 +55,22 @@ export default defineConfig({
   },
 
   hooks: {
+    /**
+     * Run the build target in all workspaces.
+     */
+    beforeCopy() {
+      const buffer = spawnSync('yarn', ['nx', 'run-many', '--target=build', '--output-style=stream'], {
+        stdio: 'inherit',
+      });
+
+      if (buffer.error) {
+        throw buffer.error;
+      }
+    },
+
+    /**
+     * Rename the entry file.
+     */
     async afterCopy({context}) {
       const {config} = context;
 

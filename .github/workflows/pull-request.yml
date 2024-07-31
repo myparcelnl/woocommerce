@@ -38,17 +38,13 @@ jobs:
         with:
           ref: ${{ github.event.client_payload.ref || github.ref }}
 
-      - uses: ./.github/actions/build
-        id: build
-        with:
-          php-version: ${{ vars.PHP_VERSION }}
-
       - uses: myparcelnl/actions/pdk-prerelease-pr@v4
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
-          image: ${{ steps.build.outputs.image }}
           pr-number: ${{ github.event.client_payload.number || github.event.pull_request.number }}
+          php-version: ${{ vars.PHP_VERSION }}
+          php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
           source-files: |
             **/scoper.*.inc.php
             **/scoper.inc.php

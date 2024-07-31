@@ -47,10 +47,11 @@ jobs:
             src/**/*
             woocommerce-myparcel.php
 
-      - uses: ./.github/actions/build
-        id: build
+      - uses: myparcelnl/actions/pdk-setup@v4
+        id: setup
         with:
           php-version: ${{ vars.PHP_VERSION }}
+          composer-dev: false
 
       # The pdk-builder release step is run in release.config.cjs
       - uses: myparcelnl/actions/semantic-release@v4
