@@ -39,6 +39,11 @@ jobs:
             upgrade/**/*
             myparcelnl.php
             scoper.inc.php
+          vendor-files: |
+            composer.json
+            composer.lock
+            scoper.inc.php
+            scoper.*.inc.php
 
   rebase-prs:
     needs:

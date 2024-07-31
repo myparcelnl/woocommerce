@@ -28,11 +28,16 @@ jobs:
           js-pdk-ref: ${{ inputs.js-pdk-ref }}
           php-pdk-ref: ${{ inputs.php-pdk-ref }}
           source-files: |
-            **/scoper.*.inc.php
-            **/scoper.inc.php
+            scoper.*.inc.php
+            scoper.inc.php
             config/**/*
             src/**/*
             woocommerce-myparcel.php
+          vendor-files: |
+            composer.json
+            composer.lock
+            scoper.inc.php
+            scoper.*.inc.php
 
       - name: 'Build frontend'
         uses: myparcelnl/actions/nx-run-many@v4
