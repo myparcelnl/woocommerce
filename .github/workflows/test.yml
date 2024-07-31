@@ -11,7 +11,7 @@ on:
 
 jobs:
   test-frontend:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-arm
     steps:
       - uses: actions/checkout@v4
         with:
@@ -55,7 +55,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   test-backend:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-arm
     steps:
       - uses: actions/checkout@v4
         with:

@@ -29,7 +29,7 @@ jobs:
       ref: ${{ github.event.client_payload.ref || github.ref }}
 
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-arm
     needs:
       - test
       - analyse

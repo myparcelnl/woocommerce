@@ -5,7 +5,7 @@ on:
 
 jobs:
   rebase-prs:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-arm
     steps:
       - uses: myparcelnl/actions/rebase-prs@v4
         with:

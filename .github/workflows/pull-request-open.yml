@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   assign-author:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-arm
     steps:
       - uses: myparcelnl/actions/pr-assign-author@v4
         with:

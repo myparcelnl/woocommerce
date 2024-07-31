@@ -20,7 +20,7 @@ jobs:
     needs:
       - test
       - analyse
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-arm
     outputs:
       released: ${{ steps.release.outputs.released }}
       version: ${{ steps.release.outputs.version }}

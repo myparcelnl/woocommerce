@@ -8,7 +8,7 @@ run-name: 'Trigger from PDK release ${{ github.event.client_payload.version }}'
 
 jobs:
   prepare:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-arm
     outputs:
       pr-data: ${{ steps.list.outputs.result }}
     steps:
@@ -38,7 +38,7 @@ jobs:
 
   trigger:
     needs: prepare
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-arm
     strategy:
       matrix:
         pr: ${{ fromJSON(needs.prepare.outputs.pr-data) }}

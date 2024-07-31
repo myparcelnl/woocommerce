@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   lint:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-arm
     steps:
       - uses: myparcelnl/actions/pr-validate-title-conventional@v4
         with:

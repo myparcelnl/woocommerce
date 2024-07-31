@@ -38,7 +38,7 @@ on:
 
 jobs:
   rebase:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-arm
     steps:
       - uses: myparcelnl/actions/rebase@v4
         with:
