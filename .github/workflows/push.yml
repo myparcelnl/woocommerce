@@ -39,4 +39,8 @@ jobs:
 
   rebase-prs:
     uses: ./.github/workflows/rebase-prs.yml
+    needs:
+      - build
+      - test
+      - analyse
     secrets: inherit
