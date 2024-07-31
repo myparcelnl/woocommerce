@@ -22,10 +22,6 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
       - uses: myparcelnl/actions/pdk-prerelease-push@v4
         continue-on-error: true
         with:
