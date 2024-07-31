@@ -25,42 +25,20 @@ jobs:
       released: ${{ steps.release.outputs.released }}
       version: ${{ steps.release.outputs.version }}
     steps:
-      - uses: myparcelnl/actions/setup-git-credentials@v4
-        id: credentials
+      - uses: myparcelnl/actions/pdk-semantic-release@v4
+        id: release
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
-
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ steps.credentials.outputs.token }}
-
-      - uses: myparcelnl/actions/pdk-cache@v4
-        with:
           php-version: ${{ vars.PHP_VERSION }}
           php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
           source-files: |
-            **/scoper.*.inc.php
-            **/scoper.inc.php
-            config/**/*
             src/**/*
-            woocommerce-myparcel.php
-
-      - uses: myparcelnl/actions/pdk-setup@v4
-        id: setup
-        with:
-          php-version: ${{ vars.PHP_VERSION }}
-          composer-dev: false
-
-      # The pdk-builder release step is run in release.config.cjs
-      - uses: myparcelnl/actions/semantic-release@v4
-        id: release
-        env:
-          PDK_ROOT_COMMAND: 'docker run -t --user $(id -u):$(id -g) -v $PWD:/app -w /app ${{ steps.build.outputs.image }}'
-        with:
-          token: ${{ steps.credentials.outputs.token }}
-          write-summary: true
+            config/**/*
+            controllers/**/*
+            upgrade/**/*
+            myparcelnl.php
+            scoper.inc.php
 
   rebase-prs:
     needs:
