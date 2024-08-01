@@ -195,7 +195,7 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
 
         $showDeliveryOptions = false;
 
-        $deliveryOptionsEnabledWhenNotInStock = Settings::get(
+        $deliveryOptionsEnabledWhenOnBackorder = Settings::get(
             CheckoutSettings::ENABLE_DELIVERY_OPTIONS_WHEN_NOT_IN_STOCK,
             CheckoutSettings::ID
         );
@@ -204,10 +204,10 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
             /**  @var WC_Product $product */
             $product = $cartItem['data'];
 
-            $productIsNotVirtual   = ! $product->is_virtual();
-            $productNotOnBackorder = ! $product->is_on_backorder($cartItem['quantity']);
+            $productIsVirtual   = $product->is_virtual();
+            $productOnBackorder = $product->is_on_backorder($cartItem['quantity']);
 
-            if ($productIsNotVirtual && ($productNotOnBackorder || $deliveryOptionsEnabledWhenNotInStock)) {
+            if (! $productIsVirtual && (! $productOnBackorder || $deliveryOptionsEnabledWhenOnBackorder)) {
                 $showDeliveryOptions = true;
                 break;
             }
