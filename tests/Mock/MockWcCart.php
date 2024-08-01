@@ -143,6 +143,10 @@ class MockWcCart extends MockWcClass
         $thisItemsIsArray  = is_array($this->items);
         $itemAlreadyExists = isset($this->items[$cartId]);
 
-        return ! $cartId && $thisItemsIsArray && $itemAlreadyExists ? $cartId : '';
+        if ($cartId !== false && $thisItemsIsArray && $itemAlreadyExists) {
+            return $cartId;
+        }
+
+        return '';
     }
 }
