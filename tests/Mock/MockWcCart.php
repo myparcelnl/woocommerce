@@ -34,10 +34,17 @@ class MockWcCart extends MockWcClass
         array $variation = [],
         array $cartItemData = []
     ): void {
-        $this->items[] = [
-            'data' => new WC_Product($productId),
-            'quantity'  => $quantity,
-        ];
+        $cartId      = $this->generate_cart_id($productId, $variationId, $variation, $cartItemData);
+        $cartItemKey = $this->find_product_in_cart($cartId);
+
+        if ($cartItemKey) {
+            $this->items[$cartItemKey]['quantity'] += $quantity;
+        } else {
+            $this->items[] = [
+                'data'     => new WC_Product($productId),
+                'quantity' => $quantity,
+            ];
+        }
     }
 
     public function get_cart()
@@ -59,16 +66,12 @@ class MockWcCart extends MockWcClass
     public function get_shipping_packages(): array
     {
         // calculate weight of all products in cart
-        $weight = array_reduce(
-            $this->items,
-            static function (float $carry, array $item) {
-                /** @var \WC_Product $wcProduct */
-                $wcProduct = $item['data'];
-
-                return $carry + (float) $wcProduct->get_weight();
-            },
-            0
-        );
+        $weight = 0;
+        foreach ($this->items as $item) {
+            /** @var \WC_Product $wcProduct */
+            $wcProduct = $item['data'];
+            $weight    += $wcProduct->get_weight() * $item['quantity'];
+        }
 
         if ($weight > 10) {
             return [];
@@ -77,5 +80,69 @@ class MockWcCart extends MockWcClass
         return [
             'flat_rate:0' => [],
         ];
+    }
+
+    /**
+     * Generate a unique ID for the cart item being added.
+     *
+     * @param  int   $productId    - id of the product the key is being generated for.
+     * @param  int   $variationId  of the product the key is being generated for.
+     * @param  array $variation    data for the cart item.
+     * @param  array $cartItemData other cart item data passed which affects this items uniqueness in the cart.
+     *
+     * @return string cart item key
+     */
+    public function generate_cart_id(
+        int   $productId,
+        int   $variationId = 0,
+        array $variation = [],
+        array $cartItemData = []
+    ): string {
+        $idParts = [$productId];
+
+        if ($variationId && 0 !== $variationId) {
+            $idParts[] = $variationId;
+        }
+
+        if (is_array($variation) && ! empty($variation)) {
+            $variationKey = '';
+            foreach ($variation as $key => $value) {
+                $variationKey .= trim($key) . trim($value);
+            }
+            $idParts[] = $variationKey;
+        }
+
+        if (is_array($cartItemData) && ! empty($cartItemData)) {
+            $cartItemDataKey = '';
+            foreach ($cartItemData as $key => $value) {
+                if (is_array($value) || is_object($value)) {
+                    $value = http_build_query($value);
+                }
+                $cartItemDataKey .= trim($key) . trim($value);
+            }
+            $idParts[] = $cartItemDataKey;
+        }
+
+        return apply_filters(
+            'woocommerce_cart_id',
+            md5(implode('_', $idParts))
+        );
+    }
+
+    /**
+     * Check if product is in the cart and return cart item key.
+     * Cart item key will be unique based on the item and its properties, such as variations.
+     * ONLY RETURNS A KEY! DOES NOT RETURN THE ITEM!
+     *
+     * @param  mixed $cartId id of product to find in the cart.
+     *
+     * @return string cart item key
+     */
+    public function find_product_in_cart($cartId = false): string
+    {
+        $thisItemsIsArray  = is_array($this->items);
+        $itemAlreadyExists = isset($this->items[$cartId]);
+
+        return ! $cartId && $thisItemsIsArray && $itemAlreadyExists ? $cartId : '';
     }
 }

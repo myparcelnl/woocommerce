@@ -40,8 +40,8 @@
         "exportOnlyRecipient": -1,
         "exportReturn": -1,
         "exportSignature": -1,
-        "fitInDigitalStamp": 0,
-        "fitInMailbox": 1000,
+        "fitInDigitalStamp": 7,
+        "fitInMailbox": 7,
         "packageType": "digital_stamp"
       }
     },
@@ -64,8 +64,8 @@
     "exportOnlyRecipient": -1,
     "exportReturn": -1,
     "exportSignature": -1,
-    "fitInDigitalStamp": 0,
-    "fitInMailbox": 1000,
+    "fitInDigitalStamp": 7,
+    "fitInMailbox": 7,
     "id": "product",
     "packageType": "digital_stamp"
   }
