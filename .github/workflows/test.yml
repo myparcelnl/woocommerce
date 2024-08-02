@@ -45,13 +45,13 @@ jobs:
       - uses: codecov/codecov-action@v4
         with:
           flags: unit,frontend,admin
-          files: views/backend/**/coverage/*.xml
+          files: views/backend/*/coverage/*.xml
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - uses: codecov/codecov-action@v4
         with:
           flags: unit,frontend,checkout
-          files: views/frontend/**/coverage/*.xml
+          files: views/frontend/*/coverage/*.xml
           token: ${{ secrets.CODECOV_TOKEN }}
 
   test-backend:
