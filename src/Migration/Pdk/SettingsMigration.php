@@ -91,19 +91,22 @@ class SettingsMigration extends AbstractPdkMigration
 
         $newSettings['carrier'] = new SettingsModelCollection();
 
-        foreach (self::OLD_CARRIERS as $carrier) {
-            $transformed                            =
-                $this->transformSettings($oldSettings[$carrier] ?? [], $this->getTransformationMap());
-            $transformed['dropOffPossibilities']    =
-                $this->transformDropOffPossibilities($oldSettings[$carrier] ?? []);
-            $transformed['defaultPackageType']      = 'package';
-            $transformed['exportReturnPackageType'] = 'package';
+        //todo: comments weg
+        //        foreach (self::OLD_CARRIERS as $carrier) {
+        //            $transformed                            =
+        //                $this->transformSettings($oldSettings[$carrier] ?? [], $this->getTransformationMap());
+        //            $transformed['dropOffPossibilities']    =
+        //                $this->transformDropOffPossibilities($oldSettings[$carrier] ?? []);
+        //            $transformed['defaultPackageType']      = 'package';
+        //            $transformed['exportReturnPackageType'] = 'package';
+        //
+        //            $newSettings['carrier']->put($carrier, $transformed);
+        //        }
 
-            $newSettings['carrier']->put($carrier, $transformed);
-        }
-
+        // todo: comments weg, test variabele weg
         $settings = new Settings($newSettings);
-        //        $settingsRepository->storeAllSettings($settings);
+        $test = 'test';
+        // $settingsRepository->storeAllSettings($settings);
     }
 
     /**
@@ -124,22 +127,32 @@ class SettingsMigration extends AbstractPdkMigration
     {
         $newSettings = [];
 
+        //todo: onderstaande variabelen verwijderen
+        $sources    = [];
+        $targets    = [];
+        $casts      = [];
+        $transforms = [];
         foreach ($map as $item) {
             if (! Arr::has($oldSettings, $item[self::TRANSFORM_KEY_SOURCE])) {
                 continue;
             }
+            $sources[] = $item['source'];
 
             $value    = Arr::get($oldSettings, $item[self::TRANSFORM_KEY_SOURCE]);
             $newValue = $value;
 
             if ($item[self::TRANSFORM_KEY_TRANSFORM] ?? false) {
+                $transforms[] = $item['transform'];
+                // De Magic gebeurt in deze closures, kijk hier goed wat er mis gaat. En bedenk ook wat er goed moet gaan.
                 $newValue = $item[self::TRANSFORM_KEY_TRANSFORM]($newValue, $oldSettings);
             }
 
             if ($item[self::TRANSFORM_KEY_CAST] ?? false) {
+                $casts[] = $item['cast'];
                 $newValue = $this->castValue($item[self::TRANSFORM_KEY_CAST], $newValue);
             }
 
+            $targets[] = $item['target'];
             Arr::set($newSettings, $item[self::TRANSFORM_KEY_TARGET], $newValue);
         }
 

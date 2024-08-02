@@ -20,6 +20,7 @@ use MyParcelNL\Pdk\Facade\Installer;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Facade\WooCommerce;
 use MyParcelNL\WooCommerce\Integration\WcBlocksLoader;
+use MyParcelNL\WooCommerce\Migration\Pdk\SettingsMigration;
 use MyParcelNL\WooCommerce\Service\WordPressHookService;
 use function MyParcelNL\WooCommerce\bootPdk;
 
@@ -131,6 +132,9 @@ final class MyParcelNLWooCommerce
                 deactivate_plugins(plugin_basename(__FILE__));
             });
         }
+
+        $migration = Pdk::get(SettingsMigration::class);
+        $migration->up();
     }
 
     /**
