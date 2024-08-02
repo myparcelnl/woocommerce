@@ -42,16 +42,16 @@ jobs:
           yarn workspaces foreach -Ap --exclude . exec \
             bash -c 'if [ -f coverage/clover.xml ]; then mv coverage/clover.xml coverage/$(basename $(pwd)).xml; fi'
 
-      - uses: codecov/codecov-action@v4
+      - uses: myparcelnl/actions/codecov-action@v4
         with:
           flags: unit,frontend,admin
-          files: views/backend/*/coverage/*.xml
+          files: views/backend/**/coverage/*.xml
           token: ${{ secrets.CODECOV_TOKEN }}
 
-      - uses: codecov/codecov-action@v4
+      - uses: myparcelnl/actions/codecov-action@v4
         with:
           flags: unit,frontend,checkout
-          files: views/frontend/*/coverage/*.xml
+          files: views/frontend/**/coverage/*.xml
           token: ${{ secrets.CODECOV_TOKEN }}
 
   test-backend:
@@ -91,8 +91,8 @@ jobs:
           # Strip the /app/ prefix from the coverage paths before uploading.
           sed -i 's/\/app\///g' coverage/backend.xml
 
-      - uses: codecov/codecov-action@v4
+      - uses: myparcelnl/actions/codecov-action@v4
         with:
           flags: unit,backend
-          files: coverage/*.xml
+          files: coverage/backend.xml
           token: ${{ secrets.CODECOV_TOKEN }}
