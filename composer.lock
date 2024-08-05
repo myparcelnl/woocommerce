@@ -458,16 +458,16 @@
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "2.39.2",
+            "version": "2.41.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/pdk.git",
-                "reference": "540affec3d35eae5bf4411cca4127f7374082074"
+                "reference": "aaaac10f9251136de0d2efd35d6a74265adee55f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/540affec3d35eae5bf4411cca4127f7374082074",
-                "reference": "540affec3d35eae5bf4411cca4127f7374082074",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/aaaac10f9251136de0d2efd35d6a74265adee55f",
+                "reference": "aaaac10f9251136de0d2efd35d6a74265adee55f",
                 "shasum": ""
             },
             "require": {
@@ -511,22 +511,22 @@
             "homepage": "https://myparcel.nl",
             "support": {
                 "issues": "https://github.com/myparcelnl/pdk/issues",
-                "source": "https://github.com/myparcelnl/pdk/tree/v2.39.2"
+                "source": "https://github.com/myparcelnl/pdk/tree/v2.41.0"
             },
-            "time": "2024-07-10T16:04:01+00:00"
+            "time": "2024-07-29T16:04:05+00:00"
         },
         {
             "name": "myparcelnl/sdk",
-            "version": "7.15.1",
+            "version": "7.15.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/sdk.git",
-                "reference": "bf99b13d70a3182481202b316f77f7379f2ec5b8"
+                "reference": "12d184ccbd10b155a204b1fabf9f8dde49b47aaa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/bf99b13d70a3182481202b316f77f7379f2ec5b8",
-                "reference": "bf99b13d70a3182481202b316f77f7379f2ec5b8",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/12d184ccbd10b155a204b1fabf9f8dde49b47aaa",
+                "reference": "12d184ccbd10b155a204b1fabf9f8dde49b47aaa",
                 "shasum": ""
             },
             "require": {
@@ -575,9 +575,9 @@
             ],
             "support": {
                 "issues": "https://github.com/myparcelnl/sdk/issues",
-                "source": "https://github.com/myparcelnl/sdk/tree/v7.15.1"
+                "source": "https://github.com/myparcelnl/sdk/tree/v7.15.2"
             },
-            "time": "2024-07-23T13:37:24+00:00"
+            "time": "2024-08-02T11:05:49+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -5507,5 +5507,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
