@@ -51,8 +51,8 @@
       "value": ["5.0.0-alpha.1"]
     }
   ],
+  "parentProduct": null,
   "product": {
-    "id": "product",
     "countryOfOrigin": "BB",
     "customsCode": "1234",
     "disableDeliveryOptions": -1,
@@ -66,7 +66,7 @@
     "exportSignature": -1,
     "fitInDigitalStamp": 7,
     "fitInMailbox": 7,
+    "id": "product",
     "packageType": "digital_stamp"
-  },
-  "parentProduct": null
+  }
 }
