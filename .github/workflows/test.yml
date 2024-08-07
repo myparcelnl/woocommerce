@@ -75,7 +75,7 @@ jobs:
         id: coverage-cache
         with:
           path: clover.xml
-          key: backend-coverage-${{ hashFiles('**/composer.json', '**/composer.lock', 'src/**/*', 'tests/**/*') }}
+          key: coverage-backend-${{ hashFiles('**/composer.json', '**/composer.lock', 'src/**/*', 'tests/**/*') }}
 
       - uses: myparcelnl/actions/pdk-setup@v4
         id: setup
@@ -99,14 +99,11 @@ jobs:
         with:
           image: ${{ steps.setup.outputs.image }}
 
-      - name: 'Move coverage file'
+      - name: 'Fix coverage file'
         if: steps.coverage-cache.outputs.cache-hit != 'true'
         shell: bash
         #language=bash
         run: |
-          mkdir -p coverage
-          docker cp $(docker ps -alq):/app/clover.xml clover.xml
-
           # Strip the /app/ prefix from the coverage paths before uploading.
           sed -i 's/\/app\///g' clover.xml
 
