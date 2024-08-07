@@ -27,6 +27,12 @@ jobs:
       - uses: myparcelnl/actions/pdk-setup-frontend@v4
         if: steps.coverage-cache.outputs.cache-hit != 'true'
 
+      - uses: myparcelnl/actions/pdk-upgrade@v4
+        with:
+          report: 'false'
+          no-check: true
+          no-commit: true
+
       - name: 'Run frontend tests'
         if: steps.coverage-cache.outputs.cache-hit != 'true'
         uses: myparcelnl/actions/nx-run-many@v4
