@@ -152,7 +152,9 @@
       "priceOnlyRecipient": 0,
       "pricePackageTypeDigitalStamp": 0,
       "pricePackageTypeMailbox": 0,
-      "priceSignature": 0
+      "priceSignature": 0,
+      "allowInternationalMailbox": false,
+      "priceInternationalMailbox": 0
     },
     "dhlforyou": {
       "id": "dhlforyou",
@@ -254,7 +256,9 @@
       "priceOnlyRecipient": 0,
       "pricePackageTypeDigitalStamp": 0,
       "pricePackageTypeMailbox": 0,
-      "priceSignature": 0
+      "priceSignature": 0,
+      "allowInternationalMailbox": false,
+      "priceInternationalMailbox": 0
     },
     "dhlparcelconnect": {
       "id": "dhlparcelconnect",
@@ -356,7 +360,9 @@
       "priceOnlyRecipient": 0,
       "pricePackageTypeDigitalStamp": 0,
       "pricePackageTypeMailbox": 0,
-      "priceSignature": 0
+      "priceSignature": 0,
+      "allowInternationalMailbox": false,
+      "priceInternationalMailbox": 0
     },
     "dhleuroplus": {
       "id": "dhleuroplus",
@@ -458,7 +464,9 @@
       "priceOnlyRecipient": 0,
       "pricePackageTypeDigitalStamp": 0,
       "pricePackageTypeMailbox": 0,
-      "priceSignature": 0
+      "priceSignature": 0,
+      "allowInternationalMailbox": false,
+      "priceInternationalMailbox": 0
     }
   }
 }
