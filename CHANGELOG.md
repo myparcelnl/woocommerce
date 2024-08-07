@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file. See
 
 ## 🚧 This version is not ready for production use 🚧
 
+This is the beta release of MyParcel for WooCommerce v5.x. We've rewritten the entire plugin from scratch, using the [MyParcel Plugin Development Kit].
+
+For a less bug-prone experience, we recommend you use the stable or release candidate versions of the plugin instead. You can find the stable version in the [WordPress plugin directory]. The release candidate versions can be found in the [releases] section of this repository. They are versioned with a `-rc` suffix.
+
+If you do choose to install this version, we would love to hear your feedback. Please report any issues you encounter using the [Bug report for v5.0.0-beta.x form] or by sending an email to [support@myparcel.nl]. Use it in production at your own risk.
+
+[Bug report for v5.0.0-beta.x form]: https://github.com/myparcelnl/woocommerce/issues/new?labels=beta&template=ZZ-BUG-REPORT-v5.yml
+[MyParcel Plugin Development Kit]: https://developer.myparcel.nl/documentation/52.pdk/
+[WordPress plugin directory]: https://wordpress.org/plugins/woocommerce-myparcel/
+[releases]: https://github.com/myparcelnl/woocommerce/releases
+[support@myparcel.nl]: mailto:support@myparcel.nl
+
+## [5.0.0-beta.10](https://github.com/myparcelnl/woocommerce/compare/v5.0.0-beta.9...v5.0.0-beta.10) (2024-08-07)
+
+
+### :bug: Bug Fixes
+
+* **checkout:** use show delivery options on backorders setting ([#1136](https://github.com/myparcelnl/woocommerce/issues/1136)) ([9495554](https://github.com/myparcelnl/woocommerce/commit/94955541e71bb4a7ad479fef0d3955d18a722fbd))
+
+
+### :sparkles: New Features
+
+* **deps:** upgrade myparcelnl/pdk to v2.42.0 ([c1b1220](https://github.com/myparcelnl/woocommerce/commit/c1b1220c1a5069e8e06387c240cf16b694b274f3))
+
+## 🚧 This version is not ready for production use 🚧
+
 This is the beta release of MyParcel WooCommerce v5.x. We've rewritten the entire plugin from scratch, using the [MyParcel Plugin Development Kit].
 
 For a less bug-prone experience, we recommend you use the stable or release candidate versions of the plugin instead. You can find the stable version in the [WordPress plugin directory]. The release candidate versions can be found in the [releases] section of this repository. They are versioned with a `-rc` suffix.
