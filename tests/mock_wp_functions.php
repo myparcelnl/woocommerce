@@ -8,6 +8,7 @@ use MyParcelNL\WooCommerce\Tests\Exception\DieException;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpEnqueue;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpRestServer;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpUser;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
