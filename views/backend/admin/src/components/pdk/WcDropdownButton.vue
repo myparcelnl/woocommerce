@@ -72,7 +72,5 @@ const props = defineProps<{
 
 const {dropdownActions, toggled, dropdownIcon} = useDropdownData(props);
 
-console.log('initialize', {dropdownIcon, toggled, dropdownActions});
-
 const {translate} = useLanguage();
 </script>
