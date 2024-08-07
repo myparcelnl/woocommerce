@@ -74,7 +74,7 @@ jobs:
         uses: actions/cache@v4
         id: coverage-cache
         with:
-          path: coverage
+          path: clover.xml
           key: backend-coverage-${{ hashFiles('**/composer.json', '**/composer.lock', 'src/**/*', 'tests/**/*') }}
 
       - uses: myparcelnl/actions/pdk-setup@v4
@@ -105,13 +105,13 @@ jobs:
         #language=bash
         run: |
           mkdir -p coverage
-          docker cp $(docker ps -alq):/app/clover.xml coverage/backend.xml
+          docker cp $(docker ps -alq):/app/clover.xml clover.xml
 
           # Strip the /app/ prefix from the coverage paths before uploading.
-          sed -i 's/\/app\///g' coverage/backend.xml
+          sed -i 's/\/app\///g' clover.xml
 
       - uses: myparcelnl/actions/codecov-action@v4
         with:
           flags: unit,backend
-          files: coverage/backend.xml
+          files: clover.xml
           token: ${{ secrets.CODECOV_TOKEN }}

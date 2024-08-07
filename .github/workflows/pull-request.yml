@@ -43,13 +43,7 @@ jobs:
           php-version: ${{ vars.PHP_VERSION }}
           php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
           source-files: |
-            scoper.*.inc.php
-            scoper.inc.php
-            config/**/*
             src/**/*
-            woocommerce-myparcel.php
-          vendor-files: |
-            composer.json
-            composer.lock
+            config/**/*
             scoper.inc.php
-            scoper.*.inc.php
+            woocommerce-myparcel.php

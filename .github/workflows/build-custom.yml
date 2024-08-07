@@ -22,30 +22,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: myparcelnl/actions/pdk-custom-build-prepare@v4
+      - uses: myparcelnl/actions/pdk-custom-build@v4
         id: prepare
         with:
+          php-version: ${{ vars.PHP_VERSION }}
+          php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
           js-pdk-ref: ${{ inputs.js-pdk-ref }}
           php-pdk-ref: ${{ inputs.php-pdk-ref }}
           source-files: |
-            scoper.*.inc.php
-            scoper.inc.php
-            config/**/*
             src/**/*
-            woocommerce-myparcel.php
-          vendor-files: |
-            composer.json
-            composer.lock
+            config/**/*
             scoper.inc.php
-            scoper.*.inc.php
-
-      - name: 'Build frontend'
-        uses: myparcelnl/actions/nx-run-many@v4
-        with:
-          target: 'build'
-
-      - uses: myparcelnl/actions/pdk-custom-build@v4
-        with:
-          image: ${{ steps.prepare.outputs.image }}
-          js-pdk-ref: ${{ inputs.js-pdk-ref }}
-          php-pdk-ref: ${{ inputs.php-pdk-ref }}
+            woocommerce-myparcel.php
