@@ -28,6 +28,7 @@ jobs:
         if: steps.coverage-cache.outputs.cache-hit != 'true'
 
       - uses: myparcelnl/actions/pdk-upgrade@v4
+        if: steps.coverage-cache.outputs.cache-hit != 'true'
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
@@ -84,6 +85,7 @@ jobs:
           composer-dev: 'true'
 
       - uses: myparcelnl/actions/pdk-upgrade@v4
+        if: steps.coverage-cache.outputs.cache-hit != 'true'
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
