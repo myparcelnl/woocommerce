@@ -21,8 +21,8 @@ jobs:
         uses: actions/cache@v4
         id: coverage-cache
         with:
-          path: views/**/coverage
-          key: frontend-coverage-${{ hashFiles('**/package.json', '**/yarn.lock', 'views/**/*') }}
+          key: coverage-frontend-${{ hashFiles('**/package.json', '**/yarn.lock', 'views/**/*') }}
+          path: coverage/views
 
       - uses: myparcelnl/actions/pdk-setup-frontend@v4
         if: steps.coverage-cache.outputs.cache-hit != 'true'
@@ -51,16 +51,18 @@ jobs:
           yarn workspaces foreach -Ap --exclude . exec \
             bash -c 'if [ -f coverage/clover.xml ]; then mv coverage/clover.xml coverage/$(basename $(pwd)).xml; fi'
 
+          find views -type f -name '*.xml' -exec bash -c 'mkdir -p coverage/$(dirname $1) && cp $1 coverage/$(dirname $1)/$(basename $1)' _ {} \;
+
       - uses: myparcelnl/actions/codecov-action@v4
         with:
           flags: unit,frontend,admin
-          files: views/backend/**/coverage/*.xml
+          files: coverage/views/backend/*.xml
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - uses: myparcelnl/actions/codecov-action@v4
         with:
           flags: unit,frontend,checkout
-          files: views/frontend/**/coverage/*.xml
+          files: coverage/views/frontend/*.xml
           token: ${{ secrets.CODECOV_TOKEN }}
 
   test-backend:
