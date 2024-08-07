@@ -10,6 +10,10 @@
     </testsuite>
   </testsuites>
 
+  <extensions>
+    <extension class="\MyParcelNL\Pdk\Tests\Hook\ClearContainerCacheHook" />
+  </extensions>
+
   <coverage processUncoveredFiles="true">
     <report>
       <clover outputFile="clover.xml" />
