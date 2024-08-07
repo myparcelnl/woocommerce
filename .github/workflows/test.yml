@@ -29,6 +29,8 @@ jobs:
 
       - uses: myparcelnl/actions/pdk-upgrade@v4
         with:
+          app-id: ${{ secrets.MYPARCEL_APP_ID }}
+          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
           report: 'false'
           no-check: true
           no-commit: true
@@ -83,6 +85,8 @@ jobs:
 
       - uses: myparcelnl/actions/pdk-upgrade@v4
         with:
+          app-id: ${{ secrets.MYPARCEL_APP_ID }}
+          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
           report: 'false'
           no-check: true
           no-commit: true
