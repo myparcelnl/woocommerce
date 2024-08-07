@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="frontend/checkout-delivery-options" type="JavaScriptTestRunnerVitest">
+    <config value="$PROJECT_DIR$/views/frontend/checkout-delivery-options/vite.config.ts" />
+    <node-interpreter value="project" />
+    <vitest-package value="$PROJECT_DIR$/node_modules/vitest" />
+    <working-dir value="$PROJECT_DIR$/views/frontend/checkout-delivery-options" />
+    <envs />
+    <scope-kind value="ALL" />
+    <method v="2" />
+  </configuration>
+</component>

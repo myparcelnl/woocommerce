@@ -1,6 +1,8 @@
 import customTsConfig from 'vite-plugin-custom-tsconfig';
 import {mergeConfig} from 'vite';
 
+const dirname = new URL('.', import.meta.url).pathname;
+
 /**
  * @type createDefaultConfig {import('vitest/config').UserConfigExport}
  * @returns {import('vitest/config').UserConfig}
@@ -17,6 +19,7 @@ const createDefaultConfig = (env) => {
 
     test: {
       passWithNoTests: true,
+      setupFiles: [`${dirname}/test-setup.ts`],
       coverage: {
         all: true,
         enabled: false,

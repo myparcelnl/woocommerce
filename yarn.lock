@@ -2862,14 +2862,16 @@ __metadata:
     "@myparcel-woocommerce/vite-config": "workspace:*"
     "@myparcel/ts-utils": "npm:^1.8.0"
     "@tanstack/vue-query": "npm:^4.27.0"
-    "@types/jquery": "npm:^3.5.16"
+    "@types/jquery": "npm:^3.5.30"
     "@types/select2": "npm:^4.0.57"
     "@vitejs/plugin-vue": "npm:^5.0.0"
     "@vue/test-utils": "npm:^2.3.2"
     autoprefixer: "npm:^10.4.14"
     happy-dom: "npm:^14.0.0"
+    jquery: "npm:^3.7.1"
     postcss: "npm:^8.4.21"
     sass: "npm:^1.60.0"
+    select2: "npm:^4.0.13"
     tailwindcss: "npm:^3.2.7"
     typescript: "npm:^5.2.2"
     vite: "npm:^5.0.0"
@@ -5330,6 +5332,15 @@ __metadata:
   dependencies:
     "@types/sizzle": "npm:*"
   checksum: 10c0/17409b551956c54d641264895790b9e63a2179bacdabe2a87d5f8f2baebe2f16625d111b17b1441cdffbf9e059e683bb25bf04ba6ea56b36e39ea50cc77f5b8c
+  languageName: node
+  linkType: hard
+
+"@types/jquery@npm:^3.5.30":
+  version: 3.5.30
+  resolution: "@types/jquery@npm:3.5.30"
+  dependencies:
+    "@types/sizzle": "npm:*"
+  checksum: 10c0/7355b2b2cb44eba7a2afa4a1c653157e4bc055be1f14a4c8874e349e6860dd36ca237e538294c2d709f1ffa0d5b12a39ea97be179f3f7fb445e17e12949ccb33
   languageName: node
   linkType: hard
 
@@ -15666,6 +15677,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jquery@npm:^3.7.1":
+  version: 3.7.1
+  resolution: "jquery@npm:3.7.1"
+  checksum: 10c0/808cfbfb758438560224bf26e17fcd5afc7419170230c810dd11f5c1792e2263e2970cca8d659eb84fcd9acc301edb6d310096e450277d54be4f57071b0c82d9
+  languageName: node
+  linkType: hard
+
 "js-beautify@npm:^1.14.9":
   version: 1.15.1
   resolution: "js-beautify@npm:1.15.1"
@@ -21957,6 +21975,13 @@ __metadata:
   version: 2.0.0
   resolution: "select-hose@npm:2.0.0"
   checksum: 10c0/01cc52edd29feddaf379efb4328aededa633f0ac43c64b11a8abd075ff34f05b0d280882c4fbcbdf1a0658202c9cd2ea8d5985174dcf9a2dac7e3a4996fa9b67
+  languageName: node
+  linkType: hard
+
+"select2@npm:^4.0.13":
+  version: 4.0.13
+  resolution: "select2@npm:4.0.13"
+  checksum: 10c0/a393866565a5f878ca21276ed32793595851debb35ff48a8c368640e732619349f547d335b438b45ff5647145eb6c5af868cd5153740de58306a2dca2498550f
   languageName: node
   linkType: hard
 
