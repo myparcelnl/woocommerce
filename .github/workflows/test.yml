@@ -75,6 +75,13 @@ jobs:
           php-version: ${{ vars.PHP_VERSION }}
           composer-dev: 'true'
 
+      - uses: myparcelnl/actions/pdk-upgrade@v4
+        with:
+          report: 'false'
+          no-check: true
+          no-commit: true
+          image: ${{ steps.setup.outputs.image }}
+
       - uses: myparcelnl/actions/composer-pest@v4
         if: steps.coverage-cache.outputs.cache-hit != 'true'
         with:
