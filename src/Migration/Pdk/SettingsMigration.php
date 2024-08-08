@@ -91,22 +91,19 @@ class SettingsMigration extends AbstractPdkMigration
 
         $newSettings['carrier'] = new SettingsModelCollection();
 
-        //todo: comments weg
-        //        foreach (self::OLD_CARRIERS as $carrier) {
-        //            $transformed                            =
-        //                $this->transformSettings($oldSettings[$carrier] ?? [], $this->getTransformationMap());
-        //            $transformed['dropOffPossibilities']    =
-        //                $this->transformDropOffPossibilities($oldSettings[$carrier] ?? []);
-        //            $transformed['defaultPackageType']      = 'package';
-        //            $transformed['exportReturnPackageType'] = 'package';
-        //
-        //            $newSettings['carrier']->put($carrier, $transformed);
-        //        }
+        foreach (self::OLD_CARRIERS as $carrier) {
+            $transformed                            =
+                $this->transformSettings($oldSettings[$carrier] ?? [], $this->getTransformationMap());
+            $transformed['dropOffPossibilities']    =
+                $this->transformDropOffPossibilities($oldSettings[$carrier] ?? []);
+            $transformed['defaultPackageType']      = 'package';
+            $transformed['exportReturnPackageType'] = 'package';
 
-        // todo: comments weg, test variabele weg
+            $newSettings['carrier']->put($carrier, $transformed);
+        }
+
         $settings = new Settings($newSettings);
-        $test = 'test';
-        // $settingsRepository->storeAllSettings($settings);
+        $settingsRepository->storeAllSettings($settings);
     }
 
     /**

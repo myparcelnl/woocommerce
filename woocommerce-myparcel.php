@@ -133,6 +133,7 @@ final class MyParcelNLWooCommerce
             });
         }
 
+        //todo: verwijder dit na development.
         $migration = Pdk::get(SettingsMigration::class);
         $migration->up();
     }

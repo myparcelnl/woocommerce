@@ -79,7 +79,20 @@ final class WcShippingMethodRepository extends Repository
      */
     private function getCurrentShippingMethod(?string $method): ?WC_Shipping_Method
     {
-        $methodString = $method ?? WC()->session->get('chosen_shipping_methods')[0];
+        //$methodString = $method ?? WC()->session->get('chosen_shipping_methods')[0];
+
+        //todo: dit is nog allemaal stom omdat methodString soms een array is en soms een string en soms null
+        // ook heb ik geen idee waar deze functie voor is.
+        // Zorg eerst maar dat de explode werkt.
+
+        $chosenShippingMethods = WC()->session->get('chosen_shipping_methods');
+
+        $chosenShippingMethod = array_keys($chosenShippingMethods['rates'] ?? [])[0];
+
+        $methodString = $method ?? $chosenShippingMethod;
+        if ($methodString === null) {
+            return null;
+        }
 
         $parts      = explode(':', $methodString);
         $instanceId = $parts[1] ?? null;
