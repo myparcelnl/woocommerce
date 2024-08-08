@@ -87,9 +87,9 @@ final class WcShippingMethodRepository extends Repository
 
         $chosenShippingMethods = WC()->session->get('chosen_shipping_methods');
 
-        $chosenShippingMethod = array_keys($chosenShippingMethods['rates'] ?? [])[0];
+        $chosenShippingMethod = array_keys($chosenShippingMethods['rates'] ?? []);
 
-        $methodString = $method ?? $chosenShippingMethod;
+        $methodString = $method ?? $chosenShippingMethod[0] ?? null;
         if ($methodString === null) {
             return null;
         }
