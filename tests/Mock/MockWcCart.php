@@ -14,7 +14,7 @@ class MockWcCart extends MockWcClass
     /**
      * @var \WC_Product[]
      */
-    private $items = [];
+    public $cart_contents = [];
 
     /**
      * @param  int   $productId
@@ -38,9 +38,9 @@ class MockWcCart extends MockWcClass
         $cartItemKey = $this->find_product_in_cart($cartId);
 
         if ($cartItemKey) {
-            $this->items[$cartItemKey]['quantity'] += $quantity;
+            $this->cart_contents[$cartItemKey]['quantity'] += $quantity;
         } else {
-            $this->items[] = [
+            $this->cart_contents[] = [
                 'data'     => new WC_Product($productId),
                 'quantity' => $quantity,
             ];
@@ -49,7 +49,7 @@ class MockWcCart extends MockWcClass
 
     public function get_cart()
     {
-        return $this->items;
+        return $this->cart_contents;
     }
 
     /**
@@ -57,7 +57,7 @@ class MockWcCart extends MockWcClass
      */
     public function empty_cart(): void
     {
-        $this->items = [];
+        $this->cart_contents = [];
     }
 
     /**
@@ -67,7 +67,7 @@ class MockWcCart extends MockWcClass
     {
         // calculate weight of all products in cart
         $weight = 0;
-        foreach ($this->items as $item) {
+        foreach ($this->cart_contents as $item) {
             /** @var \WC_Product $wcProduct */
             $wcProduct = $item['data'];
             $weight    += $wcProduct->get_weight() * $item['quantity'];
@@ -140,8 +140,8 @@ class MockWcCart extends MockWcClass
      */
     public function find_product_in_cart($cartId = false): string
     {
-        $thisItemsIsArray  = is_array($this->items);
-        $itemAlreadyExists = isset($this->items[$cartId]);
+        $thisItemsIsArray  = is_array($this->cart_contents);
+        $itemAlreadyExists = isset($this->cart_contents[$cartId]);
 
         if ($cartId !== false && $thisItemsIsArray && $itemAlreadyExists) {
             return $cartId;

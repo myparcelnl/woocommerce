@@ -5,12 +5,15 @@ declare(strict_types=1);
 
 use MyParcelNL\WooCommerce\Tests\Mock\MockWc;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcCart;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWcCartRepository;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcClass;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcCustomer;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcDateTime;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcOrder;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcProduct;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcSession;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWcShippingMethodClass;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWcShippingZonesClass;
 
 /** @see \MyParcelNL\WooCommerce\bootPdk() */
 const PEST = true;
@@ -46,3 +49,9 @@ class WC extends MockWc { }
 
 /** @see \WC_Session */
 class WC_Session extends MockWcSession { }
+
+/** @see \WC_Shipping_Zones */
+class WC_Shipping_Zones extends MockWcShippingZonesClass { }
+
+/** @see \WC_Shipping_Method */
+class WC_Shipping_Method extends MockWcShippingMethodClass { }
