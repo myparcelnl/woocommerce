@@ -10,7 +10,6 @@ namespace MyParcelNL\WooCommerce\Tests;
  * @see https://pestphp.com/docs/underlying-test-case#testspestphp
  */
 
-use MyParcelNL\Pdk\Tests\Uses\ClearContainerCache;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcData;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkBootstrapper;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
