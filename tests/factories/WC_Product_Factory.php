@@ -19,6 +19,7 @@ use MyParcelNL\WooCommerce\Tests\Factory\AbstractWcDataFactory;
  * @method $this withWeight(float $weight)
  * @method $this withWidth(float $width)
  * @method $this withSettings(array $settings)
+ * @method $this withShippingClassId(int $id)
  */
 final class WC_Product_Factory extends AbstractWcDataFactory
 {

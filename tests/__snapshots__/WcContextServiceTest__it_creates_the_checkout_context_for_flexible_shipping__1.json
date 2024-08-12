@@ -1,0 +1,58 @@
+{
+    "config": {
+        "allowRetry": false,
+        "basePrice": 0,
+        "carrierSettings": [],
+        "currency": "EUR",
+        "locale": "nl-NL",
+        "packageType": "package",
+        "pickupLocationsDefaultView": null,
+        "platform": "myparcel",
+        "priceStandardDelivery": 0,
+        "showPriceSurcharge": false,
+        "apiBaseUrl": "https:\/\/api.myparcel.nl"
+    },
+    "strings": {
+        "morning": "Ochtend",
+        "headerDeliveryOptions": null
+    },
+    "settings": {
+        "actions": {
+            "baseUrl": "FRONTEND_URL",
+            "endpoints": {
+                "fetchCheckoutContext": {
+                    "body": null,
+                    "headers": [],
+                    "method": "GET",
+                    "parameters": {
+                        "action": "fetchCheckoutContext"
+                    },
+                    "path": "",
+                    "property": "context",
+                    "responseProperty": null
+                },
+                "fetchContext": {
+                    "body": null,
+                    "headers": [],
+                    "method": "GET",
+                    "parameters": {
+                        "action": "fetchContext"
+                    },
+                    "path": "",
+                    "property": "context",
+                    "responseProperty": null
+                }
+            }
+        },
+        "allowedShippingMethods": null,
+        "hasDeliveryOptions": null,
+        "hiddenInputName": "pest_checkout_data",
+        "countriesWithSeparateAddressFields": [
+            "NL",
+            "BE"
+        ],
+        "carriersWithTaxFields": [],
+        "highestShippingClass": ""
+    },
+    "endpoints": []
+}

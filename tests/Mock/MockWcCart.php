@@ -40,7 +40,9 @@ class MockWcCart extends MockWcClass
         if ($cartItemKey) {
             $this->cart_contents[$cartItemKey]['quantity'] += $quantity;
         } else {
-            $this->cart_contents[] = [
+            $cartItemKey = $cartId;
+
+            $this->cart_contents[$cartItemKey] = [
                 'data'     => new WC_Product($productId),
                 'quantity' => $quantity,
             ];
@@ -65,9 +67,21 @@ class MockWcCart extends MockWcClass
      */
     public function get_shipping_packages(): array
     {
+        //todo: momenteel lijkt deze method totaal niet op die van de echte WC_Cart class.
+        // kijk hoe je het kan aanpassen maar dat de andere testen nog steeds slagen.
+        // alleen de migratie lijkt hier ook gebruik van te maken.
+        // Misschien dat de migratie ook de woocommerce_cart_shipping_packages filter aanpast?
+
+        return apply_filters(
+            'woocommerce_cart_shipping_packages',
+            [
+                'flat_rate:0' => [],
+            ]
+        );
+
         // calculate weight of all products in cart
         $weight = 0;
-        foreach ($this->cart_contents as $item) {
+        foreach ($this->cart_contents as $key => $item) {
             /** @var \WC_Product $wcProduct */
             $wcProduct = $item['data'];
             $weight    += $wcProduct->get_weight() * $item['quantity'];

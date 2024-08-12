@@ -44,6 +44,7 @@ final class WcContextService extends ContextService
             return null;
         }
 
+        //todo: vanaf hier verder
         $shippingClasses = $this->getShippingClasses($shippingMethod);
 
         foreach ($shippingClasses as $shippingClass) {
@@ -97,7 +98,7 @@ final class WcContextService extends ContextService
         /** @var \WC_Shipping_Method|null $shippingMethod */
         //todo: WC_Shipping_Zones moet je mocken in de test
         // Zelfde voor WC_Shipping_Method
-        $shippingMethod = WC_Shipping_Zones::get_shipping_method($instanceId) ?: null;
+        $shippingMethod = WC_Shipping_Zones::get_shipping_method((int) $instanceId) ?: null;
 
         return $shippingMethod;
     }
@@ -110,10 +111,12 @@ final class WcContextService extends ContextService
     private function getShippingClasses(WC_Shipping_Method $shippingMethod): array
     {
         // in de cart moet een product zitten en dat product moet een shipping class hebben.
+        //todo: kijk wat er bij de website gebeurt in deze class.
+        // Bij flat rate bestaat deze functie wel. Verdient misschien zijn eigen testcase?
         if (! method_exists($shippingMethod, 'find_shipping_classes')) {
             return [];
         }
-
+        //todo: zorg dat je packages kan ophalen
         $packages = WC()->cart->get_shipping_packages();
         $package  = current($packages);
 

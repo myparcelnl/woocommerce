@@ -13,7 +13,9 @@ use MyParcelNL\WooCommerce\Tests\Mock\MockWcOrder;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcProduct;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcSession;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcShippingMethodClass;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWcShippingMethodFlatRateClass;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcShippingZonesClass;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpTerm;
 
 /** @see \MyParcelNL\WooCommerce\bootPdk() */
 const PEST = true;
@@ -55,3 +57,9 @@ class WC_Shipping_Zones extends MockWcShippingZonesClass { }
 
 /** @see \WC_Shipping_Method */
 class WC_Shipping_Method extends MockWcShippingMethodClass { }
+
+/** @see \WC_Shipping_Flat_Rate */
+class WC_Shipping_Flat_Rate extends MockWcShippingMethodFlatRateClass { }
+
+/** @see \WP_Term */
+class WP_Term extends MockWpTerm { }

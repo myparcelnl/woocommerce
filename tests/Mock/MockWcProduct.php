@@ -33,9 +33,15 @@ class MockWcProduct extends MockWcClass
     {
         $class_id = $this->get_shipping_class_id();
         if ($class_id) {
+            // uiteindelijk moet je de slug string returnen. Geen class. Wp_term
+
             // Je moet hier iets maken zodat je de shipping class kan opvragen.
             // Daarvoor moet de shipping class wel bestaan dus misschien moet je die eerst nog maken in de test.
             // Wellicht moet er dus ook een mock shipping class komen.
+
+            $instance = MockWcData::get($class_id);
+
+            return $instance->get_slug();
 
             //Dit is even nep zodat ik verder kan met mijn leven.
             return 'bbp';

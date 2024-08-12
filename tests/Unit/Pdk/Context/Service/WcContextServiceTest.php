@@ -7,14 +7,17 @@ namespace MyParcelNL\WooCommerce\Pdk\Context\Service;
 
 use MyParcelNL\Pdk\App\Cart\Contract\PdkCartRepositoryInterface;
 use MyParcelNL\Pdk\App\ShippingMethod\Model\PdkShippingMethod;
-use MyParcelNL\Pdk\Context\Model\CheckoutContext;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcSession;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Product;
+use WC_Shipping_Flat_Rate;
+use WC_Shipping_Method;
+use WP_Term;
 use function MyParcelNL\Pdk\Tests\factory;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function MyParcelNL\WooCommerce\Tests\wpFactory;
+use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 
 usesShared(new UsesMockWcPdkInstance());
 
@@ -39,17 +42,25 @@ usesShared(new UsesMockWcPdkInstance());
 //
 //    expect($highestShippingClass)->toBe('bbp');
 
-it('creates the checkout context', function () {
+it('creates the checkout context for flexible shipping', function () {
     $contextService = Pdk::get(WcContextService::class);
     $cartRepository = Pdk::get(PdkCartRepositoryInterface::class);
 
     $wcCart  = WC()->cart;
     $session = Pdk::get(MockWcSession::class);
-    $session->set('chosen_shipping_methods', ['flat_rate:1234']);
+    $session->set('chosen_shipping_methods', ['flat_rate:456']);
 
     $wcProduct = wpFactory(WC_Product::class)
         ->withId(6789)
+        ->withShippingClassId(12)
         ->make();
+
+    wpFactory(WP_Term::class)
+        ->withId(12)
+        ->withTermId(12)
+        ->withName('shipping class')
+        ->withSlug('shipping-class')
+        ->store();
 
     $wcCart->add_to_cart($wcProduct->get_id());
 
@@ -60,7 +71,53 @@ it('creates the checkout context', function () {
         ->make();
     $pdkCart->shippingMethod = $pdkShippingMethod;
 
+    wpFactory(WC_Shipping_Method::class)
+        ->withId(123)
+        ->store();
+
     $checkoutContext = $contextService->createCheckoutContext($pdkCart);
 
-    expect($checkoutContext)->toBeInstanceOf(CheckoutContext::class);
+    assertMatchesJsonSnapshot(json_encode($checkoutContext->toArray()));
+    // ik denk dat je hier moet checken op de highest shipping class om je test te laten slagen?
+    //    expect($checkoutContext)->toBeInstanceOf(CheckoutContext::class);
+});
+
+it('creates the checkout context for flat rate shipping', function () {
+    $contextService = Pdk::get(WcContextService::class);
+    $cartRepository = Pdk::get(PdkCartRepositoryInterface::class);
+
+    $wcCart  = WC()->cart;
+    $session = Pdk::get(MockWcSession::class);
+    $session->set('chosen_shipping_methods', ['flat_rate:456']);
+
+    $wcProduct = wpFactory(WC_Product::class)
+        ->withId(6789)
+        ->withShippingClassId(12)
+        ->make();
+
+    wpFactory(WP_Term::class)
+        ->withId(12)
+        ->withTermId(12)
+        ->withName('shipping class')
+        ->withSlug('shipping-class')
+        ->store();
+
+    $wcCart->add_to_cart($wcProduct->get_id());
+
+    $pdkCart = $cartRepository->get($wcCart);
+
+    $pdkShippingMethod       = factory(PdkShippingMethod::class)
+        ->withId('flat_rate:123')
+        ->make();
+    $pdkCart->shippingMethod = $pdkShippingMethod;
+
+    wpFactory(WC_Shipping_Flat_Rate::class)
+        ->withId(123)
+        ->store();
+
+    $checkoutContext = $contextService->createCheckoutContext($pdkCart);
+
+    assertMatchesJsonSnapshot(json_encode($checkoutContext->toArray()));
+    // ik denk dat je hier moet checken op de highest shipping class om je test te laten slagen?
+    //    expect($checkoutContext)->toBeInstanceOf(CheckoutContext::class);
 });
