@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Tests\Exception\DieException;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWcData;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpEnqueue;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
@@ -162,3 +163,31 @@ function wp_enqueue_style($handle, $src, $deps, $version, $media)
 {
     MockWpEnqueue::add($handle, $src, $deps, $version, $media);
 }
+
+function get_term_by($field, $value, $taxonomy = '', $output = 'OBJECT', $filter = 'raw')
+{
+    $terms = MockWcData::getByClass(WP_Term::class);
+
+    // note: this is not how the real get_term_by() works, but it's good enough for testing
+    foreach ($terms as $term) {
+        /** @var \WP_Term $term */
+        switch ($field) {
+            case 'slug':
+                //todo: it should be possible to just do $term->slug
+                if ($term->get_slug() === $value) {
+                    return $term;
+                }
+                break;
+        }
+    }
+
+    return false;
+}
+
+//todo: het zou cool zijn als we ooit een wp_cache_get() functie hier kunnen bouwen.
+// misschien is het niet nodig en kan hij al aangeroepen worden?
+//function wp_cache_get( $key, $group = '', $force = false, &$found = null ) {
+//    global $wp_object_cache;
+//
+//    return $wp_object_cache->get( $key, $group, $force, $found );
+//}

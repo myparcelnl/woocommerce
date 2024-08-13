@@ -72,28 +72,15 @@ class MockWcCart extends MockWcClass
         // alleen de migratie lijkt hier ook gebruik van te maken.
         // Misschien dat de migratie ook de woocommerce_cart_shipping_packages filter aanpast?
 
+        // calculate weight of all products in cart
+        $shippingPackages = [
+            ['contents' => $this->cart_contents],
+        ];
+
         return apply_filters(
             'woocommerce_cart_shipping_packages',
-            [
-                'flat_rate:0' => [],
-            ]
+            $shippingPackages
         );
-
-        // calculate weight of all products in cart
-        $weight = 0;
-        foreach ($this->cart_contents as $key => $item) {
-            /** @var \WC_Product $wcProduct */
-            $wcProduct = $item['data'];
-            $weight    += $wcProduct->get_weight() * $item['quantity'];
-        }
-
-        if ($weight > 10) {
-            return [];
-        }
-
-        return [
-            'flat_rate:0' => [],
-        ];
     }
 
     /**
