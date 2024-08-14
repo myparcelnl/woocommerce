@@ -41,3 +41,13 @@ jobs:
       - test
       - analyse
     secrets: inherit
+
+  notify-on-failure:
+    needs:
+      - test
+      - analyse
+      - build
+      - rebase-prs
+    if: always() && contains(needs.*.result, 'failure')
+    uses: myparcelnl/actions/.github/workflows/notify-on-failure.yml@v4
+    secrets: inherit
