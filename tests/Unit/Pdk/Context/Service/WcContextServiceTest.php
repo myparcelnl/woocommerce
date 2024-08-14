@@ -95,12 +95,22 @@ it('creates the checkout context for flat rate shipping', function () {
         ->withShippingClassId(12)
         ->make();
 
-    wpFactory(WP_Term::class)
-        ->withId(12)
-        ->withTermId(12)
-        ->withName('shipping class')
-        ->withSlug('shipping-class')
-        ->store();
+    //    wpFactory(WP_Term::class)
+    //        ->withId(12)
+    //        ->withTermId(12)
+    //        ->withName('shipping class')
+    //        ->withSlug('shipping-class')
+    //        ->store();
+
+    //stap 1 is de class handmatig aanmaken en dat in de cache te stoppen.
+    // Daarna kan je kijken of je het in een factory kan doen.
+
+    $wpTerm          = new WP_Term();
+    $wpTerm->term_id = 12;
+    $wpTerm->name    = 'shipping class';
+    $wpTerm->slug    = 'shipping-class';
+
+    wp_cache_add((string) $wpTerm->term_id, $wpTerm, 'terms');
 
     $wcCart->add_to_cart($wcProduct->get_id());
 

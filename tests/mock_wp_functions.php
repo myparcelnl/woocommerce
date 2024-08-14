@@ -5,10 +5,11 @@ declare(strict_types=1);
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Tests\Exception\DieException;
-use MyParcelNL\WooCommerce\Tests\Mock\MockWcData;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpCache;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpEnqueue;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpTerm;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpUser;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
@@ -166,28 +167,58 @@ function wp_enqueue_style($handle, $src, $deps, $version, $media)
 
 function get_term_by($field, $value, $taxonomy = '', $output = 'OBJECT', $filter = 'raw')
 {
-    $terms = MockWcData::getByClass(WP_Term::class);
+    if ($field === 'id' || $field === 'ID' || $field === 'term_id') {
+        return get_term((int) $value, $taxonomy, $output, $filter);
+    }
 
-    // note: this is not how the real get_term_by() works, but it's good enough for testing
-    foreach ($terms as $term) {
-        /** @var \WP_Term $term */
-        switch ($field) {
-            case 'slug':
-                //todo: it should be possible to just do $term->slug
-                if ($term->get_slug() === $value) {
-                    return $term;
-                }
-                break;
+    //Note: the real get_term_by function does not retrieve by slug like this.
+    // But for the test it is good enough.
+    if ($field === 'slug') {
+        $cacheTerms = MockWpCache::$cache['terms'];
+        foreach ($cacheTerms as $cacheTerm) {
+            /** @var \WP_Term $term */
+            $term = $cacheTerm['data'];
+
+            if ($term->slug === $value) {
+                return $term;
+            }
         }
     }
 
     return false;
 }
 
-//todo: het zou cool zijn als we ooit een wp_cache_get() functie hier kunnen bouwen.
-// misschien is het niet nodig en kan hij al aangeroepen worden?
-//function wp_cache_get( $key, $group = '', $force = false, &$found = null ) {
-//    global $wp_object_cache;
-//
-//    return $wp_object_cache->get( $key, $group, $force, $found );
-//}
+/**
+ * @param  int|\Wp_Term $term
+ * @param               $taxonomy
+ * @param               $output
+ * @param               $filter
+ *
+ * @return false|mixed|\WP_Term
+ */
+function get_term($term, $taxonomy = '', $output = OBJECT, $filter = 'raw')
+{
+    if ($term instanceof WP_Term) {
+        return MockWpTerm::get_instance($term->term_id, $taxonomy);
+    }
+
+    return MockWpTerm::get_instance($term, $taxonomy);
+}
+
+function wp_cache_add(string $key, $data, string $group = '', int $expire = 0): bool
+{
+    return MockWpCache::add($key, $data, $group, $expire);
+}
+
+/**
+ * @param  int|string $key
+ * @param  string     $group
+ * @param  bool       $force
+ * @param             $found
+ *
+ * @return false|mixed
+ */
+function wp_cache_get($key, string $group = '', bool $force = false, &$found = null)
+{
+    return MockWpCache::get($key, $group, $force, $found);
+}

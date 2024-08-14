@@ -39,20 +39,10 @@ class MockWcProduct extends MockWcClass
             // Daarvoor moet de shipping class wel bestaan dus misschien moet je die eerst nog maken in de test.
             // Wellicht moet er dus ook een mock shipping class komen.
 
-            $instance = MockWcData::get($class_id);
+            $term = get_term_by('id', $class_id, 'product_shipping_class');
 
-            return $instance->get_slug();
+            return $term->slug;
 
-            //Dit is even nep zodat ik verder kan met mijn leven.
-            return 'bbp';
-
-            //{
-            // officiele woocommerce meuk:
-            //            $term = get_term_by('id', $class_id, 'product_shipping_class');
-            //
-            //            if ($term && ! is_wp_error($term)) {
-            //                return $term->slug;
-            //            }
         }
 
         return '';
