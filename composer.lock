@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2698a9c79627a07ed78cfb8dc77e3e0b",
+    "content-hash": "bf07174750a1ea037ccc3ca14dc69711",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -398,26 +398,27 @@
         },
         {
             "name": "laravel/serializable-closure",
-            "version": "v1.3.3",
+            "version": "v1.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/serializable-closure.git",
-                "reference": "3dbf8a8e914634c48d389c1234552666b3d43754"
+                "reference": "61b87392d986dc49ad5ef64e75b1ff5fee24ef81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/3dbf8a8e914634c48d389c1234552666b3d43754",
-                "reference": "3dbf8a8e914634c48d389c1234552666b3d43754",
+                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/61b87392d986dc49ad5ef64e75b1ff5fee24ef81",
+                "reference": "61b87392d986dc49ad5ef64e75b1ff5fee24ef81",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.3|^8.0"
             },
             "require-dev": {
-                "nesbot/carbon": "^2.61",
+                "illuminate/support": "^8.0|^9.0|^10.0|^11.0",
+                "nesbot/carbon": "^2.61|^3.0",
                 "pestphp/pest": "^1.21.3",
                 "phpstan/phpstan": "^1.8.2",
-                "symfony/var-dumper": "^5.4.11"
+                "symfony/var-dumper": "^5.4.11|^6.2.0|^7.0.0"
             },
             "type": "library",
             "extra": {
@@ -454,20 +455,20 @@
                 "issues": "https://github.com/laravel/serializable-closure/issues",
                 "source": "https://github.com/laravel/serializable-closure"
             },
-            "time": "2023-11-08T14:08:06+00:00"
+            "time": "2024-08-02T07:48:17+00:00"
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "2.42.0",
+            "version": "2.42.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/pdk.git",
-                "reference": "d66aad800be08a97d10dff61ea751c2b89887fbe"
+                "reference": "7e7862c9f51a5eaeddfca7573f7653ad790bce0f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/d66aad800be08a97d10dff61ea751c2b89887fbe",
-                "reference": "d66aad800be08a97d10dff61ea751c2b89887fbe",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/7e7862c9f51a5eaeddfca7573f7653ad790bce0f",
+                "reference": "7e7862c9f51a5eaeddfca7573f7653ad790bce0f",
                 "shasum": ""
             },
             "require": {
@@ -511,22 +512,22 @@
             "homepage": "https://myparcel.nl",
             "support": {
                 "issues": "https://github.com/myparcelnl/pdk/issues",
-                "source": "https://github.com/myparcelnl/pdk/tree/v2.42.0"
+                "source": "https://github.com/myparcelnl/pdk/tree/v2.42.1"
             },
-            "time": "2024-08-05T16:05:20+00:00"
+            "time": "2024-08-15T10:32:33+00:00"
         },
         {
             "name": "myparcelnl/sdk",
-            "version": "7.15.1",
+            "version": "7.15.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/sdk.git",
-                "reference": "bf99b13d70a3182481202b316f77f7379f2ec5b8"
+                "reference": "a9b29e5b099e6f7d46021e8da193eafdfbc8f51b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/bf99b13d70a3182481202b316f77f7379f2ec5b8",
-                "reference": "bf99b13d70a3182481202b316f77f7379f2ec5b8",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/a9b29e5b099e6f7d46021e8da193eafdfbc8f51b",
+                "reference": "a9b29e5b099e6f7d46021e8da193eafdfbc8f51b",
                 "shasum": ""
             },
             "require": {
@@ -575,9 +576,9 @@
             ],
             "support": {
                 "issues": "https://github.com/myparcelnl/sdk/issues",
-                "source": "https://github.com/myparcelnl/sdk/tree/v7.15.1"
+                "source": "https://github.com/myparcelnl/sdk/tree/v7.15.4"
             },
-            "time": "2024-07-23T13:37:24+00:00"
+            "time": "2024-08-13T14:41:48+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -5507,5 +5508,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
