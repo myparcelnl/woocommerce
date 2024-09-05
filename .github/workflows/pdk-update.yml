@@ -7,6 +7,14 @@ on:
 run-name: 'Trigger from PDK release ${{ github.event.client_payload.version }}'
 
 jobs:
+  trigger:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: benc-uk/workflow-dispatch@v1
+        with:
+          ref: beta
+          workflow: push.yml
+
   prepare:
     runs-on: ubuntu-22.04
     outputs:
@@ -36,7 +44,7 @@ jobs:
               ref: pr.head.ref
             }));
 
-  trigger:
+  trigger-prs:
     needs: prepare
     runs-on: ubuntu-22.04
     strategy:
