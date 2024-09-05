@@ -37,8 +37,11 @@ it('adds audits', function () {
         'orderIds' => [$wcOrder->get_id()],
     ]);
 
-    /** @var \MyParcelNL\Pdk\Audit\Contract\PdkAuditRepositoryInterface $auditRepository */
+    /** @var \MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkAuditRepository $auditRepository */
     $auditRepository = Pdk::get(PdkAuditRepositoryInterface::class);
+
+    // Clear the cache of retrieved audits
+    $auditRepository->reset();
 
     $audit = $auditRepository->all()
         ->first();

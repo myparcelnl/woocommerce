@@ -13,7 +13,10 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
 use MyParcelNL\WooCommerce\Database\Contract\WpDatabaseServiceInterface;
 
-final class WcPdkAuditRepository extends Repository implements PdkAuditRepositoryInterface
+/**
+ * @final
+ */
+class WcPdkAuditRepository extends Repository implements PdkAuditRepositoryInterface
 {
     /**
      * @var \MyParcelNL\WooCommerce\Database\Contract\WpDatabaseServiceInterface
