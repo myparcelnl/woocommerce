@@ -36,19 +36,21 @@ final class WcPdkAuditRepository extends Repository implements PdkAuditRepositor
      */
     public function all(): AuditCollection
     {
-        $audits = $this->wpDatabaseService->getAll(Pdk::get('tableNameAudits'));
+        return $this->retrieve('audits', function () {
+            $audits = $this->wpDatabaseService->getAll(Pdk::get('tableNameAudits'));
 
-        return new AuditCollection($audits->map(static function (array $audit): Audit {
-            return new Audit([
-                'id'              => $audit['auditId'],
-                'arguments'       => json_decode($audit['arguments'], true),
-                'action'          => $audit['action'],
-                'model'           => $audit['model'],
-                'modelIdentifier' => $audit['modelIdentifier'],
-                'created'         => new DateTime($audit['created']),
-                'type'            => $audit['type'],
-            ]);
-        }));
+            return new AuditCollection($audits->map(static function (array $audit): Audit {
+                return new Audit([
+                    'id'              => $audit['auditId'],
+                    'arguments'       => json_decode($audit['arguments'], true),
+                    'action'          => $audit['action'],
+                    'model'           => $audit['model'],
+                    'modelIdentifier' => $audit['modelIdentifier'],
+                    'created'         => new DateTime($audit['created']),
+                    'type'            => $audit['type'],
+                ]);
+            }));
+        });
     }
 
     /**
