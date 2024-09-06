@@ -78,6 +78,7 @@ class WCMP_Data
             AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME,
             AbstractConsignment::PACKAGE_TYPE_LETTER_NAME,
             AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME,
+            abstractConsignment::PACKAGE_TYPE_PACKAGE_SMALL_NAME,
         ];
 
         self::$packageTypesHuman = [
@@ -85,6 +86,7 @@ class WCMP_Data
             AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME       => __('Mailbox', 'woocommerce-myparcel'),
             AbstractConsignment::PACKAGE_TYPE_LETTER_NAME        => __('Unpaid letter', 'woocommerce-myparcel'),
             AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME => __('Digital stamp', 'woocommerce-myparcel'),
+            abstractConsignment::PACKAGE_TYPE_PACKAGE_SMALL_NAME => __('Small package', 'woocommerce-myparcel'),
         ];
 
         self::$deliveryTypesHuman = [
