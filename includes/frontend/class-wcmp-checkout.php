@@ -581,7 +581,6 @@ class WCMP_Checkout
             return $allowedMethods;
         }
 
-        // Ensure the new package type is included
         $packageTypes = [
             AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME,
             AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME,
