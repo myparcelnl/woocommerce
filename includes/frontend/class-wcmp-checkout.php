@@ -581,23 +581,13 @@ class WCMP_Checkout
             return $allowedMethods;
         }
 
-        $packageTypes = [
-            AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME,
-            AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME,
-            AbstractConsignment::PACKAGE_TYPE_PACKAGE_SMALL_NAME,
-        ];
+        $shippingMethodsForPackage = $shippingMethodsByPackageType[AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME];
 
-        foreach ($packageTypes as $packageType) {
-            if (isset($shippingMethodsByPackageType[$packageType])) {
-                $shippingMethodsForPackage = $shippingMethodsByPackageType[$packageType];
+        foreach ($shippingMethodsForPackage as $shippingMethod) {
+            [$methodId] = self::splitShippingMethodString($shippingMethod);
 
-                foreach ($shippingMethodsForPackage as $shippingMethod) {
-                    [$methodId] = self::splitShippingMethodString($shippingMethod);
-
-                    if (! in_array($methodId, WCMP_Export::DISALLOWED_SHIPPING_METHODS, true)) {
-                        $allowedMethods[] = $shippingMethod;
-                    }
-                }
+            if (! in_array($methodId, WCMP_Export::DISALLOWED_SHIPPING_METHODS, true)) {
+                $allowedMethods[] = $shippingMethod;
             }
         }
 
