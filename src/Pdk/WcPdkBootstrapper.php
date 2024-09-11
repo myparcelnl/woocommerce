@@ -224,7 +224,10 @@ class WcPdkBootstrapper extends PdkBootstrapper
 
             'routeBackend'                   => value("$name/backend/v1"),
             'routeBackendPdk'                => value('pdk'),
-            'routeBackendWebhook'            => value('webhook/(?P<hash>.+)'),
+            'routeBackendWebhookBase'        => value('webhook'),
+            'routeBackendWebhook'            => factory(function (): string {
+                return sprintf('%s/(?P<hash>.+)', Pdk::get('routeBackendWebhookBase'));
+            }),
             'routeBackendPermissionCallback' => factory(static function (): string {
                 if (! is_user_logged_in()) {
                     return '__return_false';

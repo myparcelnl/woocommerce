@@ -45,14 +45,14 @@ final class UsesMockWcPdkInstance extends UsesEachMockPdkInstance
     private function getConfig(): array
     {
         return array_replace(
-            $this->config,
             [
                 CronServiceInterface::class            => get(WpCronService::class),
                 PdkAuditRepositoryInterface::class     => get(WcPdkAuditRepository::class),
                 PdkOrderNoteRepositoryInterface::class => get(WcOrderNoteRepository::class),
                 PdkOrderRepositoryInterface::class     => get(PdkOrderRepository::class),
                 PdkProductRepositoryInterface::class   => get(WcPdkProductRepository::class),
-            ]
+            ],
+            $this->config
         );
     }
 }

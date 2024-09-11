@@ -8,6 +8,7 @@ use MyParcelNL\WooCommerce\Tests\Exception\DieException;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpEnqueue;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpRestServer;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpUser;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
@@ -161,4 +162,21 @@ function wp_enqueue_script($handle, $src = '', $deps = [], $ver = false, $in_foo
 function wp_enqueue_style($handle, $src, $deps, $version, $media)
 {
     MockWpEnqueue::add($handle, $src, $deps, $version, $media);
+}
+
+/**
+ * @return \WP_REST_Server|MockWpRestServer
+ * @see \rest_get_server()
+ */
+function rest_get_server(): MockWpRestServer
+{
+    return MockWpRestServer::getInstance();
+}
+
+/**
+ * @see \register_rest_route()
+ */
+function register_rest_route(...$args): void
+{
+    rest_get_server()->register_route(...$args);
 }

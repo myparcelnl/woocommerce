@@ -4,24 +4,16 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Tests\Mock;
 
-use BadMethodCallException;
 use MyParcelNL\Pdk\Base\Support\Arr;
-use MyParcelNL\Sdk\src\Support\Str;
 use WC_Data;
 
 abstract class MockWcClass extends WC_Data
 {
-    private const GETTER_PREFIX = 'get_';
-
-    /**
-     * @var array<string, mixed>
-     */
-    protected $attributes = [];
+    use MocksGettersAndSetters;
 
     /**
      * @param  array|int|string $data - extra types to avoid type errors in real code.
      *
-     * @noinspection PhpMissingParentConstructorInspection
      * @throws \Throwable
      */
     public function __construct($data = [])
@@ -38,37 +30,6 @@ abstract class MockWcClass extends WC_Data
         }
 
         $this->fill($data);
-    }
-
-    /**
-     * @param $name
-     * @param $arguments
-     *
-     * @return null|mixed
-     */
-    public function __call($name, $arguments)
-    {
-        if (Str::startsWith($name, ['is_', 'needs_'])) {
-            $method = self::GETTER_PREFIX . $name;
-
-            return $this->{$method}();
-        }
-
-        if (Str::startsWith($name, self::GETTER_PREFIX)) {
-            $attribute = substr($name, strlen(self::GETTER_PREFIX));
-
-            return $this->attributes[$attribute] ?? null;
-        }
-
-        throw new BadMethodCallException("Method $name does not exist");
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    public function getAttributes(): array
-    {
-        return $this->attributes;
     }
 
     /**
@@ -147,7 +108,7 @@ abstract class MockWcClass extends WC_Data
      *
      * @return void
      */
-    private function fill(array $data): void
+    protected function fill(array $data): void
     {
         $this->attributes = array_replace($this->attributes, Arr::except($data, 'meta'));
 
