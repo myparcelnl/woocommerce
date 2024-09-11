@@ -248,9 +248,6 @@
     <XML>
       <option name="XML_SPACE_INSIDE_EMPTY_TAG" value="true" />
     </XML>
-    <editorconfig>
-      <option name="ENABLED" value="false" />
-    </editorconfig>
     <codeStyleSettings language="Blade">
       <indentOptions>
         <option name="INDENT_SIZE" value="2" />

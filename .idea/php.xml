@@ -32,7 +32,6 @@
       <path value="$PROJECT_DIR$/vendor/symfony/http-foundation" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php80" />
-      <path value="$PROJECT_DIR$/vendor/myparcelnl/pdk" />
       <path value="$PROJECT_DIR$/vendor/laravel/serializable-closure" />
       <path value="$PROJECT_DIR$/vendor/psr/log" />
       <path value="$PROJECT_DIR$/vendor/psr/http-client" />
@@ -277,6 +276,7 @@
       <path value="$PROJECT_DIR$/vendor/php-stubs/wordpress-stubs" />
       <path value="$PROJECT_DIR$/vendor/php-stubs/woocommerce-stubs" />
       <path value="$PROJECT_DIR$/vendor/psr/event-dispatcher" />
+      <path value="$PROJECT_DIR$/vendor/myparcelnl/pdk" />
     </include_path>
   </component>
   <component name="PhpInterpreters">
