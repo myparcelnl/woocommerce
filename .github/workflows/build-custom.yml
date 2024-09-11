@@ -34,3 +34,9 @@ jobs:
             config/**/*
             scoper.inc.php
             woocommerce-myparcel.php
+
+      - uses: lhotari/action-upterm@v1
+        if: failure()
+        with:
+          limit-access-to-actor: true
+          wait-timeout-minutes: 5
