@@ -8,6 +8,7 @@ namespace MyParcelNL\WooCommerce\Pdk\Context\Service;
 use MyParcelNL\Pdk\App\Cart\Contract\PdkCartRepositoryInterface;
 use MyParcelNL\Pdk\App\ShippingMethod\Model\PdkShippingMethod;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Product;
 use WC_Shipping_Flat_Rate;
@@ -50,7 +51,11 @@ it('creates checkout context', function ($input, $expected) {
     $contextService = Pdk::get(WcContextService::class);
     $cartRepository = Pdk::get(PdkCartRepositoryInterface::class);
 
-    $shippingClass = $input['shippingMethod'];
+    factory(CheckoutSettings::class)
+        ->withAllowedShippingMethods(['-1' => ['shipping_class:12']])
+        ->store();
+
+    $shippingMethodClassName = $input['shippingMethod'];
     $shippingClassId = $input['shippingClassId'] ?? null;
     $shippingPrice   = $input['shippingPrice'] ?? 0;
     $termAsArray     = $input['termAsArray'] ?? false;
@@ -75,10 +80,10 @@ it('creates checkout context', function ($input, $expected) {
         ->make();
     $pdkCart->shippingMethod = $pdkShippingMethod;
 
-    $shippingMethod = wpFactory($shippingClass)
+    $shippingMethod = wpFactory($shippingMethodClassName)
         ->withId(456);
     if ($shippingPrice) {
-        $shippingMethod->instance_settings["class_cost_$wpTerm->term_id"] = $shippingPrice;
+        $shippingMethod->withInstanceSettings(['class_cost_12' => $shippingPrice]);
     }
     $shippingMethod->store();
 
@@ -107,7 +112,7 @@ it('creates checkout context', function ($input, $expected) {
         ],
         'expected' => [
             'basePrice'            => 0.0,
-            'highestShippingClass' => '',
+            'highestShippingClass' => 'shipping_class:12',
         ],
     ],
     'product without shipping class' => [
