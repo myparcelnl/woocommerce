@@ -14,6 +14,24 @@ You can install this version manually to get a head start on [the new features a
 [support@myparcel.nl]: mailto:support@myparcel.nl
 [the new features and improvements]: https://github.com/myparcelnl/woocommerce/compare/main...develop
 
+## [4.23.1-rc.2](https://github.com/myparcelnl/woocommerce/compare/v4.23.1-rc.1...v4.23.1-rc.2) (2024-09-16)
+
+
+### :bug: Bug Fixes
+
+* fix small parcel in the Delivery Options ([#1165](https://github.com/myparcelnl/woocommerce/issues/1165)) ([e3016af](https://github.com/myparcelnl/woocommerce/commit/e3016af5320ffe914aa60cf48f3675aee937fb55))
+
+**🚧 Note: 🚧**
+
+This is a release candidate. It's not fully tested yet, but will be tested thoroughly and released on the [WordPress plugin directory] soon.
+
+You can install this version manually to get a head start on [the new features and improvements]. Please report any issues you encounter using the [Bug report form] or by sending an email to [support@myparcel.nl].
+
+[Bug report form]: https://github.com/myparcelnl/woocommerce/issues/new?labels=bug&template=BUG-REPORT.yml&version=v4.x.x-rc.x
+[WordPress plugin directory]: https://wordpress.org/plugins/woocommerce-myparcel/
+[support@myparcel.nl]: mailto:support@myparcel.nl
+[the new features and improvements]: https://github.com/myparcelnl/woocommerce/compare/main...develop
+
 ## [4.23.1-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.23.0...v4.23.1-rc.1) (2024-07-04)
 
 
