@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.24.0](https://github.com/myparcelnl/woocommerce/compare/v4.23.0...v4.24.0) (2024-09-17)
+
+
+### :sparkles: New Features
+
+* add support for small package ([#1158](https://github.com/myparcelnl/woocommerce/issues/1158)) ([158fb95](https://github.com/myparcelnl/woocommerce/commit/158fb957ede9a16b30ed1e2d9feea894e6c1cc36))
+
+
+### :bug: Bug Fixes
+
+* fix small parcel in the Delivery Options ([#1165](https://github.com/myparcelnl/woocommerce/issues/1165)) ([42961d4](https://github.com/myparcelnl/woocommerce/commit/42961d480fc04c36f042c635aa9b65abc459601b))
+* **ordergrid:** prevent warning undefined array key ([#1122](https://github.com/myparcelnl/woocommerce/issues/1122)) ([6c93000](https://github.com/myparcelnl/woocommerce/commit/6c93000fb1792dfad0ceff6f6ca26ee39b333ab5))
+
 **🚧 Note: 🚧**
 
 This is a release candidate. It's not fully tested yet, but will be tested thoroughly and released on the [WordPress plugin directory] soon.

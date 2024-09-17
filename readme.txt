@@ -3,7 +3,7 @@ Contributors: richardperdaan, edielemoine, joerimyparcel
 Tags: woocommerce, export, delivery, packages, myparcel, flespakket, postnl
 Requires at least: 5.2.0
 Tested up to: 6.2
-Stable tag: 4.23.1-rc.2
+Stable tag: 4.24.0
 Requires PHP: 7.1
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
@@ -102,6 +102,12 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 6. MyParcel pickup delivery options
 
 == Changelog ==
+
+= 4.24.0 (2024-09-17) =
+
+* New: add support for small package (#1158)
+* Fixed bug: fix small parcel in the Delivery Options (#1165)
+* Fixed bug: prevent warning undefined array key (#1122)
 
 = 4.23.1-rc.2 (2024-09-16) =
 
