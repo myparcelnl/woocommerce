@@ -6,6 +6,7 @@ namespace MyParcelNL\WooCommerce\Tests\Mock;
 
 use MyParcelNL\Pdk\Base\Concern\PdkInterface;
 use MyParcelNL\WooCommerce\Database\Contract\WpDatabaseServiceInterface;
+use MyParcelNL\WooCommerce\Pdk\Audit\Repository\WcPdkAuditRepository;
 use MyParcelNL\WooCommerce\Pdk\WcPdkBootstrapper;
 use function DI\get;
 
@@ -98,6 +99,7 @@ final class MockWcPdkBootstrapper extends WcPdkBootstrapper implements StaticMoc
             self::$config,
             [
                 WpDatabaseServiceInterface::class => get(MockWpDatabaseService::class),
+                WcPdkAuditRepository::class       => get(MockWcPdkAuditRepository::class),
             ]
         );
     }
