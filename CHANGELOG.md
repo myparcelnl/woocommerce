@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+**🚧 Note: 🚧**
+
+This is a release candidate. It's not fully tested yet, but will be tested thoroughly and released on the [WordPress plugin directory] soon.
+
+You can install this version manually to get a head start on [the new features and improvements]. Please report any issues you encounter using the [Bug report form] or by sending an email to [support@myparcel.nl].
+
+[Bug report form]: https://github.com/myparcelnl/woocommerce/issues/new?labels=bug&template=BUG-REPORT.yml&version=v4.x.x-rc.x
+[WordPress plugin directory]: https://wordpress.org/plugins/woocommerce-myparcel/
+[support@myparcel.nl]: mailto:support@myparcel.nl
+[the new features and improvements]: https://github.com/myparcelnl/woocommerce/compare/main...develop
+
+## [4.24.1-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.24.0...v4.24.1-rc.1) (2024-09-20)
+
+
+### :bug: Bug Fixes
+
+* allow dhl for you export with default volume properties ([3a38c7b](https://github.com/myparcelnl/woocommerce/commit/3a38c7bea8918d3f55b21ad666ae2f40f1f4633f))
+
 ## [4.24.0](https://github.com/myparcelnl/woocommerce/compare/v4.23.0...v4.24.0) (2024-09-17)
 
 
