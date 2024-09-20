@@ -36,7 +36,11 @@ final class MyParcelNLWooCommerce
         register_deactivation_hook(__FILE__, [$this, 'uninstall']);
         add_action('init', [$this, 'initialize'], 9999);
         add_action('woocommerce_blocks_checkout_block_registration', [$this, 'registerCheckoutBlocks']);
+
+        // Add the custom checkout field hooks
+        $this->addCustomCheckoutFieldHooks();
     }
+
 
     /**
      * Perform required tasks that initialize the plugin.
@@ -85,6 +89,18 @@ final class MyParcelNLWooCommerce
 
         $loader->registerCheckoutBlocks();
     }
+
+    /**
+     * Add the custom checkout field hooks.
+     *
+     * @return void
+     */
+    private function addCustomCheckoutFieldHooks(): void
+    {
+        $customCheckoutFieldHooks = new \MyParcelNL\WooCommerce\Hooks\CustomCheckoutFieldsHooks();
+        $customCheckoutFieldHooks->apply();
+    }
+
 
     /**
      * @return void
