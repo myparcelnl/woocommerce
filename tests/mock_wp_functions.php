@@ -201,7 +201,7 @@ function get_term_by($field, $value, $taxonomy = '', $output = 'OBJECT', $filter
  *
  * @return false|mixed|\WP_Term
  */
-function get_term($term, $taxonomy = '', $output = OBJECT, $filter = 'raw')
+function get_term($term, $taxonomy = '', $output = 'OBJECT', $filter = 'raw')
 {
     if ($term instanceof WP_Term) {
         return MockWpTerm::get_instance($term->term_id, $taxonomy);

@@ -33,7 +33,6 @@ class WcShippingMethodRepository implements PdkShippingMethodRepositoryInterface
      */
     public function all(): PdkShippingMethodCollection
     {
-        // The "0" zone is the "Rest of the World" zone in WooCommerce.
         $wcShippingMethods = $this->wcShippingRepository->getShippingMethods();
         $wcShippingClasses = $this->wcShippingRepository->getShippingClasses();
 
@@ -78,10 +77,11 @@ class WcShippingMethodRepository implements PdkShippingMethodRepositoryInterface
      */
     private function createFromWcShippingMethod(WC_Shipping_Method $method): PdkShippingMethod
     {
+        $id = $method->get_rate_id();
         return new PdkShippingMethod([
-            'id'          => $method->get_rate_id(),
+            'id'          => $id,
             'name'        => $this->getShippingMethodTitle($method),
-            'description' => "ID: {$method->get_rate_id()}",
+            'description' => "ID: $id",
             'isEnabled'   => 'yes' === $method->enabled && ! $method instanceof WC_Shipping_Local_Pickup,
         ]);
     }

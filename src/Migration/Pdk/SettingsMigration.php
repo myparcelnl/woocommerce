@@ -194,20 +194,20 @@ class SettingsMigration extends AbstractPdkMigration
 
         if ($termId) {
             $match = $wcShippingMethods
-                ->filter(function ($shippingMethod) use ($termId, $shippingMethodName) {
-                    return $shippingMethod->id === $shippingMethodName && (int) $shippingMethod->instance_id === (int) $termId;
+                ->filter(function ($wcShippingMethod) use ($termId, $shippingMethodName) {
+                    return $wcShippingMethod->id === $shippingMethodName && (int) $wcShippingMethod->instance_id === (int) $termId;
                 })
                 ->first();
 
             if (! $match) {
                 /** @var WP_Term|null $foundShippingClass */
                 $foundShippingClass = $wcShippingMethods
-                    ->filter(function ($shippingMethod) use ($termId) {
-                        if (! $shippingMethod instanceof WP_Term) {
+                    ->filter(function ($wcShippingMethod) use ($termId) {
+                        if (! $wcShippingMethod instanceof WP_Term) {
                             return false;
                         }
 
-                        return $shippingMethod->term_id === (int) $termId;
+                        return $wcShippingMethod->term_id === (int) $termId;
                     })
                     ->first();
 
