@@ -6,8 +6,10 @@ declare(strict_types=1);
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Tests\Exception\DieException;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpCache;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpEnqueue;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpTerm;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpRestServer;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpUser;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
@@ -163,6 +165,69 @@ function wp_enqueue_style($handle, $src, $deps, $version, $media)
 {
     MockWpEnqueue::add($handle, $src, $deps, $version, $media);
 }
+
+function get_term_by($field, $value, $taxonomy = '', $output = 'OBJECT', $filter = 'raw')
+{
+    if ($field === 'id' || $field === 'ID' || $field === 'term_id') {
+        return get_term((int) $value, $taxonomy, $output, $filter);
+    }
+
+    /* ignores $output parameter on purpose, because it can not be changed in the test,
+    just output what you put in (object or array) */
+    if ($field === 'slug') {
+        $cacheTerms = MockWpCache::$cache['terms'];
+        foreach ($cacheTerms as $cacheTerm) {
+            /** @var \WP_Term $term */
+            $term = $cacheTerm['data'];
+
+            if (($term instanceof WP_Term) && $term->slug === $value) {
+                return $term;
+            }
+
+            if (is_array($term) && $term['slug'] === $value) {
+                return $term;
+            }
+        }
+    }
+
+    return false;
+}
+
+/**
+ * @param  int|\Wp_Term $term
+ * @param               $taxonomy
+ * @param               $output
+ * @param               $filter
+ *
+ * @return false|mixed|\WP_Term
+ */
+function get_term($term, $taxonomy = '', $output = 'OBJECT', $filter = 'raw')
+{
+    if ($term instanceof WP_Term) {
+        return MockWpTerm::get_instance($term->term_id, $taxonomy);
+    }
+
+    return MockWpTerm::get_instance($term, $taxonomy);
+}
+
+function wp_cache_add(string $key, $data, string $group = '', int $expire = 0): bool
+{
+    return MockWpCache::add($key, $data, $group, $expire);
+}
+
+/**
+ * @param  int|string $key
+ * @param  string     $group
+ * @param  bool       $force
+ * @param             $found
+ *
+ * @return false|mixed
+ */
+function wp_cache_get($key, string $group = '', bool $force = false, &$found = null)
+{
+    return MockWpCache::get($key, $group, $force, $found);
+}
+
 
 /**
  * @return \WP_REST_Server|MockWpRestServer

@@ -22,7 +22,7 @@ final class MockWcData implements StaticMockInterface
      */
     public static function create(MockWcClass $data): MockWcClass
     {
-        if (! $data->get_id()) {
+        if (! $data->get_id() && ! $data->get_instance_id()) {
             $data->set_id(count(self::$items) + 1);
         }
 
@@ -78,13 +78,13 @@ final class MockWcData implements StaticMockInterface
      */
     public static function save(MockWcClass $data): MockWcClass
     {
-        $id = (string) $data->get_id();
+        $id = $data->get_instance_id() ?? $data->get_id();
 
         if (! $id) {
             throw new RuntimeException('Cannot save data without id');
         }
 
-        self::$items[$id] = $data;
+        self::$items[(string) $id] = $data;
 
         return $data;
     }

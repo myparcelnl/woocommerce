@@ -8,11 +8,15 @@ use Generator;
 use MyParcelNL\Pdk\Base\Contract\CurrencyServiceInterface;
 use MyParcelNL\Pdk\Base\Contract\WeightServiceInterface;
 use MyParcelNL\Pdk\Base\Support\Arr;
+use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Collection\SettingsModelCollection;
 use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\Settings;
 use MyParcelNL\Pdk\Shipment\Model\DropOffDay;
+use MyParcelNL\Sdk\src\Support\Str;
+use MyParcelNL\WooCommerce\WooCommerce\Repository\WcShippingRepository;
+use WP_Term;
 
 class SettingsMigration extends AbstractPdkMigration
 {
@@ -99,7 +103,6 @@ class SettingsMigration extends AbstractPdkMigration
         }
 
         $settings = new Settings($newSettings);
-
         $settingsRepository->storeAllSettings($settings);
     }
 
@@ -173,6 +176,48 @@ class SettingsMigration extends AbstractPdkMigration
             default:
                 return $value;
         }
+    }
+
+    /**
+     * @param  string                                  $shippingMethod
+     * @param  \MyParcelNL\Pdk\Base\Support\Collection $wcShippingMethods
+     *
+     * @return string
+     */
+    private function convertShippingMethodId(string $shippingMethod, Collection $wcShippingMethods): string
+    {
+        if (! Str::contains($shippingMethod, ':')) {
+            return $shippingMethod;
+        }
+
+        [$shippingMethodName, $termId] = explode(':', $shippingMethod);
+
+        if ($termId) {
+            $match = $wcShippingMethods
+                ->filter(function ($wcShippingMethod) use ($termId, $shippingMethodName) {
+                    return $wcShippingMethod->id === $shippingMethodName && (int) $wcShippingMethod->instance_id === (int) $termId;
+                })
+                ->first();
+
+            if (! $match) {
+                /** @var WP_Term|null $foundShippingClass */
+                $foundShippingClass = $wcShippingMethods
+                    ->filter(function ($wcShippingMethod) use ($termId) {
+                        if (! $wcShippingMethod instanceof WP_Term) {
+                            return false;
+                        }
+
+                        return $wcShippingMethod->term_id === (int) $termId;
+                    })
+                    ->first();
+
+                if ($foundShippingClass) {
+                    return Pdk::get('createShippingClassName')($foundShippingClass->term_id);
+                }
+            }
+        }
+
+        return $shippingMethod;
     }
 
     private function getOldSettings(): array
@@ -383,6 +428,11 @@ class SettingsMigration extends AbstractPdkMigration
                     return $newValue;
                 }
 
+                $wcShippingRepository = Pdk::get(WcShippingRepository::class);
+                $wcShippingMethods    = $wcShippingRepository
+                    ->getShippingMethods()
+                    ->merge($wcShippingRepository->getShippingClasses());
+
                 $allShippingMethods = array_unique(Arr::flatten($value));
 
                 // Find the smallest enabled package type for each shipping method, and add it to the new map.
@@ -392,7 +442,10 @@ class SettingsMigration extends AbstractPdkMigration
                     }));
 
                     $smallestPackageType              = Arr::last($packageTypes);
-                    $newValue[$smallestPackageType][] = $shippingMethod;
+                    $newValue[$smallestPackageType][] = $this->convertShippingMethodId(
+                        $shippingMethod,
+                        $wcShippingMethods
+                    );
                 }
 
                 return $newValue;

@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Tests\Mock;
 
-use BadMethodCallException;
-use MyParcelNL\Pdk\Base\Support\Arr;
-use MyParcelNL\Sdk\src\Support\Str;
-use WC_Data;
-
-class MockWcSession extends MockWcClass
+/**
+ * @extends \WC_Session
+ */
+class MockWcSession implements StaticMockInterface
 {
+    private static $session = [
+        'rates' => [
+            'flat_rate:0' => [],
+        ],
+    ];
+
     /**
      * @param $key
      *
@@ -18,10 +22,26 @@ class MockWcSession extends MockWcClass
      */
     public function get($key): array
     {
-        return [
+        return self::$session[$key] ?? [
             'rates' => [
                 'flat_rate:0' => [],
-            ]
+            ],
         ];
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     *
+     * @return void
+     */
+    public function set($key, $value): void
+    {
+        self::$session[$key] = $value;
+    }
+
+    public static function reset(): void
+    {
+        self::$session = [];
     }
 }

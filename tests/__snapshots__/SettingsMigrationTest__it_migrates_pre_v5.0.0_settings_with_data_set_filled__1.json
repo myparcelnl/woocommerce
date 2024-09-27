@@ -47,10 +47,10 @@
         "flat_rate:32",
         "free_shipping",
         "local_pickup",
-        "table_rate:5:2"
+        "shipping_class:5"
       ],
       "package_small": [],
-      "mailbox": ["table_rate:5:1"],
+      "mailbox": ["shipping_class:5"],
       "digital_stamp": ["flat_rate:30", "flat_rate:31"],
       "letter": ["flat_rate:33"]
     },

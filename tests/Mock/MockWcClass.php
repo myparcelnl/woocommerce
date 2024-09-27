@@ -33,13 +33,11 @@ abstract class MockWcClass extends WC_Data
     }
 
     /**
-     * @return null|int
+     * @return null|int|string
      */
-    public function get_id(): ?int
+    public function get_id()
     {
-        $id = $this->attributes['id'] ?? null;
-
-        return is_numeric($id) ? (int) $id : null;
+        return $this->attributes['id'] ?? null;
     }
 
     /**
@@ -76,7 +74,7 @@ abstract class MockWcClass extends WC_Data
     /**
      * @return void
      */
-    public function save_meta_data()
+    public function save_meta_data(): void
     {
         // do nothing
     }
@@ -117,5 +115,42 @@ abstract class MockWcClass extends WC_Data
         foreach ($data['meta'] ?? [] as $metaKey => $metaValue) {
             update_post_meta($created->get_id(), $metaKey, $metaValue);
         }
+    }
+
+    /**
+     * Dynamically retrieve attributes on the model.
+     *
+     * @param  string $key
+     *
+     * @return mixed
+     */
+    public function __get(string $key)
+    {
+        return $this->attributes[$key] ?? null;
+    }
+
+    /**
+     * Dynamically set attributes on the model.
+     *
+     * @param  string $key
+     * @param  mixed  $value
+     *
+     * @return void
+     */
+    public function __set(string $key, $value): void
+    {
+        $this->attributes[$key] = $value;
+    }
+
+    /**
+     * Determine if an attribute or relation exists on the model.
+     *
+     * @param  string $key
+     *
+     * @return bool
+     */
+    public function __isset(string $key)
+    {
+        return isset($this->attributes[$key]);
     }
 }
