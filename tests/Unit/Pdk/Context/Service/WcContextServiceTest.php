@@ -52,7 +52,7 @@ it('creates checkout context', function ($input, $expected) {
     $cartRepository = Pdk::get(PdkCartRepositoryInterface::class);
 
     factory(CheckoutSettings::class)
-        ->withAllowedShippingMethods(['-1' => ['shipping_class:12']])
+        ->withAllowedShippingMethods(['-1' => $input['allowShippingMethods']])
         ->store();
 
     $shippingMethodClassName = $input['shippingMethod'];
@@ -96,6 +96,7 @@ it('creates checkout context', function ($input, $expected) {
 })->with([
     'flexible shipping'              => [
         'input'    => [
+            'allowShippingMethods' => ['shipping_class:12'],
             'shippingMethod' => WC_Shipping_Method::class,
             'shippingClassId' => 12,
         ],
@@ -106,6 +107,7 @@ it('creates checkout context', function ($input, $expected) {
     ],
     'flat rate with price'           => [
         'input'    => [
+            'allowShippingMethods' => ['shipping_class:12'],
             'shippingMethod' => WC_Shipping_Flat_Rate::class,
             'shippingClassId' => 12,
             'shippingPrice'   => 5.12,
@@ -117,6 +119,7 @@ it('creates checkout context', function ($input, $expected) {
     ],
     'product without shipping class' => [
         'input'    => [
+            'allowShippingMethods' => ['shipping_class:12'],
             'shippingMethod' => WC_Shipping_Flat_Rate::class,
         ],
         'expected' => [
@@ -126,6 +129,7 @@ it('creates checkout context', function ($input, $expected) {
     ],
     'flat rate without price'        => [
         'input'    => [
+            'allowShippingMethods' => ['shipping_class:12'],
             'shippingMethod' => WC_Shipping_Flat_Rate::class,
             'shippingClassId' => 12,
         ],
@@ -136,9 +140,21 @@ it('creates checkout context', function ($input, $expected) {
     ],
     'term as array'                  => [
         'input'    => [
+            'allowShippingMethods' => ['shipping_class:12'],
             'shippingMethod' => WC_Shipping_Flat_Rate::class,
             'shippingClassId' => 12,
             'termAsArray'     => true,
+        ],
+        'expected' => [
+            'basePrice'            => 0.0,
+            'highestShippingClass' => '',
+        ],
+    ],
+    'no allowed shipping methods'              => [
+        'input'    => [
+            'allowShippingMethods' => [],
+            'shippingMethod' => WC_Shipping_Method::class,
+            'shippingClassId' => 12,
         ],
         'expected' => [
             'basePrice'            => 0.0,
