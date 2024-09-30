@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bf07174750a1ea037ccc3ca14dc69711",
+    "content-hash": "e101617cc9219947be6ee6f129258617",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -2420,16 +2420,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.3",
+            "version": "1.12.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "0fcbf194ab63d8159bb70d9aa3e1350051632009"
+                "reference": "7e6c6cb7cecb0a6254009a1a8a7d54ec99812b17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/0fcbf194ab63d8159bb70d9aa3e1350051632009",
-                "reference": "0fcbf194ab63d8159bb70d9aa3e1350051632009",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/7e6c6cb7cecb0a6254009a1a8a7d54ec99812b17",
+                "reference": "7e6c6cb7cecb0a6254009a1a8a7d54ec99812b17",
                 "shasum": ""
             },
             "require": {
@@ -2474,7 +2474,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-09-09T08:10:35+00:00"
+            "time": "2024-09-26T12:45:22+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -5508,5 +5508,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
