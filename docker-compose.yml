@@ -1,6 +1,8 @@
 services:
   php:
     image: ghcr.io/myparcelnl/php-xd:7.4-cli-alpine
+    environment:
+      COMPOSER_IGNORE_PLATFORM_REQ: 'ext-*,lib-*'
     volumes:
       - .:/app
     command: ['composer', 'install']
