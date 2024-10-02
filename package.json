@@ -36,6 +36,7 @@
     "test:run": "nx run-many --output-style=stream --target=test:run",
     "translations:import": "yarn pdk-builder translations",
     "upgrade": "yarn pdk-builder upgrade-self && yarn pdk-builder upgrade-all",
+    "upgrade:dev": "yarn pdk-builder upgrade-self --no-commit --no-check && yarn pdk-builder upgrade-all --no-commit --no-check",
     "watch": "yarn build:js:dev --parallel=99 -- --watch",
     "watch:backend": "yarn build:js:dev:backend --parallel=99 -- --watch",
     "watch:frontend": "yarn build:js:dev:frontend --parallel=99 -- --watch",
