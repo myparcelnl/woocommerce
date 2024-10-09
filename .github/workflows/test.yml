@@ -100,6 +100,11 @@ jobs:
           php-version: ${{ vars.PHP_VERSION }}
           mode: 'backend'
 
+      - uses: myparcelnl/actions/pdk-builder@v4
+        if: steps.cache.outputs.cache-hit != 'true'
+        with:
+          command: 'translations'
+
       - uses: myparcelnl/actions/composer-pest@v4
         if: steps.cache.outputs.cache-hit != 'true'
         with:
