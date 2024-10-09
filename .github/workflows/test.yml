@@ -52,12 +52,12 @@ jobs:
             bash -c \
               'if [ -f "coverage/clover.xml" ]; then \
                  # Make file paths relative
-                 sed -i "" "s|'$PWD'/||g" "coverage/clover.xml"; \
+                 sed -i "s|'$PWD'/||g" "coverage/clover.xml"; \
                  cp -f "coverage/clover.xml" "'$PWD'/coverage/$(basename $PWD).xml"; \
                fi; \
                if [[ -f "junit.xml" && -s "junit.xml" ]]; then \
                  # Set the testsuites name to the package name
-                 sed -i "" "s|<testsuites name=\".*\">|<testsuites name=\"$npm_package_name\">|" "junit.xml"; \
+                 sed -i "s|<testsuites name=\".*\">|<testsuites name=\"$npm_package_name\">|" "junit.xml"; \
                  cp -f "junit.xml" "'$PWD'/junit/$(basename $PWD).xml"; \
                fi'
 
