@@ -18,6 +18,7 @@ const createDefaultConfig = (env) => {
     },
 
     test: {
+      reporters: ['default', ['junit', {outputFile: './junit.xml'}]],
       passWithNoTests: true,
       setupFiles: [`${dirname}/test-setup.ts`],
       coverage: {

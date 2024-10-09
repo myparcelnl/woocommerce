@@ -17,48 +17,63 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
-      - name: 'Cache coverage'
+      - name: 'Cache test results'
         uses: actions/cache@v4
-        id: coverage-cache
+        id: cache
         with:
-          key: coverage-frontend-${{ hashFiles('**/package.json', '**/yarn.lock', 'views/**/*') }}
-          path: coverage/views
+          path: |
+            .tmp/coverage
+            .tmp/junit
+          key: test-frontend-${{ hashFiles('**/package.json', '**/yarn.lock', 'views/**/*') }}
 
       - uses: myparcelnl/actions/pdk-setup-upgrade@v4
-        if: steps.coverage-cache.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
           mode: 'frontend'
 
       - name: 'Run frontend tests'
-        if: steps.coverage-cache.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         uses: myparcelnl/actions/nx-run-many@v4
         with:
           target: 'test:coverage'
-          args: '--parallel=1'
+          parallel: 1
 
-      - name: 'Move coverage files'
-        if: steps.coverage-cache.outputs.cache-hit != 'true'
+      - name: 'Move test result files'
+        if: steps.cache.outputs.cache-hit != 'true'
         shell: bash
         #language=bash
         run: |
-          yarn workspaces foreach -Ap --exclude . exec \
-            bash -c 'if [ -f coverage/clover.xml ]; then mv coverage/clover.xml coverage/$(basename $(pwd)).xml; fi'
+          # Create the directories in case they don't exist
+          mkdir -p .tmp/coverage .tmp/junit
 
-          find views -type f -name '*.xml' -exec bash -c 'mkdir -p coverage/$(dirname $1) && cp $1 coverage/$(dirname $1)/$(basename $1)' _ {} \;
+          yarn workspaces foreach -Apv --exclude . exec \
+            bash -c \
+              'if [ -f "coverage/clover.xml" ]; then \
+                 # Make file paths relative
+                 sed -i "" "s|'$PWD'/||g" "coverage/clover.xml"; \
+                 cp -f "coverage/clover.xml" "'$PWD'/.tmp/coverage/$(basename $PWD).xml"; \
+               fi; \
+               if [[ -f "junit.xml" && -s "junit.xml" ]]; then \
+                 # Set the testsuites name to the package name
+                 sed -i "" "s|<testsuites name=\".*\">|<testsuites name=\"$npm_package_name\">|" "junit.xml"; \
+                 cp -f "junit.xml" "'$PWD'/.tmp/junit/$(basename $PWD).xml"; \
+               fi'
 
-      - uses: myparcelnl/actions/codecov-action@v4
+      - uses: myparcelnl/actions/codecov-coverage@v4
         with:
-          flags: unit,frontend,admin
-          files: coverage/views/backend/*.xml
           token: ${{ secrets.CODECOV_TOKEN }}
+          name: frontend
+          flags: unit,frontend
+          files: .tmp/coverage/**/*.xml
 
-      - uses: myparcelnl/actions/codecov-action@v4
+      - uses: myparcelnl/actions/codecov-test-results@v4
         with:
-          flags: unit,frontend,checkout
-          files: coverage/views/frontend/*.xml
           token: ${{ secrets.CODECOV_TOKEN }}
+          name: frontend
+          flags: unit,frontend
+          files: .tmp/junit/**/*.xml
 
   test-backend:
     runs-on: ubuntu-22.04
@@ -69,13 +84,15 @@ jobs:
 
       - name: 'Cache coverage'
         uses: actions/cache@v4
-        id: coverage-cache
+        id: cache
         with:
-          path: clover.xml
-          key: coverage-backend-${{ hashFiles('**/composer.json', '**/composer.lock', 'src/**/*', 'tests/**/*') }}
+          path: |
+            clover.xml
+            junit.xml
+          key: test-backend-${{ hashFiles('**/composer.json', '**/composer.lock', 'src/**/*', 'tests/**/*') }}
 
       - uses: myparcelnl/actions/pdk-setup-upgrade@v4
-        if: steps.coverage-cache.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         id: setup
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
@@ -84,20 +101,29 @@ jobs:
           mode: 'backend'
 
       - uses: myparcelnl/actions/composer-pest@v4
-        if: steps.coverage-cache.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         with:
           image: ${{ steps.setup.outputs.image }}
+          args: '--log-junit=junit.xml'
 
       - name: 'Fix coverage file'
-        if: steps.coverage-cache.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         shell: bash
         #language=bash
         run: |
-          # Strip the /app/ prefix from the coverage paths before uploading.
+          # Strip the /app/ prefix (absolute path from the docker container) from the coverage paths before uploading.
           sed -i 's/\/app\///g' clover.xml
 
-      - uses: myparcelnl/actions/codecov-action@v4
+      - uses: myparcelnl/actions/codecov-coverage@v4
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          name: backend
           flags: unit,backend
           files: clover.xml
+
+      - uses: myparcelnl/actions/codecov-test-results@v4
+        with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          name: backend
+          flags: unit,backend
+          files: junit.xml

@@ -1,12 +1,14 @@
-.tmp/
-node_modules/
-vendor/
-lib/
-dist/
-coverage/
 .nx-cache/
 .nx/
+.tmp/
+coverage/
+dist/
+junit/
+lib/
+node_modules/
+vendor/
 
+junit.xml
 clover.xml
 coverage.xml
 
