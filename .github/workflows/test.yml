@@ -22,8 +22,8 @@ jobs:
         id: cache
         with:
           path: |
-            .tmp/coverage
-            .tmp/junit
+            coverage
+            junit
           key: test-frontend-${{ hashFiles('**/package.json', '**/yarn.lock', 'views/**/*') }}
 
       - uses: myparcelnl/actions/pdk-setup-upgrade@v4
@@ -46,19 +46,19 @@ jobs:
         #language=bash
         run: |
           # Create the directories in case they don't exist
-          mkdir -p .tmp/coverage .tmp/junit
+          mkdir -p coverage junit
 
           yarn workspaces foreach -Apv --exclude . exec \
             bash -c \
               'if [ -f "coverage/clover.xml" ]; then \
                  # Make file paths relative
                  sed -i "" "s|'$PWD'/||g" "coverage/clover.xml"; \
-                 cp -f "coverage/clover.xml" "'$PWD'/.tmp/coverage/$(basename $PWD).xml"; \
+                 cp -f "coverage/clover.xml" "'$PWD'/coverage/$(basename $PWD).xml"; \
                fi; \
                if [[ -f "junit.xml" && -s "junit.xml" ]]; then \
                  # Set the testsuites name to the package name
                  sed -i "" "s|<testsuites name=\".*\">|<testsuites name=\"$npm_package_name\">|" "junit.xml"; \
-                 cp -f "junit.xml" "'$PWD'/.tmp/junit/$(basename $PWD).xml"; \
+                 cp -f "junit.xml" "'$PWD'/junit/$(basename $PWD).xml"; \
                fi'
 
       - uses: myparcelnl/actions/codecov-coverage@v4
@@ -66,14 +66,14 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           name: frontend
           flags: unit,frontend
-          files: .tmp/coverage/**/*.xml
+          files: coverage/**/*.xml
 
       - uses: myparcelnl/actions/codecov-test-results@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           name: frontend
           flags: unit,frontend
-          files: .tmp/junit/**/*.xml
+          files: junit/**/*.xml
 
   test-backend:
     runs-on: ubuntu-22.04
