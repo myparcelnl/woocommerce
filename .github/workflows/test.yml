@@ -40,39 +40,23 @@ jobs:
           target: 'test:coverage'
           parallel: 1
 
-      - name: 'Move test result files'
-        if: steps.cache.outputs.cache-hit != 'true'
-        shell: bash
-        #language=bash
-        run: |
-          # Create the directories in case they don't exist
-          mkdir -p coverage junit
-
-          yarn workspaces foreach -Apv --exclude . exec \
-            bash -c \
-              'if [ -f "coverage/clover.xml" ]; then \
-                 # Make file paths relative
-                 sed -i "s|'$PWD'/||g" "coverage/clover.xml"; \
-                 cp -f "coverage/clover.xml" "'$PWD'/coverage/$(basename $PWD).xml"; \
-               fi; \
-               if [[ -f "junit.xml" && -s "junit.xml" ]]; then \
-                 # Set the testsuites name to the package name
-                 sed -i "s|<testsuites name=\".*\">|<testsuites name=\"$npm_package_name\">|" "junit.xml"; \
-                 cp -f "junit.xml" "'$PWD'/junit/$(basename $PWD).xml"; \
-               fi'
+      - uses: myparcelnl/actions/collect-test-results@v4
+        if: always() && steps.cache.outputs.cache-hit != 'true'
 
       - uses: myparcelnl/actions/codecov-coverage@v4
+        if: always()
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           name: frontend
-          flags: unit,frontend
+          flags: frontend
           files: coverage/**/*.xml
 
       - uses: myparcelnl/actions/codecov-test-results@v4
+        if: always()
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           name: frontend
-          flags: unit,frontend
+          flags: frontend
           files: junit/**/*.xml
 
   test-backend:
@@ -109,10 +93,11 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         with:
           image: ${{ steps.setup.outputs.image }}
-          args: '--log-junit=junit.xml'
+          pest-args: |
+            --log-junit=junit.xml
 
       - name: 'Fix coverage file'
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: always() && steps.cache.outputs.cache-hit != 'true'
         shell: bash
         #language=bash
         run: |
@@ -120,15 +105,17 @@ jobs:
           sed -i 's/\/app\///g' clover.xml
 
       - uses: myparcelnl/actions/codecov-coverage@v4
+        if: always()
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           name: backend
-          flags: unit,backend
+          flags: backend
           files: clover.xml
 
       - uses: myparcelnl/actions/codecov-test-results@v4
+        if: always()
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           name: backend
-          flags: unit,backend
+          flags: backend
           files: junit.xml
