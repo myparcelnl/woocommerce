@@ -1,11 +1,23 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
   "compilerOptions": {
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "importsNotUsedAsValues": "remove",
     "incremental": true,
+    "jsx": "preserve",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "noImplicitThis": true,
     "preserveValueImports": false,
-    "types": ["node", "vite/client"]
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ESNext",
+    "types": ["node", "vite/client", "jquery"],
+    "useDefineForClassFields": true,
+    "verbatimModuleSyntax": true
   },
-  "exclude": ["**/__tests__/*", "**/*.spec.*"]
+  "exclude": ["./**/__tests__/*", "./**/*.spec.*", "./**/*.test.*"]
 }

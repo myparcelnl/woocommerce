@@ -1,21 +1,21 @@
 /* eslint-disable no-underscore-dangle */
-import {useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {registerPlugin} from '@wordpress/plugins';
 import {getSetting} from '@woocommerce/settings';
 import {ExperimentalOrderShippingPackages} from '@woocommerce/blocks-checkout';
+import {CHECKOUT_STORE_KEY} from '@woocommerce/block-data';
 
 const NAME = 'myparcelnl-delivery-options';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const DeliveryOptionsWrapper = () => {
-  const {CHECKOUT_STORE_KEY} = window.wc.wcBlocksData;
-  const data = getSetting(`${NAME}_data`) || {};
+  const data = getSetting<{style?: string; context: string}>(`${NAME}_data`, {});
 
   useEffect(() => {
-    const dispatch = wp.data.dispatch(CHECKOUT_STORE_KEY) as Record<string, Function>;
+    const dispatch = wp.data.dispatch(CHECKOUT_STORE_KEY);
 
     document.addEventListener('myparcel_updated_delivery_options', (event) => {
-      dispatch.__internalSetExtensionData(NAME, (event as CustomEvent).detail);
+      void dispatch.__internalSetExtensionData(NAME, (event as CustomEvent).detail);
     });
 
     document.dispatchEvent(new CustomEvent('myparcel_wc_delivery_options_ready'));
@@ -34,14 +34,12 @@ const DeliveryOptionsWrapper = () => {
   );
 };
 
-const render = () => {
+const render: React.FC = () => {
   return (
-    // eslint-disable-next-line prettier/prettier
-    <ExperimentalOrderShippingPackages><DeliveryOptionsWrapper /></ExperimentalOrderShippingPackages>
+    <ExperimentalOrderShippingPackages>
+      <DeliveryOptionsWrapper />
+    </ExperimentalOrderShippingPackages>
   );
 };
 
-registerPlugin(NAME, {
-  render,
-  scope: 'woocommerce-checkout',
-});
+registerPlugin(NAME, {render, scope: 'woocommerce-checkout'});

@@ -1,0 +1,4 @@
+# use yarn update-wc-types to fill this directory
+
+*
+!.gitignore

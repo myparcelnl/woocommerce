@@ -3,5 +3,5 @@
   "compilerOptions": {
     "types": ["@myparcel-woocommerce/frontend-common"]
   },
-  "include": ["src"]
+  "include": ["./src"]
 }

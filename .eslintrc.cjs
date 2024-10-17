@@ -59,5 +59,13 @@ module.exports = {
         'max-lines-per-function': 'off',
       },
     },
+
+    /**
+     * WooCommerce blocks
+     */
+    {
+      files: ['./views/blocks/**/*'],
+      extends: ['plugin:react-hooks/recommended'],
+    },
   ],
 };

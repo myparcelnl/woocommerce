@@ -9,7 +9,7 @@
   "namedInputs": {
     "sharedDefaults": [
       "{workspaceRoot}/package.json",
-      "{workspaceRoot}/tsconfig.base.json",
+      "{workspaceRoot}/tsconfig.*.json",
       "{workspaceRoot}/views/vite-config/**/*",
       "{workspaceRoot}/yarn.lock",
       "{projectRoot}/**/*"

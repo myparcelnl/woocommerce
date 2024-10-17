@@ -1,13 +1,15 @@
-import {type BlocksComponent} from '@wordpress/blocks';
+import React from 'react';
 import {useBlockProps} from '@wordpress/block-editor';
 
-export const Edit: BlocksComponent = () => {
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const Edit: React.FC = () => {
   const blockProps = useBlockProps();
+
   return (
     <div
       {...blockProps}
       style={{display: 'block'}}>
-      MyParcel Delivery Options{' '}
+      MyParcel Delivery Options
     </div>
   );
 };

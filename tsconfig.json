@@ -3,9 +3,139 @@
   "compilerOptions": {
     "paths": {
       "@myparcel-woocommerce/frontend-*": ["./views/frontend/*/src"],
-      "@myparcel-woocommerce/backend-*": ["./views/backend/*/src"]
+      "@myparcel-woocommerce/backend-*": ["./views/backend/*/src"],
+      // For WooCommerce TS support. Run `yarn update-wc-types` to get the types. Yes, I know, it's terrible.
+      "@woocommerce/atomic-blocks": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/base/atomic/blocks/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/base/atomic/blocks/index.js"
+      ],
+      "@woocommerce/atomic-blocks/*": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/base/atomic/blocks/*"
+      ],
+      "@woocommerce/atomic-utils": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/atomic/utils/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/atomic/utils/index.js"
+      ],
+      "@woocommerce/base-components/*": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/base/components/*"
+      ],
+      "@woocommerce/base-context": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/base/context/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/base/context/index.js"
+      ],
+      "@woocommerce/base-context/*": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/base/context/*"
+      ],
+      "@woocommerce/base-context/hooks": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/base/context/hooks/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/base/context/hooks/index.js"
+      ],
+      "@woocommerce/base-context/components": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/base/context/components/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/base/context/components/index.js"
+      ],
+      "@woocommerce/base-hocs/*": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/base/hocs/*"
+      ],
+      "@woocommerce/base-hooks": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/base/hooks/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/base/hooks/index.js"
+      ],
+      "@woocommerce/interactivity": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/interactivity/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/interactivity/index.js"
+      ],
+      "@woocommerce/interactivity/*": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/interactivity/*"
+      ],
+      "@woocommerce/base-utils": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/base/utils/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/base/utils/index.js"
+      ],
+      "@woocommerce/base-utils/*": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/base/utils/*"
+      ],
+      "@woocommerce/blocks/*": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/blocks/*"
+      ],
+      "@woocommerce/editor-components/*": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/editor-components/*"
+      ],
+      "@woocommerce/block-data": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/data/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/data/index.js"
+      ],
+      "@woocommerce/block-hocs": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/hocs/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/hocs/index.js"
+      ],
+      "@woocommerce/blocks-registry": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/blocks-registry/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/blocks-registry/index.js"
+      ],
+      "@woocommerce/blocks-checkout": [
+        "./private/wc-types/plugins/woocommerce-blocks/packages/checkout/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/packages/checkout/index.js"
+      ],
+      "@woocommerce/blocks-components": [
+        "./private/wc-types/plugins/woocommerce-blocks/packages/components/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/packages/components/index.js"
+      ],
+      "@woocommerce/interactivity-components/*": [
+        "./private/wc-types/plugins/woocommerce-blocks/packages/interactivity-components/*"
+      ],
+      "@woocommerce/price-format": [
+        "./private/wc-types/plugins/woocommerce-blocks/packages/prices/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/packages/prices/index.js"
+      ],
+      "@woocommerce/block-settings": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/settings/blocks/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/settings/blocks/index.js"
+      ],
+      "@woocommerce/icons": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/icons/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/icons/index.js"
+      ],
+      "@woocommerce/resource-previews": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/previews/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/previews/index.js"
+      ],
+      "@woocommerce/settings": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/settings/shared/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/settings/shared/index.js"
+      ],
+      "@woocommerce/shared-context": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/shared/context/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/shared/context/index.js"
+      ],
+      "@woocommerce/shared-hocs": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/shared/hocs/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/shared/hocs/index.js"
+      ],
+      "@woocommerce/type-defs/*": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/types/type-defs/*"
+      ],
+      "@woocommerce/types": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/types/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/types/index.js"
+      ],
+      "@woocommerce/storybook-controls": [
+        "./private/wc-types/plugins/woocommerce-blocks/storybook/custom-controls/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/storybook/custom-controls/index.js"
+      ],
+      "@woocommerce/utils": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/utils/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/utils/index.js"
+      ],
+      "@woocommerce/e2e-utils": [
+        "./private/wc-types/plugins/woocommerce-blocks/tests/e2e/utils/index.ts",
+        "./private/wc-types/plugins/woocommerce-blocks/tests/e2e/utils/index.js"
+      ],
+      "@woocommerce/templates/*": [
+        "./private/wc-types/plugins/woocommerce-blocks/assets/js/templates/*"
+      ]
     }
   },
-  "include": ["**/*"],
+  "include": ["./*.*", "./views/**/*", "./private/wc-types/**/*"],
   "exclude": []
 }
