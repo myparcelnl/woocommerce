@@ -42,3 +42,34 @@
 #shipping_number {
   -moz-appearance: textfield;
 }
+
+/**
+ * Blocks checkout
+ */
+
+// Make our fields appear next to each other
+.wc-block-components-address-form__myparcelnl {
+  &-street_name {
+    flex: 0 0 calc(50% - 8px) !important;
+  }
+
+  &-house_number,
+  &-house_number_suffix {
+    flex: 1 0 15% !important;
+  }
+}
+
+// Have all non-MyParcel fields except country, first name and last name appear last
+// @formatter:off
+.wc-block-components-address-form
+  > div:not([class*='_country']):not([class*='_first_name']):not(
+    [class*='_first_name']
+  ):not([class*='_last_name']):not([class*='myparcelnl']) {
+  // @formatter:on
+  order: 99 !important;
+}
+
+// Have our fields appear after country, first name and last name
+[class^='wc-block-components-address-form__myparcelnl'] {
+  order: 1 !important;
+}
