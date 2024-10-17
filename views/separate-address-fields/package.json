@@ -1,5 +1,5 @@
 {
-  "name": "@myparcel-woocommerce/block-delivery-options",
+  "name": "@myparcel-woocommerce/block-separate-address-fields",
   "version": "1.0.0",
   "private": true,
   "description": "",
@@ -12,9 +12,6 @@
     "build": "wp-scripts build",
     "build:dev": "wp-scripts build --mode=development",
     "clean": "run ws:clean \"$(pwd)\""
-  },
-  "dependencies": {
-    "@myparcel-pdk/checkout": "^1.0.0"
   },
   "devDependencies": {
     "@myparcel-woocommerce/webpack-config": "workspace:*",

@@ -1,18 +1,19 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "myparcelnl/delivery-options-block",
+  "name": "myparcelnl/separate-address-fields-block",
   "version": "1.0.0",
-  "title": "MyParcel Delivery Options",
+  "title": "MyParcel Separate Address Fields",
   "category": "woocommerce",
-  "description": "If used, the customer can choose delivery options during checkout.",
+  "description": "MyParcel Separate Address Fields",
   "supports": {
-    "html": false,
     "align": false,
+    "html": false,
     "multiple": false,
-    "reusable": false
+    "reusable": false,
+    "inserter": false,
+    "lock": false
   },
-  "parent": ["woocommerce/checkout-shipping-methods-block"],
   "attributes": {
     "lock": {
       "type": "object",
@@ -20,12 +21,9 @@
         "remove": true,
         "move": true
       }
-    },
-    "text": {
-      "type": "string",
-      "default": ""
     }
   },
+  "parent": ["woocommerce/checkout-fields-block"],
   "textdomain": "myparcelnl",
   "editorScript": "file:./dist/index.js",
   "viewScript": "file:./dist/frontend.js"

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Integration;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationRegistry;
+use MyParcelNL\Pdk\Facade\Pdk;
 
 final class WcBlocksLoader
 {
@@ -18,7 +19,12 @@ final class WcBlocksLoader
      */
     public function registerCheckoutBlocks(): void
     {
-        $this->integrationRegistry->register(new DeliveryOptionsBlocksIntegration());
+        /**
+         * @type class-string<\MyParcelNL\WooCommerce\Integration\AbstractBlocksIntegration> $block
+         */
+        foreach (Pdk::get('wooCommerceBlocksCheckout') as $name => $block) {
+            $this->integrationRegistry->register(new $block($name));
+        }
     }
 
     /**

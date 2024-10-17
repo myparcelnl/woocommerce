@@ -25,6 +25,7 @@
     "build:js": "nx run-many --output-style=stream --target=build",
     "build:js:dev": "nx run-many --output-style=stream --target=build:dev",
     "build:js:dev:backend": "yarn build:js:dev --projects='*/backend-*'",
+    "build:js:dev:blocks": "yarn build:js:dev --projects='*/block-*'",
     "build:js:dev:frontend": "yarn build:js:dev --projects='*/frontend-*'",
     "build:js:test": "nx run-many --output-style=stream --target=build:test",
     "build:test": "yarn build:js:test",
@@ -42,6 +43,7 @@
     "upgrade:dev": "yarn pdk-builder upgrade-self --no-commit --no-check && yarn pdk-builder upgrade-all --no-commit --no-check",
     "watch": "yarn build:js:dev --parallel=99 -- --watch",
     "watch:backend": "yarn build:js:dev:backend --parallel=99 -- --watch",
+    "watch:blocks": "yarn build:js:dev:blocks --parallel=99 -- --watch",
     "watch:frontend": "yarn build:js:dev:frontend --parallel=99 -- --watch",
     "watch:test": "yarn build:js:test --parallel=99 -- --watch",
     "ws:build": "vite build",
@@ -67,6 +69,7 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@automattic/data-stores": "^3.1.0-rc.5",
     "@myparcel-eslint/eslint-config-esnext": "^1.2.0",
     "@myparcel-eslint/eslint-config-import": "^1.2.0",
     "@myparcel-eslint/eslint-config-node": "^1.2.0",

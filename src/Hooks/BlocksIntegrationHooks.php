@@ -52,7 +52,7 @@ class BlocksIntegrationHooks implements WordPressHooksInterface
         }
 
         $appInfo = Pdk::getAppInfo();
-        $blocks  = glob($appInfo->path . 'views/blocks/*');
+        $blocks  = glob($appInfo->path . 'views/blocks/*', GLOB_ONLYDIR);
 
         foreach ($blocks as $block) {
             register_block_type($block);
