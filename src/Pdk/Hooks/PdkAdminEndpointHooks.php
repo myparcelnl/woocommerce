@@ -7,7 +7,6 @@ namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 use MyParcelNL\Pdk\App\Api\PdkEndpoint;
 use MyParcelNL\Pdk\Facade\Pdk;
 use WP_REST_Request;
-use WP_REST_Response;
 use WP_REST_Server;
 
 final class PdkAdminEndpointHooks extends AbstractPdkEndpointHooks
@@ -20,11 +19,11 @@ final class PdkAdminEndpointHooks extends AbstractPdkEndpointHooks
     /**
      * @param  \WP_REST_Request $request
      *
-     * @return \WP_REST_Response
+     * @return void
      */
-    public function processBackendRequest(WP_REST_Request $request): WP_REST_Response
+    public function processBackendRequest(WP_REST_Request $request): void
     {
-        return $this->processRequest(PdkEndpoint::CONTEXT_BACKEND, $request);
+        $this->processRequest(PdkEndpoint::CONTEXT_BACKEND, $request);
     }
 
     /**
