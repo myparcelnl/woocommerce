@@ -21,6 +21,7 @@ class DeliveryOptionsBlocksIntegration extends AbstractBlocksIntegration
         return [
             'context' => $this->getCartContext(),
             'style'   => Settings::get(CheckoutSettings::DELIVERY_OPTIONS_CUSTOM_CSS, CheckoutSettings::ID),
+            'enabled' => Settings::get(CheckoutSettings::ENABLE_DELIVERY_OPTIONS, CheckoutSettings::ID),
         ];
     }
 

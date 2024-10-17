@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk;
 
 use MyParcelNL\Pdk\Base\PdkBootstrapper;
+use MyParcelNL\Pdk\Facade\Language;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\WooCommerce\Integration\DeliveryOptionsBlocksIntegration;
@@ -237,6 +238,37 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'wooCommerceBlocksCheckout' => value([
                 'delivery-options' => DeliveryOptionsBlocksIntegration::class,
             ]),
+
+
+            'separateAddressFields' => factory(function () {
+                return [
+                    [
+                        'id'         => Pdk::get('fieldStreet'),
+                        'label'      => Language::translate('street'),
+                        'required'   => true,
+                        'attributes' => [
+                            // There is no street autocomplete, only address line 1
+                            'autocomplete' => 'off',
+                        ],
+                    ],
+                    [
+                        'id'         => Pdk::get('fieldNumber'),
+                        'label'      => Language::translate('number'),
+                        'required'   => true,
+                        'attributes' => [
+                            // There is no number autocomplete, only address line 1
+                            'autocomplete' => 'off',
+                        ],
+                    ],
+                    [
+                        'id'         => Pdk::get('fieldNumberSuffix'),
+                        'label'      => Language::translate('number_suffix'),
+                        'attributes' => [
+                            'maxLength' => Pdk::get('numberSuffixMaxLength'),
+                        ],
+                    ],
+                ];
+            }),
 
             ###
             # Routes

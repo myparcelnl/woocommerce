@@ -1,21 +1,26 @@
 import {AddressType, PdkField} from '@myparcel-pdk/checkout-common';
-import {PdkUtil, useUtil, type PdkFormData, updateContext} from '@myparcel-pdk/checkout';
+import {PdkUtil, useUtil, type PdkFormData, updateContext, AddressField} from '@myparcel-pdk/checkout';
+import {type WcCartStore} from '../utils/useCartStore';
 import {useCartStore, getShippingRate} from '../utils';
 import {type CheckoutConfig} from '../types';
 
 // eslint-disable-next-line max-lines-per-function
 export const getBlocksCheckoutConfig = (): CheckoutConfig => {
   const addressFields = {
-    address1: `address_1`,
-    address2: `address_2`,
-    city: `city`,
-    country: `country`,
-    eoriNumber: `eori_number`,
-    number: `house_number`,
-    numberSuffix: `house_number_suffix`,
-    postalCode: `postcode`,
-    street: `street`,
-    vatNumber: `vat_number`,
+    address1: 'address_1',
+    address2: 'address_2',
+    city: 'city',
+    country: 'country',
+    eoriNumber: 'eori_number',
+    postalCode: 'postcode',
+    vatNumber: 'vat_number',
+
+    /**
+     * Our custom fields
+     */
+    street: 'myparcelnl/street_name',
+    number: 'myparcelnl/house_number',
+    numberSuffix: 'myparcelnl/house_number_suffix',
   };
 
   return {
@@ -27,7 +32,6 @@ export const getBlocksCheckoutConfig = (): CheckoutConfig => {
 
     config: {
       /**
-       *
        * Update whenever the shipping method or the address changes.
        */
       formChange(callback) {
@@ -67,9 +71,42 @@ export const getBlocksCheckoutConfig = (): CheckoutConfig => {
         const formData: PdkFormData = {};
 
         [AddressType.Shipping, AddressType.Billing].forEach((addressType) => {
+          const storeMethod: keyof WcCartStore['dispatch'] =
+            addressType === AddressType.Billing ? 'setBillingAddress' : 'setShippingAddress';
+          const addressObject =
+            addressType === AddressType.Billing ? customerData.billingAddress : customerData.shippingAddress;
+
           Object.keys(addressFields).forEach((field) => {
-            formData[`${addressType}-${addressFields[field]}`] = customerData.shippingAddress[addressFields[field]];
+            const key = addressFields[field as keyof typeof addressFields];
+
+            formData[`${addressType}-${key}`] = addressObject[key];
           });
+
+          // Combine street, number and number suffix back into address1
+          const address1Key = addressFields[AddressField.Address1];
+          const streetKey = addressFields.street;
+          const numberKey = addressFields.number;
+          const numberSuffixKey = addressFields.numberSuffix;
+
+          const newFullStreet = [addressObject[streetKey], addressObject[numberKey], addressObject[numberSuffixKey]]
+            .filter(Boolean)
+            .join(' ')
+            .trim();
+
+          const currentFullStreet = formData[`${addressType}-${address1Key}`];
+
+          console.log({
+            currentFullStreet,
+            newFullStreet,
+            equal: currentFullStreet === newFullStreet,
+          });
+
+          // Save the full street back to the store if it doesn't match
+          if (currentFullStreet !== newFullStreet) {
+            console.log('dispatching');
+            // TODO: het werkt bijna, alleen dit wordt nog infinite loop want address1 wordt steeds weer leeg gemaakt :(
+            cartStore.dispatch[storeMethod]({[address1Key]: newFullStreet});
+          }
         });
 
         const shippingRates = cartStore.getShippingRates();

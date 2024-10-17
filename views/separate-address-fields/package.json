@@ -1,0 +1,29 @@
+{
+  "name": "@myparcel-woocommerce/block-separate-address-fields",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/myparcelnl/woocommerce"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "wp-scripts build",
+    "build:dev": "wp-scripts build --mode=development",
+    "clean": "run ws:clean \"$(pwd)\""
+  },
+  "devDependencies": {
+    "@myparcel-woocommerce/webpack-config": "workspace:*",
+    "@woocommerce/block-library": "^2.3.0",
+    "@woocommerce/settings": "^1.0.0",
+    "@wordpress/block-editor": "^14.4.0",
+    "@wordpress/blocks": "^13.9.0",
+    "@wordpress/icons": "^10.9.0",
+    "@wordpress/plugins": "^7.9.0",
+    "react": "*",
+    "react-dom": "*",
+    "webpack": "^5.90.0",
+    "webpack-cli": "^5.1.4"
+  }
+}
