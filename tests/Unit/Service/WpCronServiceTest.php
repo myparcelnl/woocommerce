@@ -60,7 +60,7 @@ it('schedules jobs', function ($callback) {
         ->toHaveLength(count($actions))
         ->and($tasks->all())
         ->toHaveLength(1)
-        ->and(Pdk::get('webhookActionName') . $task['callback'])
+        ->and($task['callback'])
         ->toBe(end($keys))
         ->and($task['time'])
         ->toBeLessThanOrEqual($dispatchTimestamp + 5)

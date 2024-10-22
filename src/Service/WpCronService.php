@@ -41,10 +41,11 @@ class WpCronService implements CronServiceInterface
         }
 
         /**
-         * TODO: callback not processed > 5% of cases, also, using '2' as timestamp is not a good practice
-         * notice: using a sane timestamp results in almost 0% of callbacks executed at the moment
+         * TODO with original timestamp, the callback is almost never processed.
+         * When supplying (int) 2, the callback is processed around 90% of the time. This seems consistent with
+         * the default WP cron behavior according to internet, but not something that makes our clients happy.
          */
-        wp_schedule_single_event(2, Pdk::get('webhookActionName') . $hook, $args);
+        wp_schedule_single_event($timestamp, $hook, $args);
     }
 
     /**
@@ -67,7 +68,7 @@ class WpCronService implements CronServiceInterface
 
         $actions = get_option(Pdk::get('webhookAddActions'), []);
 
-        $hookAction           = Pdk::get('webhookActionName') . $hook;
+        $hookAction           = $hook;
         $actions[$hookAction] = $callable;
 
         return $actions;
