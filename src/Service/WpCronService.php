@@ -40,7 +40,11 @@ class WpCronService implements CronServiceInterface
             update_option(Pdk::get('webhookAddActions'), $this->getActions($callback, $hook));
         }
 
-        wp_schedule_single_event($timestamp, $hook, $args);
+        /**
+         * TODO: callback not processed > 5% of cases, also, using '2' as timestamp is not a good practice
+         * notice: using a sane timestamp results in almost 0% of callbacks executed at the moment
+         */
+        wp_schedule_single_event(2, Pdk::get('webhookActionName') . $hook, $args);
     }
 
     /**
