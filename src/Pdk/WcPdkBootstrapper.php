@@ -228,7 +228,6 @@ class WcPdkBootstrapper extends PdkBootstrapper
                 'delivery-options' => DeliveryOptionsBlocksIntegration::class,
             ]),
 
-
             'separateAddressFields' => factory(function () {
                 return [
                     [
