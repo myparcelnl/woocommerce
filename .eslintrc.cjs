@@ -40,9 +40,11 @@ module.exports = {
     {
       files: ['./**/*.js', './**/*.cjs', './**/*.mjs'],
       extends: [
-        '@myparcel-eslint/eslint-config-node',
         '@myparcel-eslint/eslint-config-esnext',
-        '@myparcel-eslint/eslint-config-prettier',
+        '@myparcel-eslint/eslint-config-node',
+        'plugin:@typescript-eslint/eslint-recommended',
+        'plugin:@typescript-eslint/recommended',
+        '@myparcel-eslint/eslint-config-import',
       ],
     },
     {
@@ -64,7 +66,7 @@ module.exports = {
      * WooCommerce blocks
      */
     {
-      files: ['./views/blocks/**/*'],
+      files: ['./views/blocks/**/src/**/*.ts', './views/blocks/**/src/**/*.tsx'],
       extends: ['plugin:react-hooks/recommended'],
     },
   ],
