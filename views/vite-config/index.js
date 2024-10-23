@@ -14,7 +14,7 @@ const createDefaultConfig = (env) => {
     plugins: [customTsConfig()],
     build: {
       minify: !isDev,
-      sourcemap: isDev,
+      sourcemap: isDev ? 'inline' : false,
     },
 
     test: {
@@ -34,7 +34,7 @@ const createDefaultConfig = (env) => {
  *  @param config {import('vitest/config').UserConfigExport}
  *  @returns {import('vitest/config').UserConfigFn}
  */
-export const createViteConfig = (config) => async (env) => {
+export const createViteConfig = (config) => async(env) => {
   let resolvedConfig = config ?? {};
 
   if (typeof config === 'function') {
