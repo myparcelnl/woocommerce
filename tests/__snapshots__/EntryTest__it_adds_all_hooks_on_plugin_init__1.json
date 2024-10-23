@@ -1,9 +1,13 @@
 {
-  "activate_woocommerce-myparcel": ["MyParcelNLWooCommerce::install"],
-  "deactivate_woocommerce-myparcel": ["MyParcelNLWooCommerce::uninstall"],
   "init": [],
   "woocommerce_blocks_checkout_block_registration": [
-    "MyParcelNLWooCommerce::registerCheckoutBlocks"
+    "MyParcelNL\\WooCommerce\\PluginLoader::registerWcCheckoutBlocks"
+  ],
+  "activate_woocommerce-myparcel": [
+    "MyParcelNL\\WooCommerce\\PluginLoader::install"
+  ],
+  "deactivate_woocommerce-myparcel": [
+    "MyParcelNL\\WooCommerce\\PluginLoader::uninstall"
   ],
   "admin_init": [{}],
   "woocommerce_order_status_changed": [

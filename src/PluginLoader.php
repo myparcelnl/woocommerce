@@ -16,6 +16,7 @@ class PluginLoader
     public function __construct()
     {
         add_action('init', [$this, 'initialize'], 9999);
+
         // This cannot be done after the init hook
         add_action('woocommerce_blocks_checkout_block_registration', [$this, 'registerWcCheckoutBlocks']);
     }
@@ -65,7 +66,7 @@ class PluginLoader
         /** @var \MyParcelNL\WooCommerce\Integration\WcBlocksLoader $loader */
         $loader = Pdk::get(WcBlocksLoader::class);
         $loader->setRegistry($integrationRegistry);
-        $loader->registerCheckoutBlocks();
+        $loader->registerBlocks(Pdk::get('wooCommerceBlocksCheckout'));
     }
 
     /**
