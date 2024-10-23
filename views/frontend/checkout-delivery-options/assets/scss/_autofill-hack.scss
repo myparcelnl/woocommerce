@@ -1,12 +1,16 @@
 /* Hack to disable yellow bg color on filled fields and allow js to listen for it */
 @-webkit-keyframes onAutoFillStart {
-  0% {}
-  100% {}
+  0% {
+  }
+  100% {
+  }
 }
 
 @keyframes onAutoFillStart {
-  0% {}
-  100% {}
+  0% {
+  }
+  100% {
+  }
 }
 
 input:-webkit-autofill {

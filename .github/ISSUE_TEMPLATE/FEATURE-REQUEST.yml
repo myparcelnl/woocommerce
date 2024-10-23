@@ -1,6 +1,6 @@
 name: 'Feature request'
 description: 'Suggest an idea to improve the plugin.'
-labels: [ 'feature' ]
+labels: ['feature']
 
 body:
   - type: markdown

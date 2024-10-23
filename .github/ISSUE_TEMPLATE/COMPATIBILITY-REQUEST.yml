@@ -1,6 +1,6 @@
 name: 'Compatibility request'
 description: 'Request a compatibility update between our plugin and another plugin or theme.'
-labels: [ 'feature', 'compatibility' ]
+labels: ['feature', 'compatibility']
 
 body:
   - type: markdown
