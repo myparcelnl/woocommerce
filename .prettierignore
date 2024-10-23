@@ -1,2 +1,14 @@
-composer.lock
+# Dependency directories
+node_modules/
+vendor/
+
+# Temporary files
+.tmp/
+
+# Generated directories and files
+.nx/
 private/wc-types/
+
+tests/__snapshots__/**/*.html
+CHANGELOG.md
+composer.lock

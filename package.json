@@ -33,6 +33,7 @@
     "docker": "docker compose run --rm -it php",
     "docker:build": "docker build -t myparcelnl/woocommerce .",
     "docker:run": "docker run -it --rm -v $(pwd):/app myparcelnl/woocommerce",
+    "lint": "prettier --write '**/*.{md,json,yml,css,scss}'",
     "prepare": "is-ci || husky install",
     "test": "nx run-many --output-style=stream --target=test",
     "test:coverage": "nx run-many --output-style=stream --target=test:coverage",
