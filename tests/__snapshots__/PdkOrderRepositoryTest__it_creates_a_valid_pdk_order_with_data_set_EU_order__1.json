@@ -83,6 +83,7 @@
           "exportOnlyRecipient": -1,
           "exportReturn": -1,
           "exportSignature": -1,
+          "exportTracked": -1,
           "fitInDigitalStamp": -1,
           "fitInMailbox": -1,
           "packageType": -1
@@ -100,6 +101,7 @@
           "exportOnlyRecipient": -1,
           "exportReturn": -1,
           "exportSignature": -1,
+          "exportTracked": -1,
           "fitInDigitalStamp": -1,
           "fitInMailbox": -1,
           "packageType": -1
@@ -143,6 +145,7 @@
           "exportOnlyRecipient": -1,
           "exportReturn": -1,
           "exportSignature": -1,
+          "exportTracked": -1,
           "fitInDigitalStamp": -1,
           "fitInMailbox": -1,
           "packageType": -1
@@ -160,11 +163,23 @@
           "exportOnlyRecipient": -1,
           "exportReturn": -1,
           "exportSignature": -1,
+          "exportTracked": -1,
           "fitInDigitalStamp": -1,
           "fitInMailbox": -1,
           "packageType": -1
         }
       }
+    }
+  ],
+  "notes": [
+    {
+      "externalIdentifier": "customer_note",
+      "orderIdentifier": "6",
+      "apiIdentifier": null,
+      "author": "customer",
+      "note": "This is a test order",
+      "createdAt": "2021-01-01 18:03:41",
+      "updatedAt": "2021-01-01 18:03:41"
     }
   ],
   "orderDate": "2021-01-01 18:03:41",
@@ -177,5 +192,6 @@
   "orderVat": 0,
   "totalPrice": 500000,
   "totalVat": 0,
-  "totalPriceAfterVat": 500000
+  "totalPriceAfterVat": 500000,
+  "audits": []
 }

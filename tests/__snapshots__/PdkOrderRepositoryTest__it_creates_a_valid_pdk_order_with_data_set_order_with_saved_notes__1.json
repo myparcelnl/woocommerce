@@ -83,6 +83,7 @@
           "exportOnlyRecipient": -1,
           "exportReturn": -1,
           "exportSignature": -1,
+          "exportTracked": -1,
           "fitInDigitalStamp": -1,
           "fitInMailbox": -1,
           "packageType": -1
@@ -100,6 +101,7 @@
           "exportOnlyRecipient": -1,
           "exportReturn": -1,
           "exportSignature": -1,
+          "exportTracked": -1,
           "fitInDigitalStamp": -1,
           "fitInMailbox": -1,
           "packageType": -1
@@ -143,6 +145,7 @@
           "exportOnlyRecipient": -1,
           "exportReturn": -1,
           "exportSignature": -1,
+          "exportTracked": -1,
           "fitInDigitalStamp": -1,
           "fitInMailbox": -1,
           "packageType": -1
@@ -160,6 +163,7 @@
           "exportOnlyRecipient": -1,
           "exportReturn": -1,
           "exportSignature": -1,
+          "exportTracked": -1,
           "fitInDigitalStamp": -1,
           "fitInMailbox": -1,
           "packageType": -1
@@ -188,5 +192,6 @@
   "orderVat": 0,
   "totalPrice": 500000,
   "totalVat": 0,
-  "totalPriceAfterVat": 500000
+  "totalPriceAfterVat": 500000,
+  "audits": []
 }
