@@ -7,6 +7,7 @@ namespace MyParcelNL\WooCommerce\Pdk;
 use MyParcelNL\Pdk\Base\PdkBootstrapper;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
+use MyParcelNL\WooCommerce\Integration\DeliveryOptionsBlocksIntegration;
 use function DI\factory;
 use function DI\value;
 
@@ -216,6 +217,14 @@ class WcPdkBootstrapper extends PdkBootstrapper
                 'woocommerce_review_order_after_shipping',
                 'woocommerce_review_order_before_order_total',
                 'woocommerce_review_order_after_order_total',
+            ]),
+
+            ###
+            # Blocks
+            ###
+
+            'wooCommerceBlocksCheckout' => value([
+                'delivery-options' => DeliveryOptionsBlocksIntegration::class,
             ]),
 
             ###

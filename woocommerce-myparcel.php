@@ -79,11 +79,11 @@ final class MyParcelNLWooCommerce
     public function registerCheckoutBlocks(IntegrationRegistry $integrationRegistry): void
     {
         $this->initialize();
+
         /** @var \MyParcelNL\WooCommerce\Integration\WcBlocksLoader $loader */
         $loader = Pdk::get(WcBlocksLoader::class);
         $loader->setRegistry($integrationRegistry);
-
-        $loader->registerCheckoutBlocks();
+        $loader->registerBlocks(Pdk::get('wooCommerceBlocksCheckout'));
     }
 
     /**

@@ -14,11 +14,17 @@ final class WcBlocksLoader
     private $integrationRegistry;
 
     /**
+     * @param  array<string, class-string<\MyParcelNL\WooCommerce\Integration\AbstractBlocksIntegration>> $blocks
+     *
      * @return void
      */
-    public function registerCheckoutBlocks(): void
+    public function registerBlocks(array $blocks): void
     {
-        $this->integrationRegistry->register(new DeliveryOptionsBlocksIntegration());
+        foreach ($blocks as $name => $block) {
+            $instance = new $block($name);
+
+            $this->integrationRegistry->register($instance);
+        }
     }
 
     /**
