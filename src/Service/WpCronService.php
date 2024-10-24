@@ -32,9 +32,13 @@ class WpCronService implements CronServiceInterface
      */
     public function schedule($callback, int $timestamp, ...$args): void
     {
+        if (! is_string($callback) && ! is_array($callback)) {
+            throw new InvalidArgumentException('Invalid callback');
+        }
+
         $hook = $callback;
 
-        if (is_callable($callback)) {
+        if (is_array($callback)) {
             [$class, $method] = $callback;
             $instance = Pdk::get(get_class($class));
 
@@ -43,7 +47,9 @@ class WpCronService implements CronServiceInterface
 
                 return;
             }
+        }
 
+        if (is_callable($callback)) {
             $hook = md5(uniqid('', true));
 
             update_option(Pdk::get('webhookAddActions'), $this->getActions($callback, $hook));
@@ -60,10 +66,6 @@ class WpCronService implements CronServiceInterface
      */
     private function getActions($callback, $hook)
     {
-        if (! is_string($callback) && ! is_array($callback)) {
-            throw new InvalidArgumentException('Invalid callback');
-        }
-
         $callable = $callback;
 
         if (is_array($callback)) {

@@ -15,4 +15,9 @@ class MockCallableClass
     {
         return 'mocked';
     }
+
+    public function updateOption(string $option, $value): void
+    {
+        update_option($option, $value);
+    }
 }

@@ -8,6 +8,7 @@ namespace MyParcelNL\WooCommerce\Service;
 use InvalidArgumentException;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\WooCommerce\Tests\Mock\MockCallableClass;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use function MyParcelNL\Pdk\Tests\usesShared;
@@ -72,6 +73,12 @@ it('schedules jobs', function ($callback) {
     unset($actions[Pdk::get('webhookActionName') . $task['callback']]);
     update_option(Pdk::get('webhookAddActions'), $actions);
 })->with('callbacks');
+
+it('executes instantiated class directly', function () {
+    $cronService = Pdk::get(CronServiceInterface::class);
+    $cronService->schedule([new MockCallableClass(), 'updateOption'], 2, 'arg1', 'arg2');
+    expect(get_option('arg1', []))->toBe('arg2');
+});
 
 it('throws exception when input is not a string or array', function () {
     /** @var \MyParcelNL\Pdk\Base\Contract\CronServiceInterface $cronService */
