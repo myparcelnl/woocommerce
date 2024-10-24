@@ -35,6 +35,15 @@ class WpCronService implements CronServiceInterface
         $hook = $callback;
 
         if (is_callable($callback)) {
+            [$class, $method] = $callback;
+            $instance = Pdk::get(get_class($class));
+
+            if (method_exists($instance, $method)) {
+                $instance->{$method}(...$args);
+
+                return;
+            }
+
             $hook = md5(uniqid('', true));
 
             update_option(Pdk::get('webhookAddActions'), $this->getActions($callback, $hook));
