@@ -1,36 +1,56 @@
+import {
+  FIELD_PREFIX_BILLING,
+  FIELD_PREFIX_SHIPPING,
+  FIELD_SHIPPING_METHOD,
+} from '@myparcel-woocommerce/frontend-common';
 import {AddressType, PdkField} from '@myparcel-pdk/checkout-common';
 import {PdkUtil, useUtil, type PdkFormData, updateContext, AddressField} from '@myparcel-pdk/checkout';
 import {type WcCartStore} from '../utils/useCartStore';
-import {useCartStore, getShippingRate} from '../utils';
-import {type CheckoutConfig} from '../types';
+import {useCartStore, getShippingRate, createId, createFields, splitStreet} from '../utils';
+import {type WooCommerceCheckoutConfig} from '../types';
+import {ADDRESS_FIELDS_BLOCKS_CHECKOUT} from './constants';
 
-// eslint-disable-next-line max-lines-per-function
-export const getBlocksCheckoutConfig = (): CheckoutConfig => {
-  const addressFields = {
-    address1: 'address_1',
-    address2: 'address_2',
-    city: 'city',
-    country: 'country',
-    eoriNumber: 'eori_number',
-    postalCode: 'postcode',
-    vatNumber: 'vat_number',
+const createSelector = (val: string, prefix: string) => {
+  const matches = /(\w+)\/(\w+)$/.exec(val);
 
-    /**
-     * Our custom fields
-     */
-    street: 'myparcelnl/street_name',
-    number: 'myparcelnl/house_number',
-    numberSuffix: 'myparcelnl/house_number_suffix',
-  };
+  if (!matches) {
+    return createId(prefix + val);
+  }
 
+  return createId(`${prefix}${matches[1]}-${matches[1]}-${matches[2]}`);
+};
+
+// eslint-disable-next-line max-lines-per-function,@typescript-eslint/explicit-module-boundary-types
+export const getBlocksCheckoutConfig = () => {
   return {
-    addressFields,
-    fieldShippingMethod: 'shipping_method',
-    prefixBilling: 'billing-',
-    prefixShipping: 'shipping-',
+    addressFields: ADDRESS_FIELDS_BLOCKS_CHECKOUT,
+    fieldShippingMethod: FIELD_SHIPPING_METHOD,
+    prefixBilling: `${FIELD_PREFIX_BILLING}-`,
+    prefixShipping: `${FIELD_PREFIX_SHIPPING}-`,
     shippingMethodFormField: 'shippingMethod',
 
     config: {
+      formData: {
+        [PdkField.AddressType]: 'ship_to_different_address',
+        [PdkField.ShippingMethod]: `${FIELD_SHIPPING_METHOD}[0]`,
+        [AddressType.Billing]: createFields(ADDRESS_FIELDS_BLOCKS_CHECKOUT, (val) => `${FIELD_PREFIX_BILLING}-${val}`),
+        [AddressType.Shipping]: createFields(
+          ADDRESS_FIELDS_BLOCKS_CHECKOUT,
+          (val) => `${FIELD_PREFIX_SHIPPING}-${val}`,
+        ),
+      },
+
+      fields: {
+        [PdkField.AddressType]: createId('checkbox-control-0'),
+        [PdkField.ShippingMethod]: createId(FIELD_SHIPPING_METHOD),
+        [AddressType.Billing]: createFields(ADDRESS_FIELDS_BLOCKS_CHECKOUT, (val) =>
+          createSelector(val, `${FIELD_PREFIX_BILLING}-`),
+        ),
+        [AddressType.Shipping]: createFields(ADDRESS_FIELDS_BLOCKS_CHECKOUT, (val) =>
+          createSelector(val, `${FIELD_PREFIX_SHIPPING}-`),
+        ),
+      },
+
       /**
        * Update whenever the shipping method or the address changes.
        */
@@ -65,48 +85,75 @@ export const getBlocksCheckoutConfig = (): CheckoutConfig => {
         });
       },
 
+      // eslint-disable-next-line max-lines-per-function
       getFormData() {
         const cartStore = useCartStore();
         const customerData = cartStore.getCustomerData();
         const formData: PdkFormData = {};
 
-        [AddressType.Shipping, AddressType.Billing].forEach((addressType) => {
+        const updateAddress = (addressType: AddressType, newAddress: Record<string, string>) => {
           const storeMethod: keyof WcCartStore['dispatch'] =
             addressType === AddressType.Billing ? 'setBillingAddress' : 'setShippingAddress';
+
+          const mappedAddress = Object.fromEntries(
+            Object.entries(newAddress).reduce((acc, [key, value]) => {
+              const resolvedKey = ADDRESS_FIELDS_BLOCKS_CHECKOUT[key as keyof typeof ADDRESS_FIELDS_BLOCKS_CHECKOUT];
+
+              acc.push([resolvedKey, value]);
+
+              return acc;
+            }, [] as [string, string][]),
+          );
+
+          Object.entries(mappedAddress).forEach(([key, value]) => {
+            formData[`${addressType}-${key}`] = value;
+          });
+
+          cartStore.dispatch[storeMethod](mappedAddress);
+        };
+
+        [AddressType.Shipping, AddressType.Billing].forEach((addressType) => {
+          const newAddress: Record<string, string> = {};
+
           const addressObject =
             addressType === AddressType.Billing ? customerData.billingAddress : customerData.shippingAddress;
 
-          Object.keys(addressFields).forEach((field) => {
-            const key = addressFields[field as keyof typeof addressFields];
+          Object.keys(ADDRESS_FIELDS_BLOCKS_CHECKOUT).forEach((field) => {
+            const key = ADDRESS_FIELDS_BLOCKS_CHECKOUT[field as keyof typeof ADDRESS_FIELDS_BLOCKS_CHECKOUT];
 
-            formData[`${addressType}-${key}`] = addressObject[key];
+            newAddress[field] = addressObject[key];
           });
 
-          // Combine street, number and number suffix back into address1
-          const address1Key = addressFields[AddressField.Address1];
-          const streetKey = addressFields.street;
-          const numberKey = addressFields.number;
-          const numberSuffixKey = addressFields.numberSuffix;
+          if (addressObject.street && !addressObject.number && !addressObject.numberSuffix) {
+            console.log('street defined, number and numberSuffix not defined');
+            const {street, number, numberSuffix} = splitStreet(addressObject.street);
 
-          const newFullStreet = [addressObject[streetKey], addressObject[numberKey], addressObject[numberSuffixKey]]
+            addressObject.street = street;
+            addressObject.number = number;
+            addressObject.numberSuffix = numberSuffix;
+          }
+
+          // Combine street, number and number suffix back into address1
+          const newFullStreet = [addressObject.street, addressObject.number, addressObject.numberSuffix]
             .filter(Boolean)
             .join(' ')
             .trim();
 
-          const currentFullStreet = formData[`${addressType}-${address1Key}`];
+          const currentFullStreet = (formData[`${addressType}-${AddressField.Address1}`] ?? '') as string;
 
-          console.log({
-            currentFullStreet,
-            newFullStreet,
-            equal: currentFullStreet === newFullStreet,
-          });
+          // Split the full street into street, number and number suffix if needed
+          if (!newFullStreet && currentFullStreet) {
+            console.log('new street not defined, current street defined');
+            Object.assign(newAddress, splitStreet(currentFullStreet));
+          }
 
           // Save the full street back to the store if it doesn't match
           if (currentFullStreet !== newFullStreet) {
-            console.log('dispatching');
-            // TODO: het werkt bijna, alleen dit wordt nog infinite loop want address1 wordt steeds weer leeg gemaakt :(
-            cartStore.dispatch[storeMethod]({[address1Key]: newFullStreet});
+            console.log('current street does not match new street');
+            newAddress[AddressField.Address1] = newFullStreet;
           }
+
+          updateAddress(addressType, newAddress);
         });
 
         const shippingRates = cartStore.getShippingRates();
@@ -136,5 +183,5 @@ export const getBlocksCheckoutConfig = (): CheckoutConfig => {
         });
       },
     },
-  } satisfies CheckoutConfig;
+  } satisfies WooCommerceCheckoutConfig;
 };

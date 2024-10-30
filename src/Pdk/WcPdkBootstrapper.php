@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk;
 
 use MyParcelNL\Pdk\Base\PdkBootstrapper;
-use MyParcelNL\Pdk\Facade\Language;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\WooCommerce\Integration\DeliveryOptionsBlocksIntegration;
@@ -242,8 +241,8 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'separateAddressFields' => factory(function () {
                 return [
                     [
-                        'id'         => Pdk::get('fieldStreet'),
-                        'label'      => Language::translate('street'),
+                        'name'       => 'fieldStreet',
+                        'label'      => 'street',
                         'required'   => true,
                         'attributes' => [
                             // There is no street autocomplete, only address line 1
@@ -251,8 +250,8 @@ class WcPdkBootstrapper extends PdkBootstrapper
                         ],
                     ],
                     [
-                        'id'         => Pdk::get('fieldNumber'),
-                        'label'      => Language::translate('number'),
+                        'name'       => 'fieldNumber',
+                        'label'      => 'number',
                         'required'   => true,
                         'attributes' => [
                             // There is no number autocomplete, only address line 1
@@ -260,8 +259,8 @@ class WcPdkBootstrapper extends PdkBootstrapper
                         ],
                     ],
                     [
-                        'id'         => Pdk::get('fieldNumberSuffix'),
-                        'label'      => Language::translate('number_suffix'),
+                        'name'       => 'fieldNumberSuffix',
+                        'label'      => 'number_suffix',
                         'attributes' => [
                             'maxLength' => Pdk::get('numberSuffixMaxLength'),
                         ],
@@ -355,15 +354,34 @@ class WcPdkBootstrapper extends PdkBootstrapper
                 'fieldNumberClass'       => ['form-row-third'],
                 'fieldNumberSuffixClass' => ['form-row-third', 'last'],
 
-                'fieldEoriNumberClass' => ['form-row'],
-                'fieldVatNumberClass'  => ['form-row'],
+                'fieldEoriNumberClass'      => ['form-row'],
+                'fieldVatNumberClass'       => ['form-row'],
 
-                'fieldStreetPriority'       => 60,
-                'fieldNumberPriority'       => 61,
-                'fieldNumberSuffixPriority' => 62,
+                /**
+                 * Classic checkout field order
+                 */
 
-                'fieldEoriNumberPriority' => 900,
-                'fieldVatNumberPriority'  => 901,
+                // Between address_1 and address_2
+                'fieldStreetPriority'       => 51,
+                'fieldNumberPriority'       => 52,
+                'fieldNumberSuffixPriority' => 53,
+
+                // After all other fields
+                'fieldEoriNumberPriority'   => 900,
+                'fieldVatNumberPriority'    => 901,
+
+                /**
+                 * Blocks checkout field order
+                 */
+
+                // Between address_1 and address_2
+                'fieldStreetIndex'          => 51,
+                'fieldNumberIndex'          => 52,
+                'fieldNumberSuffixIndex'    => 53,
+
+                // After all other fields
+                'fieldEoriNumberIndex'      => 900,
+                'fieldVatNumberIndex'       => 901,
             ]),
 
             ###

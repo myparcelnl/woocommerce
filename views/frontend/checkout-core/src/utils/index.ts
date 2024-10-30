@@ -4,4 +4,6 @@ export * from './createName';
 export * from './isClassicCheckout';
 export {getShippingRate} from './getShippingRate';
 
+export {splitStreet} from './splitStreet';
+
 export {useCartStore} from './useCartStore';

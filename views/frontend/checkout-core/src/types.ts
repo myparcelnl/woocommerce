@@ -1,9 +1,9 @@
 import {type PdkCheckoutConfigInput} from '@myparcel-pdk/checkout-common';
 import {type AddressField} from '@myparcel-pdk/checkout';
 
-export interface CheckoutConfig<Config extends Partial<PdkCheckoutConfigInput> = Partial<PdkCheckoutConfigInput>> {
-  addressFields: Record<AddressField, string>;
-  config: Config;
+export interface WooCommerceCheckoutConfig {
+  addressFields: Record<AddressField | string, string>;
+  config: Partial<PdkCheckoutConfigInput>;
   fieldShippingMethod: string;
   prefixBilling: string;
   prefixShipping: string;
