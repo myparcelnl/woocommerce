@@ -40,7 +40,7 @@ abstract class AbstractFieldsHooks implements WordPressHooksInterface
     /**
      * Creates the selectors for the given field.
      *
-     * @param  string $field
+     * @param  string $fieldId
      *
      * @return array
      * @example $this->createSelectorFor('fieldVatNumber') returns:
@@ -48,16 +48,16 @@ abstract class AbstractFieldsHooks implements WordPressHooksInterface
      *      'fieldVatNumber' => '#billing_field_vat_number_field,#shipping_field_vat_number_field',
      *  ]
      */
-    protected function createSelectorFor(string $field): array
+    protected function createSelectorFor(string $fieldId): array
     {
-        $resolvedField = Pdk::get($field);
-
         return [
-            $resolvedField => implode(
+            $fieldId => implode(
                 ', ',
                 array_map(
-                    static function (string $addressType) use ($resolvedField): string {
-                        return sprintf('#%s_%s_field', $addressType, $resolvedField);
+                    static function (string $addressType) use ($fieldId): string {
+                        $baseFieldId = preg_replace('/^(?:\w+\/)?(.+)/', '$1', $fieldId);
+
+                        return sprintf('#%s_%s_field', $addressType, $baseFieldId);
                     },
                     Pdk::get('wcAddressTypes')
                 )

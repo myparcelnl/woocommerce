@@ -59,17 +59,25 @@
   }
 }
 
-// Have all non-MyParcel fields except country, first name and last name appear last
-// @formatter:off
-.wc-block-components-address-form
-  > div:not([class*='_country']):not([class*='_first_name']):not(
-    [class*='_first_name']
-  ):not([class*='_last_name']):not([class*='myparcelnl']) {
-  // @formatter:on
-  order: 99 !important;
+.wc-block-components-address-form {
+  //   // @formatter:off
+  //   // All fields except country, first name and last name
+  //   & > div:not([class*='_country']):not([class*='_first_name']):not([class*='_first_name']):not([class*='_last_name']):not([class*='myparcelnl']),
+  //   // The toggle that shows the second address field
+  //   &__address_2-toggle {
+  //   // @formatter:on
+  //     // Make them appear last
+  //     order: 99999 !important;
+  //   }
+  //
+  // Hide address line 1
+  &__address_1 {
+    display: none !important;
+  }
 }
 
-// Have our fields appear after country, first name and last name
-[class^='wc-block-components-address-form__myparcelnl'] {
-  order: 1 !important;
-}
+//
+// // Have our fields appear before the fields that were pushed down above.
+// [class^='wc-block-components-address-form__myparcelnl'] {
+//   order: 1 !important;
+// }

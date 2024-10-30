@@ -11,14 +11,6 @@ export default createViteConfig({
       entry: 'src/main.ts',
       formats: ['iife'],
     },
-    rollupOptions: {
-      external: ['vue', 'vitest'],
-      output: {
-        globals: {
-          vue: 'Vue',
-        },
-      },
-    },
   },
 
   define: {
