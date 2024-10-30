@@ -3,8 +3,9 @@ name: '⚙️ On pull request'
 on:
   pull_request:
     branches:
-      - alpha
+      - main
       - beta
+      - alpha
 
   repository_dispatch:
     types: [trigger-pr-build]

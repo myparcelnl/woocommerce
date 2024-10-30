@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: benc-uk/workflow-dispatch@v1
         with:
-          ref: beta
+          ref: main
           workflow: push.yml
 
   prepare:

@@ -3,8 +3,9 @@ name: '⚙️ On push'
 on:
   push:
     branches:
-      - alpha
+      - main
       - beta
+      - alpha
 
   workflow_dispatch:
 

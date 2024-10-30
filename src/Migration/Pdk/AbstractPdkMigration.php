@@ -10,6 +10,6 @@ abstract class AbstractPdkMigration extends AbstractMigration
 {
     public function getVersion(): string
     {
-        return '5.0.0-alpha.1';
+        return '5.0.0';
     }
 }

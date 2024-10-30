@@ -1,15 +1,15 @@
 /* eslint-disable no-template-curly-in-string */
-const mainConfig = require('@myparcel/semantic-release-config');
-const {addExecPlugin, addGitHubPlugin, addGitPlugin} = require('@myparcel/semantic-release-config/src/plugins');
-const {gitPluginDefaults} = require('@myparcel/semantic-release-config/src/plugins/addGitPlugin');
+const path = require('path');
+const {spawnSync} = require('child_process');
 const {
   addCommitAnalyzerPlugin,
   addGitHubActionsOutputPlugin,
   addReleaseNotesGeneratorPlugin,
   addChangelogPlugin,
 } = require('@myparcel/semantic-release-config/src/plugins/index.js');
-const {spawnSync} = require('child_process');
-const path = require('path');
+const {gitPluginDefaults} = require('@myparcel/semantic-release-config/src/plugins/addGitPlugin');
+const {addExecPlugin, addGitHubPlugin, addGitPlugin} = require('@myparcel/semantic-release-config/src/plugins');
+const mainConfig = require('@myparcel/semantic-release-config');
 
 const branch = spawnSync('git', ['rev-parse', '--abbrev-ref', 'HEAD']).stdout.toString().trim();
 
@@ -27,7 +27,7 @@ module.exports = {
     addGitHubActionsOutputPlugin(),
     addReleaseNotesGeneratorPlugin({header: path.resolve(__dirname, `private/semantic-release/header-${branch}.md`)}),
     addChangelogPlugin(),
-    // TODO: Uncomment when this version is stable.
+    // TODO: Uncomment when we're releasing to the WordPress svn repository.
     // '@myparcel/semantic-release-wordpress-readme-generator',
     addExecPlugin({
       prepareCmd: `yarn pdk-builder release --root-command "${process.env.PDK_ROOT_COMMAND}" --version $\{nextRelease.version} -v`,

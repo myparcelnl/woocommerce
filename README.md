@@ -1,6 +1,6 @@
 # MyParcel for WooCommerce
 
-[![GitHub release](https://img.shields.io/github/v/release/myparcelnl/woocommerce?logo=github)](https://github.com/myparcelnl/woocommerce/releases/latest)
+[![Latest stable release](https://img.shields.io/github/v/release/myparcelnl/woocommerce?labelColor=white&label=Latest%20release)](https://github.com/myparcelnl/woocommerce/releases/latest)
 [![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/woocommerce-myparcel?logo=wordpress)](https://wordpress.org/plugins/woocommerce-myparcel/)
 
 Welcome to the MyParcel for WooCommerce repository on GitHub. Here you can browse the source, look at open issues and keep track of development.
@@ -36,7 +36,6 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 [Backoffice]: https://backoffice.myparcel.nl/
 [Delivery options]: https://github.com/myparcelnl/delivery-options
-[Node 16]: https://nodejs.org/en/
 [Plugin manual]: https://developer.myparcel.nl/nl/documentatie/10.woocommerce.html
 [WordPress plugin repository]: https://wordpress.org/plugins/woocommerce-myparcel/
 [Yarn]: https://classic.yarnpkg.com/en/docs/install
