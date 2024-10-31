@@ -1,6 +1,6 @@
 {
   "name": "@myparcel-woocommerce/monorepo",
-  "version": "5.0.0-beta.11",
+  "version": "5.0.0",
   "private": true,
   "homepage": "https://github.com/myparcelnl/woocommerce#readme",
   "bugs": {
