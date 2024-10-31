@@ -36,13 +36,14 @@ it('completes even when api returns error', function () {
     $migration5 = Pdk::get(Migration5_0_0::class);
     $migration5->up();
 
+    /** @noinspection ClassConstantCanBeUsedInspection */
     expect(Arr::last(Logger::getLogs()))->toEqual([
         'level'   => 'warning',
         'message' => '[PDK]: Migration 5.0.0 (PDK) error',
         'context' => [
             'action'    => 'updateAccount',
             'migration' => 'MyParcelNL\WooCommerce\Migration\Migration5_0_0',
-            'exception' => 'Request failed. Status code: 403. Errors: ',
+            'exception' => 'Request failed. Status code: 403. Message: ',
         ],
     ]);
 });

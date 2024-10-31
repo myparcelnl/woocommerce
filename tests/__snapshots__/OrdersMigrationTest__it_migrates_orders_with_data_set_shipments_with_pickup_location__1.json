@@ -101,7 +101,7 @@
       }
     ],
     "_myparcelnl_version": "4.20.2",
-    "_myparcelnl_migrated": ["5.0.0-alpha.1"]
+    "_myparcelnl_migrated": ["5.0.0"]
   },
   "pdkOrder": {
     "exported": false,
