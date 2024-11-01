@@ -8,6 +8,8 @@ use MyParcelNL\Pdk\Base\PdkBootstrapper;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\WooCommerce\Integration\DeliveryOptionsBlocksIntegration;
+use MyParcelNL\WooCommerce\Service\WooCommerceService;
+use WC_Blocks_Utils;
 use function DI\factory;
 use function DI\value;
 
@@ -196,10 +198,18 @@ class WcPdkBootstrapper extends PdkBootstrapper
 
             'defaultSettings'          => value([
                 CheckoutSettings::ID => [
-                    CheckoutSettings::ALLOWED_SHIPPING_METHODS  => ['flat_rate:0', 'free_shipping:0'],
-                    CheckoutSettings::DELIVERY_OPTIONS_POSITION => 'woocommerce_after_checkout_billing_form',
+                    CheckoutSettings::ALLOWED_SHIPPING_METHODS => ['flat_rate:0', 'free_shipping:0'],
                 ],
             ]),
+
+            'disabledSettings'         => factory(function () {
+                $disabledSettings = [];
+                if (Pdk::get(WooCommerceService::class)->isUsingBlocksCheckout()) {
+                    $disabledSettings[CheckoutSettings::ID][] = CheckoutSettings::DELIVERY_OPTIONS_POSITION;
+                }
+
+                return $disabledSettings;
+            }),
 
             /**
              * @see https://www.businessbloomer.com/woocommerce-visual-hook-guide-checkout-page/
