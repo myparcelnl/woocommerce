@@ -7,7 +7,29 @@ on:
 run-name: 'Trigger from PDK release ${{ github.event.client_payload.version }}'
 
 jobs:
-  trigger:
+  store:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: myparcelnl/actions/setup-app-credentials@v4
+        id: credentials
+        with:
+          app-id: ${{ secrets.MYPARCEL_APP_ID }}
+          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
+
+      - name: 'Store update information'
+        id: store
+        shell: bash
+        with:
+          GITHUB_TOKEN: ${{ steps.credentials.outputs.token }}
+        # language=bash
+        run: |
+          gh variable set PDK_LAST_UPDATE_TIMESTAMP --body "$(date +%s)"
+
+  trigger-push:
+    needs:
+      - store
     runs-on: ubuntu-22.04
     steps:
       - uses: benc-uk/workflow-dispatch@v1
@@ -15,10 +37,21 @@ jobs:
           ref: main
           workflow: push.yml
 
-  prepare:
+      - name: 'Report'
+        shell: bash
+        env:
+          PR_NUMBER: ${{ matrix.pr.number }}
+          PR_REF: ${{ matrix.pr.ref }}
+        #language=bash
+        run: |
+          echo "✅ Triggered a new build on the main branch" >> $GITHUB_STEP_SUMMARY
+
+  prepare-prs:
+    needs:
+      - store
     runs-on: ubuntu-22.04
     outputs:
-      pr-data: ${{ steps.list.outputs.result }}
+      pr-data: ${{ steps.pulls.outputs.result }}
     steps:
       - uses: myparcelnl/actions/setup-app-credentials@v4
         id: credentials
@@ -27,7 +60,7 @@ jobs:
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
 
       - name: 'Get pull requests'
-        id: list
+        id: pulls
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -45,7 +78,8 @@ jobs:
             }));
 
   trigger-prs:
-    needs: prepare
+    needs:
+      - prepare-prs
     runs-on: ubuntu-22.04
     strategy:
       matrix:
@@ -57,3 +91,12 @@ jobs:
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
           event-type: trigger-pr-build
           client-payload: ${{ toJSON(matrix.pr) }}
+
+      - name: 'Report'
+        shell: bash
+        env:
+          PR_NUMBER: ${{ matrix.pr.number }}
+          PR_REF: ${{ matrix.pr.ref }}
+        #language=bash
+        run: |
+          echo "✅ Triggered a new build for PR #${PR_NUMBER} (${PR_REF})" >> $GITHUB_STEP_SUMMARY
