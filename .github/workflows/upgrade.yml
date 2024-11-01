@@ -18,11 +18,12 @@ on:
 jobs:
   upgrade:
     runs-on: ubuntu-22.04
-    if: github.event.inputs.update-deps == true
     steps:
       - uses: actions/checkout@v4
+        if: inputs.update-deps == true
 
       - uses: myparcelnl/actions/pdk-setup-upgrade@v4
+        if: inputs.update-deps == true
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
