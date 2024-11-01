@@ -9,11 +9,11 @@ on:
         required: false
         default: true
 
-    create-commit:
-      description: 'Create a commit with the changes.'
-      type: boolean
-      required: false
-      default: false
+      create-commit:
+        description: 'Create a commit with the changes.'
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   upgrade:
