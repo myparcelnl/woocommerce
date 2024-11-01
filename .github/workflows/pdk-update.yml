@@ -44,7 +44,9 @@ jobs:
           PR_REF: ${{ matrix.pr.ref }}
         #language=bash
         run: |
-          echo "✅ Triggered a new build on the main branch" >> $GITHUB_STEP_SUMMARY
+          buildUrl="${REPO_URL}/actions/workflows/push.yml"
+
+          echo "✅ Triggered a [new build](${buildUrl}) on the main branch" >> $GITHUB_STEP_SUMMARY
 
   prepare-prs:
     needs:
@@ -96,7 +98,10 @@ jobs:
         shell: bash
         env:
           PR_NUMBER: ${{ matrix.pr.number }}
-          PR_REF: ${{ matrix.pr.ref }}
+          REPO_URL: '${{ github.server_url }}/${{ github.repository }}'
         #language=bash
         run: |
-          echo "✅ Triggered a new build for PR #${PR_NUMBER} (${PR_REF})" >> $GITHUB_STEP_SUMMARY
+          prUrl="${REPO_URL}/pull/${PR_NUMBER}"
+          buildUrl="${REPO_URL}/actions/workflows/pull-request.yml"
+
+          echo "✅ Triggered a [new build](${buildUrl}) for [PR #${PR_NUMBER}](${prUrl})" >> $GITHUB_STEP_SUMMARY
