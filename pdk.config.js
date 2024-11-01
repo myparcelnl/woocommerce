@@ -1,3 +1,4 @@
+import {spawnSync} from 'node:child_process';
 import {
   PdkPlatformName,
   addPlatformToContext,
@@ -9,7 +10,6 @@ import {
   resolvePath,
   resolveString,
 } from '@myparcel-pdk/app-builder';
-import {spawnSync} from 'node:child_process';
 
 const ENTRY_FILE = 'woocommerce-myparcel.php';
 
@@ -75,12 +75,12 @@ export default defineConfig({
       const {config} = context;
 
       await Promise.all(
-        config.platforms.map(async (platform) => {
+        config.platforms.map(async(platform) => {
           const platformContext = addPlatformToContext(context, platform);
           const platformDistPath = getPlatformDistPath(platformContext);
           const sourcePath = resolvePath([platformDistPath, ENTRY_FILE], context);
 
-          if (!(await exists(sourcePath))) {
+          if (!await exists(sourcePath)) {
             reportFileDoesNotExist(sourcePath, platformContext);
             return;
           }
