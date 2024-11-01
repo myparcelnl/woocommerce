@@ -83,7 +83,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        pr: ${{ fromJSON(needs.prepare.outputs.pr-data) }}
+        pr: ${{ fromJSON(needs.prepare-prs.outputs.pr-data) }}
     steps:
       - uses: myparcelnl/actions/repository-dispatch@v4
         with:
