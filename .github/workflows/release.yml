@@ -8,21 +8,36 @@ on:
         default: true
         type: boolean
 
+      create-commit:
+        description: '[🚧 UNTESTED] Commit and push the upgrade changes before releasing.'
+        default: false
+        type: boolean
+
 concurrency:
   group: '${{ github.workflow }}-${{ github.ref }}'
   cancel-in-progress: true
 
 jobs:
+  upgrade:
+    uses: ./.github/workflows/upgrade.yml
+    secrets: inherit
+    with:
+      update-deps: ${{ github.event.inputs.update-deps }}
+      create-commit: ${{ github.event.inputs.create-commit }}
+
   test:
+    needs: upgrade
     uses: ./.github/workflows/test.yml
     secrets: inherit
 
   analyse:
+    needs: upgrade
     uses: ./.github/workflows/analyse.yml
     secrets: inherit
 
   release:
     needs:
+      - upgrade
       - test
       - analyse
     runs-on: ubuntu-22.04

@@ -17,14 +17,22 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  upgrade:
+    uses: ./.github/workflows/upgrade.yml
+    secrets: inherit
+
   test:
     uses: ./.github/workflows/test.yml
+    needs:
+      - upgrade
     secrets: inherit
     with:
       ref: ${{ github.event.client_payload.ref || github.ref }}
 
   analyse:
     uses: ./.github/workflows/analyse.yml
+    needs:
+      - upgrade
     secrets: inherit
     with:
       ref: ${{ github.event.client_payload.ref || github.ref }}
