@@ -20,9 +20,9 @@ jobs:
 
       - name: 'Store update information'
         id: store
-        shell: bash
-        with:
+        env:
           GITHUB_TOKEN: ${{ steps.credentials.outputs.token }}
+        shell: bash
         # language=bash
         run: |
           gh variable set PDK_LAST_UPDATE_TIMESTAMP --body "$(date +%s)"
