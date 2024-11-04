@@ -27,6 +27,7 @@ it(
         factory(CheckoutSettings::class)
             ->withEnableDeliveryOptions($enableDeliveryOptions)
             ->withEnableDeliveryOptionsWhenNotInStock($enableDeliveryOptionsWhenNotInStock)
+            ->withDeliveryOptionsPosition('woocommerce_after_checkout_billing_form')
             ->store();
 
         $product = wpFactory(WC_Product::class)

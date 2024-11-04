@@ -312,7 +312,6 @@ class WcPdkBootstrapper extends PdkBootstrapper
             ]),
 
             'filterDefaults' => value([
-                'deliveryOptionsPosition'          => 'woocommerce_after_checkout_billing_form',
                 'separateAddressFieldsPriority'    => 10,
                 'taxFieldsPriority'                => 10,
                 'trackTraceInEmailPriority'        => 10,
