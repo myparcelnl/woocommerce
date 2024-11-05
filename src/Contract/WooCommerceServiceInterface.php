@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Contract;
 
-use WC_Blocks_Utils;
 
 interface WooCommerceServiceInterface
 {
