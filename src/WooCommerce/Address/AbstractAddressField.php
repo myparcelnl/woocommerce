@@ -8,6 +8,7 @@ use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Facade\Language;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Sdk\src\Support\Str;
+use MyParcelNL\WooCommerce\Contract\WooCommerceServiceInterface;
 use MyParcelNL\WooCommerce\Facade\Filter;
 use MyParcelNL\WooCommerce\WooCommerce\Address\Contract\AddressFieldInterface;
 
@@ -50,16 +51,6 @@ abstract class AbstractAddressField implements AddressFieldInterface
     }
 
     /**
-     * @return string
-     */
-    final public function getBlocksCheckoutId(): string
-    {
-        $appInfo = Pdk::getAppInfo();
-
-        return sprintf('%s/%s', $appInfo->name, $this->getId());
-    }
-
-    /**
      * @return string[]
      */
     public function getClass(): array
@@ -72,7 +63,13 @@ abstract class AbstractAddressField implements AddressFieldInterface
      */
     public function getId(): string
     {
-        return Pdk::get($this->getName());
+        /** @var \MyParcelNL\WooCommerce\Contract\WooCommerceServiceInterface $service */
+        $service = Pdk::get(WooCommerceServiceInterface::class);
+        $appInfo = Pdk::getAppInfo();
+
+        $id = Pdk::get($this->getName());
+
+        return $service->isUsingBlocksCheckout() ? sprintf('%s/%s', $appInfo->name, $id) : $id;
     }
 
     /**
@@ -92,6 +89,14 @@ abstract class AbstractAddressField implements AddressFieldInterface
     }
 
     /**
+     * @return string
+     */
+    public function getLocation(): string
+    {
+        return 'address';
+    }
+
+    /**
      * @return int
      */
     public function getPriority(): int
@@ -108,6 +113,15 @@ abstract class AbstractAddressField implements AddressFieldInterface
     }
 
     /**
+     * @return string
+     * @see \Automattic\WooCommerce\Blocks\Domain\Services\CheckoutFields::$supported_field_types
+     */
+    public function getType(): string
+    {
+        return 'text';
+    }
+
+    /**
      * @return bool
      */
     public function isHidden(): bool
@@ -121,23 +135,6 @@ abstract class AbstractAddressField implements AddressFieldInterface
     public function isRequired(): bool
     {
         return false;
-    }
-
-    /**
-     * @param  null|int $flags
-     *
-     * @return array
-     */
-    public function toArray(?int $flags = null): array
-    {
-        return [
-            'id'         => $this->getId(),
-            'label'      => $this->getLabel(),
-            'name'       => $this->getName(),
-            'hidden'     => $this->isHidden(),
-            'required'   => $this->isRequired(),
-            'attributes' => $this->getAttributes(),
-        ];
     }
 
     /**

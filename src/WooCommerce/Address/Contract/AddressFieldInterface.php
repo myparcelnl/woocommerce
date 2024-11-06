@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\WooCommerce\Address\Contract;
 
-use MyParcelNL\Pdk\Base\Contract\Arrayable;
-
-interface AddressFieldInterface extends Arrayable
+interface AddressFieldInterface
 {
     /**
      * @return array<string, scalar>
@@ -17,11 +15,6 @@ interface AddressFieldInterface extends Arrayable
      * @return array<string, scalar>
      */
     public function getBlocksCheckoutAttributes(): array;
-
-    /**
-     * @return string
-     */
-    public function getBlocksCheckoutId(): string;
 
     /**
      * @return string[]
@@ -51,6 +44,11 @@ interface AddressFieldInterface extends Arrayable
     /**
      * @return string
      */
+    public function getLocation(): string;
+
+    /**
+     * @return string
+     */
     public function getName(): string;
 
     /**
@@ -62,6 +60,11 @@ interface AddressFieldInterface extends Arrayable
      * @return string
      */
     public function getTranslatedLabel(): string;
+
+    /**
+     * @return string
+     */
+    public function getType(): string;
 
     /**
      * @return bool

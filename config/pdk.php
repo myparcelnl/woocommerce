@@ -71,12 +71,10 @@ use MyParcelNL\WooCommerce\Service\WpCronService;
 use MyParcelNL\WooCommerce\Service\WpFilterService;
 use MyParcelNL\WooCommerce\Service\WpInstallerService;
 use MyParcelNL\WooCommerce\Service\WpScriptService;
-use MyParcelNL\WooCommerce\WooCommerce\Contract\WcAddressFieldsServiceInterface;
 use MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface;
 use MyParcelNL\WooCommerce\WooCommerce\Contract\WcShippingRepositoryInterface;
 use MyParcelNL\WooCommerce\WooCommerce\Repository\WcOrderRepository;
 use MyParcelNL\WooCommerce\WooCommerce\Repository\WcShippingRepository;
-use MyParcelNL\WooCommerce\WooCommerce\Service\WcAddressFieldsService;
 use Psr\Log\LoggerInterface;
 use function DI\factory;
 use function DI\get;
@@ -181,9 +179,8 @@ return [
     WordPressServiceInterface::class => get(WordPressService::class),
     WpFilterServiceInterface::class  => get(WpFilterService::class),
 
-    WooCommerceServiceInterface::class     => get(WooCommerceService::class),
-    WcShippingRepositoryInterface::class   => get(WcShippingRepository::class),
-    WcAddressFieldsServiceInterface::class => get(WcAddressFieldsService::class),
+    WooCommerceServiceInterface::class   => get(WooCommerceService::class),
+    WcShippingRepositoryInterface::class => get(WcShippingRepository::class),
 
     ###
     # PDK services
