@@ -1,9 +1,4 @@
-import {
-  FIELD_PREFIX_BILLING,
-  FIELD_PREFIX_SHIPPING,
-  FIELD_SHIPPING_METHOD,
-  FIELD_SHIP_TO_DIFFERENT_ADDRESS,
-} from '@myparcel-woocommerce/frontend-common';
+import {FIELD_PREFIX_BILLING, FIELD_PREFIX_SHIPPING} from '@myparcel-woocommerce/frontend-common';
 import {AddressType, useConfig, PdkField, type PdkCheckoutConfigInput} from '@myparcel-pdk/checkout-common';
 import {useUtil, PdkUtil} from '@myparcel-pdk/checkout';
 import {createId, createFields, createName} from '../utils';
@@ -14,8 +9,9 @@ import {ADDRESS_FIELDS_CLASSIC} from './constants';
 export const getClassicCheckoutConfig = () => {
   return {
     fields: {
-      [PdkField.AddressType]: createId('checkbox-control-0'),
-      [PdkField.ShippingMethod]: createId(FIELD_SHIPPING_METHOD),
+      // Irrelevant because there's always a separate billing and shipping address object.
+      [PdkField.AddressType]: '',
+      [PdkField.ShippingMethod]: createId('shipping_method[0]'),
       [AddressType.Billing]: createFields(ADDRESS_FIELDS_CLASSIC, (val) =>
         createName(`${FIELD_PREFIX_BILLING}_${val}`),
       ),
@@ -25,8 +21,8 @@ export const getClassicCheckoutConfig = () => {
     },
 
     formData: {
-      [PdkField.AddressType]: FIELD_SHIP_TO_DIFFERENT_ADDRESS,
-      [PdkField.ShippingMethod]: `.checkbox-control-0`,
+      [PdkField.AddressType]: PdkField.AddressType,
+      [PdkField.ShippingMethod]: 'shipping_method',
       [AddressType.Billing]: createFields(ADDRESS_FIELDS_CLASSIC, (val) => `${FIELD_PREFIX_BILLING}_${val}`),
       [AddressType.Shipping]: createFields(ADDRESS_FIELDS_CLASSIC, (val) => `${FIELD_PREFIX_SHIPPING}_${val}`),
     },

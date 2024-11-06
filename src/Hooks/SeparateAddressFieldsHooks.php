@@ -179,7 +179,7 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks
         $additionalFields = [];
 
         foreach ($this->addressFieldsService->getSeparateAddressFields() as $field) {
-            $id = sprintf('%s_%s', $form, $field->getName());
+            $id = sprintf('%s_%s', $form, $field->getId());
 
             $additionalFields[$id] = array_replace([
                 'class'    => $field->getClass(),
@@ -209,10 +209,7 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks
             'required'   => $field->isRequired(),
             'location'   => 'address',
             'attributes' => $field->getBlocksCheckoutAttributes(),
-            /**
-             * In blocks checkout, the order is determined by 'index' and not 'priority'.
-             */
-            'index'      => Filter::apply(sprintf('%sIndex', $field->getName())),
+            'index'      => $field->getIndex(),
         ]);
     }
 
