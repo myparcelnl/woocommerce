@@ -78,6 +78,9 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'fieldNumberSuffix' => value('house_number_suffix'),
             'fieldStreet'       => value('street_name'),
 
+            'fieldEoriNumber' => value('eori_number'),
+            'fieldVatNumber'  => value('vat_number'),
+
             ###
             # Meta Keys
             ###
@@ -357,14 +360,14 @@ class WcPdkBootstrapper extends PdkBootstrapper
                  * Blocks checkout field order
                  */
 
-                // Between address_1 and address_2
-                'fieldStreetIndex'          => 51,
-                'fieldNumberIndex'          => 52,
-                'fieldNumberSuffixIndex'    => 53,
+                // Before address_1 and address_2
+                'fieldStreetIndex'          => 31,
+                'fieldNumberIndex'          => 32,
+                'fieldNumberSuffixIndex'    => 33,
 
                 // After all other fields
-                'fieldEoriNumberIndex'      => 900,
-                'fieldVatNumberIndex'       => 901,
+                'fieldVatNumberIndex'       => 900,
+                'fieldEoriNumberIndex'      => 901,
             ]),
 
             ###

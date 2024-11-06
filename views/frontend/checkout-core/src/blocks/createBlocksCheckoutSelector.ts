@@ -1,6 +1,6 @@
 import {createId} from '../utils';
 
-export const createSelector = (val: string, prefix: string) => {
+export const createBlocksCheckoutSelector = (val: string, prefix: string): string => {
   const matches = /(\w+)\/(\w+)$/.exec(val);
 
   if (!matches) {

@@ -1,0 +1,61 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`getBlocksCheckoutConfig > has correct fields and formData config 1`] = `
+{
+  "address1": "#billing-address_1",
+  "address2": "#billing-address_2",
+  "city": "#billing-city",
+  "country": "#billing-country",
+  "eoriNumber": "#billing-myparcelnl-eori_number",
+  "number": "#billing-myparcelnl-house_number",
+  "numberSuffix": "#billing-myparcelnl-house_number_suffix",
+  "postalCode": "#billing-postcode",
+  "street": "#billing-myparcelnl-street_name",
+  "vatNumber": "#billing-myparcelnl-vat_number",
+}
+`;
+
+exports[`getBlocksCheckoutConfig > has correct fields and formData config 2`] = `
+{
+  "address1": "#shipping-address_1",
+  "address2": "#shipping-address_2",
+  "city": "#shipping-city",
+  "country": "#shipping-country",
+  "eoriNumber": "#shipping-myparcelnl-eori_number",
+  "number": "#shipping-myparcelnl-house_number",
+  "numberSuffix": "#shipping-myparcelnl-house_number_suffix",
+  "postalCode": "#shipping-postcode",
+  "street": "#shipping-myparcelnl-street_name",
+  "vatNumber": "#shipping-myparcelnl-vat_number",
+}
+`;
+
+exports[`getBlocksCheckoutConfig > has correct fields and formData config 3`] = `
+{
+  "address1": "billing-address_1",
+  "address2": "billing-address_2",
+  "city": "billing-city",
+  "country": "billing-country",
+  "eoriNumber": "billing-myparcelnl/eori_number",
+  "number": "billing-myparcelnl/house_number",
+  "numberSuffix": "billing-myparcelnl/house_number_suffix",
+  "postalCode": "billing-postcode",
+  "street": "billing-myparcelnl/street_name",
+  "vatNumber": "billing-myparcelnl/vat_number",
+}
+`;
+
+exports[`getBlocksCheckoutConfig > has correct fields and formData config 4`] = `
+{
+  "address1": "shipping-address_1",
+  "address2": "shipping-address_2",
+  "city": "shipping-city",
+  "country": "shipping-country",
+  "eoriNumber": "shipping-myparcelnl/eori_number",
+  "number": "shipping-myparcelnl/house_number",
+  "numberSuffix": "shipping-myparcelnl/house_number_suffix",
+  "postalCode": "shipping-postcode",
+  "street": "shipping-myparcelnl/street_name",
+  "vatNumber": "shipping-myparcelnl/vat_number",
+}
+`;

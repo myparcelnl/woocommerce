@@ -56,7 +56,7 @@ abstract class AbstractAddressField implements AddressFieldInterface
     {
         $appInfo = Pdk::getAppInfo();
 
-        return sprintf('%s/%s', $appInfo->name, $this->getName());
+        return sprintf('%s/%s', $appInfo->name, $this->getId());
     }
 
     /**
