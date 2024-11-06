@@ -17,12 +17,17 @@ interface WooCommerceServiceInterface
     public function isActive(): bool;
 
     /**
+     * Whether the WooCommerce Blocks checkout is enabled.
+     *
      * @return bool
+     * @see https://stackoverflow.com/a/77950175
      */
     public function isUsingBlocksCheckout(): bool;
 
     /**
      * Whether HPOS is enabled in WooCommerce.
+     *
+     * @return bool
      */
     public function isUsingHpos(): bool;
 }

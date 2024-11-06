@@ -238,36 +238,6 @@ class WcPdkBootstrapper extends PdkBootstrapper
                 'delivery-options' => DeliveryOptionsBlocksIntegration::class,
             ]),
 
-            'separateAddressFields' => factory(function () {
-                return [
-                    [
-                        'name'       => 'fieldStreet',
-                        'label'      => 'street',
-                        'required'   => true,
-                        'attributes' => [
-                            // There is no street autocomplete, only address line 1
-                            'autocomplete' => 'off',
-                        ],
-                    ],
-                    [
-                        'name'       => 'fieldNumber',
-                        'label'      => 'number',
-                        'required'   => true,
-                        'attributes' => [
-                            // There is no number autocomplete, only address line 1
-                            'autocomplete' => 'off',
-                        ],
-                    ],
-                    [
-                        'name'       => 'fieldNumberSuffix',
-                        'label'      => 'number_suffix',
-                        'attributes' => [
-                            'maxLength' => Pdk::get('numberSuffixMaxLength'),
-                        ],
-                    ],
-                ];
-            }),
-
             ###
             # Routes
             ###
@@ -313,33 +283,46 @@ class WcPdkBootstrapper extends PdkBootstrapper
                 /**
                  * Field classes
                  */
-                'fieldEoriNumberClass'             => 'mpwc_checkout_field_eori_number_class',
-                'fieldVatNumberClass'              => 'mpwc_checkout_field_vat_number_class',
                 'fieldStreetClass'                 => 'mpwc_checkout_field_street_class',
                 'fieldNumberClass'                 => 'mpwc_checkout_field_number_class',
                 'fieldNumberSuffixClass'           => 'mpwc_checkout_field_number_suffix_class',
 
+                'fieldVatNumberClass'       => 'mpwc_checkout_field_vat_number_class',
+                'fieldEoriNumberClass'      => 'mpwc_checkout_field_eori_number_class',
+
                 /**
                  * Field priorities
                  */
-                'fieldEoriNumberPriority'          => 'mpwc_checkout_field_eori_number_priority',
-                'fieldVatNumberPriority'           => 'mpwc_checkout_field_vat_number_priority',
-                'fieldStreetPriority'              => 'mpwc_checkout_field_street_priority',
-                'fieldNumberPriority'              => 'mpwc_checkout_field_number_priority',
-                'fieldNumberSuffixPriority'        => 'mpwc_checkout_field_number_suffix_priority',
+                'fieldStreetPriority'       => 'mpwc_checkout_field_street_priority',
+                'fieldNumberPriority'       => 'mpwc_checkout_field_number_priority',
+                'fieldNumberSuffixPriority' => 'mpwc_checkout_field_number_suffix_priority',
+
+                'fieldVatNumberPriority'  => 'mpwc_checkout_field_vat_number_priority',
+                'fieldEoriNumberPriority' => 'mpwc_checkout_field_eori_number_priority',
+
+                /**
+                 * Field indices (for blocks checkout)
+                 */
+
+                'fieldStreetIndex'       => 'mpwc_checkout_field_street_index',
+                'fieldNumberIndex'       => 'mpwc_checkout_field_number_index',
+                'fieldNumberSuffixIndex' => 'mpwc_checkout_field_number_suffix_index',
+
+                'fieldVatNumberIndex'      => 'mpwc_checkout_field_vat_number_index',
+                'fieldEoriNumberIndex'     => 'mpwc_checkout_field_eori_number_index',
 
                 /**
                  * Checkout
                  */
-                'deliveryOptionsPosition'          => 'mpwc_checkout_delivery_options_position',
-                'deliveryOptionsPositions'         => 'mpwc_checkout_delivery_options_positions',
-                'orderDeliveryOptions'             => 'mpwc_checkout_order_delivery_options',
-                'showDeliveryOptions'              => 'mpwc_checkout_show_delivery_options',
+                'deliveryOptionsPosition'  => 'mpwc_checkout_delivery_options_position',
+                'deliveryOptionsPositions' => 'mpwc_checkout_delivery_options_positions',
+                'orderDeliveryOptions'     => 'mpwc_checkout_order_delivery_options',
+                'showDeliveryOptions'      => 'mpwc_checkout_show_delivery_options',
 
                 /**
                  * Account page
                  */
-                'trackTraceLabel'                  => 'mpwc_track_trace_label',
+                'trackTraceLabel'          => 'mpwc_track_trace_label',
             ]),
 
             'filterDefaults' => value([

@@ -6,14 +6,14 @@ namespace MyParcelNL\WooCommerce\Hooks;
 
 use Exception;
 use MyParcelNL\Pdk\Base\Support\Arr;
-use MyParcelNL\Pdk\Facade\Language;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
-use MyParcelNL\Sdk\src\Support\Str;
+use MyParcelNL\WooCommerce\Contract\WooCommerceServiceInterface;
 use MyParcelNL\WooCommerce\Facade\Filter;
-use WC_Blocks_Utils;
+use MyParcelNL\WooCommerce\WooCommerce\Address\Contract\AddressFieldInterface;
+use MyParcelNL\WooCommerce\WooCommerce\Contract\WcAddressFieldsServiceInterface;
 
 /**
  * Adds separate address fields to the WooCommerce order fields.
@@ -21,18 +21,26 @@ use WC_Blocks_Utils;
 class SeparateAddressFieldsHooks extends AbstractFieldsHooks
 {
     /**
-     * Copied from WooCommerce
-     *
-     * @see \Automattic\WooCommerce\Blocks\Domain\Services\CheckoutFields::register_field_attributes
+     * @var \MyParcelNL\WooCommerce\WooCommerce\Contract\WcAddressFieldsServiceInterface
      */
-    private const ALLOWED_BLOCKS_FIELD_ATTRIBUTES = [
-        'maxLength',
-        'readOnly',
-        'pattern',
-        'autocomplete',
-        'autocapitalize',
-        'title',
-    ];
+    private $addressFieldsService;
+
+    /**
+     * @var \MyParcelNL\WooCommerce\Contract\WooCommerceServiceInterface
+     */
+    private $wooCommerceService;
+
+    /**
+     * @param  \MyParcelNL\WooCommerce\Contract\WooCommerceServiceInterface                 $wooCommerceService
+     * @param  \MyParcelNL\WooCommerce\WooCommerce\Contract\WcAddressFieldsServiceInterface $addressFieldsService
+     */
+    public function __construct(
+        WooCommerceServiceInterface     $wooCommerceService,
+        WcAddressFieldsServiceInterface $addressFieldsService
+    ) {
+        $this->wooCommerceService   = $wooCommerceService;
+        $this->addressFieldsService = $addressFieldsService;
+    }
 
     public function apply(): void
     {
@@ -81,14 +89,18 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks
      */
     public function extendDefaultsWithSeparateAddressFields(array $fields): array
     {
-        return array_reduce($this->getCustomFields(), static function (array $allFields, array $field) {
-            $allFields[$field['id']] = [
-                'required' => $field['required'] ?? false,
-                'hidden'   => true,
-            ];
+        return array_reduce(
+            $this->addressFieldsService->getSeparateAddressFields(),
+            static function (array $allFields, AddressFieldInterface $field) {
+                $allFields[$field->getId()] = [
+                    'required' => $field->isRequired(),
+                    'hidden'   => false,
+                ];
 
-            return $allFields;
-        }, $fields);
+                return $allFields;
+            },
+            $fields
+        );
     }
 
     /**
@@ -99,20 +111,21 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks
     public function extendLocaleWithSeparateAddressFields(array $locale): array
     {
         $usesSeparateAddressFields = $this->usesSeparateAddressFields();
-        $usesWcBlocksCheckout      = $this->usesWcBlocksCheckout();
+        $isUsingBlocksCheckout     = $this->wooCommerceService->isUsingBlocksCheckout();
+        $separateAddressFields     = $this->addressFieldsService->getSeparateAddressFields();
 
         // When using blocks checkout, don't hide address 1. It's not possible to modify its value otherwise.
-        $hideAddress1 = $usesSeparateAddressFields && is_checkout() && ! $usesWcBlocksCheckout;
+        $hideAddress1 = $usesSeparateAddressFields && is_checkout() && ! $isUsingBlocksCheckout;
 
         foreach (Pdk::get('countriesWithSeparateAddressFields') as $countryCode) {
             Arr::set($locale[$countryCode], sprintf('%s.required', Pdk::get('fieldAddress1')), true);
             Arr::set($locale[$countryCode], sprintf('%s.hidden', Pdk::get('fieldAddress1')), $hideAddress1);
 
-            foreach ($this->getCustomFields() as $customField) {
-                $locale[$countryCode][$customField['id']] = array_replace($customField, [
-                    'required' => $usesSeparateAddressFields && ($customField['required'] ?? false),
+            foreach ($separateAddressFields as $field) {
+                $locale[$countryCode][$field->getId()] = [
+                    'required' => $field->isRequired() && $usesSeparateAddressFields,
                     'hidden'   => ! $usesSeparateAddressFields,
-                ]);
+                ];
             }
         }
 
@@ -126,9 +139,9 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks
      */
     public function extendSelectorsWithSeparateAddressFields(array $localeFields): array
     {
-        $selectors = array_map(function (array $field) {
-            return $this->createSelectorFor($field['id']);
-        }, $this->getCustomFields());
+        $selectors = array_map(function (AddressFieldInterface $field) {
+            return $this->createSelectorFor($field->getId());
+        }, $this->addressFieldsService->getSeparateAddressFields());
 
         return array_replace($localeFields, ...$selectors);
     }
@@ -165,71 +178,41 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks
     {
         $additionalFields = [];
 
-        foreach ($this->getCustomFields() as $field) {
-            $label = $field['label'];
-            $name  = $field['id'];
-            $id    = sprintf('%s_%s', $form, Pdk::get($name));
+        foreach ($this->addressFieldsService->getSeparateAddressFields() as $field) {
+            $id = sprintf('%s_%s', $form, $field->getName());
 
             $additionalFields[$id] = array_replace([
-                'class'    => Filter::apply("{$name}Class"),
-                'label'    => Language::translate($label),
-                'priority' => Filter::apply("{$name}Priority"),
-            ], $field['attributes']);
+                'class'    => $field->getClass(),
+                'label'    => $field->getTranslatedLabel(),
+                'priority' => $field->getPriority(),
+            ], $field->getLegacyCheckoutAttributes());
         }
 
         return array_merge($fields, $additionalFields);
     }
 
     /**
-     * @return array
-     */
-    private function getCustomFields(): array
-    {
-        $baseFields         = Pdk::get('separateAddressFields');
-        $isWcBlocksCheckout = $this->usesWcBlocksCheckout();
-
-        return array_map(function (array $field) use ($isWcBlocksCheckout) {
-            $fieldName = $field['name'];
-            $id        = Pdk::get($fieldName);
-
-            return array_replace(
-                ['attributes' => []],
-                $field,
-                ['id' => $isWcBlocksCheckout ? $this->createBlocksCheckoutFieldId($id) : $id]
-            );
-        }, $baseFields);
-    }
-
-    /**
-     * @param  array $field
+     * @param  \MyParcelNL\WooCommerce\WooCommerce\Address\Contract\AddressFieldInterface $field
      *
      * @return void
      * @throws \Exception
      */
-    private function registerWcBlocksCheckoutField(array $field): void
+    private function registerWcBlocksCheckoutField(AddressFieldInterface $field): void
     {
-        $filteredAttributes = Arr::where($field['attributes'] ?? [], static function ($value, $key) {
-            return in_array($key, self::ALLOWED_BLOCKS_FIELD_ATTRIBUTES, true)
-                || Str::startsWith($key, 'data-')
-                || Str::startsWith($key, 'aria-');
-        });
-
         woocommerce_register_additional_checkout_field([
-            'id'         => $field['id'],
-            'label'      => Language::translate($field['label']),
-
+            'id'         => $field->getBlocksCheckoutId(),
+            'label'      => $field->getTranslatedLabel(),
             /**
              * @see \Automattic\WooCommerce\Blocks\Domain\Services\CheckoutFields::$supported_field_types
              */
             'type'       => 'text',
-            'required'   => $field['required'] ?? false,
+            'required'   => $field->isRequired(),
             'location'   => 'address',
-            'attributes' => $filteredAttributes,
-
+            'attributes' => $field->getBlocksCheckoutAttributes(),
             /**
              * In blocks checkout, the order is determined by 'index' and not 'priority'.
              */
-            'index'      => Filter::apply('' . $field['id'] . 'Index'),
+            'index'      => Filter::apply(sprintf('%sIndex', $field->getName())),
         ]);
     }
 
@@ -243,7 +226,7 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks
         }
 
         try {
-            foreach ($this->getCustomFields() as $field) {
+            foreach ($this->addressFieldsService->getSeparateAddressFields() as $field) {
                 $this->registerWcBlocksCheckoutField($field);
             }
         } catch (Exception $e) {
@@ -257,14 +240,5 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks
     private function usesSeparateAddressFields(): bool
     {
         return (bool) Settings::get(CheckoutSettings::USE_SEPARATE_ADDRESS_FIELDS, CheckoutSettings::ID);
-    }
-
-    /**
-     * @return bool
-     * @see https://stackoverflow.com/a/77950175
-     */
-    private function usesWcBlocksCheckout(): bool
-    {
-        return WC_Blocks_Utils::has_block_in_page(wc_get_page_id('checkout'), 'woocommerce/checkout');
     }
 }

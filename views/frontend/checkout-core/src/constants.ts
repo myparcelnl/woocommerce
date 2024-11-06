@@ -16,3 +16,7 @@ export const ADDRESS_FIELDS_DEFAULT = Object.freeze({
   [AddressField.Country]: FIELD_NAME_COUNTRY,
   [AddressField.PostalCode]: FIELD_NAME_POSTAL_CODE,
 });
+
+export const SELECTOR_FORM_CLASSIC = 'form[name="checkout"]';
+
+export const SELECTOR_FORM_BLOCKS = '.wc-block-checkout__form';
