@@ -1,15 +1,12 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="All tests" type="PestRunConfigurationType">
-    <CommandLine workingDirectory="$PROJECT_DIR$">
+    <CommandLine parameters=" " workingDirectory="$PROJECT_DIR$">
       <PhpTestInterpreterSettings>
         <option name="interpreterName" value="php" />
       </PhpTestInterpreterSettings>
     </CommandLine>
     <option name="pestRunnerSettings">
-      <PestRunner configuration_file="$PROJECT_DIR$/phpunit.xml" method="" scope="ConfigurationFile" use_alternative_configuration_file="true" />
-    </option>
-    <option name="runnerSettings">
-      <PhpTestRunnerSettings configuration_file="$PROJECT_DIR$/phpunit.xml" method="" scope="ConfigurationFile" use_alternative_configuration_file="true" />
+      <PestRunner configuration_file="$PROJECT_DIR$/phpunit.xml" method="" scope="ConfigurationFile" use_alternative_configuration_file="true" coverage_engine="PCov" />
     </option>
     <method v="2" />
   </configuration>

@@ -2,19 +2,10 @@
 <project version="4">
   <component name="PhpTestFrameworkSettings">
     <test_tools>
-      <tool tool_name="Behat">
-        <settings>
-          <configurations>
-            <local_configuration executable_path="$PROJECT_DIR$/../../../../myparcelnl/pdk/vendor/behat/behat/bin/behat" />
-          </configurations>
-        </settings>
-      </tool>
       <tool tool_name="Pest">
         <settings>
           <configurations>
-            <local_configuration configuration_file_path="$PROJECT_DIR$/phpunit.xml" executable_path="$PROJECT_DIR$/vendor/pestphp/pest/bin/pest" use_configuration_file="true" />
-            <configuration_by_sdk interpreter_id="252b5794-ce9b-458f-8c2c-3437ee18a727" configuration_file_path="/app/phpunit.xml" executable_path="/app/vendor/pestphp/pest/bin/pest" use_configuration_file="true" />
-            <local_configuration executable_path="$PROJECT_DIR$/../../../../myparcelnl/pdk/vendor/pestphp/pest/bin/pest" />
+            <configuration_by_sdk interpreter_id="252b5794-ce9b-458f-8c2c-3437ee18a727" executable_path="vendor/bin/pest" />
           </configurations>
         </settings>
       </tool>
