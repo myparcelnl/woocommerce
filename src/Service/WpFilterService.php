@@ -12,7 +12,7 @@ use MyParcelNL\WooCommerce\Contract\WpFilterServiceInterface;
 class WpFilterService implements WpFilterServiceInterface
 {
     /**
-     * @template-covariant T of mixed
+     * @template T of mixed
      * @param  string $name
      * @param  T      $value
      * @param  mixed  ...$args
