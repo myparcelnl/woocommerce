@@ -47,7 +47,7 @@ final class MockWpActions implements StaticMockInterface
     }
 
     /**
-     * @template-covariant T of mixed
+     * @template T of mixed
      * @param  string $tag
      * @param  T      $value
      * @param  mixed  ...$args
