@@ -109,5 +109,5 @@ function wc_get_page_id(string $page)
         }
     }
 
-    throw new \RuntimeException("Page with name $page not found");
+    return -1;
 }
