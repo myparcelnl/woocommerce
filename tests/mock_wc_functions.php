@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 use MyParcelNL\WooCommerce\Tests\Mock\MockWc;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcData;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpCache;
 
 /** @see \get_woocommerce_currency() */
 function get_woocommerce_currency(): string
@@ -83,4 +84,30 @@ function wc_get_products($args): array
 function WC()
 {
     return MockWc::getInstance();
+}
+
+/** @param  string $page Page slug.
+ * @return int
+ * @see \wc_get_page_id()
+ *      Retrieve page ids - used for myaccount, edit_address, shop, cart, checkout, pay, view_order, terms. returns -1
+ *      if no page is found.
+ */
+function wc_get_page_id(string $page)
+{
+    if ('pay' === $page || 'thanks' === $page) {
+        $page = 'checkout';
+    }
+    if ('change_password' === $page || 'edit_address' === $page || 'lost_password' === $page) {
+        $page = 'myaccount';
+    }
+
+    $allPages = MockWpCache::$cache['pages'];
+
+    foreach ($allPages as $pageId => $singlePage) {
+        if ($singlePage['data']['pageName'] === $page) {
+            return $pageId;
+        }
+    }
+
+    throw new \RuntimeException("Page with name $page not found");
 }

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk;
 
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpCache;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpUser;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use function MyParcelNL\Pdk\Tests\usesShared;
@@ -63,5 +65,25 @@ it('returns proper permission callback', function (array $roles, bool $expected)
     'many, shop_manager, any'     => [
         'roles'    => ['nobody', 'subscriber', 'anybody', 'shop_manager', 'somebody'],
         'expected' => true,
+    ],
+]);
+
+it('enables or disables delivery options position setting', function ($pageId, $group, $data, $result) {
+    MockWpCache::add($pageId, $data, $group);
+    $disabledSettings = Pdk::get('disabledSettings');
+
+    expect($disabledSettings)->toEqual($result);
+})->with([
+    'Blocks checkout enabled'  => [
+        'pageId' => '7',
+        'group'  => 'pages',
+        'data'   => ['pageName' => 'checkout', 'hasBlocks' => true],
+        'result' => [CheckoutSettings::ID => [CheckoutSettings::DELIVERY_OPTIONS_POSITION]],
+    ],
+    'Classic checkout enabled' => [
+        'pageId' => '7',
+        'group'  => 'pages',
+        'data'   => ['pageName' => 'checkout', 'hasBlocks' => false],
+        'result' => [],
     ],
 ]);
