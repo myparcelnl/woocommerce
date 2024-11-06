@@ -23,3 +23,5 @@ export const FIELD_SHIPPING_METHOD = 'shipping_method';
 export const FIELD_PREFIX_SHIPPING = 'shipping';
 
 export const FIELD_PREFIX_BILLING = 'billing';
+
+export const FIELD_SHIP_TO_DIFFERENT_ADDRESS = 'ship_to_different_address';

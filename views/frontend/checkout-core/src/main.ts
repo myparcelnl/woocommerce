@@ -5,8 +5,6 @@ import {isClassicCheckout} from './utils';
 import {getClassicCheckoutConfig} from './classic';
 import {getBlocksCheckoutConfig} from './blocks';
 
-const config = isClassicCheckout() ? getClassicCheckoutConfig() : getBlocksCheckoutConfig();
-
 createPdkCheckout({
   selectors: {
     deliveryOptionsWrapper: '#mypa-delivery-options-wrapper',
@@ -56,5 +54,5 @@ createPdkCheckout({
     }
   },
 
-  ...config.config,
+  ...(isClassicCheckout() ? getClassicCheckoutConfig() : getBlocksCheckoutConfig()),
 });
