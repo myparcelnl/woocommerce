@@ -14,7 +14,16 @@ const createDefaultConfig = (env) => {
     plugins: [customTsConfig()],
     build: {
       minify: !isDev,
-      sourcemap: isDev ? 'inline' : false,
+      sourcemap: isDev,
+      rollupOptions: {
+        external: ['vue', 'vitest', 'vite', /@vitest\/.*/, /@vite\/.*/, '@myparcel/delivery-options', 'leaflet'],
+        output: {
+          globals: {
+            '@myparcel/delivery-options': 'MyParcelDeliveryOptions',
+            vue: 'Vue',
+          },
+        },
+      },
     },
 
     test: {
