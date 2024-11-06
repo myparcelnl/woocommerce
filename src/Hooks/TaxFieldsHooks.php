@@ -6,140 +6,52 @@ namespace MyParcelNL\WooCommerce\Hooks;
 
 use MyParcelNL\Pdk\Base\Service\CountryCodes;
 use MyParcelNL\Pdk\Facade\AccountSettings;
-use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\WooCommerce\Facade\Filter;
+use MyParcelNL\WooCommerce\WooCommerce\Address\EoriNumberField;
+use MyParcelNL\WooCommerce\WooCommerce\Address\VatNumberField;
 
 class TaxFieldsHooks extends AbstractFieldsHooks
 {
-    public function apply(): void
+    /**
+     * @return bool
+     */
+    protected function addToBilling(): bool
     {
-        add_filter('woocommerce_get_country_locale', [$this, 'extendLocaleWithTaxFields'], 1);
-        add_filter('woocommerce_country_locale_field_selectors', [$this, 'extendSelectorsWithTaxFields']);
-        add_filter('woocommerce_default_address_fields', [$this, 'extendDefaultsWithTaxFields']);
-
-        add_filter(
-            'woocommerce_billing_fields',
-            [$this, 'extendBillingFields'],
-            Filter::apply('taxFieldsPriority'),
-            2
-        );
-
-        add_filter(
-            'woocommerce_shipping_fields',
-            [$this, 'extendShippingFields'],
-            Filter::apply('taxFieldsPriority'),
-            2
-        );
+        return false;
     }
 
     /**
-     * @param  array $fields
-     *
-     * @return array
+     * @return string[]
      */
-    public function extendBillingFields(array $fields): array
+    protected function getApplicableCountries(): array
     {
-        return $this->extendWithTaxFields($fields, Pdk::get('wcAddressTypeBilling'));
+        // TODO: Move to pdk as 'countriesWithTaxFields'
+        return CountryCodes::EU_COUNTRIES;
     }
 
     /**
-     * @param  array $fields
-     *
-     * @return array
+     * @return \MyParcelNL\WooCommerce\WooCommerce\Address\Contract\AddressFieldInterface[]
      */
-    public function extendDefaultsWithTaxFields(array $fields): array
+    protected function getCustomFields(): array
     {
-        if (! $this->shouldRender()) {
-            return $fields;
-        }
-
-        return array_merge($fields, [
-            Pdk::get('fieldEoriNumber') => [
-                'hidden'   => false,
-                'required' => true,
-            ],
-            Pdk::get('fieldVatNumber')  => [
-                'hidden'   => false,
-                'required' => true,
-            ],
-        ]);
+        return [
+            new VatNumberField(),
+            new EoriNumberField(),
+        ];
     }
 
     /**
-     * @param  array $locale
-     *
-     * @return array
+     * @return string
      */
-    public function extendLocaleWithTaxFields(array $locale): array
+    protected function getName(): string
     {
-        if (! $this->shouldRender()) {
-            return $locale;
-        }
-
-        foreach (CountryCodes::EU_COUNTRIES as $countryCode) {
-            foreach (Pdk::get('taxFields') as $field) {
-                $locale[$countryCode][Pdk::get($field)] = [
-                    'required' => false,
-                    'hidden'   => true,
-                ];
-            }
-        }
-
-        return $locale;
-    }
-
-    /**
-     * @param  array $localeFields
-     *
-     * @return array
-     */
-    public function extendSelectorsWithTaxFields(array $localeFields): array
-    {
-        if (! $this->shouldRender()) {
-            return $localeFields;
-        }
-
-        return array_replace(
-            $localeFields,
-            $this->createSelectorFor('fieldEoriNumber'),
-            $this->createSelectorFor('fieldVatNumber')
-        );
-    }
-
-    /**
-     * @param  array $fields
-     *
-     * @return array
-     */
-    public function extendShippingFields(array $fields): array
-    {
-        return $this->extendWithTaxFields($fields, Pdk::get('wcAddressTypeShipping'));
+        return 'taxFields';
     }
 
     /**
      * @return bool
      */
-    protected function shouldRender(): bool
+    protected function isEnabled(): bool
     {
         return AccountSettings::hasTaxFields();
-    }
-
-    /**
-     * @param  array  $fields
-     * @param  string $form
-     *
-     * @return array
-     */
-    private function extendWithTaxFields(array $fields, string $form): array
-    {
-        if (! $this->shouldRender()) {
-            return $fields;
-        }
-
-        return array_replace(
-            $fields,
-            $this->createField($form, 'fieldEoriNumber', 'eori'),
-            $this->createField($form, 'fieldVatNumber', 'vat')
-        );
     }
 }
