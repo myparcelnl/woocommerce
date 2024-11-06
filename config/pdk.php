@@ -37,6 +37,7 @@ use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\OrderSettings;
 use MyParcelNL\WooCommerce\Contract\WooCommerceServiceInterface;
 use MyParcelNL\WooCommerce\Contract\WordPressServiceInterface;
+use MyParcelNL\WooCommerce\Contract\WpFilterServiceInterface;
 use MyParcelNL\WooCommerce\Database\Contract\WpDatabaseServiceInterface;
 use MyParcelNL\WooCommerce\Database\Service\WpDatabaseService;
 use MyParcelNL\WooCommerce\Facade\WooCommerce;
@@ -68,6 +69,7 @@ use MyParcelNL\WooCommerce\Pdk\Webhook\WcWebhooksRepository;
 use MyParcelNL\WooCommerce\Service\WooCommerceService;
 use MyParcelNL\WooCommerce\Service\WordPressService;
 use MyParcelNL\WooCommerce\Service\WpCronService;
+use MyParcelNL\WooCommerce\Service\WpFilterService;
 use MyParcelNL\WooCommerce\Service\WpInstallerService;
 use MyParcelNL\WooCommerce\Service\WpScriptService;
 use MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface;
@@ -175,9 +177,11 @@ return [
     # Custom services
     ###
 
-    WcShippingRepositoryInterface::class => get(WcShippingRepository::class),
+    WordPressServiceInterface::class => get(WordPressService::class),
+    WpFilterServiceInterface::class  => get(WpFilterService::class),
+
     WooCommerceServiceInterface::class   => get(WooCommerceService::class),
-    WordPressServiceInterface::class     => get(WordPressService::class),
+    WcShippingRepositoryInterface::class => get(WcShippingRepository::class),
 
     ###
     # PDK services

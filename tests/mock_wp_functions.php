@@ -60,9 +60,9 @@ function update_option(string $option, $value, $autoload = null)
 }
 
 /** @see \apply_filters() */
-function apply_filters($tag, $value)
+function apply_filters($tag, $value, ...$args)
 {
-    return $value;
+    return MockWpActions::applyFilters($tag, $value, ...$args);
 }
 
 /** @see \wp_schedule_single_event() */

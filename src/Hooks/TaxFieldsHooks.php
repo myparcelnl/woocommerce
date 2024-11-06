@@ -20,14 +20,14 @@ class TaxFieldsHooks extends AbstractFieldsHooks
         add_filter(
             'woocommerce_billing_fields',
             [$this, 'extendBillingFields'],
-            Filter::apply('taxFieldsPriority', Pdk::get('wcAddressTypeBilling')),
+            Filter::apply('taxFieldsPriority'),
             2
         );
 
         add_filter(
             'woocommerce_shipping_fields',
             [$this, 'extendShippingFields'],
-            Filter::apply('taxFieldsPriority', Pdk::get('wcAddressTypeShipping')),
+            Filter::apply('taxFieldsPriority'),
             2
         );
     }

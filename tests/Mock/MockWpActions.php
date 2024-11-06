@@ -47,6 +47,19 @@ final class MockWpActions implements StaticMockInterface
     }
 
     /**
+     * @template-covariant T of mixed
+     * @param  string $tag
+     * @param  T      $value
+     * @param  mixed  ...$args
+     *
+     * @return T
+     */
+    public static function applyFilters(string $tag, $value, ...$args)
+    {
+        return self::execute($tag, $value, ...$args) ?? $value;
+    }
+
+    /**
      * @param  string $tag
      *
      * @return bool
@@ -61,17 +74,22 @@ final class MockWpActions implements StaticMockInterface
      * @param  string $tag
      * @param  mixed  ...$args
      *
-     * @return void
+     * @return mixed
      */
-    public static function execute(string $tag, ...$args): void
+    public static function execute(string $tag, ...$args)
     {
         $actions = self::get($tag);
+        $value   = null;
 
         foreach ($actions as $action) {
-            call_user_func_array($action['function'], $args);
+            $value = call_user_func_array($action['function'], $args);
         }
 
-        self::$actions->put($tag, []);
+        if (! empty($actions)) {
+            self::$actions->put($tag, []);
+        }
+
+        return $value;
     }
 
     /**
