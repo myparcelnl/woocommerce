@@ -80,10 +80,12 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
      */
     private function getDeliveryOptionsPosition(): string
     {
-        return Filter::apply(
+        $position = Filter::apply(
             'deliveryOptionsPosition',
             Settings::get(CheckoutSettings::DELIVERY_OPTIONS_POSITION, CheckoutSettings::ID)
         );
+
+        return $position ?: 'woocommerce_after_checkout_billing_form';
     }
 
     /**
