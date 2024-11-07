@@ -28,3 +28,9 @@ jobs:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
           no-commit: ${{ github.event.inputs.create-commit != true }}
+
+      - uses: lhotari/action-upterm@v1
+        if: failure() && runner.debug == '1'
+        with:
+          limit-access-to-actor: true
+          wait-timeout-minutes: 5

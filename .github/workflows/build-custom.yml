@@ -36,7 +36,7 @@ jobs:
             woocommerce-myparcel.php
 
       - uses: lhotari/action-upterm@v1
-        if: failure()
+        if: failure() && runner.debug == '1'
         with:
           limit-access-to-actor: true
           wait-timeout-minutes: 5
