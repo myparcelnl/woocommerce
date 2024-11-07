@@ -3323,8 +3323,8 @@ __metadata:
   linkType: hard
 
 "@myparcel-pdk/app-builder@npm:^1.0.0":
-  version: 1.4.7
-  resolution: "@myparcel-pdk/app-builder@npm:1.4.7"
+  version: 1.6.0
+  resolution: "@myparcel-pdk/app-builder@npm:1.6.0"
   dependencies:
     "@edielemoine/google-docs-importer": "npm:^2.2.0"
     "@myparcel/ts-utils": "npm:^1.9.0"
@@ -3336,11 +3336,12 @@ __metadata:
     inquirer: "npm:^9.1.4"
     interpret: "npm:^3.1.1"
     liftoff: "npm:^5.0.0"
+    radash: "npm:^12.1.0"
     semver: "npm:^7.5.4"
     supports-color: "npm:^9.3.1"
   bin:
     pdk-builder: ./bin/index.js
-  checksum: 10c0/6e8a47053b80e53c90ad72b8158f781d79f6202cb63d7c6a2960d45cf0c024bf24bfe3201d8a5e753bf0a81e26d11f005aed2873c47598d72dceb788d3f16df5
+  checksum: 10c0/91d3cc543e703da39ab9f80c3b01d0b63b2ba8fa76ee21d3ffccdcd5c5ee2228becf22c0320c37dcc160d4c21a54e045c239ea58d8661f5417ad89cdca0a4519
   languageName: node
   linkType: hard
 
@@ -25525,7 +25526,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"radash@npm:^12.0.0":
+"radash@npm:^12.0.0, radash@npm:^12.1.0":
   version: 12.1.0
   resolution: "radash@npm:12.1.0"
   checksum: 10c0/c89e2345e06017aa6ecc090c1a72d18720b70ad73608dd2a80b8994789acb1108b5b481bef18e4b489eb541a76dd8e0924d6ec9717939cc8634179a1153ad07c
