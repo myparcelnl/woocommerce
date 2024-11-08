@@ -259,11 +259,15 @@ class WcPdkBootstrapper extends PdkBootstrapper
             ###
 
             'filters' => value([
+                'trackTraceInEmailPriority'        => 'mpwc_track_trace_in_email_priority',
+                'trackTraceInMyAccountPriority'    => 'mpwc_track_trace_in_my_account_priority',
+                'trackTraceInOrderDetailsPriority' => 'mpwc_track_trace_in_order_details_priority',
+
+                /**
+                 * Address fields
+                 */
                 'separateAddressFieldsPriority'    => 'mpwc_checkout_separate_address_fields_priority',
                 'taxFieldsPriority'                => 'mpwc_checkout_tax_fields_priority',
-                'trackTraceInMyAccountPriority'    => 'mpwc_track_trace_in_my_account_priority',
-                'trackTraceInMyEmailPriority'      => 'mpwc_track_trace_in_email_priority',
-                'trackTraceInOrderDetailsPriority' => 'mpwc_track_trace_in_order_details_priority',
 
                 /**
                  * Field classes

@@ -23,14 +23,14 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks
         add_filter(
             'woocommerce_billing_fields',
             [$this, 'extendBillingFields'],
-            Filter::apply('separateAddressFieldsPriority', Pdk::get('wcAddressTypeBilling')),
+            Filter::apply('separateAddressFieldsPriority'),
             2
         );
 
         add_filter(
             'woocommerce_shipping_fields',
             [$this, 'extendShippingFields'],
-            Filter::apply('separateAddressFieldsPriority', Pdk::get('wcAddressTypeShipping')),
+            Filter::apply('separateAddressFieldsPriority'),
             2
         );
     }
