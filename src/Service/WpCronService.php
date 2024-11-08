@@ -19,6 +19,7 @@ class WpCronService implements CronServiceInterface
      */
     public function dispatch($callback, ...$args): void
     {
+        // todo (Joeri): execute callback immediately always
         if (is_array($callback)) {
             [$class, $method] = $callback;
             $instance = Pdk::get(get_class($class));
