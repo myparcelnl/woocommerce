@@ -19,7 +19,14 @@ class WpCronService implements CronServiceInterface
      */
     public function dispatch($callback, ...$args): void
     {
-        $this->schedule($callback, time(), ...$args);
+        if (is_array($callback)) {
+            [$class, $method] = $callback;
+            $instance = Pdk::get(get_class($class));
+
+            if (method_exists($instance, $method)) {
+                $instance->{$method}(...$args);
+            }
+        }
     }
 
     /**
