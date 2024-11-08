@@ -86,7 +86,9 @@ function WC()
     return MockWc::getInstance();
 }
 
-/** @param  string $page Page slug.
+/**
+ * @param  string $page Page slug.
+ *
  * @return int
  * @see \wc_get_page_id()
  *      Retrieve page ids - used for myaccount, edit_address, shop, cart, checkout, pay, view_order, terms. returns -1
