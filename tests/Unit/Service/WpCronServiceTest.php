@@ -8,6 +8,7 @@ namespace MyParcelNL\WooCommerce\Service;
 use InvalidArgumentException;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\WooCommerce\Tests\Mock\MockCallableClass;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use function MyParcelNL\Pdk\Tests\usesShared;
@@ -20,22 +21,9 @@ it('dispatches jobs', function () {
     /** @var \MyParcelNL\Pdk\Base\Contract\CronServiceInterface $cronService */
     $cronService = Pdk::get(CronServiceInterface::class);
 
-    $cronService->dispatch('my_dispatch_func', 'arg1', 2, 'arg3');
+    $cronService->dispatch([new MockCallableClass(),'updateOption'], 'arg1', 'arg2');
 
-    $firstTask = $tasks
-        ->all()
-        ->first();
-
-    expect($tasks->all())
-        ->toHaveLength(1)
-        ->and($firstTask['callback'])
-        ->toBe('my_dispatch_func')
-        ->and($firstTask['time'])
-        ->toBeLessThanOrEqual(time() + 5)
-        ->and($firstTask['time'])
-        ->toBeGreaterThanOrEqual(time() - 5)
-        ->and($firstTask['args'])
-        ->toBe(['arg1', 2, 'arg3']);
+    expect(get_option('arg1'))->toBe('arg2');
 });
 
 it('schedules jobs', function ($callback) {
