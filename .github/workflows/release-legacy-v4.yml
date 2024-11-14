@@ -1,0 +1,153 @@
+###
+# Only kept right now for bugfixes and security patches.
+###
+name: '🚀 Release [LEGACY v4]'
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to release (Use workflow from main!)'
+        required: true
+        default: 'v4'
+
+concurrency:
+  group: release-legacy-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PHP_VERSION: 7.1
+  NODE_VERSION: 18
+  ASSETS_DIR: ./.wordpress-assets
+  BUILD_DIR: ./.wordpress-dist
+
+jobs:
+  release:
+    runs-on: ubuntu-22.04
+    outputs:
+      released: ${{ steps.release.outputs.released }}
+      version: ${{ steps.release.outputs.version }}
+    steps:
+      - uses: myparcelnl/actions/setup-git-credentials@v4
+        id: credentials
+        with:
+          app-id: ${{ secrets.MYPARCEL_APP_ID }}
+          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+          fetch-depth: 0
+          token: ${{ steps.credentials.outputs.token }}
+
+      - uses: myparcelnl/actions/create-cache-keys@v4
+        id: cache-keys
+        with:
+          key: ${{ format('{0}{1}-legacy-cache', runner.os, runner.arch) }}
+          input: |
+            ${{ hashFiles('**/yarn.lock', '**/composer.lock') }}
+            ${{ hashFiles('**/*.php', 'includes/**', 'src/**', 'templates/**', 'migration/**') }}
+
+      - uses: actions/cache@v4
+        id: cache
+        with:
+          path: |
+            node_modules
+            vendor
+          key: ${{ steps.cache-keys.outputs.key }}
+          restore-keys: ${{ steps.cache-keys.outputs.restore-keys }}
+
+      - uses: myparcelnl/actions/composer-install@v4
+        if: steps.cache.outputs.cache-hit != 'true'
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+
+      - uses: myparcelnl/actions/yarn-install@v4
+        if: steps.cache.outputs.cache-hit != 'true'
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - uses: myparcelnl/actions/semantic-release@v4
+        id: release
+        with:
+          token: ${{ steps.credentials.outputs.token }}
+
+  deploy-svn:
+    needs: release
+    if: needs.release.outputs.released == 'true'
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+
+      - uses: myparcelnl/actions/create-cache-keys@v4
+        id: cache-keys
+        with:
+          key: ${{ format('{0}{1}-legacy-cache', runner.os, runner.arch) }}
+          input: |
+            ${{ hashFiles('**/yarn.lock', '**/composer.lock') }}
+            ${{ hashFiles('**/*.php', 'includes/**', 'src/**', 'templates/**', 'migration/**') }}
+
+      - uses: actions/cache@v4
+        id: cache
+        with:
+          path: |
+            node_modules
+            vendor
+          key: ${{ steps.cache-keys.outputs.key }}
+          restore-keys: ${{ steps.cache-keys.outputs.restore-keys }}
+
+      - uses: myparcelnl/actions/composer-install@v4
+        if: steps.cache.outputs.cache-hit != 'true'
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+
+      - uses: myparcelnl/actions/yarn-install@v4
+        if: steps.cache.outputs.cache-hit != 'true'
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 'Trim leading "v" from version number'
+        id: prepare
+        shell: bash
+        env:
+          VERSION: ${{ needs.release.outputs.version }}
+        #language=bash
+        run: |
+          echo "version=${VERSION#v}" >> $GITHUB_OUTPUT
+
+      - name: 'Create build'
+        shell: bash
+        env:
+          VERSION: ${{ steps.prepare.outputs.version }}
+        #language=bash
+        run: |
+          node ./private/updateVersion.cjs "${VERSION}"
+
+          yarn build
+
+      - name: 'Create dist folder'
+        shell: bash
+        #language=bash
+        run: |
+          bash ./private/bash/createDistFolder.sh "${BUILD_DIR}"
+
+      - uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SLUG: woocommerce-myparcel
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          VERSION: ${{ steps.prepare.outputs.version }}
+
+  rebase-prs:
+    needs:
+      - release
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: myparcelnl/actions/rebase-prs@v4
+        with:
+          app-id: ${{ secrets.MYPARCEL_APP_ID }}
+          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
+          base: ${{ inputs.branch }}
+          exclude-drafts: true
