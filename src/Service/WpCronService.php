@@ -19,7 +19,11 @@ class WpCronService implements CronServiceInterface
      */
     public function dispatch($callback, ...$args): void
     {
-        $this->schedule($callback, time(), ...$args);
+        if (! is_string($callback) && ! is_array($callback)) {
+            throw new InvalidArgumentException('Invalid callback');
+        }
+
+        $callback(...$args);
     }
 
     /**
@@ -51,10 +55,6 @@ class WpCronService implements CronServiceInterface
      */
     private function getActions($callback, $hook)
     {
-        if (! is_string($callback) && ! is_array($callback)) {
-            throw new InvalidArgumentException('Invalid callback');
-        }
-
         $callable = $callback;
 
         if (is_array($callback)) {
