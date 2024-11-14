@@ -7,11 +7,6 @@ namespace MyParcelNL\WooCommerce\Contract;
 interface WooCommerceServiceInterface
 {
     /**
-     * Whether HPOS is enabled in WooCommerce.
-     */
-    public function isUsingHpos(): bool;
-
-    /**
      * @return string
      */
     public function getVersion(): string;
@@ -20,4 +15,14 @@ interface WooCommerceServiceInterface
      * @return bool
      */
     public function isActive(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isUsingBlocksCheckout(): bool;
+
+    /**
+     * Whether HPOS is enabled in WooCommerce.
+     */
+    public function isUsingHpos(): bool;
 }

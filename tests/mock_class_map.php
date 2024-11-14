@@ -4,6 +4,7 @@
 declare(strict_types=1);
 
 use MyParcelNL\WooCommerce\Tests\Mock\MockWc;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWcBlocksUtils;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcCart;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcCartRepository;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcClass;
@@ -17,10 +18,10 @@ use MyParcelNL\WooCommerce\Tests\Mock\MockWcShippingMethodClass;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcShippingMethodFlatRateClass;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcShippingZone;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcShippingZonesClass;
-use MyParcelNL\WooCommerce\Tests\Mock\MockWpTerm;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpRestRequest;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpRestResponse;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpRestServer;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpTerm;
 
 /** @see \MyParcelNL\WooCommerce\bootPdk() */
 const PEST = true;
@@ -83,3 +84,6 @@ class WP_REST_Request extends MockWpRestRequest { }
 
 /** @see \WP_REST_Response */
 class WP_REST_Response extends MockWpRestResponse { }
+
+/** @see \WC_Blocks_Utils */
+class WC_Blocks_Utils extends MockWcBlocksUtils { }
