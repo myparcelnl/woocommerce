@@ -41,7 +41,10 @@ function get_locale(): string
     return 'nl_NL';
 }
 
-/** @see \wp_die() */
+/**
+ * @throws null
+ * @see \wp_die()
+ */
 function wp_die(string $message = '', string $title = '', array $args = [])
 {
     throw new DieException($message, $title);

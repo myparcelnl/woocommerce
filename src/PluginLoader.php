@@ -37,7 +37,6 @@ class PluginLoader
 
     /**
      * @return void
-     * @throws \MyParcelNL\WooCommerce\Tests\Exception\DieException
      */
     public function install(): void
     {
