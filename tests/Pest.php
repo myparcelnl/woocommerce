@@ -13,6 +13,7 @@ namespace MyParcelNL\WooCommerce\Tests;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcData;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkBootstrapper;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcSession;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWcShipping;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpCache;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpEnqueue;
@@ -29,16 +30,17 @@ define('WP_DEBUG', true);
 uses()
     ->afterEach(function () {
         /**
-         * @var $resetInterfaces class-string<\MyParcelNL\WooCommerce\Tests\Mock\StaticMockInterface>[]
+         * @var class-string<\MyParcelNL\WooCommerce\Tests\Mock\StaticMockInterface>[] $resetInterfaces
          */
         $resetInterfaces = [
             MockWcData::class,
             MockWcPdkBootstrapper::class,
             MockWcSession::class,
+            MockWcShipping::class,
             MockWpActions::class,
+            MockWpCache::class,
             MockWpEnqueue::class,
             MockWpMeta::class,
-            MockWpCache::class,
         ];
 
         foreach ($resetInterfaces as $class) {

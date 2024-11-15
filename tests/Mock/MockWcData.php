@@ -22,7 +22,7 @@ final class MockWcData implements StaticMockInterface
      */
     public static function create(MockWcClass $data): MockWcClass
     {
-        if (! $data->get_id() && ! $data->get_instance_id()) {
+        if (! is_scalar($data->get_id()) && ! is_scalar($data->get_instance_id())) {
             $data->set_id(count(self::$items) + 1);
         }
 
@@ -44,9 +44,10 @@ final class MockWcData implements StaticMockInterface
     }
 
     /**
-     * @param  class-string<\WC_Data> $class
+     * @template T of \WC_Data
+     * @param  class-string<T> $class
      *
-     * @return array
+     * @return array<int, T>
      */
     public static function getByClass(string $class): array
     {
@@ -80,7 +81,7 @@ final class MockWcData implements StaticMockInterface
     {
         $id = $data->get_instance_id() ?? $data->get_id();
 
-        if (! $id) {
+        if (! is_scalar($id)) {
             throw new RuntimeException('Cannot save data without id');
         }
 

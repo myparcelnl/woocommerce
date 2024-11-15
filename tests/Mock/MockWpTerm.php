@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Tests\Mock;
 
 /**
- * @extends \Wp_term
+ * @extends \WP_Term
  */
-class MockWpTerm
+class MockWpTerm extends MockWpClass
 {
     /**
      * @param  int $termId
      * @param      $taxonomy
-     *  $taxonomy is only used if term is not in cache. Used to retrieve the term from the database.
-     *  in this test $taxonomy is not used. But it is here for completeness.
      *
      * @return false|\WP_Term|mixed
      */

@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpDocFinalChecksInspection */
 
 declare(strict_types=1);
 

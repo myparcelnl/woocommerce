@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpUnused */
 
 declare(strict_types=1);
 
@@ -6,7 +7,6 @@ use MyParcelNL\WooCommerce\Tests\Factory\AbstractWcDataFactory;
 
 /**
  * @template T of WC_Shipping_Method
- * @method WC_Shipping_Method make()
  * @method $this withId(int $id)
  * @method $this withMethodTitle(string $methodTitle)
  * @method $this withMethodDescription(string $methodDescription)
@@ -25,7 +25,7 @@ use MyParcelNL\WooCommerce\Tests\Factory\AbstractWcDataFactory;
  * @method $this withHasSettings(bool $hasSettings)
  * @method $this withSettingsHtml(string|bool $settingsHtml)
  * @method $this withSupports(array $supports)
- *
+ * @extends \MyParcelNL\WooCommerce\Tests\Factory\AbstractWcDataFactory<T>
  */
 final class WC_Shipping_Flat_Rate_Factory extends AbstractWcDataFactory
 {

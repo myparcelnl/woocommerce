@@ -1,12 +1,11 @@
 <?php
-/** @noinspection PhpIllegalPsrClassPathInspection */
+/** @noinspection PhpUnused,LongInheritanceChainInspection,EmptyClassInspection,PhpIllegalPsrClassPathInspection */
 
 declare(strict_types=1);
 
 use MyParcelNL\WooCommerce\Tests\Mock\MockWc;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcBlocksUtils;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcCart;
-use MyParcelNL\WooCommerce\Tests\Mock\MockWcCartRepository;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcClass;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcCustomer;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcDateTime;
@@ -26,7 +25,10 @@ use MyParcelNL\WooCommerce\Tests\Mock\MockWpTerm;
 /** @see \MyParcelNL\WooCommerce\bootPdk() */
 const PEST = true;
 
-class WC_Data { }
+class WC_Data
+{
+    public function __construct() {}
+}
 
 /** @see \WC_Cart */
 class WC_Cart extends MockWcCart { }
@@ -62,7 +64,10 @@ class WC_Session extends MockWcSession { }
 class WC_Shipping_Zones extends MockWcShippingZonesClass { }
 
 /** @see \WC_Shipping_Zone */
-class WC_Shipping_Zone extends MockWcShippingZone { }
+class WC_Shipping_Zone extends MockWcShippingZone
+{
+    public function test() {}
+}
 
 /** @see \WC_Shipping_Method */
 class WC_Shipping_Method extends MockWcShippingMethodClass { }

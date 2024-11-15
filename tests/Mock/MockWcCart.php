@@ -49,11 +49,6 @@ class MockWcCart extends MockWcClass
         }
     }
 
-    public function get_cart()
-    {
-        return $this->cart_contents;
-    }
-
     /**
      * @return void
      */
@@ -63,18 +58,24 @@ class MockWcCart extends MockWcClass
     }
 
     /**
-     * @return array
+     * Check if product is in the cart and return cart item key.
+     * Cart item key will be unique based on the item and its properties, such as variations.
+     * ONLY RETURNS A KEY! DOES NOT RETURN THE ITEM!
+     *
+     * @param  mixed $cartId id of product to find in the cart.
+     *
+     * @return string cart item key
      */
-    public function get_shipping_packages(): array
+    public function find_product_in_cart($cartId = false): string
     {
-        $shippingPackages = [
-            ['contents' => $this->cart_contents],
-        ];
+        $thisItemsIsArray  = is_array($this->cart_contents);
+        $itemAlreadyExists = isset($this->cart_contents[$cartId]);
 
-        return apply_filters(
-            'woocommerce_cart_shipping_packages',
-            $shippingPackages
-        );
+        if (false !== $cartId && $thisItemsIsArray && $itemAlreadyExists) {
+            return $cartId;
+        }
+
+        return '';
     }
 
     /**
@@ -124,24 +125,23 @@ class MockWcCart extends MockWcClass
         );
     }
 
-    /**
-     * Check if product is in the cart and return cart item key.
-     * Cart item key will be unique based on the item and its properties, such as variations.
-     * ONLY RETURNS A KEY! DOES NOT RETURN THE ITEM!
-     *
-     * @param  mixed $cartId id of product to find in the cart.
-     *
-     * @return string cart item key
-     */
-    public function find_product_in_cart($cartId = false): string
+    public function get_cart()
     {
-        $thisItemsIsArray  = is_array($this->cart_contents);
-        $itemAlreadyExists = isset($this->cart_contents[$cartId]);
+        return $this->cart_contents;
+    }
 
-        if ($cartId !== false && $thisItemsIsArray && $itemAlreadyExists) {
-            return $cartId;
-        }
+    /**
+     * @return array
+     */
+    public function get_shipping_packages(): array
+    {
+        $shippingPackages = [
+            ['contents' => $this->cart_contents],
+        ];
 
-        return '';
+        return apply_filters(
+            'woocommerce_cart_shipping_packages',
+            $shippingPackages
+        );
     }
 }

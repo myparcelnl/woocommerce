@@ -7,6 +7,9 @@ namespace MyParcelNL\WooCommerce\Tests\Mock;
 use MyParcelNL\Pdk\Base\Support\Arr;
 use WC_Data;
 
+/**
+ * @method null|int|string get_instance_id()
+ */
 abstract class MockWcClass extends WC_Data
 {
     use MocksGettersAndSetters;
@@ -18,13 +21,15 @@ abstract class MockWcClass extends WC_Data
      */
     public function __construct($data = [])
     {
+        parent::__construct();
+
         if (is_scalar($data)) {
             $data = ['id' => $data];
         }
 
         $id = $data['id'] ?? null;
 
-        if ($id && MockWcData::has($id)) {
+        if (is_scalar($id) && MockWcData::has($id)) {
             $existing = MockWcData::get($id);
             $data     = $existing->getAttributes();
         }
@@ -115,42 +120,5 @@ abstract class MockWcClass extends WC_Data
         foreach ($data['meta'] ?? [] as $metaKey => $metaValue) {
             update_post_meta($created->get_id(), $metaKey, $metaValue);
         }
-    }
-
-    /**
-     * Dynamically retrieve attributes on the model.
-     *
-     * @param  string $key
-     *
-     * @return mixed
-     */
-    public function __get(string $key)
-    {
-        return $this->attributes[$key] ?? null;
-    }
-
-    /**
-     * Dynamically set attributes on the model.
-     *
-     * @param  string $key
-     * @param  mixed  $value
-     *
-     * @return void
-     */
-    public function __set(string $key, $value): void
-    {
-        $this->attributes[$key] = $value;
-    }
-
-    /**
-     * Determine if an attribute or relation exists on the model.
-     *
-     * @param  string $key
-     *
-     * @return bool
-     */
-    public function __isset(string $key)
-    {
-        return isset($this->attributes[$key]);
     }
 }

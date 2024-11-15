@@ -33,6 +33,7 @@ function createWcProduct(array $data = []): WC_Product
         ->make();
 }
 
+/** @noinspection PhpUnused */
 function mockFunction(): string
 {
     return 'mocked';

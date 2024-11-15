@@ -22,7 +22,7 @@ const SHIPPING_CLASS_BBP            = 3;
 const SHIPPING_CLASS_DPZ            = 2;
 const SHIPPING_CLASS_SAME_AS_PARENT = -1; // -1 is the actual value used in woocommerce
 
-dataset('productSettingsMigrationData', [
+dataset('product settings migration data', [
     'simple product with all settings' => [
         'product'    => [
             'weight' => 2,
@@ -158,7 +158,7 @@ it('migrates pre v5.0.0 product settings', function (array $product, ?array $par
             'parentProduct' => $parentPdkProduct ? $parentPdkProduct->settings->toArrayWithoutNull() : null,
         ])
     );
-})->with('productSettingsMigrationData');
+})->with('product settings migration data');
 
 it('schedules product migration in chunks', function () {
     /** @var \MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks $tasks */

@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpUnused */
 
 declare(strict_types=1);
 
@@ -7,7 +8,6 @@ use MyParcelNL\WooCommerce\Tests\Factory\AbstractWcDataFactory;
 
 /**
  * @template T of WC_Order
- * @method WC_Order make()
  * @method $this withHeight(float $height)
  * @method $this withId(int $id)
  * @method $this withLength(float $length)
@@ -20,6 +20,7 @@ use MyParcelNL\WooCommerce\Tests\Factory\AbstractWcDataFactory;
  * @method $this withWidth(float $width)
  * @method $this withSettings(array $settings)
  * @method $this withShippingClassId(int $id)
+ * @extends \MyParcelNL\WooCommerce\Tests\Factory\AbstractWcDataFactory<T>
  */
 final class WC_Product_Factory extends AbstractWcDataFactory
 {

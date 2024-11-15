@@ -1,5 +1,6 @@
 <?php
-/** @noinspection AutoloadingIssuesInspection,PhpIllegalPsrClassPathInspection */
+
+/** @noinspection AutoloadingIssuesInspection,PhpIllegalPsrClassPathInspection,EmptyClassInspection */
 
 declare(strict_types=1);
 

@@ -38,7 +38,7 @@ final class MockWpdb
         $keys = array_keys($this->db);
 
         foreach ($keys as $key) {
-            if (strpos($query, $key) !== false) {
+            if (false !== strpos($query, $key)) {
                 return $this->db[$key];
             }
         }

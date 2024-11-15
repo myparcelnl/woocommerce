@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
 
-dataset('legacyMetaData', [
+dataset('legacy meta data', [
     'delivery options' => [
         [
             OrdersMigration::LEGACY_META_ORDER_VERSION          => '2.22.0',

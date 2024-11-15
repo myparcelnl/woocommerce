@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpUnused */
 
 declare(strict_types=1);
 
@@ -11,7 +12,6 @@ use function MyParcelNL\WooCommerce\Tests\wpFactory;
 
 /**
  * @template T of WC_Order
- * @method WC_Order make()
  * @method $this withBillingCity(string $billingCity)
  * @method $this withBillingCompany(string $billingCompany)
  * @method $this withBillingCountry(string $billingCountry)
@@ -34,6 +34,7 @@ use function MyParcelNL\WooCommerce\Tests\wpFactory;
  * @method $this withShippingPostcode(string $shippingPostcode)
  * @method $this withShippingState(string $shippingState)
  * @method $this withStatus(string $value)
+ * @extends \MyParcelNL\WooCommerce\Tests\Factory\AbstractWcDataFactory<T>
  */
 final class WC_Order_Factory extends AbstractWcDataFactory
 {

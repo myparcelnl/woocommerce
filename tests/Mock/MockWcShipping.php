@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MyParcelNL\WooCommerce\Tests\Mock;
 
 use WC_Shipping;
@@ -7,7 +9,7 @@ use WC_Shipping;
 /**
  * @extends \WC_Shipping
  */
-class MockWcShipping
+class MockWcShipping implements StaticMockInterface
 {
     /**
      * The single instance of the class
@@ -43,7 +45,7 @@ class MockWcShipping
      *
      * @var array|null
      */
-    public $shipping_methods = null;
+    public $shipping_methods;
 
     /**
      * Main WC_Shipping Instance.
@@ -54,11 +56,19 @@ class MockWcShipping
      */
     public static function instance()
     {
-        if (is_null(self::$_instance)) {
+        if (null === self::$_instance) {
             self::$_instance = new self();
         }
 
         return self::$_instance;
+    }
+
+    /**
+     * @return void
+     */
+    public static function reset(): void
+    {
+        self::$_instance = null;
     }
 
     public function get_shipping_classes(): array

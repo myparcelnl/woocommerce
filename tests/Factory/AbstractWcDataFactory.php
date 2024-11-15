@@ -4,76 +4,24 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Tests\Factory;
 
-use BadMethodCallException;
-use MyParcelNL\Pdk\Tests\Factory\AbstractFactory;
-use MyParcelNL\Sdk\src\Support\Str;
-use MyParcelNL\WooCommerce\Tests\Factory\Contract\WcDataFactoryInterface;
-use WC_Data;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWcData;
 
 /**
- * @template T of WC_Data
- * @implements \MyParcelNL\WooCommerce\Tests\Factory\Contract\WcDataFactoryInterface<T>
+ * @template T of \WC_Data
+ * @extends \MyParcelNL\WooCommerce\Tests\Factory\AbstractWpFactory<T>
  */
-abstract class AbstractWcDataFactory extends AbstractFactory implements WcDataFactoryInterface
+abstract class AbstractWcDataFactory extends AbstractWpFactory
 {
     /**
-     * @var array<string, WC_Data>
+     * @inheritDoc
      */
-    private $cache = [];
-
-    /**
-     * @param  mixed $name
-     * @param  mixed $arguments
-     *
-     * @return $this
-     */
-    public function __call($name, $arguments)
+    public function store()
     {
-        if (Str::startsWith($name, 'with')) {
-            $attribute = Str::snake(Str::after($name, 'with'));
-            $value     = $arguments[0];
+        $model = parent::store();
 
-            return $this->with([$attribute => $value]);
-        }
+        MockWcData::save($model);
 
-        throw new BadMethodCallException(sprintf('Method %s does not exist', $name));
-    }
-
-    /**
-     * @return T
-     */
-    public function make(): WC_Data
-    {
-        $model      = $this->getClass();
-        $attributes = $this->resolveAttributes();
-
-        $cacheKey = sprintf('%s::%s', $model, md5(json_encode($attributes)));
-
-        if (! isset($this->cache[$cacheKey])) {
-            $this->cache[$cacheKey] = new $model($attributes);
-        }
-
-        return $this->cache[$cacheKey];
-    }
-
-    /**
-     * @return T
-     */
-    public function store(): WC_Data
-    {
-        return $this->make();
-    }
-
-    /**
-     * @param  array|\MyParcelNL\Pdk\Base\Support\Collection $data
-     *
-     * @return $this
-     */
-    public function with($data): WcDataFactoryInterface
-    {
-        $this->attributes = $this->attributes->merge($data);
-
-        return $this;
+        return $model;
     }
 
     /**

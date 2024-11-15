@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MyParcelNL\WooCommerce\Tests\Mock;
 
 use WC_Shipping_Method;
@@ -24,7 +26,7 @@ class MockWcShippingZone extends MockWcClass
         $filteredMethods = [];
         foreach ($methods as $method) {
             if ($method->get_supports()['settings']['shipping_zone_id'] === $this->get_id()) {
-                if ($enabledOnly && $method->get_enabled === 'no') {
+                if ($enabledOnly && 'no' === $method->get_enabled) {
                     continue;
                 }
                 $filteredMethods[] = $method;

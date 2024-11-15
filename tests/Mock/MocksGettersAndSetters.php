@@ -52,6 +52,43 @@ trait MocksGettersAndSetters
     }
 
     /**
+     * Dynamically retrieve attributes on the model.
+     *
+     * @param  string $key
+     *
+     * @return mixed
+     */
+    public function __get(string $key)
+    {
+        return $this->attributes[$key] ?? null;
+    }
+
+    /**
+     * Determine if an attribute or relation exists on the model.
+     *
+     * @param  string $key
+     *
+     * @return bool
+     */
+    public function __isset(string $key)
+    {
+        return isset($this->attributes[$key]);
+    }
+
+    /**
+     * Dynamically set attributes on the model.
+     *
+     * @param  string $key
+     * @param  mixed  $value
+     *
+     * @return void
+     */
+    public function __set(string $key, $value): void
+    {
+        $this->attributes[$key] = $value;
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public function getAttributes(): array

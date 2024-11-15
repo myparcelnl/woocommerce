@@ -1,5 +1,6 @@
 <?php
-/** @noinspection PhpMissingReturnTypeInspection,PhpUnhandledExceptionInspection */
+
+/** @noinspection PhpMissingReturnTypeInspection,PhpUnhandledExceptionInspection,PhpUnusedParameterInspection */
 
 declare(strict_types=1);
 
@@ -30,7 +31,7 @@ function wc_get_order_notes($args = []): array
 
     $item = MockWcData::get($id);
 
-    return $item->getAttributes()['order_notes'] ?? [];
+    return $item ? $item->getAttributes()['order_notes'] ?? [] : [];
 }
 
 /**

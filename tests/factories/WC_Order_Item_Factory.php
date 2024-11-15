@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpUnused */
 
 declare(strict_types=1);
 
@@ -7,9 +8,9 @@ use MyParcelNL\WooCommerce\Tests\Factory\AbstractWcDataFactory;
 
 /**
  * @template T of WC_Order_Item
- * @method WC_Order_Item make()
  * @method $this withQuantity(int $quantity)
  * @method $this withTotal(int $total)
+ * @extends \MyParcelNL\WooCommerce\Tests\Factory\AbstractWcDataFactory<T>
  */
 final class WC_Order_Item_Factory extends AbstractWcDataFactory
 {

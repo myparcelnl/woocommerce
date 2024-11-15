@@ -1,5 +1,5 @@
 <?php
-/** @noinspection PhpMissingReturnTypeInspection,PhpUnhandledExceptionInspection */
+/** @noinspection PhpMissingReturnTypeInspection,PhpUnhandledExceptionInspection,PhpMissingParamTypeInspection,PhpUnusedParameterInspection,PhpUnused */
 
 declare(strict_types=1);
 
@@ -9,8 +9,8 @@ use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpCache;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpEnqueue;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
-use MyParcelNL\WooCommerce\Tests\Mock\MockWpTerm;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpRestServer;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpTerm;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpUser;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
@@ -168,19 +168,19 @@ function wp_enqueue_style($handle, $src, $deps, $version, $media)
 
 function get_term_by($field, $value, $taxonomy = '', $output = 'OBJECT', $filter = 'raw')
 {
-    if ($field === 'id' || $field === 'ID' || $field === 'term_id') {
+    if ('id' === $field || 'ID' === $field || 'term_id' === $field) {
         return get_term((int) $value, $taxonomy, $output, $filter);
     }
 
     /* ignores $output parameter on purpose, because it can not be changed in the test,
     just output what you put in (object or array) */
-    if ($field === 'slug') {
+    if ('slug' === $field) {
         $cacheTerms = MockWpCache::$cache['terms'];
         foreach ($cacheTerms as $cacheTerm) {
             /** @var \WP_Term $term */
             $term = $cacheTerm['data'];
 
-            if (($term instanceof WP_Term) && $term->slug === $value) {
+            if ($term instanceof WP_Term && $term->slug === $value) {
                 return $term;
             }
 
@@ -227,7 +227,6 @@ function wp_cache_get($key, string $group = '', bool $force = false, &$found = n
 {
     return MockWpCache::get($key, $group, $force, $found);
 }
-
 
 /**
  * @return \WP_REST_Server|MockWpRestServer

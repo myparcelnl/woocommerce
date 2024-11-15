@@ -124,4 +124,4 @@ it('migrates orders', function (array $oldMeta) {
             'shipments' => $shipmentsArray,
         ])
     );
-})->with('legacyMetaData');
+})->with('legacy meta data');

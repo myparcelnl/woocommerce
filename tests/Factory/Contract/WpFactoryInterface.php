@@ -10,7 +10,7 @@ use WC_Data;
 /**
  * @template T of WC_Data
  */
-interface WcDataFactoryInterface extends FactoryInterface
+interface WpFactoryInterface extends FactoryInterface
 {
     /**
      * @return class-string<T>
@@ -19,6 +19,7 @@ interface WcDataFactoryInterface extends FactoryInterface
 
     /**
      * @return T
+     * @noinspection ReturnTypeCanBeDeclaredInspection
      */
-    public function store(): WC_Data;
+    public function store();
 }
