@@ -1,14 +1,13 @@
 {
-  "init": [],
-  "woocommerce_blocks_checkout_block_registration": [
-    "MyParcelNL\\WooCommerce\\PluginLoader::registerWcCheckoutBlocks"
-  ],
   "activate_woocommerce-myparcel": [
     "MyParcelNL\\WooCommerce\\PluginLoader::install"
   ],
   "deactivate_woocommerce-myparcel": [
     "MyParcelNL\\WooCommerce\\PluginLoader::uninstall"
   ],
+  "init": [],
+  "woocommerce_blocks_checkout_block_registration": [{}],
+  "woocommerce_blocks_loaded": [{}],
   "admin_init": [{}],
   "woocommerce_order_status_changed": [
     "MyParcelNL\\WooCommerce\\Hooks\\AutomaticOrderExportHooks::automaticExportOrder"
