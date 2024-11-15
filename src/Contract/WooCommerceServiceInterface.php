@@ -20,7 +20,6 @@ interface WooCommerceServiceInterface
      * Whether the WooCommerce Blocks checkout is enabled.
      *
      * @return bool
-     * @see https://stackoverflow.com/a/77950175
      */
     public function isUsingBlocksCheckout(): bool;
 

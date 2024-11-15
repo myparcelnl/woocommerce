@@ -27,11 +27,11 @@ abstract class AbstractFieldsHooks implements WordPressHooksInterface
         $filteredPriority = Filter::apply("{$name}Priority");
 
         if ($this->addToShipping()) {
-            add_filter('woocommerce_shipping_fields', [$this, 'callbackWcShippingFields'], $filteredPriority, 2);
+            add_filter('woocommerce_shipping_fields', [$this, 'callbackWcShippingFields'], $filteredPriority, 1);
         }
 
         if ($this->addToBilling()) {
-            add_filter('woocommerce_billing_fields', [$this, 'callbackWcBillingFields'], $filteredPriority, 2);
+            add_filter('woocommerce_billing_fields', [$this, 'callbackWcBillingFields'], $filteredPriority, 1);
         }
 
         /**
@@ -180,7 +180,7 @@ abstract class AbstractFieldsHooks implements WordPressHooksInterface
      */
     private function extendWcFields(array $fields, array $customFields, string $addressType): array
     {
-        $additionalField = [];
+        $additionalFields = [];
 
         foreach ($customFields as $field) {
             $id = sprintf('%s_%s', $addressType, $field->getId());
