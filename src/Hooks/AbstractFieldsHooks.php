@@ -18,10 +18,7 @@ abstract class AbstractFieldsHooks implements WordPressHooksInterface
             return;
         }
 
-        add_filter(
-            'woocommerce_country_locale_field_selectors',
-            [$this, 'callbackWcCountryLocaleFieldSelectors']
-        );
+        add_filter('woocommerce_country_locale_field_selectors', [$this, 'callbackWcCountryLocaleFieldSelectors']);
 
         add_filter('woocommerce_default_address_fields', [$this, 'callbackWcDefaultAddressFields']);
         add_filter('woocommerce_get_country_locale', [$this, 'callbackWcCountryLocale'], 1);
@@ -30,21 +27,11 @@ abstract class AbstractFieldsHooks implements WordPressHooksInterface
         $filteredPriority = Filter::apply("{$name}Priority");
 
         if ($this->addToShipping()) {
-            add_filter(
-                'woocommerce_shipping_fields',
-                [$this, 'callbackWcShippingFields'],
-                $filteredPriority,
-                1
-            );
+            add_filter('woocommerce_shipping_fields', [$this, 'callbackWcShippingFields'], $filteredPriority, 1);
         }
 
         if ($this->addToBilling()) {
-            add_filter(
-                'woocommerce_billing_fields',
-                [$this, 'callbackWcBillingFields'],
-                $filteredPriority,
-                1
-            );
+            add_filter('woocommerce_billing_fields', [$this, 'callbackWcBillingFields'], $filteredPriority, 1);
         }
     }
 
@@ -65,8 +52,10 @@ abstract class AbstractFieldsHooks implements WordPressHooksInterface
      */
     public function callbackWcCountryLocale(array $locale): array
     {
+        $customFields = $this->getCustomFields();
+
         foreach ($this->getApplicableCountries() as $countryCode) {
-            foreach ($this->getCustomFields() as $field) {
+            foreach ($customFields as $field) {
                 $locale[$countryCode][$field->getId()] = [
                     'label'    => $field->getTranslatedLabel(),
                     'required' => $field->isRequired(),
@@ -191,9 +180,9 @@ abstract class AbstractFieldsHooks implements WordPressHooksInterface
     }
 
     /**
-     * @param  array  $fields
-     * @param  array  $customFields
-     * @param  string $addressType
+     * @param  array                                                                        $fields
+     * @param  \MyParcelNL\WooCommerce\WooCommerce\Address\Contract\AddressFieldInterface[] $customFields
+     * @param  string                                                                       $addressType
      *
      * @return array
      */

@@ -11,18 +11,16 @@ export const getClassicCheckoutConfig = () => {
     fields: {
       // Irrelevant because there's always a separate billing and shipping address object.
       [PdkField.AddressType]: '',
-      [PdkField.ShippingMethod]: createId('shipping_method[0]'),
-      [AddressType.Billing]: createFields(ADDRESS_FIELDS_CLASSIC, (val) =>
-        createName(`${FIELD_PREFIX_BILLING}_${val}`),
-      ),
+      [PdkField.ShippingMethod]: createName('shipping_method[0]'),
+      [AddressType.Billing]: createFields(ADDRESS_FIELDS_CLASSIC, (val) => createId(`${FIELD_PREFIX_BILLING}_${val}`)),
       [AddressType.Shipping]: createFields(ADDRESS_FIELDS_CLASSIC, (val) =>
-        createName(`${FIELD_PREFIX_SHIPPING}_${val}`),
+        createId(`${FIELD_PREFIX_SHIPPING}_${val}`),
       ),
     },
 
     formData: {
       [PdkField.AddressType]: PdkField.AddressType,
-      [PdkField.ShippingMethod]: 'shipping_method',
+      [PdkField.ShippingMethod]: 'shipping_method[0]',
       [AddressType.Billing]: createFields(ADDRESS_FIELDS_CLASSIC, (val) => `${FIELD_PREFIX_BILLING}_${val}`),
       [AddressType.Shipping]: createFields(ADDRESS_FIELDS_CLASSIC, (val) => `${FIELD_PREFIX_SHIPPING}_${val}`),
     },
