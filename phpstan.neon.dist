@@ -9,7 +9,6 @@ parameters:
     maximumNumberOfProcesses: 4
   paths:
     - src
+    - woocommerce-myparcel.php
   bootstrapFiles:
     - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
-  excludePaths:
-    - src/Integration/DeliveryOptionsBlocksIntegration.php
