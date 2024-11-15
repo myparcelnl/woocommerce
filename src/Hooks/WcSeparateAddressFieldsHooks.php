@@ -9,14 +9,8 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\WooCommerce\Contract\WooCommerceServiceInterface;
-use MyParcelNL\WooCommerce\WooCommerce\Address\NumberAbstractAddressField;
-use MyParcelNL\WooCommerce\WooCommerce\Address\NumberSuffixAbstractAddressField;
-use MyParcelNL\WooCommerce\WooCommerce\Address\StreetAbstractAddressField;
 
-/**
- * Adds separate address fields to the WooCommerce order fields.
- */
-class SeparateAddressFieldsHooks extends AbstractFieldsHooks
+class WcSeparateAddressFieldsHooks extends AbstractFieldsHooks
 {
     /**
      * @var \MyParcelNL\WooCommerce\Contract\WooCommerceServiceInterface
@@ -57,18 +51,6 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks
     protected function getApplicableCountries(): array
     {
         return Pdk::get('countriesWithSeparateAddressFields');
-    }
-
-    /**
-     * @return \MyParcelNL\WooCommerce\WooCommerce\Address\Contract\AddressFieldInterface[]
-     */
-    protected function getCustomFields(): array
-    {
-        return [
-            new StreetAbstractAddressField(),
-            new NumberAbstractAddressField(),
-            new NumberSuffixAbstractAddressField(),
-        ];
     }
 
     /**

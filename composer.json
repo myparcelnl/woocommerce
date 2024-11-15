@@ -1,55 +1,52 @@
 {
-  "name": "myparcelnl/woocommerce",
-  "version": "5.0.0",
-  "require": {
-    "myparcelnl/pdk": "^2.0.0",
-    "guzzlehttp/guzzle": "^7.5.0",
-    "psr/log": "*"
-  },
-  "scripts": {
-    "analyse": "php -dmemory_limit=-1 vendor/bin/phpstan analyse",
-    "analyse:generate": "composer run analyse -- --generate-baseline phpstan-baseline.php --allow-empty-baseline",
-    "analyze": "composer run analyse",
-    "analyze:generate": "composer run analyse:generate",
-    "test": "vendor/bin/pest",
-    "test:coverage": "php -dpcov.enabled=1 vendor/bin/pest --coverage-clover=coverage.xml"
-  },
-  "require-dev": {
-    "humbug/php-scoper": "^0.17.5",
-    "pestphp/pest": ">= 1",
-    "php-stubs/woocommerce-stubs": "^8.0",
-    "phpstan/phpstan": "^1.10",
-    "spatie/pest-plugin-snapshots": ">= 1",
-    "szepeviktor/phpstan-wordpress": "^1.3"
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "autoload": {
-    "psr-4": {
-      "MyParcelNL\\WooCommerce\\": "src"
+    "name": "myparcelnl/woocommerce",
+    "version": "5.0.0",
+    "require": {
+        "myparcelnl/pdk": "^2.0.0",
+        "guzzlehttp/guzzle": "^7.5.0",
+        "psr/log": "*"
     },
-    "files": [
-      "src/functions.php"
-    ]
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "": "tests/factories",
-      "MyParcelNL\\Pdk\\": "vendor/myparcelnl/pdk/tests/factories",
-      "MyParcelNL\\Pdk\\Tests\\": "vendor/myparcelnl/pdk/tests",
-      "MyParcelNL\\WooCommerce\\": "tests/Unit",
-      "MyParcelNL\\WooCommerce\\Tests\\": "tests"
+    "scripts": {
+        "analyse": "php -dmemory_limit=-1 vendor/bin/phpstan analyse",
+        "analyse:generate": "composer run analyse -- --generate-baseline phpstan-baseline.php --allow-empty-baseline",
+        "analyze": "composer run analyse",
+        "analyze:generate": "composer run analyse:generate",
+        "test": "vendor/bin/pest",
+        "test:coverage": "php -dpcov.enabled=1 vendor/bin/pest --coverage-clover=coverage.xml"
     },
-    "files": [
-      "vendor/myparcelnl/pdk/tests/functions.php",
-      "vendor/myparcelnl/pdk/tests/usesShared.php",
-      "tests/functions.php"
-    ]
-  },
-  "config": {
-    "prepend-autoloader": false,
-    "allow-plugins": {
-      "pestphp/pest-plugin": true
+    "require-dev": {
+        "humbug/php-scoper": "^0.17.5",
+        "pestphp/pest": ">= 1",
+        "php-stubs/woocommerce-stubs": "^8.0",
+        "phpstan/phpstan": "^1.10",
+        "spatie/pest-plugin-snapshots": ">= 1",
+        "szepeviktor/phpstan-wordpress": "^1.3"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "MyParcelNL\\WooCommerce\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "": "tests/factories",
+            "MyParcelNL\\Pdk\\": "vendor/myparcelnl/pdk/tests/factories",
+            "MyParcelNL\\Pdk\\Tests\\": "vendor/myparcelnl/pdk/tests",
+            "MyParcelNL\\WooCommerce\\": "tests/Unit",
+            "MyParcelNL\\WooCommerce\\Tests\\": "tests"
+        },
+        "files": [
+            "vendor/myparcelnl/pdk/tests/functions.php",
+            "vendor/myparcelnl/pdk/tests/usesShared.php",
+            "tests/functions.php"
+        ]
+    },
+    "config": {
+        "prepend-autoloader": false,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
-  }
 }

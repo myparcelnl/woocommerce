@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
-use Exception;
-use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Facade\Filter;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\WooCommerce\Address\Contract\AddressFieldInterface;
+use RuntimeException;
 
 abstract class AbstractFieldsHooks implements WordPressHooksInterface
 {
@@ -19,7 +18,11 @@ abstract class AbstractFieldsHooks implements WordPressHooksInterface
             return;
         }
 
-        add_filter('woocommerce_country_locale_field_selectors', [$this, 'callbackWcCountryLocaleFieldSelectors']);
+        add_filter(
+            'woocommerce_country_locale_field_selectors',
+            [$this, 'callbackWcCountryLocaleFieldSelectors']
+        );
+
         add_filter('woocommerce_default_address_fields', [$this, 'callbackWcDefaultAddressFields']);
         add_filter('woocommerce_get_country_locale', [$this, 'callbackWcCountryLocale'], 1);
 
@@ -27,17 +30,22 @@ abstract class AbstractFieldsHooks implements WordPressHooksInterface
         $filteredPriority = Filter::apply("{$name}Priority");
 
         if ($this->addToShipping()) {
-            add_filter('woocommerce_shipping_fields', [$this, 'callbackWcShippingFields'], $filteredPriority, 1);
+            add_filter(
+                'woocommerce_shipping_fields',
+                [$this, 'callbackWcShippingFields'],
+                $filteredPriority,
+                1
+            );
         }
 
         if ($this->addToBilling()) {
-            add_filter('woocommerce_billing_fields', [$this, 'callbackWcBillingFields'], $filteredPriority, 1);
+            add_filter(
+                'woocommerce_billing_fields',
+                [$this, 'callbackWcBillingFields'],
+                $filteredPriority,
+                1
+            );
         }
-
-        /**
-         * The function that's called inside handles using the correct action itself. It doesn't work if we use the action directly.
-         */
-        $this->registerWcBlocksCheckoutFields();
     }
 
     /**
@@ -156,7 +164,16 @@ abstract class AbstractFieldsHooks implements WordPressHooksInterface
     /**
      * @return \MyParcelNL\WooCommerce\WooCommerce\Address\Contract\AddressFieldInterface[]
      */
-    abstract protected function getCustomFields(): array;
+    protected function getCustomFields(): array
+    {
+        $fields = Pdk::get('customFields')[$this->getName()] ?? null;
+
+        if (null === $fields) {
+            throw new RuntimeException("Custom fields for {$this->getName()} are not defined.");
+        }
+
+        return $fields;
+    }
 
     /**
      * @return string
@@ -193,38 +210,5 @@ abstract class AbstractFieldsHooks implements WordPressHooksInterface
         }
 
         return array_merge($fields, $additionalFields);
-    }
-
-    /**
-     * @param  \MyParcelNL\WooCommerce\WooCommerce\Address\Contract\AddressFieldInterface $field
-     *
-     * @return void
-     * @throws \Exception
-     */
-    private function registerWcBlocksCheckoutField(AddressFieldInterface $field): void
-    {
-        woocommerce_register_additional_checkout_field([
-            'id'         => $field->getId(),
-            'label'      => $field->getTranslatedLabel(),
-            'type'       => $field->getType(),
-            'required'   => $field->isRequired(),
-            'location'   => $field->getLocation(),
-            'attributes' => $field->getBlocksCheckoutAttributes(),
-            'index'      => $field->getIndex(),
-        ]);
-    }
-
-    /**
-     * @return void
-     */
-    private function registerWcBlocksCheckoutFields(): void
-    {
-        try {
-            foreach ($this->getCustomFields() as $field) {
-                $this->registerWcBlocksCheckoutField($field);
-            }
-        } catch (Exception $e) {
-            Logger::error('Failed to register fields', ['error' => $e->getMessage()]);
-        }
     }
 }

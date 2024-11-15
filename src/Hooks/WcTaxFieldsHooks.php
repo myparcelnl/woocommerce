@@ -6,10 +6,8 @@ namespace MyParcelNL\WooCommerce\Hooks;
 
 use MyParcelNL\Pdk\Base\Service\CountryCodes;
 use MyParcelNL\Pdk\Facade\AccountSettings;
-use MyParcelNL\WooCommerce\WooCommerce\Address\EoriNumberField;
-use MyParcelNL\WooCommerce\WooCommerce\Address\VatNumberField;
 
-class TaxFieldsHooks extends AbstractFieldsHooks
+class WcTaxFieldsHooks extends AbstractFieldsHooks
 {
     /**
      * @return bool
@@ -26,17 +24,6 @@ class TaxFieldsHooks extends AbstractFieldsHooks
     {
         // TODO: Move to pdk as 'countriesWithTaxFields'
         return CountryCodes::EU_COUNTRIES;
-    }
-
-    /**
-     * @return \MyParcelNL\WooCommerce\WooCommerce\Address\Contract\AddressFieldInterface[]
-     */
-    protected function getCustomFields(): array
-    {
-        return [
-            new VatNumberField(),
-            new EoriNumberField(),
-        ];
     }
 
     /**

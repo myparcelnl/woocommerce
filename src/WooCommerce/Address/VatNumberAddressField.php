@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\WooCommerce\Address;
 
-class EoriNumberField extends AbstractAddressField
+class VatNumberAddressField extends AbstractAddressField
 {
     /**
      * @return string
      */
     public function getLabel(): string
     {
-        return 'eori_number';
+        return 'vat_number';
     }
 
     /**
@@ -19,6 +19,7 @@ class EoriNumberField extends AbstractAddressField
      */
     public function getName(): string
     {
-        return 'fieldEoriNumber';
+        return 'fieldVatNumber';
     }
 }
+

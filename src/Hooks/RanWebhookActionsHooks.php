@@ -7,7 +7,7 @@ namespace MyParcelNL\WooCommerce\Hooks;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 
-class RanWebhookActions implements WordPressHooksInterface
+class RanWebhookActionsHooks implements WordPressHooksInterface
 {
     /**
      * @return void
