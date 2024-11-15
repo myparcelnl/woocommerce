@@ -5,8 +5,8 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
-use MyParcelNL\WooCommerce\Integration\DeliveryOptionsBlocksIntegration;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
+use MyParcelNL\WooCommerce\WooCommerce\Blocks\DeliveryOptionsBlocksIntegration;
 use function MyParcelNL\Pdk\Tests\usesShared;
 
 usesShared(new UsesMockWcPdkInstance());

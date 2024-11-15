@@ -7,8 +7,13 @@ namespace MyParcelNL\WooCommerce\Pdk;
 use MyParcelNL\Pdk\Base\PdkBootstrapper;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
-use MyParcelNL\WooCommerce\Integration\DeliveryOptionsBlocksIntegration;
 use MyParcelNL\WooCommerce\Service\WooCommerceService;
+use MyParcelNL\WooCommerce\WooCommerce\Address\EoriNumberAddressField;
+use MyParcelNL\WooCommerce\WooCommerce\Address\NumberAddressField;
+use MyParcelNL\WooCommerce\WooCommerce\Address\NumberSuffixAddressField;
+use MyParcelNL\WooCommerce\WooCommerce\Address\StreetAddressField;
+use MyParcelNL\WooCommerce\WooCommerce\Address\VatNumberAddressField;
+use MyParcelNL\WooCommerce\WooCommerce\Blocks\DeliveryOptionsBlocksIntegration;
 use function DI\factory;
 use function DI\value;
 
@@ -21,6 +26,14 @@ class WcPdkBootstrapper extends PdkBootstrapper
      * @var array
      */
     private static $config = [];
+
+    /**
+     * @return bool
+     */
+    public static function isBooted(): bool
+    {
+        return isset(self::$pdk);
+    }
 
     /**
      * @param  string $name
@@ -80,6 +93,25 @@ class WcPdkBootstrapper extends PdkBootstrapper
 
             'fieldEoriNumber' => value('eori_number'),
             'fieldVatNumber'  => value('vat_number'),
+
+            'customFields' => value([
+                /**
+                 * @see \MyParcelNL\WooCommerce\Hooks\WcSeparateAddressFieldsHooks
+                 */
+                'separateAddressFields' => [
+                    StreetAddressField::class,
+                    NumberAddressField::class,
+                    NumberSuffixAddressField::class,
+                ],
+
+                /**
+                 * @see \MyParcelNL\WooCommerce\Hooks\WcTaxFieldsHooks
+                 */
+                'taxFields'             => [
+                    VatNumberAddressField::class,
+                    EoriNumberAddressField::class,
+                ],
+            ]),
 
             ###
             # Meta Keys
@@ -237,7 +269,7 @@ class WcPdkBootstrapper extends PdkBootstrapper
             # Blocks
             ###
 
-            'wooCommerceBlocksCheckout' => value([
+            'wooCommerceBlocks' => value([
                 'delivery-options' => DeliveryOptionsBlocksIntegration::class,
             ]),
 

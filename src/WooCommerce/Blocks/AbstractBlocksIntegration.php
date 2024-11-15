@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MyParcelNL\WooCommerce\Integration;
+namespace MyParcelNL\WooCommerce\WooCommerce\Blocks;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
 use MyParcelNL\Pdk\Facade\Pdk;

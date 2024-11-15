@@ -23,7 +23,7 @@ use MyParcelNL\WooCommerce\Tests\Mock\MockWpRestServer;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpTerm;
 
 /** @see \MyParcelNL\WooCommerce\bootPdk() */
-const PEST = true;
+const MYPARCELNL_PEST = true;
 
 class WC_Data
 {

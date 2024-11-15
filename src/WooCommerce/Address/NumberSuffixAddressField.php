@@ -6,7 +6,7 @@ namespace MyParcelNL\WooCommerce\WooCommerce\Address;
 
 use MyParcelNL\Pdk\Facade\Pdk;
 
-class NumberSuffixAbstractAddressField extends AbstractAddressField
+class NumberSuffixAddressField extends AbstractAddressField
 {
     /**
      * @return array<string, scalar>
