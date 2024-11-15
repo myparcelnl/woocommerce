@@ -143,11 +143,6 @@ final class PluginLoader
     private function applyHooks(): void
     {
         foreach (self::PLUGIN_HOOKS as $service => $hook) {
-            if (! $hook) {
-                $this->applyHook($service);
-                continue;
-            }
-
             add_action($hook, function () use ($service) {
                 $this->applyHook($service);
             });

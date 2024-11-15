@@ -172,7 +172,9 @@ abstract class AbstractFieldsHooks implements WordPressHooksInterface
             throw new RuntimeException("Custom fields for {$this->getName()} are not defined.");
         }
 
-        return $fields;
+        return array_map(static function (string $class): AddressFieldInterface {
+            return new $class();
+        }, $fields);
     }
 
     /**
