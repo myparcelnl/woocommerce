@@ -1,12 +1,34 @@
 {
-  "init": ["MyParcelNL\\WooCommerce\\PluginLoader::initialize"],
-  "woocommerce_blocks_checkout_block_registration": [
-    "MyParcelNL\\WooCommerce\\PluginLoader::registerWcCheckoutBlocks"
-  ],
   "activate_woocommerce-myparcel": [
     "MyParcelNL\\WooCommerce\\PluginLoader::install"
   ],
   "deactivate_woocommerce-myparcel": [
     "MyParcelNL\\WooCommerce\\PluginLoader::uninstall"
-  ]
+  ],
+  "init": [
+    "MyParcelNL\\WooCommerce\\PluginLoader::initialize",
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {}
+  ],
+  "woocommerce_blocks_checkout_block_registration": [{}],
+  "woocommerce_blocks_loaded": [{}]
 }

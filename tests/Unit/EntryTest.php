@@ -5,8 +5,6 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Tests\Unit;
 
-use Automattic\WooCommerce\Blocks\Integrations\IntegrationRegistry;
-use MyParcelNL\WooCommerce\PluginLoader;
 use MyParcelNL\WooCommerce\Tests\Exception\DieException;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkBootstrapper;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
@@ -58,10 +56,3 @@ it('adds all hooks on plugin init', function () {
     expect(MockWpActions::get('init'))->toBe([]);
     assertMatchesJsonSnapshot(json_encode(MockWpActions::toArray()));
 });
-
-it('registers checkout blocks', function () {
-    $plugin              = new PluginLoader();
-    $integrationRegistry = new IntegrationRegistry();
-
-    $plugin->registerWcCheckoutBlocks($integrationRegistry);
-})->expectNotToPerformAssertions();

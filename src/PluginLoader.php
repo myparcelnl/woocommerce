@@ -88,11 +88,7 @@ final class PluginLoader
      */
     public function initialize(): void
     {
-        $this->initializePdk();
-
-        if (! defined('MYPARCELNL_WC_VERSION')) {
-            define('MYPARCELNL_WC_VERSION', Pdk::getAppInfo()->version);
-        }
+        $this->setup();
 
         $errors = $this->checkPrerequisites();
 
@@ -106,7 +102,7 @@ final class PluginLoader
      */
     public function install(): void
     {
-        $this->initializePdk();
+        $this->setup();
 
         $errors = $this->checkPrerequisites();
 
@@ -123,8 +119,8 @@ final class PluginLoader
      */
     public function load(): void
     {
-        register_activation_hook(__FILE__, [$this, 'install']);
-        register_deactivation_hook(__FILE__, [$this, 'uninstall']);
+        register_activation_hook(constant('MYPARCELNL_FILE'), [$this, 'install']);
+        register_deactivation_hook(constant('MYPARCELNL_FILE'), [$this, 'uninstall']);
 
         add_action('init', [$this, 'initialize']);
 
@@ -136,7 +132,7 @@ final class PluginLoader
      */
     public function uninstall(): void
     {
-        $this->initializePdk();
+        $this->setup();
 
         Installer::uninstall();
     }
@@ -229,6 +225,18 @@ final class PluginLoader
             );
         } catch (Throwable $e) {
             $this->handleFatalError([$e->getMessage()]);
+        }
+    }
+
+    /**
+     * @return void
+     */
+    private function setup(): void
+    {
+        $this->initializePdk();
+
+        if (! defined('MYPARCELNL_WC_VERSION')) {
+            define('MYPARCELNL_WC_VERSION', Pdk::getAppInfo()->version);
         }
     }
 }

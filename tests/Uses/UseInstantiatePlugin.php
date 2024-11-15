@@ -5,18 +5,22 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Tests\Uses;
 
 use MyParcelNL\Pdk\Tests\Uses\BaseMock;
-use MyParcelNLWooCommerce;
+use MyParcelNL\WooCommerce\PluginLoader;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkBootstrapper;
 
 final class UseInstantiatePlugin implements BaseMock
 {
+    public function afterEach(): void
+    {
+        MockWcPdkBootstrapper::reset();
+    }
+
     public function beforeEach(): void
     {
-        if (class_exists(MyParcelNLWooCommerce::class)) {
-            new MyParcelNLWooCommerce();
+        define('MYPARCELNL_FILE', __FILE__ . '../../woocommerce-myparcel.php');
+        define('MYPARCELNL_DIR', __DIR__ . '/../../');
 
-            return;
-        }
-
-        require __DIR__ . '/../../woocommerce-myparcel.php';
+        $pluginLoader = new PluginLoader();
+        $pluginLoader->load();
     }
 }

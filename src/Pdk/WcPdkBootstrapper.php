@@ -32,7 +32,7 @@ class WcPdkBootstrapper extends PdkBootstrapper
      */
     public static function isBooted(): bool
     {
-        return isset(self::$pdk);
+        return self::$initialized;
     }
 
     /**
