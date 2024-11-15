@@ -9,12 +9,30 @@ use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
+use MyParcelNL\WooCommerce\Service\WooCommerceService;
 use MyParcelNL\WooCommerce\WooCommerce\Address\Contract\AddressFieldInterface;
 
 class OnWcBlocksLoadedHooks implements WordPressHooksInterface
 {
+    /**
+     * @var \MyParcelNL\WooCommerce\Service\WooCommerceService
+     */
+    private $wooCommerceService;
+
+    /**
+     * @param  \MyParcelNL\WooCommerce\Service\WooCommerceService $wooCommerceService
+     */
+    public function __construct(WooCommerceService $wooCommerceService)
+    {
+        $this->wooCommerceService = $wooCommerceService;
+    }
+
     public function apply(): void
     {
+        if (! $this->wooCommerceService->isUsingBlocksCheckout()) {
+            return;
+        }
+
         $this->registerWcBlocksCheckoutFields();
     }
 
