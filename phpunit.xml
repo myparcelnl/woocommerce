@@ -4,6 +4,14 @@
          bootstrap="vendor/autoload.php"
          colors="true"
 >
+  <php>
+    <!-- For WordPress -->
+    <const name="ABSPATH" value="1" />
+
+    <!-- For detecting test runs-->
+    <const name="MYPARCELNL_PEST" value="1" />
+  </php>
+
   <testsuites>
     <testsuite name="Test Suite">
       <directory>./tests/Unit</directory>

@@ -22,9 +22,6 @@ use MyParcelNL\WooCommerce\Tests\Mock\MockWpRestResponse;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpRestServer;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpTerm;
 
-/** @see \MyParcelNL\WooCommerce\bootPdk() */
-const MYPARCELNL_PEST = true;
-
 class WC_Data
 {
     public function __construct() {}
