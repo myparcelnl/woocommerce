@@ -34,10 +34,11 @@
         "labelDescription": "[ORDER_ID]",
         "insurance": 500,
         "ageCheck": 1,
+        "return": 0,
         "hideSender": -1,
         "largeFormat": 0,
         "onlyRecipient": 1,
-        "return": 0,
+        "receiptCode": -1,
         "sameDayDelivery": 1,
         "signature": 1,
         "tracked": -1
