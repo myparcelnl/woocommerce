@@ -1,5 +1,1 @@
 root = true
-
-[composer.{json,lock}]
-indent_size = 4
-ij_json_indent_size = 4
