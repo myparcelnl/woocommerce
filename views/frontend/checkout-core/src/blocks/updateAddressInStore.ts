@@ -1,6 +1,6 @@
+import {AddressType} from '@myparcel-pdk/checkout';
 import {useCartStore, type WcCartStore} from '../utils';
 import {type WcAddressObject} from '../types';
-import {AddressType} from '../../../../../../../../../myparcelnl/js-pdk/libs/checkout-common';
 import {resolveAddress} from './resolveAddress';
 
 export const updateAddressInStore = (addressType: AddressType, newAddress: WcAddressObject): WcAddressObject => {
