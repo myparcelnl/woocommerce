@@ -65,8 +65,11 @@ body:
     id: logs
     attributes:
       label: 'Relevant log output'
-      description: 'Copy and paste any relevant log output here. Proper formatting will be applied automatically.'
       render: shell
+      description: |
+        Copy and paste any relevant log output here. Proper formatting will be applied automatically. You can download the logs from "Debug options", on our plugin's settings page. 
+
+        You can also email us the full zip file at support@myparcel.nl.
   - type: textarea
     id: additional-context
     attributes:
