@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Migration;
 
 use MyParcelNL\Pdk\App\Installer\Contract\MigrationInterface;
-use MyParcelNL\Sdk\src\Support\Arr;
+use MyParcelNL\Pdk\Base\Support\Arr;
 
 final class Migration4_0_0 extends AbstractUpgradeMigration implements MigrationInterface
 {
@@ -116,23 +116,22 @@ final class Migration4_0_0 extends AbstractUpgradeMigration implements Migration
         $this->saveSettings('woocommerce_myparcel_general_settings', $this->newGeneralSettings ?? []);
         $this->saveSettings('woocommerce_myparcel_postnl_settings', $this->newPostnlSettings ?? []);
 
-//        foreach ($this->undot($this->migrateOptions()) as $option => $value) {
-//            $exists = get_option($option) !== false;
-//            $value  = is_array($value) ? json_encode($value) : $value;
-//
-//            if ($exists) {
-//                if ($value === null) {
-//                    delete_option($option);
-//                } else {
-//                    update_option($option, $value);
-//                }
-//            } else {
-//                add_option($option, $value);
-//            }
-//        }
+        //        foreach ($this->undot($this->migrateOptions()) as $option => $value) {
+        //            $exists = get_option($option) !== false;
+        //            $value  = is_array($value) ? json_encode($value) : $value;
+        //
+        //            if ($exists) {
+        //                if ($value === null) {
+        //                    delete_option($option);
+        //                } else {
+        //                    update_option($option, $value);
+        //                }
+        //            } else {
+        //                add_option($option, $value);
+        //            }
+        //        }
 
-
-//        foreach ($this->migrateOptions() as $oldKey => $kew)
+        //        foreach ($this->migrateOptions() as $oldKey => $kew)
     }
 
     protected function migrateOptions()

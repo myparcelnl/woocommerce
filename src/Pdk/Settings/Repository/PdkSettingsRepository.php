@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Settings\Repository;
 
-use MyParcelNL\Pdk\Settings\Repository\AbstractSettingsRepository;
+use MyParcelNL\Pdk\Settings\Repository\AbstractPdkSettingsRepository;
 
-class PdkSettingsRepository extends AbstractSettingsRepository
+class PdkSettingsRepository extends AbstractPdkSettingsRepository
 {
     /**
      * @param  string $namespace

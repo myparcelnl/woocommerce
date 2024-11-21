@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use MyParcelNL\Sdk\src\Support\Str;
+use MyParcelNL\Pdk\Base\Support\Str;
 use MyParcelNL\WooCommerce\Tests\Factory\AbstractWpFactory;
 
 /**

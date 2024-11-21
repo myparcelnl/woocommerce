@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Tests\Mock;
 
 use BadMethodCallException;
-use MyParcelNL\Sdk\src\Support\Str;
+use MyParcelNL\Pdk\Base\Support\Str;
 
 trait MocksGettersAndSetters
 {

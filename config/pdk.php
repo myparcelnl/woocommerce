@@ -33,6 +33,7 @@ use MyParcelNL\Pdk\Frontend\Contract\FrontendRenderServiceInterface;
 use MyParcelNL\Pdk\Frontend\Contract\ScriptServiceInterface;
 use MyParcelNL\Pdk\Frontend\Contract\ViewServiceInterface;
 use MyParcelNL\Pdk\Language\Contract\LanguageServiceInterface;
+use MyParcelNL\Pdk\Logger\Contract\PdkLoggerInterface;
 use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\OrderSettings;
 use MyParcelNL\WooCommerce\Contract\WooCommerceServiceInterface;
@@ -76,7 +77,6 @@ use MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface;
 use MyParcelNL\WooCommerce\WooCommerce\Contract\WcShippingRepositoryInterface;
 use MyParcelNL\WooCommerce\WooCommerce\Repository\WcOrderRepository;
 use MyParcelNL\WooCommerce\WooCommerce\Repository\WcShippingRepository;
-use Psr\Log\LoggerInterface;
 use function DI\factory;
 use function DI\get;
 use function DI\value;
@@ -237,7 +237,7 @@ return [
 
     ClientAdapterInterface::class          => get(Guzzle7ClientAdapter::class),
     DeliveryOptionsServiceInterface::class => get(WcDeliveryOptionsService::class),
-    LoggerInterface::class                 => get(WcLogger::class),
+    PdkLoggerInterface::class              => get(WcLogger::class),
     MigrationServiceInterface::class       => get(WcMigrationService::class),
     ScriptServiceInterface::class          => get(WpScriptService::class),
 ];

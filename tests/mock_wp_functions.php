@@ -234,7 +234,7 @@ function wp_cache_get($key, string $group = '', bool $force = false, &$found = n
  */
 function rest_get_server(): MockWpRestServer
 {
-    return MockWpRestServer::getInstance();
+    return Pdk::get(MockWpRestServer::class);
 }
 
 /**

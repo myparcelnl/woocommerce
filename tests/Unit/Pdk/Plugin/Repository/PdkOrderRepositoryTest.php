@@ -9,8 +9,8 @@ use InvalidArgumentException;
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\App\Order\Model\PdkOrder;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Logger\Contract\PdkLoggerInterface;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
-use Psr\Log\LoggerInterface;
 use WC_Order;
 use WC_Order_Factory;
 use function MyParcelNL\Pdk\Tests\usesShared;
@@ -23,7 +23,7 @@ it('creates a valid pdk order', function (WC_Order_Factory $factory) {
     /** @var \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $orderRepository */
     $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
     /** @var \MyParcelNL\Pdk\Tests\Bootstrap\MockLogger $logger */
-    $logger = Pdk::get(LoggerInterface::class);
+    $logger = Pdk::get(PdkLoggerInterface::class);
 
     $wcOrder = $factory->make();
     $pdkOrder = $orderRepository->get($wcOrder);
