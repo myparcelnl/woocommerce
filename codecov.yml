@@ -1,0 +1,5 @@
+codecov:
+  require_ci_to_pass: yes
+  notify: # Wait for frontend and backend coverage uploads to complete before posting the commit checks
+    after_n_builds: 2
+    wait_for_ci: yes
