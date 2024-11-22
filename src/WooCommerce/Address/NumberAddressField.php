@@ -30,4 +30,3 @@ class NumberAddressField extends AbstractAddressField
         return true;
     }
 }
-

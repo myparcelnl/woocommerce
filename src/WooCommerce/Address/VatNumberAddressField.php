@@ -22,4 +22,3 @@ class VatNumberAddressField extends AbstractAddressField
         return 'fieldVatNumber';
     }
 }
-
