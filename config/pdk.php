@@ -43,7 +43,6 @@ use MyParcelNL\WooCommerce\Database\Service\WpDatabaseService;
 use MyParcelNL\WooCommerce\Facade\WooCommerce;
 use MyParcelNL\WooCommerce\Facade\WordPress;
 use MyParcelNL\WooCommerce\Logger\WcLogger;
-use MyParcelNL\WooCommerce\Pdk\Action\Frontend\Context\WcFetchCheckoutContextAction;
 use MyParcelNL\WooCommerce\Pdk\Audit\Repository\WcPdkAuditRepository;
 use MyParcelNL\WooCommerce\Pdk\Context\Service\WcContextService;
 use MyParcelNL\WooCommerce\Pdk\Guzzle7ClientAdapter;
