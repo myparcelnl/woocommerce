@@ -63,8 +63,8 @@ export default defineConfig({
         stdio: 'inherit',
       });
 
-      if (buffer.error) {
-        throw buffer.error;
+      if (buffer.status !== 0) {
+        throw new Error('Build failed.');
       }
     },
 
