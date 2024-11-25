@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/myparcelnl/woocommerce#readme",
   "dependencies": {
-    "@myparcel/delivery-options": "^5.18.0"
+    "@myparcel/delivery-options": "^5.20.0"
   },
   "devDependencies": {
     "@babel/core": "^7.13.10",
@@ -51,7 +51,22 @@
     "vinyl-buffer": "^1.0.1"
   },
   "resolutions": {
-    "@semantic-release/release-notes-generator": "npm:@myparcel/semantic-release-release-notes-generator@^10.1.0"
+    "@semantic-release/release-notes-generator": "npm:@myparcel/semantic-release-release-notes-generator@^10.1.0",
+    "@myparcel-pdk/admin": "portal:/Users/jochemgravendeel/Projects/js-pdk/apps/admin",
+    "@myparcel-pdk/admin-component-tests": "portal:/Users/jochemgravendeel/Projects/js-pdk/apps/admin-component-tests",
+    "@myparcel-pdk/admin-js": "portal:/Users/jochemgravendeel/Projects/js-pdk/apps/admin-js",
+    "@myparcel-pdk/admin-preset-bootstrap4": "portal:/Users/jochemgravendeel/Projects/js-pdk/apps/admin-preset-bootstrap4",
+    "@myparcel-pdk/admin-preset-dashicons": "portal:/Users/jochemgravendeel/Projects/js-pdk/apps/admin-preset-dashicons",
+    "@myparcel-pdk/admin-preset-default": "portal:/Users/jochemgravendeel/Projects/js-pdk/apps/admin-preset-default",
+    "@myparcel-pdk/admin-preset-fontawesome": "portal:/Users/jochemgravendeel/Projects/js-pdk/apps/admin-preset-fontawesome",
+    "@myparcel-pdk/app-builder": "portal:/Users/jochemgravendeel/Projects/js-pdk/apps/app-builder",
+    "@myparcel-pdk/checkout": "portal:/Users/jochemgravendeel/Projects/js-pdk/apps/checkout",
+    "@myparcel-pdk/checkout-js": "portal:/Users/jochemgravendeel/Projects/js-pdk/apps/checkout-js",
+    "@myparcel-pdk/checkout-common": "portal:/Users/jochemgravendeel/Projects/js-pdk/libs/checkout-common",
+    "@myparcel-pdk/checkout-delivery-options": "portal:/Users/jochemgravendeel/Projects/js-pdk/libs/checkout-delivery-options",
+    "@myparcel-pdk/checkout-separate-address-fields": "portal:/Users/jochemgravendeel/Projects/js-pdk/libs/checkout-separate-address-fields",
+    "@myparcel-pdk/checkout-tax-fields": "portal:/Users/jochemgravendeel/Projects/js-pdk/libs/checkout-tax-fields",
+    "@myparcel-pdk/common": "portal:/Users/jochemgravendeel/Projects/js-pdk/libs/common"
   },
   "packageManager": "yarn@3.3.0"
 }
