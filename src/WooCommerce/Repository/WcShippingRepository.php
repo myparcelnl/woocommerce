@@ -29,6 +29,7 @@ class WcShippingRepository extends Repository implements WcShippingRepositoryInt
 
     /**
      * @return \MyParcelNL\Pdk\Base\Support\Collection<\WC_Shipping_Method>
+     * @throws \Throwable
      */
     public function getShippingMethods(): Collection
     {

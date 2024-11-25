@@ -7,8 +7,13 @@ namespace MyParcelNL\WooCommerce\Pdk;
 use MyParcelNL\Pdk\Base\PdkBootstrapper;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
-use MyParcelNL\WooCommerce\Integration\DeliveryOptionsBlocksIntegration;
 use MyParcelNL\WooCommerce\Service\WooCommerceService;
+use MyParcelNL\WooCommerce\WooCommerce\Address\EoriNumberAddressField;
+use MyParcelNL\WooCommerce\WooCommerce\Address\NumberAddressField;
+use MyParcelNL\WooCommerce\WooCommerce\Address\NumberSuffixAddressField;
+use MyParcelNL\WooCommerce\WooCommerce\Address\StreetAddressField;
+use MyParcelNL\WooCommerce\WooCommerce\Address\VatNumberAddressField;
+use MyParcelNL\WooCommerce\WooCommerce\Blocks\DeliveryOptionsBlocksIntegration;
 use function DI\factory;
 use function DI\value;
 
@@ -21,6 +26,14 @@ class WcPdkBootstrapper extends PdkBootstrapper
      * @var array
      */
     private static $config = [];
+
+    /**
+     * @return bool
+     */
+    public static function isBooted(): bool
+    {
+        return self::$initialized;
+    }
 
     /**
      * @param  string $name
@@ -77,6 +90,28 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'fieldNumber'       => value('house_number'),
             'fieldNumberSuffix' => value('house_number_suffix'),
             'fieldStreet'       => value('street_name'),
+
+            'fieldEoriNumber' => value('eori_number'),
+            'fieldVatNumber'  => value('vat_number'),
+
+            'customFields' => value([
+                /**
+                 * @see \MyParcelNL\WooCommerce\Hooks\WcSeparateAddressFieldsHooks
+                 */
+                'separateAddressFields' => [
+                    StreetAddressField::class,
+                    NumberAddressField::class,
+                    NumberSuffixAddressField::class,
+                ],
+
+                /**
+                 * @see \MyParcelNL\WooCommerce\Hooks\WcTaxFieldsHooks
+                 */
+                'taxFields'             => [
+                    VatNumberAddressField::class,
+                    EoriNumberAddressField::class,
+                ],
+            ]),
 
             ###
             # Meta Keys
@@ -234,7 +269,7 @@ class WcPdkBootstrapper extends PdkBootstrapper
             # Blocks
             ###
 
-            'wooCommerceBlocksCheckout' => value([
+            'wooCommerceBlocks' => value([
                 'delivery-options' => DeliveryOptionsBlocksIntegration::class,
             ]),
 
@@ -283,33 +318,46 @@ class WcPdkBootstrapper extends PdkBootstrapper
                 /**
                  * Field classes
                  */
-                'fieldEoriNumberClass'             => 'mpwc_checkout_field_eori_number_class',
-                'fieldVatNumberClass'              => 'mpwc_checkout_field_vat_number_class',
                 'fieldStreetClass'                 => 'mpwc_checkout_field_street_class',
                 'fieldNumberClass'                 => 'mpwc_checkout_field_number_class',
                 'fieldNumberSuffixClass'           => 'mpwc_checkout_field_number_suffix_class',
 
+                'fieldVatNumberClass'       => 'mpwc_checkout_field_vat_number_class',
+                'fieldEoriNumberClass'      => 'mpwc_checkout_field_eori_number_class',
+
                 /**
                  * Field priorities
                  */
-                'fieldEoriNumberPriority'          => 'mpwc_checkout_field_eori_number_priority',
-                'fieldVatNumberPriority'           => 'mpwc_checkout_field_vat_number_priority',
-                'fieldStreetPriority'              => 'mpwc_checkout_field_street_priority',
-                'fieldNumberPriority'              => 'mpwc_checkout_field_number_priority',
-                'fieldNumberSuffixPriority'        => 'mpwc_checkout_field_number_suffix_priority',
+                'fieldStreetPriority'       => 'mpwc_checkout_field_street_priority',
+                'fieldNumberPriority'       => 'mpwc_checkout_field_number_priority',
+                'fieldNumberSuffixPriority' => 'mpwc_checkout_field_number_suffix_priority',
+
+                'fieldVatNumberPriority'  => 'mpwc_checkout_field_vat_number_priority',
+                'fieldEoriNumberPriority' => 'mpwc_checkout_field_eori_number_priority',
+
+                /**
+                 * Field indices (for blocks checkout)
+                 */
+
+                'fieldStreetIndex'       => 'mpwc_checkout_field_street_index',
+                'fieldNumberIndex'       => 'mpwc_checkout_field_number_index',
+                'fieldNumberSuffixIndex' => 'mpwc_checkout_field_number_suffix_index',
+
+                'fieldVatNumberIndex'      => 'mpwc_checkout_field_vat_number_index',
+                'fieldEoriNumberIndex'     => 'mpwc_checkout_field_eori_number_index',
 
                 /**
                  * Checkout
                  */
-                'deliveryOptionsPosition'          => 'mpwc_checkout_delivery_options_position',
-                'deliveryOptionsPositions'         => 'mpwc_checkout_delivery_options_positions',
-                'orderDeliveryOptions'             => 'mpwc_checkout_order_delivery_options',
-                'showDeliveryOptions'              => 'mpwc_checkout_show_delivery_options',
+                'deliveryOptionsPosition'  => 'mpwc_checkout_delivery_options_position',
+                'deliveryOptionsPositions' => 'mpwc_checkout_delivery_options_positions',
+                'orderDeliveryOptions'     => 'mpwc_checkout_order_delivery_options',
+                'showDeliveryOptions'      => 'mpwc_checkout_show_delivery_options',
 
                 /**
                  * Account page
                  */
-                'trackTraceLabel'                  => 'mpwc_track_trace_label',
+                'trackTraceLabel'          => 'mpwc_track_trace_label',
             ]),
 
             'filterDefaults' => value([
@@ -324,15 +372,34 @@ class WcPdkBootstrapper extends PdkBootstrapper
                 'fieldNumberClass'       => ['form-row-third'],
                 'fieldNumberSuffixClass' => ['form-row-third', 'last'],
 
-                'fieldEoriNumberClass' => ['form-row'],
-                'fieldVatNumberClass'  => ['form-row'],
+                'fieldEoriNumberClass'      => ['form-row'],
+                'fieldVatNumberClass'       => ['form-row'],
 
-                'fieldStreetPriority'       => 60,
-                'fieldNumberPriority'       => 61,
-                'fieldNumberSuffixPriority' => 62,
+                /**
+                 * Classic checkout field order
+                 */
 
-                'fieldEoriNumberPriority' => 900,
-                'fieldVatNumberPriority'  => 901,
+                // Between address_1 and address_2
+                'fieldStreetPriority'       => 51,
+                'fieldNumberPriority'       => 52,
+                'fieldNumberSuffixPriority' => 53,
+
+                // After all other fields
+                'fieldEoriNumberPriority'   => 900,
+                'fieldVatNumberPriority'    => 901,
+
+                /**
+                 * Blocks checkout field order
+                 */
+
+                // Before address_1 and address_2
+                'fieldStreetIndex'          => 31,
+                'fieldNumberIndex'          => 32,
+                'fieldNumberSuffixIndex'    => 33,
+
+                // After all other fields
+                'fieldVatNumberIndex'       => 900,
+                'fieldEoriNumberIndex'      => 901,
             ]),
 
             ###

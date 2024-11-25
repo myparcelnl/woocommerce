@@ -14,18 +14,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/src/Hooks/CheckoutScriptHooks.php',
 ];
 $ignoreErrors[] = [
-	// identifier: arguments.count
-	'message' => '#^Callback expects 1 parameter, \\$accepted_args is set to 2\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/src/Hooks/SeparateAddressFieldsHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: arguments.count
-	'message' => '#^Callback expects 1 parameter, \\$accepted_args is set to 2\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/src/Hooks/TaxFieldsHooks.php',
-];
-$ignoreErrors[] = [
 	// identifier: nullCoalesce.property
 	'message' => '#^Property MyParcelNL\\\\WooCommerce\\\\Migration\\\\Migration4_0_0\\:\\:\\$newCheckoutSettings \\(array\\) on left side of \\?\\? is not nullable\\.$#',
 	'count' => 1,

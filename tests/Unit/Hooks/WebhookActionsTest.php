@@ -19,8 +19,8 @@ it('adds webhook actions correctly', function ($callback) {
         $key => $callback,
     ]);
 
-    /** @var \MyParcelNL\WooCommerce\Hooks\WebhookActions $class */
-    $class = Pdk::get(WebhookActions::class);
+    /** @var \MyParcelNL\WooCommerce\Hooks\WebhookActionsHooks $class */
+    $class = Pdk::get(WebhookActionsHooks::class);
     $class->apply();
 
     $webhookActions = get_option(Pdk::get('webhookAddActions'));
@@ -45,8 +45,8 @@ it('adds webhook actions correctly', function ($callback) {
             ],
         ]);
 
-    /** @var \MyParcelNL\WooCommerce\Hooks\RanWebhookActions $afterAction */
-    $afterAction = Pdk::get(RanWebhookActions::class);
+    /** @var \MyParcelNL\WooCommerce\Hooks\RanWebhookActionsHooks $afterAction */
+    $afterAction = Pdk::get(RanWebhookActionsHooks::class);
     $afterAction->apply();
 
     $webhookActions = get_option(Pdk::get('webhookAddActions'));
@@ -56,8 +56,8 @@ it('adds webhook actions correctly', function ($callback) {
 })->with('callbacks');
 
 it('does nothing when null is passed', function () {
-    /** @var \MyParcelNL\WooCommerce\Hooks\WebhookActions $class */
-    $class = Pdk::get(WebhookActions::class);
+    /** @var \MyParcelNL\WooCommerce\Hooks\WebhookActionsHooks $class */
+    $class = Pdk::get(WebhookActionsHooks::class);
     $class->apply();
 
     $actions = get_option(Pdk::get('webhookAddActions'));
@@ -70,7 +70,7 @@ it('ran but action didnt', function () {
         'test' => 'test',
     ]);
 
-    $afterAction = Pdk::get(RanWebhookActions::class);
+    $afterAction = Pdk::get(RanWebhookActionsHooks::class);
     $afterAction->apply();
 
     $webhookActions = get_option(Pdk::get('webhookAddActions'));

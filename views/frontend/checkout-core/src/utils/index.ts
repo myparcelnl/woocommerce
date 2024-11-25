@@ -1,7 +1,6 @@
 export * from './createFields';
 export * from './createId';
 export * from './createName';
+export * from './getShippingRate';
 export * from './isClassicCheckout';
-export {getShippingRate} from './getShippingRate';
-
-export {useCartStore} from './useCartStore';
+export * from './useCartStore';

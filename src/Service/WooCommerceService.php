@@ -24,19 +24,19 @@ class WooCommerceService implements WooCommerceServiceInterface
 
     /**
      * @return bool
+     */
+    public function isActive(): bool
+    {
+        return Pdk::get('wooCommerceIsActive');
+    }
+
+    /**
+     * @return bool
      * @see https://stackoverflow.com/a/77950175
      */
     public function isUsingBlocksCheckout(): bool
     {
         return WC_Blocks_Utils::has_block_in_page(wc_get_page_id('checkout'), 'woocommerce/checkout');
-    }
-
-    /**
-     * @return bool
-     */
-    public function isActive(): bool
-    {
-        return Pdk::get('wooCommerceIsActive');
     }
 
     /**
