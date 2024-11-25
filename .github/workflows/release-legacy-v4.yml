@@ -10,6 +10,11 @@ on:
         description: 'Branch to release (Use workflow from main!)'
         required: true
         default: 'v4'
+      deploy-svn:
+        type: boolean
+        description: 'Deploy to SVN'
+        required: false
+        default: true
 
 concurrency:
   group: release-legacy-${{ github.ref }}
@@ -74,7 +79,7 @@ jobs:
 
   deploy-svn:
     needs: release
-    if: needs.release.outputs.released == 'true'
+    if: needs.release.outputs.released == 'true' && inputs.deploy-svn == 'true'
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
