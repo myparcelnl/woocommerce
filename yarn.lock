@@ -1473,9 +1473,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel/delivery-options@npm:^5.18.0":
-  version: 5.18.0
-  resolution: "@myparcel/delivery-options@npm:5.18.0"
+"@myparcel/delivery-options@npm:^5.20.0":
+  version: 5.20.0
+  resolution: "@myparcel/delivery-options@npm:5.20.0"
   dependencies:
     "@fortawesome/free-solid-svg-icons": ^5.15.4
     "@myparcel/js-sdk": ^2.0.3
@@ -1488,7 +1488,7 @@ __metadata:
     vue-async-computed: ^3.9.0
     vue-click-outside: ^1.1.0
     vue-fa: ^2.0.1
-  checksum: 2ffad8c8d589ca4ee0fd5f2b3c96d4cc1b3c0013e952b65e27c1b9658c9359c45766f29cf9270cf45d125e5dacf9e88b30cf6b610e5c2cbc77b5dce11efe2864
+  checksum: 87c825b410b6af25b8d0b9a4fa4493a7ff137c273f1843fd62557b54a0a9bc786bebc2084458dec42b6faff127e1731ee9370badcc7a5d84cd17d5345491c1e4
   languageName: node
   linkType: hard
 
@@ -1568,7 +1568,7 @@ __metadata:
   dependencies:
     "@babel/core": ^7.13.10
     "@babel/preset-env": ^7.13.10
-    "@myparcel/delivery-options": ^5.18.0
+    "@myparcel/delivery-options": ^5.20.0
     "@myparcel/eslint-config": ^3.0.2
     "@myparcel/semantic-release-config": ^5.0.0
     "@myparcel/semantic-release-wordpress-readme-generator": ^1.2.0
