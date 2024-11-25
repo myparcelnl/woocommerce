@@ -76,6 +76,7 @@ jobs:
         id: release
         with:
           token: ${{ steps.credentials.outputs.token }}
+          semantic-release-args: --branch ${{ inputs.branch }}
 
   deploy-svn:
     needs: release
