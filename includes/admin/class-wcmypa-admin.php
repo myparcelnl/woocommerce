@@ -179,7 +179,7 @@ class WCMYPA_Admin
               );
 
               foreach (range(1, $deliveryDayWindow) as $number) {
-                  $date       = date('Y-m-d', strtotime($number . 'days'));
+                  $date       = gmdate('Y-m-d', strtotime($number . 'days'));
                   $dateString = wc_format_datetime(new WC_DateTime($date), 'D d-m');
 
                   if (1 === $number) {
@@ -284,7 +284,7 @@ class WCMYPA_Admin
     public function saveVariationCountryOfOriginField(int $variationId, int $loop): void
     {
         if (! isset($_POST[self::META_COUNTRY_OF_ORIGIN_VARIATION][$loop])) return;
-        $countryOfOriginValue = sanitize_title($_POST[self::META_COUNTRY_OF_ORIGIN_VARIATION][$loop]);
+        $countryOfOriginValue = sanitize_title(wp_unslash($_POST[self::META_COUNTRY_OF_ORIGIN_VARIATION][$loop]));
 
         if (! empty($countryOfOriginValue) && (new WC_Countries())->country_exists($countryOfOriginValue)) {
             update_post_meta($variationId, self::META_COUNTRY_OF_ORIGIN_VARIATION, $countryOfOriginValue);
@@ -330,7 +330,7 @@ class WCMYPA_Admin
     public function save_variation_hs_code_field($variationId, $loop)
     {
         if (!isset($_POST[self::META_HS_CODE_VARIATION][$loop])) return;
-        $hsCodeValue = sanitize_title($_POST[self::META_HS_CODE_VARIATION][$loop]);
+        $hsCodeValue = sanitize_title(wp_unslash($_POST[self::META_HS_CODE_VARIATION][$loop]));
 
         if (! $hsCodeValue || ! ctype_digit(str_replace(' ', '', $hsCodeValue))) {
             return;
@@ -363,7 +363,7 @@ class WCMYPA_Admin
                 'exclude_from_search'       => false,
                 'show_in_admin_all_list'    => true,
                 'show_in_admin_status_list' => true,
-                //#translators: %s: number of orders
+                /* translators: %s: number of orders */
                 'label_count'               => _n_noop('Delivered (%s)', 'Delivered (%s)', 'woocommerce-myparcel'),
             ]
         );

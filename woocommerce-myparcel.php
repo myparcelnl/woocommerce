@@ -10,8 +10,8 @@ Text Domain: woocommerce-myparcel
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
-Tested up to: 6.5
-WC tested up to: 8.9.1
+Tested up to: 6.7
+WC tested up to: 9.4
 Requires PHP: 7.4
 */
 

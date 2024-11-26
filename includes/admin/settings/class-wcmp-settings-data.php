@@ -870,7 +870,7 @@ class WCMP_Settings_Data
 
         return sprintf(
             '<p>%s <a class="" href="#" onclick="document.querySelector(`#delivery_options_custom_css`).value = `%s`">%s</a></p>',
-            //#translators: %s is the name of the current theme.
+            /* translators: %s is the name of the current theme. */
             sprintf(__('Theme "%s" detected.', 'woocommerce-myparcel'), $currentTheme),
             esc_js(file_get_contents(WCMYPA()->plugin_path() . $cssPath)),
             __('Apply preset.', 'woocommerce-myparcel')

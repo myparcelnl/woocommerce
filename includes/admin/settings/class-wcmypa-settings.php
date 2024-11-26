@@ -273,7 +273,7 @@ class WCMYPA_Settings
         if (! $hide_notice && 'BE' === $base_country) {
             $myparcel_be_link = '<a href="https://wordpress.org/plugins/wc-myparcel-belgium/" target="_blank">WC MyParcel Belgium</a>';
             $text             = sprintf(
-                    //#translators: %s is a link to the MyParcel Belgium plugin
+                    /* translators: %s is a link to the MyParcel Belgium plugin */
                 __(
                     'It looks like your shop is based in Belgium. This plugin is for MyParcelNL. If you are based in Belgium, download the %s plugin instead!',
                     'woocommerce-myparcel'

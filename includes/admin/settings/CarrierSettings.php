@@ -447,7 +447,7 @@ class CarrierSettings
                 'class'             => ['wcmp__child'],
                 'label'             => sprintf(
                     __('setting_carrier_cut_off_time_day_title', 'woocommerce-myparcel'),
-                    __($settings['cut_off_time_day'])
+                    $settings['cut_off_time_day']
                 ),
                 'default'           => '15:00',
                 'help_text'         => __('setting_carrier_cut_off_time_help_text', 'woocommerce-myparcel'),

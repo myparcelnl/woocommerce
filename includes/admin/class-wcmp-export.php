@@ -511,7 +511,7 @@ class WCMP_Export
                 ) use ($returnOptions): AbstractConsignment {
                     $returnConsignment->setLabelDescription(
                         'Return: ' . $parent->getLabelDescription() .
-                        ' This label is valid until: ' . date('d-m-Y', strtotime('+ 28 days'))
+                        ' This label is valid until: ' . gmdate('d-m-Y', strtotime('+ 28 days'))
                     );
 
                     if (WCMP_Settings_Data::NO_OPTIONS === $returnOptions) {
@@ -619,7 +619,7 @@ class WCMP_Export
 
         if (! empty($this->success)) {
             $return['success']     = sprintf(
-                //#translators: %s is the number of shipments
+                /* translators: %s is the number of shipments */
                 __('%s shipments successfully exported to MyParcel', 'woocommerce-myparcel'),
                 count($collection->getConsignmentIds())
             );

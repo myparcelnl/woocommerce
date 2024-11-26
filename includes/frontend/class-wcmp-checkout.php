@@ -446,7 +446,7 @@ class WCMP_Checkout
      */
     private function adjustDhlForYouDeliverySettings(array $dhlForYouSettings): array
     {
-        $weekDay           = date('N', strtotime(date('Y-m-d')));
+        $weekDay           = gmdate('N', strtotime(gmdate('Y-m-d')));
         $now               = new DateTime();
         $cutOffTime        = DateTime::createFromFormat('H:i', $dhlForYouSettings['cutoffTime']);
         $weekDay           = $now < $cutOffTime ? $weekDay : $weekDay + 1;
