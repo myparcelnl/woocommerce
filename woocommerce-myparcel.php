@@ -125,6 +125,7 @@ if (! class_exists('WCMYPA')) :
          */
         private function getVersion(): string
         {
+            /* WP: this is a local file, we can get it directly */
             $composerJson = json_decode(file_get_contents(__DIR__ . '/composer.json'), false);
 
             return $composerJson->version;

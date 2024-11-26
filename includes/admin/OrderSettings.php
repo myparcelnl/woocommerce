@@ -32,11 +32,6 @@ class OrderSettings
     public const DEFAULT_COLLO_AMOUNT      = 1;
     public const DEFAULT_BELGIAN_INSURANCE = 500;
 
-    public const OPTION_TRANSLATION_STRINGS = [
-        AbstractConsignment::SHIPMENT_OPTION_RETURN         => 'shipment_options_return',
-        AbstractConsignment::SHIPMENT_OPTION_ONLY_RECIPIENT => 'shipment_options_only_recipient',
-    ];
-
     /**
      * @var \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter
      */
@@ -744,12 +739,17 @@ class OrderSettings
             && $this->deliveryOptions->isPickup()
             && ! $this->consignment->canHaveShipmentOption($consignmentSettingName)
         ) {
-            $this->showAdminNoticeOptionRemoved(
-                __(
-                    self::OPTION_TRANSLATION_STRINGS[$consignmentSettingName] ?? $consignmentSettingName,
-                    'woocommerce-myparcel'
-                )
-            );
+            switch ($consignmentSettingName) {
+                case AbstractConsignment::SHIPMENT_OPTION_RETURN:
+                    $translation = __('shipment_options_return','woocommerce-myparcel');
+                    break;
+                case AbstractConsignment::SHIPMENT_OPTION_ONLY_RECIPIENT:
+                    $translation = __('shipment_options_only_recipient','woocommerce-myparcel');
+                    break;
+                default:
+                    $translation = $consignmentSettingName;
+            }
+            $this->showAdminNoticeOptionRemoved($translation);
             $returnValue = false;
         }
 

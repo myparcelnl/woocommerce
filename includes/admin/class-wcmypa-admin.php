@@ -1457,7 +1457,7 @@ class WCMYPA_Admin
     }
 
     /**
-     * @param array[]|null $options
+     * @param string[]|null $options
      *
      * @return string|null
      */
@@ -1468,8 +1468,7 @@ class WCMYPA_Admin
 
             foreach ($options as $key => $option) {
                 if ($option) {
-                    // these option strings are all translated, we cannot use a literal here
-                    $htmlHeader .= "<tr><td>$key</td><td>" . __($option, 'woocommerce-myparcel') . '</td></tr>';
+                    $htmlHeader .= "<tr><td>$key</td><td>" . $this->translate($option) . '</td></tr>';
                 }
             }
 
@@ -1480,7 +1479,7 @@ class WCMYPA_Admin
     }
 
     /**
-     * @param array[]|null $options
+     * @param string[]|null $options
      *
      * @return string|null
      */
@@ -1494,7 +1493,7 @@ class WCMYPA_Admin
                 if ($option) {
                     $htmlHeader .= "<tr style='border: 1px solid #d5d5d5;'>
                               <td style='border: 1px solid #e5e5e5;'>$key</td>
-                              <td style='border: 1px solid #e5e5e5;'>" . __($option, "woocommerce-myparcel") . "</td>
+                              <td style='border: 1px solid #e5e5e5;'>" . $this->translate($option) . "</td>
                             </tr>";
                 }
             }
@@ -1503,6 +1502,24 @@ class WCMYPA_Admin
         }
 
         return null;
+    }
+
+    private function translate(string $option): string
+    {
+        switch ($option) {
+            case 'shipment_options_delivery_morning':
+                return __('shipment_options_delivery_morning', 'woocommerce-myparcel');
+            case 'shipment_options_delivery_standard':
+                return __('shipment_options_delivery_standard', 'woocommerce-myparcel');
+            case 'shipment_options_delivery_evening':
+                return __('shipment_options_delivery_evening', 'woocommerce-myparcel');
+            case 'shipment_options_delivery_pickup':
+                return __('shipment_options_delivery_pickup', 'woocommerce-myparcel');
+            case 'shipment_options_delivery_same_day':
+                return __('shipment_options_delivery_same_day', 'woocommerce-myparcel');
+            default:
+                return $option;
+        }
     }
 
     /**
