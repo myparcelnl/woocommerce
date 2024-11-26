@@ -284,7 +284,7 @@ class WCMYPA_Admin
     public function saveVariationCountryOfOriginField(int $variationId, int $loop): void
     {
         if (! isset($_POST[self::META_COUNTRY_OF_ORIGIN_VARIATION][$loop])) return;
-        $countryOfOriginValue = wp_unslash($_POST[self::META_COUNTRY_OF_ORIGIN_VARIATION][$loop]);
+        $countryOfOriginValue = sanitize_title($_POST[self::META_COUNTRY_OF_ORIGIN_VARIATION][$loop]);
 
         if (! empty($countryOfOriginValue) && (new WC_Countries())->country_exists($countryOfOriginValue)) {
             update_post_meta($variationId, self::META_COUNTRY_OF_ORIGIN_VARIATION, $countryOfOriginValue);
@@ -330,7 +330,7 @@ class WCMYPA_Admin
     public function save_variation_hs_code_field($variationId, $loop)
     {
         if (!isset($_POST[self::META_HS_CODE_VARIATION][$loop])) return;
-        $hsCodeValue = wp_unslash($_POST[self::META_HS_CODE_VARIATION][$loop]);
+        $hsCodeValue = sanitize_title($_POST[self::META_HS_CODE_VARIATION][$loop]);
 
         if (! $hsCodeValue || ! ctype_digit(str_replace(' ', '', $hsCodeValue))) {
             return;
@@ -363,7 +363,8 @@ class WCMYPA_Admin
                 'exclude_from_search'       => false,
                 'show_in_admin_all_list'    => true,
                 'show_in_admin_status_list' => true,
-                'label_count'               => _n_noop('Delivered (%s)', 'Delivered (%s)'),
+                //#translators: %s: number of orders
+                'label_count'               => _n_noop('Delivered (%s)', 'Delivered (%s)', 'woocommerce-myparcel'),
             ]
         );
     }
@@ -1105,13 +1106,9 @@ class WCMYPA_Admin
                 'label'       => __('HS Code', 'woocommerce-myparcel'),
                 'type'        => 'text',
                 'description' => wc_help_tip(
-                    sprintf(
-                        __(
-                            'HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s',
-                            'woocommerce-myparcel'
-                        ),
-                        '<a href="https://tarief.douane.nl/arctictariff-public-web/#!/home" target="_blank">',
-                        '</a>'
+                    __(
+                        'HS Codes are used for MyParcel world shipments, you can find the appropriate code on the site of the Dutch Customs',
+                        'woocommerce-myparcel'
                     )
                 ),
             ],
@@ -1377,7 +1374,7 @@ class WCMYPA_Admin
         ];
 
         if (WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY)) {
-            $confirmationData[__('Date:', 'woocommerce')] = wc_format_datetime(new WC_DateTime($deliveryOptions->getDate() ?? ''));
+            $confirmationData[__('Date:', 'woocommerce-myparcel')] = wc_format_datetime(new WC_DateTime($deliveryOptions->getDate() ?? ''));
         }
 
         $extraOptions = $this->getExtraOptions($deliveryOptions->getShipmentOptions());
@@ -1467,15 +1464,16 @@ class WCMYPA_Admin
     public function generateThankYouConfirmation(?array $options): ?string
     {
         if ($options) {
-            $htmlHeader = "<h2 class='woocommerce-column__title'> " . __("Delivery information:", "woocommerce-myparcel") . "</h2><table>";
+            $htmlHeader = '<h2 class="woocommerce-column__title"> ' . __('Delivery information:', 'woocommerce-myparcel') . '</h2><table>';
 
             foreach ($options as $key => $option) {
                 if ($option) {
-                    $htmlHeader .= "<tr><td>$key</td><td>" . __($option, "woocommerce-myparcel") . "</td></tr>";
+                    // these option strings are all translated, we cannot use a literal here
+                    $htmlHeader .= "<tr><td>$key</td><td>" . __($option, 'woocommerce-myparcel') . '</td></tr>';
                 }
             }
 
-            return $htmlHeader . "</table>";
+            return $htmlHeader . '</table>';
         }
 
         return null;

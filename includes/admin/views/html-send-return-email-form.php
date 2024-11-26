@@ -86,7 +86,7 @@ $target_url = wp_nonce_url(
                                                     if ($weight) {
                                                         echo esc_html(wc_format_weight($weight * $item['qty']));
                                                     } else {
-                                                        echo esc_html__('N/A', 'woocommerce');
+                                                        echo esc_html__('N/A', 'woocommerce-myparcel');
                                                     }
                                                     ?>
                                                 </td>
@@ -104,7 +104,7 @@ $target_url = wp_nonce_url(
                                                 if ($weight) {
                                                     echo esc_html(wc_format_weight($weight));
                                                 } else {
-                                                    echo esc_html__('N/A', 'woocommerce');
+                                                    echo esc_html__('N/A', 'woocommerce-myparcel');
                                                 }
                                                 ?>
                                             </th>

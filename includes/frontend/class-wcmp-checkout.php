@@ -58,7 +58,7 @@ class WCMP_Checkout
     {
         $settings = WCMYPA()->setting_collection;
 
-        return esc_html__($settings->getStringByName($title), 'woocommerce-myparcel');
+        return esc_html($settings->getStringByName($title));
     }
 
     /**

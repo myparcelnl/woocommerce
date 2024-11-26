@@ -273,6 +273,7 @@ class WCMYPA_Settings
         if (! $hide_notice && 'BE' === $base_country) {
             $myparcel_be_link = '<a href="https://wordpress.org/plugins/wc-myparcel-belgium/" target="_blank">WC MyParcel Belgium</a>';
             $text             = sprintf(
+                    //#translators: %s is a link to the MyParcel Belgium plugin
                 __(
                     'It looks like your shop is based in Belgium. This plugin is for MyParcelNL. If you are based in Belgium, download the %s plugin instead!',
                     'woocommerce-myparcel'
@@ -382,7 +383,7 @@ class WCMYPA_Settings
             printf('<th scope="row"><label class="wcmp__ws--nowrap" %s>%s%s</label></th>',
                 $label ? 'for="' . esc_attr($label) . '"' : '',
                 esc_html(Arr::get($field, 'title')),
-                esc_attr($helpText ? wc_help_tip($helpText) : '')
+                wp_kses(($helpText ? wc_help_tip($helpText) : ''),['span' => ['class' => [], 'data-tip' => [], 'style' => []]])
             );
 
             // Pass the option id as argument

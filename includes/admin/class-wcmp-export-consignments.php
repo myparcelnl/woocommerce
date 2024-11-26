@@ -414,6 +414,7 @@ class WCMP_Export_Consignments
 
         if ($colloWeight > $maxColloWeight) {
             $message = sprintf(
+                //#translators: %1$s: collo weight, %2$s: max collo weight
                 __('error_collo_weight_%1$s_but_max_%2$s', 'woocommerce-myparcel'),
                 $colloWeight / 1000,
                 $maxColloWeight / 1000

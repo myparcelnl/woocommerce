@@ -173,12 +173,12 @@ class WCMP_Settings_Callbacks
         if (wc_string_to_bool($class->getValue())) {
             printf(
                 "<span class=\"woocommerce-input-toggle woocommerce-input-toggle--enabled\">%s</span>",
-                esc_attr__('Yes', 'woocommerce')
+                esc_attr__('Yes', 'woocommerce-myparcel')
             );
         } else {
             printf(
                 "<span class=\"woocommerce-input-toggle woocommerce-input-toggle--disabled\">%s</span>",
-                esc_attr__('No', 'woocommerce')
+                esc_attr__('No', 'woocommerce-myparcel')
             );
         }
 

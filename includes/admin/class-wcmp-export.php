@@ -559,7 +559,7 @@ class WCMP_Export
             } catch (Exception $ex) {
                 $errorMessage = sprintf(
                     __('error_export_order_id_failed_because', 'woocommerce-myparcel'),
-                    $order_id, __($ex->getMessage(), 'woocommerce-myparcel')
+                    $order_id, $ex->getMessage()
                 );
                 Messages::showAdminNotice($errorMessage, Messages::NOTICE_LEVEL_ERROR);
                 WCMP_Log::add($errorMessage);
@@ -619,6 +619,7 @@ class WCMP_Export
 
         if (! empty($this->success)) {
             $return['success']     = sprintf(
+                //#translators: %s is the number of shipments
                 __('%s shipments successfully exported to MyParcel', 'woocommerce-myparcel'),
                 count($collection->getConsignmentIds())
             );

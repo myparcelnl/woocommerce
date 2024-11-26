@@ -39,7 +39,7 @@ class MyParcelWidget
     {
         wp_add_dashboard_widget(
             'woocommerce_myparcel_dashboard_widget',
-            __('MyParcel'),
+            'MyParcel',
             [$this, 'myparcelDashboardWidgetHandler'],
             [$this, 'myparcelDashboardWidgetConfigHandler']
         );

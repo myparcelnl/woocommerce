@@ -125,7 +125,7 @@ if (! class_exists('WCMYPA')) :
          */
         private function getVersion(): string
         {
-            $composerJson = wp_json_decode(file_get_contents(__DIR__ . '/composer.json'), false);
+            $composerJson = json_decode(file_get_contents(__DIR__ . '/composer.json'), false);
 
             return $composerJson->version;
         }
@@ -279,13 +279,9 @@ if (! class_exists('WCMYPA')) :
                 return true;
             }
 
-            Messages::showAdminNotice(sprintf(
-                __(
-                    'MyParcel requires %sWooCommerce%s to be installed & activated!',
+            Messages::showAdminNotice(__(
+                    'MyParcel requires WooCommerce to be installed and activated!',
                     'woocommerce-myparcel'
-                ),
-                '<a href="http://wordpress.org/extend/plugins/woocommerce/">',
-                '</a>'
             ), Messages::NOTICE_LEVEL_ERROR);
 
             return false;

@@ -684,12 +684,7 @@ class OrderSettings
             && $this->deliveryOptions->isPickup()
             && ! $this->consignment->canHaveShipmentOption($consignmentSettingName)
         ) {
-            $this->showAdminNoticeOptionRemoved(
-                __(
-                    self::OPTION_TRANSLATION_STRINGS[$consignmentSettingName] ?? $consignmentSettingName,
-                    'woocommerce-myparcel'
-                )
-            );
+            $this->showAdminNoticeOptionRemoved(__('insurance', 'woocommerce-myparcel'));
             $this->insured         = false;
             $this->insuranceAmount = 0;
 

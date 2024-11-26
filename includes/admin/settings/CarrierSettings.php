@@ -423,7 +423,7 @@ class CarrierSettings
                 'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 'label'     => sprintf(
                     __('settings_carrier_delivery_day', 'woocommerce-myparcel'),
-                    ucfirst(__($settings['day']))
+                    ucfirst($settings['day'])
                 ),
                 'help_text' => strtr(
                     __('settings_carrier_delivery_day_help_text', 'woocommerce-myparcel'),
@@ -431,8 +431,8 @@ class CarrierSettings
                         ':delivery_days' => strtolower(
                             __('setting_carrier_drop_off_days_title', 'woocommerce-myparcel')
                         ),
-                        ':cutoff_day'    => __($settings['cut_off_time_day']),
-                        ':delivery_day'  => __($settings['day']),
+                        ':cutoff_day'    => $settings['cut_off_time_day'],
+                        ':delivery_day'  => $settings['day'],
                     ]
                 ),
                 'type'      => 'toggle',
@@ -702,4 +702,3 @@ class CarrierSettings
         ];
     }
 }
-
