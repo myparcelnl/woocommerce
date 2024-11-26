@@ -125,7 +125,7 @@ if (! class_exists('WCMYPA')) :
          */
         private function getVersion(): string
         {
-            $composerJson = json_decode(file_get_contents(__DIR__ . '/composer.json'), false);
+            $composerJson = wp_json_decode(file_get_contents(__DIR__ . '/composer.json'), false);
 
             return $composerJson->version;
         }

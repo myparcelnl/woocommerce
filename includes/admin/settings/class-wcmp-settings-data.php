@@ -317,7 +317,7 @@ class WCMP_Settings_Data
     public function renderManualUpdateTrigger(): void
     {
         $baseUrl = esc_url('admin-ajax.php?action=' . WCMYPA_Settings::SETTING_TRIGGER_MANUAL_UPDATE);
-        printf('<a class="button wcmp__trigger" href="%s">', $baseUrl);
+        printf('<a class="button wcmp__trigger" href="%s">', esc_url($baseUrl));
         esc_html_e('settings_trigger_manual_update_button', 'woocommerce-myparcel');
         WCMYPA_Admin::renderSpinner();
         echo '</a>';
@@ -862,7 +862,7 @@ class WCMP_Settings_Data
         $currentTheme = wp_get_theme();
 
         $preset  = sanitize_title($currentTheme);
-        $cssPath = WCMYPA()->plugin_path() . "/assets/css/delivery-options/delivery-options-preset-$preset.css";
+        $cssPath = "/assets/css/delivery-options/delivery-options-preset-$preset.css";
 
         if (! file_exists($cssPath)) {
             return '';
@@ -871,7 +871,7 @@ class WCMP_Settings_Data
         return sprintf(
             '<p>%s <a class="" href="#" onclick="document.querySelector(`#delivery_options_custom_css`).value = `%s`">%s</a></p>',
             sprintf(__('Theme "%s" detected.', 'woocommerce-myparcel'), $currentTheme),
-            esc_js(file_get_contents($cssPath)),
+            esc_js(file_get_contents(WCMYPA()->plugin_path() . $cssPath)),
             __('Apply preset.', 'woocommerce-myparcel')
         );
     }

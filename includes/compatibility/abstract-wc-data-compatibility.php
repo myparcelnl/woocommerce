@@ -187,7 +187,7 @@ abstract class Data
     public static function update_meta_data($object, $key, $value, $meta_id = ''): void
     {
         if (is_array($value)) {
-            $value = json_encode($value);
+            $value = wp_json_encode($value);
         }
 
         if (WC_Core::is_wc_version_gte_3_0()) {

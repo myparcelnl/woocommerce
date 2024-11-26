@@ -43,14 +43,14 @@ try {
 
         <tr>
             <td>
-                <label for="<?php echo $class->getName() ?>">
+                <label for="<?php echo esc_attr($class->getName()) ?>">
                     <?php echo esc_html($class->getArgument('label')); ?>
                 </label>
             </td>
             <td>
                 <?php
                 if (isset($optionRow['help_text'])) {
-                    printf("<span class='ml-auto'>%s</span>", wc_help_tip($optionRow['help_text'], true));
+                    printf("<span class='ml-auto'>%s</span>", wp_kses(wc_help_tip($optionRow['help_text'], true)));
                 }
                 ?>
             </td>

@@ -419,7 +419,7 @@ class WCMP_Export_Consignments
                 $maxColloWeight / 1000
             );
             $hint    = __('export_hint_change_parcel', 'woocommerce-myparcel');
-            throw new Exception("{$message} {$hint}");
+            throw new Exception(esc_html("$message $hint"));
         }
     }
 }

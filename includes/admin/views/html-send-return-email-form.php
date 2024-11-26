@@ -69,8 +69,8 @@ $target_url = wp_nonce_url(
                                         <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th><?php _e("Product name", "woocommerce-myparcel"); ?></th>
-                                            <th class="wcmp__text--right"><?php _e("weight", "woocommerce-myparcel"); ?></th>
+                                            <th><?php esc_html_e("Product name", "woocommerce-myparcel"); ?></th>
+                                            <th class="wcmp__text--right"><?php esc_html_e("weight", "woocommerce-myparcel"); ?></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -84,7 +84,7 @@ $target_url = wp_nonce_url(
                                                     $weight = $item->get_product()->weight ?? null;
 
                                                     if ($weight) {
-                                                        echo wc_format_weight($weight * $item['qty']);
+                                                        echo esc_html(wc_format_weight($weight * $item['qty']));
                                                     } else {
                                                         echo esc_html__('N/A', 'woocommerce');
                                                     }
@@ -96,13 +96,13 @@ $target_url = wp_nonce_url(
                                         <tfoot>
                                         <tr>
                                             <th>&nbsp;</th>
-                                            <th><?php _e("Total weight", "woocommerce-myparcel"); ?></th>
+                                            <th><?php esc_html_e("Total weight", "woocommerce-myparcel"); ?></th>
                                             <th class="wcmp__text--right">
                                                 <?php
                                                 $weight = $orderSettings->getWeight();
 
                                                 if ($weight) {
-                                                    echo wc_format_weight($weight);
+                                                    echo esc_html(wc_format_weight($weight));
                                                 } else {
                                                     echo esc_html__('N/A', 'woocommerce');
                                                 }
