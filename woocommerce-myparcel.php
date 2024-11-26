@@ -31,6 +31,10 @@ defined('ABSPATH') or die();
 
 require(plugin_dir_path(__FILE__) . 'vendor/autoload.php');
 
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
+
 if (! class_exists('WCMYPA')) :
     class WCMYPA
     {

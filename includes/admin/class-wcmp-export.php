@@ -365,7 +365,7 @@ class WCMP_Export
         }
 
         if (is_array($value)) {
-            return array_map(['self', 'sanitizeOptions'], $value);
+            return array_map([self::class, 'sanitizeOptions'], $value);
         }
 
         return (int) $value;

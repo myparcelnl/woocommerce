@@ -35,8 +35,6 @@ class WCMP_API extends WCMP_Rest
      */
     public function __construct($key)
     {
-        parent::__construct();
-
         $this->userAgent = $this->getUserAgent();
         $this->key       = (string) $key;
     }
