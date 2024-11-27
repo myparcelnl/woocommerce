@@ -31,10 +31,6 @@ defined('ABSPATH') or die();
 
 require(plugin_dir_path(__FILE__) . 'vendor/autoload.php');
 
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
-
 if (! class_exists('WCMYPA')) :
     class WCMYPA
     {
@@ -48,6 +44,7 @@ if (! class_exists('WCMYPA')) :
         public const NONCE_ACTION         = 'wc_myparcel';
         public const PHP_VERSION_7_1      = '7.1';
         public const PHP_VERSION_REQUIRED = self::PHP_VERSION_7_1;
+        public const WC_VERSION_REQUIRED  = '5.5';
         public const NAME                 = 'woocommerce-myparcel';
 
         /**
@@ -267,6 +264,7 @@ if (! class_exists('WCMYPA')) :
         private function checkPrerequisites(): bool
         {
             return $this->isWoocommerceActivated()
+                && $this->woocommerceVersionMeets(self::WC_VERSION_REQUIRED)
                 && $this->phpVersionMeets(self::PHP_VERSION_REQUIRED);
         }
 
@@ -429,6 +427,20 @@ if (! class_exists('WCMYPA')) :
             );
 
             Messages::showAdminNotice($message, Messages::NOTICE_LEVEL_ERROR);
+
+            return false;
+        }
+
+        private function woocommerceVersionMeets(string $version): bool
+        {
+            if (defined('WC_VERSION') && version_compare(WC_VERSION, $version, '>=')) {
+                return true;
+            }
+
+            $error = __('MyParcel requires WooCommerce {WC_VERSION} or higher.', 'woocommerce-myparcel');
+            $error = str_replace('{WC_VERSION}', self::WC_VERSION_REQUIRED, $error);
+
+            Messages::showAdminNotice($error, Messages::NOTICE_LEVEL_ERROR);
 
             return false;
         }
