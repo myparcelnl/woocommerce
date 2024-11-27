@@ -167,7 +167,7 @@ class WebhookSubscriptionService
      */
     private function generateHash(): string
     {
-        return md5(uniqid((string) mt_rand(), true));
+        return md5(uniqid((string) wp_rand(), true));
     }
 
     /**
@@ -295,7 +295,7 @@ class WebhookSubscriptionService
         $newSubscriptions->push($subscription);
         $array = Utils::toArray($newSubscriptions->all());
 
-        update_option(self::WEBHOOK_SETTINGS_PATH, json_encode($array));
+        update_option(self::WEBHOOK_SETTINGS_PATH, wp_json_encode($array));
     }
 
     /**

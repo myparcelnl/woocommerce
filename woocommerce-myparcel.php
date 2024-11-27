@@ -10,8 +10,8 @@ Text Domain: woocommerce-myparcel
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
-Tested up to: 6.5
-WC tested up to: 8.9.1
+Tested up to: 6.7
+WC tested up to: 9.4
 Requires PHP: 7.4
 */
 
@@ -44,6 +44,7 @@ if (! class_exists('WCMYPA')) :
         public const NONCE_ACTION         = 'wc_myparcel';
         public const PHP_VERSION_7_1      = '7.1';
         public const PHP_VERSION_REQUIRED = self::PHP_VERSION_7_1;
+        public const WC_VERSION_REQUIRED  = '5.5';
         public const NAME                 = 'woocommerce-myparcel';
 
         /**
@@ -125,6 +126,7 @@ if (! class_exists('WCMYPA')) :
          */
         private function getVersion(): string
         {
+            /* WP: this is a local file, we can get it directly */
             $composerJson = json_decode(file_get_contents(__DIR__ . '/composer.json'), false);
 
             return $composerJson->version;
@@ -262,6 +264,7 @@ if (! class_exists('WCMYPA')) :
         private function checkPrerequisites(): bool
         {
             return $this->isWoocommerceActivated()
+                && $this->woocommerceVersionMeets(self::WC_VERSION_REQUIRED)
                 && $this->phpVersionMeets(self::PHP_VERSION_REQUIRED);
         }
 
@@ -279,13 +282,9 @@ if (! class_exists('WCMYPA')) :
                 return true;
             }
 
-            Messages::showAdminNotice(sprintf(
-                __(
-                    'MyParcel requires %sWooCommerce%s to be installed & activated!',
+            Messages::showAdminNotice(__(
+                    'MyParcel requires WooCommerce to be installed and activated!',
                     'woocommerce-myparcel'
-                ),
-                '<a href="http://wordpress.org/extend/plugins/woocommerce/">',
-                '</a>'
             ), Messages::NOTICE_LEVEL_ERROR);
 
             return false;
@@ -428,6 +427,20 @@ if (! class_exists('WCMYPA')) :
             );
 
             Messages::showAdminNotice($message, Messages::NOTICE_LEVEL_ERROR);
+
+            return false;
+        }
+
+        private function woocommerceVersionMeets(string $version): bool
+        {
+            if (defined('WC_VERSION') && version_compare(WC_VERSION, $version, '>=')) {
+                return true;
+            }
+
+            $error = __('MyParcel requires WooCommerce {WC_VERSION} or higher.', 'woocommerce-myparcel');
+            $error = str_replace('{WC_VERSION}', self::WC_VERSION_REQUIRED, $error);
+
+            Messages::showAdminNotice($error, Messages::NOTICE_LEVEL_ERROR);
 
             return false;
         }

@@ -99,7 +99,7 @@ class MessagesRepository
                 printf(
                     '<div class="wcmp__notice notice myparcel-dismiss-notice notice-%s %s" data-messageid="%s"><p>%s</p></div>',
                     esc_html($message['level']),
-                    $cssClassDismiss,
+                    esc_html($cssClassDismiss),
                     esc_html($message['messageId']),
                     wp_kses($message['message'], self::ALLOWED_HTML)
                 );

@@ -58,7 +58,7 @@ class WCMP_Checkout
     {
         $settings = WCMYPA()->setting_collection;
 
-        return __(strip_tags($settings->getStringByName($title)), 'woocommerce-myparcel');
+        return esc_html($settings->getStringByName($title));
     }
 
     /**
@@ -81,6 +81,7 @@ class WCMP_Checkout
      */
     public static function save_delivery_options(int $orderId): void
     {
+        // TODO nonce verification
         $order                = WCX::get_order($orderId);
         $shippingMethod       = sanitize_text_field(
             wp_unslash(
@@ -358,7 +359,7 @@ class WCMP_Checkout
     {
         $input = filter_input_array(INPUT_GET);
 
-        echo json_encode($this->getDeliveryOptionsConfig($input['cc']), JSON_UNESCAPED_SLASHES);
+        echo wp_json_encode($this->getDeliveryOptionsConfig($input['cc']), JSON_UNESCAPED_SLASHES);
         die();
     }
 
@@ -393,8 +394,8 @@ class WCMP_Checkout
             'wc-myparcel',
             'MyParcelDeliveryOptions',
             [
-                'allowedShippingMethods'    => json_encode($this->getShippingMethodsAllowingDeliveryOptions()),
-                'disallowedShippingMethods' => json_encode(WCMP_Export::DISALLOWED_SHIPPING_METHODS),
+                'allowedShippingMethods'    => wp_json_encode($this->getShippingMethodsAllowingDeliveryOptions()),
+                'disallowedShippingMethods' => wp_json_encode(WCMP_Export::DISALLOWED_SHIPPING_METHODS),
                 'alwaysShow'                => $this->alwaysDisplayDeliveryOptions(),
                 'hiddenInputName'           => WCMYPA_Admin::META_DELIVERY_OPTIONS,
             ]
@@ -445,7 +446,7 @@ class WCMP_Checkout
      */
     private function adjustDhlForYouDeliverySettings(array $dhlForYouSettings): array
     {
-        $weekDay           = date('N', strtotime(date('Y-m-d')));
+        $weekDay           = gmdate('N', strtotime(gmdate('Y-m-d')));
         $now               = new DateTime();
         $cutOffTime        = DateTime::createFromFormat('H:i', $dhlForYouSettings['cutoffTime']);
         $weekDay           = $now < $cutOffTime ? $weekDay : $weekDay + 1;

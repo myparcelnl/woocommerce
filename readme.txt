@@ -1,18 +1,18 @@
-=== Plugin Name ===
+=== MyParcel ===
 Contributors: richardperdaan, edielemoine, joerimyparcel
-Tags: woocommerce, export, delivery, packages, myparcel, flespakket, postnl
+Tags: woocommerce, delivery, packages, myparcel, shipping
 Requires at least: 5.2.0
-Tested up to: 6.2
+Tested up to: 6.7
 Stable tag: 4.24.1
 Requires PHP: 7.1
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
-Export your WooCommerce orders to MyParcel (www.myparcel.nl) or to Flespakket (www.flespakket.nl) and print labels directly from the WooCommerce admin
+Export your WooCommerce orders to MyParcel (www.myparcel.nl) and print labels directly from the WooCommerce admin
 
 == Description ==
 [vimeo https://vimeo.com/507950149]
-This WooCommerce extension allows you to export your orders to the MyParcel service (www.myparcel.nl) & Flespakket service (www.flespakket.nl). The products are delivered by PostNL.
+This WooCommerce extension allows you to export your orders to the MyParcel service (www.myparcel.nl).
 
 **Online Manual (in Dutch):** [https://myparcelnl.github.io/woocommerce/](https://myparcelnl.github.io/woocommerce/)
 

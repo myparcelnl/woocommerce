@@ -148,17 +148,6 @@ class WCMP_NL_Postcode_Fields
                 add_action('woocommerce_checkout_update_order_meta', [$this, 'save_order_data'], 10, 2);
             }
 
-            // Remove placeholder values (IE8 & 9)
-            add_action('woocommerce_checkout_update_order_meta', [$this, 'remove_placeholders'], 10, 2);
-
-            // Fix weird required field translations
-            add_filter(
-                'woocommerce_checkout_required_field_notice',
-                [$this, 'required_field_notices'],
-                10,
-                2
-            );
-
             $this->load_woocommerce_filters();
         } else { // if NOT using old fields
             add_action('woocommerce_after_checkout_validation', [$this, 'validate_address_fields'], 10, 2);
@@ -748,92 +737,6 @@ class WCMP_NL_Postcode_Fields
         }
 
         return $shipping_postcode;
-    }
-
-    /**
-     * Remove placeholders from posted checkout data
-     *
-     * @param string $order_id order_id of the new order
-     * @param array  $posted   Array of posted form data
-     *
-     * @return void
-     */
-    public function remove_placeholders($order_id, $posted)
-    {
-        $order = WCX::get_order($order_id);
-        // get default address fields with their placeholders
-        $countries = new WC_Countries();
-        $fields    = $countries->get_default_address_fields();
-
-        // define order_comments placeholder
-        $order_comments_placeholder = _x(
-            'Notes about your order, e.g. special notes for delivery.',
-            'placeholder',
-            'woocommerce'
-        );
-
-        // check if ship to billing is set
-        if (version_compare(WOOCOMMERCE_VERSION, '2.1', '<=')) {
-            // old versions use 'shiptobilling'
-            $ship_to_different_address = isset($this->postedValues['shiptobilling']) ? false : true;
-        } else {
-            // WC2.1
-            $ship_to_different_address = isset($this->postedValues['ship_to_different_address']) ? true : false;
-        }
-
-        // check the billing & shipping fields
-        $field_types  = ['billing', 'shipping'];
-        $check_fields = ['address_1', 'address_2', 'city', 'state', 'postcode'];
-        foreach ($field_types as $field_type) {
-            foreach ($check_fields as $check_field) {
-                if (isset($posted[$field_type . '_' . $check_field])
-                    && isset($fields[$check_field]['placeholder'])
-                    && $posted[$field_type . '_' . $check_field] == $fields[$check_field]['placeholder']) {
-                    WCX_Order::set_address_prop($order, $check_field, $field_type, '');
-
-                    // also clear shipping field when ship_to_different_address is false
-                    if ($ship_to_different_address == false && $field_type == 'billing') {
-                        WCX_Order::set_address_prop($order, $check_field, 'shipping', '');
-                    }
-                }
-            }
-        }
-
-        // check the order comments field
-        if ($posted['order_comments'] == $order_comments_placeholder) {
-            wp_update_post(
-                [
-                    'ID'           => $order_id,
-                    'post_excerpt' => '',
-                ]
-            );
-        }
-
-        return;
-    }
-
-    /**
-     * WooCommerce concatenates translations for required field notices that result in
-     * confusing messages, so we translate the full notice to prevent this
-     */
-    public function required_field_notices($notice, $field_label)
-    {
-        // concatenate translations
-        $billing_nr  = sprintf(__('Billing %s', 'woocommerce'), __('No.'));
-        $shipping_nr = sprintf(__('Shipping %s', 'woocommerce'), __('No.'));
-
-        switch ($field_label) {
-            case $billing_nr:
-                $notice = __('<strong>Billing No.</strong> is a required field', 'woocommerce-myparcel');
-                break;
-            case $shipping_nr:
-                $notice = __('<strong>Shipping No.</strong> is a required field', 'woocommerce-myparcel');
-                break;
-            default:
-                break;
-        }
-
-        return $notice;
     }
 
     /**

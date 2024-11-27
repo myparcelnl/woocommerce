@@ -423,7 +423,7 @@ class CarrierSettings
                 'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 'label'     => sprintf(
                     __('settings_carrier_delivery_day', 'woocommerce-myparcel'),
-                    ucfirst(__($settings['day']))
+                    ucfirst($settings['day'])
                 ),
                 'help_text' => strtr(
                     __('settings_carrier_delivery_day_help_text', 'woocommerce-myparcel'),
@@ -431,8 +431,8 @@ class CarrierSettings
                         ':delivery_days' => strtolower(
                             __('setting_carrier_drop_off_days_title', 'woocommerce-myparcel')
                         ),
-                        ':cutoff_day'    => __($settings['cut_off_time_day']),
-                        ':delivery_day'  => __($settings['day']),
+                        ':cutoff_day'    => $settings['cut_off_time_day'],
+                        ':delivery_day'  => $this->translateWeekdays($settings['day']),
                     ]
                 ),
                 'type'      => 'toggle',
@@ -447,7 +447,7 @@ class CarrierSettings
                 'class'             => ['wcmp__child'],
                 'label'             => sprintf(
                     __('setting_carrier_cut_off_time_day_title', 'woocommerce-myparcel'),
-                    __($settings['cut_off_time_day'])
+                    $this->translateWeekdays($settings['cut_off_time_day'])
                 ),
                 'default'           => '15:00',
                 'help_text'         => __('setting_carrier_cut_off_time_help_text', 'woocommerce-myparcel'),
@@ -701,5 +701,44 @@ class CarrierSettings
             ),
         ];
     }
-}
 
+    /**
+     * @param string $weekday the English weekday
+     * @return string the weekday translated from English with capitalization intact or the original weekday if no translation is found
+     */
+    private function translateWeekdays(string $weekday):string{
+        $capitalize = preg_match('~^[\p{Lu}\x{2160}-\x{216F}]~u', $weekday);
+
+        switch (strtolower($weekday)) {
+            case 'monday':
+                $translated = __('monday', 'woocommerce-myparcel');
+                break;
+            case 'tuesday':
+                $translated = __('tuesday', 'woocommerce-myparcel');
+                break;
+            case 'wednesday':
+                $translated = __('wednesday', 'woocommerce-myparcel');
+                break;
+            case 'thursday':
+                $translated = __('thursday', 'woocommerce-myparcel');
+                break;
+            case 'friday':
+                $translated = __('friday', 'woocommerce-myparcel');
+                break;
+            case 'saturday':
+                $translated = __('saturday', 'woocommerce-myparcel');
+                break;
+            case 'sunday':
+                $translated = __('sunday', 'woocommerce-myparcel');
+                break;
+            default:
+                return $weekday;
+        }
+
+        if ($capitalize) {
+            $translated = ucfirst($translated);
+        }
+
+        return $translated;
+    }
+}

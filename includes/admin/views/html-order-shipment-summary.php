@@ -42,19 +42,19 @@ echo '<ul class="wcmp__shipment-summary wcmp__ws--nowrap">';
 printf(
     '%s: %s',
     esc_html__('Shipment type', 'woocommerce-myparcel'),
-    WCMP_Data::getPackageTypeHuman(Arr::get($firstShipment, 'shipment.options.package_type'))
+    esc_html(WCMP_Data::getPackageTypeHuman(Arr::get($firstShipment, 'shipment.options.package_type')))
 );
 
 foreach ($option_strings as $key => $label) {
     if (Arr::get($firstShipment, "shipment.options.$key")
         && (int) Arr::get($firstShipment, "shipment.options.$key") === 1) {
-        printf('<li class="%s">%s</li>', $key, esc_html($label));
+        printf('<li class="%s">%s</li>', esc_attr($key), esc_html($label));
     }
 }
 
 if ($insurance) {
     $price = number_format(Arr::get($insurance, 'amount') / 100, 2);
-    printf('<li>%s: € %s</li>', esc_html__('insured_for', 'woocommerce-myparcel'), $price);
+    printf('<li>%s: € %s</li>', esc_html__('insured_for', 'woocommerce-myparcel'), esc_html($price));
 }
 
 if ($labelDescription) {
@@ -90,7 +90,7 @@ foreach ($shipments as $shipment_id => $shipment) {
 
     printf(
         '<a href="%1$s" target="_blank" title="%2$s">%2$s</a><br/> %3$s: %4$s<br/>',
-        WCMYPA_Admin::getTrackTraceUrl($order_id, $trackTrace),
+        esc_url(WCMYPA_Admin::getTrackTraceUrl($order_id, $trackTrace)),
         esc_html($trackTrace),
         esc_html(__('Status', 'woocommerce-myparcel')),
         esc_html(Arr::get($shipment, 'status'))
