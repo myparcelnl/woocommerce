@@ -3,7 +3,7 @@ Contributors: richardperdaan, edielemoine, joerimyparcel
 Tags: woocommerce, export, delivery, packages, myparcel, flespakket, postnl
 Requires at least: 5.2.0
 Tested up to: 6.2
-Stable tag: 4.19.1
+Stable tag: 5.0.0
 Requires PHP: 7.1
 License: MIT
 License URI: http://www.opensource.org/licenses/mit-license.php
