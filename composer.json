@@ -4,6 +4,7 @@
   "description": "Export your WooCommerce orders to MyParcel and print labels",
   "license": "MIT",
   "require": {
+    "php": ">= 7.1",
     "guzzlehttp/guzzle": "^7.5.0",
     "myparcelnl/pdk": "^2.0.0",
     "psr/log": "^1.1 || ^2.0 || ^3.0"
