@@ -1,5 +1,6 @@
 {
   "name": "myparcelnl/woocommerce",
+  "type": "wordpress-plugin",
   "description": "Export your WooCommerce orders to MyParcel and print labels",
   "license": "MIT",
   "require": {
