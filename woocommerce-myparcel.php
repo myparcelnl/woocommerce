@@ -24,7 +24,7 @@ use MyParcelNL\WooCommerce\Integration\WcBlocksLoader;
 use MyParcelNL\WooCommerce\Service\WordPressHookService;
 use function MyParcelNL\WooCommerce\bootPdk;
 
-require(plugin_dir_path(__FILE__) . 'vendor/autoload.php');
+require plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 
 final class MyParcelNLWooCommerce
 {
