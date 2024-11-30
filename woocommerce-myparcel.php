@@ -9,7 +9,7 @@
  * Author URI: https://myparcel.nl
  * Version: 5.3.1
  * License: MIT
- * License URI: http://www.opensource.org/licenses/mit-license.php
+ * License URI: https://opensource.org/license/mit
  * Requires Plugins: woocommerce
  */
 
