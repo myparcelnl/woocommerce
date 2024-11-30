@@ -237,4 +237,3 @@ final class Migration4_0_0 extends AbstractUpgradeMigration implements Migration
         );
     }
 }
-

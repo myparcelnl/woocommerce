@@ -204,8 +204,10 @@ class WcPdkBootstrapper extends PdkBootstrapper
 
             'disabledSettings'         => factory(function () {
                 $disabledSettings = [];
-                if (Pdk::get(WooCommerceService::class)
-                    ->isUsingBlocksCheckout()) {
+                if (
+                    Pdk::get(WooCommerceService::class)
+                    ->isUsingBlocksCheckout()
+                ) {
                     $disabledSettings[CheckoutSettings::ID][] = CheckoutSettings::DELIVERY_OPTIONS_POSITION;
                 }
 

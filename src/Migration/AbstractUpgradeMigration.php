@@ -31,12 +31,16 @@ abstract class AbstractUpgradeMigration
     /**
      * Import any dependencies you might need using this function
      */
-    protected function import(): void { }
+    protected function import(): void
+    {
+    }
 
     /**
      * Put the migration logic in this function.
      */
-    protected function migrate(): void { }
+    protected function migrate(): void
+    {
+    }
 
     /**
      * @param  array      $map
@@ -125,5 +129,7 @@ abstract class AbstractUpgradeMigration
     /**
      *
      */
-    protected function setOptionSettingsMap(): void { }
+    protected function setOptionSettingsMap(): void
+    {
+    }
 }

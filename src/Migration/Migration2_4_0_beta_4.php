@@ -31,4 +31,3 @@ final class Migration2_4_0_beta_4 implements MigrationInterface
         }
     }
 }
-

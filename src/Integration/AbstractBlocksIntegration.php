@@ -63,7 +63,9 @@ abstract class AbstractBlocksIntegration implements IntegrationInterface
     /**
      * @return void
      */
-    public function initialize(): void {}
+    public function initialize(): void
+    {
+    }
 
     protected function getScriptData(): array
     {

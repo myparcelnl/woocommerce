@@ -78,4 +78,3 @@ final class Migration4_4_1 extends AbstractUpgradeMigration implements Migration
         unset($this->newCheckoutSettings['show_delivery_day']);
     }
 }
-
