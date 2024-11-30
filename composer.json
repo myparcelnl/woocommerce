@@ -50,7 +50,7 @@
     "analyse:generate": "@analyse --generate-baseline phpstan-baseline.php --allow-empty-baseline",
     "analyze": "@analyse",
     "analyze:generate": "@analyse:generate",
-    "test": "vendor/bin/pest",
+    "test": "pest",
     "test:coverage": "php -dpcov.enabled=1 vendor/bin/pest --coverage-clover=coverage.xml"
   }
 }
