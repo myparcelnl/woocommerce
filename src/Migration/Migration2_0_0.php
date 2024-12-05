@@ -11,7 +11,9 @@ use MyParcelNL\Pdk\App\Installer\Contract\MigrationInterface;
  */
 final class Migration2_0_0 implements MigrationInterface
 {
-    public function down(): void {}
+    public function down(): void
+    {
+    }
 
     public function getVersion(): string
     {
@@ -78,4 +80,3 @@ final class Migration2_0_0 implements MigrationInterface
         update_option('woocommerce_myparcel_export_defaults_settings', $defaultSettings);
     }
 }
-
