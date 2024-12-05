@@ -91,6 +91,38 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         });
     }
 
+    public function getByApiIdentifier(string $uuid): ?PdkOrder
+    {
+        /**
+         * Load the most recent orders to search for the apiIdentifier.
+         * Assuming change webhooks are fired for recent orders.
+         */
+        $orderIds = wc_get_orders([
+            'limit'   => 300,
+            'status'  => ['on-hold', 'processing', 'completed'],
+            'orderby' => 'date',
+            'order'   => 'DESC',
+            'return'  => 'ids',
+        ]);
+
+        foreach ($orderIds as $orderId) {
+            $order     = $this->wcOrderRepository->get($orderId);
+            $orderData = $order->get_meta(Pdk::get('metaKeyOrderData'));
+            if (isset($orderData['apiIdentifier']) && $orderData['apiIdentifier'] === $uuid) {
+                return $this->get($orderId);
+            }
+        }
+
+        Logger::debug(
+            'Did not find order with apiIdentifier',
+            [
+                'apiIdentifier' => $uuid,
+            ]
+        );
+
+        return null;
+    }
+
     /**
      * @param  \MyParcelNL\Pdk\App\Order\Model\PdkOrder $order
      *
