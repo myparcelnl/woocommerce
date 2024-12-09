@@ -50,7 +50,7 @@ try {
             <td>
                 <?php
                 if (isset($optionRow['help_text'])) {
-                    printf("<span class='ml-auto'>%s</span>", wp_kses(wc_help_tip($optionRow['help_text'], true)));
+                    printf("<span class='ml-auto'>%s</span>", wp_kses(wc_help_tip($optionRow['help_text']), true));
                 }
                 ?>
             </td>
