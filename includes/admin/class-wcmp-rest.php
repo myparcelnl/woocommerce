@@ -16,102 +16,6 @@ if (class_exists('WCMP_Rest')) {
 class WCMP_Rest
 {
     /**
-     * Handle for the current cURL session
-     *
-     * @var CurlHandle|resource
-     */
-    private $curl = null;
-
-    /**
-     * Default cURL settings
-     *
-     * @var
-     */
-    protected $curlDefaults = [
-        // BOOLEANS
-        CURLOPT_AUTOREFERER    => true,     // Update referer on redirects
-        CURLOPT_FAILONERROR    => false,    // Return false on HTTP code > 400
-        CURLOPT_FOLLOWLOCATION => false,    // DON'T Follow redirects
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_FRESH_CONNECT  => true,     // Don't use cached connection
-        CURLOPT_FORBID_REUSE   => true,     // Close connection
-
-        // INTEGERS
-        CURLOPT_TIMEOUT        => 10,       // cURL timeout
-        CURLOPT_CONNECTTIMEOUT => 10,       // Connection timeout
-
-        // STRINGS
-        CURLOPT_ENCODING       => "",       // "identity", "deflate", and "gzip"
-        CURLOPT_SSL_VERIFYPEER => false,    // if all else fails :)
-    ];
-
-    /**
-     * Basic constructor
-     * Checks for cURL and initialize options
-     *
-     * @return void
-     * @throws Exception
-     */
-    public function __construct()
-    {
-        if (! function_exists("curl_init")) {
-            throw new Exception("cURL is not installed on this system");
-        }
-
-        $this->curl = curl_init();
-        if ((! is_resource($this->curl) && ! is_a($this->curl, 'CurlHandle')) || ! isset($this->curl)) {
-            throw new Exception("Unable to create cURL session");
-        }
-
-        $options                 = $this->curlDefaults;
-        $options[CURLOPT_CAINFO] =
-            dirname(__FILE__) . 'lib/ca-bundle.pem'; // Use bundled PEM file to avoid issues with Windows servers
-
-        if ((ini_get('open_basedir') == '') AND (! ini_get('safe_mode'))) {
-            $options[CURLOPT_FOLLOWLOCATION] = true;
-        }
-
-        $success = curl_setopt_array($this->curl, $options);
-        if ($success !== true) {
-            throw new Exception("cURL Error: " . curl_error($this->curl));
-        }
-    }
-
-    /**
-     * Closes the current cURL connection
-     */
-    public function close()
-    {
-        curl_close($this->curl);
-        unset($this->curl);
-    }
-
-    public function __destruct()
-    {
-        $this->close();
-    }
-
-    /**
-     * Returns last error message
-     *
-     * @return string  Error message
-     */
-    public function error()
-    {
-        return curl_error($this->curl);
-    }
-
-    /**
-     * Returns last error code
-     *
-     * @return int
-     */
-    public function errno()
-    {
-        return curl_errno($this->curl);
-    }
-
-    /**
      * @param       $url
      * @param array $headers
      * @param bool  $raw
@@ -198,11 +102,6 @@ class WCMP_Rest
                 break;
         }
 
-        // Close any open resource handle
-        if (isset($f) && is_resource($f)) {
-            @fclose($f);
-        }
-
         $status = Arr::get($response, 'response.code');
         $body   = Arr::get($response, 'body');
 
@@ -222,7 +121,7 @@ class WCMP_Rest
             } else {
                 $error = 'Unknown error';
             }
-            throw new Exception($error, $status);
+            throw new Exception(esc_html($error), esc_html($status));
         }
 
         return ['code' => $status, 'body' => $body, 'headers' => Arr::get($response, 'headers')];

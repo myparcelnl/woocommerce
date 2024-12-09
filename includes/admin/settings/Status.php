@@ -139,10 +139,11 @@ class Status
 
         $allWebhooksPresent = WebhookSubscriptionService::hasValidSubscription();
 
-        $text = $allWebhooksPresent ? 'diagnostics_status_webhooks_set_up' : 'diagnostics_status_webhooks_error';
-        $type = $allWebhooksPresent ? self::TYPE_SUCCESS : self::TYPE_ERROR;
-
-        self::addItem($title, __($text, 'woocommerce-myparcel'), $type);
+        if ($allWebhooksPresent) {
+            self::addItem(__('diagnostics_status_webhooks_set_up','woocommerce-myparcel'), self::TYPE_SUCCESS);
+        } else {
+            self::addItem(__('diagnostics_status_webhooks_error','woocommerce-myparcel'), self::TYPE_ERROR);
+        }
     }
 
     /**

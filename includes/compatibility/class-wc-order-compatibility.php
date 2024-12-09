@@ -139,21 +139,10 @@ class Order extends Data
      */
     public static function set_address_prop(WC_Order $order, $prop, $address = 'billing', $value = null, $save = true)
     {
-        if (WC_Core::is_wc_version_gte_3_0()) {
-            if (is_callable([$order, "set_{$address}_{$prop}"])) {
-                $order->{"set_{$address}_{$prop}"}($value);
-                if ($save === true) {
-                    $order->save();
-                }
-            }
-        } else {
-            // wc 2.6 or older
+        if (is_callable([$order, "set_{$address}_{$prop}"])) {
+            $order->{"set_{$address}_{$prop}"}($value);
             if ($save === true) {
-                // store directly in postmeta
-                update_post_meta($order->id, "_{$address}_{$prop}", $value);
-            } else {
-                // only change property in the order
-                $order->$prop = $value;
+                $order->save();
             }
         }
 

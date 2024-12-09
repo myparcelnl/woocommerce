@@ -365,7 +365,7 @@ class WCMP_Export
         }
 
         if (is_array($value)) {
-            return array_map(['self', 'sanitizeOptions'], $value);
+            return array_map([self::class, 'sanitizeOptions'], $value);
         }
 
         return (int) $value;
@@ -511,7 +511,7 @@ class WCMP_Export
                 ) use ($returnOptions): AbstractConsignment {
                     $returnConsignment->setLabelDescription(
                         'Return: ' . $parent->getLabelDescription() .
-                        ' This label is valid until: ' . date('d-m-Y', strtotime('+ 28 days'))
+                        ' This label is valid until: ' . gmdate('d-m-Y', strtotime('+ 28 days'))
                     );
 
                     if (WCMP_Settings_Data::NO_OPTIONS === $returnOptions) {
@@ -559,7 +559,7 @@ class WCMP_Export
             } catch (Exception $ex) {
                 $errorMessage = sprintf(
                     __('error_export_order_id_failed_because', 'woocommerce-myparcel'),
-                    $order_id, __($ex->getMessage(), 'woocommerce-myparcel')
+                    $order_id, $ex->getMessage()
                 );
                 Messages::showAdminNotice($errorMessage, Messages::NOTICE_LEVEL_ERROR);
                 WCMP_Log::add($errorMessage);
@@ -619,6 +619,7 @@ class WCMP_Export
 
         if (! empty($this->success)) {
             $return['success']     = sprintf(
+                /* translators: %s is the number of shipments */
                 __('%s shipments successfully exported to MyParcel', 'woocommerce-myparcel'),
                 count($collection->getConsignmentIds())
             );
@@ -665,7 +666,7 @@ class WCMP_Export
             $api->getShipmentLabels($shipment_ids, $order_ids, $positions, $display);
         } catch (Exception $e) {
             Messages::showAdminNotice($e->getMessage());
-            throw new RuntimeException($e->getMessage());
+            throw new RuntimeException(esc_html($e->getMessage()));
         }
 
         return $return;
@@ -688,7 +689,7 @@ class WCMP_Export
         }
 
         if (! is_user_logged_in()) {
-            wp_die(__('You do not have sufficient permissions to access this page.', 'woocommerce-myparcel'));
+            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'woocommerce-myparcel'));
         }
 
         $return = [];
@@ -702,7 +703,7 @@ class WCMP_Export
                 'You do not have sufficient permissions to access this page.',
                 'woocommerce-myparcel'
             );
-            echo json_encode($return);
+            echo wp_json_encode($return);
             die();
         }
 
@@ -767,7 +768,7 @@ class WCMP_Export
             $this->modal_success_page($request, $return);
         } else {
             // return JSON response
-            echo json_encode($return);
+            echo wp_json_encode($return);
             die();
         }
     }
@@ -963,7 +964,7 @@ class WCMP_Export
         if (empty($shipment_ids)) {
             WCMP_Log::add(' *** Failed label request(not exported yet) ***');
 
-            throw new Exception(__(
+            throw new Exception(esc_html__(
                 'The selected orders have not been exported to MyParcel yet! ',
                 'woocommerce-myparcel'
             ));
@@ -1329,7 +1330,7 @@ class WCMP_Export
         $key = $this->getSetting(WCMYPA_Settings::SETTING_API_KEY);
 
         if (! ($key)) {
-            throw new ErrorException(__('No API key found in MyParcel settings', 'woocommerce-myparcel'));
+            throw new ErrorException(esc_html__('No API key found in MyParcel settings', 'woocommerce-myparcel'));
         }
 
         return new WCMP_API($key);
@@ -1404,7 +1405,7 @@ class WCMP_Export
         ];
 
         if (! Arr::get($return_shipment_data, 'email')) {
-            throw new Exception(__('No e-mail address found in order.', 'woocommerce-myparcel'));
+            throw new Exception(esc_html__('No e-mail address found in order.', 'woocommerce-myparcel'));
         }
 
         // add options if available
@@ -1664,7 +1665,7 @@ class WCMP_Export
         $response = $api->get_shipments($shipment_id);
 
         if (! isset($response['body']['data']['shipments'][0]['barcode'])) {
-            throw new ErrorException('No MyParcel barcode found for shipment id; ' . $shipment_id);
+            throw new ErrorException('No MyParcel barcode found for shipment id; ' . (int) $shipment_id);
         }
 
         return $response['body']['data']['shipments'][0]['barcode'];

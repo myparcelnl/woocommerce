@@ -142,10 +142,10 @@ class WCMP_Export_Consignments
             return null;
         }
         $date             = strtotime($deliveryDateFromDeliveryOptions);
-        $deliveryDateTime = date('Y-m-d H:i:s', $date);
-        $deliveryDate     = date('Y-m-d', $date);
-        $dateOfToday      = date('Y-m-d');
-        $dateOfTomorrow   = date('Y-m-d H:i:s', strtotime('now +1 day'));
+        $deliveryDateTime = gmdate('Y-m-d H:i:s', $date);
+        $deliveryDate     = gmdate('Y-m-d', $date);
+        $dateOfToday      = gmdate('Y-m-d');
+        $dateOfTomorrow   = gmdate('Y-m-d H:i:s', strtotime('now +1 day'));
 
         if ($deliveryDate <= $dateOfToday) {
             return $dateOfTomorrow;
@@ -414,12 +414,13 @@ class WCMP_Export_Consignments
 
         if ($colloWeight > $maxColloWeight) {
             $message = sprintf(
+                /* translators: %1$s: collo weight, %2$s: max collo weight */
                 __('error_collo_weight_%1$s_but_max_%2$s', 'woocommerce-myparcel'),
                 $colloWeight / 1000,
                 $maxColloWeight / 1000
             );
             $hint    = __('export_hint_change_parcel', 'woocommerce-myparcel');
-            throw new Exception("{$message} {$hint}");
+            throw new Exception(esc_html("$message $hint"));
         }
     }
 }

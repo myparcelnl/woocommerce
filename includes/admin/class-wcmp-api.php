@@ -35,8 +35,6 @@ class WCMP_API extends WCMP_Rest
      */
     public function __construct($key)
     {
-        parent::__construct();
-
         $this->userAgent = $this->getUserAgent();
         $this->key       = (string) $key;
     }
@@ -77,7 +75,7 @@ class WCMP_API extends WCMP_Rest
             ],
         ];
 
-        $json = json_encode($data);
+        $json = wp_json_encode($data);
 
         $headers = [
             'Content-type'  => $contentType . '; charset=UTF-8',
