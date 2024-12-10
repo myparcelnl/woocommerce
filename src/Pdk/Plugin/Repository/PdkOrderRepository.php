@@ -94,24 +94,29 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     public function getByApiIdentifier(string $uuid): ?PdkOrder
     {
         /**
-         * Load the most recent orders to search for the apiIdentifier.
-         * Assuming change webhooks are fired for recent orders.
+         * Walk through orders from newest to oldest in batches of 100 until the order is found.
          */
-        $orderIds = wc_get_orders([
-            'limit'   => 300,
-            'status'  => ['on-hold', 'processing', 'completed'],
-            'orderby' => 'date',
-            'order'   => 'DESC',
-            'return'  => 'ids',
-        ]);
+        $page_number = 1;
+        $page_size = 100;
 
-        foreach ($orderIds as $orderId) {
-            $order     = $this->wcOrderRepository->get($orderId);
-            $orderData = $order->get_meta(Pdk::get('metaKeyOrderData'));
-            if (isset($orderData['apiIdentifier']) && $orderData['apiIdentifier'] === $uuid) {
-                return $this->get($orderId);
+        do {
+            $orderIds = wc_get_orders([
+                'limit'   => $page_size,
+                'paged'   => $page_number,
+                'status'  => ['on-hold', 'processing', 'completed'],
+                'orderby' => 'date',
+                'order'   => 'DESC',
+                'return'  => 'ids',
+            ]);
+
+            foreach ($orderIds as $orderId) {
+                $order     = $this->wcOrderRepository->get($orderId);
+                $orderData = $order->get_meta(Pdk::get('metaKeyOrderData'));
+                if (isset($orderData['apiIdentifier']) && $orderData['apiIdentifier'] === $uuid) {
+                    return $this->get($orderId);
+                }
             }
-        }
+        } while (count($orderIds) === $page_size);
 
         Logger::debug(
             'Did not find order with apiIdentifier',
