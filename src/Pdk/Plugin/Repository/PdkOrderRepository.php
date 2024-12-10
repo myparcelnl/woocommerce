@@ -96,13 +96,13 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         /**
          * Walk through orders from newest to oldest in batches of 100 until the order is found.
          */
-        $page_number = 1;
-        $page_size = 100;
+        $pageNumber = 1;
+        $pageSize = 100;
 
         do {
             $orderIds = wc_get_orders([
-                'limit'   => $page_size,
-                'paged'   => $page_number,
+                'limit'   => $pageSize,
+                'paged'   => $pageNumber,
                 'status'  => ['on-hold', 'processing', 'completed'],
                 'orderby' => 'date',
                 'order'   => 'DESC',
@@ -116,7 +116,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                     return $this->get($orderId);
                 }
             }
-        } while (count($orderIds) === $page_size);
+        } while (count($orderIds) === $pageSize);
 
         Logger::debug(
             'Did not find order with apiIdentifier',
