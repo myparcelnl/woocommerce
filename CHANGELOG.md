@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.24.2 (2024-12-12)
+
+### :bug: Bug Fixes
+
+* Prevent reflected XSS (#1200)
+
 ## [4.24.1](https://github.com/myparcelnl/woocommerce/compare/v4.24.0...v4.24.1) (2024-09-20)
 
 
