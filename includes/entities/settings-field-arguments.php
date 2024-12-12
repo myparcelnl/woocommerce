@@ -278,7 +278,7 @@ class SettingsFieldArguments
                 }
 
                 if (is_array($value)) {
-                    $value = htmlspecialchars(json_encode($value));
+                    $value = htmlspecialchars(wp_json_encode($value));
                 }
 
                 $arguments["custom_attributes"][$arg] = $value;

@@ -120,18 +120,11 @@ class WCMP_Settings_Callbacks
     {
         $order_statuses = [];
 
-        if (version_compare(WOOCOMMERCE_VERSION, '2.2', '<')) {
-            $statuses = (array) get_terms('shop_order_status', ['hide_empty' => 0, 'orderby' => 'id']);
-            foreach ($statuses as $status) {
-                $order_statuses[esc_attr($status->slug)] = esc_html__($status->name, 'woocommerce');
-            }
-        } else {
-            $statuses = wc_get_order_statuses();
-            foreach ($statuses as $status_slug => $status) {
-                $status_slug = 'wc-' === substr($status_slug, 0, 3) ? substr($status_slug, 3) : $status_slug;
+        $statuses = wc_get_order_statuses();
+        foreach ($statuses as $status_slug => $status) {
+            $status_slug = 'wc-' === substr($status_slug, 0, 3) ? substr($status_slug, 3) : $status_slug;
 
-                $order_statuses[$status_slug] = $status;
-            }
+            $order_statuses[$status_slug] = $status;
         }
 
         return $order_statuses;
@@ -174,18 +167,18 @@ class WCMP_Settings_Callbacks
             '<input type="hidden" name="%s" value="%s" %s>',
             esc_attr($class->getName()),
             esc_attr($class->getValue()),
-            $class->getCustomAttributesAsString()
+            wp_kses_post($class->getCustomAttributesAsString())
         );
 
         if (wc_string_to_bool($class->getValue())) {
             printf(
                 "<span class=\"woocommerce-input-toggle woocommerce-input-toggle--enabled\">%s</span>",
-                esc_attr__('Yes', 'woocommerce')
+                esc_attr__('Yes', 'woocommerce-myparcel')
             );
         } else {
             printf(
                 "<span class=\"woocommerce-input-toggle woocommerce-input-toggle--disabled\">%s</span>",
-                esc_attr__('No', 'woocommerce')
+                esc_attr__('No', 'woocommerce-myparcel')
             );
         }
 

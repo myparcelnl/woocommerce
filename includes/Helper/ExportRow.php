@@ -91,7 +91,7 @@ class ExportRow
         }
 
         if (! $hsCode) {
-            throw new ErrorException(__('no_hs_code_found', 'woocommerce-myparcel'));
+            throw new ErrorException(esc_html__('no_hs_code_found', 'woocommerce-myparcel'));
         }
 
         return (int) $hsCode;

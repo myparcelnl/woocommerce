@@ -39,7 +39,7 @@ class MyParcelWidget
     {
         wp_add_dashboard_widget(
             'woocommerce_myparcel_dashboard_widget',
-            __('MyParcel'),
+            'MyParcel',
             [$this, 'myparcelDashboardWidgetHandler'],
             [$this, 'myparcelDashboardWidgetConfigHandler']
         );
@@ -75,9 +75,9 @@ class MyParcelWidget
                 <label>%s:</label>
                 <input name=\"showMyParcelOrders\" class=\"form-control\" type=\"checkbox\" %s />
               </p>",
-            __('order_amount', 'woocommerce-myparcel'),
+            esc_html__('order_amount', 'woocommerce-myparcel'),
             esc_attr($options['items']),
-            __('show_myparcel_orders_only', 'woocommerce-myparcel'),
+            esc_html__('show_myparcel_orders_only', 'woocommerce-myparcel'),
             esc_attr(isset($options['showMyParcelOrders']) ? 'checked' : '')
         );
     }

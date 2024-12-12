@@ -171,7 +171,7 @@ class WCMYPA_Admin
             ?>
 
           <select name="deliveryDate">
-            <option value=""><?php _e('all_delivery_days', 'woocommerce-myparcel'); ?></option>
+            <option value=""><?php esc_html_e('all_delivery_days', 'woocommerce-myparcel'); ?></option>
               <?php
               $carrierName       = CarrierPostNL::NAME;
               $deliveryDayWindow = (int) WCMYPA()->setting_collection->where('carrier', $carrierName)->getByName(
@@ -179,7 +179,7 @@ class WCMYPA_Admin
               );
 
               foreach (range(1, $deliveryDayWindow) as $number) {
-                  $date       = date('Y-m-d', strtotime($number . 'days'));
+                  $date       = gmdate('Y-m-d', strtotime($number . 'days'));
                   $dateString = wc_format_datetime(new WC_DateTime($date), 'D d-m');
 
                   if (1 === $number) {
@@ -188,9 +188,9 @@ class WCMYPA_Admin
 
                   printf(
                       '<option value="%s""%s">%s</option>',
-                      $date,
+                      esc_html($date),
                       selected($date, $selected),
-                      $dateString
+                      esc_html($dateString)
                   );
               }
               ?>
@@ -283,7 +283,8 @@ class WCMYPA_Admin
      */
     public function saveVariationCountryOfOriginField(int $variationId, int $loop): void
     {
-        $countryOfOriginValue = $_POST[self::META_COUNTRY_OF_ORIGIN_VARIATION][$loop];
+        if (! isset($_POST[self::META_COUNTRY_OF_ORIGIN_VARIATION][$loop])) return;
+        $countryOfOriginValue = sanitize_title(wp_unslash($_POST[self::META_COUNTRY_OF_ORIGIN_VARIATION][$loop]));
 
         if (! empty($countryOfOriginValue) && (new WC_Countries())->country_exists($countryOfOriginValue)) {
             update_post_meta($variationId, self::META_COUNTRY_OF_ORIGIN_VARIATION, $countryOfOriginValue);
@@ -328,7 +329,8 @@ class WCMYPA_Admin
      */
     public function save_variation_hs_code_field($variationId, $loop)
     {
-        $hsCodeValue = $_POST[self::META_HS_CODE_VARIATION][$loop];
+        if (!isset($_POST[self::META_HS_CODE_VARIATION][$loop])) return;
+        $hsCodeValue = sanitize_title(wp_unslash($_POST[self::META_HS_CODE_VARIATION][$loop]));
 
         if (! $hsCodeValue || ! ctype_digit(str_replace(' ', '', $hsCodeValue))) {
             return;
@@ -361,7 +363,8 @@ class WCMYPA_Admin
                 'exclude_from_search'       => false,
                 'show_in_admin_all_list'    => true,
                 'show_in_admin_status_list' => true,
-                'label_count'               => _n_noop('Delivered (%s)', 'Delivered (%s)'),
+                /* translators: %s: number of orders */
+                'label_count'               => _n_noop('Delivered (%s)', 'Delivered (%s)', 'woocommerce-myparcel'),
             ]
         );
     }
@@ -469,7 +472,7 @@ class WCMYPA_Admin
             class="wcmp__box wcmp__modal wcmp__shipment-summary__list"
             data-loaded=""
             data-shipment_id="<?php echo (int) $lastShipmentId; ?>"
-            data-order_id="<?php echo $order->get_id(); ?>"
+            data-order_id="<?php echo (int) $order->get_id(); ?>"
             style="display: none;">
               <?php self::renderSpinner(); ?>
           </div>
@@ -482,8 +485,8 @@ class WCMYPA_Admin
 
         printf(
             '<a href="#" class="wcmp__shipment-options__show" data-order-id="%s"><span class="wcmp__shipment-options__package-type">%s%s</span> &#x25BE;</a>',
-            $order->get_id(),
-            $packageTypeHuman,
+            (int) $order->get_id(),
+            esc_html($packageTypeHuman),
             AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $packageType ? sprintf(' (%s - %s)', esc_html($digitalStampRange['min']), esc_html($digitalStampRange['max'])) : ''
         );
 
@@ -561,7 +564,7 @@ class WCMYPA_Admin
           jQuery(document).ready(function () {
               <?php foreach ($bulk_actions as $action => $title) { ?>
             jQuery('<option>')
-              .val('<?php echo $action; ?>')
+              .val('<?php echo esc_attr($action); ?>')
               .html('<?php echo esc_attr($title); ?>')
               .appendTo('select[name=\'action\'], select[name=\'action2\']');
               <?php }    ?>
@@ -608,14 +611,14 @@ class WCMYPA_Admin
             <div class="wcmp__pb--2">
                 <?php printf(
                     '<label for="%s">%s</label>',
-                    $class->getId(),
-                    __("Labels to skip", "woocommerce-myparcel")
+                    esc_html($class->getId()),
+                    esc_html__("Labels to skip", "woocommerce-myparcel")
                 ); ?>
             </div>
             <div class="wcmp__d--flex wcmp__pb--2">
                 <?php woocommerce_form_field($field["name"], $class->getArguments(false), ""); ?>
               <img
-                src="<?php echo WCMYPA()->plugin_url(), '/assets/img/offset.svg'; ?>"
+                src="<?php echo esc_url(WCMYPA()->plugin_url()), '/assets/img/offset.svg'; ?>"
                 alt="Offset"
                 class="wcmp__offset-dialog__icon wcmp__pl--1"/>
             </div>
@@ -741,7 +744,7 @@ class WCMYPA_Admin
         }
 
         if (is_array($metaPps) && count($metaPps)) {
-            $attributes['data-pps'] = htmlentities(var_export($metaPps, true));
+            $attributes['data-pps'] = esc_attr(wp_json_encode($metaPps));
         }
 
         return $attributes;
@@ -1103,13 +1106,9 @@ class WCMYPA_Admin
                 'label'       => __('HS Code', 'woocommerce-myparcel'),
                 'type'        => 'text',
                 'description' => wc_help_tip(
-                    sprintf(
-                        __(
-                            'HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s',
-                            'woocommerce-myparcel'
-                        ),
-                        '<a href="https://tarief.douane.nl/arctictariff-public-web/#!/home" target="_blank">',
-                        '</a>'
+                    __(
+                        'HS Codes are used for MyParcel world shipments, you can find the appropriate code on the site of the Dutch Customs',
+                        'woocommerce-myparcel'
                     )
                 ),
             ],
@@ -1191,12 +1190,12 @@ class WCMYPA_Admin
                     echo (isset($lastOrder[self::META_TRACK_TRACE]) && $lastOrder[self::META_TRACK_TRACE])
                         ? sprintf(
                             '<a href="%s">%s</a>',
-                            TrackTraceUrl::create(
+                            esc_url(TrackTraceUrl::create(
                                 $lastOrder[self::META_TRACK_TRACE],
                                 $order->get_shipping_postcode(),
                                 $order->get_shipping_country()
-                            ),
-                            $lastOrder[self::META_TRACK_TRACE]
+                            )),
+                            esc_html($lastOrder[self::META_TRACK_TRACE])
                         ) : esc_html(__('Concept created but not printed.', 'woocommerce-myparcel'));
                 }
             } else {
@@ -1326,10 +1325,10 @@ class WCMYPA_Admin
         if ($deliveryDate || AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $deliveryOptions->getPackageType()) {
             printf(
                 '<div class="delivery-date"><strong>%s</strong><br />%s, %s</div>',
-                __('MyParcel shipment:', 'woocommerce-myparcel'),
-                WCMP_Data::getDeliveryTypesHuman()[$deliveryType],
+                esc_html__('MyParcel shipment:', 'woocommerce-myparcel'),
+                esc_html(WCMP_Data::getDeliveryTypesHuman()[$deliveryType]),
                 empty($deliveryDate) || $deliveryType === AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME ? ''
-                    : wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()), 'D d-m')
+                    : esc_html(wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()), 'D d-m'))
             );
         }
     }
@@ -1375,7 +1374,7 @@ class WCMYPA_Admin
         ];
 
         if (WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY)) {
-            $confirmationData[__('Date:', 'woocommerce')] = wc_format_datetime(new WC_DateTime($deliveryOptions->getDate() ?? ''));
+            $confirmationData[__('Date:', 'woocommerce-myparcel')] = wc_format_datetime(new WC_DateTime($deliveryOptions->getDate() ?? ''));
         }
 
         $extraOptions = $this->getExtraOptions($deliveryOptions->getShipmentOptions());
@@ -1458,29 +1457,29 @@ class WCMYPA_Admin
     }
 
     /**
-     * @param array[]|null $options
+     * @param string[]|null $options
      *
      * @return string|null
      */
     public function generateThankYouConfirmation(?array $options): ?string
     {
         if ($options) {
-            $htmlHeader = "<h2 class='woocommerce-column__title'> " . __("Delivery information:", "woocommerce-myparcel") . "</h2><table>";
+            $htmlHeader = '<h2 class="woocommerce-column__title"> ' . __('Delivery information:', 'woocommerce-myparcel') . '</h2><table>';
 
             foreach ($options as $key => $option) {
                 if ($option) {
-                    $htmlHeader .= "<tr><td>$key</td><td>" . __($option, "woocommerce-myparcel") . "</td></tr>";
+                    $htmlHeader .= "<tr><td>$key</td><td>" . $this->translate($option) . '</td></tr>';
                 }
             }
 
-            return $htmlHeader . "</table>";
+            return $htmlHeader . '</table>';
         }
 
         return null;
     }
 
     /**
-     * @param array[]|null $options
+     * @param string[]|null $options
      *
      * @return string|null
      */
@@ -1494,7 +1493,7 @@ class WCMYPA_Admin
                 if ($option) {
                     $htmlHeader .= "<tr style='border: 1px solid #d5d5d5;'>
                               <td style='border: 1px solid #e5e5e5;'>$key</td>
-                              <td style='border: 1px solid #e5e5e5;'>" . __($option, "woocommerce-myparcel") . "</td>
+                              <td style='border: 1px solid #e5e5e5;'>" . $this->translate($option) . "</td>
                             </tr>";
                 }
             }
@@ -1503,6 +1502,24 @@ class WCMYPA_Admin
         }
 
         return null;
+    }
+
+    private function translate(string $option): string
+    {
+        switch ($option) {
+            case 'shipment_options_delivery_morning':
+                return __('shipment_options_delivery_morning', 'woocommerce-myparcel');
+            case 'shipment_options_delivery_standard':
+                return __('shipment_options_delivery_standard', 'woocommerce-myparcel');
+            case 'shipment_options_delivery_evening':
+                return __('shipment_options_delivery_evening', 'woocommerce-myparcel');
+            case 'shipment_options_delivery_pickup':
+                return __('shipment_options_delivery_pickup', 'woocommerce-myparcel');
+            case 'shipment_options_delivery_same_day':
+                return __('shipment_options_delivery_same_day', 'woocommerce-myparcel');
+            default:
+                return $option;
+        }
     }
 
     /**
@@ -1540,8 +1557,8 @@ class WCMYPA_Admin
         foreach ($spinners as $spinnerState => $icon) {
             printf(
                 '<img class="wcmp__spinner__%1$s" alt="%1$s" src="%2$s" style="display: %3$s;" />',
-                $spinnerState,
-                $icon,
+                esc_attr($spinnerState),
+                esc_url($icon),
                 $state === $spinnerState ? 'block' : 'none'
             );
         }

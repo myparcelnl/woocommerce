@@ -80,7 +80,7 @@ class WCMP_Settings_Callbacks_Enhanced_Select
             esc_attr($class->getId()),
             esc_attr($class->getName() . ($id ? "[$id][]" : '[]')),
             esc_attr($args['placeholder'] ?? ''),
-            $class->getCustomAttributesAsString()
+            wp_kses_post($class->getCustomAttributesAsString())
         );
 
         foreach ($args["options"] as $key => $label) {

@@ -221,7 +221,7 @@ class WCMYPA_Settings
         $active_tab = filter_input(INPUT_GET, 'tab') ?? self::SETTINGS_GENERAL;
         ?>
         <div class="wrap woocommerce">
-            <h1><?php _e('MyParcel Settings', 'woocommerce-myparcel'); ?></h1>
+            <h1><?php esc_html_e('MyParcel Settings', 'woocommerce-myparcel'); ?></h1>
             <h2 class="nav-tab-wrapper">
                 <?php
                 foreach ($settings_tabs as $tabSlug => $tabTitle) :
@@ -230,7 +230,7 @@ class WCMYPA_Settings
                         esc_html($tabSlug),
                         (($active_tab === $tabSlug) ? 'nav-tab-active' : ''),
                         esc_html($tabTitle),
-                        self::SETTINGS_MENU_SLUG
+                        esc_attr(self::SETTINGS_MENU_SLUG)
                     );
                 endforeach;
                 ?>
@@ -239,7 +239,7 @@ class WCMYPA_Settings
             <form
                     method="post"
                     action="options.php"
-                    id="<?php echo self::SETTINGS_MENU_SLUG; ?>">
+                    id="<?php echo esc_attr(self::SETTINGS_MENU_SLUG); ?>">
                 <?php
                 do_action("woocommerce_myparcel_before_settings", $active_tab);
                 settings_fields(self::getOptionId($active_tab));
@@ -271,24 +271,24 @@ class WCMYPA_Settings
 
         // link to hide message when one of the premium extensions is installed
         if (! $hide_notice && 'BE' === $base_country) {
-            $myparcel_nl_link =
-                '<a href="https://wordpress.org/plugins/woocommerce-myparcel/" target="blank">WC MyParcel Netherlands</a>';
+            $myparcel_be_link = '<a href="https://wordpress.org/plugins/wc-myparcel-belgium/" target="_blank">WC MyParcel Belgium</a>';
             $text             = sprintf(
+                    /* translators: %s is a link to the MyParcel Belgium plugin */
                 __(
-                    'It looks like your shop is based in Netherlands. This plugin is for MyParcel. If you are using MyParcel Netherlands, download the %s plugin instead!',
+                    'It looks like your shop is based in Belgium. This plugin is for MyParcelNL. If you are based in Belgium, download the %s plugin instead!',
                     'woocommerce-myparcel'
                 ),
-                $myparcel_nl_link
+                $myparcel_be_link
             );
             $dismiss_button   = sprintf(
-                '<a href="%s" style="display:inline-block; margin-top: 10px;">%s</a>',
-                add_query_arg('myparcel_hide_be_notice', 'true'),
+                '<a href="%s">%s</a>',
+                esc_url(add_query_arg('myparcel_hide_be_notice', 'true')),
                 esc_html__('Hide this message', 'woocommerce-myparcel')
             );
             printf(
               '<div class="notice notice-warning"><p>%s %s</p></div>',
-              esc_html($text),
-              $dismiss_button
+              wp_kses($text, ['a'=> ['href' => [], 'target' => []]]),
+              wp_kses($dismiss_button, ['a' => ['href' => []]])
             );
         }
     }
@@ -375,7 +375,7 @@ class WCMYPA_Settings
                 $class = wc_implode_html_attributes(['class' => esc_attr($class)]);
             }
 
-            echo "<tr {$class}>";
+            echo wp_kses("<tr {$class}>", ['tr' => ['class'=>[]]]);
 
             $helpText = Arr::get($field, 'args.help_text');
             $label    = Arr::get($field, 'args.label_for');
@@ -383,7 +383,7 @@ class WCMYPA_Settings
             printf('<th scope="row"><label class="wcmp__ws--nowrap" %s>%s%s</label></th>',
                 $label ? 'for="' . esc_attr($label) . '"' : '',
                 esc_html(Arr::get($field, 'title')),
-                $helpText ? wc_help_tip($helpText) : ''
+                wp_kses(($helpText ? wc_help_tip($helpText) : ''),['span' => ['class' => [], 'data-tip' => [], 'style' => []]])
             );
 
             // Pass the option id as argument

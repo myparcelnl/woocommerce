@@ -30,7 +30,7 @@ $orderSettings = new OrderSettings($order);
         </td>
         <td>
             <?php
-            echo "<select name=\"myparcel_options[$order_id][package_type]\" class=\"package_type\">";
+            echo '<select name="myparcel_options[',(int)$order_id,'][package_type]" class="package_type">';
             foreach (WCMP_Data::getPackageTypesHuman() as $key => $label) {
                 $isReturnPackageType = in_array(
                     $key,
@@ -46,7 +46,7 @@ $orderSettings = new OrderSettings($order);
 
                 printf(
                     '<option value="%s">%s</option>',
-                    WCMP_Data::getPackageTypeId($key),
+                    esc_html(WCMP_Data::getPackageTypeId($key)),
                     esc_html($label)
                 );
             }
@@ -57,7 +57,7 @@ $orderSettings = new OrderSettings($order);
 </table><br>
 <?php if (! isset($skip_save)): ?>
     <div class="wcmp__d--flex">
-        <a class="button save" data-order="<?php echo $order_id; ?>"><?php esc_html_e('Save', 'woocommerce-myparcel') ?>
+        <a class="button save" data-order="<?php echo (int)$order_id; ?>"><?php esc_html_e('Save', 'woocommerce-myparcel') ?>
             <?php WCMYPA_Admin::renderSpinner() ?>
         </a>
     </div>
