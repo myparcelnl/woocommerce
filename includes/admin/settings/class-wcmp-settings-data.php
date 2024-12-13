@@ -862,7 +862,7 @@ class WCMP_Settings_Data
         $currentTheme = wp_get_theme();
 
         $preset  = sanitize_title($currentTheme);
-        $cssPath = "/assets/css/delivery-options/delivery-options-preset-$preset.css";
+        $cssPath = WCMYPA()->plugin_path() . "/assets/css/delivery-options/delivery-options-preset-$preset.css";
 
         if (! file_exists($cssPath)) {
             return '';
@@ -873,7 +873,7 @@ class WCMP_Settings_Data
             /* translators: %s is the name of the current theme. */
             sprintf(__('Theme "%s" detected.', 'woocommerce-myparcel'), $currentTheme),
             /* WP: this is a local file, we can get it directly */
-            esc_js(file_get_contents(WCMYPA()->plugin_path() . $cssPath)),
+            esc_js(file_get_contents($cssPath)),
             __('Apply preset.', 'woocommerce-myparcel')
         );
     }
