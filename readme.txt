@@ -3,7 +3,7 @@ Contributors: richardperdaan, edielemoine, joerimyparcel
 Tags: woocommerce, delivery, packages, myparcel, shipping
 Requires at least: 5.2.0
 Tested up to: 6.7
-Stable tag: 4.24.2
+Stable tag: 4.24.3
 Requires PHP: 7.1
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php

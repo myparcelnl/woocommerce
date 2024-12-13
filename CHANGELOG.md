@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.24.3 (2024-12-13)
+
+### :bug: Bug Fixes
+
+* Prevent open_basedir restriction error (#1215)
+
 ## 4.24.2 (2024-12-12)
 
 ### :bug: Bug Fixes
