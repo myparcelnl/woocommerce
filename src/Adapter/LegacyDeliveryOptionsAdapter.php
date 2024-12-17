@@ -52,7 +52,7 @@ class LegacyDeliveryOptionsAdapter
         $arr['carrier']  = $arr['carrier']['externalIdentifier'];
         $arr['isPickup'] = DeliveryOptions::DELIVERY_TYPE_PICKUP_NAME === $arr['deliveryType'];
 
-        if (is_string($arr['date'])) {
+        if (isset($arr['date']) && is_string($arr['date'])) {
             $arr['date'] = substr($arr['date'], 0, 10) . 'T00:00:00.000Z';
         } else {
             $arr['date'] = null;

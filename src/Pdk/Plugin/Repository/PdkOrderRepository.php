@@ -91,6 +91,45 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         });
     }
 
+    public function getByApiIdentifier(string $uuid): ?PdkOrder
+    {
+        /**
+         * Walk through orders from newest to oldest in batches of 100 until the order is found.
+         */
+        $pageNumber = 1;
+        $pageSize = 100;
+
+        do {
+            $orderIds = wc_get_orders([
+                'limit'   => $pageSize,
+                'paged'   => $pageNumber,
+                'status'  => ['on-hold', 'processing', 'completed'],
+                'orderby' => 'date',
+                'order'   => 'DESC',
+                'return'  => 'ids',
+            ]);
+
+            foreach ($orderIds as $orderId) {
+                $order     = $this->wcOrderRepository->get($orderId);
+                $orderData = $order->get_meta(Pdk::get('metaKeyOrderData'));
+                if (isset($orderData['apiIdentifier']) && $orderData['apiIdentifier'] === $uuid) {
+                    return $this->get($orderId);
+                }
+            }
+
+            $pageNumber++;
+        } while (count($orderIds) === $pageSize);
+
+        Logger::debug(
+            'Did not find order with apiIdentifier',
+            [
+                'apiIdentifier' => $uuid,
+            ]
+        );
+
+        return null;
+    }
+
     /**
      * @param  \MyParcelNL\Pdk\App\Order\Model\PdkOrder $order
      *
