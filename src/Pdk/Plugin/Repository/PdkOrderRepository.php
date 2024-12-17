@@ -116,6 +116,8 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                     return $this->get($orderId);
                 }
             }
+
+            $pageNumber++;
         } while (count($orderIds) === $pageSize);
 
         Logger::debug(
