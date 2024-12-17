@@ -22,8 +22,8 @@ jobs:
     uses: ./.github/workflows/upgrade.yml
     secrets: inherit
     with:
-      update-deps: ${{ github.event.inputs.update-deps }}
-      create-commit: ${{ github.event.inputs.create-commit }}
+      update-deps: ${{ fromJSON(github.event.inputs.update-deps) }}
+      create-commit: ${{ fromJSON(github.event.inputs.create-commit) }}
 
   test:
     needs: upgrade
