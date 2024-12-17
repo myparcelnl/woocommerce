@@ -20,7 +20,10 @@ final class CartFeesHooks implements WordPressHooksInterface
     /** @var WcTaxService */
     private $taxService;
 
-    public function __construct(WcTaxService $taxService) { $this->taxService = $taxService; }
+    public function __construct(WcTaxService $taxService)
+    {
+        $this->taxService = $taxService;
+    }
 
     public function apply(): void
     {
