@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.0](https://github.com/myparcelnl/woocommerce/compare/v5.0.0...v5.1.0) (2024-12-17)
+
+
+### :zap: Performance Improvements
+
+* properly externalize delivery options dependency ([9c332e1](https://github.com/myparcelnl/woocommerce/commit/9c332e12cf807d2a6e070b230c6382e1a7640e00))
+
+
+### :bug: Bug Fixes
+
+* make filters work correctly ([#1189](https://github.com/myparcelnl/woocommerce/issues/1189)) ([239878a](https://github.com/myparcelnl/woocommerce/commit/239878a3237e7e9f36395fbedd75f75bc2061bc7))
+* **settings:** hide delivery options position setting when blocks checkout is enabled ([#1188](https://github.com/myparcelnl/woocommerce/issues/1188)) ([b6115c9](https://github.com/myparcelnl/woocommerce/commit/b6115c9951f762babec1b3150a1db70b9adbbf9a)), closes [#1189](https://github.com/myparcelnl/woocommerce/issues/1189)
+* **webhooks:** prevent webhook callback never being executed ([#1187](https://github.com/myparcelnl/woocommerce/issues/1187)) ([d8cf0bb](https://github.com/myparcelnl/woocommerce/commit/d8cf0bb018626982883be6b08aa4ce51b753cb53))
+
+
+### :sparkles: New Features
+
+* **backend:** add download logs action ([#1175](https://github.com/myparcelnl/woocommerce/issues/1175)) ([ee4cecb](https://github.com/myparcelnl/woocommerce/commit/ee4cecbf29c5fb6b4cb9c62ffedc383e60864036))
+* find order by api identifier ([#1214](https://github.com/myparcelnl/woocommerce/issues/1214)) ([a0f76cb](https://github.com/myparcelnl/woocommerce/commit/a0f76cbe73d30497a2ae66fb68f453f8fdbd2568))
+
 ## [5.0.0](https://github.com/myparcelnl/woocommerce/compare/v4.24.1...v5.0.0) (2024-10-31)
 
 
