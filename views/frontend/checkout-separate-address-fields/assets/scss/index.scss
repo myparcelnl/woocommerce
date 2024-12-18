@@ -42,3 +42,26 @@
 #shipping_number {
   -moz-appearance: textfield;
 }
+
+/**
+ * Blocks checkout
+ */
+
+// Make our fields appear next to each other
+.wc-block-components-address-form__myparcelnl {
+  &-street_name {
+    flex: 0 0 calc(50% - 8px) !important;
+  }
+
+  &-house_number,
+  &-house_number_suffix {
+    flex: 1 0 15% !important;
+  }
+}
+
+.wc-block-components-address-form {
+  // Hide address line 1
+  &__address_1 {
+    display: none !important;
+  }
+}

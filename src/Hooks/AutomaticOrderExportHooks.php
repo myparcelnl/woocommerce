@@ -18,6 +18,9 @@ final class AutomaticOrderExportHooks implements WordPressHooksInterface
      */
     private $wcOrderRepository;
 
+    /**
+     * @param  \MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface $wcOrderRepository
+     */
     public function __construct(WcOrderRepositoryInterface $wcOrderRepository)
     {
         $this->wcOrderRepository = $wcOrderRepository;
