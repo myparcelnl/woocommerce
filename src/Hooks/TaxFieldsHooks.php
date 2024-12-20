@@ -56,11 +56,11 @@ class TaxFieldsHooks extends AbstractFieldsHooks
         return array_merge($fields, [
             Pdk::get('fieldEoriNumber') => [
                 'hidden'   => false,
-                'required' => true,
+                'required' => false,
             ],
             Pdk::get('fieldVatNumber')  => [
                 'hidden'   => false,
-                'required' => true,
+                'required' => false,
             ],
         ]);
     }
