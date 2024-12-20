@@ -1,170 +1,174 @@
 {
-  "meta": {
-    "_myparcelnl_order_data": {
-      "exported": false
+    "meta": {
+        "_myparcelnl_order_data": {
+            "exported": false
+        },
+        "_myparcelnl_order_shipments": [
+            {
+                "id": 123456789,
+                "shopId": 5678,
+                "orderId": 1,
+                "referenceIdentifier": "1525",
+                "externalIdentifier": "3SMYPA123456789",
+                "barcode": "3SMYPA123456789",
+                "carrier": {
+                    "id": 1
+                },
+                "delayed": false,
+                "delivered": false,
+                "deliveryOptions": {
+                    "carrier": {
+                        "id": 1
+                    },
+                    "date": "2077-10-23 09:47:51",
+                    "deliveryType": 2,
+                    "labelAmount": null,
+                    "packageType": 1,
+                    "pickupLocation": null,
+                    "shipmentOptions": {
+                        "insurance": {
+                            "amount": 0,
+                            "currency": "EUR"
+                        },
+                        "largeFormat": 0,
+                        "labelDescription": "1525"
+                    }
+                },
+                "dropOffPoint": {
+                    "cc": "NL",
+                    "city": "Hoofddorp",
+                    "locationCode": "173804",
+                    "locationName": "Primera Sanders Skagerhof Hoofddorp",
+                    "number": "218",
+                    "postalCode": "2133DW",
+                    "street": "Skagerrak"
+                },
+                "hidden": 0,
+                "physicalProperties": {
+                    "weight": 330
+                },
+                "price": {
+                    "amount": 607,
+                    "currency": "EUR"
+                },
+                "recipient": {
+                    "address2": "",
+                    "cc": "NL",
+                    "city": "Hoofddorp",
+                    "email": "test@myparcel.nl",
+                    "person": "hallo test",
+                    "phone": "06123456789",
+                    "postalCode": "2132 JE",
+                    "region": "",
+                    "address1": "Antareslaan 31"
+                },
+                "senderAddress": {
+                    "address2": "",
+                    "cc": "NL",
+                    "city": "Hoofddorp",
+                    "company": "BEDRIJF via MyParcel",
+                    "email": "test@myparcel.nl",
+                    "person": "BEDRIJF via MyParcel",
+                    "phone": "",
+                    "postalCode": "2130AK",
+                    "address1": "Postbus 442"
+                },
+                "shipmentType": 1,
+                "status": 2,
+                "created": "2023-07-26 18:03:15",
+                "createdBy": 1234,
+                "modified": "2023-07-26 18:03:45",
+                "modifiedBy": 1234
+            }
+        ],
+        "_myparcelnl_version": "3.12.0",
+        "_myparcelnl_migrated": [
+            "5.0.0"
+        ]
     },
-    "_myparcelnl_order_shipments": [
-      {
-        "id": 123456789,
-        "shopId": 5678,
-        "orderId": 1,
-        "referenceIdentifier": "1525",
-        "externalIdentifier": "3SMYPA123456789",
-        "barcode": "3SMYPA123456789",
-        "carrier": {
-          "id": 1
-        },
-        "delayed": false,
-        "delivered": false,
+    "pdkOrder": {
+        "exported": false,
         "deliveryOptions": {
-          "carrier": {
-            "id": 1
-          },
-          "date": "2077-10-23 09:47:51",
-          "deliveryType": 2,
-          "labelAmount": null,
-          "packageType": 1,
-          "pickupLocation": null,
-          "shipmentOptions": {
-            "insurance": {
-              "amount": 0,
-              "currency": "EUR"
+            "carrier": {
+                "externalIdentifier": "postnl"
             },
-            "largeFormat": 0,
-            "labelDescription": "1525"
-          }
-        },
-        "dropOffPoint": {
-          "cc": "NL",
-          "city": "Hoofddorp",
-          "locationCode": "173804",
-          "locationName": "Primera Sanders Skagerhof Hoofddorp",
-          "number": "218",
-          "postalCode": "2133DW",
-          "street": "Skagerrak"
-        },
-        "hidden": 0,
-        "physicalProperties": {
-          "weight": 330
-        },
-        "price": {
-          "amount": 607,
-          "currency": "EUR"
-        },
-        "recipient": {
-          "address2": "",
-          "cc": "NL",
-          "city": "Hoofddorp",
-          "email": "test@myparcel.nl",
-          "person": "hallo test",
-          "phone": "06123456789",
-          "postalCode": "2132 JE",
-          "region": "",
-          "address1": "Antareslaan 31"
-        },
-        "senderAddress": {
-          "address2": "",
-          "cc": "NL",
-          "city": "Hoofddorp",
-          "company": "BEDRIJF via MyParcel",
-          "email": "test@myparcel.nl",
-          "person": "BEDRIJF via MyParcel",
-          "phone": "",
-          "postalCode": "2130AK",
-          "address1": "Postbus 442"
-        },
-        "shipmentType": 1,
-        "status": 2,
-        "created": "2023-07-26 18:03:15",
-        "createdBy": 1234,
-        "modified": "2023-07-26 18:03:45",
-        "modifiedBy": 1234
-      }
-    ],
-    "_myparcelnl_version": "3.12.0",
-    "_myparcelnl_migrated": ["5.0.0"]
-  },
-  "pdkOrder": {
-    "exported": false,
-    "deliveryOptions": {
-      "carrier": {
-        "externalIdentifier": "postnl"
-      },
-      "labelAmount": 1,
-      "shipmentOptions": {
-        "insurance": -1,
-        "ageCheck": -1,
-        "return": -1,
-        "hideSender": -1,
-        "largeFormat": -1,
-        "onlyRecipient": -1,
-        "receiptCode": -1,
-        "sameDayDelivery": -1,
-        "signature": -1,
-        "tracked": -1
-      },
-      "deliveryType": "standard",
-      "packageType": "package"
-    }
-  },
-  "shipments": [
-    {
-      "orderId": "1",
-      "multiCollo": false,
-      "id": 123456789,
-      "shopId": 5678,
-      "referenceIdentifier": "1525",
-      "externalIdentifier": "3SMYPA123456789",
-      "barcode": "3SMYPA123456789",
-      "carrier": {
-        "externalIdentifier": "postnl"
-      },
-      "delayed": false,
-      "delivered": false,
-      "deliveryOptions": {
-        "date": "2077-10-23 09:47:51",
-        "carrier": {
-          "externalIdentifier": "postnl"
-        },
-        "labelAmount": 1,
-        "shipmentOptions": {
-          "labelDescription": "1525",
-          "insurance": 1,
-          "ageCheck": -1,
-          "return": -1,
-          "hideSender": -1,
-          "largeFormat": 0,
-          "onlyRecipient": -1,
-          "receiptCode": -1,
-          "sameDayDelivery": -1,
-          "signature": -1,
-          "tracked": -1
-        },
-        "deliveryType": "standard",
-        "packageType": "package"
-      },
-      "dropOffPoint": {
-        "locationCode": "173804",
-        "locationName": "Primera Sanders Skagerhof Hoofddorp",
-        "cc": "NL",
-        "city": "Hoofddorp",
-        "number": "218",
-        "postalCode": "2133DW",
-        "street": "Skagerrak"
-      },
-      "hidden": false,
-      "isReturn": false,
-      "partnerTrackTraces": [],
-      "price": {
-        "amount": 607,
-        "currency": "EUR"
-      },
-      "shipmentType": 1,
-      "status": 2,
-      "created": "2023-07-26 18:03:15",
-      "createdBy": 1234,
-      "modified": "2023-07-26 18:03:45",
-      "modifiedBy": 1234
-    }
-  ]
+            "labelAmount": 1,
+            "shipmentOptions": {
+                "insurance": -1,
+                "ageCheck": -1,
+                "return": -1,
+                "hideSender": -1,
+                "largeFormat": -1,
+                "onlyRecipient": -1,
+                "receiptCode": -1,
+                "sameDayDelivery": -1,
+                "signature": -1,
+                "tracked": -1,
+                "collect": -1
+            },
+            "deliveryType": "standard",
+            "packageType": "package"
+        }
+    },
+    "shipments": [
+        {
+            "orderId": "1",
+            "multiCollo": false,
+            "id": 123456789,
+            "shopId": 5678,
+            "referenceIdentifier": "1525",
+            "externalIdentifier": "3SMYPA123456789",
+            "barcode": "3SMYPA123456789",
+            "carrier": {
+                "externalIdentifier": "postnl"
+            },
+            "delayed": false,
+            "delivered": false,
+            "deliveryOptions": {
+                "date": "2077-10-23 09:47:51",
+                "carrier": {
+                    "externalIdentifier": "postnl"
+                },
+                "labelAmount": 1,
+                "shipmentOptions": {
+                    "labelDescription": "1525",
+                    "insurance": 1,
+                    "ageCheck": -1,
+                    "return": -1,
+                    "hideSender": -1,
+                    "largeFormat": 0,
+                    "onlyRecipient": -1,
+                    "receiptCode": -1,
+                    "sameDayDelivery": -1,
+                    "signature": -1,
+                    "tracked": -1,
+                    "collect": -1
+                },
+                "deliveryType": "standard",
+                "packageType": "package"
+            },
+            "dropOffPoint": {
+                "locationCode": "173804",
+                "locationName": "Primera Sanders Skagerhof Hoofddorp",
+                "cc": "NL",
+                "city": "Hoofddorp",
+                "number": "218",
+                "postalCode": "2133DW",
+                "street": "Skagerrak"
+            },
+            "hidden": false,
+            "isReturn": false,
+            "partnerTrackTraces": [],
+            "price": {
+                "amount": 607,
+                "currency": "EUR"
+            },
+            "shipmentType": 1,
+            "status": 2,
+            "created": "2023-07-26 18:03:15",
+            "createdBy": 1234,
+            "modified": "2023-07-26 18:03:45",
+            "modifiedBy": 1234
+        }
+    ]
 }

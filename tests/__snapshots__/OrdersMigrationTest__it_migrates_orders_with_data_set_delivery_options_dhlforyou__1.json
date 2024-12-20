@@ -1,51 +1,54 @@
 {
-  "meta": {
-    "_myparcelnl_order_data": {
-      "exported": false,
-      "deliveryOptions": {
-        "carrier": "dhlforyou",
-        "deliveryType": "standard",
-        "labelAmount": 1,
-        "packageType": "package",
-        "shipmentOptions": {
-          "ageCheck": true,
-          "insurance": 500,
-          "largeFormat": false,
-          "onlyRecipient": true,
-          "return": false,
-          "sameDayDelivery": true,
-          "signature": true,
-          "labelDescription": "[ORDER_ID]"
-        }
-      }
+    "meta": {
+        "_myparcelnl_order_data": {
+            "exported": false,
+            "deliveryOptions": {
+                "carrier": "dhlforyou",
+                "deliveryType": "standard",
+                "labelAmount": 1,
+                "packageType": "package",
+                "shipmentOptions": {
+                    "ageCheck": true,
+                    "insurance": 500,
+                    "largeFormat": false,
+                    "onlyRecipient": true,
+                    "return": false,
+                    "sameDayDelivery": true,
+                    "signature": true,
+                    "labelDescription": "[ORDER_ID]"
+                }
+            }
+        },
+        "_myparcelnl_order_shipments": [],
+        "_myparcelnl_version": "2.22.0",
+        "_myparcelnl_migrated": [
+            "5.0.0"
+        ]
     },
-    "_myparcelnl_order_shipments": [],
-    "_myparcelnl_version": "2.22.0",
-    "_myparcelnl_migrated": ["5.0.0"]
-  },
-  "pdkOrder": {
-    "exported": false,
-    "deliveryOptions": {
-      "carrier": {
-        "externalIdentifier": "dhlforyou"
-      },
-      "labelAmount": 1,
-      "shipmentOptions": {
-        "labelDescription": "[ORDER_ID]",
-        "insurance": 500,
-        "ageCheck": 1,
-        "return": 0,
-        "hideSender": -1,
-        "largeFormat": 0,
-        "onlyRecipient": 1,
-        "receiptCode": -1,
-        "sameDayDelivery": 1,
-        "signature": 1,
-        "tracked": -1
-      },
-      "deliveryType": "standard",
-      "packageType": "package"
-    }
-  },
-  "shipments": []
+    "pdkOrder": {
+        "exported": false,
+        "deliveryOptions": {
+            "carrier": {
+                "externalIdentifier": "dhlforyou"
+            },
+            "labelAmount": 1,
+            "shipmentOptions": {
+                "labelDescription": "[ORDER_ID]",
+                "insurance": 500,
+                "ageCheck": 1,
+                "return": 0,
+                "hideSender": -1,
+                "largeFormat": 0,
+                "onlyRecipient": 1,
+                "receiptCode": -1,
+                "sameDayDelivery": 1,
+                "signature": 1,
+                "tracked": -1,
+                "collect": -1
+            },
+            "deliveryType": "standard",
+            "packageType": "package"
+        }
+    },
+    "shipments": []
 }
