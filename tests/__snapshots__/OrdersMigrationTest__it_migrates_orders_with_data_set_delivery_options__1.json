@@ -1,54 +1,57 @@
 {
-  "meta": {
-    "_myparcelnl_order_data": {
-      "exported": false,
-      "deliveryOptions": {
-        "carrier": "postnl",
-        "date": "2077-10-23T00:00:00.000Z",
-        "deliveryType": "standard",
-        "labelAmount": 2,
-        "packageType": "package",
-        "shipmentOptions": {
-          "ageCheck": false,
-          "insurance": {
-            "amount": 500,
-            "currency": "EUR"
-          },
-          "onlyRecipient": false,
-          "sameDayDelivery": false,
-          "signature": true,
-          "labelDescription": "[ORDER_ID] [DELIVERY_DATE]"
-        }
-      }
+    "meta": {
+        "_myparcelnl_order_data": {
+            "exported": false,
+            "deliveryOptions": {
+                "carrier": "postnl",
+                "date": "2077-10-23T00:00:00.000Z",
+                "deliveryType": "standard",
+                "labelAmount": 2,
+                "packageType": "package",
+                "shipmentOptions": {
+                    "ageCheck": false,
+                    "insurance": {
+                        "amount": 500,
+                        "currency": "EUR"
+                    },
+                    "onlyRecipient": false,
+                    "sameDayDelivery": false,
+                    "signature": true,
+                    "labelDescription": "[ORDER_ID] [DELIVERY_DATE]"
+                }
+            }
+        },
+        "_myparcelnl_order_shipments": [],
+        "_myparcelnl_version": "2.22.0",
+        "_myparcelnl_migrated": [
+            "5.0.0"
+        ]
     },
-    "_myparcelnl_order_shipments": [],
-    "_myparcelnl_version": "2.22.0",
-    "_myparcelnl_migrated": ["5.0.0"]
-  },
-  "pdkOrder": {
-    "exported": false,
-    "deliveryOptions": {
-      "date": "2077-10-23 00:00:00",
-      "carrier": {
-        "externalIdentifier": "postnl"
-      },
-      "labelAmount": 2,
-      "shipmentOptions": {
-        "labelDescription": "[ORDER_ID] [DELIVERY_DATE]",
-        "insurance": 1,
-        "ageCheck": 0,
-        "return": -1,
-        "hideSender": -1,
-        "largeFormat": -1,
-        "onlyRecipient": 0,
-        "receiptCode": -1,
-        "sameDayDelivery": 0,
-        "signature": 1,
-        "tracked": -1
-      },
-      "deliveryType": "standard",
-      "packageType": "package"
-    }
-  },
-  "shipments": []
+    "pdkOrder": {
+        "exported": false,
+        "deliveryOptions": {
+            "date": "2077-10-23 00:00:00",
+            "carrier": {
+                "externalIdentifier": "postnl"
+            },
+            "labelAmount": 2,
+            "shipmentOptions": {
+                "labelDescription": "[ORDER_ID] [DELIVERY_DATE]",
+                "insurance": 1,
+                "ageCheck": 0,
+                "return": -1,
+                "hideSender": -1,
+                "largeFormat": -1,
+                "onlyRecipient": 0,
+                "receiptCode": -1,
+                "sameDayDelivery": 0,
+                "signature": 1,
+                "tracked": -1,
+                "collect": -1
+            },
+            "deliveryType": "standard",
+            "packageType": "package"
+        }
+    },
+    "shipments": []
 }
