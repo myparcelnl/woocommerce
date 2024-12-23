@@ -582,7 +582,10 @@ class WCMP_Checkout
             return $allowedMethods;
         }
 
-        $shippingMethodsForPackage = $shippingMethodsByPackageType[AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME];
+        $shippingMethodsForPackage = array_merge(
+            $shippingMethodsByPackageType[AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME] ?? [],
+            $shippingMethodsByPackageType[AbstractConsignment::PACKAGE_TYPE_PACKAGE_SMALL_NAME] ?? []
+        );
 
         foreach ($shippingMethodsForPackage as $shippingMethod) {
             [$methodId] = self::splitShippingMethodString($shippingMethod);
