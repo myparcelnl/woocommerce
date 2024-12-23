@@ -17,7 +17,7 @@
   "require-dev": {
     "humbug/php-scoper": "^0.17.5",
     "pestphp/pest": ">= 1",
-    "php-stubs/woocommerce-stubs": "^8.0",
+    "php-stubs/woocommerce-stubs": "^9.5",
     "phpstan/phpstan": "^1.10",
     "spatie/pest-plugin-snapshots": ">= 1",
     "szepeviktor/phpstan-wordpress": "^1.3"
