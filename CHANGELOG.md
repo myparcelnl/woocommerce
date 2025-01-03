@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.0](https://github.com/myparcelnl/woocommerce/compare/v5.1.0...v5.2.0) (2025-01-03)
+
+
+### :sparkles: New Features
+
+* **deps:** upgrade myparcelnl/pdk to v2.49.1 ([bcc543e](https://github.com/myparcelnl/woocommerce/commit/bcc543e4bab98163b405241321e2b226e89fe4c9))
+
 ## [5.1.0](https://github.com/myparcelnl/woocommerce/compare/v5.0.0...v5.1.0) (2024-12-17)
 
 
