@@ -5,7 +5,7 @@ on:
     inputs:
       update-deps:
         description: 'Update PDK dependencies before releasing.'
-        default: true
+        default: false
         type: boolean
 
       create-commit:
