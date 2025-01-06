@@ -1587,6 +1587,8 @@ class WCMP_Export
         MyParcelCollection  $collection,
         AbstractConsignment $consignment
     ): void {
+        apply_filters('wc_myparcel_add_consignment', $consignment, $orderSettings);
+
         $colloAmount = $orderSettings->getColloAmount();
 
         if ($colloAmount > 1) {
