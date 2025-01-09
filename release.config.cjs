@@ -17,7 +17,7 @@ module.exports = {
   ...mainConfig,
   extends: '@myparcel/semantic-release-config',
   branches: [
-    {name: 'main'},
+    {name: 'v4'},
     {name: 'develop', prerelease: 'rc', channel: 'rc'},
     {name: 'alpha', prerelease: 'alpha', channel: 'alpha'},
   ],

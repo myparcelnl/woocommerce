@@ -1,16 +1,10 @@
 name: '🚀 Release'
 
 on:
-  push:
-    branches:
-      - main
-      - develop
-      - alpha
-
   workflow_dispatch:
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release-legacy-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -46,7 +40,7 @@ jobs:
 
   deploy-svn:
     needs: release
-    if: github.ref == 'refs/heads/main' && needs.release.outputs.released == 'true'
+    if: github.ref == 'refs/heads/v4' && needs.release.outputs.released == 'true'
     runs-on: ubuntu-22.04
     env:
       ASSETS_DIR: ./.wordpress-assets
@@ -80,22 +74,10 @@ jobs:
           SLUG: woocommerce-myparcel
           VERSION: ${{ steps.prepare.outputs.version }}
 
-  rebase-develop:
-    name: 'Rebase develop onto main'
-    uses: ./.github/workflows/rebase.yml
-    secrets: inherit
-    needs: release
-    if: always() && github.ref == 'refs/heads/main'
-    with:
-      base: 'main'
-      target: 'develop'
-      force: ${{ needs.release.outputs.released == 'true' }}
-
   rebase-prs:
     name: 'Rebase pull requests'
     needs:
       - release
-      - rebase-develop
     if: always()
     runs-on: ubuntu-22.04
     steps:
@@ -111,21 +93,3 @@ jobs:
           base: ${{ github.ref_name }}
           exclude-drafts: true
           exclude-labels: 'hotfix'
-
-  prune-releases:
-    needs: release
-    if: github.ref == 'refs/heads/alpha' && needs.release.outputs.released == 'true'
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: myparcelnl/actions/setup-app-credentials@v3
-        id: credentials
-        with:
-          app-id: ${{ secrets.MYPARCEL_APP_ID }}
-          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
-
-      - uses: dev-drprasad/delete-older-releases@v0.2
-        with:
-          keep_latest: 1
-          delete_tag_pattern: alpha
-        env:
-          GITHUB_TOKEN: ${{ steps.credentials.outputs.token }}
