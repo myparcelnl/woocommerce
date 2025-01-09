@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.24.4](https://github.com/myparcelnl/woocommerce/compare/v4.24.3...v4.24.4) (2025-01-09)
+
+
+### :bug: Bug Fixes
+
+* fix small package not showing in delivery options ([#1167](https://github.com/myparcelnl/woocommerce/issues/1167)) ([f0329b6](https://github.com/myparcelnl/woocommerce/commit/f0329b61f4468312c51d90a72c0e9c505a1f9c86))
+
 ## 4.24.3 (2024-12-13)
 
 ### :bug: Bug Fixes
