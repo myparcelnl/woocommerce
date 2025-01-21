@@ -8,6 +8,7 @@ use MyParcelNL\Pdk\Base\Service\CountryCodes;
 use MyParcelNL\Pdk\Facade\AccountSettings;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Facade\Filter;
+use MyParcelNL\Pdk\Facade\Settings;
 
 class TaxFieldsHooks extends AbstractFieldsHooks
 {
@@ -121,7 +122,7 @@ class TaxFieldsHooks extends AbstractFieldsHooks
      */
     protected function shouldRender(): bool
     {
-        return AccountSettings::hasTaxFields();
+        return AccountSettings::hasTaxFields() && Settings::get('checkout.showTaxFields');
     }
 
     /**
