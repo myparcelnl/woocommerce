@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.3.0](https://github.com/myparcelnl/woocommerce/compare/v5.2.0...v5.3.0) (2025-01-30)
+
+
+### :bug: Bug Fixes
+
+* Make VAT and EORI fields optional for non-EU checkout ([#1219](https://github.com/myparcelnl/woocommerce/issues/1219)) ([1950afa](https://github.com/myparcelnl/woocommerce/commit/1950afa83b835e23611c32d987db88078021c53c))
+
+
+### :sparkles: New Features
+
+* add toggle for EU VAT and EORI fields in checkout settings ([#1227](https://github.com/myparcelnl/woocommerce/issues/1227)) ([4064129](https://github.com/myparcelnl/woocommerce/commit/406412998aa52d50319dd43e17aee83d4703784e))
+
 ## [5.2.0](https://github.com/myparcelnl/woocommerce/compare/v5.1.0...v5.2.0) (2025-01-03)
 
 
