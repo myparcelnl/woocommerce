@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fb80c05e58d08e806c90e29e4b86ec95",
+    "content-hash": "260397558dbe493e734f0bc72b944758",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -459,16 +459,16 @@
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "2.50.0",
+            "version": "2.51.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/pdk.git",
-                "reference": "406d2fb373adac4ce095068310f7ff06785b895d"
+                "reference": "1973ea616460cb3f56e6813e1c9828544b8c8698"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/406d2fb373adac4ce095068310f7ff06785b895d",
-                "reference": "406d2fb373adac4ce095068310f7ff06785b895d",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/1973ea616460cb3f56e6813e1c9828544b8c8698",
+                "reference": "1973ea616460cb3f56e6813e1c9828544b8c8698",
                 "shasum": ""
             },
             "require": {
@@ -513,9 +513,9 @@
             "homepage": "https://myparcel.nl",
             "support": {
                 "issues": "https://github.com/myparcelnl/pdk/issues",
-                "source": "https://github.com/myparcelnl/pdk/tree/v2.50.0"
+                "source": "https://github.com/myparcelnl/pdk/tree/v2.51.0"
             },
-            "time": "2025-01-22T09:33:21+00:00"
+            "time": "2025-02-05T09:01:36+00:00"
         },
         {
             "name": "myparcelnl/sdk",
@@ -1075,12 +1075,12 @@
             },
             "type": "library",
             "extra": {
+                "thanks": {
+                    "url": "https://github.com/symfony/contracts",
+                    "name": "symfony/contracts"
+                },
                 "branch-alias": {
                     "dev-main": "2.5-dev"
-                },
-                "thanks": {
-                    "name": "symfony/contracts",
-                    "url": "https://github.com/symfony/contracts"
                 }
             },
             "autoload": {
@@ -1225,8 +1225,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -1299,8 +1299,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -2076,9 +2076,6 @@
             ],
             "type": "library",
             "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
                 "pest": {
                     "plugins": [
                         "Pest\\Plugins\\Coverage",
@@ -2091,6 +2088,9 @@
                     "providers": [
                         "Pest\\Laravel\\PestServiceProvider"
                     ]
+                },
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
                 }
             },
             "autoload": {
@@ -2165,10 +2165,10 @@
             },
             "type": "composer-plugin",
             "extra": {
+                "class": "Pest\\Plugin\\Manager",
                 "branch-alias": {
                     "dev-master": "1.x-dev"
-                },
-                "class": "Pest\\Plugin\\Manager"
+                }
             },
             "autoload": {
                 "psr-4": {
@@ -4172,12 +4172,12 @@
             },
             "type": "library",
             "extra": {
+                "thanks": {
+                    "url": "https://github.com/symfony/contracts",
+                    "name": "symfony/contracts"
+                },
                 "branch-alias": {
                     "dev-main": "2.5-dev"
-                },
-                "thanks": {
-                    "name": "symfony/contracts",
-                    "url": "https://github.com/symfony/contracts"
                 }
             },
             "autoload": {
@@ -4384,8 +4384,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -4460,8 +4460,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -4538,8 +4538,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -4616,8 +4616,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -4974,12 +4974,12 @@
             },
             "type": "library",
             "extra": {
+                "thanks": {
+                    "url": "https://github.com/symfony/contracts",
+                    "name": "symfony/contracts"
+                },
                 "branch-alias": {
                     "dev-main": "2.5-dev"
-                },
-                "thanks": {
-                    "name": "symfony/contracts",
-                    "url": "https://github.com/symfony/contracts"
                 }
             },
             "autoload": {
