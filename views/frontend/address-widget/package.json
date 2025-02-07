@@ -15,7 +15,7 @@
     "test:run": "run ws:test:run \"$(pwd)\""
   },
   "dependencies": {
-    "address-widget": "git@github.com:myparcelnl/address-widget.git"
+    "address-widget": "file:./package.tgz"
   },
   "devDependencies": {
     "@myparcel-woocommerce/vite-config": "workspace:*",
