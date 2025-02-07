@@ -10806,7 +10806,7 @@ __metadata:
 
 "address-widget@file:./package.tgz::locator=%40myparcel-woocommerce%2Faddress-widget%40workspace%3Aviews%2Ffrontend%2Faddress-widget":
   version: 0.0.0
-  resolution: "address-widget@file:./package.tgz#./package.tgz::hash=9a1ed8&locator=%40myparcel-woocommerce%2Faddress-widget%40workspace%3Aviews%2Ffrontend%2Faddress-widget"
+  resolution: "address-widget@file:./package.tgz#./package.tgz::hash=2bd125&locator=%40myparcel-woocommerce%2Faddress-widget%40workspace%3Aviews%2Ffrontend%2Faddress-widget"
   dependencies:
     "@hey-api/client-fetch": "npm:^0.5.7"
     "@myparcel/constants": "npm:^2.2.0"
@@ -10816,7 +10816,7 @@ __metadata:
     "@vueuse/core": "npm:^12.4.0"
     pinia: "npm:^2.3.0"
     vue: "npm:^3.5.13"
-  checksum: 10c0/cba83d0e896952860b313f4e3e41b18d8802b53f012a67c126b96e26aee5015b6e4476371e3705c28128ed4aedb355db7154792b2f136f6a0f1e5cf45e3819ca
+  checksum: 10c0/a31e7b010e34371d0d785588a6478c51e85dbe8d246d467da40d12a13866ef9698331659922c75d139e6b1f17f0e08ba53100d0356c6ec033bdf44146eb99522
   languageName: node
   linkType: hard
 

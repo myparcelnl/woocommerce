@@ -3,7 +3,7 @@ import {
   usePdkCheckout,
 } from '@myparcel-pdk/checkout';
 
-import { App } from 'address-widget';
+import App from 'address-widget';
 
 
 // @TODO import WC styles
