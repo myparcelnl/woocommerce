@@ -3463,7 +3463,7 @@ __metadata:
   dependencies:
     "@myparcel-woocommerce/vite-config": "workspace:*"
     "@types/jquery": "npm:^3.5.16"
-    address-widget: "git@github.com:myparcelnl/address-widget.git"
+    address-widget: "file:./package.tgz"
     typescript: "npm:^5.2.2"
     vite: "npm:^5.0.0"
   languageName: unknown
@@ -10804,9 +10804,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"address-widget@git@github.com:myparcelnl/address-widget.git":
+"address-widget@file:./package.tgz::locator=%40myparcel-woocommerce%2Faddress-widget%40workspace%3Aviews%2Ffrontend%2Faddress-widget":
   version: 0.0.0
-  resolution: "address-widget@git@github.com:myparcelnl/address-widget.git#commit=e5020a797863b8f828057600baa4c03ab70bcb5c"
+  resolution: "address-widget@file:./package.tgz#./package.tgz::hash=9a1ed8&locator=%40myparcel-woocommerce%2Faddress-widget%40workspace%3Aviews%2Ffrontend%2Faddress-widget"
   dependencies:
     "@hey-api/client-fetch": "npm:^0.5.7"
     "@myparcel/constants": "npm:^2.2.0"
@@ -10816,7 +10816,7 @@ __metadata:
     "@vueuse/core": "npm:^12.4.0"
     pinia: "npm:^2.3.0"
     vue: "npm:^3.5.13"
-  checksum: 10c0/6d05d37f4945e02fc0e8ff97c5c10715db07351cdae6f98f69d262cfd33285bb57b71ac45d1c65e009d0526348b06c85aa8a17ba89d25e07b60e2f81b0c91bdb
+  checksum: 10c0/cba83d0e896952860b313f4e3e41b18d8802b53f012a67c126b96e26aee5015b6e4476371e3705c28128ed4aedb355db7154792b2f136f6a0f1e5cf45e3819ca
   languageName: node
   linkType: hard
 
