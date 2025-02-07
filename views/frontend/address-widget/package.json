@@ -1,0 +1,26 @@
+{
+  "name": "@myparcel-woocommerce/address-widget",
+  "packageManager": "yarn@4.3.1",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "run ws:build \"$(pwd)\"",
+    "build:dev": "run ws:build:dev \"$(pwd)\"",
+    "build:test": "run ws:build:test \"$(pwd)\"",
+    "clean": "run ws:clean \"$(pwd)\"",
+    "test": "run ws:test \"$(pwd)\"",
+    "test:coverage": "run ws:test:coverage \"$(pwd)\"",
+    "test:run": "run ws:test:run \"$(pwd)\""
+  },
+  "dependencies": {
+    "address-widget": "git@github.com:myparcelnl/address-widget.git"
+  },
+  "devDependencies": {
+    "@myparcel-woocommerce/vite-config": "workspace:*",
+    "@types/jquery": "^3.5.16",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.0"
+  }
+}
