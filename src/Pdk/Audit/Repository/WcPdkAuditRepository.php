@@ -15,48 +15,22 @@ use MyParcelNL\WooCommerce\Database\Contract\WpDatabaseServiceInterface;
 
 /**
  * @final
+ * @deprecated This class is deprecated and will be removed in the next major release.
  */
 class WcPdkAuditRepository extends Repository implements PdkAuditRepositoryInterface
 {
     /**
-     * @var \MyParcelNL\WooCommerce\Database\Contract\WpDatabaseServiceInterface
-     */
-    private $wpDatabaseService;
-
-    /**
-     * @param  \MyParcelNL\Pdk\Storage\Contract\StorageInterface                    $storage
-     * @param  \MyParcelNL\WooCommerce\Database\Contract\WpDatabaseServiceInterface $wpDatabaseService
-     */
-    public function __construct(StorageInterface $storage, WpDatabaseServiceInterface $wpDatabaseService)
-    {
-        parent::__construct($storage);
-        $this->wpDatabaseService = $wpDatabaseService;
-    }
-
-    /**
      * @return \MyParcelNL\Pdk\Audit\Collection\AuditCollection
      * @throws \Exception
+     * @deprecated This method is a no-op, retained for compatibility only.
      */
     public function all(): AuditCollection
     {
-        return $this->retrieve('audits', function () {
-            $audits = $this->wpDatabaseService->getAll(Pdk::get('tableNameAudits'));
-
-            return new AuditCollection($audits->map(static function (array $audit): Audit {
-                return new Audit([
-                    'id'              => $audit['auditId'],
-                    'arguments'       => json_decode($audit['arguments'], true),
-                    'action'          => $audit['action'],
-                    'model'           => $audit['model'],
-                    'modelIdentifier' => $audit['modelIdentifier'],
-                    'created'         => new DateTime($audit['created']),
-                    'type'            => $audit['type'],
-                ]);
-            }));
-        });
+        return new AuditCollection([]);
     }
 
     /**
+     * @deprecated This method is a no-op, retained for compatibility only.
      * @param  \MyParcelNL\Pdk\Audit\Model\Audit $audit
      *
      * @return void
@@ -64,16 +38,6 @@ class WcPdkAuditRepository extends Repository implements PdkAuditRepositoryInter
      */
     public function store(Audit $audit): void
     {
-        $this->wpDatabaseService->insert(Pdk::get('tableNameAudits'), [
-            'auditId'         => $audit->id,
-            'arguments'       => json_encode($audit->arguments),
-            'action'          => $audit->action,
-            'model'           => $audit->model,
-            'modelIdentifier' => $audit->modelIdentifier,
-            'created'         => $audit->created->format('Y-m-d H:i:s'),
-            'type'            => $audit->type,
-        ]);
-
-        $this->save($audit->id, $audit);
+        // no-op
     }
 }
