@@ -12,6 +12,7 @@ interface WpDatabaseServiceInterface
      * @return void
      */
     public function createAuditsTable(): void;
+    public function dropAuditsTable(): void;
 
     /**
      * @param  string|string[] $sql

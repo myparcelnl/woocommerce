@@ -6,13 +6,20 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk\Plugin\Repository;
 
 use InvalidArgumentException;
+use MyParcelNL\Pdk\App\Api\Backend\PdkBackendActions;
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\App\Order\Model\PdkOrder;
+use MyParcelNL\Pdk\Audit\Contract\PdkAuditRepositoryInterface;
+use MyParcelNL\Pdk\Facade\Actions;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Settings\Model\OrderSettings;
+use MyParcelNL\Pdk\Tests\Api\Response\ExampleGetShipmentsResponse;
+use MyParcelNL\Pdk\Tests\Bootstrap\MockApi;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use Psr\Log\LoggerInterface;
 use WC_Order;
 use WC_Order_Factory;
+use function MyParcelNL\Pdk\Tests\factory;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function MyParcelNL\WooCommerce\Tests\wpFactory;
 use function Spatie\Snapshots\assertMatchesJsonSnapshot;
@@ -37,6 +44,32 @@ it('creates a valid pdk order', function (WC_Order_Factory $factory) {
 
     assertMatchesJsonSnapshot(json_encode($orderArray, JSON_PRETTY_PRINT));
 })->with('orders');
+
+it('adds autoExported property to order', function () {
+    factory(OrderSettings::class)
+        ->withConceptShipments(true)
+        ->store();
+
+
+    $orderFactory = wpFactory(WC_Order::class)->withShippingAddressInBelgium();
+    /** @var \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $orderRepository */
+    $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
+
+    $wcOrder = $orderFactory->make();
+    $pdkOrder = $orderRepository->get($wcOrder);
+    expect($pdkOrder->autoExported)->toBeFalsy();
+
+    MockApi::enqueue(new ExampleGetShipmentsResponse());
+
+    Actions::executeAutomatic(PdkBackendActions::EXPORT_ORDERS, [
+        'orderIds' => [$wcOrder->get_id()],
+    ]);
+
+    // Re-fetch the pdk order to get the updated autoExported property
+    $pdkOrder = $orderRepository->get($wcOrder);
+    expect($pdkOrder->autoExported)->toBeTrue();
+});
+
 
 it('gets order via various inputs', function ($input) {
     wpFactory(WC_Order::class)

@@ -195,6 +195,5 @@
     "orderVat": 0,
     "totalPrice": 500000,
     "totalVat": 0,
-    "totalPriceAfterVat": 500000,
-    "audits": []
+    "totalPriceAfterVat": 500000
 }
