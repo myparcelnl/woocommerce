@@ -19,4 +19,9 @@ updates:
       interval: 'daily'
     reviewers: ['myparcelnl/integration']
     versioning-strategy: increase-if-necessary
+    groups:
+      js-pdk:
+        patterns:
+          - '@myparcel-pdk/*'
+
 
