@@ -14,143 +14,138 @@ use MyParcelNL\WooCommerce\Facade\Filter;
  */
 class SeparateAddressFieldsHooks extends AbstractFieldsHooks
 {
+    protected const ADDRESS_WIDGET_FIELDTYPE = 'MyParcelAddressWidget';
+
     public function apply(): void
     {
-        add_filter('woocommerce_get_country_locale', [$this, 'extendLocaleWithSeparateAddressFields'], 1);
-        add_filter('woocommerce_country_locale_field_selectors', [$this, 'extendSelectorsWithSeparateAddressFields']);
-        add_filter('woocommerce_default_address_fields', [$this, 'extendDefaultsWithSeparateAddressFields']);
+        // Hide existing address fields
+        // add_filter('woocommerce_get_country_locale', [$this, 'hideLocaleFields'], 1);
+        // add_filter('woocommerce_country_locale_field_selectors', [$this, 'destroyJsSelectors']);
+        add_filter('woocommerce_default_address_fields', [$this, 'hideDefaultAddressFields']);
 
-        add_filter(
-            'woocommerce_billing_fields',
-            [$this, 'extendBillingFields'],
-            Filter::apply('separateAddressFieldsPriority'),
-            2
-        );
+        // Add new address fields
+        add_filter('woocommerce_checkout_fields', [$this, 'addAddressWidgetToCheckout'], Filter::apply('separateAddressFieldsPriority'), 2);
 
-        add_filter(
-            'woocommerce_shipping_fields',
-            [$this, 'extendShippingFields'],
-            Filter::apply('separateAddressFieldsPriority'),
-            2
-        );
+        // Custom field type rendering. Cannot call wooCommerce_form_field_TYPE
+        // as we need to be the last to modify the output
+        // and woocommerce_form_field is called later.
+        add_filter('woocommerce_form_field', [$this, 'renderAddressWidgetContainer'], 1, 4);
+
+
+        add_action('woocommerce_checkout_update_order_meta', [$this, 'saveResolvedAddress']);
+
     }
 
     /**
+     * Non-blocks (shortcode) checkout only.
+     * Hides all default woocommerce address fields.
+     *
      * @param  array $fields
      *
      * @return array
      */
-    public function extendBillingFields(array $fields): array
+    public function hideDefaultAddressFields(array $fields): array
     {
-        return $this->extendWithSeparateAddressFields($fields, Pdk::get('wcAddressTypeBilling'));
-    }
-
-    /**
-     * @param  array $fields
-     *
-     * @return array
-     */
-    public function extendDefaultsWithSeparateAddressFields(array $fields): array
-    {
-        return array_merge($fields, [
-            Pdk::get('fieldStreet') => [
-                'hidden'   => true,
-                'required' => false,
-            ],
-
-            Pdk::get('fieldNumber') => [
-                'hidden'   => true,
-                'required' => false,
-            ],
-
-            Pdk::get('fieldNumberSuffix') => [
-                'hidden'   => true,
-                'required' => false,
-            ],
-        ]);
-    }
-
-    /**
-     * @param  array $locale
-     *
-     * @return array
-     */
-    public function extendLocaleWithSeparateAddressFields(array $locale): array
-    {
-        $useSeparateAddressFields = Settings::get(CheckoutSettings::USE_SEPARATE_ADDRESS_FIELDS, CheckoutSettings::ID);
-
-        foreach (Pdk::get('countriesWithSeparateAddressFields') as $countryCode) {
-            $locale[$countryCode][Pdk::get('fieldAddress1')] = [
-                'required' => true,
-                'hidden'   => $useSeparateAddressFields,
-            ];
-
-            $locale[$countryCode][Pdk::get('fieldAddress2')] = [
-                'hidden' => $useSeparateAddressFields,
-            ];
-
-            $locale[$countryCode][Pdk::get('fieldStreet')] = [
-                'required' => $useSeparateAddressFields,
-                'hidden'   => ! $useSeparateAddressFields,
-            ];
-
-            $locale[$countryCode][Pdk::get('fieldNumber')] = [
-                'required' => $useSeparateAddressFields,
-                'hidden'   => ! $useSeparateAddressFields,
-            ];
-
-            $locale[$countryCode][Pdk::get('fieldNumberSuffix')] = [
-                'required' => false,
-                'hidden'   => ! $useSeparateAddressFields,
-            ];
+        // TODO: check pdk-fields.php and add an "address fields"  group to hide them easily
+        $hidden = [
+            Pdk::get('fieldAddress1'),
+            Pdk::get('fieldAddress2'),
+            Pdk::get('fieldStreet'),
+            Pdk::get('fieldNumber'),
+            Pdk::get('fieldNumberSuffix'),
+            Pdk::get('fieldCity'),
+            Pdk::get('fieldPostalCode'),
+            Pdk::get('fieldCountry'),
+            Pdk::get('fieldState'),
+        ];
+        foreach ($hidden as $field) {
+            unset($fields[$field]);
         }
 
-        return $locale;
+        return $fields;
     }
 
     /**
-     * @param  array $localeFields
+     * Shortcode (non-Blocks) checkout only.
+     * Adds the scripts, wrapper and fields for the separate address fields.
      *
-     * @return array
-     */
-    public function extendSelectorsWithSeparateAddressFields(array $localeFields): array
-    {
-        return array_replace(
-            $localeFields,
-            $this->createSelectorFor('fieldStreet'),
-            $this->createSelectorFor('fieldNumber'),
-            $this->createSelectorFor('fieldNumberSuffix')
-        );
-    }
-
-    /**
      * @param  array $fields
      *
      * @return array
      */
-    public function extendShippingFields(array $fields): array
+    public function addAddressWidgetToCheckout(array $fields): array
     {
-        return $this->extendWithSeparateAddressFields($fields, Pdk::get('wcAddressTypeShipping'));
+        // This custom field is rendered as an empty div, which will be replaced by the Vue component.
+        // This is implemented through the filter 'woocommerce_form_field_XXX'.
+        $fields['billing']['billing_address_widget'] = [
+            'type' => self::ADDRESS_WIDGET_FIELDTYPE,
+            'label' => 'mount',
+            'id' => 'form',
+            'priority' =>  9999,
+        ]; // TODO: implement with $this->createField instead
+        // TODO: re-implement wooc defaults fields
+
+        $fields['billing']['billing_address_resolved'] = [
+            'type' => 'hidden'
+        ];
+
+        $fields['billing']['billing_country'] = [
+            'type' => 'hidden'
+        ];
+
+        $fields['billing']['billing_address_1'] = [
+            'type' => 'hidden'
+        ];
+
+        $fields['billing']['billing_city'] = [
+            'type' => 'hidden'
+        ];
+
+        $fields['billing']['billing_postcode'] = [
+            'type' => 'hidden'
+        ];
+
+
+        // $fields[] = woocommerce_form_field( 'fieldResolvedAddressBilling', ['type' => 'hidden', 'id' => 'resolvedAddress', 'return' => true, 'label' => 'Hidden field for resolved address']);
+        return $fields;
     }
 
+
     /**
-     * @param  array  $fields
-     * @param  string $form
-     *
-     * @return array
+     * Save resolved address to Wooc
+     * TODO: Needs to be done through PDK
+     * @param mixed $order_id
+     * @return void
      */
-    private function extendWithSeparateAddressFields(array $fields, string $form): array
+    public function saveResolvedAddress($order_id)
     {
-        return array_merge(
-            $fields,
-            $this->createField($form, 'fieldStreet', 'street'),
-            $this->createField($form, 'fieldNumber', 'number', ['type' => 'number']),
-            $this->createField(
-                $form,
-                'fieldNumberSuffix',
-                'number_suffix',
-                ['maxlength' => Pdk::get('numberSuffixMaxLength')]
-            )
-        );
+        if (!empty($_POST['billing_address_resolved'])) {
+            update_post_meta($order_id, 'myparcel_resolved_billing_address', \wc_sanitize_textarea($_POST['billing_address_resolved']));
+        }
+    }
+
+
+    /**
+     * Callback for the 'woocommerce_form_field_XXX' filter.
+     * Renders an empty div to be replaced by the Vue component.
+     *
+     * @see \woocommerce_form_field()
+     *
+     * @param $field
+     * @param $key
+     * @param $args
+     * @param $value
+     *
+     * @return string
+     */
+    public function renderAddressWidgetContainer($field, $key, $args, $value): string
+    {
+        if ($args['type'] !== self::ADDRESS_WIDGET_FIELDTYPE) {
+            return $field;
+        }
+        // TODO:  ID based on config
+        // TODO: Sorting is done through regex or JS by woocommerce and will not work without the correct wrapper
+        // Find a better way to get our own HTML without having to duplicate the wapper HTML here
+        return '<div class="form-row form-row-first" id="form" data-priority="9999">REPLACE ME</div>';
     }
 }
