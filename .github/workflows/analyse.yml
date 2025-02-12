@@ -27,15 +27,6 @@ jobs:
             phpstan-cache-${{ hashFiles('phpstan.neon.dist', 'composer.json') }}-
             phpstan-cache-
 
-      - uses: myparcelnl/actions/pdk-setup-upgrade@v4
-        if: steps.phpstan-cache.outputs.cache-hit != 'true'
-        id: setup
-        with:
-          app-id: ${{ secrets.MYPARCEL_APP_ID }}
-          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
-          php-version: ${{ vars.PHP_VERSION }}
-          mode: 'backend'
-
       - name: 'Run PHPStan analysis'
         if: steps.phpstan-cache.outputs.cache-hit != 'true'
         env:

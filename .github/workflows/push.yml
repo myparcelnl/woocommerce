@@ -14,26 +14,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  upgrade:
-    uses: ./.github/workflows/upgrade.yml
-    secrets: inherit
-
   test:
     uses: ./.github/workflows/test.yml
-    needs:
-      - upgrade
     secrets: inherit
 
   analyse:
     uses: ./.github/workflows/analyse.yml
-    needs:
-      - upgrade
     secrets: inherit
 
   build:
     runs-on: ubuntu-22.04
-    needs:
-      - upgrade
     steps:
       - uses: myparcelnl/actions/pdk-prerelease@v4
         with:
@@ -41,6 +31,7 @@ jobs:
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
           php-version: ${{ vars.PHP_VERSION }}
           php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
+          upgrade-pdk-deps: 'false'
           source-files: |
             src/**/*
             config/**/*
@@ -57,7 +48,6 @@ jobs:
 
   notify-on-failure:
     needs:
-      - upgrade
       - test
       - analyse
       - build
