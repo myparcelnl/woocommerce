@@ -4,8 +4,19 @@ updates:
     directory: '/'
     schedule:
       interval: 'weekly'
+    reviewers: ['myparcelnl/integration']
 
   - package-ecosystem: 'composer'
     directory: '/'
     schedule:
-      interval: 'weekly'
+      interval: 'daily'
+    reviewers: ['myparcelnl/integration']
+    versioning-strategy: increase-if-necessary
+
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+    reviewers: ['myparcelnl/integration']
+    versioning-strategy: increase-if-necessary
+
