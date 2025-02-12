@@ -2,42 +2,22 @@ name: '🚀 Release'
 
 on:
   workflow_dispatch:
-    inputs:
-      update-deps:
-        description: 'Update PDK dependencies before releasing.'
-        default: false
-        type: boolean
-
-      create-commit:
-        description: '[🚧 UNTESTED] Commit and push the upgrade changes before releasing.'
-        default: false
-        type: boolean
 
 concurrency:
   group: '${{ github.workflow }}-${{ github.ref }}'
   cancel-in-progress: true
 
 jobs:
-  upgrade:
-    uses: ./.github/workflows/upgrade.yml
-    secrets: inherit
-    with:
-      update-deps: ${{ fromJSON(github.event.inputs.update-deps) }}
-      create-commit: ${{ fromJSON(github.event.inputs.create-commit) }}
-
   test:
-    needs: upgrade
     uses: ./.github/workflows/test.yml
     secrets: inherit
 
   analyse:
-    needs: upgrade
     uses: ./.github/workflows/analyse.yml
     secrets: inherit
 
   release:
     needs:
-      - upgrade
       - test
       - analyse
     runs-on: ubuntu-22.04
