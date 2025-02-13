@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.3.1](https://github.com/myparcelnl/woocommerce/compare/v5.3.0...v5.3.1) (2025-02-13)
+
+
+### :bug: Bug Fixes
+
+* resolve errors relating to audits table ([#1228](https://github.com/myparcelnl/woocommerce/issues/1228)) ([ff6c2c4](https://github.com/myparcelnl/woocommerce/commit/ff6c2c4beff7c7f3eb2cdcfe4d98e26e9a2b6f0f))
+
 ## [5.3.0](https://github.com/myparcelnl/woocommerce/compare/v5.2.0...v5.3.0) (2025-01-30)
 
 
