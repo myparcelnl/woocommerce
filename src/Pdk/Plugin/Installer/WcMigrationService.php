@@ -13,6 +13,7 @@ use MyParcelNL\WooCommerce\Migration\Migration4_1_0;
 use MyParcelNL\WooCommerce\Migration\Migration4_2_1;
 use MyParcelNL\WooCommerce\Migration\Migration4_4_1;
 use MyParcelNL\WooCommerce\Migration\Migration5_0_0;
+use MyParcelNL\WooCommerce\Migration\Migration5_2_1;
 use MyParcelNL\WooCommerce\Migration\Pdk\AuditsMigration;
 
 final class WcMigrationService implements MigrationServiceInterface
@@ -26,9 +27,7 @@ final class WcMigrationService implements MigrationServiceInterface
 
     public function getInstallationMigrations(): array
     {
-        return [
-            AuditsMigration::class,
-        ];
+        return [];
     }
 
     public function getUpgradeMigrations(): array
@@ -42,6 +41,7 @@ final class WcMigrationService implements MigrationServiceInterface
             Migration4_2_1::class,
             Migration4_4_1::class,
             Migration5_0_0::class,
+            Migration5_2_1::class,
         ];
     }
 }

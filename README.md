@@ -22,6 +22,14 @@ This WooCommerce extension allows you to export your orders to the MyParcel [Bac
 - View the status of the shipment in the order details page
 - Add Track & Trace URL to the order confirmation email
 
+## Important notice about third-party checkouts
+
+> :warning: Third-Party Checkouts Compatibility.
+
+Our plugin may not be fully compatible with “third-party” checkout solutions provided by plugins, other than those native to WooCommerce itself. Features such as Delivery Options or other functionalities might not work as expected.
+
+We recommend testing the plugin’s functionality in your specific setup before fully implementing it.
+
 ## Manual
 
 [Plugin Manual]

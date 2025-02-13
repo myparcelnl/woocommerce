@@ -40,6 +40,19 @@ EOF;
         $this->executeSql($sql);
     }
 
+    public function dropAuditsTable(): void
+    {
+        global $wpdb;
+
+        $tableName = $wpdb->prefix . Pdk::get('tableNameAudits');
+
+        if (! $this->tableExists($tableName)) {
+            return;
+        }
+
+        $wpdb->query("DROP TABLE $tableName;");
+    }
+
     /**
      * @param  string|string[] $sql
      *
@@ -63,6 +76,10 @@ EOF;
         global $wpdb;
 
         $tableName = $wpdb->prefix . $table;
+
+        if (! $this->tableExists($tableName)) {
+            return new Collection([]);
+        }
 
         return new Collection(
             $wpdb->get_results(

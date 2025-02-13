@@ -165,6 +165,7 @@
       "shipmentOptions": {
         "insurance": -1,
         "ageCheck": -1,
+        "collect": -1,
         "return": -1,
         "hideSender": -1,
         "largeFormat": -1,
@@ -202,6 +203,7 @@
           "labelDescription": "1520",
           "insurance": 1,
           "ageCheck": -1,
+          "collect": -1,
           "return": -1,
           "hideSender": -1,
           "largeFormat": 0,
@@ -250,6 +252,7 @@
           "labelDescription": "1520",
           "insurance": 1,
           "ageCheck": -1,
+          "collect": -1,
           "return": -1,
           "hideSender": -1,
           "largeFormat": 0,
