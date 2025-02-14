@@ -45,6 +45,7 @@ jobs:
           pr-number: ${{ github.event.client_payload.number || github.event.pull_request.number }}
           php-version: ${{ vars.PHP_VERSION }}
           php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
+          upgrade-pdk-deps: 'false'
           source-files: |
             src/**/*
             config/**/*
