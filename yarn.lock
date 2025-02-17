@@ -8023,11 +8023,11 @@ __metadata:
   linkType: hard
 
 "@woocommerce/dependency-extraction-webpack-plugin@npm:^3.0.0":
-  version: 3.0.1
-  resolution: "@woocommerce/dependency-extraction-webpack-plugin@npm:3.0.1"
+  version: 3.1.0
+  resolution: "@woocommerce/dependency-extraction-webpack-plugin@npm:3.1.0"
   dependencies:
     "@wordpress/dependency-extraction-webpack-plugin": "npm:^3.7.0"
-  checksum: 10c0/654c989af5db92ebbc2253b3dc980151eda032eba93de3c1bd69f515bf99db96290c36420149317dffb79a53f0cf8d8b9482d625e42e095d83826d649b21a440
+  checksum: 10c0/67ee2ead8f8bfe52c2997d5f4212579784f080b0b2e8df1fe94d9a833a7218614d911799cec4d182d1f71373b4c8162748db427cd62a5b495fd3c7ef34101078
   languageName: node
   linkType: hard
 
