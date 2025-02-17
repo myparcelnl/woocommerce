@@ -20,6 +20,13 @@ updates:
     reviewers: ['myparcelnl/integration']
     versioning-strategy: increase-if-necessary
     groups:
+      minor-js-updates:
+        applies-to: version-updates
+        exclude-patterns:
+          - "@myparcel-pdk/*"
+        update-types:
+          - "minor"
+          - "patch"
       js-pdk:
         patterns:
           - '@myparcel-pdk/*'
