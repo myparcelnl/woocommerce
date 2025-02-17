@@ -17,22 +17,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  upgrade:
-    uses: ./.github/workflows/upgrade.yml
-    secrets: inherit
-
   test:
     uses: ./.github/workflows/test.yml
-    needs:
-      - upgrade
     secrets: inherit
     with:
       ref: ${{ github.event.client_payload.ref || github.ref }}
 
   analyse:
     uses: ./.github/workflows/analyse.yml
-    needs:
-      - upgrade
     secrets: inherit
     with:
       ref: ${{ github.event.client_payload.ref || github.ref }}
@@ -53,6 +45,7 @@ jobs:
           pr-number: ${{ github.event.client_payload.number || github.event.pull_request.number }}
           php-version: ${{ vars.PHP_VERSION }}
           php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
+          upgrade-pdk-deps: 'false'
           source-files: |
             src/**/*
             config/**/*
