@@ -71,7 +71,7 @@ jobs:
             junit.xml
           key: test-backend-${{ hashFiles('**/composer.json', '**/composer.lock', 'src/**/*', 'tests/**/*') }}
 
-      - uses: myparcelnl/actions/pdk-setup-backend@v4
+      - uses: myparcelnl/actions/pdk-setup@v4
         if: steps.cache.outputs.cache-hit != 'true'
         id: setup
         with:
