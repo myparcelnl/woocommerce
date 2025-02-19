@@ -242,4 +242,3 @@ final class Migration4_1_0 extends AbstractUpgradeMigration implements Migration
         return $possibleValues[$match] ?? $possibleValues[0];
     }
 }
-
