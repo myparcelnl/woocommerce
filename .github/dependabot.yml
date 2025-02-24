@@ -12,6 +12,17 @@ updates:
       interval: 'daily'
     reviewers: ['myparcelnl/integration']
     versioning-strategy: increase-if-necessary
+    groups:
+      minor-php-updates:
+        applies-to: version-updates
+        exclude-patterns:
+          - "myparcelnl/pdk"
+        update-types:
+          - "minor"
+          - "patch"
+      php-pdk:
+        patterns:
+          - 'myparcelnl/pdk'
 
   - package-ecosystem: 'npm'
     directory: '/'
@@ -30,5 +41,3 @@ updates:
       js-pdk:
         patterns:
           - '@myparcel-pdk/*'
-
-
