@@ -1,8 +1,17 @@
 {
-  "activate_woocommerce-myparcel": ["MyParcelNLWooCommerce::install"],
-  "deactivate_woocommerce-myparcel": ["MyParcelNLWooCommerce::uninstall"],
-  "init": ["MyParcelNLWooCommerce::initialize"],
-  "woocommerce_blocks_checkout_block_registration": [
-    "MyParcelNLWooCommerce::registerCheckoutBlocks"
-  ]
+    "activate_woocommerce-myparcel": [
+        "MyParcelNLWooCommerce::install"
+    ],
+    "wp_loaded": [
+        "MyParcelNLWooCommerce::upgrade"
+    ],
+    "deactivate_woocommerce-myparcel": [
+        "MyParcelNLWooCommerce::uninstall"
+    ],
+    "init": [
+        "MyParcelNLWooCommerce::initialize"
+    ],
+    "woocommerce_blocks_checkout_block_registration": [
+        "MyParcelNLWooCommerce::registerCheckoutBlocks"
+    ]
 }
