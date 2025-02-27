@@ -1,4 +1,5 @@
 <?php
+
 /** @noinspection PhpMissingReturnTypeInspection,PhpUnhandledExceptionInspection,PhpMissingParamTypeInspection,PhpUnusedParameterInspection,PhpUnused */
 
 declare(strict_types=1);
@@ -39,6 +40,12 @@ function get_bloginfo(string $name): string
 function get_locale(): string
 {
     return 'nl_NL';
+}
+
+/** @see \get_user_locale() */
+function get_user_locale(): string
+{
+    return 'en_US';
 }
 
 /** @see \wp_die() */

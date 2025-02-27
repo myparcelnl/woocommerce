@@ -24,7 +24,7 @@ class LanguageService extends AbstractLanguageService
      */
     public function getLanguage(): string
     {
-        return str_replace('_', '-', get_locale());
+        return str_replace('_', '-', get_user_locale());
     }
 
     /**
