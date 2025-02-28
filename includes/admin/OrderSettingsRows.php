@@ -375,6 +375,17 @@ class OrderSettingsRows
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY),
                 ],
             ],
+            [
+                'name'      => self::OPTION_SHIPMENT_OPTIONS_RECEIPT_CODE,
+                'type'        => 'toggle',
+                'label'       => __('shipment_options_receipt', 'woocommerce-myparcel'),
+                'help_text'   => __('shipment_options_receipt_help_text', 'woocommerce-myparcel'),
+                'value'       => $orderSettings->hasReceiptCode(),
+                'condition'   => [
+                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_RECEIPT_CODE),
+                ],
+            ]
         ];
 
         if (in_array($carrier, [CarrierPostNL::NAME, CarrierDHLForYou::NAME], true)) {
