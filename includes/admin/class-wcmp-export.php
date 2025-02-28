@@ -1727,6 +1727,7 @@ class WCMP_Export
             $shipmentOptions->setLabelDescription($labelDescriptionFormat->getFormattedLabelDescription());
             $shipmentOptions->setHideSender($orderSettings->hasHideSender());
             $shipmentOptions->setExtraAssurance($orderSettings->hasExtraAssurance());
+            $shipmentOptions->setReceiptCode($orderSettings->hasReceiptCode());
 
             $order = (new Order())
                 ->setStatus($wcOrder->get_status())
