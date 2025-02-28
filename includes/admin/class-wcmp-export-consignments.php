@@ -319,7 +319,8 @@ class WCMP_Export_Consignments
             ->setContents($this->getContents())
             ->setExtraAssurance($this->orderSettings->hasExtraAssurance())
             ->setHideSender($this->orderSettings->hasHideSender())
-            ->setInvoice($this->order->get_id());
+            ->setInvoice($this->order->get_id())
+            ->setReceiptCode($this->orderSettings->hasReceiptCode());
     }
 
     /**

@@ -187,6 +187,16 @@ class CarrierSettings
                     'help_text' => __('shipment_options_age_check_help_text', 'woocommerce-myparcel'),
                 ];
                 break;
+            case AbstractConsignment::SHIPMENT_OPTION_RECEIPT_CODE:
+                if ($carrier instanceof CarrierPostNL) {
+                    $settings[] = [
+                        'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RECEIPT_CODE,
+                        'label'     => __('shipment_options_receipt_code', 'woocommerce-myparcel'),
+                        'type'      => 'toggle',
+                        'help_text' => __('shipment_options_receipt_code_help_text', 'woocommerce-myparcel'),
+                    ];
+                }
+                break;
             case AbstractConsignment::SHIPMENT_OPTION_INSURANCE:
                 $settings[] = [
                     'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
