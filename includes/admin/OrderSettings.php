@@ -257,7 +257,7 @@ class OrderSettings
      */
     public function hasExtraAssurance(): bool
     {
-        return $this->extraAssurance;
+        return $this->extraAssurance; ?? false;
     }
 
     /**
