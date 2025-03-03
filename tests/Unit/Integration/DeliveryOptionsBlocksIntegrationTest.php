@@ -11,7 +11,7 @@ use function MyParcelNL\Pdk\Tests\usesShared;
 
 usesShared(new UsesMockWcPdkInstance());
 
-it('integrates with Woocommerce Blocks', function () {
+it('integrates with WooCommerce Blocks', function () {
     $class      = new DeliveryOptionsBlocksIntegration('delivery-options');
     $scriptData = $class->get_script_data();
 

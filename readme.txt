@@ -85,7 +85,7 @@ When logged in on your MyParcel or Flespakket account, you can find your API key
 You can change the text (which is placed above the order details table by default) by applying the following filter:
 `
 add_filter( 'wcmyparcel_email_text', 'wcmyparcel_new_email_text' );
-function wcmyparcel_new_email_text($track_trace_tekst) {
+function wcmyparcel_new_email_text($track_trace_text) {
 	// Tutoyeren ipv vousvoyeren
 	$nieuwe_tekst = 'Je kunt je bestelling volgen met het volgende PostNL Track & Trace nummer:';
 	return $nieuwe_tekst;
@@ -426,7 +426,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 * Fix: Ignore virtual products when creating consignment
 * Fix: Check shipment type before empty DPZ is calculated
 * Fix: When a product is created, country of origin must be set to default
-* Fix: Woocommerce hooks for the address fields in the admin
+* Fix: WooCommerce hooks for the address fields in the admin
 
 = 4.4.4 (2021-07-15) =
 * Hotfix: Minimum steps for empty weight
@@ -534,7 +534,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 * Fix: Calculate DPZ weight
 * Fix: Error delivery_date is too early
 * Fix: Multiple barcode in order note
-* Fix: Maximum label description lenght of 45 characters
+* Fix: Maximum label description length of 45 characters
 * Improvement: support WP-Multilang
 
 
@@ -680,7 +680,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 * Fix: The multiple calls that are made to retrieve the shipping data.
 * Fix: The option for Pick up extra early
 * Fix: Wrong house number / postcode message and the possibility to adjust the address in the MyParcel checkout
-* Fix: Woocommerce tabel rates
+* Fix: WooCommerce table rates
 * Improvement: Better support the default WooCommerce checkout address fields
 
 = 3.0.7 (2018-11-20) =
@@ -708,7 +708,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 * Fix: error about "Bewaar barcode in een notitie" size
 * Fix: Turn of the option allow Pickup Express
 * Fix: Save settings with a new update
-* Improvement: MyParcel delivery header titel
+* Improvement: MyParcel delivery header title
 * Improvement: Support WooCommerce 3.5.0
 * Improvement: add preliminary support for "digitale postzegel"
 
@@ -739,12 +739,12 @@ These are the biggest changes:
 * Fix: Select the correct package type inside admin when there is one shipping used.
 
 = 2.4.13 (2018-07-26) =
-* Fix: Tabel rate shipping witch WooCommerce Table Rate Shipping by Automattic / Bolder Elements 4.0 / Bolder Elements 4.1.3
+* Fix: Table rate shipping witch WooCommerce Table Rate Shipping by Automattic / Bolder Elements 4.0 / Bolder Elements 4.1.3
 * Fix: The option to show the checkout only when he is linked to package
 
 = 2.4.12 (2018-07-09) =
 * Fix: #102 change Iceland to world shipping
-* Fix: #106 tabel rates shipping
+* Fix: #106 table rates shipping
 * Improvement: #94 support legacy consignment and tracktrace data
 * Improvement: #95 Speed up order list view
 * Improvement: #104 Add reference identifier, that is always the order id
@@ -756,7 +756,7 @@ These are the biggest changes:
 
 = 2.4.9 (2018-04-03) =
 * Fix: Scrolling when changing package type in orderview
-* Fix: Select the correct delivery methode inside the checkout
+* Fix: Select the correct delivery method inside the checkout
 * Improvement: Support Cloudflare
 
 = 2.4.8 (2018-02-27) =
@@ -1008,7 +1008,7 @@ These are the biggest changes:
 
 = 1.1.1 =
 * Fix: Labels for Custom id ('Eigen kenmerk') & Message ('Optioneel bericht') in the export window were reversed
-* Fix: Removed depricated functions for better WooCommerce 2.1 compatibility
+* Fix: Removed deprecated functions for better WooCommerce 2.1 compatibility
 
 = 1.1.0 =
 * Made extra checkout fields exclusive for dutch customers.
