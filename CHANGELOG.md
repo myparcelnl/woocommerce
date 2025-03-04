@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.25.0](https://github.com/myparcelnl/woocommerce/compare/v4.24.4...v4.25.0) (2025-03-04)
+
+
+### :sparkles: New Features
+
+* add filter before consignment export ([#1222](https://github.com/myparcelnl/woocommerce/issues/1222)) ([d04cd65](https://github.com/myparcelnl/woocommerce/commit/d04cd654e84de5c88fcf8eaa3295b487a07f8619))
+* add receipt code for WooCommerce v4 ([#1261](https://github.com/myparcelnl/woocommerce/issues/1261)) ([371513a](https://github.com/myparcelnl/woocommerce/commit/371513a0075357b7bf310f96e67950699af3cf1f))
+
 ## [4.24.4](https://github.com/myparcelnl/woocommerce/compare/v4.24.3...v4.24.4) (2025-01-09)
 
 
