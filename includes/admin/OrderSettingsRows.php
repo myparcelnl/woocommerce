@@ -48,6 +48,7 @@ class OrderSettingsRows
     private const OPTION_SHIPMENT_OPTIONS_AGE_CHECK         = '[shipment_options][age_check]';
     private const OPTION_SHIPMENT_OPTIONS_HIDE_SENDER       = '[shipment_options][hide_sender]';
     private const OPTION_SHIPMENT_OPTIONS_EXTRA_ASSURANCE   = '[shipment_options][extra_assurance]';
+    private const OPTION_SHIPMENT_OPTIONS_RECEIPT_CODE      = '[shipment_options][receipt_code]';
     /**
      * Maps shipment options in this form to their respective name in the SDK.
      */
@@ -61,6 +62,7 @@ class OrderSettingsRows
         self::OPTION_SHIPMENT_OPTIONS_SIGNATURE         => AbstractConsignment::SHIPMENT_OPTION_SIGNATURE,
         self::OPTION_SHIPMENT_OPTIONS_HIDE_SENDER       => AbstractConsignment::SHIPMENT_OPTION_HIDE_SENDER,
         self::OPTION_SHIPMENT_OPTIONS_EXTRA_ASSURANCE   => AbstractConsignment::SHIPMENT_OPTION_EXTRA_ASSURANCE,
+        self::OPTION_SHIPMENT_OPTIONS_RECEIPT_CODE      => AbstractConsignment::SHIPMENT_OPTION_RECEIPT_CODE,
     ];
     private const CONDITION_DELIVERY_TYPE_DELIVERY     = [
         'parent_name'  => self::OPTION_DELIVERY_TYPE,
@@ -373,6 +375,17 @@ class OrderSettingsRows
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY),
                 ],
             ],
+            [
+                'name'      => self::OPTION_SHIPMENT_OPTIONS_RECEIPT_CODE,
+                'type'        => 'toggle',
+                'label'       => __('shipment_options_receipt', 'woocommerce-myparcel'),
+                'help_text'   => __('shipment_options_receipt_help_text', 'woocommerce-myparcel'),
+                'value'       => $orderSettings->hasReceiptCode(),
+                'condition'   => [
+                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_RECEIPT_CODE),
+                ],
+            ]
         ];
 
         if (in_array($carrier, [CarrierPostNL::NAME, CarrierDHLForYou::NAME], true)) {

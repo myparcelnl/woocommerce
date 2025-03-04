@@ -158,6 +158,11 @@ class OrderSettings
     private $consignment;
 
     /**
+     * @var bool
+     */
+    private $receiptCode;
+
+    /**
      * @param WC_Order                                                                              $order
      * @param \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter|array|null $deliveryOptions
      *
@@ -328,6 +333,20 @@ class OrderSettings
     }
 
     /**
+     * @return bool
+     */
+    public function hasReceiptCode(): bool
+    {
+        $recipient = $this->getShippingRecipient();
+
+        if ($recipient && AbstractConsignment::CC_NL !== $recipient->getCc()) {
+            return false;
+        }
+
+        return $this->receiptCode;
+    }
+
+    /**
      * @throws \Exception
      */
     private function setAllData(): void
@@ -413,6 +432,12 @@ class OrderSettings
                 'method'             => [$this->shipmentOptions, 'hasExtraAssurance'],
                 'setting'            => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_EXTRA_ASSURANCE,
                 'consignment_option' => AbstractConsignment::SHIPMENT_OPTION_EXTRA_ASSURANCE,
+                'default_when_false' => false,
+            ],
+            'receiptCode'        => [
+                'method'             => [$this->shipmentOptions, 'hasReceiptCode'],
+                'setting'            => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RECEIPT_CODE,
+                'consignment_option' => AbstractConsignment::SHIPMENT_OPTION_RECEIPT_CODE,
                 'default_when_false' => false,
             ],
         ];
