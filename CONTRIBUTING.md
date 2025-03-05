@@ -55,6 +55,14 @@ docker compose run php composer test
 
 These will also be run automatically on GitHub when you create a pull request and must pass before your changes can be merged.
 
+Update snapshots:
+
+To run the PHP tests:
+
+```shell
+docker compose run php composer test:snapshots
+```
+
 #### Manual testing
 
 ##### Using a local WordPress instance
