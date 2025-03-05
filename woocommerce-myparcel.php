@@ -1,4 +1,5 @@
 <?php
+
 /** @noinspection AutoloadingIssuesInspection */
 
 /*
@@ -15,6 +16,7 @@
 
 declare(strict_types=1);
 
+use Automattic\Jetpack\Constants;
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationRegistry;
 use MyParcelNL\Pdk\Base\Pdk as PdkInstance;
 use MyParcelNL\Pdk\Facade\Installer;
@@ -22,6 +24,7 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Facade\WooCommerce;
 use MyParcelNL\WooCommerce\Integration\WcBlocksLoader;
 use MyParcelNL\WooCommerce\Service\WordPressHookService;
+
 use function MyParcelNL\WooCommerce\bootPdk;
 
 require plugin_dir_path(__FILE__) . 'vendor/autoload.php';
@@ -34,6 +37,9 @@ final class MyParcelNLWooCommerce
     public function __construct()
     {
         register_activation_hook(__FILE__, [$this, 'install']);
+        // Since wordpress 3.1 register_activation_hook is not called when a plugin is updated
+        add_action('wp_loaded', [$this, 'upgrade']);
+
         register_deactivation_hook(__FILE__, [$this, 'uninstall']);
         add_action('init', [$this, 'initialize'], 9999);
         add_action('woocommerce_blocks_checkout_block_registration', [$this, 'registerCheckoutBlocks']);
@@ -61,6 +67,7 @@ final class MyParcelNLWooCommerce
     {
         $this->boot();
 
+        // Prerequisites check also runs in boot() but here we want to stop on error rather than just show a notice.
         $errors = $this->checkPrerequisites();
 
         if (! empty($errors)) {
@@ -68,6 +75,17 @@ final class MyParcelNLWooCommerce
             wp_die(implode('<br>', $errors), '', ['back_link' => true]);
         }
 
+        Installer::install();
+    }
+
+    /**
+     * Run upgrade migrations
+     * @return void
+     * @throws Exception
+     */
+    public function upgrade(): void
+    {
+        // The install function will check whether we are installing a new plugin or upgrading an existing one and run the appropiate migrations.
         Installer::install();
     }
 
