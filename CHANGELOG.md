@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.3.2](https://github.com/myparcelnl/woocommerce/compare/v5.3.1...v5.3.2) (2025-03-07)
+
+
+### :bug: Bug Fixes
+
+* **language:** fix myparcel settings not rendering in some languages ([#1259](https://github.com/myparcelnl/woocommerce/issues/1259)) ([fcf26d0](https://github.com/myparcelnl/woocommerce/commit/fcf26d0b9cfd6a66ced491777c4b7a9a58393380))
+* **migrations:** fix an issue where db migrations would not automatically run for already active plugin installations ([#1256](https://github.com/myparcelnl/woocommerce/issues/1256)) ([49df9ed](https://github.com/myparcelnl/woocommerce/commit/49df9ed8d8629aa50f0c5b2cf4d3e3497b37ec3d))
+
 ## [5.3.1](https://github.com/myparcelnl/woocommerce/compare/v5.3.0...v5.3.1) (2025-02-13)
 
 
