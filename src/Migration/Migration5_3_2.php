@@ -7,9 +7,8 @@ namespace MyParcelNL\WooCommerce\Migration;
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\Audit\Service\AuditService;
 use MyParcelNL\WooCommerce\Database\Contract\WpDatabaseServiceInterface;
-use MyParcelNL\WooCommerce\Migration\Pdk\AbstractPdkMigration;
 
-final class Migration5_2_1 extends AbstractPdkMigration
+final class Migration5_3_2 extends AbstractMigration
 {
     /**
      * @var \MyParcelNL\Pdk\Audit\Service\AuditService
@@ -38,7 +37,7 @@ final class Migration5_2_1 extends AbstractPdkMigration
 
     public function getVersion(): string
     {
-        return '5.2.1';
+        return '5.3.2';
     }
 
     /**
