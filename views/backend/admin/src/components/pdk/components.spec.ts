@@ -1,3 +1,4 @@
+import {DefaultHeading} from '@myparcel-pdk/admin-preset-default';
 import {executePdkComponentTests} from '@myparcel-pdk/admin-component-tests';
 import {AdminComponent} from '@myparcel-pdk/admin';
 import WcTriStateInput from './WcTriStateInput.vue';
@@ -39,6 +40,7 @@ executePdkComponentTests({
   [AdminComponent.Col]: WcCol,
   [AdminComponent.DropOffInput]: WcDropOffInput,
   [AdminComponent.DropdownButton]: WcDropdownButton,
+  [AdminComponent.Heading]: DefaultHeading,
   [AdminComponent.FormGroup]: WcFormGroup,
   [AdminComponent.Image]: WcImage,
   [AdminComponent.Loader]: WcLoader,
