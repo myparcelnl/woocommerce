@@ -1,0 +1,12 @@
+.address-widget-forced-hidden {
+  display: none !important;
+}
+.address-widget-forced-visible {
+  display: block !important;
+}
+
+/** temporary **/
+.address-widget {
+  background-color: lightblue;
+  padding: 20px;
+}
