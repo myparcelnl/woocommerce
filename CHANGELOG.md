@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.3.3](https://github.com/myparcelnl/woocommerce/compare/v5.3.2...v5.3.3) (2025-04-09)
+
+
+### :bug: Bug Fixes
+
+* update order status on webhook ([a957b0b](https://github.com/myparcelnl/woocommerce/commit/a957b0bb094f16f216dd83f6aae991873af8aa2c))
+
 ## [5.3.2](https://github.com/myparcelnl/woocommerce/compare/v5.3.1...v5.3.2) (2025-03-07)
 
 
