@@ -6,7 +6,8 @@ import {
   type AddressEventPayload,
 } from 'mypa-address-widget';
 import {EVENT_WOOCOMMERCE_COUNTRY_TO_STATE_CHANGED} from '@myparcel-woocommerce/frontend-common';
-import {handleCountryChange, syncAddressWhenSelected, getSelectedCountry} from './syncData';
+import {getClassicCheckoutConfig} from '../../../checkout-core/src/classic';
+import {handleCountryChange, syncAddressWhenSelected, getSelectedCountry, createHiddenInput} from './syncData';
 import {hideAddressFields} from './showHide';
 
 /**
@@ -41,7 +42,7 @@ export const initializeListeners = (): void => {
   jQuery(document.body).on(
     // @ts-expect-error this is a valid event
     EVENT_WOOCOMMERCE_COUNTRY_TO_STATE_CHANGED,
-    (event: Event, country: string, $wrapper: unknown) => {
+    (event: Event, country: string, $wrapper: unknown[]) => {
       handleCountryChange(event, country, $wrapper);
     },
   );
@@ -64,11 +65,15 @@ export const initializeAddressWidget = (): void => {
   }
 
   // Mount on billing
+  createHiddenInput(getClassicCheckoutConfig().prefixBilling);
+
   createApp(TheAddressWidget, {
     config: getConfig(BILLING_ID),
   }).mount(`#${BILLING_ID}`);
 
   // Mount on shipping
+  createHiddenInput(getClassicCheckoutConfig().prefixShipping);
+
   createApp(TheAddressWidget, {
     config: getConfig(SHIPPING_ID),
   }).mount(`#${SHIPPING_ID}`);

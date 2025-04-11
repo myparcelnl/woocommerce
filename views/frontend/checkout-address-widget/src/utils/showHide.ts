@@ -1,4 +1,4 @@
-import {woocAddressFieldPrefixes, woocAddressFields} from '../constants/fields';
+import {WOOC_CHECKOUT_PREFIXES, WOOC_ADDRESS_FIELDS} from '../constants/fields';
 
 /**
  * Hide all the configured woocommerce address fields
@@ -9,11 +9,11 @@ export const hideAddressFields = (prefix?: string): void => {
   if (prefix) {
     prefixes = [prefix];
   } else {
-    prefixes = woocAddressFieldPrefixes;
+    prefixes = WOOC_CHECKOUT_PREFIXES;
   }
 
   prefixes.forEach((prefix) => {
-    woocAddressFields.forEach((field) => {
+    WOOC_ADDRESS_FIELDS.forEach((field) => {
       const woocField = document.querySelector(`#${prefix}${field}`);
 
       if (woocField) {
@@ -33,11 +33,11 @@ export const showAddressFields = (prefix?: string): void => {
   if (prefix) {
     prefixes = [prefix];
   } else {
-    prefixes = woocAddressFieldPrefixes;
+    prefixes = WOOC_CHECKOUT_PREFIXES;
   }
 
   prefixes.forEach((prefix) => {
-    woocAddressFields.forEach((field) => {
+    WOOC_ADDRESS_FIELDS.forEach((field) => {
       const woocField = document.querySelector(`#${prefix}${field}`);
 
       if (woocField) {

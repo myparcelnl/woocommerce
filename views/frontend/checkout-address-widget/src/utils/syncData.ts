@@ -1,14 +1,32 @@
 import {CONFIGURATION_UPDATE_EVENT, type AddressEventPayload, type Alpha2CountryCode} from 'mypa-address-widget';
-import {woocAddressFields} from '../constants/fields';
+import {HIDDEN_ADDRESS_FIELD, WOOC_ADDRESS_FIELDS} from '../constants/fields';
+import {getClassicCheckoutConfig} from '../../../checkout-core/src/classic';
 import {hideAddressFields, showAddressFields} from './showHide';
-import {BILLING_ID, getConfig, SHIPPING_ID} from './init';
+import {BILLING_ID, SHIPPING_ID} from './init';
 
-export const handleCountryChange = (event: Event, newCountry: string, wrapper: unknown): void => {
-  // TODO: Not sure if this is the right way to do this and how to seperate billing/shipping here, but it'll do...
+export const createHiddenInput = (prefix: string): HTMLInputElement => {
+  const hiddenInput = document.createElement('input');
+  hiddenInput.type = 'hidden';
+  hiddenInput.name = `${prefix}${HIDDEN_ADDRESS_FIELD}`;
+  hiddenInput.id = `${prefix}${HIDDEN_ADDRESS_FIELD}`;
+  hiddenInput.value = JSON.stringify({});
+
+  // Add it to the form
+  const form = document.querySelector('form.woocommerce-checkout');
+
+  if (!form) {
+    console.warn(`Failed to add ${hiddenInput.id} to the form, failed to find the form.`);
+    return hiddenInput;
+  }
+
+  form.appendChild(hiddenInput);
+  return hiddenInput;
+};
+
+export const handleCountryChange = (event: Event, newCountry: string, wrapper: unknown[]): void => {
   updateWidgetCountry(newCountry, wrapperToAppIdentifier(wrapper));
 
   // If the country is NL, hide the address fields, if not, show them
-  // TODO: dedupe
   if (newCountry === 'NL') {
     hideAddressFields();
   } else {
@@ -20,7 +38,7 @@ export const handleCountryChange = (event: Event, newCountry: string, wrapper: u
  * React to the address selected event from the address widget
  * @param event
  */
-export const syncAddressWhenSelected = (event: AddressEventPayload) => {
+export const syncAddressWhenSelected = (event: AddressEventPayload): void => {
   const address = event.detail;
   const shipToDifferentAdressCheckbox = document.querySelector(
     '[name="ship_to_different_address"]',
@@ -28,14 +46,13 @@ export const syncAddressWhenSelected = (event: AddressEventPayload) => {
 
   // Check which widget was changed
   if (event.detail.appIdentifier === SHIPPING_ID) {
-    // Load the address into a a hidden input. This assumes some backend script, like PHP, will handle the data when the form is submitted.
-    writeAddressToFields('shipping_', address);
+    writeAddressToFields(getClassicCheckoutConfig().prefixShipping, address);
 
     if (shipToDifferentAdressCheckbox?.value !== '1') {
-      writeAddressToFields('billing_', address);
+      writeAddressToFields(getClassicCheckoutConfig().prefixBilling, address);
     }
   } else if (event.detail.appIdentifier === BILLING_ID) {
-    writeAddressToFields('billing_', address);
+    writeAddressToFields(getClassicCheckoutConfig().prefixBilling, address);
   }
 };
 
@@ -45,7 +62,11 @@ export const syncAddressWhenSelected = (event: AddressEventPayload) => {
  * @param address
  */
 const writeAddressToFields = (prefix: string, address: AddressEventPayload['detail']) => {
-  woocAddressFields.forEach((field) => {
+  // Write the address to the hidden input field
+  const hiddenInput = document.querySelector(`#${prefix}${HIDDEN_ADDRESS_FIELD}`) as HTMLInputElement;
+  hiddenInput.value = JSON.stringify(address);
+
+  WOOC_ADDRESS_FIELDS.forEach((field) => {
     const fieldId = `${prefix}${field}`;
     const woocFieldInput = document.querySelector(`#${fieldId} input`);
 
@@ -98,8 +119,6 @@ export const wrapperToAppIdentifier = (wrapper?: any[]): string => {
   // Interpret wrapper as DOM element
   const wrapperElement = wrapper?.[0] as HTMLElement;
   const wrapperClass = wrapperElement?.className;
-  console.log(wrapperClass);
-
   return wrapperClass === 'woocommerce-shipping-fields' ? SHIPPING_ID : BILLING_ID;
 };
 
