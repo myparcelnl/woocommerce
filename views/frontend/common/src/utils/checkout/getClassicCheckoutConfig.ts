@@ -1,8 +1,9 @@
 import {AddressType, useConfig} from '@myparcel-pdk/checkout-common';
 import {useUtil, AddressField, PdkUtil} from '@myparcel-pdk/checkout';
-import {type CheckoutConfig} from '../types';
+import {type CheckoutConfig} from '../../types';
 
-export const getClassicCheckoutConfig = () => {
+// eslint-disable-next-line max-lines-per-function
+export const getClassicCheckoutConfig = (): CheckoutConfig => {
   return {
     addressFields: {
       [AddressField.Address1]: `address_1`,

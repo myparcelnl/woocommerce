@@ -1,1 +1,1 @@
-export const createId = (name: string) => `#${name}`;
+export const createId = (name: string): string => `#${name}`;
