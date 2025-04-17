@@ -1,1 +1,1 @@
-export const createName = (name: string) => `[name="${name}"]`;
+export const createName = (name: string): string => `[name="${name}"]`;

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Service;
 
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\WooCommerce\Hooks\AddressWidgetHooks;
 use MyParcelNL\WooCommerce\Hooks\AutomaticOrderExportHooks;
 use MyParcelNL\WooCommerce\Hooks\BlocksIntegrationHooks;
 use MyParcelNL\WooCommerce\Hooks\CartFeesHooks;
@@ -54,6 +55,7 @@ final class WordPressHookService
     private function getHooks(): array
     {
         return [
+            AddressWidgetHooks::class,
             AutomaticOrderExportHooks::class,
             BlocksIntegrationHooks::class,
             CartFeesHooks::class,

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import {type WcShippingRate, type WpStore} from '../types';
+import {type WcShippingRate, type WpStore} from '../../types';
 
 export interface WcCartStore extends WpStore {
   getCustomerData(): {

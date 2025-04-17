@@ -1,4 +1,4 @@
-import {type WcShippingRate} from '../types';
+import {type WcShippingRate} from '../../types';
 import {useCartStore} from './useCartStore';
 
 export const getShippingRate = (): WcShippingRate | undefined => {

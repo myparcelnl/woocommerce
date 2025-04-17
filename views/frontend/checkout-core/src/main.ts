@@ -1,9 +1,12 @@
+import {
+  getBlocksCheckoutConfig,
+  getClassicCheckoutConfig,
+  isClassicCheckout,
+} from '@myparcel-woocommerce/frontend-common';
 import {getHighestShippingClass} from '@myparcel-woocommerce/frontend-checkout-delivery-options/src/utils/getHighestShippingClass';
 import {PdkField, AddressType} from '@myparcel-pdk/checkout-common';
 import {createPdkCheckout, getEnabledShippingMethods} from '@myparcel-pdk/checkout';
-import {isClassicCheckout, createName, createId, createFields} from './utils';
-import {getClassicCheckoutConfig} from './classic';
-import {getBlocksCheckoutConfig} from './blocks';
+import {createName, createId, createFields} from './utils';
 
 const config = isClassicCheckout() ? getClassicCheckoutConfig() : getBlocksCheckoutConfig();
 

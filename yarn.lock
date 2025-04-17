@@ -2523,6 +2523,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hey-api/client-fetch@npm:^0.5.7":
+  version: 0.5.7
+  resolution: "@hey-api/client-fetch@npm:0.5.7"
+  checksum: 10c0/fc4408f0965ed9cc8cc9835caa9dea4247c6347b4a0bc16d8250522dbaf2853b93849ee3b802a1369ef8f715d22da3dcc2cd5d0e142da0bbae1a7da886b88327
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.13.0":
   version: 0.13.0
   resolution: "@humanwhocodes/config-array@npm:0.13.0"
@@ -3335,7 +3342,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/admin@npm:^1.0.0, @myparcel-pdk/admin@npm:^1.6.0":
+"@myparcel-pdk/admin@npm:^1.0.0":
+  version: 1.6.1
+  resolution: "@myparcel-pdk/admin@npm:1.6.1"
+  dependencies:
+    "@myparcel-pdk/common": "npm:^1.5.0"
+    "@myparcel/constants": "npm:^2.0.0"
+    "@myparcel/sdk": "npm:^3.0.0"
+    "@tanstack/vue-query": "npm:^4.0.0"
+    "@vueuse/core": "npm:^10.0.0"
+    lodash: "npm:^4.17.21"
+    lodash-es: "npm:^4.17.21"
+    lodash-unified: "npm:^1.0.3"
+    pinia: "npm:^2.0.0"
+    vite: "npm:^5.4.10"
+    vue: "npm:^3.3.0"
+    vue-tsc: "npm:^2.0.0"
+  checksum: 10c0/66725b342f919556f1d6b153181791eb87f84ca1e7153f529b85c1f6920303134fc05bb87b313527ed69268df21a1dd0c733c5958f5304fe6a047cad137d8e36
+  languageName: node
+  linkType: hard
+
+"@myparcel-pdk/admin@npm:^1.6.0":
   version: 1.6.0
   resolution: "@myparcel-pdk/admin@npm:1.6.0"
   dependencies:
@@ -3443,6 +3470,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@myparcel-pdk/common@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "@myparcel-pdk/common@npm:1.5.0"
+  dependencies:
+    "@myparcel/constants": "npm:^2.0.0"
+    "@myparcel/delivery-options": "npm:^6.0.0"
+  checksum: 10c0/1222a557339f3b69715f59854321d1591b35f19f271e821dab7a314156afea7230d441e5da0ced04576c242ec3e646b81777126f8606da552f140e9009d87a2a
+  languageName: node
+  linkType: hard
+
 "@myparcel-vfb/core@npm:^1.0.0-beta.40":
   version: 1.0.0-beta.40
   resolution: "@myparcel-vfb/core@npm:1.0.0-beta.40"
@@ -3482,6 +3519,20 @@ __metadata:
   checksum: 10c0/6e341670c5fff98aad9ececb66e285bc20431fba290d2985fdc284cda3868c22a72de1d5b6a76fb5ce117ce3d394eed60961c09b0e03e57670ecba7b76e219de
   languageName: node
   linkType: hard
+
+"@myparcel-woocommerce/address-widget@workspace:views/frontend/checkout-address-widget":
+  version: 0.0.0-use.local
+  resolution: "@myparcel-woocommerce/address-widget@workspace:views/frontend/checkout-address-widget"
+  dependencies:
+    "@myparcel-pdk/common": "npm:^1.5.0"
+    "@myparcel-woocommerce/frontend-common": "workspace:^"
+    "@myparcel-woocommerce/vite-config": "workspace:*"
+    "@types/jquery": "npm:^3.5.16"
+    mypa-address-widget: "npm:^1.3.1"
+    typescript: "npm:^5.2.2"
+    vite: "npm:^5.0.0"
+  languageName: unknown
+  linkType: soft
 
 "@myparcel-woocommerce/backend-admin@workspace:views/backend/admin":
   version: 0.0.0-use.local
@@ -3535,6 +3586,7 @@ __metadata:
   resolution: "@myparcel-woocommerce/frontend-checkout-core@workspace:views/frontend/checkout-core"
   dependencies:
     "@myparcel-pdk/checkout": "npm:^1.0.0"
+    "@myparcel-woocommerce/frontend-common": "workspace:^"
     "@myparcel-woocommerce/vite-config": "workspace:*"
     "@types/jquery": "npm:^3.5.16"
     typescript: "npm:^5.7.3"
@@ -3586,7 +3638,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@myparcel-woocommerce/frontend-common@workspace:*, @myparcel-woocommerce/frontend-common@workspace:views/frontend/common":
+"@myparcel-woocommerce/frontend-common@workspace:*, @myparcel-woocommerce/frontend-common@workspace:^, @myparcel-woocommerce/frontend-common@workspace:views/frontend/common":
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/frontend-common@workspace:views/frontend/common"
   dependencies:
@@ -3681,6 +3733,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@myparcel/constants@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "@myparcel/constants@npm:2.2.0"
+  dependencies:
+    "@myparcel/ts-utils": "npm:^1.7.0"
+  checksum: 10c0/242a8d2294937e3a3c86d45f76bcb8f7cc6518a72ed4fdaa0e62e27267bb84bd46b03c68e6c50a315309c928cdf72b939e2077f4231df991bb36b79163c6c3c1
+  languageName: node
+  linkType: hard
+
 "@myparcel/delivery-options@npm:^6.0.0":
   version: 6.1.6
   resolution: "@myparcel/delivery-options@npm:6.1.6"
@@ -3716,6 +3777,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@myparcel/sdk@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "@myparcel/sdk@npm:4.1.1"
+  dependencies:
+    "@myparcel/constants": "npm:^2.0.0"
+    "@myparcel/ts-utils": "npm:^1.6.0"
+  checksum: 10c0/f59a7cd907f8788754c1b85799e06f231728d261406af350bafb2a62e827ba9d56a416e40fd1db115fcfc2c22b845bc1f7e34806b422c27984a9742a03f1fec8
+  languageName: node
+  linkType: hard
+
 "@myparcel/semantic-release-config@npm:^5.0.0":
   version: 5.0.1
   resolution: "@myparcel/semantic-release-config@npm:5.0.1"
@@ -3745,10 +3816,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel/ts-utils@npm:>= 1.6.0, @myparcel/ts-utils@npm:^1.12.0, @myparcel/ts-utils@npm:^1.6.0, @myparcel/ts-utils@npm:^1.7.0, @myparcel/ts-utils@npm:^1.8.0, @myparcel/ts-utils@npm:^1.9.0":
+"@myparcel/ts-utils@npm:>= 1.6.0, @myparcel/ts-utils@npm:^1.12.0, @myparcel/ts-utils@npm:^1.14.0, @myparcel/ts-utils@npm:^1.6.0, @myparcel/ts-utils@npm:^1.7.0, @myparcel/ts-utils@npm:^1.8.0, @myparcel/ts-utils@npm:^1.9.0":
   version: 1.14.0
   resolution: "@myparcel/ts-utils@npm:1.14.0"
   checksum: 10c0/13bf9521403e9761303cde9916932e12bdd50096a678de19282899809430086071e071851f49ce58fe3a9afb0b78fd807a5e0b7aa88344c30dfdae010b061866
+  languageName: node
+  linkType: hard
+
+"@myparcel/vue-form-builder@npm:1.0.0-beta.52":
+  version: 1.0.0-beta.52
+  resolution: "@myparcel/vue-form-builder@npm:1.0.0-beta.52"
+  dependencies:
+    "@myparcel/ts-utils": "npm:>= 1.6.0"
+    "@vueuse/core": "npm:>= 10.1.0"
+    vue-component-type-helpers: "npm:^2.1.6"
+  peerDependencies:
+    vue: ^3
+  checksum: 10c0/f64c054678acc518faecae9fe6f897ec8ae5741cfeabd8dc65a618f69b1e30c4b63e3c7a12af2c6724198e1182b5b86a16cd96cefdab7d1c78420349a5bd2019
   languageName: node
   linkType: hard
 
@@ -6363,6 +6447,150 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tailwindcss/node@npm:4.1.3":
+  version: 4.1.3
+  resolution: "@tailwindcss/node@npm:4.1.3"
+  dependencies:
+    enhanced-resolve: "npm:^5.18.1"
+    jiti: "npm:^2.4.2"
+    lightningcss: "npm:1.29.2"
+    tailwindcss: "npm:4.1.3"
+  checksum: 10c0/c36c1baf0308d8d9f240c1f03bbc1a14b0475fa54170e5c306ddb9520d4ccab1af9644e08fc7b6ddf9e3049a5c93ba6631df12e1025be977fc3a75f40d0b8305
+  languageName: node
+  linkType: hard
+
+"@tailwindcss/oxide-android-arm64@npm:4.1.3":
+  version: 4.1.3
+  resolution: "@tailwindcss/oxide-android-arm64@npm:4.1.3"
+  conditions: os=android & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@tailwindcss/oxide-darwin-arm64@npm:4.1.3":
+  version: 4.1.3
+  resolution: "@tailwindcss/oxide-darwin-arm64@npm:4.1.3"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@tailwindcss/oxide-darwin-x64@npm:4.1.3":
+  version: 4.1.3
+  resolution: "@tailwindcss/oxide-darwin-x64@npm:4.1.3"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@tailwindcss/oxide-freebsd-x64@npm:4.1.3":
+  version: 4.1.3
+  resolution: "@tailwindcss/oxide-freebsd-x64@npm:4.1.3"
+  conditions: os=freebsd & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@tailwindcss/oxide-linux-arm-gnueabihf@npm:4.1.3":
+  version: 4.1.3
+  resolution: "@tailwindcss/oxide-linux-arm-gnueabihf@npm:4.1.3"
+  conditions: os=linux & cpu=arm
+  languageName: node
+  linkType: hard
+
+"@tailwindcss/oxide-linux-arm64-gnu@npm:4.1.3":
+  version: 4.1.3
+  resolution: "@tailwindcss/oxide-linux-arm64-gnu@npm:4.1.3"
+  conditions: os=linux & cpu=arm64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@tailwindcss/oxide-linux-arm64-musl@npm:4.1.3":
+  version: 4.1.3
+  resolution: "@tailwindcss/oxide-linux-arm64-musl@npm:4.1.3"
+  conditions: os=linux & cpu=arm64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"@tailwindcss/oxide-linux-x64-gnu@npm:4.1.3":
+  version: 4.1.3
+  resolution: "@tailwindcss/oxide-linux-x64-gnu@npm:4.1.3"
+  conditions: os=linux & cpu=x64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@tailwindcss/oxide-linux-x64-musl@npm:4.1.3":
+  version: 4.1.3
+  resolution: "@tailwindcss/oxide-linux-x64-musl@npm:4.1.3"
+  conditions: os=linux & cpu=x64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"@tailwindcss/oxide-win32-arm64-msvc@npm:4.1.3":
+  version: 4.1.3
+  resolution: "@tailwindcss/oxide-win32-arm64-msvc@npm:4.1.3"
+  conditions: os=win32 & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@tailwindcss/oxide-win32-x64-msvc@npm:4.1.3":
+  version: 4.1.3
+  resolution: "@tailwindcss/oxide-win32-x64-msvc@npm:4.1.3"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@tailwindcss/oxide@npm:4.1.3":
+  version: 4.1.3
+  resolution: "@tailwindcss/oxide@npm:4.1.3"
+  dependencies:
+    "@tailwindcss/oxide-android-arm64": "npm:4.1.3"
+    "@tailwindcss/oxide-darwin-arm64": "npm:4.1.3"
+    "@tailwindcss/oxide-darwin-x64": "npm:4.1.3"
+    "@tailwindcss/oxide-freebsd-x64": "npm:4.1.3"
+    "@tailwindcss/oxide-linux-arm-gnueabihf": "npm:4.1.3"
+    "@tailwindcss/oxide-linux-arm64-gnu": "npm:4.1.3"
+    "@tailwindcss/oxide-linux-arm64-musl": "npm:4.1.3"
+    "@tailwindcss/oxide-linux-x64-gnu": "npm:4.1.3"
+    "@tailwindcss/oxide-linux-x64-musl": "npm:4.1.3"
+    "@tailwindcss/oxide-win32-arm64-msvc": "npm:4.1.3"
+    "@tailwindcss/oxide-win32-x64-msvc": "npm:4.1.3"
+  dependenciesMeta:
+    "@tailwindcss/oxide-android-arm64":
+      optional: true
+    "@tailwindcss/oxide-darwin-arm64":
+      optional: true
+    "@tailwindcss/oxide-darwin-x64":
+      optional: true
+    "@tailwindcss/oxide-freebsd-x64":
+      optional: true
+    "@tailwindcss/oxide-linux-arm-gnueabihf":
+      optional: true
+    "@tailwindcss/oxide-linux-arm64-gnu":
+      optional: true
+    "@tailwindcss/oxide-linux-arm64-musl":
+      optional: true
+    "@tailwindcss/oxide-linux-x64-gnu":
+      optional: true
+    "@tailwindcss/oxide-linux-x64-musl":
+      optional: true
+    "@tailwindcss/oxide-win32-arm64-msvc":
+      optional: true
+    "@tailwindcss/oxide-win32-x64-msvc":
+      optional: true
+  checksum: 10c0/a7b36fc98e5b67d03d2bd0c6d268167216c4c64fe967e4570dd941ad85dfc7d249e540dc10ac977b4ba511b6ae3ec929a546bbc9844dba7a4680e64f44a0c5d9
+  languageName: node
+  linkType: hard
+
+"@tailwindcss/vite@npm:^4.1.3":
+  version: 4.1.3
+  resolution: "@tailwindcss/vite@npm:4.1.3"
+  dependencies:
+    "@tailwindcss/node": "npm:4.1.3"
+    "@tailwindcss/oxide": "npm:4.1.3"
+    tailwindcss: "npm:4.1.3"
+  peerDependencies:
+    vite: ^5.2.0 || ^6
+  checksum: 10c0/0148ba2b33174fb189d2879a58f60ce1ef73aa2637f5469c58a9abcbc005520b60fa65a05d3d2db7bfa758ae7e3ebfe893a89caabf1307620b0bb937e98235de
+  languageName: node
+  linkType: hard
+
 "@tannin/compile@npm:^1.1.0":
   version: 1.1.0
   resolution: "@tannin/compile@npm:1.1.0"
@@ -7073,6 +7301,13 @@ __metadata:
   version: 0.0.20
   resolution: "@types/web-bluetooth@npm:0.0.20"
   checksum: 10c0/3a49bd9396506af8f1b047db087aeeea9fe4301b7fad4fe06ae0f6e00d331138caae878fd09e6410658b70b4aaf10e4b191c41c1a5ff72211fe58da290c7d003
+  languageName: node
+  linkType: hard
+
+"@types/web-bluetooth@npm:^0.0.21":
+  version: 0.0.21
+  resolution: "@types/web-bluetooth@npm:0.0.21"
+  checksum: 10c0/5f47c5ec452ca31e6a9b44c8aaa54b66c4f57d4aca00166c45902a3883139580e14b254b774172ff982ba4458cc444b5aa59bb4573c2fd34562cfa599721f8e4
   languageName: node
   linkType: hard
 
@@ -7790,10 +8025,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vueuse/core@npm:^12.8.2":
+  version: 12.8.2
+  resolution: "@vueuse/core@npm:12.8.2"
+  dependencies:
+    "@types/web-bluetooth": "npm:^0.0.21"
+    "@vueuse/metadata": "npm:12.8.2"
+    "@vueuse/shared": "npm:12.8.2"
+    vue: "npm:^3.5.13"
+  checksum: 10c0/79c74c7daa471bbf6d51bf83d3750105074d83f6628fcdf41828e9f87977de4a4744968f48ad2d13597e758baf1a0aa5fe4f348dbecf093c9437bd8fd9937b73
+  languageName: node
+  linkType: hard
+
 "@vueuse/metadata@npm:10.11.1":
   version: 10.11.1
   resolution: "@vueuse/metadata@npm:10.11.1"
   checksum: 10c0/c252056aa7e7bd5d207791a2e3b415dcb81fef5b24bfe18cefdec026ae9b7e5a5813100d2e55262fc66feafe15ccdc11a69351d724d848fafe4b3b052e559283
+  languageName: node
+  linkType: hard
+
+"@vueuse/metadata@npm:12.8.2":
+  version: 12.8.2
+  resolution: "@vueuse/metadata@npm:12.8.2"
+  checksum: 10c0/95d352506608d5f8ae9c99ce494e7e55d864707d903f20401fecf378b08c8ed96631d0b8b38f6cd1d04dda69d9c8d3e4fa37e33caae10692805a9566e316e39c
   languageName: node
   linkType: hard
 
@@ -7803,6 +8057,15 @@ __metadata:
   dependencies:
     vue-demi: "npm:>=0.14.8"
   checksum: 10c0/22c4f04be8fdb5e95535cf20f13956fc1f3707540f3730282905e6f9b24f314ada28292e82f4401d88b2c1fcf7fc7203011260958f517abc2b756779243147e3
+  languageName: node
+  linkType: hard
+
+"@vueuse/shared@npm:12.8.2":
+  version: 12.8.2
+  resolution: "@vueuse/shared@npm:12.8.2"
+  dependencies:
+    vue: "npm:^3.5.13"
+  checksum: 10c0/43a04cf44e3377ee7666787e597d45ddf83880d3e1835000201b0c471198ce83ad45e4f4a0182d68781c0a23c84a904aab253e4c6279400a235e0246b613bad2
   languageName: node
   linkType: hard
 
@@ -9879,7 +10142,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wordpress/icons@npm:^10.10.0, @wordpress/icons@npm:^10.19.0, @wordpress/icons@npm:^10.8.0, @wordpress/icons@npm:^10.9.0":
+"@wordpress/icons@npm:^10.10.0, @wordpress/icons@npm:^10.8.0":
+  version: 10.10.0
+  resolution: "@wordpress/icons@npm:10.10.0"
+  dependencies:
+    "@babel/runtime": "npm:7.25.7"
+    "@wordpress/element": "npm:^6.10.0"
+    "@wordpress/primitives": "npm:^4.10.0"
+  checksum: 10c0/39e0cfc78d0a95123016cf9df39f9eb7ae75d625721c5b269c0df788eb661f631f90148a0b337503a271d7afdca640b67f63fddae9d6a5125aeea5951bce076f
+  languageName: node
+  linkType: hard
+
+"@wordpress/icons@npm:^10.19.0":
   version: 10.19.0
   resolution: "@wordpress/icons@npm:10.19.0"
   dependencies:
@@ -9887,6 +10161,17 @@ __metadata:
     "@wordpress/element": "npm:^6.19.0"
     "@wordpress/primitives": "npm:^4.19.0"
   checksum: 10c0/429821b55dcf9b0f9b3f56bf9f39b423ded0c90bd9dca789076b39536ee3e8c928738ed2c6192d0e8fb0d1418c2aa0bb63ae56c5752f0a4fda7ae433d526732c
+  languageName: node
+  linkType: hard
+
+"@wordpress/icons@npm:^10.9.0":
+  version: 10.9.0
+  resolution: "@wordpress/icons@npm:10.9.0"
+  dependencies:
+    "@babel/runtime": "npm:^7.16.0"
+    "@wordpress/element": "npm:^6.9.0"
+    "@wordpress/primitives": "npm:^4.9.0"
+  checksum: 10c0/1aaa71b649ba12e07d317f78c34c13a298ddbe642b15f6890b447fe27db44388b143f8e1a27f01989caba4453e983caf9f548311d651a071a18c11b046a6b37a
   languageName: node
   linkType: hard
 
@@ -10246,6 +10531,19 @@ __metadata:
   peerDependencies:
     react: ^18.0.0
   checksum: 10c0/7f674410645f696128bbb3162e58afd6c8200df23dc90c7f828d8300c027bb10142f88c54d3b2fb85927bbc40db7e9583f4b033dca7b4696dd4125a2c10bd34b
+  languageName: node
+  linkType: hard
+
+"@wordpress/primitives@npm:^4.9.0":
+  version: 4.9.0
+  resolution: "@wordpress/primitives@npm:4.9.0"
+  dependencies:
+    "@babel/runtime": "npm:^7.16.0"
+    "@wordpress/element": "npm:^6.9.0"
+    clsx: "npm:^2.1.1"
+  peerDependencies:
+    react: ^18.0.0
+  checksum: 10c0/7c6ff0fb87fced825f1004adc075657fd80ad60a15e486379096c29da1941f6e19320689eb23bfe60cb45a476f5ddfb0195b2a5161a19cf0405b6c3c96b14873
   languageName: node
   linkType: hard
 
@@ -14798,6 +15096,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"detect-libc@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "detect-libc@npm:2.0.3"
+  checksum: 10c0/88095bda8f90220c95f162bf92cad70bd0e424913e655c20578600e35b91edc261af27531cf160a331e185c0ced93944bc7e09939143225f56312d7fd800fdb7
+  languageName: node
+  linkType: hard
+
 "detect-newline@npm:^3.0.0":
   version: 3.1.0
   resolution: "detect-newline@npm:3.1.0"
@@ -15287,6 +15592,16 @@ __metadata:
     graceful-fs: "npm:^4.2.4"
     tapable: "npm:^2.2.0"
   checksum: 10c0/81a0515675eca17efdba2cf5bad87abc91a528fc1191aad50e275e74f045b41506167d420099022da7181c8d787170ea41e4a11a0b10b7a16f6237daecb15370
+  languageName: node
+  linkType: hard
+
+"enhanced-resolve@npm:^5.18.1":
+  version: 5.18.1
+  resolution: "enhanced-resolve@npm:5.18.1"
+  dependencies:
+    graceful-fs: "npm:^4.2.4"
+    tapable: "npm:^2.2.0"
+  checksum: 10c0/4cffd9b125225184e2abed9fdf0ed3dbd2224c873b165d0838fd066cde32e0918626cba2f1f4bf6860762f13a7e2364fd89a82b99566be2873d813573ac71846
   languageName: node
   linkType: hard
 
@@ -20716,6 +21031,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jiti@npm:^2.4.2":
+  version: 2.4.2
+  resolution: "jiti@npm:2.4.2"
+  bin:
+    jiti: lib/jiti-cli.mjs
+  checksum: 10c0/4ceac133a08c8faff7eac84aabb917e85e8257f5ad659e843004ce76e981c457c390a220881748ac67ba1b940b9b729b30fb85cbaf6e7989f04b6002c94da331
+  languageName: node
+  linkType: hard
+
 "joi@npm:^17.11.0, joi@npm:^17.6.0":
   version: 17.13.3
   resolution: "joi@npm:17.13.3"
@@ -21562,6 +21886,116 @@ __metadata:
     lighthouse: cli/index.js
     smokehouse: cli/test/smokehouse/frontends/smokehouse-bin.js
   checksum: 10c0/8b13c8ccfc4b2720805de6ac03a039f0f9cc6e5abfebb8a90683b54f9bd12c60d1d6a2abcb4529c50e17c2f004a181f8ae6f3574acdede6270b7c0ef935f3308
+  languageName: node
+  linkType: hard
+
+"lightningcss-darwin-arm64@npm:1.29.2":
+  version: 1.29.2
+  resolution: "lightningcss-darwin-arm64@npm:1.29.2"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"lightningcss-darwin-x64@npm:1.29.2":
+  version: 1.29.2
+  resolution: "lightningcss-darwin-x64@npm:1.29.2"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"lightningcss-freebsd-x64@npm:1.29.2":
+  version: 1.29.2
+  resolution: "lightningcss-freebsd-x64@npm:1.29.2"
+  conditions: os=freebsd & cpu=x64
+  languageName: node
+  linkType: hard
+
+"lightningcss-linux-arm-gnueabihf@npm:1.29.2":
+  version: 1.29.2
+  resolution: "lightningcss-linux-arm-gnueabihf@npm:1.29.2"
+  conditions: os=linux & cpu=arm
+  languageName: node
+  linkType: hard
+
+"lightningcss-linux-arm64-gnu@npm:1.29.2":
+  version: 1.29.2
+  resolution: "lightningcss-linux-arm64-gnu@npm:1.29.2"
+  conditions: os=linux & cpu=arm64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"lightningcss-linux-arm64-musl@npm:1.29.2":
+  version: 1.29.2
+  resolution: "lightningcss-linux-arm64-musl@npm:1.29.2"
+  conditions: os=linux & cpu=arm64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"lightningcss-linux-x64-gnu@npm:1.29.2":
+  version: 1.29.2
+  resolution: "lightningcss-linux-x64-gnu@npm:1.29.2"
+  conditions: os=linux & cpu=x64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"lightningcss-linux-x64-musl@npm:1.29.2":
+  version: 1.29.2
+  resolution: "lightningcss-linux-x64-musl@npm:1.29.2"
+  conditions: os=linux & cpu=x64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"lightningcss-win32-arm64-msvc@npm:1.29.2":
+  version: 1.29.2
+  resolution: "lightningcss-win32-arm64-msvc@npm:1.29.2"
+  conditions: os=win32 & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"lightningcss-win32-x64-msvc@npm:1.29.2":
+  version: 1.29.2
+  resolution: "lightningcss-win32-x64-msvc@npm:1.29.2"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"lightningcss@npm:1.29.2":
+  version: 1.29.2
+  resolution: "lightningcss@npm:1.29.2"
+  dependencies:
+    detect-libc: "npm:^2.0.3"
+    lightningcss-darwin-arm64: "npm:1.29.2"
+    lightningcss-darwin-x64: "npm:1.29.2"
+    lightningcss-freebsd-x64: "npm:1.29.2"
+    lightningcss-linux-arm-gnueabihf: "npm:1.29.2"
+    lightningcss-linux-arm64-gnu: "npm:1.29.2"
+    lightningcss-linux-arm64-musl: "npm:1.29.2"
+    lightningcss-linux-x64-gnu: "npm:1.29.2"
+    lightningcss-linux-x64-musl: "npm:1.29.2"
+    lightningcss-win32-arm64-msvc: "npm:1.29.2"
+    lightningcss-win32-x64-msvc: "npm:1.29.2"
+  dependenciesMeta:
+    lightningcss-darwin-arm64:
+      optional: true
+    lightningcss-darwin-x64:
+      optional: true
+    lightningcss-freebsd-x64:
+      optional: true
+    lightningcss-linux-arm-gnueabihf:
+      optional: true
+    lightningcss-linux-arm64-gnu:
+      optional: true
+    lightningcss-linux-arm64-musl:
+      optional: true
+    lightningcss-linux-x64-gnu:
+      optional: true
+    lightningcss-linux-x64-musl:
+      optional: true
+    lightningcss-win32-arm64-msvc:
+      optional: true
+    lightningcss-win32-x64-msvc:
+      optional: true
+  checksum: 10c0/e06bb99c98e9f56cfcf37b5ce0e0198cdeeac2993ef2e5b878b6b0934fff54c7528f38bf8875e7bd71e64c9b20b29c0cada222d1e0089c8f94c1159bbb5d611f
   languageName: node
   linkType: hard
 
@@ -23195,6 +23629,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mypa-address-widget@npm:^1.3.1":
+  version: 1.3.2
+  resolution: "mypa-address-widget@npm:1.3.2"
+  dependencies:
+    "@hey-api/client-fetch": "npm:^0.5.7"
+    "@myparcel/constants": "npm:^2.2.0"
+    "@myparcel/sdk": "npm:^4.1.1"
+    "@myparcel/ts-utils": "npm:^1.14.0"
+    "@myparcel/vue-form-builder": "npm:1.0.0-beta.52"
+    "@tailwindcss/vite": "npm:^4.1.3"
+    "@vueuse/core": "npm:^12.8.2"
+    pinia: "npm:^2.3.1"
+    vue: "npm:^3.5.13"
+    zod: "npm:^3.24.2"
+  peerDependencies:
+    vue: ^3.0.0
+  checksum: 10c0/ed7351fada1ecec026a49dafd96a9c4119b0769781e5e3f9c8502ee8ee3c561a4d23415deb51b5b8a1ac0b2d47c5bc8ccaaae999f7ec54b857958537a4044e46
+  languageName: node
+  linkType: hard
+
 "mz@npm:^2.4.0, mz@npm:^2.7.0":
   version: 2.7.0
   resolution: "mz@npm:2.7.0"
@@ -23203,6 +23657,15 @@ __metadata:
     object-assign: "npm:^4.0.1"
     thenify-all: "npm:^1.0.0"
   checksum: 10c0/103114e93f87362f0b56ab5b2e7245051ad0276b646e3902c98397d18bb8f4a77f2ea4a2c9d3ad516034ea3a56553b60d3f5f78220001ca4c404bd711bd0af39
+  languageName: node
+  linkType: hard
+
+"nanoid@npm:^3.3.7":
+  version: 3.3.7
+  resolution: "nanoid@npm:3.3.7"
+  bin:
+    nanoid: bin/nanoid.cjs
+  checksum: 10c0/e3fb661aa083454f40500473bb69eedb85dc160e763150b9a2c567c7e9ff560ce028a9f833123b618a6ea742e311138b591910e795614a629029e86e180660f3
   languageName: node
   linkType: hard
 
@@ -25176,6 +25639,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pinia@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "pinia@npm:2.3.1"
+  dependencies:
+    "@vue/devtools-api": "npm:^6.6.3"
+    vue-demi: "npm:^0.14.10"
+  peerDependencies:
+    typescript: ">=4.4.4"
+    vue: ^2.7.0 || ^3.5.11
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 10c0/e005883c26fe782e26803859db8703ead2e7053271d22828175c82d56e925ddab65ca2543a3f3a36686a11e6835f60c031f1eb2ef9159f9da05121495499c5f6
+  languageName: node
+  linkType: hard
+
 "pinkie-promise@npm:^2.0.0":
   version: 2.0.1
   resolution: "pinkie-promise@npm:2.0.1"
@@ -26065,14 +26544,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.3.11, postcss@npm:^8.4.19, postcss@npm:^8.4.21, postcss@npm:^8.4.23, postcss@npm:^8.4.33, postcss@npm:^8.4.43, postcss@npm:^8.4.47, postcss@npm:^8.4.48, postcss@npm:^8.4.5":
-  version: 8.5.3
-  resolution: "postcss@npm:8.5.3"
+"postcss@npm:^8.3.11, postcss@npm:^8.4.19, postcss@npm:^8.4.21, postcss@npm:^8.4.23, postcss@npm:^8.4.33, postcss@npm:^8.4.43, postcss@npm:^8.4.47, postcss@npm:^8.4.5":
+  version: 8.4.47
+  resolution: "postcss@npm:8.4.47"
+  dependencies:
+    nanoid: "npm:^3.3.7"
+    picocolors: "npm:^1.1.0"
+    source-map-js: "npm:^1.2.1"
+  checksum: 10c0/929f68b5081b7202709456532cee2a145c1843d391508c5a09de2517e8c4791638f71dd63b1898dba6712f8839d7a6da046c72a5e44c162e908f5911f57b5f44
+  languageName: node
+  linkType: hard
+
+"postcss@npm:^8.4.48":
+  version: 8.5.1
+  resolution: "postcss@npm:8.5.1"
   dependencies:
     nanoid: "npm:^3.3.8"
     picocolors: "npm:^1.1.1"
     source-map-js: "npm:^1.2.1"
-  checksum: 10c0/b75510d7b28c3ab728c8733dd01538314a18c52af426f199a3c9177e63eb08602a3938bfb66b62dc01350b9aed62087eabbf229af97a1659eb8d3513cec823b3
+  checksum: 10c0/c4d90c59c98e8a0c102b77d3f4cac190f883b42d63dc60e2f3ed840f16197c0c8e25a4327d2e9a847b45a985612317dc0534178feeebd0a1cf3eb0eecf75cae4
   languageName: node
   linkType: hard
 
@@ -29817,6 +30307,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tailwindcss@npm:4.1.3":
+  version: 4.1.3
+  resolution: "tailwindcss@npm:4.1.3"
+  checksum: 10c0/e1a57c6fa8d3b2a950b50ee599bf40734e472f719d2a7c74d6fa95584ac09554625481a9c28420bb32396a7f49e1b9eafe628eb61c230fcdc134b86999bf0bae
+  languageName: node
+  linkType: hard
+
 "tailwindcss@npm:^3.2.7":
   version: 3.4.14
   resolution: "tailwindcss@npm:3.4.14"
@@ -30717,7 +31214,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^5.2.2, typescript@npm:^5.7.3":
+"typescript@npm:^5.2.2":
   version: 5.8.2
   resolution: "typescript@npm:5.8.2"
   bin:
@@ -30727,13 +31224,33 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A^5.2.2#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.7.3#optional!builtin<compat/typescript>":
+"typescript@npm:^5.7.3":
+  version: 5.7.3
+  resolution: "typescript@npm:5.7.3"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 10c0/b7580d716cf1824736cc6e628ab4cd8b51877408ba2be0869d2866da35ef8366dd6ae9eb9d0851470a39be17cbd61df1126f9e211d8799d764ea7431d5435afa
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@npm%3A^5.2.2#optional!builtin<compat/typescript>":
   version: 5.8.2
   resolution: "typescript@patch:typescript@npm%3A5.8.2#optional!builtin<compat/typescript>::version=5.8.2&hash=379a07"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 10c0/8a6cd29dfb59bd5a978407b93ae0edb530ee9376a5b95a42ad057a6f80ffb0c410489ccd6fe48d1d0dfad6e8adf5d62d3874bbd251f488ae30e11a1ce6dabd28
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@npm%3A^5.7.3#optional!builtin<compat/typescript>":
+  version: 5.7.3
+  resolution: "typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=379a07"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 10c0/3b56d6afa03d9f6172d0b9cdb10e6b1efc9abc1608efd7a3d2f38773d5d8cfb9bbc68dfb72f0a7de5e8db04fc847f4e4baeddcd5ad9c9feda072234f0d788896
   languageName: node
   linkType: hard
 
@@ -31527,6 +32044,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"vue-component-type-helpers@npm:^2.1.6":
+  version: 2.2.0
+  resolution: "vue-component-type-helpers@npm:2.2.0"
+  checksum: 10c0/3e95ddc38e01accdc1f0ae4bdeb3b5a32fd9ad3f7f10100d84c2752492d4f757d305d3026d26244b574d921eb35123a5f1cfa6f2e2c943a4ecd7deeaf777843d
+  languageName: node
+  linkType: hard
+
 "vue-demi@npm:>=0.14.8, vue-demi@npm:^0.14.10":
   version: 0.14.10
   resolution: "vue-demi@npm:0.14.10"
@@ -31591,7 +32115,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue@npm:^3.2.47, vue@npm:^3.3.0":
+"vue@npm:^3.2.47, vue@npm:^3.3.0, vue@npm:^3.5.13":
   version: 3.5.13
   resolution: "vue@npm:3.5.13"
   dependencies:
@@ -32720,5 +33244,12 @@ __metadata:
   version: 3.23.8
   resolution: "zod@npm:3.23.8"
   checksum: 10c0/8f14c87d6b1b53c944c25ce7a28616896319d95bc46a9660fe441adc0ed0a81253b02b5abdaeffedbeb23bdd25a0bf1c29d2c12dd919aef6447652dd295e3e69
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.24.2":
+  version: 3.24.2
+  resolution: "zod@npm:3.24.2"
+  checksum: 10c0/c638c7220150847f13ad90635b3e7d0321b36cce36f3fc6050ed960689594c949c326dfe2c6fa87c14b126ee5d370ccdebd6efb304f41ef5557a4aaca2824565
   languageName: node
   linkType: hard

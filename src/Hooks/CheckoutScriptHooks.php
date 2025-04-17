@@ -49,11 +49,37 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
         if (! $viewService->isCheckoutPage()) {
             return;
         }
-
         $this->loadCoreScripts();
-        $this->loadSeparateAddressFieldsScripts();
+        // $this->loadSeparateAddressFieldsScripts();
+        $this->loadAddressWidgetScript();
         $this->loadDeliveryOptionsScripts();
         $this->loadTaxFieldsScripts();
+    }
+
+    public function loadAddressWidgetScript(): void
+    {
+        // @TODO figure out how DO is loading Vue3 in the checkout and emulate that
+        $this->service->enqueueVue('3');
+
+        $this->service->enqueueLocalScript(
+            'myparcelnl-checkout-address-widget', // TODO: set from WPScriptService
+            'views/frontend/checkout-address-widget/dist/address-widget',
+            $this->getWcCheckoutDependencies()
+        );
+
+        $this->service->enqueueLocalStyle(
+            'myparcelnl-checkout-address-widget', // TODO: set from WPScriptService
+            'views/frontend/checkout-address-widget/dist/style.css'
+        );
+
+
+        wp_add_inline_script(
+            'myparcelnl-checkout-address-widget',
+            'window.TemporaryMyParcelAddressConfig = ' . json_encode([
+                'apiKey' => Settings::all()->account->apiKey, // TODO: unsafe, use proxy
+            ]) . ';',
+            'before'
+        );
     }
 
     /**
