@@ -76,7 +76,16 @@ final class CartFeesHooks implements WordPressHooksInterface
         $tax = $this->taxService->getShippingTaxClass();
 
         $fees->each(function (PdkCartFee $fee) use ($tax, $cart) {
-            $cart->add_fee(Language::translate($fee->translation), $fee->amount, (bool) $tax, $tax);
+            $amount = $fee->amount;
+            
+            // For pickup fee, ensure total shipping costs don't go below 0
+            if ($fee->id === 'delivery_type_pickup') {
+                $shippingTotal = $cart->get_shipping_total();
+                // Limit the pickup discount so shipping + pickup >= 0
+                $amount = max(-$shippingTotal, $fee->amount);
+            }
+            
+            $cart->add_fee(Language::translate($fee->translation), $amount, (bool) $tax, $tax);
         });
     }
 }
