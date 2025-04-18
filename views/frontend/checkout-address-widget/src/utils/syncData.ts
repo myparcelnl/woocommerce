@@ -1,5 +1,5 @@
 import {CONFIGURATION_UPDATE_EVENT, type AddressEventPayload, type Alpha2CountryCode} from 'mypa-address-widget';
-import {getClassicCheckoutConfig} from '@myparcel-woocommerce/frontend-common';
+import {getClassicCheckoutConfig, isClassicCheckout} from '@myparcel-woocommerce/frontend-common';
 import {useSettings} from '@myparcel-pdk/checkout';
 import {ALL_ADDRESS_FIELDS} from '../constants/fields';
 import {hideAddressFields, showAddressFields} from './showHide';
@@ -14,7 +14,13 @@ export const createHiddenInput = (prefix: string): HTMLInputElement => {
   hiddenInput.value = JSON.stringify({});
 
   // Add it to the form
-  const form = document.querySelector('form.woocommerce-checkout');
+  let form;
+
+  if (isClassicCheckout()) {
+    form = document.querySelector('form.woocommerce-checkout');
+  } else {
+    form = document.querySelector('form.wc-block-checkout__form');
+  }
 
   if (!form) {
     console.warn(`Failed to add ${hiddenInput.id} to the form, failed to find the form.`);

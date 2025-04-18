@@ -16,7 +16,6 @@
 
 declare(strict_types=1);
 
-use Automattic\Jetpack\Constants;
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationRegistry;
 use MyParcelNL\Pdk\Base\Pdk as PdkInstance;
 use MyParcelNL\Pdk\Facade\Installer;
@@ -41,8 +40,22 @@ final class MyParcelNLWooCommerce
         add_action('wp_loaded', [$this, 'upgrade']);
 
         register_deactivation_hook(__FILE__, [$this, 'uninstall']);
+        add_action('before_woocommerce_init', [$this, 'beforeWoocommerceInitialize']);
+        add_action('woocommerce_init', [$this, 'woocommerceInitialize']);
         add_action('init', [$this, 'initialize'], 9999);
+
         add_action('woocommerce_blocks_checkout_block_registration', [$this, 'registerCheckoutBlocks']);
+
+    }
+
+    /**
+     * Perform required tasks that initialize the plugin.
+     *
+     * @throws \Throwable
+     */
+    public function beforeWoocommerceInitialize(): void
+    {
+        $this->boot();
     }
 
     /**
@@ -52,11 +65,21 @@ final class MyParcelNLWooCommerce
      */
     public function initialize(): void
     {
-        $this->boot();
-
         /** @var WordPressHookService $hookService */
         $hookService = Pdk::get(WordPressHookService::class);
         $hookService->applyAll();
+    }
+
+    /**
+     * Callbacks called via woocommerce_init cannot be added through the "init" hook.
+     * As a workaround, we call those separately
+     * @return void
+     */
+    public function woocommerceInitialize(): void
+    {
+        /** @var WordPressHookService $hookService */
+        $hookService = Pdk::get(WordPressHookService::class);
+        $hookService->runWoocommerceInitCallbacks();
     }
 
     /**

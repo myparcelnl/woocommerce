@@ -13,6 +13,7 @@ import {
 } from '@myparcel-woocommerce/frontend-common';
 import {handleCountryChange, syncAddressWhenSelected, getSelectedCountry, createHiddenInput} from './syncData';
 import {hideAddressFields} from './showHide';
+import {createPlaceholders} from './blocks';
 
 /**
  * The element IDs to mount the widget on
@@ -47,7 +48,6 @@ export const initializeListeners = (): void => {
 
   // Listen for changes to the selected country in woocommerce (can be either shipment or billing)
   jQuery(document.body).on(
-    // @ts-expect-error this is a valid event
     EVENT_WOOCOMMERCE_COUNTRY_TO_STATE_CHANGED,
     (event: Event, country: string, $wrapper: unknown[]) => {
       handleCountryChange(event, country, $wrapper);
@@ -73,7 +73,11 @@ export const initializeAddressWidget = (): void => {
 
   const config = isClassicCheckout() ? getClassicCheckoutConfig() : getBlocksCheckoutConfig();
 
-  // Mount on billing
+  if (!isClassicCheckout()) {
+    // Create the placeholder div with JS, as there's no way to do this with PHP in the correct place.
+    createPlaceholders();
+  }
+
   createHiddenInput(config.prefixBilling);
 
   createApp(TheAddressWidget, {

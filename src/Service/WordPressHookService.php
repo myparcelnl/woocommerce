@@ -10,6 +10,7 @@ use MyParcelNL\WooCommerce\Hooks\AutomaticOrderExportHooks;
 use MyParcelNL\WooCommerce\Hooks\BlocksIntegrationHooks;
 use MyParcelNL\WooCommerce\Hooks\CartFeesHooks;
 use MyParcelNL\WooCommerce\Hooks\CheckoutScriptHooks;
+use MyParcelNL\WooCommerce\Hooks\Contract\WooCommerceInitHookInterface;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Hooks\OrderNotesHooks;
 use MyParcelNL\WooCommerce\Hooks\PluginInfoHooks;
@@ -46,6 +47,20 @@ final class WordPressHookService
             }
 
             $instance->apply();
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function runWoocommerceInitCallbacks(): void
+    {
+        foreach ($this->getHooks() as $service) {
+            $instance = Pdk::get($service);
+
+            if ($instance instanceof WooCommerceInitHookInterface) {
+                $instance->onWoocommerceInit();
+            }
         }
     }
 

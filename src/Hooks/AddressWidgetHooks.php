@@ -4,15 +4,23 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
+use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Facade\Filter;
+use MyParcelNL\WooCommerce\Hooks\Contract\WooCommerceInitHookInterface;
+use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 
 /**
  * Adds separate address fields to the WooCommerce order fields.
  */
-class AddressWidgetHooks extends AbstractFieldsHooks
+class AddressWidgetHooks implements WordPressHooksInterface, WooCommerceInitHookInterface
 {
     protected const ADDRESS_WIDGET_FIELDTYPE = 'MyParcelAddressWidget';
+
+    public function onWoocommerceInit(): void
+    {
+        $this->registerBlocksFields();
+    }
 
     public function apply(): void
     {
@@ -30,6 +38,13 @@ class AddressWidgetHooks extends AbstractFieldsHooks
         // Save our metadata
         add_action('woocommerce_checkout_update_order_meta', [$this, 'saveResolvedAddress']);
 
+        add_filter('render_block_woocommerce/checkout-shipping-address-block', [$this, 'renderBlock'], 9999, 3);
+    }
+
+    public function renderBlock($content, $block, $instance)
+    {
+        print \esc_html($content);
+        return $content;
     }
 
     /**
@@ -62,6 +77,31 @@ class AddressWidgetHooks extends AbstractFieldsHooks
         return $fields;
     }
 
+    /**
+     * Register fields for the blocks checkout
+     * @return void
+     */
+    public function registerBlocksFields(): void
+    {
+        \woocommerce_register_additional_checkout_field(
+            array(
+                'id'            => 'address/widget',
+                'type'        => 'text', // ideally we'd use a div, but woocommerce is limited to checkbox/select/text
+                'label'         => 'Address',
+                // 'optionalLabel' => 'Government ID (optional)',
+                'location'      => 'address',
+                'required'      => false,
+                // 'attributes'    => array(
+                //     'autocomplete'     => 'government-id',
+                //     'aria-describedby' => 'some-element',
+                //     'aria-label'       => 'custom aria label',
+                //     'pattern'          => '[A-Z0-9]{5}', // A 5-character string of capital letters and numbers.
+                //     'title'            => 'Title to show on hover',
+                //     'data-custom'      => 'custom data',
+                // ),
+            ),
+        );
+    }
 
     /**
      * Save resolved address to Wooc
