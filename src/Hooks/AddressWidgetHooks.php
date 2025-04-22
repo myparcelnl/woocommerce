@@ -78,13 +78,16 @@ class AddressWidgetHooks extends AbstractFieldsHooks
     {
         $post = wp_unslash(filter_input_array(INPUT_POST));
 
+        $order = wc_get_order($order_id);
+
         if (!empty($post['billing_' . Pdk::get('checkoutAddressHiddenInputName')])) {
-            update_post_meta($order_id, 'myparcel_resolved_billing_address', \wc_sanitize_textarea($post['billing_' . Pdk::get('checkoutAddressHiddenInputName')]));
+            $order->update_meta_data('_billing_' . Pdk::get('checkoutAddressHiddenInputName'), \wc_sanitize_textarea($post['billing_' . Pdk::get('checkoutAddressHiddenInputName')]));
         }
 
         if (!empty($post['shipping_' . Pdk::get('checkoutAddressHiddenInputName')])) {
-            update_post_meta($order_id, 'myparcel_resolved_shipping_address', \wc_sanitize_textarea($post['shipping_' . Pdk::get('checkoutAddressHiddenInputName')]));
+            $order->update_meta_data('_shipping_' . Pdk::get('checkoutAddressHiddenInputName'), \wc_sanitize_textarea($post['shipping_' . Pdk::get('checkoutAddressHiddenInputName')]));
         }
+        $order->save_meta_data();
     }
 
 
