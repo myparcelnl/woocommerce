@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Adapter;
 
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Base\Model\MyParcelAddress;
 use WC_Cart;
 use WC_Customer;
 use WC_Order;
@@ -69,6 +70,8 @@ class WcAddressAdapter
     }
 
     /**
+     * Provide the address fields in a suitable format for the PDK Address model constructor.
+     *
      * @param  \WC_Customer|\WC_Order $class
      * @param  string                 $addressType
      *
@@ -76,14 +79,26 @@ class WcAddressAdapter
      */
     private function getAddressFields($class, string $addressType): array
     {
-        $state = $this->getState($class, $addressType);
-
-        return [
+        $pdkAddressAttributes = [
             'email' => $class->get_billing_email(),
             'phone' => $class->get_billing_phone(),
-
             'person' => $this->getPerson($class, $addressType),
+        ];
 
+        // If there's an address JSON object, use it
+        if ($class instanceof WC_Order) {
+            $myParcelAddress = $this->getOrderMeta($class, Pdk::get('checkoutAddressHiddenInputName'), $addressType);
+            if ($myParcelAddress) {
+                // Convert the microservice definition to the PDK definition
+                $decodedAddress = new MyParcelAddress(\json_decode($myParcelAddress, true));
+                return array_merge($pdkAddressAttributes, $decodedAddress->toPdkAddress()->toArray());
+            }
+        }
+
+        // Legacy fallback if the address widget wasn't used
+        $state = $this->getState($class, $addressType);
+
+        return array_merge($pdkAddressAttributes, [
             'address1'   => $this->getAddressField($class, Pdk::get('fieldAddress1'), $addressType),
             'address2'   => $this->getAddressField($class, Pdk::get('fieldAddress2'), $addressType),
             'cc'         => $this->getAddressField($class, Pdk::get('fieldCountry'), $addressType),
@@ -92,7 +107,7 @@ class WcAddressAdapter
             'postalCode' => $this->getAddressField($class, Pdk::get('fieldPostalCode'), $addressType),
             'region'     => $state,
             'state'      => $state,
-        ];
+        ]);
     }
 
     /**
@@ -139,10 +154,13 @@ class WcAddressAdapter
      */
     private function getSeparateAddressFromOrder(WC_Order $order, string $addressType): array
     {
+        // Check if the hidden address is filled, use it when available and don't send the fullStreet in that case.
+        if ($this->getOrderMeta($order, Pdk::get('checkoutAddressHiddenInputName'), $addressType)) {
+            return [];
+        }
         $street       = $this->getOrderMeta($order, Pdk::get('fieldStreet'), $addressType);
         $number       = $this->getOrderMeta($order, Pdk::get('fieldNumber'), $addressType);
         $numberSuffix = $this->getOrderMeta($order, Pdk::get('fieldNumberSuffix'), $addressType);
-
         $country = $this->getAddressField($order, Pdk::get('fieldCountry'), $addressType);
 
         $hasSeparateAddress = $street || $number || $numberSuffix;
