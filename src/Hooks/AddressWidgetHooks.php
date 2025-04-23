@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Hooks;
 
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Facade\Settings;
+use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\WooCommerce\Facade\Filter;
 
 /**
@@ -16,6 +18,10 @@ class AddressWidgetHooks extends AbstractFieldsHooks
 
     public function apply(): void
     {
+        if (! Settings::get(CheckoutSettings::ENABLE_ADDRESS_WIDGET, CheckoutSettings::ID)) {
+            return;
+        }
+
         // Add our custom field for the address widget
         add_filter('woocommerce_checkout_fields', [$this, 'addAddressWidgetToCheckout'], Filter::apply('separateAddressFieldsPriority'), 2);
 
