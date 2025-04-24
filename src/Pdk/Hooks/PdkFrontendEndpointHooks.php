@@ -27,8 +27,8 @@ final class PdkFrontendEndpointHooks extends AbstractPdkEndpointHooks
      * @return void
      */
     public function registerPdkRoutes(): void
-    {       
-        if (empty($wc->cart)) {
+    {
+        if (empty(WC()->cart)) {
             WC()->frontend_includes();
             wc_load_cart();
             WC()->cart->get_cart_from_session();
