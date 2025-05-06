@@ -41,7 +41,7 @@ final class PdkAddressEndpointHooks extends AbstractPdkEndpointHooks
      */
     public function registerPdkRoutes(): void
     {
-        register_rest_route(Pdk::get('routeFrontend'), 'address', [
+        register_rest_route(Pdk::get('routeFrontend'), 'address/list', [
             'methods'             => 'GET',
             'callback'           => [$this, 'processAddressListRequest'],
             'permission_callback' => '__return_true',
