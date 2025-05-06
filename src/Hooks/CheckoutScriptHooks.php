@@ -74,15 +74,6 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
             'myparcelnl-checkout-address-widget',
             'views/frontend/checkout-address-widget/dist/style.css'
         );
-
-
-        wp_add_inline_script(
-            'myparcelnl-checkout-address-widget',
-            'window.TemporaryMyParcelAddressConfig = ' . json_encode([
-                'apiKey' => Settings::all()->account->apiKey, // TODO: unsafe, use proxy
-            ]) . ';',
-            'before'
-        );
     }
 
     /**

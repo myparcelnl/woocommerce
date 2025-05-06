@@ -11,7 +11,14 @@ import {
   getClassicCheckoutConfig,
   isClassicCheckout,
 } from '@myparcel-woocommerce/frontend-common';
-import {handleCountryChange, syncAddressWhenSelected, getSelectedCountry, createHiddenInput} from './syncData';
+import {useSettings} from '@myparcel-pdk/checkout';
+import {
+  handleCountryChange,
+  syncAddressWhenSelected,
+  getSelectedCountry,
+  createHiddenInput,
+  getAddressFromPdkStore,
+} from './syncData';
 import {hideAddressFields} from './showHide';
 
 /**
@@ -23,12 +30,14 @@ export const BILLING_ID = 'billing_address_widget';
 
 export const getConfig = (appIdentifier: string): ConfigObject => {
   return {
-    country: getSelectedCountry(),
-    apiUrl: 'https://address.api.myparcel.nl', // TODO: replace with the proxy URL
-    apiKey: window.TemporaryMyParcelAddressConfig.apiKey as string, // @TODO remove
     appIdentifier,
+    apiUrl: `${useSettings().actions.baseUrl}/address`,
+    address: getAddressFromPdkStore(appIdentifier),
     classNames: {
       fieldWrapper: ['form-row form-row-wide'],
+    },
+    elements: {
+      fieldWrapper: 'p',
     },
   };
 };

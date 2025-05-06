@@ -4,3 +4,7 @@
 .address-widget-forced-visible {
   display: block !important;
 }
+.myparcel-address-widget button {
+  opacity: 0.9;
+  font-size: 12px;
+}

@@ -1,6 +1,11 @@
-import {CONFIGURATION_UPDATE_EVENT, type AddressEventPayload, type Alpha2CountryCode} from 'mypa-address-widget';
+import {
+  CONFIGURATION_UPDATE_EVENT,
+  type AddressEventPayload,
+  type Alpha2CountryCode,
+  type ConfigObject,
+} from 'mypa-address-widget';
 import {getClassicCheckoutConfig} from '@myparcel-woocommerce/frontend-common';
-import {useSettings} from '@myparcel-pdk/checkout';
+import {AddressType, splitFullStreet, useCheckoutStore, useSettings} from '@myparcel-pdk/checkout';
 import {ALL_ADDRESS_FIELDS} from '../constants/fields';
 import {hideAddressFields, showAddressFields} from './showHide';
 import {BILLING_ID, SHIPPING_ID} from './init';
@@ -90,7 +95,7 @@ const addressToHiddenInput = (prefix: string, address: AddressEventPayload['deta
  * @param prefix
  * @param address
  */
-const writeAddressToFields = (prefix: string, address: AddressEventPayload['detail']) => {
+export const writeAddressToFields = (prefix: string, address: AddressEventPayload['detail']): void => {
   addressToHiddenInput(prefix, address);
   const address1Values = mergeAddressFields(address);
 
@@ -127,6 +132,31 @@ const writeAddressToFields = (prefix: string, address: AddressEventPayload['deta
         break;
     }
   });
+};
+
+/**
+ * Map the address in the  checkout store to the address widget address.
+ * Mostly used for the initial load of the address widget to set a prefilled address.
+ */
+export const getAddressFromPdkStore = (appIdentifier: string): ConfigObject['address'] => {
+  let addressType = AddressType.Billing;
+
+  if (appIdentifier === SHIPPING_ID) {
+    addressType = AddressType.Shipping;
+  }
+
+  const checkoutStore = useCheckoutStore();
+  const formData = checkoutStore.state.form[addressType];
+  const splitAddress = splitFullStreet(formData.address1);
+
+  return {
+    countryCode: getSelectedCountry(),
+    street: splitAddress.street.length ? splitAddress.street : undefined,
+    houseNumber: splitAddress.number.length ? splitAddress.number : undefined,
+    houseNumberSuffix: splitAddress.numberSuffix.length ? splitAddress.numberSuffix : undefined,
+    city: formData.city,
+    postalCode: formData.postalCode,
+  };
 };
 
 /**
