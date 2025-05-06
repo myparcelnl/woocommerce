@@ -11,8 +11,6 @@ use WP_REST_Request;
 
 final class PdkAddressEndpointHooks extends AbstractPdkEndpointHooks
 {
-    private const NAMESPACE = 'myparcel/v2';
-
     public function apply(): void
     {
         add_action('rest_api_init', [$this, 'registerPdkRoutes']);
