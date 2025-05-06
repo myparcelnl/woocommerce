@@ -11,6 +11,8 @@ use WP_REST_Request;
 
 final class PdkAddressEndpointHooks extends AbstractPdkEndpointHooks
 {
+    private const NAMESPACE = 'myparcel/v2';
+
     public function apply(): void
     {
         add_action('rest_api_init', [$this, 'registerPdkRoutes']);
@@ -39,41 +41,20 @@ final class PdkAddressEndpointHooks extends AbstractPdkEndpointHooks
      */
     public function registerPdkRoutes(): void
     {
-        error_log('MyParcel: Registering address routes');
-        
-        $namespace = 'myparcel/v2';
-        error_log('MyParcel: Using namespace: ' . $namespace);
-
         $route = '/addresses';
-        error_log('MyParcel: Registering route: ' . $namespace . $route);
 
-        register_rest_route($namespace, $route, [
+        register_rest_route(self::NAMESPACE, $route, [
             'methods'             => 'GET',
             'callback'           => [$this, 'processAddressListRequest'],
             'permission_callback' => '__return_true',
         ]);
 
-        error_log('MyParcel: Route registered: ' . $namespace . $route);
-
         $validate_route = '/validate';
-        error_log('MyParcel: Registering route: ' . $namespace . $validate_route);
 
-        register_rest_route($namespace, $validate_route, [
+        register_rest_route(self::NAMESPACE, $validate_route, [
             'methods'             => 'GET',
             'callback'           => [$this, 'processAddressValidateRequest'],
             'permission_callback' => '__return_true',
         ]);
-
-        error_log('MyParcel: Route registered: ' . $namespace . $validate_route);
-        
-        // Debug: Check if our specific route is registered
-        global $wp_rest_server;
-        if ($wp_rest_server) {
-            $routes = $wp_rest_server->get_routes();
-            $our_route = $namespace . $route;
-            error_log('MyParcel: Is our route registered? ' . (isset($routes[$our_route]) ? 'yes' : 'no'));
-        }
-        
-        error_log('MyParcel: Address routes registration completed');
     }
 } 
