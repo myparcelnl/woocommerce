@@ -31,7 +31,7 @@ export const BILLING_ID = 'billing_address_widget';
 export const getConfig = (appIdentifier: string): ConfigObject => {
   return {
     appIdentifier,
-    apiUrl: `${useSettings().actions.baseUrl}/address`,
+    apiUrl: `${useSettings().actions.baseUrl}/address/list`,
     address: getAddressFromPdkStore(appIdentifier),
     classNames: {
       fieldWrapper: ['form-row form-row-wide'],
