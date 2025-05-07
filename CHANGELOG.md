@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.3.4](https://github.com/myparcelnl/woocommerce/compare/v5.3.3...v5.3.4) (2025-05-07)
+
+
+### :bug: Bug Fixes
+
+* disable delivery date selection for bpost carrier ([38e9cd6](https://github.com/myparcelnl/woocommerce/commit/38e9cd68351ec7e192db09cf9bacfbf65e2ca580))
+* prevent negative fees with free shipping ([#1289](https://github.com/myparcelnl/woocommerce/issues/1289)) ([8715a7c](https://github.com/myparcelnl/woocommerce/commit/8715a7cef2e71cedfcbba8922216fd9e80782a38))
+
 ## [5.3.3](https://github.com/myparcelnl/woocommerce/compare/v5.3.2...v5.3.3) (2025-04-09)
 
 
