@@ -57,7 +57,8 @@
         "enableDeliveryOptions": true,
         "enableDeliveryOptionsWhenNotInStock": true,
         "useSeparateAddressFields": false,
-        "showTaxFields": true
+        "showTaxFields": true,
+        "enableAddressWidget": false
     },
     "carrier": {
         "postnl": {
