@@ -62,7 +62,6 @@ final class WordPressHookService
             CartFeesHooks::class,
             CheckoutScriptHooks::class,
             OrderNotesHooks::class,
-            PdkAddressEndpointHooks::class,
             PdkAdminEndpointHooks::class,
             PdkCheckoutPlaceOrderHooks::class,
             PdkCoreHooks::class,

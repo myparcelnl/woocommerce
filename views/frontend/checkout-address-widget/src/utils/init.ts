@@ -29,9 +29,11 @@ export const SHIPPING_ID = 'shipping_address_widget';
 export const BILLING_ID = 'billing_address_widget';
 
 export const getConfig = (appIdentifier: string): ConfigObject => {
+  console.log(useSettings());
+  const endpoint = useSettings().actions.proxyAddressList;
   return {
     appIdentifier,
-    apiUrl: `${useSettings().actions.baseUrl}/address/list`,
+    apiUrl: `${useSettings().actions.baseUrl}/address`,
     address: getAddressFromPdkStore(appIdentifier),
     classNames: {
       fieldWrapper: ['form-row form-row-wide'],
