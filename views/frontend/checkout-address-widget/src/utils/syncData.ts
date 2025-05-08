@@ -60,6 +60,9 @@ export const syncAddressWhenSelected = (event: AddressEventPayload): void => {
     }
   } else if (event.detail.appIdentifier === SHIPPING_ID) {
     writeAddressToFields(getClassicCheckoutConfig().prefixShipping, address);
+  } else {
+    // eslint-disable-next-line no-console
+    console.warn(`Unknown appIdentifier ${event.detail.appIdentifier}`);
   }
 };
 
