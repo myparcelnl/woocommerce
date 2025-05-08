@@ -12,6 +12,7 @@ import {
   isClassicCheckout,
 } from '@myparcel-woocommerce/frontend-common';
 import {useSettings} from '@myparcel-pdk/checkout';
+import {FrontendEndpoint} from '../../../../../node_modules/@myparcel-pdk/checkout-common/node_modules/@myparcel-pdk/common/src/data/endpoints';
 import {
   handleCountryChange,
   syncAddressWhenSelected,
@@ -29,18 +30,26 @@ export const SHIPPING_ID = 'shipping_address_widget';
 export const BILLING_ID = 'billing_address_widget';
 
 export const getConfig = (appIdentifier: string): ConfigObject => {
-  console.log(useSettings());
-  const endpoint = useSettings().actions.proxyAddressList;
+  const endpoint = useSettings().actions.endpoints[FrontendEndpoint.ProxyAddressesList];
   return {
     appIdentifier,
-    apiUrl: `${useSettings().actions.baseUrl}/address`,
+    apiUrl: `${useSettings().actions.baseUrl}`,
     address: getAddressFromPdkStore(appIdentifier),
+    apiRequestOptions: {
+      '/addresses': {
+        query: endpoint.parameters,
+        path: '/',
+      },
+    },
     classNames: {
       fieldWrapper: ['form-row form-row-wide'],
     },
     elements: {
       fieldWrapper: 'p',
     },
+    // This is not ideal, should be added to the PDK config at some point
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+    locale: document.documentElement.lang.length > 0 ? document.documentElement.lang.slice(0, 2) : undefined,
   };
 };
 
