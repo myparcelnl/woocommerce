@@ -8,3 +8,9 @@
   opacity: 0.9;
   font-size: 12px;
 }
+.validation-messages {
+  margin-top: 20px;
+}
+.validation-message {
+  color: #a02222;
+}
