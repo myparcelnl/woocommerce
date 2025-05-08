@@ -21,9 +21,9 @@
     "vite": "^5.0.0"
   },
   "dependencies": {
-    "@myparcel-pdk/checkout": "^1.3.0",
-    "@myparcel-pdk/common": "^1.5.0",
+    "@myparcel-pdk/checkout": "^1.3.2",
+    "@myparcel-pdk/checkout-common": "^1.3.2",
     "@myparcel-woocommerce/frontend-common": "workspace:^",
-    "mypa-address-widget": "^1.7.2"
+    "mypa-address-widget": "^1.8.1"
   }
 }
