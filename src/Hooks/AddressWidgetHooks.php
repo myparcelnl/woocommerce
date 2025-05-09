@@ -23,7 +23,7 @@ class AddressWidgetHooks extends AbstractFieldsHooks
         }
 
         // Add our custom field for the address widget
-        add_filter('woocommerce_checkout_fields', [$this, 'addAddressWidgetToCheckout'], Filter::apply('separateAddressFieldsPriority'), 2);
+        add_filter('woocommerce_checkout_fields', [$this, 'addAddressWidgetToCheckout'], Filter::apply('separateAddressFieldsPriority'), 1);
 
         /**
          * This hook allows us to render our own arbitrary HTML as specified in the type in "addAddressWidgetToCheckout()".
