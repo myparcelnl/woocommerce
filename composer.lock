@@ -4,79 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "725aef43f5536275d677fb6e34e9a987",
+    "content-hash": "fb5d4a3405d8b7e16ad57cd945fef352",
     "packages": [
-        {
-            "name": "fruitcake/php-cors",
-            "version": "v1.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fruitcake/php-cors.git",
-                "reference": "3d158f36e7875e2f040f37bc0573956240a5a38b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fruitcake/php-cors/zipball/3d158f36e7875e2f040f37bc0573956240a5a38b",
-                "reference": "3d158f36e7875e2f040f37bc0573956240a5a38b",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.4|^8.0",
-                "symfony/http-foundation": "^4.4|^5.4|^6|^7"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^1.4",
-                "phpunit/phpunit": "^9",
-                "squizlabs/php_codesniffer": "^3.5"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.2-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Fruitcake\\Cors\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fruitcake",
-                    "homepage": "https://fruitcake.nl"
-                },
-                {
-                    "name": "Barryvdh",
-                    "email": "barryvdh@gmail.com"
-                }
-            ],
-            "description": "Cross-origin resource sharing library for the Symfony HttpFoundation",
-            "homepage": "https://github.com/fruitcake/php-cors",
-            "keywords": [
-                "cors",
-                "laravel",
-                "symfony"
-            ],
-            "support": {
-                "issues": "https://github.com/fruitcake/php-cors/issues",
-                "source": "https://github.com/fruitcake/php-cors/tree/v1.3.0"
-            },
-            "funding": [
-                {
-                    "url": "https://fruitcake.nl",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/barryvdh",
-                    "type": "github"
-                }
-            ],
-            "time": "2023-10-12T05:21:21+00:00"
-        },
         {
             "name": "guzzlehttp/guzzle",
             "version": "7.9.3",
@@ -531,14 +460,19 @@
         {
             "name": "myparcelnl/pdk",
             "version": "2.57.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/myparcelnl/pdk.git",
+                "reference": "9574b2bb34a1d0c58acc1f3d0ceb1ce772644f1d"
+            },
             "dist": {
-                "type": "path",
-                "url": "/Users/freek.vanrijt/projects/pdk",
-                "reference": "44eb9dc63534cbe8f05fbcb93154c07e1dd83254"
+                "type": "zip",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/9574b2bb34a1d0c58acc1f3d0ceb1ce772644f1d",
+                "reference": "9574b2bb34a1d0c58acc1f3d0ceb1ce772644f1d",
+                "shasum": ""
             },
             "require": {
                 "ext-zip": "*",
-                "fruitcake/php-cors": "^1.2",
                 "justinrainbow/json-schema": "^5.2",
                 "myparcelnl/sdk": "^7.0.0",
                 "php": ">=7.4.0",
@@ -550,7 +484,6 @@
                 "behat/behat": "^3.13",
                 "brick/varexporter": "^0.4",
                 "guzzlehttp/guzzle": "^7.5",
-                "mockery/mockery": "^1.6",
                 "myparcelnl/devtools": "^1.0.0",
                 "nette/robot-loader": "^3.0.0",
                 "pestphp/pest": "^1.0.0",
@@ -566,61 +499,7 @@
                     "MyParcelNL\\Pdk\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "MyParcelNL\\Pdk\\": [
-                        "tests/Unit/",
-                        "tests/factories"
-                    ],
-                    "MyParcelNL\\Pdk\\Console\\": "private/",
-                    "MyParcelNL\\Pdk\\Tests\\": "tests/"
-                },
-                "files": [
-                    "tests/functions.php",
-                    "tests/usesShared.php"
-                ]
-            },
-            "scripts": {
-                "analyse": [
-                    "php -dmemory_limit=-1 vendor/bin/phpstan analyse"
-                ],
-                "analyse:generate": [
-                    "composer run analyse -- --generate-baseline phpstan-baseline.php --allow-empty-baseline"
-                ],
-                "analyze": [
-                    "composer run analyse"
-                ],
-                "analyze:generate": [
-                    "composer run analyse:generate"
-                ],
-                "console": [
-                    "php bin/console"
-                ],
-                "post-autoload-dump": [
-                    "composer console generate:ide-helper"
-                ],
-                "quality": [
-                    "rector process --dry-run"
-                ],
-                "quality:fix": [
-                    "rector process"
-                ],
-                "test": [
-                    "composer run test:unit && composer run test:integration"
-                ],
-                "test:integration": [
-                    "behat"
-                ],
-                "test:unit": [
-                    "pest"
-                ],
-                "test:unit:coverage": [
-                    "php -dpcov.enabled=1 vendor/bin/pest --coverage-clover clover.xml"
-                ],
-                "test:unit:snapshot": [
-                    "pest -d --update-snapshots"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -632,9 +511,11 @@
             ],
             "description": "MyParcel Plugin Development Kit",
             "homepage": "https://myparcel.nl",
-            "transport-options": {
-                "relative": false
-            }
+            "support": {
+                "issues": "https://github.com/myparcelnl/pdk/issues",
+                "source": "https://github.com/myparcelnl/pdk/tree/v2.57.0"
+            },
+            "time": "2025-05-06T08:39:18+00:00"
         },
         {
             "name": "myparcelnl/sdk",
