@@ -31,7 +31,6 @@
         "MyParcelNL\\WooCommerce\\Hooks\\OrderNotesHooks::addOrderNotes"
     ],
     "rest_api_init": [
-        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkAddressEndpointHooks::registerPdkRoutes",
         "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkAdminEndpointHooks::registerPdkRoutes",
         "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkFrontendEndpointHooks::registerPdkRoutes",
         "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkWebhookHooks::registerWebhookRoutes"
