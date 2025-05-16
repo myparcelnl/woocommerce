@@ -2,13 +2,14 @@ import {
   CONFIGURATION_UPDATE_EVENT,
   type AddressEventPayload,
   type Alpha2CountryCode,
+  type ConfigEventPayload,
   type ConfigObject,
 } from 'mypa-address-widget';
 import {getClassicCheckoutConfig} from '@myparcel-woocommerce/frontend-common';
 import {AddressType, splitFullStreet, useCheckoutStore, useSettings} from '@myparcel-pdk/checkout';
 import {ALL_ADDRESS_FIELDS} from '../constants/fields';
 import {hideAddressFields, showAddressFields} from './showHide';
-import {BILLING_ID, SHIPPING_ID} from './init';
+import {BILLING_ID, getConfig, SHIPPING_ID} from './init';
 
 export const createHiddenInput = (prefix: string): HTMLInputElement => {
   const HIDDEN_ADDRESS_FIELD = useSettings().checkoutAddressHiddenInputName;
@@ -179,9 +180,13 @@ export const wrapperToAppIdentifier = (wrapper?: unknown[]): string => {
 };
 
 const updateWidgetCountry = (country: string, appIdentifier: string) => {
+  const countryCode = country.toUpperCase() as Alpha2CountryCode;
+  const address = getAddressFromPdkStore(appIdentifier);
+  address.countryCode = countryCode;
+
   document.dispatchEvent(
-    new CustomEvent(CONFIGURATION_UPDATE_EVENT, {
-      detail: {appIdentifier, config: {country}},
+    new CustomEvent<ConfigEventPayload>(CONFIGURATION_UPDATE_EVENT, {
+      detail: {appIdentifier, config: {address}},
     }),
   );
 };

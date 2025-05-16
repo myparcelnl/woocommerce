@@ -41,7 +41,7 @@ export const showAddressFields = (prefix?: string): void => {
       const woocField = document.querySelector(`#${prefix}${field}`);
 
       if (woocField) {
-        (woocField as HTMLElement).style.display = 'block';
+        (woocField as HTMLElement).classList.remove('address-widget-forced-hidden');
       }
     });
   });
