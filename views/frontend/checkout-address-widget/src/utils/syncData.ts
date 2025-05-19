@@ -116,23 +116,23 @@ export const writeAddressToFields = (prefix: string, address: AddressEventPayloa
 
     switch (field) {
       case 'address_1_field':
-        (woocFieldInput as HTMLInputElement).value = address1Values?.join(' ') ?? '';
+        (woocFieldInput as HTMLInputElement).value = address1Values?.length ? address1Values?.join(' ') : '';
         break;
       case 'house_number_field':
-        (woocFieldInput as HTMLInputElement).value = address.houseNumber;
+        (woocFieldInput as HTMLInputElement).value = address.houseNumber ?? '';
         break;
       case 'house_number_suffix_field':
         (woocFieldInput as HTMLInputElement).value = address.houseNumberSuffix ?? '';
         break;
       case 'street_field':
       case 'street_name_field':
-        (woocFieldInput as HTMLInputElement).value = address.street;
+        (woocFieldInput as HTMLInputElement).value = address.street ?? '';
         break;
       case 'city_field':
-        (woocFieldInput as HTMLInputElement).value = address.city;
+        (woocFieldInput as HTMLInputElement).value = address.city ?? '';
         break;
       case 'postcode_field':
-        (woocFieldInput as HTMLInputElement).value = address.postalCode;
+        (woocFieldInput as HTMLInputElement).value = address.postalCode ?? '';
         break;
     }
   });
@@ -158,8 +158,8 @@ export const getAddressFromPdkStore = (appIdentifier: string): ConfigObject['add
     street: splitAddress.street.length ? splitAddress.street : undefined,
     houseNumber: splitAddress.number.length ? splitAddress.number : undefined,
     houseNumberSuffix: splitAddress.numberSuffix.length ? splitAddress.numberSuffix : undefined,
-    city: formData.city,
-    postalCode: formData.postalCode,
+    city: formData.city.length ? formData.city : undefined,
+    postalCode: formData.postalCode.length ? formData.postalCode : undefined,
   };
 };
 
