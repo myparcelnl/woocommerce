@@ -92,6 +92,7 @@ const addressToHiddenInput = (prefix: string, address: AddressEventPayload['deta
   const HIDDEN_ADDRESS_FIELD = useSettings().checkoutAddressHiddenInputName;
   const hiddenInput = document.querySelector(`#${prefix}${HIDDEN_ADDRESS_FIELD}`) as HTMLInputElement;
   hiddenInput.value = JSON.stringify(address);
+  hiddenInput.dispatchEvent(new Event('change', {bubbles: true}));
 };
 
 /**
@@ -101,12 +102,26 @@ const addressToHiddenInput = (prefix: string, address: AddressEventPayload['deta
  */
 export const writeAddressToFields = (prefix: string, address: AddressEventPayload['detail']): void => {
   addressToHiddenInput(prefix, address);
-  const address1Values = mergeAddressFields(address);
+
+  const FIELD_VALUE_MAP: Record<string, (address: AddressEventPayload['detail']) => string> = {
+    /* eslint-disable @typescript-eslint/naming-convention */
+    address_1_field: (address) => {
+      const mergedFields = mergeAddressFields(address);
+      return mergedFields?.length ? mergedFields.join(' ') : '';
+    },
+    house_number_field: (address) => address.houseNumber ?? '',
+    house_number_suffix_field: (address) => address.houseNumberSuffix ?? '',
+    street_field: (address) => address.street ?? '',
+    street_name_field: (address) => address.street ?? '',
+    city_field: (address) => address.city ?? '',
+    postcode_field: (address) => address.postalCode ?? '',
+    /* eslint-enable @typescript-eslint/naming-convention */
+  };
 
   // eslint-disable-next-line complexity
   ALL_ADDRESS_FIELDS.forEach((field) => {
     const fieldId = `${prefix}${field}`;
-    const woocFieldInput = document.querySelector(`#${fieldId} input`);
+    const woocFieldInput = document.querySelector(`#${fieldId} input`) as HTMLInputElement;
 
     if (!woocFieldInput) {
       // eslint-disable-next-line no-console
@@ -114,26 +129,11 @@ export const writeAddressToFields = (prefix: string, address: AddressEventPayloa
       return;
     }
 
-    switch (field) {
-      case 'address_1_field':
-        (woocFieldInput as HTMLInputElement).value = address1Values?.length ? address1Values?.join(' ') : '';
-        break;
-      case 'house_number_field':
-        (woocFieldInput as HTMLInputElement).value = address.houseNumber ?? '';
-        break;
-      case 'house_number_suffix_field':
-        (woocFieldInput as HTMLInputElement).value = address.houseNumberSuffix ?? '';
-        break;
-      case 'street_field':
-      case 'street_name_field':
-        (woocFieldInput as HTMLInputElement).value = address.street ?? '';
-        break;
-      case 'city_field':
-        (woocFieldInput as HTMLInputElement).value = address.city ?? '';
-        break;
-      case 'postcode_field':
-        (woocFieldInput as HTMLInputElement).value = address.postalCode ?? '';
-        break;
+    const getMappedValue = FIELD_VALUE_MAP[field];
+
+    if (getMappedValue) {
+      woocFieldInput.value = getMappedValue(address);
+      woocFieldInput.dispatchEvent(new Event('change', {bubbles: true}));
     }
   });
 };
