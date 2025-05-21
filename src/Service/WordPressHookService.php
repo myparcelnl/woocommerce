@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Service;
 
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\WooCommerce\Hooks\AddressWidgetHooks;
 use MyParcelNL\WooCommerce\Hooks\AutomaticOrderExportHooks;
 use MyParcelNL\WooCommerce\Hooks\BlocksIntegrationHooks;
 use MyParcelNL\WooCommerce\Hooks\CartFeesHooks;
@@ -27,6 +28,7 @@ use MyParcelNL\WooCommerce\Pdk\Hooks\PdkOrderListHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkPluginSettingsHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkProductSettingsHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkWebhookHooks;
+use MyParcelNL\WooCommerce\Pdk\Hooks\PdkAddressEndpointHooks;
 use RuntimeException;
 
 final class WordPressHookService
@@ -54,6 +56,7 @@ final class WordPressHookService
     private function getHooks(): array
     {
         return [
+            AddressWidgetHooks::class,
             AutomaticOrderExportHooks::class,
             BlocksIntegrationHooks::class,
             CartFeesHooks::class,

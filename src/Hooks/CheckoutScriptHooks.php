@@ -49,11 +49,31 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
         if (! $viewService->isCheckoutPage()) {
             return;
         }
-
         $this->loadCoreScripts();
         $this->loadSeparateAddressFieldsScripts();
+        $this->loadAddressWidgetScript();
         $this->loadDeliveryOptionsScripts();
         $this->loadTaxFieldsScripts();
+    }
+
+    public function loadAddressWidgetScript(): void
+    {
+        if (! Settings::get(CheckoutSettings::ENABLE_ADDRESS_WIDGET, CheckoutSettings::ID)) {
+            return;
+        }
+
+        $this->service->enqueueVue('3');
+
+        $this->service->enqueueLocalScript(
+            'myparcelnl-checkout-address-widget',
+            'views/frontend/checkout-address-widget/dist/address-widget',
+            $this->getWcCheckoutDependencies()
+        );
+
+        $this->service->enqueueLocalStyle(
+            'myparcelnl-checkout-address-widget',
+            'views/frontend/checkout-address-widget/dist/style.css'
+        );
     }
 
     /**

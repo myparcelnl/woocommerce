@@ -1,7 +1,8 @@
 import {AddressType, PdkField} from '@myparcel-pdk/checkout-common';
 import {PdkUtil, useUtil, type PdkFormData, updateContext} from '@myparcel-pdk/checkout';
-import {useCartStore, getShippingRate} from '../utils';
-import {type CheckoutConfig} from '../types';
+import {type CheckoutConfig} from '../../types';
+import {useCartStore} from './useCartStore';
+import {getShippingRate} from './getShippingRate';
 
 // eslint-disable-next-line max-lines-per-function
 export const getBlocksCheckoutConfig = (): CheckoutConfig => {
