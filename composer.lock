@@ -4,8 +4,79 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fb5d4a3405d8b7e16ad57cd945fef352",
+    "content-hash": "0d282ce3d212b0a20d59ef3c304097d2",
     "packages": [
+        {
+            "name": "fruitcake/php-cors",
+            "version": "v1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fruitcake/php-cors.git",
+                "reference": "3d158f36e7875e2f040f37bc0573956240a5a38b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fruitcake/php-cors/zipball/3d158f36e7875e2f040f37bc0573956240a5a38b",
+                "reference": "3d158f36e7875e2f040f37bc0573956240a5a38b",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4|^8.0",
+                "symfony/http-foundation": "^4.4|^5.4|^6|^7"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.4",
+                "phpunit/phpunit": "^9",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fruitcake\\Cors\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fruitcake",
+                    "homepage": "https://fruitcake.nl"
+                },
+                {
+                    "name": "Barryvdh",
+                    "email": "barryvdh@gmail.com"
+                }
+            ],
+            "description": "Cross-origin resource sharing library for the Symfony HttpFoundation",
+            "homepage": "https://github.com/fruitcake/php-cors",
+            "keywords": [
+                "cors",
+                "laravel",
+                "symfony"
+            ],
+            "support": {
+                "issues": "https://github.com/fruitcake/php-cors/issues",
+                "source": "https://github.com/fruitcake/php-cors/tree/v1.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://fruitcake.nl",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/barryvdh",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-10-12T05:21:21+00:00"
+        },
         {
             "name": "guzzlehttp/guzzle",
             "version": "7.9.3",
@@ -459,20 +530,21 @@
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "2.57.0",
+            "version": "2.58.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/pdk.git",
-                "reference": "9574b2bb34a1d0c58acc1f3d0ceb1ce772644f1d"
+                "reference": "ab8636b9b12270a6657e51e906f3fa68c802995a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/9574b2bb34a1d0c58acc1f3d0ceb1ce772644f1d",
-                "reference": "9574b2bb34a1d0c58acc1f3d0ceb1ce772644f1d",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/ab8636b9b12270a6657e51e906f3fa68c802995a",
+                "reference": "ab8636b9b12270a6657e51e906f3fa68c802995a",
                 "shasum": ""
             },
             "require": {
                 "ext-zip": "*",
+                "fruitcake/php-cors": "^1.2",
                 "justinrainbow/json-schema": "^5.2",
                 "myparcelnl/sdk": "^7.0.0",
                 "php": ">=7.4.0",
@@ -484,6 +556,7 @@
                 "behat/behat": "^3.13",
                 "brick/varexporter": "^0.4",
                 "guzzlehttp/guzzle": "^7.5",
+                "mockery/mockery": "^1.6",
                 "myparcelnl/devtools": "^1.0.0",
                 "nette/robot-loader": "^3.0.0",
                 "pestphp/pest": "^1.0.0",
@@ -513,9 +586,9 @@
             "homepage": "https://myparcel.nl",
             "support": {
                 "issues": "https://github.com/myparcelnl/pdk/issues",
-                "source": "https://github.com/myparcelnl/pdk/tree/v2.57.0"
+                "source": "https://github.com/myparcelnl/pdk/tree/v2.58.0"
             },
-            "time": "2025-05-06T08:39:18+00:00"
+            "time": "2025-05-21T09:50:50+00:00"
         },
         {
             "name": "myparcelnl/sdk",
@@ -2425,16 +2498,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.25",
+            "version": "1.12.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "e310849a19e02b8bfcbb63147f495d8f872dd96f"
+                "reference": "84cbf8f018e01834b9b1ac3dacf3b9780e209e53"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e310849a19e02b8bfcbb63147f495d8f872dd96f",
-                "reference": "e310849a19e02b8bfcbb63147f495d8f872dd96f",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/84cbf8f018e01834b9b1ac3dacf3b9780e209e53",
+                "reference": "84cbf8f018e01834b9b1ac3dacf3b9780e209e53",
                 "shasum": ""
             },
             "require": {
@@ -2479,7 +2552,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-04-27T12:20:45+00:00"
+            "time": "2025-05-14T11:08:32+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
