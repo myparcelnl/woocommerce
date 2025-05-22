@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.4.0](https://github.com/myparcelnl/woocommerce/compare/v5.3.4...v5.4.0) (2025-05-22)
+
+
+### :sparkles: New Features
+
+* **checkout:** add myparcel address input widget to the checkout ([#1237](https://github.com/myparcelnl/woocommerce/issues/1237)) ([1fd3e37](https://github.com/myparcelnl/woocommerce/commit/1fd3e370eb4a228808a4b41d570f0fd9b893e238))
+
 ## [5.3.4](https://github.com/myparcelnl/woocommerce/compare/v5.3.3...v5.3.4) (2025-05-07)
 
 
