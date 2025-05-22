@@ -11,8 +11,8 @@ import {
   getClassicCheckoutConfig,
   isClassicCheckout,
 } from '@myparcel-woocommerce/frontend-common';
+import {FrontendEndpoint} from '@myparcel-pdk/common';
 import {useSettings} from '@myparcel-pdk/checkout';
-import {FrontendEndpoint} from '../../../../../node_modules/@myparcel-pdk/checkout-common/node_modules/@myparcel-pdk/common/src/data/endpoints';
 import {
   handleCountryChange,
   syncAddressWhenSelected,
