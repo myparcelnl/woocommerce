@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.4.1](https://github.com/myparcelnl/woocommerce/compare/v5.4.0...v5.4.1) (2025-05-22)
+
+
+### :bug: Bug Fixes
+
+* **admin:** resolve issues with loading some form components in admin ([#1306](https://github.com/myparcelnl/woocommerce/issues/1306)) ([2647641](https://github.com/myparcelnl/woocommerce/commit/2647641ea1136d5a5ca71b9775a3d038ea9fd490))
+
 ## [5.4.0](https://github.com/myparcelnl/woocommerce/compare/v5.3.4...v5.4.0) (2025-05-22)
 
 
