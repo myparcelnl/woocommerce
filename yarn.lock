@@ -7151,6 +7151,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react@npm:^18":
+  version: 18.3.22
+  resolution: "@types/react@npm:18.3.22"
+  dependencies:
+    "@types/prop-types": "npm:*"
+    csstype: "npm:^3.0.2"
+  checksum: 10c0/d5d77d5329ed6cf6d2f77d778bfc128e2a4d1b0e30d8eebd5e295c207615842abaff57813cd39be5939a9c4aecacd3771f4e7a8d874d5a8002ff18809f237c19
+  languageName: node
+  linkType: hard
+
 "@types/retry@npm:0.12.0":
   version: 0.12.0
   resolution: "@types/retry@npm:0.12.0"
@@ -7325,17 +7335,17 @@ __metadata:
   linkType: hard
 
 "@types/wordpress__block-editor@npm:*":
-  version: 11.5.15
-  resolution: "@types/wordpress__block-editor@npm:11.5.15"
+  version: 11.5.16
+  resolution: "@types/wordpress__block-editor@npm:11.5.16"
   dependencies:
-    "@types/react": "npm:*"
+    "@types/react": "npm:^18"
     "@types/wordpress__blocks": "npm:*"
     "@wordpress/components": "npm:^27.2.0"
     "@wordpress/data": "npm:^9.13.0"
     "@wordpress/element": "npm:^5.0.0"
     "@wordpress/keycodes": "npm:^3.54.0"
     react-autosize-textarea: "npm:^7.1.0"
-  checksum: 10c0/913078aef38361dc4e483516a08dfacbb46804b06c3cdca50d63bb7c0c58761e224ea2902a2d95cc1516996d8bb7a32604d0638b1849877b67d1d9dee708012f
+  checksum: 10c0/fd149a732811f2c6deebb87ec6bdc14fbd68f824d5a33ad8df8754468f25d41960d4de759e548768c4d5a5145f4e1005c6c350cc40f0952db2f498aa65b5ff0d
   languageName: node
   linkType: hard
 
