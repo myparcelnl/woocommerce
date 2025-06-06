@@ -3514,7 +3514,7 @@ __metadata:
     "@myparcel-woocommerce/frontend-common": "workspace:^"
     "@myparcel-woocommerce/vite-config": "workspace:*"
     "@types/jquery": "npm:^3.5.16"
-    mypa-address-widget: "npm:^1.8.1"
+    mypa-address-widget: "npm:^1.8.2"
     typescript: "npm:^5.2.2"
     vite: "npm:^5.0.0"
   languageName: unknown
@@ -23655,9 +23655,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mypa-address-widget@npm:^1.8.1":
-  version: 1.8.1
-  resolution: "mypa-address-widget@npm:1.8.1"
+"mypa-address-widget@npm:^1.8.2":
+  version: 1.8.2
+  resolution: "mypa-address-widget@npm:1.8.2"
   dependencies:
     "@hey-api/client-fetch": "npm:^0.10.0"
     "@myparcel/constants": "npm:^2.2.0"
@@ -23671,7 +23671,7 @@ __metadata:
     zod: "npm:^3.24.2"
   peerDependencies:
     vue: ^3.0.0
-  checksum: 10c0/662c4d927c6df2fe954a43d8be52ee3ce60730751c775772b027b765dcb5dfc274f88132409d6f1e74d0657d9743cfc3b1ecdc235cf73fdd9fdb24c47779c905
+  checksum: 10c0/1203c18ca1d055054257899776c5b982e44dd53e992568da6382dead5d44ed44d54cf84e0ef300be3d4080b6d404981013bdc4e3990ce7e92c6aaf91854743af
   languageName: node
   linkType: hard
 
