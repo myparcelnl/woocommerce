@@ -23,6 +23,7 @@ use MyParcelNL\Pdk\Facade\Installer;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Facade\WooCommerce;
 use MyParcelNL\WooCommerce\Integration\WcBlocksLoader;
+use MyParcelNL\WooCommerce\Service\WooCommerceService;
 use MyParcelNL\WooCommerce\Service\WordPressHookService;
 
 use function MyParcelNL\WooCommerce\bootPdk;
@@ -42,6 +43,7 @@ final class MyParcelNLWooCommerce
 
         register_deactivation_hook(__FILE__, [$this, 'uninstall']);
         add_action('init', [$this, 'initialize'], 9999);
+        add_action('woocommerce_init', [$this, 'onWoocommerceInit'], 9999);
         add_action('woocommerce_blocks_checkout_block_registration', [$this, 'registerCheckoutBlocks']);
     }
 
@@ -52,11 +54,23 @@ final class MyParcelNLWooCommerce
      */
     public function initialize(): void
     {
-        $this->boot();
-
         /** @var WordPressHookService $hookService */
         $hookService = Pdk::get(WordPressHookService::class);
         $hookService->applyAll();
+    }
+
+    /**
+    * Run code when WooCommerce is initialized.
+    *
+    * @throws \Throwable
+    */
+    public function onWoocommerceInit(): void
+    {
+        $this->boot(); // This seems to fire earlier than the init hook, so we need to boot the PDK here.
+
+        /** @var WordPressHookService $hookService */
+        $hookService = Pdk::get(WordPressHookService::class);
+        $hookService->onInit();
     }
 
     /**
