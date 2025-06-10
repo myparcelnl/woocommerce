@@ -12,6 +12,16 @@ use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 abstract class AbstractFieldsHooks implements WordPressHooksInterface
 {
     /**
+     * Generate a namespaced ID for a block field.
+     * @param mixed $name
+     * @return string
+     */
+    protected function getBlockFieldId($name): string
+    {
+        return sprintf('myparcelnl/%s', Pdk::get($name));
+    }
+
+    /**
      * @param  string $form
      * @param  string $name
      * @param  string $label
@@ -35,6 +45,32 @@ abstract class AbstractFieldsHooks implements WordPressHooksInterface
                 $additionalFields
             ),
         ];
+    }
+
+    /**
+     * Returns an array suitable for woocommerce_register_additional_checkout_field().
+     *
+     * @param string $name
+     * @param string $label
+     * @param string $type The field type: either text, checkbox, select.
+     * @param array $additionalOptions @see https://developer.woocommerce.com/docs/block-development/cart-and-checkout-blocks/additional-checkout-fields/#options
+     * @param array $attributes An array of HTML attributes to add to the field.
+     * @return void
+     */
+    protected function createBlocksCheckoutAddressField(
+        string $name,
+        string $label,
+        string $type = 'text',
+        array $additionalOptions = [],
+        array $attributes = []
+    ) {
+
+        return array_merge([
+            'id' => $this->getBlockFieldId($name),
+            'label' => Language::translate($label),
+            'location' => 'address',
+            'type' => $type,
+        ], $additionalOptions, $attributes);
     }
 
     /**
