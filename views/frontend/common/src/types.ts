@@ -1,8 +1,7 @@
-import {type PdkCheckoutConfigInput} from '@myparcel-pdk/checkout-common';
-import {type AddressField} from '@myparcel-pdk/checkout';
+import {type PdkCheckoutConfigInput, type PdkCheckoutForm} from '@myparcel-pdk/checkout-common';
 
 export interface CheckoutConfig<Config extends Partial<PdkCheckoutConfigInput> = Partial<PdkCheckoutConfigInput>> {
-  addressFields: Record<AddressField, string>;
+  addressFields: PdkCheckoutForm['billing'] & PdkCheckoutForm['shipping'];
   config: Config;
   fieldShippingMethod: string;
   prefixBilling: string;

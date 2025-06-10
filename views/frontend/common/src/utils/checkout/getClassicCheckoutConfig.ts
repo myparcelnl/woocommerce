@@ -1,5 +1,5 @@
 import {AddressType, useConfig} from '@myparcel-pdk/checkout-common';
-import {useUtil, AddressField, PdkUtil} from '@myparcel-pdk/checkout';
+import {useUtil, AddressField, PdkUtil, SeparateAddressField} from '@myparcel-pdk/checkout';
 import {type CheckoutConfig} from '../../types';
 
 // eslint-disable-next-line max-lines-per-function
@@ -11,6 +11,9 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
       [AddressField.City]: `city`,
       [AddressField.Country]: `country`,
       [AddressField.PostalCode]: `postcode`,
+      [SeparateAddressField.Street]: `street_name`,
+      [SeparateAddressField.Number]: `house_number`,
+      [SeparateAddressField.NumberSuffix]: `house_number_suffix`,
     },
 
     prefixBilling: 'billing_',
