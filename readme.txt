@@ -1,6 +1,6 @@
 === Plugin Name ===
 Contributors: richardperdaan, edielemoine, joerimyparcel
-Tags: woocommerce, export, delivery, packages, myparcel, flespakket, postnl
+Tags: woocommerce, export, delivery, packages, myparcel, postnl
 Requires at least: 5.2.0
 Tested up to: 6.2
 Stable tag: 4.19.1
@@ -8,11 +8,11 @@ Requires PHP: 7.1
 License: MIT
 License URI: http://www.opensource.org/licenses/mit-license.php
 
-Export your WooCommerce orders to MyParcel (www.myparcel.nl) or to Flespakket (www.flespakket.nl) and print labels directly from the WooCommerce admin
+Export your WooCommerce orders to MyParcel (www.myparcel.nl) and print labels directly from the WooCommerce admin
 
 == Description ==
 [vimeo https://vimeo.com/507950149]
-This WooCommerce extension allows you to export your orders to the MyParcel service (www.myparcel.nl) & Flespakket service (www.flespakket.nl). The products are delivered by PostNL.
+This WooCommerce extension allows you to export your orders to the MyParcel service (www.myparcel.nl).
 
 **Online Manual (in Dutch):** [https://myparcelnl.github.io/woocommerce/](https://myparcelnl.github.io/woocommerce/)
 
@@ -63,7 +63,7 @@ In the search field type "MyParcel" and click Search Plugins. You can install it
 
 = Setting up the plugin =
 1. Go to the menu `WooCommerce > MyParcel`.
-2. Fill in your API Details. If you don't have API details, log into your MyParcel or Flespakket account, you can find your API key under Instellingen → Algemeen.
+2. Fill in your API Details. If you don't have API details, log into your MyParcel account, you can find your API key under Instellingen → Algemeen.
 3. Under 'Default export settings' you can set options that should be set by default for the export. You can change these settings per order at the time of export.
 4. The plugin is ready to be used!
 
@@ -79,7 +79,7 @@ Moreover, after a label is created, a Track & Trace code is added to the order. 
 **Online Manual (in Dutch):** [https://myparcelnl.github.io/woocommerce/](https://myparcelnl.github.io/woocommerce/)
 
 = How do I get an API key? =
-When logged in on your MyParcel or Flespakket account, you can find your API key under Instellingen → Algemeen.
+When logged in on your MyParcel account, you can find your API key under Instellingen → Algemeen.
 
 = How do I change the Track & Trace email text? =
 You can change the text (which is placed above the order details table by default) by applying the following filter:
