@@ -1,9 +1,9 @@
 import {type WcShippingRate} from '../../types';
-import {useCartStore} from './useCartStore';
+import {useWcCartStore} from './useWcCartStore';
 
 export const getShippingRate = (): WcShippingRate | undefined => {
-  const cartStore = useCartStore();
-  const shippingRates = cartStore.getShippingRates();
+  const cartStore = useWcCartStore();
+  const shippingRates = cartStore.selectors.getShippingRates();
 
-  return shippingRates[0].shipping_rates.find((rate) => rate.selected);
+  return shippingRates?.[0]?.shipping_rates.find((rate) => rate.selected);
 };

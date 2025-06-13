@@ -12,15 +12,25 @@ const config = isClassicCheckout() ? getClassicCheckoutConfig() : getBlocksCheck
 
 createPdkCheckout({
   fields: {
-    [PdkField.AddressType]: createId('checkbox-control-0'),
+    [PdkField.AddressType]: isClassicCheckout()
+      ? createName(config.fieldAddressType)
+      : createId(config.fieldAddressType),
     [PdkField.ShippingMethod]: createId(config.fieldShippingMethod),
-    [AddressType.Billing]: createFields(config.addressFields, config.prefixBilling, createName),
-    [AddressType.Shipping]: createFields(config.addressFields, config.prefixShipping, createName),
+    [AddressType.Billing]: createFields(
+      config.addressFields,
+      config.prefixBilling,
+      isClassicCheckout() ? createName : createId,
+    ),
+    [AddressType.Shipping]: createFields(
+      config.addressFields,
+      config.prefixShipping,
+      isClassicCheckout() ? createName : createId,
+    ),
   },
 
   formData: {
-    [PdkField.AddressType]: 'ship_to_different_address',
-    [PdkField.ShippingMethod]: config.shippingMethodFormField,
+    [PdkField.AddressType]: config.addressTypeFormDataKey,
+    [PdkField.ShippingMethod]: config.shippingMethodFormDataKey,
     [AddressType.Billing]: createFields(config.addressFields, config.prefixBilling),
     [AddressType.Shipping]: createFields(config.addressFields, config.prefixShipping),
   },
@@ -40,10 +50,6 @@ createPdkCheckout({
     if (response.ok) {
       return response.json();
     }
-  },
-
-  getAddressType(value) {
-    return value === '1' ? AddressType.Shipping : AddressType.Billing;
   },
 
   hasDeliveryOptions(shippingMethod) {
