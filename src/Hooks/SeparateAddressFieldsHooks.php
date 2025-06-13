@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
+use Automattic\WooCommerce\StoreApi\Schemas\V1\CheckoutSchema;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\WooCommerce\Facade\Filter;
 use MyParcelNL\WooCommerce\Facade\WooCommerce;
 use MyParcelNL\WooCommerce\Hooks\Contract\WooCommerceInitCallbacksInterface;
+use MyParcelNLWooCommerce;
+use WC_Customer;
+use WC_Order;
 
 /**
  * Adds separate address fields to the WooCommerce order fields.
@@ -19,6 +23,22 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
     public function onWoocommerceInit(): void
     {
         $this->registerAdditionalBlocksCheckoutFields();
+
+        // This action only fires for blocks checkout.
+        add_action(
+            'woocommerce_set_additional_field_value',
+            [$this, 'storeBlockSeparateAddressFields'],
+            10,
+            4
+        );
+
+        // This action only fires for blocks checkout.
+        add_action(
+            'woocommerce_store_api_checkout_update_order_meta',
+            [$this, 'setAddress1ForBlocksCheckout'],
+            10,
+            1
+        );
     }
 
     public function apply(): void
@@ -106,6 +126,61 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
     }
 
     /**
+     * Save unprefixed street, number, and suffix for compatibility with classic checkout.
+     * @param string $key (namespaced) field ID
+     * @param string $value value for the field being saved
+     * @param string $type shipping or billing
+     * @param WC_Order $wc_object
+     * @return void
+     */
+    public function storeBlockSeparateAddressFields(string $key, string $value, string $type, WC_Order | WC_Customer $wc_object)
+    {
+        $prefix = $type === 'billing' ? Pdk::get('wcAddressTypeBilling') : Pdk::get('wcAddressTypeShipping');
+        if ($key === $this->getBlockFieldId('fieldStreet')) {
+            $wc_object->set_meta_data(
+                $prefix . '_' . Pdk::get('fieldStreet'),
+                $value,
+                true
+            );
+        }
+        if ($key === $this->getBlockFieldId('fieldNumber')) {
+            $wc_object->set_meta_data(
+                $prefix . '_' . Pdk::get('fieldNumber'),
+                $value,
+                true
+            );
+        }
+        if ($key === $this->getBlockFieldId('fieldNumberSuffix')) {
+            $wc_object->set_meta_data(
+                $prefix . '_' . Pdk::get('fieldNumberSuffix'),
+                $value,
+                true
+            );
+        }
+    }
+
+    /**
+     * Set the address1 field for separated fields for blocks checkout.
+     * @param WC_Order $order
+     * @return void
+     */
+    public function setAddress1ForBlocksCheckout(WC_Order $order): void
+    {
+        foreach (['billing', 'shipping'] as $type) {
+            $metaKeyPrefix = '_wc_' . $type . '/' . MyParcelNLWooCommerce::PLUGIN_NAMESPACE . '/';
+            $street      = $order->get_meta($metaKeyPrefix . Pdk::get('fieldStreet'), true);
+            $number      = $order->get_meta($metaKeyPrefix . Pdk::get('fieldNumber'), true);
+            $numberSuffix = $order->get_meta($metaKeyPrefix . Pdk::get('fieldNumberSuffix'), true);
+            $address1 = implode(' ', array_filter([$street, $number, $numberSuffix]));
+            if ($type === 'billing') {
+                $order->set_billing_address_1($address1);
+            } else {
+                $order->set_shipping_address_1($address1);
+            }
+        }
+    }
+
+    /**
      * @param  array $fields
      *
      * @return array
@@ -151,10 +226,12 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
                 // Hide the default address fields.
                 $locale[$countryCode][Pdk::get('fieldAddress1')] = [
                     'hidden'   => true,
+                    'required' => false,
                 ];
 
                 $locale[$countryCode][Pdk::get('fieldAddress2')] = [
                     'hidden'   => true,
+                    'required' => false,
                 ];
 
                 // Modify our own separate address fields.
@@ -173,7 +250,7 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
 
                 $locale[$countryCode][$this->getBlockFieldId('fieldNumberSuffix')] = [
                     'priority' => $postalCodePosition + 2,
-                    'required' => true,
+                    'required' => false,
                     'hidden'   => false,
                 ];
             } else {

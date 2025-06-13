@@ -8,7 +8,6 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\WooCommerce\Facade\Filter;
-use MyParcelNL\WooCommerce\Hooks\Contract\WooCommerceInitCallbacksInterface;
 
 /**
  * Adds separate address fields to the WooCommerce order fields.

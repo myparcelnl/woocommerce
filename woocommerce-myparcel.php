@@ -32,6 +32,8 @@ require plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 
 final class MyParcelNLWooCommerce
 {
+    public const PLUGIN_NAMESPACE = 'myparcelnl';
+
     /**
      * @throws \Throwable
      */
@@ -139,7 +141,7 @@ final class MyParcelNLWooCommerce
         $version = $this->getVersion();
 
         bootPdk(
-            'myparcelnl',
+            self::PLUGIN_NAMESPACE,
             'MyParcel',
             $version,
             plugin_dir_path(__FILE__),
