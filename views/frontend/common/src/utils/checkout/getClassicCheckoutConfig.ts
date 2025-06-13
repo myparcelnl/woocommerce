@@ -1,5 +1,5 @@
 import {AddressType, useConfig} from '@myparcel-pdk/checkout-common';
-import {useUtil, AddressField, PdkUtil} from '@myparcel-pdk/checkout';
+import {useUtil, AddressField, PdkUtil, SeparateAddressField} from '@myparcel-pdk/checkout';
 import {type CheckoutConfig} from '../../types';
 
 // eslint-disable-next-line max-lines-per-function
@@ -11,13 +11,18 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
       [AddressField.City]: `city`,
       [AddressField.Country]: `country`,
       [AddressField.PostalCode]: `postcode`,
+      [SeparateAddressField.Street]: `street_name`,
+      [SeparateAddressField.Number]: `house_number`,
+      [SeparateAddressField.NumberSuffix]: `house_number_suffix`,
     },
 
     prefixBilling: 'billing_',
     prefixShipping: 'shipping_',
 
     fieldShippingMethod: 'shipping_method',
-    shippingMethodFormField: 'shipping_method[0]',
+    fieldAddressType: 'ship_to_different_address',
+    shippingMethodFormDataKey: 'shipping_method[0]',
+    addressTypeFormDataKey: 'ship_to_different_address',
 
     config: {
       formChange(callback) {
@@ -38,6 +43,10 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
         const formData = new FormData(form);
 
         return Object.fromEntries(formData.entries());
+      },
+
+      getAddressType(value: string): AddressType {
+        return value === '1' ? AddressType.Shipping : AddressType.Billing;
       },
 
       hasAddressType(addressType: AddressType) {
