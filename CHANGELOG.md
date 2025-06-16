@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.4.2](https://github.com/myparcelnl/woocommerce/compare/v5.4.1...v5.4.2) (2025-06-16)
+
+
+### :bug: Bug Fixes
+
+* **checkout:** fix validation error when using split address ([#1322](https://github.com/myparcelnl/woocommerce/issues/1322)) ([d6fc8fc](https://github.com/myparcelnl/woocommerce/commit/d6fc8fcbae60fd4548c4d29643c2afd4310956bb))
+* **pdk:** bump myparcelnl/pdk from 2.58.1 to 2.58.5 ([#1326](https://github.com/myparcelnl/woocommerce/issues/1326)) ([e11302c](https://github.com/myparcelnl/woocommerce/commit/e11302ccaed43466a869da425ee110f72a7a60eb))
+
 ## [5.4.1](https://github.com/myparcelnl/woocommerce/compare/v5.4.0...v5.4.1) (2025-05-22)
 
 
