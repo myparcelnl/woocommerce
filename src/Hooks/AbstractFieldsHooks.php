@@ -56,7 +56,7 @@ abstract class AbstractFieldsHooks implements WordPressHooksInterface
      * @param string $type The field type: either text, checkbox, select.
      * @param array $additionalOptions @see https://developer.woocommerce.com/docs/block-development/cart-and-checkout-blocks/additional-checkout-fields/#options
      * @param array $attributes An array of HTML attributes to add to the field.
-     * @return void
+     * @return array
      */
     protected function createBlocksCheckoutAddressField(
         string $name,
@@ -64,7 +64,7 @@ abstract class AbstractFieldsHooks implements WordPressHooksInterface
         string $type = 'text',
         array $additionalOptions = [],
         array $attributes = []
-    ) {
+    ): array {
 
         return array_merge([
             'id' => $this->getBlockFieldId($name),

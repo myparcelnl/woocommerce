@@ -130,7 +130,7 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
      * @param string $key (namespaced) field ID
      * @param string $value value for the field being saved
      * @param string $type shipping or billing
-     * @param WC_Order | WC_Customer $wc_object
+     * @param WC_Order|WC_Customer $wc_object
      * @return void
      */
     public function storeBlockSeparateAddressFields(string $key, string $value, string $type, object $wc_object)
@@ -138,23 +138,17 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
         $prefix = $type === 'billing' ? Pdk::get('wcAddressTypeBilling') : Pdk::get('wcAddressTypeShipping');
         if ($key === $this->getBlockFieldId('fieldStreet')) {
             $wc_object->set_meta_data(
-                $prefix . '_' . Pdk::get('fieldStreet'),
-                $value,
-                true
+                [$prefix . '_' . Pdk::get('fieldStreet') => $value]
             );
         }
         if ($key === $this->getBlockFieldId('fieldNumber')) {
             $wc_object->set_meta_data(
-                $prefix . '_' . Pdk::get('fieldNumber'),
-                $value,
-                true
+                [$prefix . '_' . Pdk::get('fieldNumber') => $value]
             );
         }
         if ($key === $this->getBlockFieldId('fieldNumberSuffix')) {
             $wc_object->set_meta_data(
-                $prefix . '_' . Pdk::get('fieldNumberSuffix'),
-                $value,
-                true
+                [$prefix . '_' . Pdk::get('fieldNumberSuffix') => $value]
             );
         }
     }
