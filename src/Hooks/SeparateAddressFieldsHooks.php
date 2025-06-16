@@ -130,10 +130,10 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
      * @param string $key (namespaced) field ID
      * @param string $value value for the field being saved
      * @param string $type shipping or billing
-     * @param WC_Order $wc_object
+     * @param WC_Order | WC_Customer $wc_object
      * @return void
      */
-    public function storeBlockSeparateAddressFields(string $key, string $value, string $type, WC_Order | WC_Customer $wc_object)
+    public function storeBlockSeparateAddressFields(string $key, string $value, string $type, object $wc_object)
     {
         $prefix = $type === 'billing' ? Pdk::get('wcAddressTypeBilling') : Pdk::get('wcAddressTypeShipping');
         if ($key === $this->getBlockFieldId('fieldStreet')) {
