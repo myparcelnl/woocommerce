@@ -3315,11 +3315,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/admin-component-tests@npm:^1.6.3":
-  version: 1.6.3
-  resolution: "@myparcel-pdk/admin-component-tests@npm:1.6.3"
+"@myparcel-pdk/admin-component-tests@npm:^1.6.4":
+  version: 1.6.4
+  resolution: "@myparcel-pdk/admin-component-tests@npm:1.6.4"
   dependencies:
-    "@myparcel-pdk/admin": "npm:^1.6.3"
+    "@myparcel-pdk/admin": "npm:^1.6.4"
     "@myparcel/vue-form-builder": "npm:^1.0.0-alpha.1"
     "@pinia/testing": "npm:>= 0.1.0 < 1"
     "@vitest/coverage-v8": "npm:^2.1.3"
@@ -3329,37 +3329,37 @@ __metadata:
     vitest: "npm:^2.1.3"
   peerDependencies:
     vue: ^3
-  checksum: 10c0/a380ed5021da8deed066c65fe75ddecb7220a0ee4bd71075530a288cb22bff5930e5da190361caf0903eda6138946046c78c8769fdff40dd51d32aa988c96e5f
+  checksum: 10c0/43a7280b146dea02bb177c8b71c711af30e5360be6755b81990b8ea070a94d9b84fa8f4ed5a4b3124400bf51da2d9e39ea1e0bd8da65a2e0c34c41d9e28a058e
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/admin-preset-dashicons@npm:^1.6.3":
-  version: 1.6.3
-  resolution: "@myparcel-pdk/admin-preset-dashicons@npm:1.6.3"
+"@myparcel-pdk/admin-preset-dashicons@npm:^1.6.4":
+  version: 1.6.4
+  resolution: "@myparcel-pdk/admin-preset-dashicons@npm:1.6.4"
   dependencies:
-    "@myparcel-pdk/admin": "npm:^1.6.3"
+    "@myparcel-pdk/admin": "npm:^1.6.4"
     vite: "npm:^5.4.10"
     vue: "npm:^3.3.0"
     vue-tsc: "npm:^2.0.0"
-  checksum: 10c0/e85c0db7a15e1eea280b8c65a70a7bcd47b0c8597d9494b7dadfd4e29998d55b69c11eec97a3ec0c4b221adceb7b61954e5dbf621fd377415dadda139d5e0999
+  checksum: 10c0/f9328bd6bb06279cbcbb425bc8f68b7174dc3535b8ef13f87dde3032f472aa7fc33872619d35c991a389985c620857a1821721b2e23c57dedac8780e579b8d96
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/admin-preset-default@npm:^1.6.3":
-  version: 1.6.3
-  resolution: "@myparcel-pdk/admin-preset-default@npm:1.6.3"
+"@myparcel-pdk/admin-preset-default@npm:^1.6.4":
+  version: 1.6.4
+  resolution: "@myparcel-pdk/admin-preset-default@npm:1.6.4"
   dependencies:
-    "@myparcel-pdk/admin": "npm:^1.6.3"
+    "@myparcel-pdk/admin": "npm:^1.6.4"
     "@myparcel/ts-utils": "npm:^1.9.0"
     "@vueuse/core": "npm:^10.0.0"
     vue: "npm:^3.3.0"
-  checksum: 10c0/71518ab6102634cb7f528e870097a0ad797a5614ee8a211848bef400fab0eb120350303786fbd6e7310b25602dca2198790ff489aa1a10c2cd764f39232bbd66
+  checksum: 10c0/bb51ca6df111eb8aefb830f2b41103ce1e8fb8e156ab4ea1ae12e23a8b0e0694bb175794966a27e1b5fdf741ad56bbdd8187955ee8dee767173a4c9ec26639a9
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/admin@npm:^1.6.3":
-  version: 1.6.3
-  resolution: "@myparcel-pdk/admin@npm:1.6.3"
+"@myparcel-pdk/admin@npm:^1.6.4":
+  version: 1.6.4
+  resolution: "@myparcel-pdk/admin@npm:1.6.4"
   dependencies:
     "@myparcel-pdk/common": "npm:^1.6.1"
     "@myparcel/constants": "npm:^2.0.0"
@@ -3373,7 +3373,7 @@ __metadata:
     vite: "npm:^5.4.10"
     vue: "npm:^3.3.0"
     vue-tsc: "npm:^2.0.0"
-  checksum: 10c0/c7f66517ed24f26faaa4127f44e3022829c4d0c41594ad17a5a182971635cf063c7f18980b9785f1eeffabd6c19aa63b5b9e9f13f365159cf0be72c35ae90bd8
+  checksum: 10c0/a3e25d49b38d7cfa77f715db6652bc0695d7626be03bf229d39af1b7f7a0905fda31bc7dd84fbeaf42e5bf7a43c74fdfd683ec15cbef8c598d62afb44165033d
   languageName: node
   linkType: hard
 
@@ -3400,58 +3400,58 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/checkout-common@npm:^1.3.2":
-  version: 1.3.2
-  resolution: "@myparcel-pdk/checkout-common@npm:1.3.2"
+"@myparcel-pdk/checkout-common@npm:^1.3.3":
+  version: 1.3.3
+  resolution: "@myparcel-pdk/checkout-common@npm:1.3.3"
   dependencies:
     "@myparcel-pdk/common": "npm:^1.6.1"
     "@myparcel/constants": "npm:^2.0.0"
     "@myparcel/delivery-options": "npm:^6.0.0"
     typescript: "npm:^5.2.2"
-  checksum: 10c0/c456fe48e21c099307771999380b194739e03448cd5f48ed83901d2278b88fc4e4cd0531b096ce20029e14697fd26ca63c55f9d67e838e448ae5ba1fb342374d
+  checksum: 10c0/745469b483874c57e8d19d16a1fa9c06aaa3da01e1ac43539279306dc1efdf30f0a2493d36d4402bc08f2ae677517853717b9856235dbf6cf863a174ea551008
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/checkout-delivery-options@npm:^1.3.2":
-  version: 1.3.2
-  resolution: "@myparcel-pdk/checkout-delivery-options@npm:1.3.2"
+"@myparcel-pdk/checkout-delivery-options@npm:^1.3.3":
+  version: 1.3.3
+  resolution: "@myparcel-pdk/checkout-delivery-options@npm:1.3.3"
   dependencies:
-    "@myparcel-pdk/checkout-common": "npm:^1.3.2"
+    "@myparcel-pdk/checkout-common": "npm:^1.3.3"
     "@myparcel/delivery-options": "npm:^6.0.0"
     "@myparcel/ts-utils": "npm:^1.9.0"
-  checksum: 10c0/1c2014270f0b546cd193a8e592ff0cb81e12c0d0b6e40519f3610e64db71a185c398d3a28a17e60076e9c7056be768a8ef9075b31167936264e3b7a9a556252b
+  checksum: 10c0/9564fb688ded996d409137bf2cc826c05b06a163a2a4f742cf1a914a9fcb68eb626bf25e76aeccc5a7a86b0acafc8e77015505d2130780b7fbeec7261773132b
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/checkout-separate-address-fields@npm:^1.3.2":
-  version: 1.3.2
-  resolution: "@myparcel-pdk/checkout-separate-address-fields@npm:1.3.2"
+"@myparcel-pdk/checkout-separate-address-fields@npm:^1.3.3":
+  version: 1.3.3
+  resolution: "@myparcel-pdk/checkout-separate-address-fields@npm:1.3.3"
   dependencies:
-    "@myparcel-pdk/checkout-common": "npm:^1.3.2"
-  checksum: 10c0/f0706922e8c03fe239db04b1241fd66a985a8d6ff0d94c72d476a26b8b9b72a2214b42faa173f8bd3027c1391798e3ac47b6794d05374260b40efa2434828da7
+    "@myparcel-pdk/checkout-common": "npm:^1.3.3"
+  checksum: 10c0/2429fe4630ac27beddcaddafad4024ff676017688e45c4a946269c05b73ee90e2ced20d70c9c9362870024eefc711b22c9ced9825d77a546abbb049c96b1ba2b
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/checkout-tax-fields@npm:^1.3.2":
-  version: 1.3.2
-  resolution: "@myparcel-pdk/checkout-tax-fields@npm:1.3.2"
+"@myparcel-pdk/checkout-tax-fields@npm:^1.3.3":
+  version: 1.3.3
+  resolution: "@myparcel-pdk/checkout-tax-fields@npm:1.3.3"
   dependencies:
-    "@myparcel-pdk/checkout-common": "npm:^1.3.2"
+    "@myparcel-pdk/checkout-common": "npm:^1.3.3"
     "@myparcel/constants": "npm:^2.0.0"
-  checksum: 10c0/d230c3d3c9403358ac3ccc701745ad817d69d45ee29c106a299b50e46877addf663964a23f9d0e7467691b893d0db90ce788be177d9085a6aa0f90a946431a52
+  checksum: 10c0/4288b223660000499154cce6212c3ccc4a5940a52d43680966624bee531d2ea3ecec2f8b1dd7631394cee16692057c354b736e04702cdea869a5175747bdab35
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/checkout@npm:^1.3.2":
-  version: 1.3.2
-  resolution: "@myparcel-pdk/checkout@npm:1.3.2"
+"@myparcel-pdk/checkout@npm:^1.3.3":
+  version: 1.3.3
+  resolution: "@myparcel-pdk/checkout@npm:1.3.3"
   dependencies:
-    "@myparcel-pdk/checkout-common": "npm:^1.3.2"
-    "@myparcel-pdk/checkout-delivery-options": "npm:^1.3.2"
-    "@myparcel-pdk/checkout-separate-address-fields": "npm:^1.3.2"
-    "@myparcel-pdk/checkout-tax-fields": "npm:^1.3.2"
+    "@myparcel-pdk/checkout-common": "npm:^1.3.3"
+    "@myparcel-pdk/checkout-delivery-options": "npm:^1.3.3"
+    "@myparcel-pdk/checkout-separate-address-fields": "npm:^1.3.3"
+    "@myparcel-pdk/checkout-tax-fields": "npm:^1.3.3"
     "@myparcel-pdk/common": "npm:^1.6.1"
-  checksum: 10c0/9e76ae2a9278296227692ff90cbea9297654ad4c054bfdb9bf6b766deef1ab506868fc7557bee51686b901179ad09db0ed2a973c231e087079e789c8bc5a23f5
+  checksum: 10c0/c10b4414ed5221d342fd737c551892cc547cb04edfa1972e757401f2c6e6101fe7f9fc20eb1840bd9d135496a08130a3330acfa077f4194fd9b8754abdd13974
   languageName: node
   linkType: hard
 
@@ -3509,8 +3509,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/address-widget@workspace:views/frontend/checkout-address-widget"
   dependencies:
-    "@myparcel-pdk/checkout": "npm:^1.3.2"
-    "@myparcel-pdk/checkout-common": "npm:^1.3.2"
+    "@myparcel-pdk/checkout": "npm:^1.3.3"
+    "@myparcel-pdk/checkout-common": "npm:^1.3.3"
     "@myparcel-woocommerce/frontend-common": "workspace:^"
     "@myparcel-woocommerce/vite-config": "workspace:*"
     "@types/jquery": "npm:^3.5.16"
@@ -3524,10 +3524,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/backend-admin@workspace:views/backend/admin"
   dependencies:
-    "@myparcel-pdk/admin": "npm:^1.6.3"
-    "@myparcel-pdk/admin-component-tests": "npm:^1.6.3"
-    "@myparcel-pdk/admin-preset-dashicons": "npm:^1.6.3"
-    "@myparcel-pdk/admin-preset-default": "npm:^1.6.3"
+    "@myparcel-pdk/admin": "npm:^1.6.4"
+    "@myparcel-pdk/admin-component-tests": "npm:^1.6.4"
+    "@myparcel-pdk/admin-preset-dashicons": "npm:^1.6.4"
+    "@myparcel-pdk/admin-preset-default": "npm:^1.6.4"
     "@myparcel-woocommerce/vite-config": "workspace:*"
     "@myparcel/ts-utils": "npm:^1.8.0"
     "@tanstack/vue-query": "npm:^4.27.0"
@@ -3552,7 +3552,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/block-delivery-options@workspace:views/blocks/delivery-options"
   dependencies:
-    "@myparcel-pdk/checkout": "npm:^1.3.2"
+    "@myparcel-pdk/checkout": "npm:^1.3.3"
     "@myparcel-woocommerce/webpack-config": "workspace:*"
     "@woocommerce/block-library": "npm:^2.3.0"
     "@woocommerce/settings": "npm:^1.0.0"
@@ -3571,7 +3571,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/frontend-checkout-core@workspace:views/frontend/checkout-core"
   dependencies:
-    "@myparcel-pdk/checkout": "npm:^1.3.2"
+    "@myparcel-pdk/checkout": "npm:^1.3.3"
     "@myparcel-woocommerce/frontend-common": "workspace:^"
     "@myparcel-woocommerce/vite-config": "workspace:*"
     "@types/jquery": "npm:^3.5.16"
@@ -3584,7 +3584,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/frontend-checkout-delivery-options@workspace:views/frontend/checkout-delivery-options"
   dependencies:
-    "@myparcel-pdk/checkout": "npm:^1.3.2"
+    "@myparcel-pdk/checkout": "npm:^1.3.3"
     "@myparcel-woocommerce/frontend-common": "workspace:*"
     "@myparcel-woocommerce/vite-config": "workspace:*"
     "@myparcel/ts-utils": "npm:^1.8.0"
@@ -3599,7 +3599,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/frontend-checkout-separate-address-fields@workspace:views/frontend/checkout-separate-address-fields"
   dependencies:
-    "@myparcel-pdk/checkout": "npm:^1.3.2"
+    "@myparcel-pdk/checkout": "npm:^1.3.3"
     "@myparcel-woocommerce/frontend-common": "workspace:*"
     "@myparcel-woocommerce/vite-config": "workspace:*"
     "@myparcel/ts-utils": "npm:^1.8.0"
@@ -3614,7 +3614,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/frontend-checkout-tax-fields@workspace:views/frontend/checkout-tax-fields"
   dependencies:
-    "@myparcel-pdk/checkout": "npm:^1.3.2"
+    "@myparcel-pdk/checkout": "npm:^1.3.3"
     "@myparcel-woocommerce/frontend-common": "workspace:*"
     "@myparcel-woocommerce/vite-config": "workspace:*"
     "@myparcel/ts-utils": "npm:^1.8.0"
