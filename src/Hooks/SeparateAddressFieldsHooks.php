@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
+use Automattic\WooCommerce\Blocks\Utils\CartCheckoutUtils;
 use Automattic\WooCommerce\StoreApi\Schemas\V1\CheckoutSchema;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
@@ -20,6 +21,13 @@ use WC_Order;
  */
 class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooCommerceInitCallbacksInterface
 {
+    public $useSeparateAddressFields;
+
+    public function __construct()
+    {
+        $this->useSeparateAddressFields = Settings::get(CheckoutSettings::USE_SEPARATE_ADDRESS_FIELDS, CheckoutSettings::ID);
+    }
+
     public function onWoocommerceInit(): void
     {
         $this->registerAdditionalBlocksCheckoutFields();
@@ -43,7 +51,7 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
 
     public function apply(): void
     {
-        // Blocks only
+        // Blocks AND Classic checkout
         add_filter('woocommerce_get_country_locale', [$this, 'extendLocaleWithSeparateAddressFields'], 1);
 
         // Classic only
@@ -93,6 +101,10 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
      */
     public function registerAdditionalBlocksCheckoutFields(): void
     {
+        if (! $this->useSeparateAddressFields) {
+            return;
+        }
+
         if (version_compare(WooCommerce::getVersion(), '8.9', '>=')) {
             // Note: These fields are further modified in the extendLocaleWithSeparateAddressFields() method.
             \woocommerce_register_additional_checkout_field(
@@ -132,6 +144,10 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
      */
     public function storeStreetAndNumberForBlocksCheckout(string $key, string $value, string $type, object $wc_object)
     {
+        if (! $this->useSeparateAddressFields) {
+            return;
+        }
+
         $prefix = $type === 'billing' ? Pdk::get('wcAddressTypeBilling') : Pdk::get('wcAddressTypeShipping');
         $fields = [
             'fieldStreet',
@@ -158,6 +174,10 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
      */
     public function setAddress1ForBlocksCheckout(WC_Order $order): void
     {
+        if (! $this->useSeparateAddressFields) {
+            return;
+        }
+
         foreach (['billing', 'shipping'] as $type) {
             $countryCode = $type === 'billing' ? $order->get_billing_country() : $order->get_shipping_country();
             if (in_array($countryCode, (array) Pdk::get('countriesWithSeparateAddressFields'), true)) {
@@ -209,15 +229,13 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
      */
     public function extendLocaleWithSeparateAddressFields(array $locale): array
     {
-        $useSeparateAddressFields = Settings::get(CheckoutSettings::USE_SEPARATE_ADDRESS_FIELDS, CheckoutSettings::ID);
-        if (! $useSeparateAddressFields) {
+        if (! $this->useSeparateAddressFields) {
             return $locale;
         }
 
-
         // We cannot define our fields for specific locales, so we need to remove them here by default.
         foreach ($locale as $countryCode => $fields) {
-            if (in_array($countryCode, Pdk::get('countriesWithSeparateAddressFields'), true)) {
+            if (in_array($countryCode, (array) Pdk::get('countriesWithSeparateAddressFields'), true)) {
                 // Hide the default address fields.
                 $locale[$countryCode][Pdk::get('fieldAddress1')] = [
                     'hidden'   => true,
@@ -230,40 +248,75 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
                 ];
 
                 // Modify our own separate address fields.
-                $postalCodePosition = $fields['postcode']['priority'];
-                $locale[$countryCode][$this->getBlockFieldId('fieldStreet')] = [
-                    'priority' => $postalCodePosition - 1,
-                    'required' => true,
-                    'hidden'   => false,
-                ];
+                if (CartCheckoutUtils::is_checkout_block_default()) {
+                    $postalCodePosition = $fields['postcode']['priority'];
+                    $locale[$countryCode][$this->getBlockFieldId('fieldStreet')] = [
+                        'priority' => $postalCodePosition - 1,
+                        'required' => true,
+                        'hidden'   => false,
+                    ];
 
-                $locale[$countryCode][$this->getBlockFieldId('fieldNumber')] = [
-                    'priority' => $postalCodePosition + 1,
-                    'required' => true,
-                    'hidden'   => false,
-                ];
+                    $locale[$countryCode][$this->getBlockFieldId('fieldNumber')] = [
+                        'priority' => $postalCodePosition + 1,
+                        'required' => true,
+                        'hidden'   => false,
+                    ];
 
-                $locale[$countryCode][$this->getBlockFieldId('fieldNumberSuffix')] = [
-                    'priority' => $postalCodePosition + 2,
-                    'required' => false,
-                    'hidden'   => false,
-                ];
+                    $locale[$countryCode][$this->getBlockFieldId('fieldNumberSuffix')] = [
+                        'priority' => $postalCodePosition + 2,
+                        'required' => false,
+                        'hidden'   => false,
+                    ];
+                } else {
+                    $locale[$countryCode][Pdk::get('fieldStreet')] = [
+                        'required' => true,
+                        'hidden'   => false,
+                    ];
+
+                    $locale[$countryCode][Pdk::get('fieldNumber')] = [
+                        'required' => true,
+                        'hidden'   => false,
+                    ];
+
+                    $locale[$countryCode][Pdk::get('fieldNumberSuffix')] = [
+                        'required' => false,
+                        'hidden'   => false,
+                    ];
+                }
             } else {
-                // Hide our custom address fields if the country does not use separate address fields.
-                $locale[$countryCode][$this->getBlockFieldId('fieldStreet')] = [
-                    'hidden' => true,
-                    'required' => false,
-                ];
+                if (CartCheckoutUtils::is_checkout_block_default()) {
+                    // Hide our custom address fields if the country does not use separate address fields.
+                    $locale[$countryCode][$this->getBlockFieldId('fieldStreet')] = [
+                        'hidden' => true,
+                        'required' => false,
+                    ];
 
-                $locale[$countryCode][$this->getBlockFieldId('fieldNumber')] = [
-                    'hidden' => true,
-                    'required' => false,
-                ];
+                    $locale[$countryCode][$this->getBlockFieldId('fieldNumber')] = [
+                        'hidden' => true,
+                        'required' => false,
+                    ];
 
-                $locale[$countryCode][$this->getBlockFieldId('fieldNumberSuffix')] = [
-                    'hidden' => true,
-                    'required' => false,
-                ];
+                    $locale[$countryCode][$this->getBlockFieldId('fieldNumberSuffix')] = [
+                        'hidden' => true,
+                        'required' => false,
+                    ];
+                } else {
+                    $locale[$countryCode][Pdk::get('fieldStreet')] = [
+                        'required' => true,
+                        'hidden'   => false,
+                    ];
+
+                    $locale[$countryCode][Pdk::get('fieldNumber')] = [
+                        'required' => true,
+                        'hidden'   => false,
+                    ];
+
+                    $locale[$countryCode][Pdk::get('fieldNumberSuffix')] = [
+                        'required' => false,
+                        'hidden'   => false,
+                    ];
+
+                }
             }
         }
         return $locale;
