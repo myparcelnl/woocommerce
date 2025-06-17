@@ -27,7 +27,7 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
         // This action only fires for blocks checkout.
         add_action(
             'woocommerce_set_additional_field_value',
-            [$this, 'storeBlockSeparateAddressFields'],
+            [$this, 'storeStreetAndNumberForBlocksCheckout'],
             10,
             4
         );
@@ -72,7 +72,7 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
      */
     public function extendShippingFields(array $fields): array
     {
-        return $this->extendWithSeparateAddressFields($fields, Pdk::get('wcAddressTypeShipping'));
+        return $this->extendWithSeparateAddressFields($fields, (string) Pdk::get('wcAddressTypeShipping'));
     }
 
     /**
@@ -82,7 +82,7 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
      */
     public function extendBillingFields(array $fields): array
     {
-        return $this->extendWithSeparateAddressFields($fields, Pdk::get('wcAddressTypeBilling'));
+        return $this->extendWithSeparateAddressFields($fields, (string) Pdk::get('wcAddressTypeBilling'));
     }
 
     /**
@@ -99,8 +99,7 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
                 $this->createBlocksCheckoutAddressField(
                     'fieldStreet',
                     'street',
-                    'text',
-                    ['required' => true]
+                    'text'
                 ),
             );
 
@@ -108,8 +107,7 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
                 $this->createBlocksCheckoutAddressField(
                     'fieldNumber',
                     'number',
-                    'text',
-                    ['required' => true]
+                    'text'
                 ),
             );
 
@@ -118,22 +116,21 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
                 $this->createBlocksCheckoutAddressField(
                     'fieldNumberSuffix',
                     'number_suffix',
-                    'text',
-                    ['required' => false]
+                    'text'
                 )
             );
         }
     }
 
     /**
-     * Save unprefixed street, number, and suffix for compatibility with classic checkout.
+     * Save street, number, and suffix without namespace prefix, for compatibility with classic checkout.
      * @param string $key (namespaced) field ID
      * @param string $value value for the field being saved
      * @param string $type shipping or billing
      * @param WC_Order|WC_Customer $wc_object
      * @return void
      */
-    public function storeBlockSeparateAddressFields(string $key, string $value, string $type, object $wc_object)
+    public function storeStreetAndNumberForBlocksCheckout(string $key, string $value, string $type, object $wc_object)
     {
         $prefix = $type === 'billing' ? Pdk::get('wcAddressTypeBilling') : Pdk::get('wcAddressTypeShipping');
         $fields = [
@@ -162,15 +159,18 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
     public function setAddress1ForBlocksCheckout(WC_Order $order): void
     {
         foreach (['billing', 'shipping'] as $type) {
-            $metaKeyPrefix = '_wc_' . $type . '/' . MyParcelNLWooCommerce::PLUGIN_NAMESPACE . '/';
-            $street      = $order->get_meta($metaKeyPrefix . Pdk::get('fieldStreet'), true);
-            $number      = $order->get_meta($metaKeyPrefix . Pdk::get('fieldNumber'), true);
-            $numberSuffix = $order->get_meta($metaKeyPrefix . Pdk::get('fieldNumberSuffix'), true);
-            $address1 = implode(' ', array_filter([$street, $number, $numberSuffix]));
-            if ($type === 'billing') {
-                $order->set_billing_address_1($address1);
-            } else {
-                $order->set_shipping_address_1($address1);
+            $countryCode = $type === 'billing' ? $order->get_billing_country() : $order->get_shipping_country();
+            if (in_array($countryCode, (array) Pdk::get('countriesWithSeparateAddressFields'), true)) {
+                $metaKeyPrefix = '_wc_' . $type . '/' . MyParcelNLWooCommerce::PLUGIN_NAMESPACE . '/';
+                $street      = $order->get_meta($metaKeyPrefix . Pdk::get('fieldStreet'), true);
+                $number      = $order->get_meta($metaKeyPrefix . Pdk::get('fieldNumber'), true);
+                $numberSuffix = $order->get_meta($metaKeyPrefix . Pdk::get('fieldNumberSuffix'), true);
+                $address1 = implode(' ', array_filter([$street, $number, $numberSuffix]));
+                if ($type === 'billing') {
+                    $order->set_billing_address_1($address1);
+                } else {
+                    $order->set_shipping_address_1($address1);
+                }
             }
         }
     }

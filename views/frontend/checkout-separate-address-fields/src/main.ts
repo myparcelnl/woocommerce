@@ -5,7 +5,14 @@ import {
   useWcCartStore,
   useWcCheckoutStore,
 } from '@myparcel-woocommerce/frontend-common';
-import {AddressType, PdkEvent, StoreListener, useCheckoutStore} from '@myparcel-pdk/checkout-common';
+import {
+  AddressField,
+  AddressType,
+  PdkEvent,
+  StoreListener,
+  useCheckoutStore,
+  useSettings,
+} from '@myparcel-pdk/checkout-common';
 import {
   initializeCheckoutSeparateAddressFields as initialize,
   SeparateAddressField,
@@ -13,6 +20,7 @@ import {
   usePdkCheckout,
 } from '@myparcel-pdk/checkout';
 
+// eslint-disable-next-line max-lines-per-function
 const initializeCheckoutSeparateAddressFields = () => {
   // @ts-expect-error this is a valid event
   jQuery(document.body).on(EVENT_WOOCOMMERCE_COUNTRY_TO_STATE_CHANGED, (event: Event, newCountry: string) => {
@@ -41,25 +49,31 @@ const initializeCheckoutSeparateAddressFields = () => {
 
     // Set the address fields in the WC cart store when the MyParcel checkout data is updated.
     const wcCartStore = useWcCartStore();
+    const settings = useSettings();
     checkoutStore.on(StoreListener.Update, async (event) => {
-      await wcCartStore.actions.setShippingAddress({
-        address_1: [
-          event.form.shipping[SeparateAddressField.Street],
-          event.form.shipping[SeparateAddressField.Number],
-          event.form.shipping[SeparateAddressField.NumberSuffix],
-        ]
-          .filter(Boolean)
-          .join(' '),
-      });
-      await wcCartStore.actions.setBillingAddress({
-        address_1: [
-          event.form.billing[SeparateAddressField.Street],
-          event.form.billing[SeparateAddressField.Number],
-          event.form.billing[SeparateAddressField.NumberSuffix],
-        ]
-          .filter(Boolean)
-          .join(' '),
-      });
+      if (settings.countriesWithSeparateAddressFields.includes(event.form.shipping[AddressField.Country])) {
+        await wcCartStore.actions.setShippingAddress({
+          address_1: [
+            event.form.shipping[SeparateAddressField.Street],
+            event.form.shipping[SeparateAddressField.Number],
+            event.form.shipping[SeparateAddressField.NumberSuffix],
+          ]
+            .filter(Boolean)
+            .join(' '),
+        });
+      }
+
+      if (settings.countriesWithSeparateAddressFields.includes(event.form.billing[AddressField.Country])) {
+        await wcCartStore.actions.setBillingAddress({
+          address_1: [
+            event.form.billing[SeparateAddressField.Street],
+            event.form.billing[SeparateAddressField.Number],
+            event.form.billing[SeparateAddressField.NumberSuffix],
+          ]
+            .filter(Boolean)
+            .join(' '),
+        });
+      }
     });
   }
 };
