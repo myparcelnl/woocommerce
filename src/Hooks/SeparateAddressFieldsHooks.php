@@ -136,21 +136,22 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
     public function storeBlockSeparateAddressFields(string $key, string $value, string $type, object $wc_object)
     {
         $prefix = $type === 'billing' ? Pdk::get('wcAddressTypeBilling') : Pdk::get('wcAddressTypeShipping');
-        if ($key === $this->getBlockFieldId('fieldStreet')) {
-            $wc_object->set_meta_data(
-                [$prefix . '_' . Pdk::get('fieldStreet') => $value]
-            );
+        $fields = [
+            'fieldStreet',
+            'fieldNumber',
+            'fieldNumberSuffix',
+        ];
+
+        foreach ($fields as $field) {
+            if ($key === $this->getBlockFieldId($field)) {
+                $wc_object->update_meta_data(
+                    '_' . $prefix . '_' . Pdk::get($field),
+                    $value
+                );
+            }
         }
-        if ($key === $this->getBlockFieldId('fieldNumber')) {
-            $wc_object->set_meta_data(
-                [$prefix . '_' . Pdk::get('fieldNumber') => $value]
-            );
-        }
-        if ($key === $this->getBlockFieldId('fieldNumberSuffix')) {
-            $wc_object->set_meta_data(
-                [$prefix . '_' . Pdk::get('fieldNumberSuffix') => $value]
-            );
-        }
+        // This function checks whether meta data has changed and only saves if necessary.
+        $wc_object->save_meta_data();
     }
 
     /**
