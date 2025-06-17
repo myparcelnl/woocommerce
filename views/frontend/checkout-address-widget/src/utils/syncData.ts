@@ -91,15 +91,16 @@ const mergeAddressFields = (address: AddressEventPayload['detail']): string[] | 
 const addressToHiddenInput = (prefix: string, address: AddressEventPayload['detail']) => {
   const HIDDEN_ADDRESS_FIELD = useSettings().checkoutAddressHiddenInputName;
   const hiddenInput = document.querySelector(`#${prefix}${HIDDEN_ADDRESS_FIELD}`) as HTMLInputElement;
-  delete address.appIdentifier;
+  const addressCopy = {...address};
+  delete addressCopy.appIdentifier;
 
   // Empty value instead of empty object if the address object is empty
-  if (Object.keys(address).length === 0) {
+  if (Object.keys(addressCopy).length === 0) {
     hiddenInput.value = '';
-    return;
+  } else {
+    hiddenInput.value = JSON.stringify(addressCopy);
   }
 
-  hiddenInput.value = JSON.stringify(address);
   hiddenInput.dispatchEvent(new Event('change', {bubbles: true}));
 };
 
