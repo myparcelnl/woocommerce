@@ -93,6 +93,11 @@ export const getBlocksCheckoutConfig = (): CheckoutConfig => {
         return formData;
       },
 
+      getAddressType() {
+        // Always use shipping in the blocks checkout.
+        return AddressType.Shipping;
+      },
+
       getForm() {
         const getElement = useUtil(PdkUtil.GetElement);
 
