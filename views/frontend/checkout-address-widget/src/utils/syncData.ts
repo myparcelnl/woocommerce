@@ -17,7 +17,7 @@ export const createHiddenInput = (prefix: string): HTMLInputElement => {
   hiddenInput.type = 'hidden';
   hiddenInput.name = `${prefix}${HIDDEN_ADDRESS_FIELD}`;
   hiddenInput.id = `${prefix}${HIDDEN_ADDRESS_FIELD}`;
-  hiddenInput.value = JSON.stringify({});
+  hiddenInput.value = '';
 
   // Add it to the form
   const form = document.querySelector('form.woocommerce-checkout');
