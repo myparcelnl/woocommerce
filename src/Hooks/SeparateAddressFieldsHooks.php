@@ -302,18 +302,18 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
                     ];
                 } else {
                     $locale[$countryCode][Pdk::get('fieldStreet')] = [
-                        'required' => true,
-                        'hidden'   => false,
+                        'hidden' => true,
+                        'required' => false,
                     ];
 
                     $locale[$countryCode][Pdk::get('fieldNumber')] = [
-                        'required' => true,
-                        'hidden'   => false,
+                        'hidden' => true,
+                        'required' => false,
                     ];
 
                     $locale[$countryCode][Pdk::get('fieldNumberSuffix')] = [
+                        'hidden' => true,
                         'required' => false,
-                        'hidden'   => false,
                     ];
 
                 }
