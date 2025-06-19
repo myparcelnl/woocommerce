@@ -9,11 +9,11 @@
         "MyParcelNLWooCommerce::uninstall"
     ],
     "init": [],
+    "woocommerce_init": [
+        "MyParcelNLWooCommerce::onWoocommerceInit"
+    ],
     "woocommerce_blocks_checkout_block_registration": [
         "MyParcelNLWooCommerce::registerCheckoutBlocks"
-    ],
-    "admin_init": [
-        {}
     ],
     "woocommerce_order_status_changed": [
         "MyParcelNL\\WooCommerce\\Hooks\\AutomaticOrderExportHooks::automaticExportOrder"

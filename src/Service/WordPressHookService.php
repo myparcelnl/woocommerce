@@ -10,6 +10,7 @@ use MyParcelNL\WooCommerce\Hooks\AutomaticOrderExportHooks;
 use MyParcelNL\WooCommerce\Hooks\BlocksIntegrationHooks;
 use MyParcelNL\WooCommerce\Hooks\CartFeesHooks;
 use MyParcelNL\WooCommerce\Hooks\CheckoutScriptHooks;
+use MyParcelNL\WooCommerce\Hooks\Contract\WooCommerceInitCallbacksInterface;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Hooks\OrderNotesHooks;
 use MyParcelNL\WooCommerce\Hooks\PluginInfoHooks;
@@ -28,7 +29,6 @@ use MyParcelNL\WooCommerce\Pdk\Hooks\PdkOrderListHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkPluginSettingsHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkProductSettingsHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkWebhookHooks;
-use MyParcelNL\WooCommerce\Pdk\Hooks\PdkAddressEndpointHooks;
 use RuntimeException;
 
 final class WordPressHookService
@@ -47,6 +47,20 @@ final class WordPressHookService
             }
 
             $instance->apply();
+        }
+    }
+
+    public function onInit(): void
+    {
+        foreach ($this->getInitHooks() as $service) {
+            /** @var \MyParcelNL\WooCommerce\Hooks\Contract\WooCommerceInitCallbacksInterface $instance */
+            $instance = Pdk::get($service);
+
+            if (! $instance instanceof WooCommerceInitCallbacksInterface) {
+                throw new RuntimeException("Service {$service} does not implement WooCommerceInitCallbacksInterface");
+            }
+
+            $instance->onWoocommerceInit();
         }
     }
 
@@ -78,6 +92,16 @@ final class WordPressHookService
             TaxFieldsHooks::class,
             TrackTraceHooks::class,
             WebhookActions::class,
+        ];
+    }
+
+    /**
+     * @return class-string<\MyParcelNL\WooCommerce\Hooks\Contract\WooCommerceInitCallbacksInterface>[]
+     */
+    private function getInitHooks(): array
+    {
+        return [
+            SeparateAddressFieldsHooks::class,
         ];
     }
 }

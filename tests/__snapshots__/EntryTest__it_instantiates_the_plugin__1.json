@@ -11,6 +11,9 @@
     "init": [
         "MyParcelNLWooCommerce::initialize"
     ],
+    "woocommerce_init": [
+        "MyParcelNLWooCommerce::onWoocommerceInit"
+    ],
     "woocommerce_blocks_checkout_block_registration": [
         "MyParcelNLWooCommerce::registerCheckoutBlocks"
     ]
