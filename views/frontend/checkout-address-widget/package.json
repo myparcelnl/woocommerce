@@ -24,6 +24,6 @@
     "@myparcel-pdk/checkout": "^1.3.3",
     "@myparcel-pdk/checkout-common": "^1.3.3",
     "@myparcel-woocommerce/frontend-common": "workspace:^",
-    "mypa-address-widget": "^1.8.1"
+    "mypa-address-widget": "^1.8.2"
   }
 }
