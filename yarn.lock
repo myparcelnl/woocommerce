@@ -3514,7 +3514,7 @@ __metadata:
     "@myparcel-woocommerce/frontend-common": "workspace:^"
     "@myparcel-woocommerce/vite-config": "workspace:*"
     "@types/jquery": "npm:^3.5.16"
-    mypa-address-widget: "npm:^1.8.1"
+    mypa-address-widget: "npm:^1.8.2"
     typescript: "npm:^5.2.2"
     vite: "npm:^5.0.0"
   languageName: unknown
@@ -10379,7 +10379,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wordpress/icons@npm:^10.22.0, @wordpress/icons@npm:^10.23.0, @wordpress/icons@npm:^10.25.0, @wordpress/icons@npm:^10.9.0":
+"@wordpress/icons@npm:^10.22.0, @wordpress/icons@npm:^10.23.0, @wordpress/icons@npm:^10.9.0":
+  version: 10.23.0
+  resolution: "@wordpress/icons@npm:10.23.0"
+  dependencies:
+    "@babel/runtime": "npm:7.25.7"
+    "@wordpress/element": "npm:^6.23.0"
+    "@wordpress/primitives": "npm:^4.23.0"
+  checksum: 10c0/e6a4248571f8a74dc60d8aa8d9ad3341b198a3331c48015ceca498c76c8d66ad6a19b883dbafd13af90373bba03c593ff0f77de055ef0bcdf12cbe03f17f24c6
+  languageName: node
+  linkType: hard
+
+"@wordpress/icons@npm:^10.25.0":
   version: 10.25.0
   resolution: "@wordpress/icons@npm:10.25.0"
   dependencies:
@@ -23994,9 +24005,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mypa-address-widget@npm:^1.8.1":
-  version: 1.8.3
-  resolution: "mypa-address-widget@npm:1.8.3"
+"mypa-address-widget@npm:^1.8.2":
+  version: 1.8.2
+  resolution: "mypa-address-widget@npm:1.8.2"
   dependencies:
     "@hey-api/client-fetch": "npm:^0.10.0"
     "@myparcel/constants": "npm:^2.2.0"
@@ -24010,7 +24021,7 @@ __metadata:
     zod: "npm:^3.24.2"
   peerDependencies:
     vue: ^3.0.0
-  checksum: 10c0/ac68b585c3d213f1458c35432173f827784a0b3ad81a2b3f11a22ee468c4748377f8bd1e3126dfea18062d73a481a490455e6abe465f7b774da77e99f84f3749
+  checksum: 10c0/1203c18ca1d055054257899776c5b982e44dd53e992568da6382dead5d44ed44d54cf84e0ef300be3d4080b6d404981013bdc4e3990ce7e92c6aaf91854743af
   languageName: node
   linkType: hard
 
