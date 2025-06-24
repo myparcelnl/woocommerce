@@ -20,7 +20,9 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
     prefixShipping: 'shipping_',
 
     fieldShippingMethod: 'shipping_method',
-    shippingMethodFormField: 'shipping_method[0]',
+    fieldAddressType: 'ship_to_different_address',
+    shippingMethodFormDataKey: 'shipping_method[0]',
+    addressTypeFormDataKey: 'ship_to_different_address',
 
     config: {
       formChange(callback) {
@@ -41,6 +43,10 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
         const formData = new FormData(form);
 
         return Object.fromEntries(formData.entries());
+      },
+
+      getAddressType(value: string): AddressType {
+        return value === '1' ? AddressType.Shipping : AddressType.Billing;
       },
 
       hasAddressType(addressType: AddressType) {
