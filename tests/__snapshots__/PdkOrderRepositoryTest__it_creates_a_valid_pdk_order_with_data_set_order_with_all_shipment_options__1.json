@@ -58,9 +58,9 @@
     "lines": [
         {
             "quantity": 2,
-            "price": 100000,
+            "price": 50000,
             "vat": 0,
-            "priceAfterVat": 100000,
+            "priceAfterVat": 50000,
             "product": {
                 "externalIdentifier": "3214",
                 "sku": "WVS-0001",
@@ -120,9 +120,9 @@
         },
         {
             "quantity": 2,
-            "price": 100000,
+            "price": 50000,
             "vat": 0,
-            "priceAfterVat": 100000,
+            "priceAfterVat": 50000,
             "product": {
                 "externalIdentifier": "2324",
                 "sku": "WVS-0002",
@@ -191,10 +191,10 @@
     "shipmentPrice": 0,
     "shipmentPriceAfterVat": 0,
     "shipmentVat": 0,
-    "orderPrice": 500000,
-    "orderPriceAfterVat": 500000,
+    "orderPrice": 300000,
+    "orderPriceAfterVat": 300000,
     "orderVat": 0,
-    "totalPrice": 500000,
+    "totalPrice": 300000,
     "totalVat": 0,
-    "totalPriceAfterVat": 500000
+    "totalPriceAfterVat": 300000
 }

@@ -186,9 +186,12 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'billingAddress'        => $this->addressAdapter->fromWcOrder($order, Pdk::get('wcAddressTypeBilling')),
             'lines'                 => $items
                 ->map(function (array $item) {
+                    $quantity = $item['item']->get_quantity();
+                    $price    = $quantity ? (float) $item['item']->get_total() / $quantity : 0;
+
                     return new PdkOrderLine([
-                        'quantity' => $item['item']->get_quantity(),
-                        'price'    => (int) ((float) $item['item']->get_total() * 100),
+                        'quantity' => $quantity,
+                        'price'    => (int) ($price * 100),
                         'product'  => $item['pdkProduct'],
                     ]);
                 })
