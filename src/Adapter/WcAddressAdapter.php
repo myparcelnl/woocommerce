@@ -88,7 +88,7 @@ class WcAddressAdapter
         // If there's an address JSON object, use it
         if ($class instanceof WC_Order) {
             $myParcelAddress = $this->getOrderMeta($class, Pdk::get('checkoutAddressHiddenInputName'), $addressType);
-            if ($myParcelAddress) {
+            if (!empty($myParcelAddress)) {
                 // Convert the microservice definition to the PDK definition
                 $decodedAddress = new MyParcelAddress(\json_decode($myParcelAddress, true));
                 return array_merge($pdkAddressAttributes, $decodedAddress->toPdkAddress()->toArray());
