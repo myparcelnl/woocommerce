@@ -89,7 +89,7 @@
     "@myparcel/semantic-release-config": "^5.0.0",
     "@myparcel/semantic-release-wordpress-readme-generator": "^1.1.0",
     "@semantic-release/git": "^10.0.1",
-    "@types/node": "^20.0.0",
+    "@types/node": "^24.0.7",
     "@types/react": "*",
     "@types/react-dom": "*",
     "@types/wordpress__block-editor": "*",
