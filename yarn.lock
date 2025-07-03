@@ -3377,9 +3377,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/app-builder@npm:^1.6.1":
-  version: 1.6.1
-  resolution: "@myparcel-pdk/app-builder@npm:1.6.1"
+"@myparcel-pdk/app-builder@npm:^1.6.2":
+  version: 1.6.2
+  resolution: "@myparcel-pdk/app-builder@npm:1.6.2"
   dependencies:
     "@edielemoine/google-docs-importer": "npm:^2.2.0"
     "@myparcel/ts-utils": "npm:^1.9.0"
@@ -3396,7 +3396,7 @@ __metadata:
     supports-color: "npm:^9.3.1"
   bin:
     pdk-builder: ./bin/index.js
-  checksum: 10c0/a99e3c2d661a173f5ac36c286cb1282e12fc2a8f56a9f4ac5d53a68013186bf8b2137dd867723db60cb036f12887363eafac8b71cbf4cc27b137b8f2f8a8dc9e
+  checksum: 10c0/175509b0c8621467615194c4f1f4e92ddf4a77b6026fe90e3f7f2e7a72fb69f094c2b838789763d1f83586713fde36a6124ebeafac0066a0e287ca01a0305812
   languageName: node
   linkType: hard
 
@@ -3643,7 +3643,7 @@ __metadata:
     "@myparcel-eslint/eslint-config-prettier": "npm:^1.2.0"
     "@myparcel-eslint/eslint-config-prettier-typescript": "npm:^1.2.0"
     "@myparcel-eslint/eslint-config-prettier-typescript-vue": "npm:^1.2.0"
-    "@myparcel-pdk/app-builder": "npm:^1.6.1"
+    "@myparcel-pdk/app-builder": "npm:^1.6.2"
     "@myparcel/semantic-release-config": "npm:^5.0.0"
     "@myparcel/semantic-release-wordpress-readme-generator": "npm:^1.1.0"
     "@semantic-release/git": "npm:^10.0.1"
