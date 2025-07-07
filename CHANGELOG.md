@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.5.0](https://github.com/myparcelnl/woocommerce/compare/v5.4.2...v5.5.0) (2025-07-07)
+
+
+### :sparkles: New Features
+
+* **checkout:** support using separate address fields in woocommerce blocks ([#1325](https://github.com/myparcelnl/woocommerce/issues/1325)) ([ae5837d](https://github.com/myparcelnl/woocommerce/commit/ae5837d843a36048c68aa998d6d6b09446ab64bd))
+
+
+### :bug: Bug Fixes
+
+* correct price when exporting order ([#1332](https://github.com/myparcelnl/woocommerce/issues/1332)) ([59fe900](https://github.com/myparcelnl/woocommerce/commit/59fe900229ba589baf1c97ba129c765b122e776b))
+* **export:** fix missing address when using address widget ([#1320](https://github.com/myparcelnl/woocommerce/issues/1320)) ([3cc7312](https://github.com/myparcelnl/woocommerce/commit/3cc7312bd957f4b78bb9f88c90a128193da2f11f))
+* fix conflicting class names in autoload ([#1343](https://github.com/myparcelnl/woocommerce/issues/1343)) ([c886c6d](https://github.com/myparcelnl/woocommerce/commit/c886c6d9332567bdc7e80d59f9915d34f7491777)), closes [#1338](https://github.com/myparcelnl/woocommerce/issues/1338)
+
 ## [5.4.2](https://github.com/myparcelnl/woocommerce/compare/v5.4.1...v5.4.2) (2025-06-16)
 
 
