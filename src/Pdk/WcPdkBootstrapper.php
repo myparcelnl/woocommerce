@@ -273,6 +273,8 @@ class WcPdkBootstrapper extends PdkBootstrapper
                 'trackTraceInEmailPriority'        => 'mpwc_track_trace_in_email_priority',
                 'trackTraceInMyAccountPriority'    => 'mpwc_track_trace_in_my_account_priority',
                 'trackTraceInOrderDetailsPriority' => 'mpwc_track_trace_in_order_details_priority',
+                'trackTraceInEmailText'            => 'mpwc_track_trace_in_email_text',
+                'trackTraceInOrderDetailsText'     => 'mpwc_track_trace_in_order_details_text',
 
                 /**
                  * Address fields
@@ -319,6 +321,8 @@ class WcPdkBootstrapper extends PdkBootstrapper
                 'trackTraceInEmailPriority'        => 10,
                 'trackTraceInMyAccountPriority'    => 10,
                 'trackTraceInOrderDetailsPriority' => 10,
+                'trackTraceInEmailText'            => null,
+                'trackTraceInOrderDetailsText'     => null,
 
                 'fieldStreetClass'       => ['form-row-third', 'first'],
                 'fieldNumberClass'       => ['form-row-third'],
