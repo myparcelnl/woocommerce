@@ -25,7 +25,9 @@ updates:
           - 'myparcelnl/pdk'
 
   - package-ecosystem: 'npm'
-    directory: '/'
+    directories: 
+      - '/'
+      - 'views/**/*'
     schedule:
       interval: 'daily'
     reviewers: ['myparcelnl/integration']
