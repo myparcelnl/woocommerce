@@ -3348,10 +3348,10 @@ __metadata:
   linkType: hard
 
 "@myparcel-pdk/admin-component-tests@npm:^1.6.4":
-  version: 1.6.4
-  resolution: "@myparcel-pdk/admin-component-tests@npm:1.6.4"
+  version: 1.8.0
+  resolution: "@myparcel-pdk/admin-component-tests@npm:1.8.0"
   dependencies:
-    "@myparcel-pdk/admin": "npm:^1.6.4"
+    "@myparcel-pdk/admin": "npm:^1.8.0"
     "@myparcel/vue-form-builder": "npm:^1.0.0-alpha.1"
     "@pinia/testing": "npm:>= 0.1.0 < 1"
     "@vitest/coverage-v8": "npm:^2.1.3"
@@ -3361,37 +3361,37 @@ __metadata:
     vitest: "npm:^2.1.3"
   peerDependencies:
     vue: ^3
-  checksum: 10c0/43a7280b146dea02bb177c8b71c711af30e5360be6755b81990b8ea070a94d9b84fa8f4ed5a4b3124400bf51da2d9e39ea1e0bd8da65a2e0c34c41d9e28a058e
+  checksum: 10c0/3753b71b98a2346fd65833e6a261efd536420ea8d46e69333220c3c3b91ae917f0086396f654f192dbb98c460d0fd27b860620806837f1cc8e7920b9b8f4453c
   languageName: node
   linkType: hard
 
 "@myparcel-pdk/admin-preset-dashicons@npm:^1.6.4":
-  version: 1.6.4
-  resolution: "@myparcel-pdk/admin-preset-dashicons@npm:1.6.4"
+  version: 1.8.0
+  resolution: "@myparcel-pdk/admin-preset-dashicons@npm:1.8.0"
   dependencies:
-    "@myparcel-pdk/admin": "npm:^1.6.4"
+    "@myparcel-pdk/admin": "npm:^1.8.0"
     vite: "npm:^5.4.10"
     vue: "npm:^3.3.0"
     vue-tsc: "npm:^2.0.0"
-  checksum: 10c0/f9328bd6bb06279cbcbb425bc8f68b7174dc3535b8ef13f87dde3032f472aa7fc33872619d35c991a389985c620857a1821721b2e23c57dedac8780e579b8d96
+  checksum: 10c0/31f4d2561168dced5ee7886ad26416d0d7b7534d63bf5c5edaef97d1fe8dc7f5e0bd5dd6c29a38365a12e0574083f843202bd2ecf93f5ddf7010e5ee14f45c6a
   languageName: node
   linkType: hard
 
 "@myparcel-pdk/admin-preset-default@npm:^1.6.4":
-  version: 1.6.4
-  resolution: "@myparcel-pdk/admin-preset-default@npm:1.6.4"
+  version: 1.8.0
+  resolution: "@myparcel-pdk/admin-preset-default@npm:1.8.0"
   dependencies:
-    "@myparcel-pdk/admin": "npm:^1.6.4"
+    "@myparcel-pdk/admin": "npm:^1.8.0"
     "@myparcel/ts-utils": "npm:^1.9.0"
     "@vueuse/core": "npm:^10.0.0"
     vue: "npm:^3.3.0"
-  checksum: 10c0/bb51ca6df111eb8aefb830f2b41103ce1e8fb8e156ab4ea1ae12e23a8b0e0694bb175794966a27e1b5fdf741ad56bbdd8187955ee8dee767173a4c9ec26639a9
+  checksum: 10c0/1202058f6e8d12b2a081c587116c8c6d88217550785c7a52c4b25779d3997bfc41abbb50bbd421234beab30dc7c65452c683a1ec7f6ac082fd125bea93added8
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/admin@npm:^1.6.4":
-  version: 1.6.4
-  resolution: "@myparcel-pdk/admin@npm:1.6.4"
+"@myparcel-pdk/admin@npm:^1.6.4, @myparcel-pdk/admin@npm:^1.8.0":
+  version: 1.8.0
+  resolution: "@myparcel-pdk/admin@npm:1.8.0"
   dependencies:
     "@myparcel-pdk/common": "npm:^1.6.1"
     "@myparcel/constants": "npm:^2.0.0"
@@ -3405,7 +3405,7 @@ __metadata:
     vite: "npm:^5.4.10"
     vue: "npm:^3.3.0"
     vue-tsc: "npm:^2.0.0"
-  checksum: 10c0/a3e25d49b38d7cfa77f715db6652bc0695d7626be03bf229d39af1b7f7a0905fda31bc7dd84fbeaf42e5bf7a43c74fdfd683ec15cbef8c598d62afb44165033d
+  checksum: 10c0/9d29fa014a4c2ed2806bd1fb81191805855582c8d47f8560a09892df0700e2089ba50744acb985457c75803bb5db5435e73c6b966f96bd402574846b6e653811
   languageName: node
   linkType: hard
 
