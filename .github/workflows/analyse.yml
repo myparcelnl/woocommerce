@@ -27,7 +27,7 @@ jobs:
             phpstan-cache-${{ hashFiles('phpstan.neon.dist', 'composer.json') }}-
             phpstan-cache-
 
-      - uses: myparcelnl/actions/pdk-setup-backend@v4
+      - uses: myparcelnl/actions/pdk-setup-backend@v5
         if: steps.phpstan-cache.outputs.cache-hit != 'true'
         id: setup
         with:
