@@ -25,14 +25,13 @@ jobs:
       released: ${{ steps.release.outputs.released }}
       version: ${{ steps.release.outputs.version }}
     steps:
-      - uses: myparcelnl/actions/pdk-semantic-release@v4
+      - uses: myparcelnl/actions/pdk-semantic-release@v5
         id: release
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
           php-version: ${{ vars.PHP_VERSION }}
           php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
-          update-deps: ${{ github.event.inputs.update-deps }}
           source-files: |
             src/**/*
             config/**/*
@@ -51,5 +50,5 @@ jobs:
       - analyse
       - release
     if: always() && contains(needs.*.result, 'failure')
-    uses: myparcelnl/actions/.github/workflows/notify-on-failure.yml@v4
+    uses: myparcelnl/actions/.github/workflows/notify-on-failure.yml@v5
     secrets: inherit
