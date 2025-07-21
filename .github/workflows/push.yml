@@ -25,13 +25,12 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - uses: myparcelnl/actions/pdk-prerelease@v4
+      - uses: myparcelnl/actions/pdk-prerelease@v5
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
           php-version: ${{ vars.PHP_VERSION }}
           php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
-          upgrade-pdk-deps: 'false'
           source-files: |
             src/**/*
             config/**/*

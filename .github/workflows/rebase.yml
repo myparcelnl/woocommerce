@@ -40,7 +40,7 @@ jobs:
   rebase:
     runs-on: ubuntu-22.04
     steps:
-      - uses: myparcelnl/actions/rebase@v4
+      - uses: myparcelnl/actions/rebase@v5
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
