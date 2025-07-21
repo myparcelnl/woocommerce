@@ -31,7 +31,6 @@ jobs:
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
           php-version: ${{ vars.PHP_VERSION }}
           php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
-          upgrade-pdk-deps: 'false'
           source-files: |
             src/**/*
             config/**/*
