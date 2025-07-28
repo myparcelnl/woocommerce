@@ -33,6 +33,14 @@ This will build the plugin and output a version for each platform to the `dist` 
 
 ### Make your changes
 
+### In case of random error:
+
+If you encounter a random error when loading the plugin, try running the following command:
+
+```shell
+yarn pdk-builder translations
+```
+
 Follow our [Developer Guide for contributing to MyParcel repositories].
 
 ### Test your changes
