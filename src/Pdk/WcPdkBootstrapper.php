@@ -43,45 +43,6 @@ class WcPdkBootstrapper extends PdkBootstrapper
     ): array {
         return array_replace(self::$config, [
             ###
-            # General
-            ###
-
-            'pluginBasename' => factory(function (): string {
-                return plugin_basename(Pdk::getAppInfo()->path);
-            }),
-
-            'urlDocumentation' => value('https://developer.myparcel.nl/nl/documentatie/10.woocommerce.html'),
-            'urlReleaseNotes'  => value('https://github.com/myparcelnl/woocommerce/releases'),
-
-            'defaultWeightUnit' => value('kg'),
-
-            'wcAddressTypeBilling'  => value('billing'),
-            'wcAddressTypeShipping' => value('shipping'),
-
-            'wcAddressTypes' => factory(static function (): array {
-                return [
-                    Pdk::get('wcAddressTypeBilling'),
-                    Pdk::get('wcAddressTypeShipping'),
-                ];
-            }),
-
-            'fieldAddress1'   => value('address_1'),
-            'fieldAddress2'   => value('address_2'),
-            'fieldCity'       => value('city'),
-            'fieldCompany'    => value('company'),
-            'fieldCountry'    => value('country'),
-            'fieldEmail'      => value('email'),
-            'fieldFirstName'  => value('first_name'),
-            'fieldLastName'   => value('last_name'),
-            'fieldPhone'      => value('phone'),
-            'fieldPostalCode' => value('postcode'),
-            'fieldRegion'     => value('state'),
-
-            'fieldNumber'       => value('house_number'),
-            'fieldNumberSuffix' => value('house_number_suffix'),
-            'fieldStreet'       => value('street_name'),
-
-            ###
             # Meta Keys
             ###
 
@@ -111,14 +72,6 @@ class WcPdkBootstrapper extends PdkBootstrapper
              * The meta key a PdkOrder's notes are saved in.
              */
             'metaKeyOrderNotes'            => value("_{$name}_order_notes"),
-
-            /**
-             * The meta key a product's MyParcel settings are saved in.
-             *
-             * @see \MyParcelNL\WooCommerce\Pdk\Product\Repository\WcPdkProductRepository
-             */
-
-            'metaKeyProductSettings' => value("_{$name}_product_settings"),
 
             /**
              * The database table audits are saved in.
@@ -191,15 +144,6 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'orderMetaBoxId'    => value("{$name}_woocommerce_order_data"),
             'orderMetaBoxTitle' => value($title),
 
-            ###
-            # Settings
-            ###
-
-            'settingsMenuSlug'      => value("woocommerce_page_$name-settings"),
-            'settingsMenuSlugShort' => value("$name-settings"),
-            'settingsMenuTitle'     => value($title),
-            'settingsPageTitle'     => value("$title WooCommerce"),
-
             /**
              * Prefix of each setting saved to the database. Prefixed with an underscore to prevent it from being shown
              * and edited in ACF.
@@ -253,33 +197,6 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'wooCommerceBlocksCheckout' => value([
                 'delivery-options' => DeliveryOptionsBlocksIntegration::class,
             ]),
-
-            ###
-            # Routes
-            ###
-
-            'routeBackend'                   => value("$name/backend/v1"),
-            'routeBackendPdk'                => value('pdk'),
-            'routeBackendWebhookBase'        => value('webhook'),
-            'routeBackendWebhook'            => factory(function (): string {
-                return sprintf('%s/(?P<hash>.+)', Pdk::get('routeBackendWebhookBase'));
-            }),
-            'routeBackendPermissionCallback' => factory(static function (): string {
-                if (! is_user_logged_in()) {
-                    return '__return_false';
-                }
-
-                foreach (wp_get_current_user()->roles as $role) {
-                    if (in_array($role, ['shop_manager', 'administrator'])) {
-                        return '__return_true';
-                    }
-                }
-
-                return '__return_false';
-            }),
-
-            'routeFrontend'         => value("$name/frontend/v1"),
-            'routeFrontendMyParcel' => value($name),
 
             ###
             # Filters

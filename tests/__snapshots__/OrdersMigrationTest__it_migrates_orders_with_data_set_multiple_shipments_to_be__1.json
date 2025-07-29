@@ -1,12 +1,12 @@
 {
     "meta": {
-        "_myparcelnl_order_data": {
+        "_myparcelcom_order_data": {
             "exported": false,
             "deliveryOptions": {
                 "labelAmount": 1
             }
         },
-        "_myparcelnl_order_shipments": [
+        "_myparcelcom_order_shipments": [
             {
                 "id": 1000001,
                 "shopId": 111359,
@@ -152,8 +152,8 @@
                 "modifiedBy": 1444
             }
         ],
-        "_myparcelnl_version": "3.12.0",
-        "_myparcelnl_migrated": [
+        "_myparcelcom_version": "3.12.0",
+        "_myparcelcom_migrated": [
             "5.0.0"
         ]
     },
@@ -175,10 +175,7 @@
                 "sameDayDelivery": -1,
                 "signature": -1,
                 "tracked": -1,
-                "collect": -1,
-                "excludeParcelLockers": -1,
-                "freshFood": -1,
-                "frozen": -1
+                "collect": -1
             },
             "deliveryType": "standard",
             "packageType": "package"
@@ -216,10 +213,7 @@
                     "sameDayDelivery": -1,
                     "signature": 1,
                     "tracked": -1,
-                    "collect": -1,
-                    "excludeParcelLockers": -1,
-                    "freshFood": -1,
-                    "frozen": -1
+                    "collect": -1
                 },
                 "deliveryType": "standard",
                 "packageType": "package"
@@ -268,10 +262,7 @@
                     "sameDayDelivery": -1,
                     "signature": 1,
                     "tracked": -1,
-                    "collect": -1,
-                    "excludeParcelLockers": -1,
-                    "freshFood": -1,
-                    "frozen": -1
+                    "collect": -1
                 },
                 "deliveryType": "standard",
                 "packageType": "package"

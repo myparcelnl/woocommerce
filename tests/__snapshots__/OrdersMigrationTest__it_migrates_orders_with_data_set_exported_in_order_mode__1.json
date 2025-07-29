@@ -1,12 +1,12 @@
 {
     "meta": {
-        "_myparcelnl_order_data": {
+        "_myparcelcom_order_data": {
             "apiIdentifier": "f146efee-a7e2-47cc-9369-e1b65a37aff9",
             "exported": true
         },
-        "_myparcelnl_order_shipments": [],
-        "_myparcelnl_version": "4.99.9",
-        "_myparcelnl_migrated": [
+        "_myparcelcom_order_shipments": [],
+        "_myparcelcom_version": "4.99.9",
+        "_myparcelcom_migrated": [
             "5.0.0"
         ]
     },

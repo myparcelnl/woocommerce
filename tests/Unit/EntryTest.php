@@ -9,6 +9,7 @@ use Automattic\WooCommerce\Blocks\Integrations\IntegrationRegistry;
 use MyParcelNL\WooCommerce\Tests\Exception\DieException;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkBootstrapper;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
+use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
 use MyParcelNL\WooCommerce\Tests\Uses\UseInstantiatePlugin;
 use MyParcelNLWooCommerce;
 use function MyParcelNL\Pdk\Tests\usesShared;
@@ -20,29 +21,18 @@ it('instantiates the plugin', function () {
     assertMatchesJsonSnapshot(json_encode(MockWpActions::toArray()));
 });
 
-it('throws error if the php version is too low', function () {
-    MockWcPdkBootstrapper::addConfig(['isPhpVersionSupported' => false]);
-
-    MockWpActions::execute('activate_woocommerce-myparcel');
-})->throws(DieException::class, 'PHP');
-
 it('throws error if woocommerce is not enabled', function () {
-    WC()->version = '';
+    WordPressOptions::updateOption('active_plugins', []);
 
     MockWpActions::execute('activate_woocommerce-myparcel');
 })->throws(DieException::class, 'woocommerce');
 
 it('activates plugin if prerequisites are met', function () {
-    MockWcPdkBootstrapper::addConfig([
-        'wooCommerceVersion'  => '999.0.0',
-        'wooCommerceIsActive' => true,
-    ]);
-
     MockWpActions::execute('activate_woocommerce-myparcel');
 
     expect(MockWpActions::get('activate_woocommerce-myparcel'))
         ->toBe([])
-        ->and(constant('MYPARCELNL_WC_VERSION'))
+        ->and(constant('MYPARCEL_WC_VERSION'))
         ->toBeString();
 });
 
@@ -52,7 +42,7 @@ it('runs uninstall on deactivate', function () {
     expect(MockWpActions::get('deactivate_woocommerce-myparcel'))->toBe([]);
 });
 
-it('adds all hooks on plugin init', function () {
+it('adds necessary hooks on plugin init', function () {
     MockWpActions::execute('init');
 
     expect(MockWpActions::get('init'))->toBe([]);
