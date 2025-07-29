@@ -134,6 +134,7 @@ return [
     'userAgent' => factory(function (): array {
         return [
             'MyParcelNL-WooCommerce' => PdkFacade::getAppInfo()->version,
+            'MyParcelNL-Proposition' => PdkFacade::getAppInfo()->name,
             'WooCommerce'            => WooCommerce::getVersion(),
             'WordPress'              => WordPress::getVersion(),
         ];

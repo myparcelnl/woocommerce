@@ -12,6 +12,7 @@ use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\WooCommerce\Facade\Filter;
 use MyParcelNL\WooCommerce\Facade\WooCommerce;
 use MyParcelNL\WooCommerce\Hooks\Contract\WooCommerceInitCallbacksInterface;
+use MyParcelNL\WooCommerce\Pdk\WcPdkBootstrapper;
 use MyParcelNLWooCommerce;
 use WC_Customer;
 use WC_Order;
@@ -181,7 +182,7 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
         foreach (['billing', 'shipping'] as $type) {
             $countryCode = $type === 'billing' ? $order->get_billing_country() : $order->get_shipping_country();
             if (in_array($countryCode, (array) Pdk::get('countriesWithSeparateAddressFields'), true)) {
-                $metaKeyPrefix = '_wc_' . $type . '/' . MyParcelNLWooCommerce::PLUGIN_NAMESPACE . '/';
+                $metaKeyPrefix = "_wc_{$type}/" . WcPdkBootstrapper::PLUGIN_NAMESPACE . '/';
                 $street      = $order->get_meta($metaKeyPrefix . Pdk::get('fieldStreet'), true);
                 $number      = $order->get_meta($metaKeyPrefix . Pdk::get('fieldNumber'), true);
                 $numberSuffix = $order->get_meta($metaKeyPrefix . Pdk::get('fieldNumberSuffix'), true);
