@@ -26,8 +26,6 @@
                 "exportReturn": -1,
                 "exportSignature": -1,
                 "exportTracked": -1,
-                "exportFreshFood": -1,
-                "exportFrozen": -1,
                 "fitInDigitalStamp": -1,
                 "fitInMailbox": -1,
                 "packageType": -1
@@ -55,8 +53,6 @@
         "exportReturn": -1,
         "exportSignature": -1,
         "exportTracked": -1,
-        "exportFreshFood": -1,
-        "exportFrozen": -1,
         "fitInDigitalStamp": -1,
         "fitInMailbox": -1,
         "packageType": -1
