@@ -16,14 +16,12 @@
 
 declare(strict_types=1);
 
-use Automattic\Jetpack\Constants;
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationRegistry;
 use MyParcelNL\Pdk\Base\Pdk as PdkInstance;
 use MyParcelNL\Pdk\Facade\Installer;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Facade\WooCommerce;
 use MyParcelNL\WooCommerce\Integration\WcBlocksLoader;
-use MyParcelNL\WooCommerce\Service\WooCommerceService;
 use MyParcelNL\WooCommerce\Service\WordPressHookService;
 
 use function MyParcelNL\WooCommerce\bootPdk;
@@ -39,9 +37,9 @@ final class MyParcelNLWooCommerce
      */
     public function __construct()
     {
-        register_activation_hook(__FILE__, [$this, 'install']);
+        //register_activation_hook(__FILE__, [$this, 'install']);
         // Since wordpress 3.1 register_activation_hook is not called when a plugin is updated
-        add_action('wp_loaded', [$this, 'upgrade']);
+        //add_action('wp_loaded', [$this, 'upgrade']);
 
         register_deactivation_hook(__FILE__, [$this, 'uninstall']);
         add_action('init', [$this, 'initialize'], 9999);
@@ -56,6 +54,8 @@ final class MyParcelNLWooCommerce
      */
     public function initialize(): void
     {
+        $this->boot();
+
         /** @var WordPressHookService $hookService */
         $hookService = Pdk::get(WordPressHookService::class);
         $hookService->applyAll();
@@ -141,8 +141,6 @@ final class MyParcelNLWooCommerce
         $version = $this->getVersion();
 
         bootPdk(
-            self::PLUGIN_NAMESPACE,
-            'MyParcel',
             $version,
             plugin_dir_path(__FILE__),
             plugin_dir_url(__FILE__),
