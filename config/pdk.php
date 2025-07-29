@@ -93,15 +93,19 @@ return [
     }),
 
     'wooCommerceIsActive' => factory(function (): bool {
-        $plugins = apply_filters('active_plugins', get_option('active_plugins'));
+        $plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
 
-        return is_array($plugins) && in_array('woocommerce/woocommerce.php', $plugins, true);
+        return is_array($plugins) && in_array( 'woocommerce/woocommerce.php', $plugins , true );
     }),
 
     'wooCommerceVersion' => factory(function (): string {
         $plugins = get_plugins();
 
-        return $plugins['woocommerce/woocommerce.php']['Version'] ?? '?';
+        if (isset($plugins['woocommerce/woocommerce.php'])) {
+            return $plugins['woocommerce/woocommerce.php']['Version'] ?? '?';
+        }
+
+        return '?';
     }),
 
     'minimumWooCommerceVersion' => value('5.0.0'),
