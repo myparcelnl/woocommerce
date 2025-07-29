@@ -55,7 +55,7 @@ it('registers webhook handler in wp rest api', function () {
     $routes = rest_get_server()->get_routes();
 
     expect($routes)->toEqual([
-        'myparcelnl/backend/v1/webhook/(?P<hash>.+)' => [
+        'myparcelcom/backend/v1/webhook/(?P<hash>.+)' => [
             'override' => false,
             'args'     => [
                 'callback'            => [$hookClass, 'processWebhookRequest'],

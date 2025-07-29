@@ -10,8 +10,6 @@ use MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkBootstrapper;
 
 if (! function_exists('\MyParcelNL\WooCommerce\bootPdk')) {
     /**
-     * @param  string $name
-     * @param  string $title
      * @param  string $version
      * @param  string $path
      * @param  string $url
@@ -21,8 +19,6 @@ if (! function_exists('\MyParcelNL\WooCommerce\bootPdk')) {
      * @throws \Exception
      */
     function bootPdk(
-        string $name,
-        string $title,
         string $version,
         string $path,
         string $url,

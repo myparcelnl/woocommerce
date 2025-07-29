@@ -27,7 +27,7 @@
         },
         {
             "id": 0,
-            "key": "_myparcelnl_product_settings",
+            "key": "_myparcelcom_product_settings",
             "value": {
                 "countryOfOrigin": "BB",
                 "customsCode": "1234",
@@ -41,17 +41,14 @@
                 "exportReturn": -1,
                 "exportSignature": -1,
                 "exportTracked": -1,
-                "exportFreshFood": -1,
-                "exportFrozen": -1,
                 "fitInDigitalStamp": -1,
                 "fitInMailbox": -1,
-                "packageType": -1,
-                "excludeParcelLockers": -1
+                "packageType": -1
             }
         },
         {
             "id": 0,
-            "key": "_myparcelnl_migrated",
+            "key": "_myparcelcom_migrated",
             "value": [
                 "5.0.0"
             ]
@@ -71,12 +68,9 @@
         "exportReturn": -1,
         "exportSignature": -1,
         "exportTracked": -1,
-        "exportFreshFood": -1,
-        "exportFrozen": -1,
         "fitInDigitalStamp": -1,
         "fitInMailbox": -1,
-        "packageType": -1,
-        "excludeParcelLockers": -1
+        "packageType": -1
     },
     "parentProduct": null
 }
