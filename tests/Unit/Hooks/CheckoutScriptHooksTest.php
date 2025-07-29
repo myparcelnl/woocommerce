@@ -58,7 +58,7 @@ it(
             'enableDeliveryOptionsWhenNotInStock' => true,
             'productData'                         => ['id' => 1, 'is_on_backorder' => false],
             'expected'                            => [
-                'toContain'    => ['myparcelnl-delivery-options'],
+                'toContain'    => ['myparcel-delivery-options'],
                 'notToContain' => [],
             ],
         ],
@@ -68,7 +68,7 @@ it(
             'productData'                         => ['id' => 1, 'is_on_backorder' => true],
             'expected'                            => [
                 'toContain'    => [],
-                'notToContain' => ['myparcelnl-delivery-options'],
+                'notToContain' => ['myparcel-delivery-options'],
             ],
         ],
         'enable all, on backorder'              => [
@@ -76,7 +76,7 @@ it(
             'enableDeliveryOptionsWhenNotInStock' => true,
             'productData'                         => ['id' => 1, 'is_on_backorder' => true],
             'expected'                            => [
-                'toContain'    => ['myparcelnl-delivery-options'],
+                'toContain'    => ['myparcel-delivery-options'],
                 'notToContain' => [],
             ],
         ],
