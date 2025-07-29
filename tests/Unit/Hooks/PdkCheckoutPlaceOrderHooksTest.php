@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Hooks;
 
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
+use MyParcelNL\Pdk\Base\PdkBootstrapper;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkCheckoutPlaceOrderHooks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
@@ -16,9 +17,10 @@ use function MyParcelNL\WooCommerce\Tests\wpFactory;
 usesShared(new UsesMockWcPdkInstance());
 
 it('saves delivery options for the blocks checkout', function ($orderId, $deliveryOptions) {
+    $namespace = PdkBootstrapper::PLUGIN_NAMESPACE;
     $GLOBALS['HTTP_RAW_POST_DATA'] = json_encode([
         'extensions' => [
-            'myparcelnl-delivery-options' => [
+            "$namespace-delivery-options" => [
                 'carrier'     => $deliveryOptions['carrier'],
                 'packageType' => $deliveryOptions['packageType'],
             ],
@@ -48,18 +50,18 @@ it('saves delivery options for the blocks checkout', function ($orderId, $delive
         )
         ->toBe($deliveryOptions['packageType']);
 })->with([
-    'postnl order' => [
-        'orderId'         => 1,
-        'deliveryOptions' => [
-            'carrier'     => 'postnl',
-            'packageType' => 1,
-        ],
-    ],
     'dhl order'    => [
         'orderId'         => 2,
         'deliveryOptions' => [
             'carrier'     => 'dhlforyou',
             'packageType' => 2,
+        ],
+    ],
+    'postnl order' => [
+        'orderId'         => 1,
+        'deliveryOptions' => [
+            'carrier'     => 'postnl',
+            'packageType' => 1,
         ],
     ],
 ]);

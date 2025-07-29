@@ -2,13 +2,13 @@
     "activate_woocommerce-myparcel": [
         "MyParcelNLWooCommerce::install"
     ],
-    "wp_loaded": [
-        "MyParcelNLWooCommerce::upgrade"
-    ],
     "deactivate_woocommerce-myparcel": [
         "MyParcelNLWooCommerce::uninstall"
     ],
     "init": [],
+    "wp_loaded": [
+        "MyParcelNLWooCommerce::upgrade"
+    ],
     "woocommerce_init": [
         "MyParcelNLWooCommerce::onWoocommerceInit"
     ],
@@ -56,13 +56,13 @@
     "add_meta_boxes": [
         "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkOrderHooks::registerSingleOrderPageMetaBox"
     ],
-    "bulk_actions-edit-shop_order": [
+    "bulk_actions-woocommerce_page_wc-orders": [
         "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkOrderListHooks::registerBulkActions"
     ],
-    "manage_edit-shop_order_columns": [
+    "manage_woocommerce_page_wc-orders_columns": [
         "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkOrderListHooks::registerMyParcelOrderListItem"
     ],
-    "manage_shop_order_posts_custom_column": [
+    "manage_woocommerce_page_wc-orders_custom_column": [
         "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkOrderListHooks::renderPdkOrderListItem"
     ],
     "admin_menu": [
@@ -98,10 +98,10 @@
     "plugin_row_meta": [
         "MyParcelNL\\WooCommerce\\Hooks\\PluginInfoHooks::setPluginMeta"
     ],
-    "myparcelnl_migrate_5_0_0_orders": [
+    "myparcelcom_migrate_5_0_0_orders": [
         "MyParcelNL\\WooCommerce\\Migration\\Pdk\\OrdersMigration::migrateOrder"
     ],
-    "myparcelnl_migrate_5_0_0_product_settings": [
+    "myparcelcom_migrate_5_0_0_product_settings": [
         "MyParcelNL\\WooCommerce\\Migration\\Pdk\\ProductSettingsMigration::migrateProductSettings"
     ],
     "woocommerce_get_country_locale": [
@@ -123,6 +123,9 @@
     "woocommerce_shipping_fields": [
         "MyParcelNL\\WooCommerce\\Hooks\\SeparateAddressFieldsHooks::extendShippingFields",
         "MyParcelNL\\WooCommerce\\Hooks\\TaxFieldsHooks::extendShippingFields"
+    ],
+    "woocommerce_set_additional_field_value": [
+        "MyParcelNL\\WooCommerce\\Hooks\\TaxFieldsHooks::storeTaxFieldsForBlocksCheckout"
     ],
     "woocommerce_email_before_order_table": [
         "MyParcelNL\\WooCommerce\\Hooks\\TrackTraceHooks::renderTrackTraceInEmail"
