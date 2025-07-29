@@ -6,6 +6,7 @@ namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
 use Exception;
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
+use MyParcelNL\Pdk\Base\PdkBootstrapper;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
@@ -47,10 +48,11 @@ final class PdkCheckoutPlaceOrderHooks implements WordPressHooksInterface
     {
         // eslint-disable-next-line camelcase
         global $HTTP_RAW_POST_DATA;
+        $namespace = PdkBootstrapper::PLUGIN_NAMESPACE;
 
         try {
             $postData            = json_decode(wp_unslash($HTTP_RAW_POST_DATA), true);
-            $deliveryOptionsData = $postData['extensions']['myparcelnl-delivery-options'] ?? null;
+            $deliveryOptionsData = $postData['extensions']["$namespace-delivery-options"] ?? null;
 
             if (empty($deliveryOptionsData)) {
                 return;
