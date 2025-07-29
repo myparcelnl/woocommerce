@@ -34,6 +34,6 @@ class LanguageService extends AbstractLanguageService
      */
     protected function getFilePath(?string $language = null): string
     {
-        return sprintf('%s/config/pdk/translations/%s.json', Pdk::getAppInfo()->path, $this->getIso2($language));
+        return sprintf('%s/config/pdk/translations/%s.json', __DIR__ . '/../../..', $this->getIso2($language));
     }
 }

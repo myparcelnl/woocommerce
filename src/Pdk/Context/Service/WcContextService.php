@@ -77,7 +77,7 @@ final class WcContextService extends ContextService
         array  $allowedShippingMethods
     ): bool {
         foreach ($allowedShippingMethods as $packageType) {
-            if (in_array($methodOrClassName, $packageType, false)) {
+            if (is_array($packageType) && in_array($methodOrClassName, $packageType, false)) {
                 return true;
             }
         }

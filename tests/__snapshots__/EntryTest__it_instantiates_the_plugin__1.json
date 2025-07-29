@@ -2,19 +2,10 @@
     "activate_woocommerce-myparcel": [
         "MyParcelNLWooCommerce::install"
     ],
-    "wp_loaded": [
-        "MyParcelNLWooCommerce::upgrade"
-    ],
     "deactivate_woocommerce-myparcel": [
         "MyParcelNLWooCommerce::uninstall"
     ],
     "init": [
         "MyParcelNLWooCommerce::initialize"
-    ],
-    "woocommerce_init": [
-        "MyParcelNLWooCommerce::onWoocommerceInit"
-    ],
-    "woocommerce_blocks_checkout_block_registration": [
-        "MyParcelNLWooCommerce::registerCheckoutBlocks"
     ]
 }

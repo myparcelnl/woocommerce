@@ -1,6 +1,6 @@
 {
     "meta": {
-        "_myparcelnl_order_data": {
+        "_myparcelcom_order_data": {
             "exported": false,
             "deliveryOptions": {
                 "carrier": "postnl",
@@ -21,9 +21,9 @@
                 }
             }
         },
-        "_myparcelnl_order_shipments": [],
-        "_myparcelnl_version": "2.22.0",
-        "_myparcelnl_migrated": [
+        "_myparcelcom_order_shipments": [],
+        "_myparcelcom_version": "2.22.0",
+        "_myparcelcom_migrated": [
             "5.0.0"
         ]
     },
