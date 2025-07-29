@@ -11,13 +11,13 @@ use MyParcelNL\Pdk\Frontend\Service\ScriptService;
 class WpScriptService extends ScriptService
 {
     // Our local scripts
-    public const HANDLE_PDK_ADMIN                 = PdkBootstrapper::PLUGIN_NAMESPACE . '-pdk-admin';
-    public const HANDLE_CHECKOUT_CORE             = PdkBootstrapper::PLUGIN_NAMESPACE . '-checkout-core';
-    public const HANDLE_SEPARATE_ADDRESS_FIELDS   = PdkBootstrapper::PLUGIN_NAMESPACE . '-checkout-separate-address-fields';
-    public const HANDLE_TAX_FIELDS                = PdkBootstrapper::PLUGIN_NAMESPACE . '-checkout-tax-fields';
-    public const HANDLE_CHECKOUT_DELIVERY_OPTIONS = PdkBootstrapper::PLUGIN_NAMESPACE . '-checkout-delivery-options';
+    public const HANDLE_PDK_ADMIN                 = 'myparcel-pdk-admin';
+    public const HANDLE_CHECKOUT_CORE             = 'myparcel-checkout-core';
+    public const HANDLE_SEPARATE_ADDRESS_FIELDS   = 'myparcel-checkout-separate-address-fields';
+    public const HANDLE_TAX_FIELDS                = 'myparcel-checkout-tax-fields';
+    public const HANDLE_CHECKOUT_DELIVERY_OPTIONS = 'myparcel-checkout-delivery-options';
     // External dependencies
-    public const HANDLE_DELIVERY_OPTIONS = PdkBootstrapper::PLUGIN_NAMESPACE . '-delivery-options';
+    public const HANDLE_DELIVERY_OPTIONS = 'myparcel-delivery-options';
     public const HANDLE_VUE              = 'vue';
     // Scripts that are already present in WooCommerce
     public const HANDLE_WOOCOMMERCE_ADMIN = 'woocommerce_admin';
