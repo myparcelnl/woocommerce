@@ -70,7 +70,7 @@ class TaxFieldsHooks extends AbstractFieldsHooks implements WooCommerceInitCallb
                 'fieldEoriNumber',
                 'eori',
                 'text'
-            ),
+            )
         );
 
         \woocommerce_register_additional_checkout_field(
