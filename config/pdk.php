@@ -89,11 +89,19 @@ return [
     }),
 
     'wooCommerceIsActive' => factory(function (): bool {
-        return function_exists('WC');
+        $plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
+
+        return in_array( 'woocommerce/woocommerce.php', $plugins , true );
     }),
 
     'wooCommerceVersion' => factory(function (): string {
-        return WooCommerce::isActive() ? WC()->version : '?';
+        $plugins = get_plugins();
+
+        if (isset($plugins['woocommerce/woocommerce.php'])) {
+            return $plugins['woocommerce/woocommerce.php']['Version'] ?? '?';
+        }
+
+        return '?';
     }),
 
     'minimumWooCommerceVersion' => value('5.0.0'),
@@ -172,6 +180,89 @@ return [
             ? wc_get_page_screen_id('shop_order')
             : 'woocommerce_page_wc-order';
     }),
+
+    ###
+    # General (JOERI)
+    ###
+
+    'pluginBasename' => factory(function (): string {
+        return plugin_basename(Pdk::getAppInfo()->path);
+    }),
+
+    'urlDocumentation' => value('https://developer.myparcel.nl/nl/documentatie/10.woocommerce.html'),
+    'urlReleaseNotes'  => value('https://github.com/myparcelnl/woocommerce/releases'),
+
+    'defaultWeightUnit' => value('kg'),
+
+    'wcAddressTypeBilling'  => value('billing'),
+    'wcAddressTypeShipping' => value('shipping'),
+
+    'wcAddressTypes' => factory(static function (): array {
+        return [
+            Pdk::get('wcAddressTypeBilling'),
+            Pdk::get('wcAddressTypeShipping'),
+        ];
+    }),
+
+    'fieldAddress1'   => value('address_1'),
+    'fieldAddress2'   => value('address_2'),
+    'fieldCity'       => value('city'),
+    'fieldCompany'    => value('company'),
+    'fieldCountry'    => value('country'),
+    'fieldEmail'      => value('email'),
+    'fieldFirstName'  => value('first_name'),
+    'fieldLastName'   => value('last_name'),
+    'fieldPhone'      => value('phone'),
+    'fieldPostalCode' => value('postcode'),
+    'fieldRegion'     => value('state'),
+
+    'fieldNumber'       => value('house_number'),
+    'fieldNumberSuffix' => value('house_number_suffix'),
+    'fieldStreet'       => value('street_name'),
+
+    ###
+    # Settings
+    ###
+
+    'settingsMenuSlug'      => value('woocommerce_page_myparcel-settings'),
+    'settingsMenuSlugShort' => value('myparcel-settings'),
+    'settingsMenuTitle'     => value('MyParcel'),
+    'settingsPageTitle'     => value('MyParcel WooCommerce'),
+
+    ###
+    # Routes
+    ###
+
+    'routeBackend'                   => value('myparcel/backend/v1'),
+    'routeBackendPdk'                => value('pdk'),
+    'routeBackendWebhookBase'        => value('webhook'),
+    'routeBackendWebhook'            => factory(function (): string {
+        return sprintf('%s/(?P<hash>.+)', Pdk::get('routeBackendWebhookBase'));
+    }),
+    'routeBackendPermissionCallback' => factory(static function (): string {
+        if (! is_user_logged_in()) {
+            return '__return_false';
+        }
+
+        foreach (wp_get_current_user()->roles as $role) {
+            if (in_array($role, ['shop_manager', 'administrator'])) {
+                return '__return_true';
+            }
+        }
+
+        return '__return_false';
+    }),
+
+    'routeFrontend'         => value('myparcel/frontend/v1'),
+    'routeFrontendMyParcel' => value('myparcel'),
+
+    /**
+     * The meta key a product's MyParcel settings are saved in.
+     *
+     * @see \MyParcelNL\WooCommerce\Pdk\Product\Repository\WcPdkProductRepository
+     */
+
+    'metaKeyProductSettings' => value('_myparcel_product_settings'),
 
     ###
     # Custom services
