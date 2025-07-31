@@ -530,16 +530,16 @@
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "2.59.1",
+            "version": "2.61.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/pdk.git",
-                "reference": "aa03875f1bd8a3e66d24795e63a8725457251b89"
+                "reference": "3fb0595f0ef088e357731d7c75e5ef3136802e9a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/aa03875f1bd8a3e66d24795e63a8725457251b89",
-                "reference": "aa03875f1bd8a3e66d24795e63a8725457251b89",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/3fb0595f0ef088e357731d7c75e5ef3136802e9a",
+                "reference": "3fb0595f0ef088e357731d7c75e5ef3136802e9a",
                 "shasum": ""
             },
             "require": {
@@ -586,9 +586,9 @@
             "homepage": "https://myparcel.nl",
             "support": {
                 "issues": "https://github.com/myparcelnl/pdk/issues",
-                "source": "https://github.com/myparcelnl/pdk/tree/v2.59.1"
+                "source": "https://github.com/myparcelnl/pdk/tree/v2.61.0"
             },
-            "time": "2025-07-11T16:07:28+00:00"
+            "time": "2025-07-31T09:55:27+00:00"
         },
         {
             "name": "myparcelnl/sdk",
