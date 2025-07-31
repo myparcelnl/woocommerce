@@ -17,7 +17,7 @@ class TaxFieldsHooks extends AbstractFieldsHooks implements WooCommerceInitCallb
 {
     public function onWoocommerceInit(): void
     {
-        if (version_compare(\WC()->version, '8.9', '>=')) {
+        if ($this->supportsBlocksCheckoutFields()) {
             $this->registerAdditionalBlocksCheckoutFields();
         }
     }
@@ -43,7 +43,7 @@ class TaxFieldsHooks extends AbstractFieldsHooks implements WooCommerceInitCallb
         );
 
         // Blocks checkout hooks
-        if (version_compare(\WC()->version, '8.9', '>=')) {
+        if ($this->supportsBlocksCheckoutFields()) {
             add_action(
                 'woocommerce_set_additional_field_value',
                 [$this, 'storeTaxFieldsForBlocksCheckout'],
@@ -70,7 +70,7 @@ class TaxFieldsHooks extends AbstractFieldsHooks implements WooCommerceInitCallb
                 'fieldEoriNumber',
                 'eori',
                 'text'
-            )
+            ),
         );
 
         \woocommerce_register_additional_checkout_field(
@@ -206,6 +206,17 @@ class TaxFieldsHooks extends AbstractFieldsHooks implements WooCommerceInitCallb
     protected function shouldRender(): bool
     {
         return AccountSettings::hasTaxFields() && Settings::get('checkout.showTaxFields');
+    }
+
+    /**
+     * Check if the current WooCommerce version supports blocks checkout additional fields.
+     * This feature was introduced in WooCommerce 8.9.0.
+     *
+     * @return bool
+     */
+    private function supportsBlocksCheckoutFields(): bool
+    {
+        return version_compare(Pdk::get('wooCommerceVersion'), '8.9', '>=');
     }
 
     /**
