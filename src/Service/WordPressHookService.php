@@ -102,6 +102,7 @@ final class WordPressHookService
     {
         return [
             SeparateAddressFieldsHooks::class,
+            TaxFieldsHooks::class,
         ];
     }
 }
