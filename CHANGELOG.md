@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.6.0](https://github.com/myparcelnl/woocommerce/compare/v5.5.0...v5.6.0) (2025-07-31)
+
+
+### :sparkles: New Features
+
+* **admin:** show delivery type and display errors when exporting shipments ([21493fc](https://github.com/myparcelnl/woocommerce/commit/21493fce2e85b97119fde3cc1a36f3da6ed244c7))
+* **export:** display api errors on screen when exporting ([b56cf80](https://github.com/myparcelnl/woocommerce/commit/b56cf80d29e2d7ba7e9ca88d4884c17f36b40e7c))
+* improve javascript compatibility with other plugins ([#1369](https://github.com/myparcelnl/woocommerce/issues/1369)) ([d9b056f](https://github.com/myparcelnl/woocommerce/commit/d9b056f39a467160f2dfccb14fb41e008a31b0a1))
+
+
+### :bug: Bug Fixes
+
+* **address-widget:** use the correct `inputmode` for the postal code field ([#1375](https://github.com/myparcelnl/woocommerce/issues/1375)) ([3d780e6](https://github.com/myparcelnl/woocommerce/commit/3d780e61aec45f1f54890f206edb7c23866effaf))
+* allow woocommerce emails by not throwing invalid argument exception ([#1344](https://github.com/myparcelnl/woocommerce/issues/1344)) ([aa90ea3](https://github.com/myparcelnl/woocommerce/commit/aa90ea3e5fbb73f4dfa0b87f60cfde2474666110))
+* fix unreachable settings page when order status is NULL ([daaf337](https://github.com/myparcelnl/woocommerce/commit/daaf33707d68329152e5f04017878a0ee2299227))
+
 ## [5.5.0](https://github.com/myparcelnl/woocommerce/compare/v5.4.2...v5.5.0) (2025-07-07)
 
 
