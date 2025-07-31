@@ -46,4 +46,4 @@ it('has storeTaxFieldsForBlocksCheckout method', function () {
     $hook = Pdk::get(TaxFieldsHooks::class);
 
     expect(method_exists($hook, 'storeTaxFieldsForBlocksCheckout'))->toBe(true);
-}); 
+});
