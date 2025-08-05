@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.7.0](https://github.com/myparcelnl/woocommerce/compare/v5.6.0...v5.7.0) (2025-08-05)
+
+
+### :sparkles: New Features
+
+* **woocommerce:** add VAT and EORI fields to blocks checkout ([#1374](https://github.com/myparcelnl/woocommerce/issues/1374)) ([07c813d](https://github.com/myparcelnl/woocommerce/commit/07c813d844d96c53b8050c711210dbe4a9e9cc98)), closes [#INT-779](https://github.com/myparcelnl/woocommerce/issues/INT-779)
+
 ## [5.6.0](https://github.com/myparcelnl/woocommerce/compare/v5.5.0...v5.6.0) (2025-07-31)
 
 
