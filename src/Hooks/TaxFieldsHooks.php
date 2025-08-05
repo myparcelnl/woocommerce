@@ -9,9 +9,19 @@ use MyParcelNL\Pdk\Facade\AccountSettings;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Facade\Filter;
 use MyParcelNL\Pdk\Facade\Settings;
+use MyParcelNL\WooCommerce\Hooks\Contract\WooCommerceInitCallbacksInterface;
+use WC_Customer;
+use WC_Order;
 
-class TaxFieldsHooks extends AbstractFieldsHooks
+class TaxFieldsHooks extends AbstractFieldsHooks implements WooCommerceInitCallbacksInterface
 {
+    public function onWoocommerceInit(): void
+    {
+        if ($this->supportsBlocksCheckoutFields()) {
+            $this->registerAdditionalBlocksCheckoutFields();
+        }
+    }
+
     public function apply(): void
     {
         add_filter('woocommerce_get_country_locale', [$this, 'extendLocaleWithTaxFields'], 1);
@@ -31,6 +41,79 @@ class TaxFieldsHooks extends AbstractFieldsHooks
             Filter::apply('taxFieldsPriority'),
             2
         );
+
+        // Blocks checkout hooks
+        if ($this->supportsBlocksCheckoutFields()) {
+            add_action(
+                'woocommerce_set_additional_field_value',
+                [$this, 'storeTaxFieldsForBlocksCheckout'],
+                10,
+                4
+            );
+        }
+    }
+
+    /**
+     * Register additional blocks checkout fields for VAT and EORI.
+     * @see https://developer.woocommerce.com/docs/block-development/cart-and-checkout-blocks/additional-checkout-fields/
+     * @since WooCommerce 8.9.0
+     * @return void
+     */
+    public function registerAdditionalBlocksCheckoutFields(): void
+    {
+        if (! $this->shouldRender()) {
+            return;
+        }
+
+        \woocommerce_register_additional_checkout_field(
+            $this->createBlocksCheckoutAddressField(
+                'fieldEoriNumber',
+                'eori',
+                'text'
+            ),
+        );
+
+        \woocommerce_register_additional_checkout_field(
+            $this->createBlocksCheckoutAddressField(
+                'fieldVatNumber',
+                'vat',
+                'text'
+            ),
+        );
+    }
+
+    /**
+     * Save VAT and EORI fields for blocks checkout without namespace prefix, for compatibility with classic checkout.
+     * @param string $key (namespaced) field ID
+     * @param string $value value for the field being saved
+     * @param string $type shipping or billing
+     * @param WC_Order|WC_Customer $wc_object
+     * @return void
+     */
+    public function storeTaxFieldsForBlocksCheckout(string $key, string $value, string $type, object $wc_object): void
+    {
+        if (! $this->shouldRender()) {
+            return;
+        }
+
+        $prefix = $type === 'billing' ? Pdk::get('wcAddressTypeBilling') : Pdk::get('wcAddressTypeShipping');
+        $fields = [
+            'fieldEoriNumber',
+            'fieldVatNumber',
+        ];
+
+        foreach ($fields as $field) {
+            // Check if the key matches the blocks checkout field ID
+            if ($key === $this->getBlockFieldId($field)) {
+                // Save with the same meta key format as classic checkout for compatibility
+                $wc_object->update_meta_data(
+                    '_' . $prefix . '_' . Pdk::get($field),
+                    $value
+                );
+            }
+        }
+        // This function checks whether meta data has changed and only saves if necessary.
+        $wc_object->save_meta_data();
     }
 
     /**
@@ -123,6 +206,17 @@ class TaxFieldsHooks extends AbstractFieldsHooks
     protected function shouldRender(): bool
     {
         return AccountSettings::hasTaxFields() && Settings::get('checkout.showTaxFields');
+    }
+
+    /**
+     * Check if the current WooCommerce version supports blocks checkout additional fields.
+     * This feature was introduced in WooCommerce 8.9.0.
+     *
+     * @return bool
+     */
+    private function supportsBlocksCheckoutFields(): bool
+    {
+        return version_compare(Pdk::get('wooCommerceVersion'), '8.9', '>=');
     }
 
     /**
