@@ -65,6 +65,7 @@ it('adds necessary hooks on plugin init', function () {
 });
 
 it('adds all hooks on plugin init', function () {
+    require(__DIR__ . '/../Mock/WoocommerceUtilities.php');
     // add an api key to the settings in wp_options
     $optionKey = sprintf('_%s_account', PdkBootstrapper::PLUGIN_NAMESPACE);
     update_option($optionKey, array(
