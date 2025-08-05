@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationRegistry;
 use MyParcelNL\Pdk\Base\Pdk as PdkInstance;
+use MyParcelNL\Pdk\Base\PdkBootstrapper;
 use MyParcelNL\Pdk\Facade\Installer;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Facade\WooCommerce;
@@ -30,29 +31,21 @@ require plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 
 final class MyParcelNLWooCommerce
 {
-    public const PLUGIN_NAMESPACE = 'myparcelnl';
-
     /**
      * @throws \Throwable
      */
     public function __construct()
     {
         $this->boot();
-        //register_activation_hook(__FILE__, [$this, 'install']);
-        // Since wordpress 3.1 register_activation_hook is not called when a plugin is updated
-        //add_action('wp_loaded', [$this, 'upgrade']);
 
         register_deactivation_hook(__FILE__, [$this, 'uninstall']);
+        add_action('init', [$this, 'initialize'], 9999);
 
-        // TODO JOERI if no api key, initialize only bare necessary hooks
-        $apiKey = get_option('myparcelnl_account_settings', null);
-
-        if (empty($apiKey)) {
-            add_action('init', [$this, 'initialize'], 9999);
+        if (!$this->getApiKey()) {
             return;
         }
 
-        add_action('init', [$this, 'initialize2'], 9999);
+        add_action('wp_loaded', [$this, 'upgrade']);
         add_action('woocommerce_init', [$this, 'onWoocommerceInit'], 9999);
         add_action('woocommerce_blocks_checkout_block_registration', [$this, 'registerCheckoutBlocks']);
     }
@@ -66,19 +59,7 @@ final class MyParcelNLWooCommerce
     {
         /** @var WordPressHookService $hookService */
         $hookService = Pdk::get(WordPressHookService::class);
-        $hookService->apply(true);
-    }
-
-    /**
-     * Perform required tasks that initialize the plugin.
-     *
-     * @throws \Throwable
-     */
-    public function initialize2(): void
-    {
-        /** @var WordPressHookService $hookService */
-        $hookService = Pdk::get(WordPressHookService::class);
-        $hookService->apply();
+        $hookService->apply($this->getApiKey());
     }
 
     /**
@@ -103,8 +84,7 @@ final class MyParcelNLWooCommerce
         $errors = $this->checkPrerequisites();
 
         if (! empty($errors)) {
-            /** @noinspection ForgottenDebugOutputInspection */
-            wp_die(implode('<br>', $errors), '', ['back_link' => true]);
+            wp_die(implode('<br/>', $errors), '', ['back_link' => true]);
         }
 
         Installer::install();
@@ -144,8 +124,6 @@ final class MyParcelNLWooCommerce
      */
     public function uninstall(): void
     {
-        $this->boot();
-
         Installer::uninstall();
     }
 
@@ -201,6 +179,13 @@ final class MyParcelNLWooCommerce
         }
 
         return $errors;
+    }
+
+    private function getApiKey(): ?string
+    {
+        $optionKey = sprintf('_%s_account', PdkBootstrapper::PLUGIN_NAMESPACE);
+
+        return ((array) get_option($optionKey, []))['apiKey'] ?? null;
     }
 
     /**

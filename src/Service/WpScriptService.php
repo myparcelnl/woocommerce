@@ -40,7 +40,7 @@ class WpScriptService extends ScriptService
     public function enqueueLocalScript(string $handle, string $src, array $deps = [], bool $inFooter = true): void
     {
         $appInfo = Pdk::getAppInfo();
-        $url     = sprintf('%s/%s.%s', $appInfo->url, $src, $this->getLocalFileExtension());
+        $url     = sprintf('%s/%s.%s', untrailingslashit($appInfo->url), $src, $this->getLocalFileExtension());
 
         $this->enqueueScript($handle, $url, $deps, $appInfo->version, $inFooter);
     }

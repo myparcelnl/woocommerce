@@ -23,6 +23,8 @@ class WcPdkBootstrapper extends PdkBootstrapper
     private static $config = [];
 
     /**
+     * @param  string $name
+     * @param  string $title
      * @param  string $version
      * @param  string $path
      * @param  string $url
@@ -30,13 +32,12 @@ class WcPdkBootstrapper extends PdkBootstrapper
      * @return array
      */
     protected function getAdditionalConfig(
+        string $name,
+        string $title,
         string $version,
         string $path,
         string $url
     ): array {
-        $name = Pdk::getAppInfo()->name;
-        $title = Pdk::getAppInfo()->title;
-
         return array_replace(self::$config, [
             ###
             # Meta Keys

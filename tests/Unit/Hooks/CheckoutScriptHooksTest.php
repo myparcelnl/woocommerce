@@ -58,7 +58,7 @@ it(
             'enableDeliveryOptionsWhenNotInStock' => true,
             'productData'                         => ['id' => 1, 'is_on_backorder' => false],
             'expected'                            => [
-                'toContain'    => ['myparcelnl-delivery-options'],
+                'toContain'    => ['myparcel-delivery-options'],
                 'notToContain' => [],
             ],
         ],

@@ -36,11 +36,11 @@ final class WordPressHookService
     /**
      * @return void
      */
-    public function apply(?bool $minimum = false): void
+    public function apply(?string $apiKey = null): void
     {
-        $hooks = $minimum
-            ? $this->getPluginInitHooks()
-            : $this->getHooks();
+        $hooks = $apiKey
+            ? $this->getHooks()
+            : $this->getPluginInitHooks();
 
         foreach ($hooks as $service) {
             /** @var \MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface $instance */

@@ -42,7 +42,7 @@ it('activates plugin if prerequisites are met', function () {
 
     expect(MockWpActions::get('activate_woocommerce-myparcel'))
         ->toBe([])
-        ->and(constant('MYPARCELNL_WC_VERSION'))
+        ->and(constant('MYPARCEL_WC_VERSION'))
         ->toBeString();
 });
 
