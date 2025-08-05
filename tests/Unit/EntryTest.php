@@ -6,11 +6,16 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Tests\Unit;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationRegistry;
+use MyParcelNL\Pdk\Base\PdkBootstrapper;
+use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\WooCommerce\Hooks\RanWebhookActions;
 use MyParcelNL\WooCommerce\Tests\Exception\DieException;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkBootstrapper;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
+use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
 use MyParcelNL\WooCommerce\Tests\Uses\UseInstantiatePlugin;
 use MyParcelNLWooCommerce;
+use function _MyParcelNL\DI\get;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 
@@ -52,7 +57,21 @@ it('runs uninstall on deactivate', function () {
     expect(MockWpActions::get('deactivate_woocommerce-myparcel'))->toBe([]);
 });
 
+it('adds necessary hooks on plugin init', function () {
+    MockWpActions::execute('init');
+
+    expect(MockWpActions::get('init'))->toBe([]);
+    assertMatchesJsonSnapshot(json_encode(MockWpActions::toArray()));
+});
+
 it('adds all hooks on plugin init', function () {
+    // add an api key to the settings in wp_options
+    $optionKey = sprintf('_%s_account', PdkBootstrapper::PLUGIN_NAMESPACE);
+    update_option($optionKey, array(
+        'apiKey' => 'fake-api-key',
+        'apiKeyIsValid' => true,
+    ));
+
     MockWpActions::execute('init');
 
     expect(MockWpActions::get('init'))->toBe([]);

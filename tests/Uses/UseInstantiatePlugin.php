@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Tests\Uses;
 
+use MyParcelNL\Pdk\Base\PdkBootstrapper;
 use MyParcelNL\Pdk\Tests\Uses\BaseMock;
 use MyParcelNLWooCommerce;
 

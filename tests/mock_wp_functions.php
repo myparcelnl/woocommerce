@@ -173,6 +173,22 @@ function wp_enqueue_style($handle, $src, $deps, $version, $media)
     MockWpEnqueue::add($handle, $src, $deps, $version, $media);
 }
 
+function get_plugins() {
+    // return the woocommerce plugin as being installed
+    return [
+        'woocommerce/woocommerce.php' => [
+            'Name' => 'WooCommerce',
+            'PluginURI' => 'https://woocommerce.com/',
+            'Version' => '10.0.0',
+            'Description' => 'An eCommerce toolkit that helps you sell anything.',
+            'Author' => 'Automattic',
+            'AuthorURI' => 'https://woocommerce.com/',
+            'TextDomain' => 'woocommerce',
+            'DomainPath' => '/languages',
+        ],
+    ];
+}
+
 function get_term_by($field, $value, $taxonomy = '', $output = 'OBJECT', $filter = 'raw')
 {
     if ('id' === $field || 'ID' === $field || 'term_id' === $field) {
@@ -250,4 +266,9 @@ function rest_get_server(): MockWpRestServer
 function register_rest_route(...$args): void
 {
     rest_get_server()->register_route(...$args);
+}
+
+function untrailingslashit(string $string): string
+{
+    return rtrim($string, '/');
 }

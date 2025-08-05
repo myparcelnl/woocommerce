@@ -24,7 +24,11 @@ final class WordPressOptions
      */
     public static function getOption(string $name, $default = false)
     {
-        return self::$options[$name] ?? $default;
+        if (($data = self::$options[$name] ?? null)) {
+            return unserialize($data);
+        }
+
+        return $default;
     }
 
     /**
@@ -34,6 +38,6 @@ final class WordPressOptions
      */
     public static function updateOption($option, $value, $autoload = null): void
     {
-        self::$options[$option] = $value;
+        self::$options[$option] = serialize($value);
     }
 }

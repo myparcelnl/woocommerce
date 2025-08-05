@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
+use MyParcelNL\Pdk\Base\PdkBootstrapper;
 use MyParcelNL\Pdk\Facade\Language;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Facade\Filter;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
-use MyParcelNL\WooCommerce\Pdk\WcPdkBootstrapper;
-use MyParcelNLWooCommerce;
 
 abstract class AbstractFieldsHooks implements WordPressHooksInterface
 {
@@ -20,7 +19,7 @@ abstract class AbstractFieldsHooks implements WordPressHooksInterface
      */
     protected function getBlockFieldId($name): string
     {
-        return sprintf('%s/%s', WcPdkBootstrapper::PLUGIN_NAMESPACE, Pdk::get($name));
+        return sprintf('%s/%s', PdkBootstrapper::PLUGIN_NAMESPACE, Pdk::get($name));
     }
 
     /**

@@ -144,8 +144,8 @@ final class MyParcelNLWooCommerce
                 : PdkInstance::MODE_PRODUCTION
         );
 
-        if (! defined('MYPARCELNL_WC_VERSION')) {
-            define('MYPARCELNL_WC_VERSION', $version);
+        if (! defined('MYPARCEL_WC_VERSION')) {
+            define('MYPARCEL_WC_VERSION', $version);
 
             $errors = $this->checkPrerequisites();
 

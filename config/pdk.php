@@ -92,7 +92,7 @@ return [
     'wooCommerceIsActive' => factory(function (): bool {
         $plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
 
-        return in_array( 'woocommerce/woocommerce.php', $plugins , true );
+        return is_array($plugins) && in_array( 'woocommerce/woocommerce.php', $plugins , true );
     }),
 
     'wooCommerceVersion' => factory(function (): string {
