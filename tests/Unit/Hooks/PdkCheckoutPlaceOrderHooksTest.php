@@ -18,7 +18,7 @@ usesShared(new UsesMockWcPdkInstance());
 it('saves delivery options for the blocks checkout', function ($orderId, $deliveryOptions) {
     $GLOBALS['HTTP_RAW_POST_DATA'] = json_encode([
         'extensions' => [
-            'myparcelnl-delivery-options' => [
+            'myparcel-delivery-options' => [
                 'carrier'     => $deliveryOptions['carrier'],
                 'packageType' => $deliveryOptions['packageType'],
             ],
