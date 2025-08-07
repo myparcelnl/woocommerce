@@ -14,6 +14,7 @@ use MyParcelNL\WooCommerce\Tests\Mock\MockWpRestServer;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpTerm;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpUser;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
+use MyParcelNL\WooCommerce\Tests\Mock\WordPressPlugins;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
 
 /** @see \update_post_meta() */
@@ -174,19 +175,7 @@ function wp_enqueue_style($handle, $src, $deps, $version, $media)
 }
 
 function get_plugins() {
-    // return the woocommerce plugin as being installed
-    return [
-        'woocommerce/woocommerce.php' => [
-            'Name' => 'WooCommerce',
-            'PluginURI' => 'https://woocommerce.com/',
-            'Version' => '10.0.0',
-            'Description' => 'An eCommerce toolkit that helps you sell anything.',
-            'Author' => 'Automattic',
-            'AuthorURI' => 'https://woocommerce.com/',
-            'TextDomain' => 'woocommerce',
-            'DomainPath' => '/languages',
-        ],
-    ];
+    return WordPressPlugins::getPlugins();
 }
 
 function get_term_by($field, $value, $taxonomy = '', $output = 'OBJECT', $filter = 'raw')

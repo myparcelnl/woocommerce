@@ -7,12 +7,12 @@ namespace MyParcelNL\WooCommerce\Tests\Unit;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationRegistry;
 use MyParcelNL\Pdk\Base\PdkBootstrapper;
-use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Hooks\RanWebhookActions;
 use MyParcelNL\WooCommerce\Tests\Exception\DieException;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkBootstrapper;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
+use MyParcelNL\WooCommerce\Tests\Mock\WordPressPlugins;
 use MyParcelNL\WooCommerce\Tests\Uses\UseInstantiatePlugin;
 use MyParcelNLWooCommerce;
 use function _MyParcelNL\DI\get;
@@ -20,6 +20,12 @@ use function MyParcelNL\Pdk\Tests\usesShared;
 use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 
 usesShared(new UseInstantiatePlugin());
+
+beforeEach(function () {
+    WordPressOptions::updateOption('active_plugins', ['woocommerce/woocommerce.php']);
+    var_dump(get_option('active_plugins'));
+    die('Before each test');
+});
 
 it('instantiates the plugin', function () {
     assertMatchesJsonSnapshot(json_encode(MockWpActions::toArray()));
@@ -32,17 +38,12 @@ it('throws error if the php version is too low', function () {
 })->throws(DieException::class, 'PHP');
 
 it('throws error if woocommerce is not enabled', function () {
-    WC()->version = '';
+    //WordPressPlugins::clear();
 
     MockWpActions::execute('activate_woocommerce-myparcel');
 })->throws(DieException::class, 'woocommerce');
 
 it('activates plugin if prerequisites are met', function () {
-    MockWcPdkBootstrapper::addConfig([
-        'wooCommerceVersion'  => '999.0.0',
-        'wooCommerceIsActive' => true,
-    ]);
-
     MockWpActions::execute('activate_woocommerce-myparcel');
 
     expect(MockWpActions::get('activate_woocommerce-myparcel'))

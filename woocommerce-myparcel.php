@@ -38,6 +38,10 @@ final class MyParcelNLWooCommerce
     {
         $this->boot();
 
+        register_activation_hook(__FILE__, [$this, 'install']);
+        // Since wordpress 3.1 register_activation_hook is not called when a plugin is updated
+        add_action('wp_loaded', [$this, 'upgrade']);
+
         register_deactivation_hook(__FILE__, [$this, 'uninstall']);
         add_action('init', [$this, 'initialize'], 9999);
 
