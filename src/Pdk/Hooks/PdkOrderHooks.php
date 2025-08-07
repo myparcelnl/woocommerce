@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
-use Automattic\WooCommerce\Admin\Overrides\Order;
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\Facade\Frontend;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
+use MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface;
 
 class PdkOrderHooks implements WordPressHooksInterface
 {
@@ -18,11 +18,20 @@ class PdkOrderHooks implements WordPressHooksInterface
     private $pdkOrderRepository;
 
     /**
-     * @param  \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $pdkOrderRepository
+     * @var \MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface
      */
-    public function __construct(PdkOrderRepositoryInterface $pdkOrderRepository)
-    {
+    private $wcOrderRepository;
+
+    /**
+     * @param  \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $pdkOrderRepository
+     * @param  \MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface $wcOrderRepository
+     */
+    public function __construct(
+        PdkOrderRepositoryInterface $pdkOrderRepository,
+        WcOrderRepositoryInterface $wcOrderRepository
+    ) {
         $this->pdkOrderRepository = $pdkOrderRepository;
+        $this->wcOrderRepository = $wcOrderRepository;
     }
 
     public function apply(): void
@@ -47,12 +56,22 @@ class PdkOrderHooks implements WordPressHooksInterface
     }
 
     /**
-     * @param  \WP_Post|Order $orderInput - WP_Post in legacy, Order in HPOS
+     * @param  \WP_Post|mixed $orderInput - WP_Post in legacy, Order object if HPOS
      *
      * @return void
      */
     public function renderPdkOrderBox($orderInput): void
     {
+        // Check if the order has local pickup
+        try {
+            if ($this->wcOrderRepository->hasLocalPickup($orderInput)) {
+                // Don't render anything for local pickup orders
+                return;
+            }
+        } catch (\Throwable $e) {
+            // If we can't determine, continue with normal rendering
+        }
+
         $order = $this->pdkOrderRepository->get($orderInput);
 
         echo Frontend::renderOrderBox($order);
