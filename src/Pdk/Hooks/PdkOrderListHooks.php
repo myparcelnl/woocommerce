@@ -10,6 +10,7 @@ use MyParcelNL\Pdk\Facade\Language;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Facade\WooCommerce;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
+use MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface;
 
 class PdkOrderListHooks implements WordPressHooksInterface
 {
@@ -19,11 +20,20 @@ class PdkOrderListHooks implements WordPressHooksInterface
     private $pdkOrderRepository;
 
     /**
-     * @param  \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $pdkOrderRepository
+     * @var \MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface
      */
-    public function __construct(PdkOrderRepositoryInterface $pdkOrderRepository)
-    {
+    private $wcOrderRepository;
+
+    /**
+     * @param  \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $pdkOrderRepository
+     * @param  \MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface $wcOrderRepository
+     */
+    public function __construct(
+        PdkOrderRepositoryInterface $pdkOrderRepository,
+        WcOrderRepositoryInterface $wcOrderRepository
+    ) {
         $this->pdkOrderRepository = $pdkOrderRepository;
+        $this->wcOrderRepository = $wcOrderRepository;
     }
 
     public function apply(): void
@@ -81,7 +91,7 @@ class PdkOrderListHooks implements WordPressHooksInterface
 
     /**
      * @param  string|mixed                                      $column
-     * @param  int|\Automattic\WooCommerce\Admin\Overrides\Order $orderOrId – Order ID if legacy, Order object if HPOS.
+     * @param  int|mixed $orderOrId – Order ID if legacy, Order object if HPOS.
      *
      * @return void
      */
@@ -89,6 +99,16 @@ class PdkOrderListHooks implements WordPressHooksInterface
     {
         if (Pdk::get('orderListColumnName') !== $column) {
             return;
+        }
+
+        // Check if the order has local pickup
+        try {
+            if ($this->wcOrderRepository->hasLocalPickup($orderOrId)) {
+                // Don't render anything for local pickup orders
+                return;
+            }
+        } catch (\Throwable $e) {
+            // If we can't determine, continue with normal rendering
         }
 
         $pdkOrder = $this->pdkOrderRepository->get($orderOrId);
