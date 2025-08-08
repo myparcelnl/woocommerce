@@ -179,8 +179,8 @@ class WcPdkBootstrapper extends PdkBootstrapper
                     ? Arr::get($all, 'orderMode', [])
                     : Arr::get($all, 'default', []);
 
-                // Filter out export actions for local pickup orders
-                // This will be handled in the frontend by not rendering the export buttons
+                // Note: Export actions are not filtered here - filtering happens in the frontend
+                // by not rendering export buttons for local pickup orders
                 return $actions;
             }),
 
