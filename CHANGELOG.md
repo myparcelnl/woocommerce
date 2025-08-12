@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.8.0](https://github.com/myparcelnl/woocommerce/compare/v5.7.0...v5.8.0) (2025-08-12)
+
+
+### :sparkles: New Features
+
+* **delivery-options:** allow disabling of pickup location display toggle ([8b683ca](https://github.com/myparcelnl/woocommerce/commit/8b683cab5f3b72313aacebda684fa7b4fb6e1657))
+
 ## [5.7.0](https://github.com/myparcelnl/woocommerce/compare/v5.6.0...v5.7.0) (2025-08-05)
 
 
