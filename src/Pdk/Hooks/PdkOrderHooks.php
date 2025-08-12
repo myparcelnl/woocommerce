@@ -68,8 +68,8 @@ class PdkOrderHooks implements WordPressHooksInterface
                 // Don't render anything for local pickup orders
                 return;
             }
-        } catch (\Throwable $e) {
-            // If we can't determine, continue with normal rendering
+        } catch (\InvalidArgumentException $e) {
+            // If we can't determine due to invalid input, continue with normal rendering
         }
 
         $order = $this->pdkOrderRepository->get($orderInput);
