@@ -53,6 +53,7 @@
         "deliveryOptionsHeader": null,
         "deliveryOptionsPosition": null,
         "pickupLocationsDefaultView": null,
+        "allowPickupLocationsViewSelection": true,
         "priceType": "included",
         "enableDeliveryOptions": true,
         "enableDeliveryOptionsWhenNotInStock": true,
