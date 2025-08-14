@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk;
 
 use MyParcelNL\Pdk\Base\PdkBootstrapper;
+use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
+use MyParcelNL\Pdk\Settings\Model\OrderSettings;
 use MyParcelNL\WooCommerce\Integration\DeliveryOptionsBlocksIntegration;
 use MyParcelNL\WooCommerce\Service\WooCommerceService;
 use function DI\factory;
@@ -167,6 +170,19 @@ class WcPdkBootstrapper extends PdkBootstrapper
                     'action_export',
                 ],
             ]),
+
+            'bulkActions' => factory(static function (): array {
+                $orderModeEnabled = Settings::get(OrderSettings::ORDER_MODE, OrderSettings::ID);
+                $all              = Pdk::get('allBulkActions');
+
+                $actions = $orderModeEnabled
+                    ? Arr::get($all, 'orderMode', [])
+                    : Arr::get($all, 'default', []);
+
+                // Note: Export actions are not filtered here - filtering happens in the frontend
+                // by not rendering export buttons for local pickup orders
+                return $actions;
+            }),
 
             ###
             # Single order page
