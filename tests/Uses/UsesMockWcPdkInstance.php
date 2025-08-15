@@ -31,8 +31,6 @@ final class UsesMockWcPdkInstance extends UsesEachMockPdkInstance
         MockWcPdkBootstrapper::setConfig(MockPdkConfig::create($this->getConfig()));
 
         MockWcPdkBootstrapper::boot(
-            'myparcelnl',
-            'MyParcel [TEST]',
             '0.0.1',
             sprintf('%s/', dirname($pluginFile)),
             'https://my-site/'
