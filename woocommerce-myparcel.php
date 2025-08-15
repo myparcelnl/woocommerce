@@ -25,7 +25,6 @@ use MyParcelNL\WooCommerce\Facade\WooCommerce;
 use MyParcelNL\WooCommerce\Integration\WcBlocksLoader;
 use MyParcelNL\WooCommerce\Service\WordPressHookService;
 
-use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
 use function MyParcelNL\WooCommerce\bootPdk;
 
 require plugin_dir_path(__FILE__) . 'vendor/autoload.php';
@@ -89,7 +88,7 @@ final class MyParcelNLWooCommerce
         $errors = $this->checkPrerequisites();
 
         if (! empty($errors)) {
-            wp_die(implode('<br/>', $errors), '', ['back_link' => true]);
+            wp_die(implode('<br>', $errors), '', ['back_link' => true]);
         }
 
         Installer::install();
