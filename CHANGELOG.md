@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.8.1](https://github.com/myparcelnl/woocommerce/compare/v5.8.0...v5.8.1) (2025-08-19)
+
+
+### :bug: Bug Fixes
+
+* **woocommerce:** prevent shipping label creation for pickup orders ([#1387](https://github.com/myparcelnl/woocommerce/issues/1387)) ([8c40433](https://github.com/myparcelnl/woocommerce/commit/8c40433726c1712715dfd44aff12bff604a4f68a))
+
 ## [5.8.0](https://github.com/myparcelnl/woocommerce/compare/v5.7.0...v5.8.0) (2025-08-12)
 
 
