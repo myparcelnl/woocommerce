@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts" setup>
-import {onBeforeUnmount, onMounted, ref, watchEffect} from 'vue';
+import {onBeforeUnmount, onMounted, ref, watchEffect, watch} from 'vue';
 import {get} from '@vueuse/core';
 import {type ElementInstance, type OptionsProp, useSelectInputContext, AdminComponent} from '@myparcel-pdk/admin';
 import {type OneOrMore} from '@myparcel/ts-utils';
@@ -32,6 +32,20 @@ watchEffect(() => {
 watchEffect(() => {
   $select.value?.toggleClass('form-required', get(props.element.isValid));
 });
+
+// Watch for options changes and update SelectWoo
+watch(() => get(options), () => {
+  if ($select.value) {
+    $select.value.selectWoo('destroy');
+    $select.value.selectWoo({
+      data: get(options).map((option) => ({
+        id: option.value as string | number,
+        text: option.label,
+        disabled: option.disabled,
+      })),
+    });
+  }
+}, { deep: true });
 
 onMounted(() => {
   if (!selectElement.value) {
