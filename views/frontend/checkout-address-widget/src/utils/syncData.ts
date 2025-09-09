@@ -178,7 +178,7 @@ export const getAddressFromPdkStore = (appIdentifier: string): ConfigObject['add
  */
 export const getSelectedCountry = (): Alpha2CountryCode => {
   const element = document.querySelector('select.country_to_state, input.country_to_state');
-  return (element as HTMLSelectElement)?.value as Alpha2CountryCode;
+  return (element as HTMLSelectElement | HTMLInputElement)?.value as Alpha2CountryCode;
 };
 
 export const wrapperToAppIdentifier = (wrapper?: unknown[]): string => {
