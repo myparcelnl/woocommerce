@@ -33,7 +33,7 @@ This will build the plugin and output a version for each platform to the `dist` 
 
 ### Make your changes
 
-### In case of random error:
+### Troubleshooting Plugin Loading Issues
 
 If you encounter a random error when loading the plugin, try running the following command:
 
