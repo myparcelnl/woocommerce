@@ -13,6 +13,7 @@ import {
   DefaultSettingsDivider,
   DefaultTimeInput,
   DefaultShippingMethodsInput,
+  DefaultMultiDatesInput,
 } from '@myparcel-pdk/admin-preset-default';
 import {DashIconsIcon} from '@myparcel-pdk/admin-preset-dashicons';
 import {
@@ -150,6 +151,7 @@ export const initialize = (): void => {
       [AdminComponent.TimeInput]: DefaultTimeInput,
       [AdminComponent.ToggleInput]: WcToggleInput,
       [AdminComponent.TriStateInput]: WcTriStateInput,
+      [AdminComponent.MultiDatesInput]: DefaultMultiDatesInput,
     },
 
     cssUtilities: {
