@@ -1,10 +1,10 @@
-=== Plugin Name ===
-Contributors: richardperdaan, edielemoine, joerimyparcel
-Tags: woocommerce, export, delivery, packages, myparcel, postnl
+=== MyParcel ===
+Contributors: freekkie, joerimyparcel, nabilazahaf, richardperdaan
+Tags: woocommerce, export, delivery, packages, myparcel
 Requires at least: 5.2.0
-Tested up to: 6.2
-Stable tag: 4.19.1
-Requires PHP: 7.1
+Tested up to: 6.8
+Stable tag: 4.24.3
+Requires PHP: 7.4
 License: MIT
 License URI: http://www.opensource.org/licenses/mit-license.php
 
