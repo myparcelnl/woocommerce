@@ -96,7 +96,7 @@
     "@types/wordpress__blocks": "*",
     "@types/wordpress__data": "*",
     "@vitest/coverage-v8": "^1.0.0",
-    "@vue/tsconfig": "^0.7.0",
+    "@vue/tsconfig": "^0.8.1",
     "@wordpress/core-data": "wp-6.0",
     "@wordpress/data": "wp-6.0",
     "@wordpress/interactivity": "wp-6.3",
