@@ -14,6 +14,7 @@ use MyParcelNL\WooCommerce\Tests\Mock\MockWpRestServer;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpTerm;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpUser;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
+use MyParcelNL\WooCommerce\Tests\Mock\WordPressPlugins;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
 
 /** @see \update_post_meta() */
@@ -173,6 +174,10 @@ function wp_enqueue_style($handle, $src, $deps, $version, $media)
     MockWpEnqueue::add($handle, $src, $deps, $version, $media);
 }
 
+function get_plugins() {
+    return WordPressPlugins::getPlugins();
+}
+
 function get_term_by($field, $value, $taxonomy = '', $output = 'OBJECT', $filter = 'raw')
 {
     if ('id' === $field || 'ID' === $field || 'term_id' === $field) {
@@ -250,4 +255,9 @@ function rest_get_server(): MockWpRestServer
 function register_rest_route(...$args): void
 {
     rest_get_server()->register_route(...$args);
+}
+
+function untrailingslashit(string $string): string
+{
+    return rtrim($string, '/');
 }

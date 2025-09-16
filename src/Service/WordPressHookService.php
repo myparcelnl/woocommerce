@@ -36,9 +36,13 @@ final class WordPressHookService
     /**
      * @return void
      */
-    public function applyAll(): void
+    public function apply(?string $apiKey = null): void
     {
-        foreach ($this->getHooks() as $service) {
+        $hooks = $apiKey
+            ? $this->getHooks()
+            : $this->getPluginInitHooks();
+
+        foreach ($hooks as $service) {
             /** @var \MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface $instance */
             $instance = Pdk::get($service);
 
@@ -52,7 +56,7 @@ final class WordPressHookService
 
     public function onInit(): void
     {
-        foreach ($this->getInitHooks() as $service) {
+        foreach ($this->getWoocommerceInitHooks() as $service) {
             /** @var \MyParcelNL\WooCommerce\Hooks\Contract\WooCommerceInitCallbacksInterface $instance */
             $instance = Pdk::get($service);
 
@@ -96,9 +100,22 @@ final class WordPressHookService
     }
 
     /**
+     * @return class-string<\MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface>[]
+     */
+    private function getPluginInitHooks(): array
+    {
+        return [
+            PdkAdminEndpointHooks::class,
+            PdkCoreHooks::class,
+            PdkFrontendEndpointHooks::class,
+            PdkPluginSettingsHooks::class,
+        ];
+    }
+
+    /**
      * @return class-string<\MyParcelNL\WooCommerce\Hooks\Contract\WooCommerceInitCallbacksInterface>[]
      */
-    private function getInitHooks(): array
+    private function getWoocommerceInitHooks(): array
     {
         return [
             SeparateAddressFieldsHooks::class,
