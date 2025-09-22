@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.9.0](https://github.com/myparcelnl/woocommerce/compare/v5.8.1...v5.9.0) (2025-09-16)
+
+
+### :bug: Bug Fixes
+
+* add listener for option changes ([#1401](https://github.com/myparcelnl/woocommerce/issues/1401)) ([a98ad14](https://github.com/myparcelnl/woocommerce/commit/a98ad140727f726a90e08fe14cd5d92bd586a336))
+* **address-widget:** fix address widget with only one allowed country ([#1402](https://github.com/myparcelnl/woocommerce/issues/1402)) ([fdc0a47](https://github.com/myparcelnl/woocommerce/commit/fdc0a47c7c6575261afdaba4328ffe4c90c5b03f))
+
+
+### :sparkles: New Features
+
+* **admin:** add a new shipment method selector ([2c02a6f](https://github.com/myparcelnl/woocommerce/commit/2c02a6f88975f7022d8a7be5c2479e1da9642475))
+
 ## [5.8.1](https://github.com/myparcelnl/woocommerce/compare/v5.8.0...v5.8.1) (2025-08-19)
 
 
