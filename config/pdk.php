@@ -99,11 +99,7 @@ return [
     'wooCommerceVersion' => factory(function (): string {
         $plugins = get_plugins();
 
-        if (isset($plugins['woocommerce/woocommerce.php'])) {
-            return $plugins['woocommerce/woocommerce.php']['Version'] ?? '?';
-        }
-
-        return '?';
+        return $plugins['woocommerce/woocommerce.php']['Version'] ?? '?';
     }),
 
     'minimumWooCommerceVersion' => value('5.0.0'),

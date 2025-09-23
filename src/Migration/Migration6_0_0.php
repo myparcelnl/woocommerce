@@ -16,11 +16,13 @@ final class Migration6_0_0 extends AbstractMigration
     public function down(): void
     {
         $this->changeNamespace(PdkBootstrapper::PLUGIN_NAMESPACE, 'myparcelnl');
+        \wp_cache_flush();
     }
 
     public function up(): void
     {
         $this->changeNamespace('myparcelnl', PdkBootstrapper::PLUGIN_NAMESPACE);
+        \wp_cache_flush();
     }
 
     private function changeNamespace(string $from, string $to): void

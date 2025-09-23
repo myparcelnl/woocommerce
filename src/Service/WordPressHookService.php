@@ -34,6 +34,10 @@ use RuntimeException;
 final class WordPressHookService
 {
     /**
+     * Supplying an api key will load all hooks, otherwise only the minimum hooks to get the plugin initialized.
+     *
+     * @param  null|string $apiKey
+     *
      * @return void
      */
     public function apply(?string $apiKey = null): void
@@ -69,6 +73,8 @@ final class WordPressHookService
     }
 
     /**
+     * Called when api key is set, loads all hooks.
+     *
      * @return class-string<\MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface>[]
      */
     private function getHooks(): array
@@ -100,6 +106,8 @@ final class WordPressHookService
     }
 
     /**
+     * Called when no api key is set, only loads the minimum hooks to get the plugin initialized.
+     *
      * @return class-string<\MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface>[]
      */
     private function getPluginInitHooks(): array
