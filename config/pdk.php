@@ -35,6 +35,7 @@ use MyParcelNL\Pdk\Frontend\Contract\FrontendRenderServiceInterface;
 use MyParcelNL\Pdk\Frontend\Contract\ScriptServiceInterface;
 use MyParcelNL\Pdk\Frontend\Contract\ViewServiceInterface;
 use MyParcelNL\Pdk\Language\Contract\LanguageServiceInterface;
+use MyParcelNL\Pdk\Proposition\Service\PropositionService;
 use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\OrderSettings;
 use MyParcelNL\WooCommerce\Contract\WooCommerceServiceInterface;
@@ -78,6 +79,7 @@ use MyParcelNL\WooCommerce\WooCommerce\Contract\WcShippingRepositoryInterface;
 use MyParcelNL\WooCommerce\WooCommerce\Repository\WcOrderRepository;
 use MyParcelNL\WooCommerce\WooCommerce\Repository\WcShippingRepository;
 use Psr\Log\LoggerInterface;
+
 use function DI\factory;
 use function DI\get;
 use function DI\value;
@@ -140,7 +142,7 @@ return [
     'userAgent' => factory(function (): array {
         return [
             'MyParcel-WooCommerce' => PdkFacade::getAppInfo()->version,
-            'MyParcel-Proposition' => Platform::getPropositionName(),
+            'MyParcel-Proposition' => PdkFacade::get(PropositionService::class)->getPropositionConfig()->proposition->key,
             'WooCommerce'          => WooCommerce::getVersion(),
             'WordPress'            => WordPress::getVersion(),
         ];
