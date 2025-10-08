@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ff20d0b0382472548895434a43af63bb",
+    "content-hash": "a84011d9217a1e6553a21db12f7c85dc",
     "packages": [
         {
             "name": "fruitcake/php-cors",
@@ -530,16 +530,16 @@
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "2.63.2",
+            "version": "2.63.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/pdk.git",
-                "reference": "77c8ec435b04c1b4aab09109ac866397b6d735c5"
+                "reference": "c4fe8ca4cc6032aaeaa07d0b1db87ffd80328167"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/77c8ec435b04c1b4aab09109ac866397b6d735c5",
-                "reference": "77c8ec435b04c1b4aab09109ac866397b6d735c5",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/c4fe8ca4cc6032aaeaa07d0b1db87ffd80328167",
+                "reference": "c4fe8ca4cc6032aaeaa07d0b1db87ffd80328167",
                 "shasum": ""
             },
             "require": {
@@ -586,9 +586,9 @@
             "homepage": "https://myparcel.nl",
             "support": {
                 "issues": "https://github.com/myparcelnl/pdk/issues",
-                "source": "https://github.com/myparcelnl/pdk/tree/v2.63.2"
+                "source": "https://github.com/myparcelnl/pdk/tree/v2.63.3"
             },
-            "time": "2025-09-26T16:06:36+00:00"
+            "time": "2025-10-07T16:10:34+00:00"
         },
         {
             "name": "myparcelnl/sdk",
