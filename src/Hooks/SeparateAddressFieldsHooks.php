@@ -106,12 +106,22 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
         }
 
         if (version_compare(WooCommerce::getVersion(), '8.9', '>=')) {
+            /**
+             * Suppress useless notice from woocommerce_register_additional_checkout_field();
+             * it says fields cannot be registered with hidden=>true, however they can and must
+             * be in order to not show them in the default state (when no country is known).
+             */
+            add_filter('doing_it_wrong_trigger_error', function($_, $functionName) {
+                return 'woocommerce_register_additional_checkout_field' !== $functionName;
+            },2, 2);
+
             // Note: These fields are further modified in the extendLocaleWithSeparateAddressFields() method.
             \woocommerce_register_additional_checkout_field(
                 $this->createBlocksCheckoutAddressField(
                     'fieldStreet',
                     'street',
-                    'text'
+                    'text',
+                    ['hidden' => true],
                 ),
             );
 
@@ -119,16 +129,17 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
                 $this->createBlocksCheckoutAddressField(
                     'fieldNumber',
                     'number',
-                    'text'
+                    'text',
+                    ['hidden' => true],
                 ),
             );
-
 
             \woocommerce_register_additional_checkout_field(
                 $this->createBlocksCheckoutAddressField(
                     'fieldNumberSuffix',
                     'number_suffix',
-                    'text'
+                    'text',
+                    ['hidden' => true],
                 )
             );
         }

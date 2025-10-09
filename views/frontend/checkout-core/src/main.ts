@@ -10,6 +10,8 @@ import {createName, createId, createFields, hideSeparateFields} from './utils';
 
 const config = isClassicCheckout() ? getClassicCheckoutConfig() : getBlocksCheckoutConfig();
 
+hideSeparateFields();
+
 createPdkCheckout({
   fields: {
     [PdkField.AddressType]: isClassicCheckout()
@@ -81,5 +83,3 @@ createPdkCheckout({
 
   ...config.config,
 });
-
-usePdkCheckout().onInitialize(hideSeparateFields);

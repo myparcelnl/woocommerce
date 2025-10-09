@@ -12,18 +12,12 @@ import {isClassicCheckout} from '@myparcel-woocommerce/frontend-common';
  * because they may be required later client-side.
  */
 export const hideSeparateFields = (): void => {
-  // if a country is known there is no need to hide the fields pre-emptively
-  const countrySelect = document.getElementById(
-    isClassicCheckout() ? 'billing_country' : 'shipping-country',
-  ) as HTMLInputElement;
-
-  if (countrySelect?.value) {
-    return;
-  }
-
-  const fields = ['street_name', 'house_number', 'house_number_suffix'];
-
+  /**
+   * Blocks checkout is handled in SeparateAddressFieldsHooks.php ->registerAdditionalBlocksCheckoutFields
+   * Classic checkout must be handled here.
+   */
   if (isClassicCheckout()) {
+    const fields = ['street_name', 'house_number', 'house_number_suffix'];
     const prefixes = ['billing', 'shipping'];
 
     prefixes.forEach((prefix) => {
@@ -34,25 +28,6 @@ export const hideSeparateFields = (): void => {
           el.style.display = 'none';
         }
       });
-    });
-  }
-
-  if (!isClassicCheckout()) {
-    const ids = ['billing-fields', 'shipping-fields'];
-    const prefix = '.wc-block-components-text-input.wc-block-components-address-form__myparcelnl-';
-
-    ids.forEach((id) => {
-      const container = document.getElementById(id);
-
-      if (container) {
-        fields.forEach((field) => {
-          const el = container.querySelector(`${prefix}${field}`);
-
-          if (el) {
-            (el as HTMLElement).style.display = 'none';
-          }
-        });
-      }
     });
   }
 };
