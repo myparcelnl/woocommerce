@@ -8,6 +8,8 @@ import {isClassicCheckout} from '@myparcel-woocommerce/frontend-common';
  *
  * Note: you cannot obtain the fields from the config, because they are not present
  * when switched off, even though they are still in the DOM when country is NULL.
+ * We cannot remove them from the DOM in case of NULL, because they may be required
+ * later client-side.
  *
  * Block checkout does not work with separate fields, so we don’t touch that here.
  */
