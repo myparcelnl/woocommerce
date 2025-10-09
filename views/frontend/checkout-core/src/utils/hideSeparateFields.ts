@@ -8,14 +8,22 @@ import {isClassicCheckout} from '@myparcel-woocommerce/frontend-common';
  *
  * Note: you cannot obtain the fields from the config, because they are not present
  * when switched off, even though they are still in the DOM when country is NULL.
- * We cannot remove them from the DOM in case of NULL, because they may be required
- * later client-side.
- *
- * Block checkout does not work with separate fields, so we don’t touch that here.
+ * We cannot remove them server-side (so they are not in the DOM) in case of NULL,
+ * because they may be required later client-side.
  */
 export const hideSeparateFields = (): void => {
+  // if a country is known there is no need to hide the fields pre-emptively
+  const countrySelect = document.getElementById(
+    isClassicCheckout() ? 'billing_country' : 'shipping-country',
+  ) as HTMLInputElement;
+
+  if (countrySelect?.value) {
+    return;
+  }
+
+  const fields = ['street_name', 'house_number', 'house_number_suffix'];
+
   if (isClassicCheckout()) {
-    const fields = ['street_name', 'house_number', 'house_number_suffix'];
     const prefixes = ['billing', 'shipping'];
 
     prefixes.forEach((prefix) => {
@@ -26,6 +34,25 @@ export const hideSeparateFields = (): void => {
           el.style.display = 'none';
         }
       });
+    });
+  }
+
+  if (!isClassicCheckout()) {
+    const ids = ['billing-fields', 'shipping-fields'];
+    const prefix = '.wc-block-components-text-input.wc-block-components-address-form__myparcelnl-';
+
+    ids.forEach((id) => {
+      const container = document.getElementById(id);
+
+      if (container) {
+        fields.forEach((field) => {
+          const el = container.querySelector(`${prefix}${field}`);
+
+          if (el) {
+            (el as HTMLElement).style.display = 'none';
+          }
+        });
+      }
     });
   }
 };

@@ -5,12 +5,10 @@ import {
 } from '@myparcel-woocommerce/frontend-common';
 import {getHighestShippingClass} from '@myparcel-woocommerce/frontend-checkout-delivery-options/src/utils/getHighestShippingClass';
 import {PdkField, AddressType} from '@myparcel-pdk/checkout-common';
-import {createPdkCheckout, getEnabledShippingMethods} from '@myparcel-pdk/checkout';
+import {createPdkCheckout, getEnabledShippingMethods, usePdkCheckout} from '@myparcel-pdk/checkout';
 import {createName, createId, createFields, hideSeparateFields} from './utils';
 
 const config = isClassicCheckout() ? getClassicCheckoutConfig() : getBlocksCheckoutConfig();
-
-hideSeparateFields();
 
 createPdkCheckout({
   fields: {
@@ -83,3 +81,5 @@ createPdkCheckout({
 
   ...config.config,
 });
+
+usePdkCheckout().onInitialize(hideSeparateFields);
