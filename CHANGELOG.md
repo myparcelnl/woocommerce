@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.10.0](https://github.com/myparcelnl/woocommerce/compare/v5.9.0...v5.10.0) (2025-09-30)
+
+
+### :sparkles: New Features
+
+* allow delivery date ([#1409](https://github.com/myparcelnl/woocommerce/issues/1409)) ([979e3a2](https://github.com/myparcelnl/woocommerce/commit/979e3a22d0a93da0eca9ea4184ea58345df27352))
+
 ## [5.9.0](https://github.com/myparcelnl/woocommerce/compare/v5.8.1...v5.9.0) (2025-09-16)
 
 
