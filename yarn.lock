@@ -3438,11 +3438,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/admin-component-tests@npm:^1.9.0":
-  version: 1.9.0
-  resolution: "@myparcel-pdk/admin-component-tests@npm:1.9.0"
+"@myparcel-pdk/admin-component-tests@npm:^1.11.0":
+  version: 1.11.0
+  resolution: "@myparcel-pdk/admin-component-tests@npm:1.11.0"
   dependencies:
-    "@myparcel-pdk/admin": "npm:^1.9.0"
+    "@myparcel-pdk/admin": "npm:^1.11.0"
     "@myparcel/vue-form-builder": "npm:^1.0.0-alpha.1"
     "@pinia/testing": "npm:>= 0.1.0 < 1"
     "@vitest/coverage-v8": "npm:^2.1.3"
@@ -3452,37 +3452,38 @@ __metadata:
     vitest: "npm:^2.1.3"
   peerDependencies:
     vue: ^3
-  checksum: 10c0/76196b3fd39965d7e984a504ceae1389619b4b7af4032ffbce0e6cc416ae205a7703f39560508be282217ed8e4a9e81ad06a640314b856eadcc9b3e21d31313d
+  checksum: 10c0/f98ddb5d859b7e6edccb0edb5198b938d83ac9893cb22bdde5dfabb4703015d0be74dc0f3dbcab6f70351810672f0962cce7ee42b660bae29751579c46841423
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/admin-preset-dashicons@npm:^1.9.0":
-  version: 1.9.0
-  resolution: "@myparcel-pdk/admin-preset-dashicons@npm:1.9.0"
+"@myparcel-pdk/admin-preset-dashicons@npm:^1.11.0":
+  version: 1.11.0
+  resolution: "@myparcel-pdk/admin-preset-dashicons@npm:1.11.0"
   dependencies:
-    "@myparcel-pdk/admin": "npm:^1.9.0"
+    "@myparcel-pdk/admin": "npm:^1.11.0"
     vite: "npm:^5.4.10"
     vue: "npm:^3.3.0"
     vue-tsc: "npm:^2.0.0"
-  checksum: 10c0/c1adc61b811e6110129f36349219426c99ff1f7a8b3726cb9d9c8d2e3f2d5f143614620e1943c33e78b85c2cf11d3e752f531b540de06e6aeb79b7612d51bf13
+  checksum: 10c0/874c7e311dd908174d1ff0d43aec4bd7f0bb28b01d497c37517fbfa48ac9c11223cc5964eeeb4c181d7bb06e99e075c209226d38e20baf03c1e1d36a2971a898
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/admin-preset-default@npm:^1.10.0":
-  version: 1.10.0
-  resolution: "@myparcel-pdk/admin-preset-default@npm:1.10.0"
+"@myparcel-pdk/admin-preset-default@npm:^1.11.0":
+  version: 1.11.0
+  resolution: "@myparcel-pdk/admin-preset-default@npm:1.11.0"
   dependencies:
-    "@myparcel-pdk/admin": "npm:^1.9.0"
+    "@myparcel-pdk/admin": "npm:^1.11.0"
     "@myparcel/ts-utils": "npm:^1.9.0"
+    "@vuepic/vue-datepicker": "npm:^11.0.2"
     "@vueuse/core": "npm:^10.0.0"
     vue: "npm:^3.3.0"
-  checksum: 10c0/65df7805004ca5bdc5dd26a35f7bd2ad09bb3b959c98dbd673d437f58ffcee42fa768c5b426d9376e3a9566a41f8a5b6323ee89374da91a83cc989cd3356a797
+  checksum: 10c0/df4720affa4058cc6e75905f91cf56508983684ebd4f9c2117d86419b695a49792fba0b5404a6fc7924c4e0435436b5b1ea3b6dd7f9ac3368beb54f8667cf1b3
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/admin@npm:^1.9.0":
-  version: 1.9.0
-  resolution: "@myparcel-pdk/admin@npm:1.9.0"
+"@myparcel-pdk/admin@npm:^1.11.0":
+  version: 1.11.0
+  resolution: "@myparcel-pdk/admin@npm:1.11.0"
   dependencies:
     "@myparcel-pdk/common": "npm:^1.6.1"
     "@myparcel/constants": "npm:^2.0.0"
@@ -3496,7 +3497,7 @@ __metadata:
     vite: "npm:^5.4.10"
     vue: "npm:^3.3.0"
     vue-tsc: "npm:^2.0.0"
-  checksum: 10c0/c5f944a38585fdece63ab1bb7184c845d06d6236724dfda73ef474f526d6b7869dd5e13f6e2c309db4e385da49f42bd7260430fc74883ee88846837abda80bfe
+  checksum: 10c0/e023131e863e8f0a269de23a1deb5144498fd7ac3e3f50427d86ae5d1de3cbacd28d99a05432038f124a62efa98161791ee7e7f76afe219de9b8d7ea83b7ab2c
   languageName: node
   linkType: hard
 
@@ -3647,10 +3648,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/backend-admin@workspace:views/backend/admin"
   dependencies:
-    "@myparcel-pdk/admin": "npm:^1.9.0"
-    "@myparcel-pdk/admin-component-tests": "npm:^1.9.0"
-    "@myparcel-pdk/admin-preset-dashicons": "npm:^1.9.0"
-    "@myparcel-pdk/admin-preset-default": "npm:^1.10.0"
+    "@myparcel-pdk/admin": "npm:^1.11.0"
+    "@myparcel-pdk/admin-component-tests": "npm:^1.11.0"
+    "@myparcel-pdk/admin-preset-dashicons": "npm:^1.11.0"
+    "@myparcel-pdk/admin-preset-default": "npm:^1.11.0"
     "@myparcel-woocommerce/vite-config": "workspace:*"
     "@myparcel/ts-utils": "npm:^1.8.0"
     "@tanstack/vue-query": "npm:^4.27.0"
@@ -8180,6 +8181,17 @@ __metadata:
     vue:
       optional: true
   checksum: 10c0/f4e37182dc2560ce2c78e66fbf837000dba5460c12913ef37f5d54b6c0da518df1118fcc1968ff51d9541287a9d9d105fb17072b0dbb095919cfb50d1fe67a78
+  languageName: node
+  linkType: hard
+
+"@vuepic/vue-datepicker@npm:^11.0.2":
+  version: 11.0.2
+  resolution: "@vuepic/vue-datepicker@npm:11.0.2"
+  dependencies:
+    date-fns: "npm:^4.1.0"
+  peerDependencies:
+    vue: ">=3.3.0"
+  checksum: 10c0/fc8e29411a41284d973c9548ca5b32621baf176bc6ea990e828c61434eb2e319cfec75be7a66171c8601d0568ad910c4b8b7ace9ab6e8d18dde0973ed27ea1f6
   languageName: node
   linkType: hard
 
