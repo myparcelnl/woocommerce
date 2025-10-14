@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.11.0](https://github.com/myparcelnl/woocommerce/compare/v5.10.0...v5.11.0) (2025-10-14)
+
+
+### :bug: Bug Fixes
+
+* hide separate address fields for country null ([#1423](https://github.com/myparcelnl/woocommerce/issues/1423)) ([5300548](https://github.com/myparcelnl/woocommerce/commit/5300548349f9edc8dff95de15d181a4cc461dfef))
+
+
+### :sparkles: New Features
+
+* add acceptance API switch ([#1428](https://github.com/myparcelnl/woocommerce/issues/1428)) ([f0538b6](https://github.com/myparcelnl/woocommerce/commit/f0538b66f56a03e6d2711c7b28bb9a58b5e02c47))
+* add acceptance api switch ([#1429](https://github.com/myparcelnl/woocommerce/issues/1429)) ([1215844](https://github.com/myparcelnl/woocommerce/commit/1215844d25b14305063ec5ce4a766f524d9a6b0c))
+* **woocommerce:** add option to list closed days for shop ([#1421](https://github.com/myparcelnl/woocommerce/issues/1421)) ([49c7e31](https://github.com/myparcelnl/woocommerce/commit/49c7e316167e724ba8900d421be49ef799a3ff3d))
+
 ## [5.10.0](https://github.com/myparcelnl/woocommerce/compare/v5.9.0...v5.10.0) (2025-09-30)
 
 
