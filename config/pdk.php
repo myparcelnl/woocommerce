@@ -93,9 +93,9 @@ return [
     }),
 
     'wooCommerceIsActive' => factory(function (): bool {
-        $plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
+        $plugins = apply_filters('active_plugins', get_option('active_plugins'));
 
-        return is_array($plugins) && in_array( 'woocommerce/woocommerce.php', $plugins , true );
+        return is_array($plugins) && in_array('woocommerce/woocommerce.php', $plugins, true);
     }),
 
     'wooCommerceVersion' => factory(function (): string {
@@ -140,9 +140,13 @@ return [
     }),
 
     'userAgent' => factory(function (): array {
+        /**
+         * @var PropositionService $propositionService
+         */
+        $propositionService = Platform::get(PropositionService::class);
         return [
             'MyParcel-WooCommerce' => PdkFacade::getAppInfo()->version,
-            'MyParcel-Proposition' => PdkFacade::get(PropositionService::class)->getPropositionConfig()->proposition->key,
+            'MyParcel-Proposition' => $propositionService->hasActivePropositionId() ? $propositionService->getPropositionConfig()->proposition->key : 'unknown',
             'WooCommerce'          => WooCommerce::getVersion(),
             'WordPress'            => WordPress::getVersion(),
         ];
