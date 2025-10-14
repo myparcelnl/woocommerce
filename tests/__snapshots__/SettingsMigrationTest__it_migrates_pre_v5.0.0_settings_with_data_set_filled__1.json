@@ -2,7 +2,8 @@
     "account": {
         "id": "account",
         "apiKey": "some-fake-api-key",
-        "apiKeyValid": true
+        "apiKeyValid": true,
+        "environment": null
     },
     "order": {
         "id": "order",
@@ -78,7 +79,8 @@
         "enableDeliveryOptionsWhenNotInStock": true,
         "useSeparateAddressFields": true,
         "showTaxFields": true,
-        "enableAddressWidget": false
+        "enableAddressWidget": false,
+        "closedDays": []
     },
     "carrier": {
         "postnl": {
@@ -173,6 +175,7 @@
             "exportReturnLargeFormat": false,
             "exportReturnPackageType": "package",
             "exportSignature": true,
+            "exportTracked": false,
             "exportCollect": false,
             "priceDeliveryTypeEvening": 100,
             "priceDeliveryTypeMonday": 0,
@@ -283,6 +286,7 @@
             "exportReturnLargeFormat": false,
             "exportReturnPackageType": "package",
             "exportSignature": false,
+            "exportTracked": false,
             "exportCollect": false,
             "priceDeliveryTypeEvening": 0,
             "priceDeliveryTypeMonday": 0,
@@ -393,6 +397,7 @@
             "exportReturnLargeFormat": false,
             "exportReturnPackageType": "package",
             "exportSignature": false,
+            "exportTracked": false,
             "exportCollect": false,
             "priceDeliveryTypeEvening": 0,
             "priceDeliveryTypeMonday": 0,
@@ -503,6 +508,7 @@
             "exportReturnLargeFormat": false,
             "exportReturnPackageType": "package",
             "exportSignature": false,
+            "exportTracked": false,
             "exportCollect": false,
             "priceDeliveryTypeEvening": 0,
             "priceDeliveryTypeMonday": 0,
