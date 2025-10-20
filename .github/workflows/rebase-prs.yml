@@ -7,7 +7,7 @@ jobs:
   rebase-prs:
     runs-on: ubuntu-22.04
     steps:
-      - uses: myparcelnl/actions/rebase-prs@v4
+      - uses: myparcelnl/actions/rebase-prs@v5
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
