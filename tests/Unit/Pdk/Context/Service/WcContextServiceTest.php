@@ -72,7 +72,7 @@ it('creates checkout context', function ($input, $expected) {
         if ($specs['shippingClassId'] ?? null) {
             $wpTerm          = new WP_Term();
             $wpTerm->term_id = (int) $specs['shippingClassId'];
-            $wpTerm->name    = $wpTerm->slug = random_bytes(5);
+            $wpTerm->name    = $wpTerm->slug = bin2hex(random_bytes(5));
 
             add_product_to_cart($productId, $wpTerm->term_id);
 
