@@ -140,10 +140,7 @@ return [
     }),
 
     'userAgent' => factory(function (): array {
-        /**
-         * @var PropositionService $propositionService
-         */
-        $propositionService = Platform::get(PropositionService::class);
+        $propositionService = Pdk::get(PropositionService::class);
         return [
             'MyParcel-WooCommerce' => PdkFacade::getAppInfo()->version,
             'MyParcel-Proposition' => $propositionService->hasActivePropositionId() ? $propositionService->getPropositionConfig()->proposition->key : 'unknown',
