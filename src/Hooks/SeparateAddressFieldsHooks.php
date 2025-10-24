@@ -71,6 +71,12 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
             Filter::apply('separateAddressFieldsPriority'),
             2
         );
+
+        // Classic checkout only - save separate address fields to address1
+        add_action('woocommerce_checkout_update_order_meta', [$this, 'setAddress1ForClassicCheckout'], 10, 1);
+
+        // Classic checkout only - validate separate address fields
+        add_action('woocommerce_checkout_process', [$this, 'validateSeparateAddressFields']);
     }
 
     /**
@@ -201,6 +207,95 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
                     $order->set_billing_address_1($address1);
                 } else {
                     $order->set_shipping_address_1($address1);
+                }
+            }
+        }
+    }
+
+    /**
+     * Set the address1 field for separated fields for classic checkout.
+     * @param int $order_id
+     * @return void
+     */
+    public function setAddress1ForClassicCheckout(int $order_id): void
+    {
+        if (! $this->useSeparateAddressFields) {
+            return;
+        }
+
+        $order = wc_get_order($order_id);
+        if (! $order) {
+            return;
+        }
+
+        $post = wp_unslash(filter_input_array(INPUT_POST));
+        if (! $post) {
+            return;
+        }
+
+        foreach (['billing', 'shipping'] as $type) {
+            $countryCode = $type === 'billing' ? $order->get_billing_country() : $order->get_shipping_country();
+            
+            if (in_array($countryCode, (array) Pdk::get('countriesWithSeparateAddressFields'), true)) {
+                $prefix = $type . '_';
+                $street = $post[$prefix . Pdk::get('fieldStreet')] ?? '';
+                $number = $post[$prefix . Pdk::get('fieldNumber')] ?? '';
+                $numberSuffix = $post[$prefix . Pdk::get('fieldNumberSuffix')] ?? '';
+                
+                $address1 = implode(' ', array_filter([$street, $number, $numberSuffix]));
+                
+                if ($type === 'billing') {
+                    $order->set_billing_address_1($address1);
+                } else {
+                    $order->set_shipping_address_1($address1);
+                }
+            }
+        }
+        
+        $order->save();
+    }
+
+    /**
+     * Validate separate address fields for classic checkout.
+     * @return void
+     */
+    public function validateSeparateAddressFields(): void
+    {
+        if (! $this->useSeparateAddressFields) {
+            return;
+        }
+
+        $post = wp_unslash(filter_input_array(INPUT_POST));
+        if (! $post) {
+            return;
+        }
+
+        foreach (['billing', 'shipping'] as $type) {
+            $countryCode = $post[$type . '_country'] ?? '';
+            
+            if (in_array($countryCode, (array) Pdk::get('countriesWithSeparateAddressFields'), true)) {
+                $prefix = $type . '_';
+                $street = $post[$prefix . Pdk::get('fieldStreet')] ?? '';
+                $number = $post[$prefix . Pdk::get('fieldNumber')] ?? '';
+                
+                if (empty($street)) {
+                    wc_add_notice(
+                        sprintf(
+                            __('%s straatnaam is verplicht.', 'woocommerce-myparcel'),
+                            $type === 'billing' ? __('Factuur', 'woocommerce-myparcel') : __('Verzend', 'woocommerce-myparcel')
+                        ),
+                        'error'
+                    );
+                }
+                
+                if (empty($number)) {
+                    wc_add_notice(
+                        sprintf(
+                            __('%s huisnummer is verplicht.', 'woocommerce-myparcel'),
+                            $type === 'billing' ? __('Factuur', 'woocommerce-myparcel') : __('Verzend', 'woocommerce-myparcel')
+                        ),
+                        'error'
+                    );
                 }
             }
         }
