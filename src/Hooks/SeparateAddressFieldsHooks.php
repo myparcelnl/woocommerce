@@ -75,8 +75,6 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
         // Classic checkout only - save separate address fields to address1
         add_action('woocommerce_checkout_update_order_meta', [$this, 'setAddress1ForClassicCheckout'], 10, 1);
 
-        // Classic checkout only - validate separate address fields
-        add_action('woocommerce_checkout_process', [$this, 'validateSeparateAddressFields']);
     }
 
     /**
@@ -228,15 +226,15 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
             return;
         }
 
-        $post = wp_unslash(filter_input_array(INPUT_POST));
+        $post = $this->getPostData();
         if (! $post) {
             return;
         }
 
         foreach (['billing', 'shipping'] as $type) {
-            $countryCode = $type === 'billing' ? $order->get_billing_country() : $order->get_shipping_country();
+            $countryCode = $this->getCountryCode($type, $order, $post);
             
-            if (in_array($countryCode, (array) Pdk::get('countriesWithSeparateAddressFields'), true)) {
+            if ($this->countryUsesSeparateAddressFields($countryCode)) {
                 $prefix = $type . '_';
                 $street = $post[$prefix . Pdk::get('fieldStreet')] ?? '';
                 $number = $post[$prefix . Pdk::get('fieldNumber')] ?? '';
@@ -255,51 +253,6 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
         $order->save();
     }
 
-    /**
-     * Validate separate address fields for classic checkout.
-     * @return void
-     */
-    public function validateSeparateAddressFields(): void
-    {
-        if (! $this->useSeparateAddressFields) {
-            return;
-        }
-
-        $post = wp_unslash(filter_input_array(INPUT_POST));
-        if (! $post) {
-            return;
-        }
-
-        foreach (['billing', 'shipping'] as $type) {
-            $countryCode = $post[$type . '_country'] ?? '';
-            
-            if (in_array($countryCode, (array) Pdk::get('countriesWithSeparateAddressFields'), true)) {
-                $prefix = $type . '_';
-                $street = $post[$prefix . Pdk::get('fieldStreet')] ?? '';
-                $number = $post[$prefix . Pdk::get('fieldNumber')] ?? '';
-                
-                if (empty($street)) {
-                    wc_add_notice(
-                        sprintf(
-                            __('%s straatnaam is verplicht.', 'woocommerce-myparcel'),
-                            $type === 'billing' ? __('Factuur', 'woocommerce-myparcel') : __('Verzend', 'woocommerce-myparcel')
-                        ),
-                        'error'
-                    );
-                }
-                
-                if (empty($number)) {
-                    wc_add_notice(
-                        sprintf(
-                            __('%s huisnummer is verplicht.', 'woocommerce-myparcel'),
-                            $type === 'billing' ? __('Factuur', 'woocommerce-myparcel') : __('Verzend', 'woocommerce-myparcel')
-                        ),
-                        'error'
-                    );
-                }
-            }
-        }
-    }
 
     /**
      * @param  array $fields
@@ -442,6 +395,46 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
             $this->createSelectorFor('fieldNumberSuffix')
         );
     }
+    /**
+     * Get POST data and validate it exists.
+     * @return array|null
+     */
+    private function getPostData(): ?array
+    {
+        $post = wp_unslash(filter_input_array(INPUT_POST));
+        return $post ?: null;
+    }
+
+    /**
+     * Get country code for the given address type from order or POST data.
+     * @param string $type 'billing' or 'shipping'
+     * @param WC_Order|null $order
+     * @param array|null $post
+     * @return string
+     */
+    private function getCountryCode(string $type, ?WC_Order $order = null, ?array $post = null): string
+    {
+        if ($order) {
+            return $type === 'billing' ? $order->get_billing_country() : $order->get_shipping_country();
+        }
+        
+        if ($post) {
+            return $post[$type . '_country'] ?? '';
+        }
+        
+        return '';
+    }
+
+    /**
+     * Check if the given country uses separate address fields.
+     * @param string $countryCode
+     * @return bool
+     */
+    private function countryUsesSeparateAddressFields(string $countryCode): bool
+    {
+        return in_array($countryCode, (array) Pdk::get('countriesWithSeparateAddressFields'), true);
+    }
+
     /**
      * @param  array  $fields
      * @param  string $form
