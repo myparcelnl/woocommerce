@@ -21,7 +21,7 @@ export const hideSeparateFields = (): void => {
     // If the fields exist and are visible, it means separate address fields are enabled
     const testField = document.getElementById('billing_street_name_field');
     const fieldsExist = testField !== null;
-    
+
     // Only hide fields if they don't exist in the DOM (meaning separate address fields are disabled)
     if (!fieldsExist) {
       const fields = ['street_name', 'house_number', 'house_number_suffix'];
