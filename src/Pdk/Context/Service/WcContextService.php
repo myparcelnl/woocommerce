@@ -23,13 +23,13 @@ final class WcContextService extends ContextService
      */
     public function createCheckoutContext(?PdkCart $cart): CheckoutContext
     {
-        $rememberShippingClass   = ['shippingClassName' => null, 'packageTypeName' => null];
+        $currentShippingClass    = ['shippingClass' => null, 'packageType' => null];
         $allowedShippingMethods  = Settings::get(CheckoutSettings::ALLOWED_SHIPPING_METHODS, CheckoutSettings::ID);
         $createShippingClassName = Pdk::get('createShippingClassName');
 
         if ($allowedShippingMethods && $cart) {
             /**
-             * Remove products with a shipping class that points to a package type from the cart, remembering the largest package type.
+             * Remove products with a shipping class that points to a package type from the cart, so they don't affect package type calculation.
              */
             foreach ($cart->lines as $index => $line) {
                 $WC_product = wc_get_product($line->product->externalIdentifier);
@@ -49,14 +49,11 @@ final class WcContextService extends ContextService
                     continue;
                 }
 
-                /**
-                 * remove lines from cart that have a shipping class associated with a package type,
-                 * so they don't affect package type calculation
-                 */
                 $cart->lines->offsetUnset($index);
 
-                if ($this->isLargerPackageType($packageType, $rememberShippingClass['packageTypeName'])) {
-                    $rememberShippingClass = ['shippingClassName' => $shippingClassName, 'packageTypeName' => $packageType];
+                // Remember the largest package type from the shipping classes in the cart
+                if ($this->isLargerPackageType($packageType, $currentShippingClass['packageType'])) {
+                    $currentShippingClass = ['shippingClass' => $shippingClassName, 'packageType' => $packageType];
                 }
             }
         }
@@ -68,9 +65,9 @@ final class WcContextService extends ContextService
          * classes, or when the shipping class yields a larger package type than the cart-calculated one.
          */
         if (! $cart->lines || 0 === $cart->lines->count()
-            || $this->isLargerPackageType($rememberShippingClass['packageTypeName'], $checkoutContext->config->packageType)
+            || $this->isLargerPackageType($currentShippingClass['packageType'], $checkoutContext->config->packageType)
         ) {
-            $highestShippingClass = $rememberShippingClass['shippingClassName'];
+            $highestShippingClass = $currentShippingClass['shippingClass'];
         }
 
         $checkoutContext->settings = array_merge($checkoutContext->settings, [
@@ -111,12 +108,8 @@ final class WcContextService extends ContextService
      */
     protected function isLargerPackageType(?string $packageTypeA, ?string $packageTypeB): bool
     {
-        if (null === $packageTypeA) {
-            return false;
-        }
-
-        if (null === $packageTypeB) {
-            return true;
+        if (! isset($packageTypeA, $packageTypeB)) {
+            return (null === $packageTypeB); // null is always the smallest package type
         }
 
         $sortedPackages = array_column(
