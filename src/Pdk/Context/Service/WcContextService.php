@@ -8,7 +8,10 @@ use MyParcelNL\Pdk\App\Cart\Model\PdkCart;
 use MyParcelNL\Pdk\Context\Model\CheckoutContext;
 use MyParcelNL\Pdk\Context\Service\ContextService;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Facade\Settings;
+use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\Pdk\Shipment\Collection\PackageTypeCollection;
+use MyParcelNL\Pdk\Types\Service\TriStateService;
 use WP_Term;
 
 final class WcContextService extends ContextService
@@ -20,10 +23,13 @@ final class WcContextService extends ContextService
      */
     public function createCheckoutContext(?PdkCart $cart): CheckoutContext
     {
-        $shippingClasses = [];
-        if ($cart) {
+        $rememberShippingClass   = ['shippingClassName' => null, 'packageTypeName' => null];
+        $allowedShippingMethods  = Settings::get(CheckoutSettings::ALLOWED_SHIPPING_METHODS, CheckoutSettings::ID);
+        $createShippingClassName = Pdk::get('createShippingClassName');
+
+        if ($allowedShippingMethods && $cart) {
             /**
-             * Remove products with a shipping class from the cart, remembering their shipping classes.
+             * Remove products with a shipping class that points to a package type from the cart, remembering the largest package type.
              */
             foreach ($cart->lines as $index => $line) {
                 $WC_product = wc_get_product($line->product->externalIdentifier);
@@ -36,26 +42,35 @@ final class WcContextService extends ContextService
                     continue;
                 }
 
+                $shippingClassName = $createShippingClassName($this->getShippingClassId($shippingClass));
+
+                $packageType = $this->getAssociatedPackageType($shippingClassName, $allowedShippingMethods);
+                if (! $packageType) {
+                    continue;
+                }
+
+                /**
+                 * remove lines from cart that have a shipping class associated with a package type,
+                 * so they don't affect package type calculation
+                 */
                 $cart->lines->offsetUnset($index);
-                $shippingClasses[] = $shippingClass;
+
+                if ($this->isLargerPackageType($packageType, $rememberShippingClass['packageTypeName'])) {
+                    $rememberShippingClass = ['shippingClassName' => $shippingClassName, 'packageTypeName' => $packageType];
+                }
             }
         }
 
-        /**
-         * Also determines the package type for the products left in the cart.
-         */
         $checkoutContext = parent::createCheckoutContext($cart);
 
         /**
-         * If there are products with a shipping class, determine the highest shipping class if applicable.
+         * Use the shipping class calculated package type when there are no products in the cart without shipping
+         * classes, or when the shipping class yields a larger package type than the cart-calculated one.
          */
-        if (! empty($shippingClasses)) {
-            $highestShippingClass =
-                $this->getHighestShippingClass(
-                    $shippingClasses,
-                    $checkoutContext,
-                    0 < $cart->lines->count()
-                );
+        if (! $cart->lines || 0 === $cart->lines->count()
+            || $this->isLargerPackageType($rememberShippingClass['packageTypeName'], $checkoutContext->config->packageType)
+        ) {
+            $highestShippingClass = $rememberShippingClass['shippingClassName'];
         }
 
         $checkoutContext->settings = array_merge($checkoutContext->settings, [
@@ -66,70 +81,64 @@ final class WcContextService extends ContextService
     }
 
     /**
-     * @param  array                                         $shippingClasses
-     * @param  \MyParcelNL\Pdk\Context\Model\CheckoutContext $checkoutContext
-     * @param  bool                                          $hasItemsWithoutShippingClass
+     * @param  string $shippingClassName
+     * @param  array  $allowedShippingMethods
      *
-     * @return null|string use package type for this shipping class, null means automatic package type calculation
+     * @return null|string the package type name or null if none is associated
      */
-    private function getHighestShippingClass(
-        array           $shippingClasses,
-        CheckoutContext $checkoutContext,
-        bool            $hasItemsWithoutShippingClass
-    ): ?string {
-        $allowedShippingMethods = $checkoutContext->settings['allowedShippingMethods'] ?? [];
-
-        if (empty($shippingClasses) || empty($allowedShippingMethods)) {
-            return null;
-        }
-
-        $createShippingClassName = Pdk::get('createShippingClassName');
-
-        // key=>value array holding the MyParcel packageTypeNames with their corresponding shipping class
-        $packageClasses = [];
-
-        foreach ($shippingClasses as $shippingClass) {
-            $class = $createShippingClassName($this->getShippingClassId($shippingClass));
-
-            foreach ($allowedShippingMethods as $packageType => $methods) {
-                if (in_array($class, $methods, true)) {
-                    $packageClasses[$packageType] = $class;
-                    break;
+    protected function getAssociatedPackageType(string $shippingClassName, array $allowedShippingMethods): ?string
+    {
+        foreach ($allowedShippingMethods as $packageType => $methods) {
+            if (in_array($shippingClassName, $methods, true)) {
+                if (TriStateService::INHERIT === $packageType) {
+                    return null; // for default, we do not want to force a package type
                 }
+
+                return $packageType;
             }
         }
 
-        $sortedPackages = array_values(
-            PackageTypeCollection::fromAll()
-                ->sortBySize(true)
-                ->toArrayWithoutNull()
+        // No package type associated with this shipping class, this means don’t display
+        // delivery options, however, this is broken currently, so we default to null
+        return null;
+    }
+
+    /**
+     * @param  null|string $packageTypeA
+     * @param  null|string $packageTypeB
+     *
+     * @return bool whether package type A is larger than package type B
+     */
+    protected function isLargerPackageType(?string $packageTypeA, ?string $packageTypeB): bool
+    {
+        if (null === $packageTypeA) {
+            return false;
+        }
+
+        if (null === $packageTypeB) {
+            return true;
+        }
+
+        $sortedPackages = array_column(
+            array_values(
+                PackageTypeCollection::fromAll()
+                    ->sortBySize(true)
+                    ->toArrayWithoutNull()
+            ),
+            'name'
         );
 
-        $cartPackageType = null;
-        if ($hasItemsWithoutShippingClass && $checkoutContext->config) {
-            $cartPackageType = $checkoutContext->config->packageType;
-        }
-
-        /**
-         * Have the frontend select the largest package type, either from the shipping class
-         * or the calculated package type. Return null if the calculated package type is the
-         * largest, for the frontend will not use the shipping class in that case.
-         */
-        $highest = null;
-
-        foreach ($sortedPackages as $package) {
-            $packageName = $package['name'] ?? '';
-
-            if (isset($packageClasses[$packageName])) {
-                $highest = $packageClasses[$packageName];
+        foreach ($sortedPackages as $packageType) {
+            if ($packageType === $packageTypeA) {
+                return false;
             }
 
-            if ($cartPackageType === $packageName) {
-                $highest = null;
+            if ($packageType === $packageTypeB) {
+                return true;
             }
         }
 
-        return $highest;
+        throw new \InvalidArgumentException('One of the package types is invalid.');
     }
 
     /**
