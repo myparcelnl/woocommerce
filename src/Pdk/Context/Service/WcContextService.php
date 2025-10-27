@@ -96,7 +96,7 @@ final class WcContextService extends ContextService
         }
 
         // No package type associated with this shipping class, this means don’t display
-        // delivery options, however, this is broken currently, so we default to null
+        // delivery options. Todo: fix this functionality INT-1187
         return null;
     }
 
