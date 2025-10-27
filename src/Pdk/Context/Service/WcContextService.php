@@ -64,7 +64,7 @@ final class WcContextService extends ContextService
          * Use the shipping class calculated package type when there are no products in the cart without shipping
          * classes, or when the shipping class yields a larger package type than the cart-calculated one.
          */
-        if ((! $cart->lines) || 0 === $cart->lines->count()
+        if (null === $cart->lines || 0 === $cart->lines->count()
             || $this->isLargerPackageType($currentShippingClass['packageType'], $checkoutContext->config->packageType)
         ) {
             $highestShippingClass = $currentShippingClass['shippingClass'];
