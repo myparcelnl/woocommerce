@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.11.1](https://github.com/myparcelnl/woocommerce/compare/v5.11.0...v5.11.1) (2025-10-28)
+
+
+### :bug: Bug Fixes
+
+* allow filling in api key ([#1466](https://github.com/myparcelnl/woocommerce/issues/1466)) ([848d8ce](https://github.com/myparcelnl/woocommerce/commit/848d8ce01276ead763c37a185fe1686f5d9f2133)), closes [#393](https://github.com/myparcelnl/woocommerce/issues/393)
+
 ## [5.11.0](https://github.com/myparcelnl/woocommerce/compare/v5.10.0...v5.11.0) (2025-10-14)
 
 
