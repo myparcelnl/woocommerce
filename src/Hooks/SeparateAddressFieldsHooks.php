@@ -418,11 +418,20 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
             return $type === 'billing' ? $order->get_billing_country() : $order->get_shipping_country();
         }
         
-        if ($post) {
-            return $post[$type . '_country'] ?? '';
-        }
-        
-        return '';
+        // Fallback to POST data if no order available
+        $countryCode = $post[$type . '_country'] ?? '';
+        return $this->sanitizeCountryCode($countryCode);
+    }
+
+    /**
+     * Sanitize country code against valid WooCommerce countries.
+     * @param string $countryCode
+     * @return string
+     */
+    private function sanitizeCountryCode(string $countryCode): string
+    {
+        $validCountries = array_keys(WC()->countries->get_countries());
+        return in_array($countryCode, $validCountries, true) ? $countryCode : '';
     }
 
     /**

@@ -17,25 +17,19 @@ export const hideSeparateFields = (): void => {
    * Classic checkout must be handled here.
    */
   if (isClassicCheckout()) {
-    // Check if separate address fields are enabled by looking for the fields in the DOM
-    // If the fields exist and are visible, it means separate address fields are enabled
-    const testField = document.getElementById('billing_street_name_field');
-    const fieldsExist = testField !== null;
+    // Hide separate address fields as a precaution when they shouldn't be visible
+    // This handles cases where fields might appear due to null country settings
+    const fields = ['street_name', 'house_number', 'house_number_suffix'];
+    const prefixes = ['billing', 'shipping'];
 
-    // Only hide fields if they don't exist in the DOM (meaning separate address fields are disabled)
-    if (!fieldsExist) {
-      const fields = ['street_name', 'house_number', 'house_number_suffix'];
-      const prefixes = ['billing', 'shipping'];
+    prefixes.forEach((prefix) => {
+      fields.forEach((field) => {
+        const el = document.getElementById(`${prefix}_${field}_field`);
 
-      prefixes.forEach((prefix) => {
-        fields.forEach((field) => {
-          const el = document.getElementById(`${prefix}_${field}_field`);
-
-          if (el) {
-            el.style.display = 'none';
-          }
-        });
+        if (el) {
+          el.style.display = 'none';
+        }
       });
-    }
+    });
   }
 };
