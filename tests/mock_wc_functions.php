@@ -64,10 +64,10 @@ function wc_get_orders($args)
 }
 
 /** @see \wc_get_product() */
-function wc_get_product(int $postId): WC_Product
+function wc_get_product($postId): ?WC_Product
 {
     /** @var \WC_Product $product */
-    $product = MockWcData::get($postId);
+    $product = MockWcData::get((int) $postId);
 
     return $product;
 }

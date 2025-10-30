@@ -8,8 +8,10 @@ use MyParcelNL\Pdk\App\Cart\Model\PdkCart;
 use MyParcelNL\Pdk\Context\Model\CheckoutContext;
 use MyParcelNL\Pdk\Context\Service\ContextService;
 use MyParcelNL\Pdk\Facade\Pdk;
-use WC_Shipping_Method;
-use WC_Shipping_Zones;
+use MyParcelNL\Pdk\Facade\Settings;
+use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
+use MyParcelNL\Pdk\Shipment\Collection\PackageTypeCollection;
+use MyParcelNL\Pdk\Types\Service\TriStateService;
 use WP_Term;
 
 final class WcContextService extends ContextService
@@ -21,123 +23,115 @@ final class WcContextService extends ContextService
      */
     public function createCheckoutContext(?PdkCart $cart): CheckoutContext
     {
-        $checkoutContext      = parent::createCheckoutContext($cart);
-        $highestShippingClass =
-            $this->getHighestShippingClass($cart, $checkoutContext->settings['allowedShippingMethods']);
+        $currentShippingClass    = ['shippingClass' => null, 'packageType' => null];
+        $allowedShippingMethods  = Settings::get(CheckoutSettings::ALLOWED_SHIPPING_METHODS, CheckoutSettings::ID);
+        $createShippingClassName = Pdk::get('createShippingClassName');
+
+        if ($allowedShippingMethods && $cart) {
+            /**
+             * Remove products with a shipping class that points to a package type from the cart, so they don't affect package type calculation.
+             */
+            foreach ($cart->lines as $index => $line) {
+                $WC_product = wc_get_product($line->product->externalIdentifier);
+                if (! $WC_product) {
+                    continue;
+                }
+
+                $shippingClass = $WC_product->get_shipping_class();
+                if (! $shippingClass) {
+                    continue;
+                }
+
+                $shippingClassName = $createShippingClassName($this->getShippingClassId($shippingClass));
+
+                $packageType = $this->getAssociatedPackageType($shippingClassName, $allowedShippingMethods);
+                if (! $packageType) {
+                    continue;
+                }
+
+                $cart->lines->offsetUnset($index);
+
+                // Remember the largest package type from the shipping classes in the cart
+                if ($this->isLargerPackageType($packageType, $currentShippingClass['packageType'])) {
+                    $currentShippingClass = ['shippingClass' => $shippingClassName, 'packageType' => $packageType];
+                }
+            }
+        }
+
+        $checkoutContext = parent::createCheckoutContext($cart);
+
+        /**
+         * Use the shipping class calculated package type when there are no products in the cart without shipping
+         * classes, or when the shipping class yields a larger package type than the cart-calculated one.
+         */
+        if (null === $cart->lines || 0 === $cart->lines->count()
+            || $this->isLargerPackageType($currentShippingClass['packageType'], $checkoutContext->config->packageType)
+        ) {
+            $highestShippingClass = $currentShippingClass['shippingClass'];
+        }
 
         $checkoutContext->settings = array_merge($checkoutContext->settings, [
-            'highestShippingClass' => $highestShippingClass ?? '',
+            'highestShippingClass' => $highestShippingClass ?? '', // frontend expects empty string when not set
         ]);
 
         return $checkoutContext;
     }
 
     /**
-     * @param  array $allowedShippingMethods
+     * @param  string $shippingClassName
+     * @param  array  $allowedShippingMethods
      *
-     * @return null|string
+     * @return null|string the package type name or null if none is associated
      */
-    private function getCartShippingClass(array $allowedShippingMethods): ?string
+    protected function getAssociatedPackageType(string $shippingClassName, array $allowedShippingMethods): ?string
     {
-        $cart = WC()->cart->get_cart();
+        foreach ($allowedShippingMethods as $packageType => $methods) {
+            if (in_array($shippingClassName, $methods, true)) {
+                if (TriStateService::INHERIT === $packageType) {
+                    return null; // for default, we do not want to force a package type
+                }
 
-        $highest = null;
-
-        foreach ($cart as $cartItem) {
-            $data          = $cartItem['data'];
-            $shippingClassTermId = $data->get_shipping_class();
-            if (! $shippingClassTermId) {
-                continue;
-            }
-
-            $createShippingClassName         = Pdk::get('createShippingClassName');
-            $shippingClassName               =
-                $createShippingClassName($this->getShippingClassId($shippingClassTermId));
-            $shippingClassHasDeliveryOptions =
-                $this->shippingMethodOrClassHasDeliveryOptions($shippingClassName, $allowedShippingMethods);
-
-            if ($shippingClassHasDeliveryOptions) {
-                $highest = $shippingClassTermId;
+                return $packageType;
             }
         }
 
-        return $highest;
+        // No package type associated with this shipping class, this means don’t display
+        // delivery options. Todo: fix this functionality INT-1187
+        return null;
     }
 
     /**
-     * Checks if a shipping class or method is enabled by it being set in allowed shipping methods.
+     * @param  null|string $packageTypeA
+     * @param  null|string $packageTypeB
      *
-     * @param  string $methodOrClassName
-     * @param  array  $allowedShippingMethods
-     *
-     * @return bool
+     * @return bool whether package type A is larger than package type B
      */
-    private function shippingMethodOrClassHasDeliveryOptions(
-        string $methodOrClassName,
-        array  $allowedShippingMethods
-    ): bool {
-        foreach ($allowedShippingMethods as $packageType) {
-            if (is_array($packageType) && in_array($methodOrClassName, $packageType, false)) {
+    protected function isLargerPackageType(?string $packageTypeA, ?string $packageTypeB): bool
+    {
+        if (! isset($packageTypeA, $packageTypeB)) {
+            return (null === $packageTypeB); // null is always the smallest package type
+        }
+
+        $sortedPackages = array_column(
+            array_values(
+                PackageTypeCollection::fromAll()
+                    ->sortBySize(true)
+                    ->toArrayWithoutNull()
+            ),
+            'name'
+        );
+
+        foreach ($sortedPackages as $packageType) {
+            if ($packageType === $packageTypeA) {
+                return false;
+            }
+
+            if ($packageType === $packageTypeB) {
                 return true;
             }
         }
 
-        return false;
-    }
-
-    /**
-     * @param  null|string $method
-     *
-     * @return null|\WC_Shipping_Method
-     */
-    private function getCurrentShippingMethod(?string $method): ?WC_Shipping_Method
-    {
-        $methodString = $method ?? WC()->session->get('chosen_shipping_methods')[0];
-
-        if (! $methodString) {
-            return null;
-        }
-
-        $parts      = explode(':', $methodString);
-        $instanceId = $parts[1] ?? null;
-
-        /** @var \WC_Shipping_Method|null $shippingMethod */
-        $shippingMethod = WC_Shipping_Zones::get_shipping_method((int) $instanceId) ?: null;
-
-        return $shippingMethod;
-    }
-
-    /**
-     * @param  null|\MyParcelNL\Pdk\App\Cart\Model\PdkCart $cart
-     * @param  array $allowedShippingMethods
-     *
-     * @return null|string
-     */
-    private function getHighestShippingClass(?PdkCart $cart, ?array $allowedShippingMethods): ?string
-    {
-        $shippingMethod    = $this->getCurrentShippingMethod($cart->shippingMethod->id ?? null);
-        $cartShippingClass = null;
-        if ($allowedShippingMethods) {
-            $cartShippingClass = $this->getCartShippingClass($allowedShippingMethods);
-        }
-
-        if (! $cartShippingClass || ! $shippingMethod) {
-            return null;
-        }
-
-        $shippingClasses = $this->getShippingClasses($shippingMethod);
-
-        foreach ($shippingClasses as $shippingClass) {
-            if (! $this->hasShippingClassCost($shippingClass, $shippingMethod)) {
-                continue;
-            }
-
-            $createShippingClassName = Pdk::get('createShippingClassName');
-
-            return $createShippingClassName($this->getShippingClassId($shippingClass));
-        }
-
-        return null;
+        throw new \InvalidArgumentException('One of the package types is invalid.');
     }
 
     /**
@@ -150,25 +144,6 @@ final class WcContextService extends ContextService
         $term = get_term_by('slug', $shippingClass, 'product_shipping_class');
 
         return $this->getTermId($term);
-    }
-
-    /**
-     * @param  \WC_Shipping_Method $shippingMethod
-     *
-     * @return array<string>
-     */
-    private function getShippingClasses(WC_Shipping_Method $shippingMethod): array
-    {
-        if (! method_exists($shippingMethod, 'find_shipping_classes')) {
-            return [];
-        }
-
-        $packages = WC()->cart->get_shipping_packages();
-        $package  = current($packages);
-
-        $shippingClasses = $shippingMethod->find_shipping_classes($package);
-
-        return array_filter(array_keys($shippingClasses));
     }
 
     /**
@@ -187,21 +162,5 @@ final class WcContextService extends ContextService
         }
 
         return $termId ? (int) $termId : null;
-    }
-
-    /**
-     * @param  string              $shippingClass
-     * @param  \WC_Shipping_Method $shippingMethod
-     *
-     * @return bool
-     */
-    private function hasShippingClassCost(string $shippingClass, WC_Shipping_Method $shippingMethod): bool
-    {
-        $id = $this->getShippingClassId($shippingClass);
-
-        $classCost = $shippingMethod->get_option("class_cost_$shippingClass");
-        $termCost  = $shippingMethod->get_option("class_cost_$id");
-
-        return (bool) ($termCost ?: $classCost);
     }
 }
