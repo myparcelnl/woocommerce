@@ -23,6 +23,7 @@ import {
   LogLevel,
   createPdkAdmin,
   AdminComponent,
+  useAppInfo,
 } from '@myparcel-pdk/admin';
 import {closeModalOnEscape, listenForBulkActions} from './hooks';
 import {
@@ -106,7 +107,8 @@ export const initialize = (): void => {
           wrapper: WcChildProductSettingsFormGroup,
         },
         generateFieldId(field) {
-          return `myparcelnl-${field.form.name}-${field.name}`;
+          const appInfo = useAppInfo();
+          return `${appInfo.name}-${field.form.name}-${field.name}`;
         },
       },
     },
@@ -186,7 +188,8 @@ export const initialize = (): void => {
     },
 
     generateFieldId(field) {
-      return `myparcelnl-${field.name}`;
+      const appInfo = useAppInfo();
+      return `${appInfo.name}-${field.name}`;
     },
   });
 };
