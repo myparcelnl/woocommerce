@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "87390fea1d6776713ac1e2eaa95f26b0",
+    "content-hash": "5369e6ec49ee906186396bc08fa98f1b",
     "packages": [
         {
             "name": "fruitcake/php-cors",
@@ -530,16 +530,16 @@
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "2.65.2",
+            "version": "2.66.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/pdk.git",
-                "reference": "4a7ba4e7d7a645f8bd35ab73c2cc63f4b7c3bb90"
+                "reference": "66dd5791deba834387a6d19da38b1ba768789696"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/4a7ba4e7d7a645f8bd35ab73c2cc63f4b7c3bb90",
-                "reference": "4a7ba4e7d7a645f8bd35ab73c2cc63f4b7c3bb90",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/66dd5791deba834387a6d19da38b1ba768789696",
+                "reference": "66dd5791deba834387a6d19da38b1ba768789696",
                 "shasum": ""
             },
             "require": {
@@ -586,9 +586,9 @@
             "homepage": "https://myparcel.nl",
             "support": {
                 "issues": "https://github.com/myparcelnl/pdk/issues",
-                "source": "https://github.com/myparcelnl/pdk/tree/v2.65.2"
+                "source": "https://github.com/myparcelnl/pdk/tree/v2.66.0"
             },
-            "time": "2025-10-28T09:53:31+00:00"
+            "time": "2025-10-31T16:10:52+00:00"
         },
         {
             "name": "myparcelnl/sdk",
@@ -5597,16 +5597,16 @@
         },
         {
             "name": "webmozart/assert",
-            "version": "1.12.0",
+            "version": "1.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozarts/assert.git",
-                "reference": "541057574806f942c94662b817a50f63f7345360"
+                "reference": "9be6926d8b485f55b9229203f962b51ed377ba68"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozarts/assert/zipball/541057574806f942c94662b817a50f63f7345360",
-                "reference": "541057574806f942c94662b817a50f63f7345360",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/9be6926d8b485f55b9229203f962b51ed377ba68",
+                "reference": "9be6926d8b485f55b9229203f962b51ed377ba68",
                 "shasum": ""
             },
             "require": {
@@ -5649,9 +5649,9 @@
             ],
             "support": {
                 "issues": "https://github.com/webmozarts/assert/issues",
-                "source": "https://github.com/webmozarts/assert/tree/1.12.0"
+                "source": "https://github.com/webmozarts/assert/tree/1.12.1"
             },
-            "time": "2025-10-20T12:43:39+00:00"
+            "time": "2025-10-29T15:56:20+00:00"
         }
     ],
     "aliases": [],
