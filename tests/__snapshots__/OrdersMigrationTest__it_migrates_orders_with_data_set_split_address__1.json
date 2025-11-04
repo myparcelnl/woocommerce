@@ -29,7 +29,8 @@
                 "sameDayDelivery": -1,
                 "signature": -1,
                 "tracked": -1,
-                "collect": -1
+                "collect": -1,
+                "excludeParcelLockers": -1
             },
             "deliveryType": "standard",
             "packageType": "package"

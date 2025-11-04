@@ -34,6 +34,7 @@ function defaultProductSettings(): array
         ProductSettings::FIT_IN_DIGITAL_STAMP     => TriStateService::INHERIT,
         ProductSettings::FIT_IN_MAILBOX           => TriStateService::INHERIT,
         ProductSettings::PACKAGE_TYPE             => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
+        ProductSettings::EXCLUDE_PARCEL_LOCKERS   => TriStateService::INHERIT,
     ];
 }
 

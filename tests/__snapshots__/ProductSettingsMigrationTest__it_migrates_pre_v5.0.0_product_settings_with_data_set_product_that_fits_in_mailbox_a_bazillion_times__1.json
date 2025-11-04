@@ -1,9 +1,37 @@
 {
-  "meta": [
-    {
-      "id": 0,
-      "key": "_myparcelnl_product_settings",
-      "value": {
+    "meta": [
+        {
+            "id": 0,
+            "key": "_myparcelnl_product_settings",
+            "value": {
+                "countryOfOrigin": -1,
+                "customsCode": -1,
+                "disableDeliveryOptions": -1,
+                "dropOffDelay": -1,
+                "exportAgeCheck": -1,
+                "exportHideSender": -1,
+                "exportInsurance": -1,
+                "exportLargeFormat": -1,
+                "exportOnlyRecipient": -1,
+                "exportReturn": -1,
+                "exportSignature": -1,
+                "exportTracked": -1,
+                "fitInDigitalStamp": -1,
+                "fitInMailbox": -1,
+                "packageType": -1,
+                "excludeParcelLockers": -1
+            }
+        },
+        {
+            "id": 0,
+            "key": "_myparcelnl_migrated",
+            "value": [
+                "5.0.0"
+            ]
+        }
+    ],
+    "product": {
+        "id": "product",
         "countryOfOrigin": -1,
         "customsCode": -1,
         "disableDeliveryOptions": -1,
@@ -18,32 +46,8 @@
         "exportTracked": -1,
         "fitInDigitalStamp": -1,
         "fitInMailbox": -1,
-        "packageType": -1
-      }
+        "packageType": -1,
+        "excludeParcelLockers": -1
     },
-    {
-      "id": 0,
-      "key": "_myparcelnl_migrated",
-      "value": ["5.0.0"]
-    }
-  ],
-  "product": {
-    "id": "product",
-    "countryOfOrigin": -1,
-    "customsCode": -1,
-    "disableDeliveryOptions": -1,
-    "dropOffDelay": -1,
-    "exportAgeCheck": -1,
-    "exportHideSender": -1,
-    "exportInsurance": -1,
-    "exportLargeFormat": -1,
-    "exportOnlyRecipient": -1,
-    "exportReturn": -1,
-    "exportSignature": -1,
-    "exportTracked": -1,
-    "fitInDigitalStamp": -1,
-    "fitInMailbox": -1,
-    "packageType": -1
-  },
-  "parentProduct": null
+    "parentProduct": null
 }
