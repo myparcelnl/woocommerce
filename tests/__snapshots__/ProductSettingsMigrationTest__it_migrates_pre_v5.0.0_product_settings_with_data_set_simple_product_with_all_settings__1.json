@@ -27,7 +27,7 @@
         },
         {
             "id": 0,
-            "key": "_myparcelcom_product_settings",
+            "key": "_myparcelnl_product_settings",
             "value": {
                 "countryOfOrigin": "BB",
                 "customsCode": "1234",
@@ -48,7 +48,7 @@
         },
         {
             "id": 0,
-            "key": "_myparcelcom_migrated",
+            "key": "_myparcelnl_migrated",
             "value": [
                 "5.0.0"
             ]
