@@ -34,6 +34,7 @@ function defaultProductSettings(): array
         ProductSettings::FIT_IN_DIGITAL_STAMP     => TriStateService::INHERIT,
         ProductSettings::FIT_IN_MAILBOX           => TriStateService::INHERIT,
         ProductSettings::PACKAGE_TYPE             => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
+        ProductSettings::EXCLUDE_PARCEL_LOCKERS   => TriStateService::INHERIT,
     ];
 }
 
@@ -72,6 +73,7 @@ it('saves product data correctly', function (array $postData, array $productSett
             'pest-fitInDigitalStamp' => '-1',
             'pest-fitInMailbox'      => '10',
             'pest-packageType'       => 'mailbox',
+            'pest-excludeParcelLockers' => '1',
             'newproduct_cat'         => 'New category name',
             'newproduct_cat_parent'  => '-1',
             'newtag'                 => [],
@@ -87,6 +89,7 @@ it('saves product data correctly', function (array $postData, array $productSett
             ProductSettings::EXPORT_INSURANCE  => TriStateService::ENABLED,
             ProductSettings::FIT_IN_MAILBOX    => 10,
             ProductSettings::PACKAGE_TYPE      => DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME,
+            ProductSettings::EXCLUDE_PARCEL_LOCKERS => TriStateService::DISABLED,
         ]),
     ],
     'change all settings' => [
@@ -106,6 +109,7 @@ it('saves product data correctly', function (array $postData, array $productSett
             'pest-fitInDigitalStamp'      => '-1',
             'pest-fitInMailbox'           => '12',
             'pest-packageType'            => 'digital_stamp',
+            'pest-excludeParcelLockers'   => '-1',
             'newproduct_cat'              => 'New category name',
             'newproduct_cat_parent'       => '-1',
             'newtag'                      => [],
@@ -127,6 +131,7 @@ it('saves product data correctly', function (array $postData, array $productSett
             ProductSettings::EXPORT_SIGNATURE         => TriStateService::DISABLED,
             ProductSettings::FIT_IN_MAILBOX           => 12,
             ProductSettings::PACKAGE_TYPE             => DeliveryOptions::PACKAGE_TYPE_DIGITAL_STAMP_NAME,
+            ProductSettings::EXCLUDE_PARCEL_LOCKERS   => TriStateService::DISABLED,
         ]),
     ],
 ]);
