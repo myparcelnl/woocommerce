@@ -10,8 +10,6 @@ use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\Frontend;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Types\Service\TriStateService;
-use MyParcelNL\Pdk\Settings\Model\ProductSettings;
 use MyParcelNL\Sdk\src\Support\Str;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use Throwable;
@@ -139,8 +137,6 @@ final class PdkProductSettingsHooks implements WordPressHooksInterface
                 ];
             })
             ->toArray();
-        
-        $values[ProductSettings::EXCLUDE_PARCEL_LOCKERS] = TriStateService::DISABLED;
 
         /** @var \MyParcelNL\WooCommerce\Pdk\Product\Repository\WcPdkProductRepository $productRepository */
         $productRepository = Pdk::get(PdkProductRepositoryInterface::class);
