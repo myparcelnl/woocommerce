@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.12.0](https://github.com/myparcelnl/woocommerce/compare/v5.11.1...v5.12.0) (2025-11-04)
+
+
+### :sparkles: New Features
+
+* add parcel lockers ([#1482](https://github.com/myparcelnl/woocommerce/issues/1482)) ([9df7436](https://github.com/myparcelnl/woocommerce/commit/9df7436e97dce0f5f5a7e6d40ef5260422bc944f))
+
+
+### :bug: Bug Fixes
+
+* **admin:** fix the delivery options not showing up in the admin ([#1476](https://github.com/myparcelnl/woocommerce/issues/1476)) ([da6ccfe](https://github.com/myparcelnl/woocommerce/commit/da6ccfe572dcc64a5382f328295a290d6a35c9e0))
+* update snapshots for parcel lockers ([#1484](https://github.com/myparcelnl/woocommerce/issues/1484)) ([5e14068](https://github.com/myparcelnl/woocommerce/commit/5e14068da33ffb01b667a7dad045cc5ba8e58ccd))
+* use shipping class while determining package type ([#1427](https://github.com/myparcelnl/woocommerce/issues/1427)) ([c2b75b8](https://github.com/myparcelnl/woocommerce/commit/c2b75b84481738526731dd1e79e65df12f4d5f9f))
+
 ## [5.11.1](https://github.com/myparcelnl/woocommerce/compare/v5.11.0...v5.11.1) (2025-10-28)
 
 

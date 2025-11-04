@@ -8,7 +8,7 @@
  * Description: Export your WooCommerce orders to MyParcel and print labels directly from the WooCommerce admin
  * Author: MyParcel
  * Author URI: https://www.myparcel.nl
- * Version: 5.11.1
+ * Version: 5.12.0
  * License: MIT
  * License URI: https://opensource.org/license/mit
  * Requires Plugins: woocommerce
