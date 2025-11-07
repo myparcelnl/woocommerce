@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - uses: myparcelnl/actions/pdk-custom-build@v4
+      - uses: myparcelnl/actions/pdk-custom-build@v5
         id: prepare
         with:
           php-version: ${{ vars.PHP_VERSION }}
