@@ -233,7 +233,7 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
 
         foreach (['billing', 'shipping'] as $type) {
             // Use POST data as source of truth - this is what the user just submitted
-            $countryCode = $this->getCountryCode($type, null, $post);
+            $countryCode = $this->getCountryCode($type, $post);
             
             if ($this->countryUsesSeparateAddressFields($countryCode)) {
                 $prefix = $type . '_';
@@ -407,29 +407,16 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
     }
 
     /**
-     * Get country code for the given address type from order or POST data.
-     * Priority: order (if available) > POST data (if available).
+     * Get country code for the given address type from POST data.
      * 
      * @param string $type 'billing' or 'shipping'
-     * @param WC_Order|null $order Order object (optional, takes priority if provided)
-     * @param array|null $post POST data array (optional, used as fallback)
+     * @param array $post POST data
      * @return string Sanitized country code
      */
-    private function getCountryCode(string $type, ?WC_Order $order = null, ?array $post = null): string
+    private function getCountryCode(string $type, array $post): string
     {
-        // Priority 1: Use order country code if order is available
-        if ($order) {
-            return $type === 'billing' ? $order->get_billing_country() : $order->get_shipping_country();
-        }
-        
-        // Priority 2: Fallback to POST data if no order available
-        if ($post) {
-            $countryCode = $post[$type . '_country'] ?? '';
-            return $this->sanitizeCountryCode($countryCode);
-        }
-        
-        // No data available
-        return '';
+        $countryCode = $post[$type . '_country'] ?? '';
+        return $this->sanitizeCountryCode($countryCode);
     }
 
     /**
