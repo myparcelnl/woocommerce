@@ -71,6 +71,10 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
             Filter::apply('separateAddressFieldsPriority'),
             2
         );
+
+        // Classic checkout only - save separate address fields to address1
+        add_action('woocommerce_checkout_update_order_meta', [$this, 'setAddress1ForClassicCheckout'], 10, 1);
+
     }
 
     /**
@@ -205,6 +209,51 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
             }
         }
     }
+
+    /**
+     * Set the address1 field for separated fields for classic checkout.
+     * @param int $order_id
+     * @return void
+     */
+    public function setAddress1ForClassicCheckout(int $order_id): void
+    {
+        if (! $this->useSeparateAddressFields) {
+            return;
+        }
+
+        $order = wc_get_order($order_id);
+        if (! $order) {
+            return;
+        }
+
+        $post = $this->getPostData();
+        if (! $post) {
+            return;
+        }
+
+        foreach (['billing', 'shipping'] as $type) {
+            // Use POST data as source of truth - this is what the user just submitted
+            $countryCode = $this->getCountryCode($type, $post);
+            
+            if ($this->countryUsesSeparateAddressFields($countryCode)) {
+                $prefix = $type . '_';
+                $street = $post[$prefix . Pdk::get('fieldStreet')] ?? '';
+                $number = $post[$prefix . Pdk::get('fieldNumber')] ?? '';
+                $numberSuffix = $post[$prefix . Pdk::get('fieldNumberSuffix')] ?? '';
+                
+                $address1 = implode(' ', array_filter([$street, $number, $numberSuffix]));
+                
+                if ($type === 'billing') {
+                    $order->set_billing_address_1($address1);
+                } else {
+                    $order->set_shipping_address_1($address1);
+                }
+            }
+        }
+        
+        $order->save();
+    }
+
 
     /**
      * @param  array $fields
@@ -347,6 +396,50 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
             $this->createSelectorFor('fieldNumberSuffix')
         );
     }
+    /**
+     * Get POST data and validate it exists.
+     * @return array|null
+     */
+    private function getPostData(): ?array
+    {
+        $post = wp_unslash(filter_input_array(INPUT_POST));
+        return $post ?: null;
+    }
+
+    /**
+     * Get country code for the given address type from POST data.
+     * 
+     * @param string $type 'billing' or 'shipping'
+     * @param array $post POST data
+     * @return string Sanitized country code
+     */
+    private function getCountryCode(string $type, array $post): string
+    {
+        $countryCode = $post[$type . '_country'] ?? '';
+        return $this->sanitizeCountryCode($countryCode);
+    }
+
+    /**
+     * Sanitize country code against valid WooCommerce countries.
+     * @param string $countryCode
+     * @return string
+     */
+    private function sanitizeCountryCode(string $countryCode): string
+    {
+        $validCountries = array_keys(WC()->countries->get_countries());
+        return in_array($countryCode, $validCountries, true) ? $countryCode : '';
+    }
+
+    /**
+     * Check if the given country uses separate address fields.
+     * @param string $countryCode
+     * @return bool
+     */
+    private function countryUsesSeparateAddressFields(string $countryCode): bool
+    {
+        return in_array($countryCode, (array) Pdk::get('countriesWithSeparateAddressFields'), true);
+    }
+
     /**
      * @param  array  $fields
      * @param  string $form
