@@ -17,8 +17,6 @@ export const hideSeparateFields = (): void => {
    * Classic checkout must be handled here.
    */
   if (isClassicCheckout()) {
-    // Hide separate address fields as a precaution when they shouldn't be visible
-    // This handles cases where fields might appear due to null country settings
     const fields = ['street_name', 'house_number', 'house_number_suffix'];
     const prefixes = ['billing', 'shipping'];
 
