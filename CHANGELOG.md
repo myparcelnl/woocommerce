@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.13.0](https://github.com/myparcelnl/woocommerce/compare/v5.12.1...v5.13.0) (2025-11-20)
+
+
+### :sparkles: New Features
+
+* add carrier trunkrs ([#1492](https://github.com/myparcelnl/woocommerce/issues/1492)) ([1fb7a83](https://github.com/myparcelnl/woocommerce/commit/1fb7a83a00ffa9257b779605a35fe0b824aa32c3))
+
 ## [5.12.1](https://github.com/myparcelnl/woocommerce/compare/v5.12.0...v5.12.1) (2025-11-18)
 
 ## [5.12.0](https://github.com/myparcelnl/woocommerce/compare/v5.11.1...v5.12.0) (2025-11-04)
