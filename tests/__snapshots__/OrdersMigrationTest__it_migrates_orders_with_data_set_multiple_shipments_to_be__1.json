@@ -176,7 +176,9 @@
                 "signature": -1,
                 "tracked": -1,
                 "collect": -1,
-                "excludeParcelLockers": -1
+                "excludeParcelLockers": -1,
+                "freshFood": -1,
+                "frozen": -1
             },
             "deliveryType": "standard",
             "packageType": "package"
@@ -215,7 +217,9 @@
                     "signature": 1,
                     "tracked": -1,
                     "collect": -1,
-                    "excludeParcelLockers": -1
+                    "excludeParcelLockers": -1,
+                    "freshFood": -1,
+                    "frozen": -1
                 },
                 "deliveryType": "standard",
                 "packageType": "package"
@@ -265,7 +269,9 @@
                     "signature": 1,
                     "tracked": -1,
                     "collect": -1,
-                    "excludeParcelLockers": -1
+                    "excludeParcelLockers": -1,
+                    "freshFood": -1,
+                    "frozen": -1
                 },
                 "deliveryType": "standard",
                 "packageType": "package"
