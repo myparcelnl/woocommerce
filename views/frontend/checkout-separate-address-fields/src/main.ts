@@ -75,6 +75,14 @@ const initializeCheckoutSeparateAddressFields = async () => {
         .filter(Boolean)
         .join(' ');
 
+      // Prevent infinite update loop: only write when value actually changes
+      const currentCustomerData = wcCartStore.selectors.getCustomerData();
+      const key = `${addressType}Address` as const;
+      const currentAddress1 = currentCustomerData?.[key]?.address_1 ?? '';
+      if (currentAddress1 === address1) {
+        return;
+      }
+
       if (addressType === AddressType.Shipping) {
         await wcCartStore.actions.setShippingAddress({address_1: address1});
       } else {
