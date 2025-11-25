@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.13.1](https://github.com/myparcelnl/woocommerce/compare/v5.13.0...v5.13.1) (2025-11-25)
+
+
+### :bug: Bug Fixes
+
+* prevent order notes request failure ([#1496](https://github.com/myparcelnl/woocommerce/issues/1496)) ([205c456](https://github.com/myparcelnl/woocommerce/commit/205c456e505fb9cbbd29e4bd78fd52d9f9bd2c00))
+* save shipping address when MyParcel fields are active but delivery options are disabled ([#1463](https://github.com/myparcelnl/woocommerce/issues/1463)) ([f8b2572](https://github.com/myparcelnl/woocommerce/commit/f8b2572cc29acc954d1fa2c3e664e933a44a76c9))
+
 ## [5.13.0](https://github.com/myparcelnl/woocommerce/compare/v5.12.1...v5.13.0) (2025-11-20)
 
 
