@@ -10,6 +10,7 @@ use MyParcelNL\Pdk\Context\Service\ContextService;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
+use MyParcelNL\Pdk\Settings\Model\Settings as SettingsModel;
 use MyParcelNL\Pdk\Shipment\Collection\PackageTypeCollection;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
 use WP_Term;
@@ -26,6 +27,7 @@ final class WcContextService extends ContextService
         $currentShippingClass    = ['shippingClass' => null, 'packageType' => null];
         $allowedShippingMethods  = Settings::get(CheckoutSettings::ALLOWED_SHIPPING_METHODS, CheckoutSettings::ID);
         $createShippingClassName = Pdk::get('createShippingClassName');
+        $disableDeliveryOptions  = false;
 
         if ($allowedShippingMethods && $cart) {
             /**
@@ -45,6 +47,13 @@ final class WcContextService extends ContextService
                 $shippingClassName = $createShippingClassName($this->getShippingClassId($shippingClass));
 
                 $packageType = $this->getAssociatedPackageType($shippingClassName, $allowedShippingMethods);
+
+                if ((string) SettingsModel::OPTION_NONE === $packageType) {
+                    $disableDeliveryOptions = true;
+                    $cart->lines->offsetUnset($index);
+                    continue;
+                }
+
                 if (! $packageType) {
                     continue;
                 }
@@ -60,11 +69,16 @@ final class WcContextService extends ContextService
 
         $checkoutContext = parent::createCheckoutContext($cart);
 
+        if ($disableDeliveryOptions) {
+            $checkoutContext->settings[CheckoutSettings::ENABLE_DELIVERY_OPTIONS] = false;
+        }
+
         /**
          * Use the shipping class calculated package type when there are no products in the cart without shipping
          * classes, or when the shipping class yields a larger package type than the cart-calculated one.
          */
-        if (null === $cart->lines || 0 === $cart->lines->count()
+        if (
+            null === $cart->lines || 0 === $cart->lines->count()
             || $this->isLargerPackageType($currentShippingClass['packageType'], $checkoutContext->config->packageType)
         ) {
             $highestShippingClass = $currentShippingClass['shippingClass'];
@@ -87,16 +101,14 @@ final class WcContextService extends ContextService
     {
         foreach ($allowedShippingMethods as $packageType => $methods) {
             if (in_array($shippingClassName, $methods, true)) {
-                if (TriStateService::INHERIT === $packageType) {
-                    return null; // for default, we do not want to force a package type
+                if (TriStateService::INHERIT === (int) $packageType) {
+                    return (string) SettingsModel::OPTION_NONE;
                 }
 
-                return $packageType;
+                return (string) $packageType;
             }
         }
 
-        // No package type associated with this shipping class, this means don’t display
-        // delivery options. Todo: fix this functionality INT-1187
         return null;
     }
 
