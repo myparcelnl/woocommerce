@@ -5,10 +5,11 @@ services:
       COMPOSER_IGNORE_PLATFORM_REQ: 'ext-*,lib-*'
     volumes:
       - .:/app
-    command: ['composer', 'install']
+      - /Users/jochemgravendeel/Projects/pdk:/Users/jochemgravendeel/Projects/pdk
+    command: [ 'composer', 'install' ]
 
   test:
     image: ghcr.io/myparcelnl/php-xd:7.4
     volumes:
       - .:/app
-    command: ['php', 'vendor/bin/pest']
+    command: [ 'php', 'vendor/bin/pest' ]

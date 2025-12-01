@@ -2,7 +2,7 @@
   "name": "myparcelnl/woocommerce",
   "version": "5.13.0",
   "require": {
-    "myparcelnl/pdk": "^2.64.0",
+    "myparcelnl/pdk": "*",
     "guzzlehttp/guzzle": "^7.5.0",
     "psr/log": "*",
     "php": ">= 7.4"
@@ -56,5 +56,11 @@
     "allow-plugins": {
       "pestphp/pest-plugin": true
     }
-  }
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "/Users/jochemgravendeel/Projects/pdk"
+    }
+  ]
 }
