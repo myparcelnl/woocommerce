@@ -70,7 +70,10 @@ final class WcContextService extends ContextService
         $checkoutContext = parent::createCheckoutContext($cart);
 
         if ($disableDeliveryOptions) {
-            $checkoutContext->settings[CheckoutSettings::ENABLE_DELIVERY_OPTIONS] = false;
+            $settings = $checkoutContext->settings;
+            $settings[CheckoutSettings::ENABLE_DELIVERY_OPTIONS] = false;
+            $settings['hasDeliveryOptions']                      = false;
+            $checkoutContext->settings                           = $settings;
         }
 
         /**
