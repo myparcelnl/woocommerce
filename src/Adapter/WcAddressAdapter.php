@@ -154,12 +154,12 @@ class WcAddressAdapter
      */
     private function getSeparateAddressFromOrder(WC_Order $order, string $addressType): array
     {
-        // Check if the hidden address is filled, use it when available and don't send the fullStreet in that case.
-        if ($this->getOrderMeta($order, Pdk::get('checkoutAddressHiddenInputName'), $addressType)) {
+        // if there is already an address, which might be updated in the admin, use that
+        if ($this->getAddressField($order, Pdk::get('fieldAddress1'), $addressType)) {
             return [];
         }
-        // if there is already an addres, which might be updated in the admin, use that
-        if ($this->getAddressField($order, Pdk::get('fieldAddress1'), $addressType)) {
+        // Check if the hidden address is filled, use it when available and don't send the fullStreet in that case.
+        if ($this->getOrderMeta($order, Pdk::get('checkoutAddressHiddenInputName'), $addressType)) {
             return [];
         }
         $street       = $this->getOrderMeta($order, Pdk::get('fieldStreet'), $addressType);
