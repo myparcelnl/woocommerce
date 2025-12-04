@@ -47,7 +47,6 @@ class WcAddressAdapter
 
         return array_merge(
             $this->getAddressFields($order, $resolvedAddressType),
-            $this->getSeparateAddressFromOrder($order, $resolvedAddressType),
             [
                 'eoriNumber' => $this->getOrderMeta($order, Pdk::get('fieldEoriNumber'), $resolvedAddressType),
                 'vatNumber'  => $this->getOrderMeta($order, Pdk::get('fieldVatNumber'), $resolvedAddressType),
@@ -144,30 +143,6 @@ class WcAddressAdapter
                 $this->getAddressField($instance, Pdk::get('fieldLastName'), $addressType),
             ])
         );
-    }
-
-    /**
-     * @param  \WC_Order $order
-     * @param  string    $addressType
-     *
-     * @return array
-     */
-    private function getSeparateAddressFromOrder(WC_Order $order, string $addressType): array
-    {
-        // Check if the hidden address is filled, use it when available and don't send the fullStreet in that case.
-        if ($this->getOrderMeta($order, Pdk::get('checkoutAddressHiddenInputName'), $addressType)) {
-            return [];
-        }
-        $street       = $this->getOrderMeta($order, Pdk::get('fieldStreet'), $addressType);
-        $number       = $this->getOrderMeta($order, Pdk::get('fieldNumber'), $addressType);
-        $numberSuffix = $this->getOrderMeta($order, Pdk::get('fieldNumberSuffix'), $addressType);
-        $country = $this->getAddressField($order, Pdk::get('fieldCountry'), $addressType);
-
-        $hasSeparateAddress = $street || $number || $numberSuffix;
-
-        return $hasSeparateAddress && in_array($country, Pdk::get('countriesWithSeparateAddressFields'), true)
-            ? ['fullStreet' => trim("$street $number $numberSuffix")]
-            : [];
     }
 
     /**
