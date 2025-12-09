@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.13.2](https://github.com/myparcelnl/woocommerce/compare/v5.13.1...v5.13.2) (2025-12-09)
+
+
+### :bug: Bug Fixes
+
+* use correct address for order after checkout ([#1503](https://github.com/myparcelnl/woocommerce/issues/1503)) ([d6ffef2](https://github.com/myparcelnl/woocommerce/commit/d6ffef29e474b6e1d15972400c122f06ac781ea6))
+
 ## [5.13.1](https://github.com/myparcelnl/woocommerce/compare/v5.13.0...v5.13.1) (2025-11-25)
 
 
