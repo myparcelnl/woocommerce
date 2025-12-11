@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c0e0458c149be3c56c8ec6fa448d4a7e",
+    "content-hash": "80930726ac92082b6cfe2dd6b0f6c609",
     "packages": [
         {
             "name": "fruitcake/php-cors",
@@ -2410,16 +2410,16 @@
         },
         {
             "name": "php-stubs/woocommerce-stubs",
-            "version": "v10.3.6",
+            "version": "v10.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-stubs/woocommerce-stubs.git",
-                "reference": "1a1c3d0f9a92910d9522d8e8a723d2a501ad3732"
+                "reference": "abb710fc59f1db30b25704c3739fb74cc75d845b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/woocommerce-stubs/zipball/1a1c3d0f9a92910d9522d8e8a723d2a501ad3732",
-                "reference": "1a1c3d0f9a92910d9522d8e8a723d2a501ad3732",
+                "url": "https://api.github.com/repos/php-stubs/woocommerce-stubs/zipball/abb710fc59f1db30b25704c3739fb74cc75d845b",
+                "reference": "abb710fc59f1db30b25704c3739fb74cc75d845b",
                 "shasum": ""
             },
             "require": {
@@ -2448,9 +2448,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-stubs/woocommerce-stubs/issues",
-                "source": "https://github.com/php-stubs/woocommerce-stubs/tree/v10.3.6"
+                "source": "https://github.com/php-stubs/woocommerce-stubs/tree/v10.4.0"
             },
-            "time": "2025-12-02T21:11:55+00:00"
+            "time": "2025-12-10T16:29:29+00:00"
         },
         {
             "name": "php-stubs/wordpress-stubs",
