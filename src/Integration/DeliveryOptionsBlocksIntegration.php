@@ -10,6 +10,7 @@ use MyParcelNL\Pdk\Context\Contract\ContextServiceInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
+use MyParcelNL\Pdk\Base\Support\Arr;
 
 class DeliveryOptionsBlocksIntegration extends AbstractBlocksIntegration
 {
@@ -39,6 +40,10 @@ class DeliveryOptionsBlocksIntegration extends AbstractBlocksIntegration
             [Context::ID_CHECKOUT],
             ['cart' => ! empty($cart->cart_contents) ? $cartRepository->get($cart) : null]
         );
+
+        if (false === Arr::get($context, Context::ID_CHECKOUT . '.settings.' . CheckoutSettings::ENABLE_DELIVERY_OPTIONS)) {
+            return '';
+        }
 
         return htmlspecialchars(json_encode(array_filter($context->toArrayWithoutNull())), 0, 'UTF-8');
     }
