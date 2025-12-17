@@ -99,7 +99,7 @@ final class WcContextService extends ContextService
      *
      * @return null|string the package type name or null if none is associated
      */
-    protected function getAssociatedPackageType(string $shippingClassName, array $allowedShippingMethods): ?string
+    protected function getAssociatedPackageType(string $shippingClassName, array $allowedShippingMethods)
     {
         foreach ($allowedShippingMethods as $packageType => $methods) {
             if (in_array($shippingClassName, $methods, true)) {
