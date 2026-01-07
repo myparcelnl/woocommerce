@@ -1,3 +1,3 @@
-import {initializeCheckoutTaxFields, usePdkCheckout} from '@myparcel-pdk/checkout';
+import {initializeCheckoutTaxFields, usePdkCheckout} from '@myparcel-dev/pdk-checkout';
 
 usePdkCheckout().onInitialize(initializeCheckoutTaxFields);

@@ -62,7 +62,7 @@ import {
   useLanguage,
   useModalElementContext,
   NotificationCategory,
-} from '@myparcel-pdk/admin';
+} from '@myparcel-dev/pdk-admin';
 
 const props = defineProps({
   actions: {

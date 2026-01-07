@@ -38,7 +38,7 @@
 
 <script lang="ts" setup>
 import {type PropType} from 'vue';
-import {ActionButton, AdminComponent, type ActionDefinition, Size, useLanguage} from '@myparcel-pdk/admin';
+import {ActionButton, AdminComponent, type ActionDefinition, Size, useLanguage} from '@myparcel-dev/pdk-admin';
 import WcLoadingOverlay from '../WcLoadingOverlay.vue';
 
 defineProps({

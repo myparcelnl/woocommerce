@@ -60,7 +60,7 @@ import {
   useDropdownData,
   useLanguage,
   AdminComponent,
-} from '@myparcel-pdk/admin';
+} from '@myparcel-dev/pdk-admin';
 
 const props = defineProps<{
   // eslint-disable-next-line vue/no-unused-properties

@@ -1,4 +1,4 @@
-import {AdminAction, useActionStore} from '@myparcel-pdk/admin';
+import {AdminAction, useActionStore} from '@myparcel-dev/pdk-admin';
 
 const BULK_ACTION_PREFIX = 'myparcelnl';
 

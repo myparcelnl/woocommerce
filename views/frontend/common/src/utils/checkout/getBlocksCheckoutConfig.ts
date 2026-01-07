@@ -1,5 +1,5 @@
-import {AddressField, AddressType, PdkField, type PdkFormData} from '@myparcel-pdk/checkout-common';
-import {PdkUtil, useUtil, updateContext, SeparateAddressField} from '@myparcel-pdk/checkout';
+import {AddressField, AddressType, PdkField, type PdkFormData} from '@myparcel-dev/pdk-checkout-common';
+import {PdkUtil, useUtil, updateContext, SeparateAddressField} from '@myparcel-dev/pdk-checkout';
 import {type CheckoutConfig} from '../../types';
 import {useWcCartStore} from './useWcCartStore';
 import {getShippingRate} from './getShippingRate';

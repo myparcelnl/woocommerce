@@ -48,7 +48,7 @@ import {
   useAdminConfig,
   generateFieldId,
   Size,
-} from '@myparcel-pdk/admin';
+} from '@myparcel-dev/pdk-admin';
 
 // eslint-disable-next-line vue/no-unused-properties
 const props = defineProps<PdkElementProps<T>>();
