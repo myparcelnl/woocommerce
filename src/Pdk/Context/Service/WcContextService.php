@@ -27,6 +27,8 @@ final class WcContextService extends ContextService
         $allowedShippingMethods  = Settings::get(CheckoutSettings::ALLOWED_SHIPPING_METHODS, CheckoutSettings::ID);
         $createShippingClassName = Pdk::get('createShippingClassName');
 
+        $disableDeliveryOptions = false;
+
         if ($allowedShippingMethods && $cart) {
             /**
              * Remove products with a shipping class that points to a package type from the cart, so they don't affect package type calculation.
@@ -46,14 +48,17 @@ final class WcContextService extends ContextService
 
                 $packageType = $this->getAssociatedPackageType($shippingClassName, $allowedShippingMethods);
 
-                if (TriStateService::INHERIT === $packageType) {
+                if ((string) TriStateService::INHERIT === $packageType) {
                     continue;
                 }
 
                 if (null === $packageType) {
-                    $currentShippingClass = [
+                    // No package type associated with this shipping class.
+                    // This means we should not display any delivery options.
+                    $disableDeliveryOptions = true;
+                    $currentShippingClass   = [
                         'shippingClass' => $shippingClassName,
-                        'packageType'   => 'disable_delivery_options',
+                        'packageType'   => null,
                     ];
                     break;
                 }
@@ -84,7 +89,7 @@ final class WcContextService extends ContextService
             'highestShippingClass' => $highestShippingClass ?? '', // frontend expects empty string when not set
         ];
 
-        if (isset($currentShippingClass['packageType']) && 'disable_delivery_options' === $currentShippingClass['packageType']) {
+        if ($disableDeliveryOptions) {
             $settingsToMerge[CheckoutSettings::ENABLE_DELIVERY_OPTIONS] = false;
         }
 
@@ -99,11 +104,11 @@ final class WcContextService extends ContextService
      *
      * @return null|string|int the package type name or null if none is associated
      */
-    protected function getAssociatedPackageType(string $shippingClassName, array $allowedShippingMethods)
+    protected function getAssociatedPackageType(string $shippingClassName, array $allowedShippingMethods): ?string
     {
         foreach ($allowedShippingMethods as $packageType => $methods) {
             if (in_array($shippingClassName, $methods, true)) {
-                return $packageType;
+                return (string) $packageType;
             }
         }
 
@@ -124,12 +129,12 @@ final class WcContextService extends ContextService
             return (null === $packageTypeB); // null is always the smallest package type
         }
 
-        if ('disable_delivery_options' === $packageTypeA) {
-            return true;
+        if (TriStateService::INHERIT === (int) $packageTypeA) {
+            return false;
         }
 
-        if ('disable_delivery_options' === $packageTypeB) {
-            return false;
+        if (TriStateService::INHERIT === (int) $packageTypeB) {
+            return true;
         }
 
         $sortedPackages = array_column(
