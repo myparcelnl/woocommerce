@@ -285,7 +285,7 @@ it('creates checkout context', function ($input, $expected) {
         ],
         'expected' => [
             'basePrice'             => 0.0,
-            'highestShippingClass'  => 'shipping_class:12', // It might still calculate this, but options should be disabled.
+            'highestShippingClass'  => '', // Options are disabled, so no class is relevant/selected.
             'enableDeliveryOptions' => false,
         ],
     ],

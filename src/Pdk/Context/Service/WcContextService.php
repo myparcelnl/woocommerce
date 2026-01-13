@@ -102,7 +102,7 @@ final class WcContextService extends ContextService
      * @param  string $shippingClassName
      * @param  array  $allowedShippingMethods
      *
-     * @return null|string|int the package type name or null if none is associated
+     * @return null|string the package type name or null if none is associated
      */
     protected function getAssociatedPackageType(string $shippingClassName, array $allowedShippingMethods): ?string
     {
