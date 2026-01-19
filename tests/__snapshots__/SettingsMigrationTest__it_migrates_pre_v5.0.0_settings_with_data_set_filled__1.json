@@ -2,7 +2,8 @@
     "account": {
         "id": "account",
         "apiKey": "some-fake-api-key",
-        "apiKeyValid": true
+        "apiKeyValid": true,
+        "environment": null
     },
     "order": {
         "id": "order",
@@ -175,6 +176,7 @@
             "exportReturnLargeFormat": false,
             "exportReturnPackageType": "package",
             "exportSignature": true,
+            "exportTracked": false,
             "exportCollect": false,
             "exportFreshFood": false,
             "exportFrozen": false,
@@ -287,6 +289,7 @@
             "exportReturnLargeFormat": false,
             "exportReturnPackageType": "package",
             "exportSignature": false,
+            "exportTracked": false,
             "exportCollect": false,
             "exportFreshFood": false,
             "exportFrozen": false,
@@ -399,6 +402,7 @@
             "exportReturnLargeFormat": false,
             "exportReturnPackageType": "package",
             "exportSignature": false,
+            "exportTracked": false,
             "exportCollect": false,
             "exportFreshFood": false,
             "exportFrozen": false,
@@ -511,6 +515,7 @@
             "exportReturnLargeFormat": false,
             "exportReturnPackageType": "package",
             "exportSignature": false,
+            "exportTracked": false,
             "exportCollect": false,
             "exportFreshFood": false,
             "exportFrozen": false,
