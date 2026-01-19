@@ -6,7 +6,7 @@ namespace MyParcelNL\WooCommerce\Tests\Factory;
 
 use BadMethodCallException;
 use MyParcelNL\Pdk\Tests\Factory\AbstractFactory;
-use MyParcelNL\Sdk\src\Support\Str;
+use MyParcelNL\Sdk\Support\Str;
 use MyParcelNL\WooCommerce\Tests\Factory\Contract\WpFactoryInterface;
 
 /**
