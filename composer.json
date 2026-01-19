@@ -2,6 +2,7 @@
   "name": "myparcelnl/woocommerce",
   "version": "5.13.3",
   "require": {
+    "myparcelnl/sdk": "^10.0.0",
     "myparcelnl/pdk": "^3.0.0",
     "guzzlehttp/guzzle": "^7.5.0",
     "psr/log": "*",

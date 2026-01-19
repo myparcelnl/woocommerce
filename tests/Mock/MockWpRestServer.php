@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Tests\Mock;
 
-use MyParcelNL\Sdk\src\Concerns\HasInstance;
+use MyParcelNL\Sdk\Concerns\HasInstance;
 use Symfony\Contracts\Service\ResetInterface;
 
 /**
