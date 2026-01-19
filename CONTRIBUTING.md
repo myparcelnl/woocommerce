@@ -33,6 +33,14 @@ This will build the plugin and output a version for each platform to the `dist` 
 
 ### Make your changes
 
+### Troubleshooting Plugin Loading Issues
+
+If you run into issues where the plugin settings or other screens do not render, you may resolve these by running the following command:
+
+```shell
+yarn pdk-builder translations
+```
+
 Follow our [Developer Guide for contributing to MyParcel repositories].
 
 ### Test your changes
