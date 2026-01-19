@@ -35,7 +35,7 @@ This will build the plugin and output a version for each platform to the `dist` 
 
 ### Troubleshooting Plugin Loading Issues
 
-If you encounter a random error when loading the plugin, try running the following command:
+If you run into issues where the plugin settings or other screens do not render, you may resolve these by running the following command:
 
 ```shell
 yarn pdk-builder translations
