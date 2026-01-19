@@ -6,7 +6,7 @@ namespace MyParcelNL\WooCommerce\Adapter;
 
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
-use MyParcelNL\Sdk\src\Support\Str;
+use MyParcelNL\Sdk\Support\Str;
 
 class LegacyDeliveryOptionsAdapter
 {
