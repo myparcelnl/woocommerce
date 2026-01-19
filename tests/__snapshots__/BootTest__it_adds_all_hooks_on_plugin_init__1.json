@@ -1,139 +1,142 @@
 {
-  "activate_woocommerce-myparcel": [
-    "MyParcelNLWooCommerce::install"
-  ],
-  "deactivate_woocommerce-myparcel": [
-    "MyParcelNLWooCommerce::uninstall"
-  ],
-  "init": [],
-  "wp_loaded": [
-    "MyParcelNLWooCommerce::upgrade"
-  ],
-  "woocommerce_init": [
-    "MyParcelNLWooCommerce::onWoocommerceInit"
-  ],
-  "woocommerce_blocks_checkout_block_registration": [
-    "MyParcelNLWooCommerce::registerCheckoutBlocks"
-  ],
-  "woocommerce_order_status_changed": [
-    "MyParcelNL\\WooCommerce\\Hooks\\AutomaticOrderExportHooks::automaticExportOrder"
-  ],
-  "before_woocommerce_init": [
-    "MyParcelNL\\WooCommerce\\Hooks\\BlocksIntegrationHooks::declareCheckoutBlocksCompatibility"
-  ],
-  "woocommerce_cart_calculate_fees": [
-    "MyParcelNL\\WooCommerce\\Hooks\\CartFeesHooks::calculateDeliveryOptionsFees"
-  ],
-  "wp": [
-    "MyParcelNL\\WooCommerce\\Hooks\\CheckoutScriptHooks::enqueueFrontendScripts"
-  ],
-  "woocommerce_order_note_added": [
-    "MyParcelNL\\WooCommerce\\Hooks\\OrderNotesHooks::addOrderNotes"
-  ],
-  "rest_api_init": [
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkAdminEndpointHooks::registerPdkRoutes",
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkFrontendEndpointHooks::registerPdkRoutes",
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkWebhookHooks::registerWebhookRoutes"
-  ],
-  "woocommerce_checkout_order_processed": [
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCheckoutPlaceOrderHooks::saveDeliveryOptions"
-  ],
-  "woocommerce_blocks_checkout_order_processed": [
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCheckoutPlaceOrderHooks::saveBlocksDeliveryOptions"
-  ],
-  "admin_enqueue_scripts": [
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCoreHooks::registerPdkScripts"
-  ],
-  "admin_footer": [
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCoreHooks::renderPdkInitScripts"
-  ],
-  "all_admin_notices": [
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCoreHooks::renderPdkNotifications"
-  ],
-  "script_loader_tag": [
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCoreHooks::changeScriptTag"
-  ],
-  "add_meta_boxes": [
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkOrderHooks::registerSingleOrderPageMetaBox"
-  ],
-  "bulk_actions-woocommerce_page_wc-orders": [
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkOrderListHooks::registerBulkActions"
-  ],
-  "manage_woocommerce_page_wc-orders_columns": [
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkOrderListHooks::registerMyParcelOrderListItem"
-  ],
-  "manage_woocommerce_page_wc-orders_custom_column": [
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkOrderListHooks::renderPdkOrderListItem"
-  ],
-  "admin_menu": [
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkPluginSettingsHooks::registerMenuItem"
-  ],
-  "body_class": [
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkPluginSettingsHooks::setWooCommerceBodyClasses"
-  ],
-  "woocommerce_screen_ids": [
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkPluginSettingsHooks::registerSettingsScreenInWooCommerce"
-  ],
-  "woocommerce_navigation_is_connected_page": [
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkPluginSettingsHooks::connectPageToWooCommerce"
-  ],
-  "woocommerce_product_data_tabs": [
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkProductSettingsHooks::registerProductSettingsTab"
-  ],
-  "woocommerce_product_data_panels": [
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkProductSettingsHooks::renderPdkProductSettings"
-  ],
-  "woocommerce_product_after_variable_attributes": [
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkProductSettingsHooks::renderPdkProductSettingsForVariant"
-  ],
-  "woocommerce_process_product_meta": [
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkProductSettingsHooks::handleSaveProduct"
-  ],
-  "woocommerce_save_product_variation": [
-    "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkProductSettingsHooks::handleSaveProduct"
-  ],
-  "plugin_action_links_..": [
-    "MyParcelNL\\WooCommerce\\Hooks\\PluginInfoHooks::setPluginActionLinks"
-  ],
-  "plugin_row_meta": [
-    "MyParcelNL\\WooCommerce\\Hooks\\PluginInfoHooks::setPluginMeta"
-  ],
-  "myparcelcom_migrate_5_0_0_orders": [
-    "MyParcelNL\\WooCommerce\\Migration\\Pdk\\OrdersMigration::migrateOrder"
-  ],
-  "myparcelcom_migrate_5_0_0_product_settings": [
-    "MyParcelNL\\WooCommerce\\Migration\\Pdk\\ProductSettingsMigration::migrateProductSettings"
-  ],
-  "woocommerce_get_country_locale": [
-    "MyParcelNL\\WooCommerce\\Hooks\\SeparateAddressFieldsHooks::extendLocaleWithSeparateAddressFields",
-    "MyParcelNL\\WooCommerce\\Hooks\\TaxFieldsHooks::extendLocaleWithTaxFields"
-  ],
-  "woocommerce_country_locale_field_selectors": [
-    "MyParcelNL\\WooCommerce\\Hooks\\SeparateAddressFieldsHooks::extendSelectorsWithSeparateAddressFields",
-    "MyParcelNL\\WooCommerce\\Hooks\\TaxFieldsHooks::extendSelectorsWithTaxFields"
-  ],
-  "woocommerce_default_address_fields": [
-    "MyParcelNL\\WooCommerce\\Hooks\\SeparateAddressFieldsHooks::extendDefaultsWithSeparateAddressFields",
-    "MyParcelNL\\WooCommerce\\Hooks\\TaxFieldsHooks::extendDefaultsWithTaxFields"
-  ],
-  "woocommerce_billing_fields": [
-    "MyParcelNL\\WooCommerce\\Hooks\\SeparateAddressFieldsHooks::extendBillingFields",
-    "MyParcelNL\\WooCommerce\\Hooks\\TaxFieldsHooks::extendBillingFields"
-  ],
-  "woocommerce_shipping_fields": [
-    "MyParcelNL\\WooCommerce\\Hooks\\SeparateAddressFieldsHooks::extendShippingFields",
-    "MyParcelNL\\WooCommerce\\Hooks\\TaxFieldsHooks::extendShippingFields"
-  ],
-  "woocommerce_set_additional_field_value": [
-    "MyParcelNL\\WooCommerce\\Hooks\\TaxFieldsHooks::storeTaxFieldsForBlocksCheckout"
-  ],
-  "woocommerce_email_before_order_table": [
-    "MyParcelNL\\WooCommerce\\Hooks\\TrackTraceHooks::renderTrackTraceInEmail"
-  ],
-  "woocommerce_after_order_details": [
-    "MyParcelNL\\WooCommerce\\Hooks\\TrackTraceHooks::renderTrackTraceInAccountOrderDetails"
-  ],
-  "woocommerce_my_account_my_orders_actions": [
-    "MyParcelNL\\WooCommerce\\Hooks\\TrackTraceHooks::registerTrackTraceActions"
-  ]
+    "activate_woocommerce-myparcel": [
+        "MyParcelNLWooCommerce::install"
+    ],
+    "deactivate_woocommerce-myparcel": [
+        "MyParcelNLWooCommerce::uninstall"
+    ],
+    "init": [],
+    "wp_loaded": [
+        "MyParcelNLWooCommerce::upgrade"
+    ],
+    "woocommerce_init": [
+        "MyParcelNLWooCommerce::onWoocommerceInit"
+    ],
+    "woocommerce_blocks_checkout_block_registration": [
+        "MyParcelNLWooCommerce::registerCheckoutBlocks"
+    ],
+    "woocommerce_order_status_changed": [
+        "MyParcelNL\\WooCommerce\\Hooks\\AutomaticOrderExportHooks::automaticExportOrder"
+    ],
+    "before_woocommerce_init": [
+        "MyParcelNL\\WooCommerce\\Hooks\\BlocksIntegrationHooks::declareCheckoutBlocksCompatibility"
+    ],
+    "woocommerce_cart_calculate_fees": [
+        "MyParcelNL\\WooCommerce\\Hooks\\CartFeesHooks::calculateDeliveryOptionsFees"
+    ],
+    "wp": [
+        "MyParcelNL\\WooCommerce\\Hooks\\CheckoutScriptHooks::enqueueFrontendScripts"
+    ],
+    "woocommerce_order_note_added": [
+        "MyParcelNL\\WooCommerce\\Hooks\\OrderNotesHooks::addOrderNotes"
+    ],
+    "rest_api_init": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkAdminEndpointHooks::registerPdkRoutes",
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkFrontendEndpointHooks::registerPdkRoutes",
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkWebhookHooks::registerWebhookRoutes"
+    ],
+    "woocommerce_checkout_order_processed": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCheckoutPlaceOrderHooks::saveDeliveryOptions"
+    ],
+    "woocommerce_blocks_checkout_order_processed": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCheckoutPlaceOrderHooks::saveBlocksDeliveryOptions"
+    ],
+    "admin_enqueue_scripts": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCoreHooks::registerPdkScripts"
+    ],
+    "admin_footer": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCoreHooks::renderPdkInitScripts"
+    ],
+    "all_admin_notices": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCoreHooks::renderPdkNotifications"
+    ],
+    "script_loader_tag": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCoreHooks::changeScriptTag"
+    ],
+    "add_meta_boxes": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkOrderHooks::registerSingleOrderPageMetaBox"
+    ],
+    "bulk_actions-woocommerce_page_wc-orders": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkOrderListHooks::registerBulkActions"
+    ],
+    "manage_woocommerce_page_wc-orders_columns": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkOrderListHooks::registerMyParcelOrderListItem"
+    ],
+    "manage_woocommerce_page_wc-orders_custom_column": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkOrderListHooks::renderPdkOrderListItem"
+    ],
+    "admin_menu": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkPluginSettingsHooks::registerMenuItem"
+    ],
+    "body_class": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkPluginSettingsHooks::setWooCommerceBodyClasses"
+    ],
+    "woocommerce_screen_ids": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkPluginSettingsHooks::registerSettingsScreenInWooCommerce"
+    ],
+    "woocommerce_navigation_is_connected_page": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkPluginSettingsHooks::connectPageToWooCommerce"
+    ],
+    "woocommerce_product_data_tabs": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkProductSettingsHooks::registerProductSettingsTab"
+    ],
+    "woocommerce_product_data_panels": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkProductSettingsHooks::renderPdkProductSettings"
+    ],
+    "woocommerce_product_after_variable_attributes": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkProductSettingsHooks::renderPdkProductSettingsForVariant"
+    ],
+    "woocommerce_process_product_meta": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkProductSettingsHooks::handleSaveProduct"
+    ],
+    "woocommerce_save_product_variation": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkProductSettingsHooks::handleSaveProduct"
+    ],
+    "plugin_action_links_..": [
+        "MyParcelNL\\WooCommerce\\Hooks\\PluginInfoHooks::setPluginActionLinks"
+    ],
+    "plugin_row_meta": [
+        "MyParcelNL\\WooCommerce\\Hooks\\PluginInfoHooks::setPluginMeta"
+    ],
+    "myparcelcom_migrate_5_0_0_orders": [
+        "MyParcelNL\\WooCommerce\\Migration\\Pdk\\OrdersMigration::migrateOrder"
+    ],
+    "myparcelcom_migrate_5_0_0_product_settings": [
+        "MyParcelNL\\WooCommerce\\Migration\\Pdk\\ProductSettingsMigration::migrateProductSettings"
+    ],
+    "woocommerce_get_country_locale": [
+        "MyParcelNL\\WooCommerce\\Hooks\\SeparateAddressFieldsHooks::extendLocaleWithSeparateAddressFields",
+        "MyParcelNL\\WooCommerce\\Hooks\\TaxFieldsHooks::extendLocaleWithTaxFields"
+    ],
+    "woocommerce_country_locale_field_selectors": [
+        "MyParcelNL\\WooCommerce\\Hooks\\SeparateAddressFieldsHooks::extendSelectorsWithSeparateAddressFields",
+        "MyParcelNL\\WooCommerce\\Hooks\\TaxFieldsHooks::extendSelectorsWithTaxFields"
+    ],
+    "woocommerce_default_address_fields": [
+        "MyParcelNL\\WooCommerce\\Hooks\\SeparateAddressFieldsHooks::extendDefaultsWithSeparateAddressFields",
+        "MyParcelNL\\WooCommerce\\Hooks\\TaxFieldsHooks::extendDefaultsWithTaxFields"
+    ],
+    "woocommerce_billing_fields": [
+        "MyParcelNL\\WooCommerce\\Hooks\\SeparateAddressFieldsHooks::extendBillingFields",
+        "MyParcelNL\\WooCommerce\\Hooks\\TaxFieldsHooks::extendBillingFields"
+    ],
+    "woocommerce_shipping_fields": [
+        "MyParcelNL\\WooCommerce\\Hooks\\SeparateAddressFieldsHooks::extendShippingFields",
+        "MyParcelNL\\WooCommerce\\Hooks\\TaxFieldsHooks::extendShippingFields"
+    ],
+    "woocommerce_checkout_update_order_meta": [
+        "MyParcelNL\\WooCommerce\\Hooks\\SeparateAddressFieldsHooks::setAddress1ForClassicCheckout"
+    ],
+    "woocommerce_set_additional_field_value": [
+        "MyParcelNL\\WooCommerce\\Hooks\\TaxFieldsHooks::storeTaxFieldsForBlocksCheckout"
+    ],
+    "woocommerce_email_before_order_table": [
+        "MyParcelNL\\WooCommerce\\Hooks\\TrackTraceHooks::renderTrackTraceInEmail"
+    ],
+    "woocommerce_after_order_details": [
+        "MyParcelNL\\WooCommerce\\Hooks\\TrackTraceHooks::renderTrackTraceInAccountOrderDetails"
+    ],
+    "woocommerce_my_account_my_orders_actions": [
+        "MyParcelNL\\WooCommerce\\Hooks\\TrackTraceHooks::registerTrackTraceActions"
+    ]
 }
