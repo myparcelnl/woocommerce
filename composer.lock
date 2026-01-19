@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0c4ea8626cfbb8454d144a50d65125c5",
+    "content-hash": "6741329cd4ca35b5498a811732282faf",
     "packages": [
         {
             "name": "fruitcake/php-cors",
@@ -404,16 +404,16 @@
         },
         {
             "name": "justinrainbow/json-schema",
-            "version": "5.3.0",
+            "version": "5.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jsonrainbow/json-schema.git",
-                "reference": "feb2ca6dd1cebdaf1ed60a4c8de2e53ce11c4fd8"
+                "reference": "b5a44b6391a3bbb75c9f2b73e1ef03d6045e1e20"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/feb2ca6dd1cebdaf1ed60a4c8de2e53ce11c4fd8",
-                "reference": "feb2ca6dd1cebdaf1ed60a4c8de2e53ce11c4fd8",
+                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/b5a44b6391a3bbb75c9f2b73e1ef03d6045e1e20",
+                "reference": "b5a44b6391a3bbb75c9f2b73e1ef03d6045e1e20",
                 "shasum": ""
             },
             "require": {
@@ -463,9 +463,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jsonrainbow/json-schema/issues",
-                "source": "https://github.com/jsonrainbow/json-schema/tree/5.3.0"
+                "source": "https://github.com/jsonrainbow/json-schema/tree/5.3.1"
             },
-            "time": "2024-07-06T21:00:26+00:00"
+            "time": "2025-12-12T08:56:22+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -530,23 +530,23 @@
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "2.68.0",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/pdk.git",
-                "reference": "6eaaa3e331f0b625cc63758d5f74edc919cbdaa8"
+                "reference": "60cd2014b806447fa3d0f48740a816c8817a27e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/6eaaa3e331f0b625cc63758d5f74edc919cbdaa8",
-                "reference": "6eaaa3e331f0b625cc63758d5f74edc919cbdaa8",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/60cd2014b806447fa3d0f48740a816c8817a27e0",
+                "reference": "60cd2014b806447fa3d0f48740a816c8817a27e0",
                 "shasum": ""
             },
             "require": {
                 "ext-zip": "*",
                 "fruitcake/php-cors": "^1.2",
                 "justinrainbow/json-schema": "^5.2",
-                "myparcelnl/sdk": "^7.0.0",
+                "myparcelnl/sdk": "^10.0.0",
                 "php": ">=7.4.0",
                 "php-di/php-di": "^6.0.0",
                 "psr/log": "^1.0.0 || ^2.0.0 || ^3.0.0",
@@ -586,37 +586,37 @@
             "homepage": "https://myparcel.nl",
             "support": {
                 "issues": "https://github.com/myparcelnl/pdk/issues",
-                "source": "https://github.com/myparcelnl/pdk/tree/v2.68.0"
+                "source": "https://github.com/myparcelnl/pdk/tree/v3.0.0"
             },
-            "time": "2025-12-09T09:31:43+00:00"
+            "time": "2026-01-19T15:01:02+00:00"
         },
         {
             "name": "myparcelnl/sdk",
-            "version": "7.25.3",
+            "version": "10.7.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/sdk.git",
-                "reference": "058bdc8f566bfb1d7733d0a7cc981579802a7c84"
+                "reference": "4d5525e096f53372c3b3c112b4ffbecfa5569d75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/058bdc8f566bfb1d7733d0a7cc981579802a7c84",
-                "reference": "058bdc8f566bfb1d7733d0a7cc981579802a7c84",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/4d5525e096f53372c3b3c112b4ffbecfa5569d75",
+                "reference": "4d5525e096f53372c3b3c112b4ffbecfa5569d75",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1.0"
+                "php": "^7.4 || ^8.0"
             },
             "require-dev": {
                 "fakerphp/faker": "^v1.16.0",
-                "phpunit/phpunit": "^7.5.20",
+                "mockery/mockery": "^1.6",
+                "phpunit/phpunit": "^9.6.22",
                 "psr/container": "~1.0.0"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "MyParcelNL\\Sdk\\": "src",
-                    "MyParcelNL\\Sdk\\src\\": "src"
+                    "MyParcelNL\\Sdk\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -625,7 +625,7 @@
             ],
             "authors": [
                 {
-                    "name": "Edie Lemoine",
+                    "name": "Jochem Gravendeel",
                     "email": "support@myparcel.nl"
                 },
                 {
@@ -633,7 +633,7 @@
                     "email": "support@myparcel.nl"
                 },
                 {
-                    "name": "Mark Ernst",
+                    "name": "Nabil Azahaf",
                     "email": "support@myparcel.nl"
                 },
                 {
@@ -644,15 +644,14 @@
             "description": "This package is designed to send and receive data from MyParcel by means of an API.",
             "homepage": "https://myparcelnl.github.io/sdk",
             "keywords": [
-                "Flespakket",
                 "myparcel",
                 "postnl"
             ],
             "support": {
                 "issues": "https://github.com/myparcelnl/sdk/issues",
-                "source": "https://github.com/myparcelnl/sdk/tree/v7.25.3"
+                "source": "https://github.com/myparcelnl/sdk/tree/v10.7.4"
             },
-            "time": "2025-11-06T15:07:29+00:00"
+            "time": "2026-01-19T15:01:08+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -2877,16 +2876,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.6.29",
+            "version": "9.6.31",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "9ecfec57835a5581bc888ea7e13b51eb55ab9dd3"
+                "reference": "945d0b7f346a084ce5549e95289962972c4272e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/9ecfec57835a5581bc888ea7e13b51eb55ab9dd3",
-                "reference": "9ecfec57835a5581bc888ea7e13b51eb55ab9dd3",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/945d0b7f346a084ce5549e95289962972c4272e5",
+                "reference": "945d0b7f346a084ce5549e95289962972c4272e5",
                 "shasum": ""
             },
             "require": {
@@ -2960,7 +2959,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.29"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.31"
             },
             "funding": [
                 {
@@ -2984,7 +2983,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-09-24T06:29:11+00:00"
+            "time": "2025-12-06T07:45:52+00:00"
         },
         {
             "name": "psr/event-dispatcher",
@@ -5546,16 +5545,16 @@
         },
         {
             "name": "theseer/tokenizer",
-            "version": "1.2.3",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/theseer/tokenizer.git",
-                "reference": "737eda637ed5e28c3413cb1ebe8bb52cbf1ca7a2"
+                "reference": "b7489ce515e168639d17feec34b8847c326b0b3c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/737eda637ed5e28c3413cb1ebe8bb52cbf1ca7a2",
-                "reference": "737eda637ed5e28c3413cb1ebe8bb52cbf1ca7a2",
+                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/b7489ce515e168639d17feec34b8847c326b0b3c",
+                "reference": "b7489ce515e168639d17feec34b8847c326b0b3c",
                 "shasum": ""
             },
             "require": {
@@ -5584,7 +5583,7 @@
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
             "support": {
                 "issues": "https://github.com/theseer/tokenizer/issues",
-                "source": "https://github.com/theseer/tokenizer/tree/1.2.3"
+                "source": "https://github.com/theseer/tokenizer/tree/1.3.1"
             },
             "funding": [
                 {
@@ -5592,7 +5591,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-03-03T12:36:25+00:00"
+            "time": "2025-11-17T20:03:58+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -5655,12 +5654,12 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">= 7.4"
     },
-    "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
 }
