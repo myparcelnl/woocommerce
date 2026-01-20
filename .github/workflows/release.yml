@@ -32,7 +32,6 @@ jobs:
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
           php-version: ${{ vars.PHP_VERSION }}
           php-scoper-version: ${{ vars.PHP_SCOPER_VERSION }}
-          update-deps: ${{ github.event.inputs.update-deps }}
           source-files: |
             src/**/*
             config/**/*

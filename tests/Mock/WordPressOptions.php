@@ -12,9 +12,7 @@ final class WordPressOptions
     /**
      * @var array
      */
-    public static $options = [
-        'woocommerce_weight_unit' => 'kg',
-    ];
+    public static $options = [];
 
     /**
      * @param  string $name
@@ -35,5 +33,10 @@ final class WordPressOptions
     public static function updateOption($option, $value, $autoload = null): void
     {
         self::$options[$option] = $value;
+    }
+
+    public static function reset(): void
+    {
+        self::$options = [];
     }
 }

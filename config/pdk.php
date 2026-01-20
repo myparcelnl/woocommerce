@@ -23,16 +23,19 @@ use MyParcelNL\Pdk\App\Webhook\Contract\PdkWebhooksRepositoryInterface;
 use MyParcelNL\Pdk\Audit\Contract\PdkAuditRepositoryInterface;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Base\Contract\WeightServiceInterface;
+use MyParcelNL\Pdk\Base\PdkBootstrapper;
 use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Context\Contract\ContextServiceInterface;
 use MyParcelNL\Pdk\Facade\Language;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Pdk as PdkFacade;
+use MyParcelNL\Pdk\Facade\Platform;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Frontend\Contract\FrontendRenderServiceInterface;
 use MyParcelNL\Pdk\Frontend\Contract\ScriptServiceInterface;
 use MyParcelNL\Pdk\Frontend\Contract\ViewServiceInterface;
 use MyParcelNL\Pdk\Language\Contract\LanguageServiceInterface;
+use MyParcelNL\Pdk\Proposition\Service\PropositionService;
 use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
 use MyParcelNL\Pdk\Settings\Model\OrderSettings;
 use MyParcelNL\WooCommerce\Contract\WooCommerceServiceInterface;
@@ -76,6 +79,7 @@ use MyParcelNL\WooCommerce\WooCommerce\Contract\WcShippingRepositoryInterface;
 use MyParcelNL\WooCommerce\WooCommerce\Repository\WcOrderRepository;
 use MyParcelNL\WooCommerce\WooCommerce\Repository\WcShippingRepository;
 use Psr\Log\LoggerInterface;
+
 use function DI\factory;
 use function DI\get;
 use function DI\value;
@@ -89,11 +93,19 @@ return [
     }),
 
     'wooCommerceIsActive' => factory(function (): bool {
-        return function_exists('WC');
+        $plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
+
+        return is_array($plugins) && in_array( 'woocommerce/woocommerce.php', $plugins , true );
     }),
 
     'wooCommerceVersion' => factory(function (): string {
-        return WooCommerce::isActive() ? WC()->version : '?';
+        $plugins = get_plugins();
+
+        if (isset($plugins['woocommerce/woocommerce.php'])) {
+            return $plugins['woocommerce/woocommerce.php']['Version'] ?? '?';
+        }
+
+        return '?';
     }),
 
     'minimumWooCommerceVersion' => value('5.0.0'),
@@ -132,10 +144,12 @@ return [
     }),
 
     'userAgent' => factory(function (): array {
+        $propositionService = Pdk::get(PropositionService::class);
         return [
-            'MyParcelNL-WooCommerce' => PdkFacade::getAppInfo()->version,
-            'WooCommerce'            => WooCommerce::getVersion(),
-            'WordPress'              => WordPress::getVersion(),
+            'MyParcel-WooCommerce' => PdkFacade::getAppInfo()->version,
+            'MyParcel-Proposition' => $propositionService->hasActivePropositionId() ? $propositionService->getPropositionConfig()->proposition->key : 'unknown',
+            'WooCommerce'          => WooCommerce::getVersion(),
+            'WordPress'            => WordPress::getVersion(),
         ];
     }),
 
@@ -171,6 +185,89 @@ return [
             ? wc_get_page_screen_id('shop_order')
             : 'woocommerce_page_wc-order';
     }),
+
+    ###
+    # General
+    ###
+
+    'pluginBasename' => factory(function (): string {
+        return plugin_basename(Pdk::getAppInfo()->path);
+    }),
+
+    'urlDocumentation' => value('https://developer.myparcel.nl/nl/documentatie/10.woocommerce.html'),
+    'urlReleaseNotes'  => value('https://github.com/myparcelnl/woocommerce/releases'),
+
+    'defaultWeightUnit' => value('kg'),
+
+    'wcAddressTypeBilling'  => value('billing'),
+    'wcAddressTypeShipping' => value('shipping'),
+
+    'wcAddressTypes' => factory(static function (): array {
+        return [
+            Pdk::get('wcAddressTypeBilling'),
+            Pdk::get('wcAddressTypeShipping'),
+        ];
+    }),
+
+    'fieldAddress1'   => value('address_1'),
+    'fieldAddress2'   => value('address_2'),
+    'fieldCity'       => value('city'),
+    'fieldCompany'    => value('company'),
+    'fieldCountry'    => value('country'),
+    'fieldEmail'      => value('email'),
+    'fieldFirstName'  => value('first_name'),
+    'fieldLastName'   => value('last_name'),
+    'fieldPhone'      => value('phone'),
+    'fieldPostalCode' => value('postcode'),
+    'fieldRegion'     => value('state'),
+
+    'fieldNumber'       => value('house_number'),
+    'fieldNumberSuffix' => value('house_number_suffix'),
+    'fieldStreet'       => value('street_name'),
+
+    ###
+    # Settings
+    ###
+
+    'settingsMenuSlug'      => value('woocommerce_page_myparcel-settings'),
+    'settingsMenuSlugShort' => value('myparcel-settings'),
+    'settingsMenuTitle'     => value('MyParcel'),
+    'settingsPageTitle'     => value('MyParcel WooCommerce'),
+
+    ###
+    # Routes
+    ###
+
+    'routeBackend'                   => value(PdkBootstrapper::PLUGIN_NAMESPACE . '/backend/v1'),
+    'routeBackendPdk'                => value('pdk'),
+    'routeBackendWebhookBase'        => value('webhook'),
+    'routeBackendWebhook'            => factory(function (): string {
+        return sprintf('%s/(?P<hash>.+)', Pdk::get('routeBackendWebhookBase'));
+    }),
+    'routeBackendPermissionCallback' => factory(static function (): string {
+        if (! is_user_logged_in()) {
+            return '__return_false';
+        }
+
+        foreach (wp_get_current_user()->roles as $role) {
+            if (in_array($role, ['shop_manager', 'administrator'])) {
+                return '__return_true';
+            }
+        }
+
+        return '__return_false';
+    }),
+
+    'routeFrontend'         => value(PdkBootstrapper::PLUGIN_NAMESPACE . '/frontend/v1'),
+    'routeFrontendMyParcel' => value(PdkBootstrapper::PLUGIN_NAMESPACE),
+
+    /**
+     * The meta key a product's MyParcel settings are saved in.
+     *
+     * @see \MyParcelNL\WooCommerce\Pdk\Product\Repository\WcPdkProductRepository
+     */
+
+    'metaKeyProductSettings' => value('_' . PdkBootstrapper::PLUGIN_NAMESPACE . '_product_settings'),
 
     ###
     # Custom services

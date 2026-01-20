@@ -10,7 +10,7 @@ use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\Frontend;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Sdk\src\Support\Str;
+use MyParcelNL\Sdk\Support\Str;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use Throwable;
 use WC_Product_Variation;

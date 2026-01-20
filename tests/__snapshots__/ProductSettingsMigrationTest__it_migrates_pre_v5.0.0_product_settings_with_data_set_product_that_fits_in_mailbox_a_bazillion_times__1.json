@@ -2,7 +2,7 @@
     "meta": [
         {
             "id": 0,
-            "key": "_myparcelnl_product_settings",
+            "key": "_myparcelcom_product_settings",
             "value": {
                 "countryOfOrigin": -1,
                 "customsCode": -1,
@@ -26,7 +26,7 @@
         },
         {
             "id": 0,
-            "key": "_myparcelnl_migrated",
+            "key": "_myparcelcom_migrated",
             "value": [
                 "5.0.0"
             ]
