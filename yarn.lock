@@ -3974,20 +3974,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel/vue-form-builder@npm:1.0.0-beta.52":
-  version: 1.0.0-beta.52
-  resolution: "@myparcel/vue-form-builder@npm:1.0.0-beta.52"
-  dependencies:
-    "@myparcel/ts-utils": "npm:>= 1.6.0"
-    "@vueuse/core": "npm:>= 10.1.0"
-    vue-component-type-helpers: "npm:^2.1.6"
-  peerDependencies:
-    vue: ^3
-  checksum: 10c0/f64c054678acc518faecae9fe6f897ec8ae5741cfeabd8dc65a618f69b1e30c4b63e3c7a12af2c6724198e1182b5b86a16cd96cefdab7d1c78420349a5bd2019
-  languageName: node
-  linkType: hard
-
-"@myparcel/vue-form-builder@npm:^1.0.0-alpha.1, @myparcel/vue-form-builder@npm:^1.0.0-beta.1":
+"@myparcel/vue-form-builder@npm:1.0.0-beta.42":
   version: 1.0.0-beta.42
   resolution: "@myparcel/vue-form-builder@npm:1.0.0-beta.42"
   dependencies:
@@ -33268,13 +33255,6 @@ __metadata:
   version: 2.1.6
   resolution: "vue-component-type-helpers@npm:2.1.6"
   checksum: 10c0/88f2b4d5bacf27fec16abac80ade2e599bc6f8805b1ba9164b3c9451495871fdf1d1da7260274de610fa27e5454ff0519f41c45ee6b37348fb1fa4b5e125c851
-  languageName: node
-  linkType: hard
-
-"vue-component-type-helpers@npm:^2.1.6":
-  version: 2.2.0
-  resolution: "vue-component-type-helpers@npm:2.2.0"
-  checksum: 10c0/3e95ddc38e01accdc1f0ae4bdeb3b5a32fd9ad3f7f10100d84c2752492d4f757d305d3026d26244b574d921eb35123a5f1cfa6f2e2c943a4ecd7deeaf777843d
   languageName: node
   linkType: hard
 
