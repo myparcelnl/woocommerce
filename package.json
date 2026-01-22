@@ -70,6 +70,7 @@
   },
   "prettier": "@myparcel-dev/prettier-config",
   "resolutions": {
+    "@myparcel-dev/vue-form-builder": "./private/vue-form-builder-working.tgz",
     "@semantic-release/release-notes-generator": "npm:@myparcel-dev/semantic-release-release-notes-generator@^10.1.0",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
@@ -85,9 +86,9 @@
     "@myparcel-dev/eslint-config-prettier": "^1.4.0",
     "@myparcel-dev/eslint-config-prettier-typescript": "^1.4.0",
     "@myparcel-dev/eslint-config-prettier-typescript-vue": "^1.4.0",
-    "@myparcel-pdk/app-builder": "^1.7.0",
     "@myparcel-dev/semantic-release-config": "^6.0.10",
     "@myparcel-dev/semantic-release-wordpress-readme-generator": "^1.3.0",
+    "@myparcel-pdk/app-builder": "^1.7.0",
     "@semantic-release/git": "^10.0.1",
     "@types/node": "^20.0.0",
     "@types/react": "*",
