@@ -3728,9 +3728,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel-dev/vue-form-builder@file:./private/vue-form-builder-working.tgz::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A.":
-  version: 1.0.0-beta.44
-  resolution: "@myparcel-dev/vue-form-builder@file:./private/vue-form-builder-working.tgz#./private/vue-form-builder-working.tgz::hash=1ff3e0&locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A."
+"@myparcel-dev/vue-form-builder@npm:1.0.0-beta.44-pdk-compatible.1":
+  version: 1.0.0-beta.44-pdk-compatible.1
+  resolution: "@myparcel-dev/vue-form-builder@npm:1.0.0-beta.44-pdk-compatible.1"
   dependencies:
     "@myparcel-dev/ts-utils": "npm:>= 1.6.0"
     "@myparcel-vfb/core": "npm:^1.0.0-beta.40"
@@ -3740,7 +3740,7 @@ __metadata:
     "@vueuse/core": "npm:>= 10.1.0"
   peerDependencies:
     vue: ^3
-  checksum: 10c0/2de91f60292855b4b230ce73a78fbec36ba1df1ad0cf38d0044714583abcdb9f959a24ccbcccb35ddde04245964273a5b5b76852b4d359740bc6beb670dda63e
+  checksum: 10c0/4facf2718c7564e84020cd4a82c581b8df6136e897c6f07871ee6a6389de102edd12b85a62e648956017571bdd5e332fb16e131ecf8f4516ca2294d6bbd7a973
   languageName: node
   linkType: hard
 
