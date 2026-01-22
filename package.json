@@ -68,6 +68,7 @@
   },
   "prettier": "@myparcel-dev/prettier-config",
   "resolutions": {
+    "@myparcel-dev/vue-form-builder": "./private/vue-form-builder-working.tgz",
     "@semantic-release/release-notes-generator": "npm:@myparcel-dev/semantic-release-release-notes-generator@^10.1.0",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",

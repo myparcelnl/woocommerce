@@ -3712,7 +3712,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel-dev/ts-utils@npm:^1.15.0":
+"@myparcel-dev/ts-utils@npm:>= 1.6.0, @myparcel-dev/ts-utils@npm:^1.15.0":
   version: 1.15.0
   resolution: "@myparcel-dev/ts-utils@npm:1.15.0"
   checksum: 10c0/fe0178f881cf78b44217b5f2c9a8ed92f3c15a58de1a19bb86b136589f1d1b95925a0e170ccf89507c6f574913b1f207804cd1a96135d63e4e8a71a6b6931f0e
@@ -3728,16 +3728,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel-dev/vue-form-builder@npm:^1.0.0-beta.53, @myparcel-dev/vue-form-builder@npm:^1.0.0-beta.54":
-  version: 1.0.0-beta.55
-  resolution: "@myparcel-dev/vue-form-builder@npm:1.0.0-beta.55"
+"@myparcel-dev/vue-form-builder@file:./private/vue-form-builder-working.tgz::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A.":
+  version: 1.0.0-beta.44
+  resolution: "@myparcel-dev/vue-form-builder@file:./private/vue-form-builder-working.tgz#./private/vue-form-builder-working.tgz::hash=1ff3e0&locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A."
   dependencies:
-    "@myparcel-dev/ts-utils": "npm:^1.15.0"
+    "@myparcel-dev/ts-utils": "npm:>= 1.6.0"
+    "@myparcel-vfb/core": "npm:^1.0.0-beta.40"
+    "@myparcel-vfb/hook-manager": "npm:^1.0.0-beta.12"
+    "@myparcel-vfb/plugin": "npm:^1.0.0-beta.40"
+    "@myparcel-vfb/utils": "npm:^1.0.0-beta.7"
     "@vueuse/core": "npm:>= 10.1.0"
-    vue-component-type-helpers: "npm:^2.1.6"
   peerDependencies:
     vue: ^3
-  checksum: 10c0/08ae89a24814ed3049d622fda52e1d0901fb9c92f4efb3d051f5b7af711aea1b65cd5f9eda291cd6a3f3745630a17643ec480556aabe1cfb0ca692c6fb291018
+  checksum: 10c0/2de91f60292855b4b230ce73a78fbec36ba1df1ad0cf38d0044714583abcdb9f959a24ccbcccb35ddde04245964273a5b5b76852b4d359740bc6beb670dda63e
   languageName: node
   linkType: hard
 
@@ -3760,6 +3763,46 @@ __metadata:
   bin:
     pdk-builder: ./bin/index.js
   checksum: 10c0/1f46a31f13a2b941e6b8146d11f28d497e2c4cc8cdba5fe410a25585f0e248c0e542e79bd923d437a509ff51a01e0b545c1069be3ae6883bdcd93d2f328117e6
+  languageName: node
+  linkType: hard
+
+"@myparcel-vfb/core@npm:^1.0.0-beta.40, @myparcel-vfb/core@npm:^1.0.0-beta.43":
+  version: 1.0.0-beta.43
+  resolution: "@myparcel-vfb/core@npm:1.0.0-beta.43"
+  dependencies:
+    "@myparcel-vfb/hook-manager": "npm:^1.0.0-beta.13"
+    "@myparcel-vfb/utils": "npm:^1.0.0-beta.9"
+    "@myparcel/ts-utils": "npm:^1.6.0"
+  checksum: 10c0/643f86ec05e06a48cb027191fabc6e4e8c1652b101b30e441d7c20daa796a2f9f381178d7c5f56916087783ae7acc3e019e4934390f277a270599403a4f89b49
+  languageName: node
+  linkType: hard
+
+"@myparcel-vfb/hook-manager@npm:^1.0.0-beta.12, @myparcel-vfb/hook-manager@npm:^1.0.0-beta.13":
+  version: 1.0.0-beta.13
+  resolution: "@myparcel-vfb/hook-manager@npm:1.0.0-beta.13"
+  dependencies:
+    "@myparcel/ts-utils": "npm:^1.6.0"
+  checksum: 10c0/ab92d67a001ec5c85dbb0e7f2a34fb979202b14b0e46fe939c4392bf39d02be6f10812e22b608ae801062e82c0b4b65dfce30a5276057a8961ade2cf8d0d068c
+  languageName: node
+  linkType: hard
+
+"@myparcel-vfb/plugin@npm:^1.0.0-beta.40":
+  version: 1.0.0-beta.43
+  resolution: "@myparcel-vfb/plugin@npm:1.0.0-beta.43"
+  dependencies:
+    "@myparcel-vfb/core": "npm:^1.0.0-beta.43"
+    "@myparcel/ts-utils": "npm:^1.6.0"
+    "@vue/devtools-api": "npm:^6.5.0"
+  checksum: 10c0/dcd7cd60e23862810bc4faee991e6422d1f379c039b239cd58a8d9f73589d2a0ce916282807db8c1270f682335a9dac489d23d9daf98dc8ac73d3762e892ca3b
+  languageName: node
+  linkType: hard
+
+"@myparcel-vfb/utils@npm:^1.0.0-beta.7, @myparcel-vfb/utils@npm:^1.0.0-beta.9":
+  version: 1.0.0-beta.9
+  resolution: "@myparcel-vfb/utils@npm:1.0.0-beta.9"
+  dependencies:
+    "@myparcel/ts-utils": "npm:^1.6.0"
+  checksum: 10c0/80cacc435a5915c05714bdd07db91afdafc9995152f48e9c2900af55f4094cae4c59e7a574d7cb1fc70be23348f34ec7382a393d05ab6d0a773fd42c6e76590d
   languageName: node
   linkType: hard
 
@@ -8061,7 +8104,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/devtools-api@npm:^6.4.2, @vue/devtools-api@npm:^6.6.3":
+"@vue/devtools-api@npm:^6.4.2, @vue/devtools-api@npm:^6.5.0, @vue/devtools-api@npm:^6.6.3":
   version: 6.6.4
   resolution: "@vue/devtools-api@npm:6.6.4"
   checksum: 10c0/0a993ae23618166e1bee5a7c14cebd8312752b93c143cbdd48fb2d0f7ade070d0e6baf757cd920d4681fef8f9acf29515162160f38cc7410f9a684d2df21b6de
