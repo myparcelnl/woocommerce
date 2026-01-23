@@ -1,4 +1,5 @@
 <?php
+
 /** @noinspection PhpUnhandledExceptionInspection,StaticClosureCanBeUsedInspection */
 
 declare(strict_types=1);
@@ -121,6 +122,11 @@ it('creates checkout context', function ($input, $expected) {
         ->toBe($expected['basePrice'])
         ->and($checkoutContext->settings['highestShippingClass'])
         ->toBe($expected['highestShippingClass']);
+
+    if (isset($expected['enableDeliveryOptions'])) {
+        expect($checkoutContext->settings[CheckoutSettings::ENABLE_DELIVERY_OPTIONS])
+            ->toBe($expected['enableDeliveryOptions']);
+    }
 })->with([
     'product with specific shipping class'                => [
         'input'    => [
@@ -266,6 +272,21 @@ it('creates checkout context', function ($input, $expected) {
         'expected' => [
             'basePrice'            => 0.0,
             'highestShippingClass' => 'shipping_class:4',
+        ],
+    ],
+    'product with none shipping class mapping'            => [
+        'input'    => [
+            'allowShippingMethods' => ['mailbox' => ['shipping_class:12']],
+            'shippingMethod'       => WC_Shipping_Flat_Rate::class,
+            'products'             => [
+                999 => ['shippingClassId' => 12],
+                101 => ['shippingClassId' => 999], // 999 is not in allowedShippingMethods (None)
+            ],
+        ],
+        'expected' => [
+            'basePrice'             => 0.0,
+            'highestShippingClass'  => '', // Options are disabled, so no class is relevant/selected.
+            'enableDeliveryOptions' => false,
         ],
     ],
 ]);
