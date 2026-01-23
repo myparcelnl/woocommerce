@@ -7,7 +7,7 @@
 
 <script lang="ts" setup>
 import {onMounted} from 'vue';
-import {useLanguage, type ElementInstance} from '@myparcel-pdk/admin';
+import {useLanguage, type ElementInstance} from '@myparcel-dev/pdk-admin';
 
 defineProps<{element: ElementInstance}>();
 

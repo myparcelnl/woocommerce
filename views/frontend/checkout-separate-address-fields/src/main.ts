@@ -13,14 +13,14 @@ import {
   useCheckoutStore,
   useSettings,
   type AddressFields,
-} from '@myparcel-pdk/checkout-common';
+} from '@myparcel-dev/pdk-checkout-common';
 import {
   initializeCheckoutSeparateAddressFields as initialize,
   SeparateAddressField,
   useEvent,
   usePdkCheckout,
   type SeparateAddressFields,
-} from '@myparcel-pdk/checkout';
+} from '@myparcel-dev/pdk-checkout';
 
 // eslint-disable-next-line max-lines-per-function
 const initializeCheckoutSeparateAddressFields = async () => {

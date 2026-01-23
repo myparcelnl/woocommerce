@@ -40,7 +40,7 @@ export default {inheritAttrs: false};
 <script lang="ts" setup>
 import {computed, toRefs} from 'vue';
 import {useVModel, get} from '@vueuse/core';
-import {type ElementInstance, generateFieldId, useLanguage, AdminComponent} from '@myparcel-pdk/admin';
+import {type ElementInstance, generateFieldId, useLanguage, AdminComponent} from '@myparcel-dev/pdk-admin';
 
 // eslint-disable-next-line vue/no-unused-properties
 const props = defineProps<{modelValue: boolean; element: ElementInstance}>();

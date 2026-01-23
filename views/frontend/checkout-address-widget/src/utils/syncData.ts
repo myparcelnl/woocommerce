@@ -6,7 +6,7 @@ import {
   type ConfigObject,
 } from 'mypa-address-widget';
 import {getClassicCheckoutConfig} from '@myparcel-woocommerce/frontend-common';
-import {AddressType, splitFullStreet, useCheckoutStore, useSettings} from '@myparcel-pdk/checkout';
+import {AddressType, splitFullStreet, useCheckoutStore, useSettings} from '@myparcel-dev/pdk-checkout';
 import {ALL_ADDRESS_FIELDS} from '../constants/fields';
 import {hideAddressFields, showAddressFields} from './showHide';
 import {BILLING_ID, getConfig, SHIPPING_ID} from './init';

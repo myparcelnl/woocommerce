@@ -16,10 +16,10 @@ const createDefaultConfig = (env) => {
       minify: !isDev,
       sourcemap: isDev,
       rollupOptions: {
-        external: ['vue', 'vitest', 'vite', /@vitest\/.*/, /@vite\/.*/, '@myparcel/delivery-options', 'leaflet'],
+        external: ['vue', 'vitest', 'vite', /@vitest\/.*/, /@vite\/.*/, '@myparcel-dev/delivery-options', 'leaflet'],
         output: {
           globals: {
-            '@myparcel/delivery-options': 'MyParcelDeliveryOptions',
+            '@myparcel-dev/delivery-options': 'MyParcelDeliveryOptions',
             vue: 'Vue',
           },
         },
