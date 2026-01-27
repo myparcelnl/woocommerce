@@ -74,21 +74,19 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     {
         $order = $this->wcOrderRepository->get($input);
 
-        return $this->retrieve((string) $order->get_id(), function () use ($order) {
-            try {
-                return $this->getDataFromOrder($order);
-            } catch (Throwable $exception) {
-                Logger::error(
-                    'Could not retrieve order data from WooCommerce order',
-                    [
-                        'order_id' => $order->get_id(),
-                        'error'    => $exception->getMessage(),
-                    ]
-                );
+        try {
+             return $this->getDataFromOrder($order);
+        } catch (Throwable $exception) {
+            Logger::error(
+                'Could not retrieve order data from WooCommerce order',
+                [
+                    'order_id' => $order->get_id(),
+                    'error'    => $exception->getMessage(),
+                ]
+            );
 
-                return new PdkOrder();
-            }
-        });
+            return new PdkOrder();
+        }
     }
 
     public function getByApiIdentifier(string $uuid): ?PdkOrder
