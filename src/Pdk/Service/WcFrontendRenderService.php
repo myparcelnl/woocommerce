@@ -11,6 +11,7 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Frontend\Service\FrontendRenderService;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
+use MyParcelNL\Pdk\Base\Support\Arr;
 
 class WcFrontendRenderService extends FrontendRenderService
 {
@@ -28,6 +29,10 @@ class WcFrontendRenderService extends FrontendRenderService
 
         $customCss = Settings::get(CheckoutSettings::DELIVERY_OPTIONS_CUSTOM_CSS, CheckoutSettings::ID);
         $context   = $this->contextService->createContexts([Context::ID_CHECKOUT], ['cart' => $cart]);
+
+        if (false === Arr::get($context, Context::ID_CHECKOUT . '.settings.' . CheckoutSettings::ENABLE_DELIVERY_OPTIONS)) {
+            return '';
+        }
 
         printf(
             '<div id="mypa-delivery-options-wrapper" class="%s__delivery-options" data-context="%s">%s<div id="myparcel-delivery-options"></div></div>',

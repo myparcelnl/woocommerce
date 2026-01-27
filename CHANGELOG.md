@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.13.3](https://github.com/myparcelnl/woocommerce/compare/v5.13.2...v5.13.3) (2026-01-06)
+
+
+### :bug: Bug Fixes
+
+* update js-pdk for small package insurance fix ([#1516](https://github.com/myparcelnl/woocommerce/issues/1516)) ([4e6c1d0](https://github.com/myparcelnl/woocommerce/commit/4e6c1d0585278bcb715941e76320576c435e8741))
+
 ## [5.13.2](https://github.com/myparcelnl/woocommerce/compare/v5.13.1...v5.13.2) (2025-12-09)
 
 
