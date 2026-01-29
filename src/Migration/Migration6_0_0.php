@@ -16,11 +16,13 @@ final class Migration6_0_0 extends AbstractMigration
     public function down(): void
     {
         $this->changeNamespace(PdkBootstrapper::PLUGIN_NAMESPACE, 'myparcelnl');
+        // we do not support back-migration to 'myparcelbe' namespace, this needs to be done manually if needed
         \wp_cache_flush();
     }
 
     public function up(): void
     {
+        $this->changeNamespace('myparcelbe', PdkBootstrapper::PLUGIN_NAMESPACE);
         $this->changeNamespace('myparcelnl', PdkBootstrapper::PLUGIN_NAMESPACE);
         \wp_cache_flush();
     }

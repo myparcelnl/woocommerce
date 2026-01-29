@@ -42,13 +42,13 @@ final class MyParcelNLWooCommerce
         register_activation_hook(__FILE__, [$this, 'install']);
         register_deactivation_hook(__FILE__, [$this, 'uninstall']);
         add_action('init', [$this, 'initialize'], 9999);
+        // Since wordpress 3.1 register_activation_hook is not called when a plugin is updated
+        add_action('wp_loaded', [$this, 'upgrade']);
 
         if (!$this->getApiKey()) {
             return;
         }
 
-        // Since wordpress 3.1 register_activation_hook is not called when a plugin is updated
-        add_action('wp_loaded', [$this, 'upgrade']);
         add_action('woocommerce_init', [$this, 'onWoocommerceInit'], 9999);
         add_action('woocommerce_blocks_checkout_block_registration', [$this, 'registerCheckoutBlocks']);
     }
