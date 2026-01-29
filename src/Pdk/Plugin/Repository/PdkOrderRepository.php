@@ -75,7 +75,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         $order = $this->wcOrderRepository->get($input);
 
         try {
-             return $this->getDataFromOrder($order);
+            return $this->getDataFromOrder($order);
         } catch (Throwable $exception) {
             Logger::error(
                 'Could not retrieve order data from WooCommerce order',
@@ -249,13 +249,6 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     private function getShipments(WC_Order $order): ShipmentCollection
     {
-        return $this->retrieve(
-            "wc_order_shipments_{$order->get_id()}",
-            function () use ($order): ShipmentCollection {
-                $shipments = $order->get_meta(Pdk::get('metaKeyOrderShipments')) ?: null;
-
-                return new ShipmentCollection($shipments);
-            }
-        );
+        return new ShipmentCollection($order->get_meta(Pdk::get('metaKeyOrderShipments')) ?: null);
     }
 }
