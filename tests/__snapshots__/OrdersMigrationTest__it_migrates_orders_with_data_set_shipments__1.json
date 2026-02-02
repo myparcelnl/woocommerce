@@ -1,9 +1,9 @@
 {
     "meta": {
-        "_myparcelnl_order_data": {
+        "_myparcelcom_order_data": {
             "exported": false
         },
-        "_myparcelnl_order_shipments": [
+        "_myparcelcom_order_shipments": [
             {
                 "id": 123456789,
                 "shopId": 5678,
@@ -81,8 +81,8 @@
                 "modifiedBy": 1234
             }
         ],
-        "_myparcelnl_version": "3.12.0",
-        "_myparcelnl_migrated": [
+        "_myparcelcom_version": "3.12.0",
+        "_myparcelcom_migrated": [
             "5.0.0"
         ]
     },

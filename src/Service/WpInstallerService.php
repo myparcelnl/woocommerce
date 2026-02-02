@@ -42,31 +42,13 @@ final class WpInstallerService extends InstallerService
      */
     private function getLegacyInstalledVersion(): ?string
     {
-        $legacyKey = $this->getLegacyVersionKey();
-
-        if (! $legacyKey) {
-            return null;
-        }
-
-        $legacyVersion = get_option($legacyKey, null);
-
-        return $legacyVersion ? (string) $legacyVersion : null;
-    }
-
-    /**
-     * @return null|string
-     * @noinspection MultipleReturnStatementsInspection
-     */
-    private function getLegacyVersionKey(): ?string
-    {
-        switch (Pdk::get('platform')) {
-            case Platform::MYPARCEL_NAME:
-                return 'woocommerce_myparcel_version';
-
-            case Platform::SENDMYPARCEL_NAME:
-                return 'woocommerce_myparcelbe_version';
-        }
-
-        return null;
+        // Get the legacy installed version, prioritized by:
+        // 1. v5 - nl
+        // 2. v5 - be
+        // 3. v4
+        // Whichever matches first is used
+        return get_option('_myparcelnl_installed_version', null) // v5 - nl
+            ?? get_option('_myparcelbe_installed_version', null) // v5 - be
+            ?? get_option('woocommerce_myparcel_version', null); // v4
     }
 }

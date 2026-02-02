@@ -11,6 +11,7 @@ use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpEnqueue;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Product;
+
 use function MyParcelNL\Pdk\Tests\factory;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function MyParcelNL\WooCommerce\Tests\wpFactory;
@@ -58,7 +59,7 @@ it(
             'enableDeliveryOptionsWhenNotInStock' => true,
             'productData'                         => ['id' => 1, 'is_on_backorder' => false],
             'expected'                            => [
-                'toContain'    => ['myparcelnl-delivery-options'],
+                'toContain'    => ['myparcel-delivery-options'],
                 'notToContain' => [],
             ],
         ],
@@ -68,7 +69,7 @@ it(
             'productData'                         => ['id' => 1, 'is_on_backorder' => true],
             'expected'                            => [
                 'toContain'    => [],
-                'notToContain' => ['myparcelnl-delivery-options'],
+                'notToContain' => ['myparcel-delivery-options'],
             ],
         ],
         'enable all, on backorder'              => [
@@ -76,7 +77,7 @@ it(
             'enableDeliveryOptionsWhenNotInStock' => true,
             'productData'                         => ['id' => 1, 'is_on_backorder' => true],
             'expected'                            => [
-                'toContain'    => ['myparcelnl-delivery-options'],
+                'toContain'    => ['myparcel-delivery-options'],
                 'notToContain' => [],
             ],
         ],

@@ -14,6 +14,7 @@ use MyParcelNL\WooCommerce\Migration\Migration4_2_1;
 use MyParcelNL\WooCommerce\Migration\Migration4_4_1;
 use MyParcelNL\WooCommerce\Migration\Migration5_0_0;
 use MyParcelNL\WooCommerce\Migration\Migration5_3_2;
+use MyParcelNL\WooCommerce\Migration\Migration6_0_0;
 
 final class WcMigrationService implements MigrationServiceInterface
 {
@@ -41,6 +42,7 @@ final class WcMigrationService implements MigrationServiceInterface
             Migration4_4_1::class,
             Migration5_0_0::class,
             Migration5_3_2::class,
+            Migration6_0_0::class,
         ];
     }
 }

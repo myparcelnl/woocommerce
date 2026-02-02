@@ -1,0 +1,40 @@
+{
+    "activate_woocommerce-myparcel": [
+        "MyParcelNLWooCommerce::install"
+    ],
+    "deactivate_woocommerce-myparcel": [
+        "MyParcelNLWooCommerce::uninstall"
+    ],
+    "init": [],
+    "wp_loaded": [
+        "MyParcelNLWooCommerce::upgrade"
+    ],
+    "rest_api_init": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkAdminEndpointHooks::registerPdkRoutes",
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkFrontendEndpointHooks::registerPdkRoutes"
+    ],
+    "admin_enqueue_scripts": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCoreHooks::registerPdkScripts"
+    ],
+    "admin_footer": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCoreHooks::renderPdkInitScripts"
+    ],
+    "all_admin_notices": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCoreHooks::renderPdkNotifications"
+    ],
+    "script_loader_tag": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCoreHooks::changeScriptTag"
+    ],
+    "admin_menu": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkPluginSettingsHooks::registerMenuItem"
+    ],
+    "body_class": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkPluginSettingsHooks::setWooCommerceBodyClasses"
+    ],
+    "woocommerce_screen_ids": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkPluginSettingsHooks::registerSettingsScreenInWooCommerce"
+    ],
+    "woocommerce_navigation_is_connected_page": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkPluginSettingsHooks::connectPageToWooCommerce"
+    ]
+}
