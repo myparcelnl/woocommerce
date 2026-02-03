@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts" setup>
-import {AdminComponent, useAdminConfig} from '@myparcel-pdk/admin';
+import {AdminComponent, useAdminConfig} from '@myparcel-dev/pdk-admin';
 
 defineProps({
   // eslint-disable-next-line vue/no-unused-properties

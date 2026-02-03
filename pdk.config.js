@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import {
   defineConfig,
-} from '@myparcel-pdk/app-builder';
+} from '@myparcel-dev/pdk-app-builder';
 
 const ENTRY_FILE = 'woocommerce-myparcel.php';
 

@@ -38,7 +38,7 @@ import {
   useDropOffInputContext,
   useLanguage,
   type DropOffInputModelValue,
-} from '@myparcel-pdk/admin';
+} from '@myparcel-dev/pdk-admin';
 
 const props = defineProps<{
   element: ElementInstance;

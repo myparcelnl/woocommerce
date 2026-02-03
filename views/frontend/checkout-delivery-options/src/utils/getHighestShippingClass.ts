@@ -1,4 +1,4 @@
-import {useCheckoutStore} from '@myparcel-pdk/checkout';
+import {useCheckoutStore} from '@myparcel-dev/pdk-checkout';
 
 export const getHighestShippingClass = (): undefined | string => {
   const checkout = useCheckoutStore();

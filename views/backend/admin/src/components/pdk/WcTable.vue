@@ -30,7 +30,7 @@
 
 <script lang="ts" setup>
 import {computed} from 'vue';
-import {useAdminConfig, AdminComponent} from '@myparcel-pdk/admin';
+import {useAdminConfig, AdminComponent} from '@myparcel-dev/pdk-admin';
 
 const props = defineProps<{transition?: false | string}>();
 

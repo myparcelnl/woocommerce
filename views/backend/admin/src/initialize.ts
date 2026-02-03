@@ -14,8 +14,8 @@ import {
   DefaultTimeInput,
   DefaultShippingMethodsInput,
   DefaultMultiDateInput,
-} from '@myparcel-pdk/admin-preset-default';
-import {DashIconsIcon} from '@myparcel-pdk/admin-preset-dashicons';
+} from '@myparcel-dev/pdk-admin-preset-default';
+import {DashIconsIcon} from '@myparcel-dev/pdk-admin-preset-dashicons';
 import {
   FORM_KEY_CHILD_PRODUCT_SETTINGS,
   FORM_KEY_MODAL,
@@ -24,7 +24,7 @@ import {
   createPdkAdmin,
   AdminComponent,
   useAppInfo,
-} from '@myparcel-pdk/admin';
+} from '@myparcel-dev/pdk-admin';
 import {closeModalOnEscape, listenForBulkActions} from './hooks';
 import {
   WcBox,

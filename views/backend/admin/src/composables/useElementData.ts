@@ -1,5 +1,5 @@
 import {computed, type MaybeRef, unref, type ComputedRef} from 'vue';
-import {type ElementInstance} from '@myparcel-pdk/admin';
+import {type ElementInstance} from '@myparcel-dev/pdk-admin';
 
 export const useElementData = (
   element: MaybeRef<ElementInstance>,

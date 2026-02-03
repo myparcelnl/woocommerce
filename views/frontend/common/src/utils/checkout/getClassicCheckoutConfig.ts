@@ -1,5 +1,5 @@
-import {AddressType, useConfig} from '@myparcel-pdk/checkout-common';
-import {useUtil, AddressField, PdkUtil, SeparateAddressField} from '@myparcel-pdk/checkout';
+import {AddressType, useConfig} from '@myparcel-dev/pdk-checkout-common';
+import {useUtil, AddressField, PdkUtil, SeparateAddressField} from '@myparcel-dev/pdk-checkout';
 import {type CheckoutConfig} from '../../types';
 
 // eslint-disable-next-line max-lines-per-function

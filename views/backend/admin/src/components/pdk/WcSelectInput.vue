@@ -9,8 +9,8 @@
 <script lang="ts" setup>
 import {onBeforeUnmount, onMounted, ref, watchEffect, watch} from 'vue';
 import {get} from '@vueuse/core';
-import {type ElementInstance, type OptionsProp, useSelectInputContext, AdminComponent} from '@myparcel-pdk/admin';
-import {type OneOrMore} from '@myparcel/ts-utils';
+import {type ElementInstance, type OptionsProp, useSelectInputContext, AdminComponent} from '@myparcel-dev/pdk-admin';
+import {type OneOrMore} from '@myparcel-dev/ts-utils';
 
 // eslint-disable-next-line vue/no-unused-properties
 const props = defineProps<{element: ElementInstance<OptionsProp>; modelValue: string | number}>();

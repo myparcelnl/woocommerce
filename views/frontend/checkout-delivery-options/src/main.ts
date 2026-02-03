@@ -6,7 +6,7 @@ import {
   usePdkCheckout,
   getPackageTypeFromShippingMethod,
   defaultGetPackageType,
-} from '@myparcel-pdk/checkout';
+} from '@myparcel-dev/pdk-checkout';
 import {getHighestShippingClass} from './utils';
 
 const initializeCheckoutDeliveryOptions = () => {
