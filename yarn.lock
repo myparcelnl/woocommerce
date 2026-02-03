@@ -3613,58 +3613,58 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/checkout-common@npm:^1.4.2":
-  version: 1.4.2
-  resolution: "@myparcel-pdk/checkout-common@npm:1.4.2"
+"@myparcel-pdk/checkout-common@npm:^1.4.2, @myparcel-pdk/checkout-common@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "@myparcel-pdk/checkout-common@npm:1.6.0"
   dependencies:
-    "@myparcel-pdk/common": "npm:^1.8.0"
+    "@myparcel-pdk/common": "npm:^1.10.0"
     "@myparcel/constants": "npm:^2.0.0"
     "@myparcel/delivery-options": "npm:^6.0.0"
     typescript: "npm:^5.2.2"
-  checksum: 10c0/839ce52ed9de1fd480256cc33d085b8c1c2701a87747a3957879d212819c2bbd014153fca06d3ab7ce20cf552ec4d9cc996848ca667a7dc7eea41c909457c35b
+  checksum: 10c0/c166ccc33fde374156b25606efcfa042a17ab821216e560fa257ef788ea9e728f41da0bbcc08ca78d59d817b4ceb9aaff352fc20165b8d4bc8943f6da7f3d820
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/checkout-delivery-options@npm:^1.4.2":
-  version: 1.4.2
-  resolution: "@myparcel-pdk/checkout-delivery-options@npm:1.4.2"
+"@myparcel-pdk/checkout-delivery-options@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "@myparcel-pdk/checkout-delivery-options@npm:1.6.0"
   dependencies:
-    "@myparcel-pdk/checkout-common": "npm:^1.4.2"
+    "@myparcel-pdk/checkout-common": "npm:^1.6.0"
     "@myparcel/delivery-options": "npm:^6.0.0"
     "@myparcel/ts-utils": "npm:^1.9.0"
-  checksum: 10c0/e34cfd7714877157505b0184cec4949688e6e6d1c26acb92f88c47cfa21b40526162a9632e02951ed6756fd9740e4bb367f106034ccd50efc76e1768e3ae4e89
+  checksum: 10c0/57df5fefc7146fa8601d862b4eec109b43291a3d18401b6fba7b1c23ce9b4f4b211d52a53a09e595382a2110173561f6943daf1f278e7882b3919ea6d4ac79b1
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/checkout-separate-address-fields@npm:^1.4.2":
-  version: 1.4.2
-  resolution: "@myparcel-pdk/checkout-separate-address-fields@npm:1.4.2"
+"@myparcel-pdk/checkout-separate-address-fields@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "@myparcel-pdk/checkout-separate-address-fields@npm:1.6.0"
   dependencies:
-    "@myparcel-pdk/checkout-common": "npm:^1.4.2"
-  checksum: 10c0/8d632342254c1475f467876c47375355402d51339ca8e894ab5dac579d8b605a3dce27453b6e28f970f6d099d5f6faa30d408771461b79ddbea8d48cc5b55df6
+    "@myparcel-pdk/checkout-common": "npm:^1.6.0"
+  checksum: 10c0/307089551a45325e7ec86bc985962eeed708c2687fad913b412024d3d8244f74dac3a2f9ab5a5304facf03f655621acb65c30ea4a5d51ccdb847eccc5af56139
   languageName: node
   linkType: hard
 
-"@myparcel-pdk/checkout-tax-fields@npm:^1.4.2":
-  version: 1.4.2
-  resolution: "@myparcel-pdk/checkout-tax-fields@npm:1.4.2"
+"@myparcel-pdk/checkout-tax-fields@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "@myparcel-pdk/checkout-tax-fields@npm:1.6.0"
   dependencies:
-    "@myparcel-pdk/checkout-common": "npm:^1.4.2"
+    "@myparcel-pdk/checkout-common": "npm:^1.6.0"
     "@myparcel/constants": "npm:^2.0.0"
-  checksum: 10c0/89595d1498fcde15edb20a92d5b519bf210b61847aae0f71bebb77f5fdcf2bfe07ee8556ca1703aa9c437ff7cf9e8ded36f4d8c87e978112d5ca12149be86121
+  checksum: 10c0/a2206137dcc08c18e43db0e2aeb940f1a5595cc140f8d9db79ca081bb3ba724558daf1c419cb825035a0cfba98f437bca7389bbbffc1a8cbc9813b5571ce00f3
   languageName: node
   linkType: hard
 
 "@myparcel-pdk/checkout@npm:^1.4.2":
-  version: 1.4.2
-  resolution: "@myparcel-pdk/checkout@npm:1.4.2"
+  version: 1.6.0
+  resolution: "@myparcel-pdk/checkout@npm:1.6.0"
   dependencies:
-    "@myparcel-pdk/checkout-common": "npm:^1.4.2"
-    "@myparcel-pdk/checkout-delivery-options": "npm:^1.4.2"
-    "@myparcel-pdk/checkout-separate-address-fields": "npm:^1.4.2"
-    "@myparcel-pdk/checkout-tax-fields": "npm:^1.4.2"
-    "@myparcel-pdk/common": "npm:^1.8.0"
-  checksum: 10c0/b498c5a90a33b4e63a537fdd480b08c987012283fc99d1914cfb947180888dc391fda3ce4842e7e9f058c6d649efacc5acb91ed086282dffe35c9414d5436266
+    "@myparcel-pdk/checkout-common": "npm:^1.6.0"
+    "@myparcel-pdk/checkout-delivery-options": "npm:^1.6.0"
+    "@myparcel-pdk/checkout-separate-address-fields": "npm:^1.6.0"
+    "@myparcel-pdk/checkout-tax-fields": "npm:^1.6.0"
+    "@myparcel-pdk/common": "npm:^1.10.0"
+  checksum: 10c0/bd17b1a9ce2f92a52de7a6d130dee9d5c252ccb94d197e6582ea8e2cfc820d3b3de7b99ca0ca26efa08ce0b178437231d0d64eb9368661deeafbe1452487f829
   languageName: node
   linkType: hard
 
@@ -3675,16 +3675,6 @@ __metadata:
     "@myparcel/constants": "npm:^2.0.0"
     "@myparcel/delivery-options": "npm:^6.0.0"
   checksum: 10c0/afa158818ba5c95e0b98c852a287e4e4cffddb63f1dc296cb2fbeb11496d869b09944a7dcc861cb5392cd7bd299c66ec6f8b46b3fd7da1f39df500d9bfb542d0
-  languageName: node
-  linkType: hard
-
-"@myparcel-pdk/common@npm:^1.8.0":
-  version: 1.8.0
-  resolution: "@myparcel-pdk/common@npm:1.8.0"
-  dependencies:
-    "@myparcel/constants": "npm:^2.0.0"
-    "@myparcel/delivery-options": "npm:^6.0.0"
-  checksum: 10c0/949e5a1639850f9ee395ececdf4908b96e452119edfff97404cf38f5f765787ed87d9e78962eee4081848a4244a14d90fdc917a82ec735bc437e9a35b247869a
   languageName: node
   linkType: hard
 
