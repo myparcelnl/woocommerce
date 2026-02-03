@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {type AnyConfig, type ReduxStoreConfig, type StoreInstance} from '@wordpress/data/src/types';
 import {type StoreDescriptor} from '@wordpress/data';
-import {type PdkCheckoutConfigInput, type PdkCheckoutForm} from '@myparcel-pdk/checkout-common';
+import {type PdkCheckoutConfigInput, type PdkCheckoutForm} from '@myparcel-dev/pdk-checkout-common';
 
 export interface CheckoutConfig<Config extends Partial<PdkCheckoutConfigInput> = Partial<PdkCheckoutConfigInput>> {
   addressFields: PdkCheckoutForm['billing'] & PdkCheckoutForm['shipping'];

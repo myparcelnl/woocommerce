@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-import {AdminComponent} from '@myparcel-pdk/admin';
+import {AdminComponent} from '@myparcel-dev/pdk-admin';
 
 defineProps({
   component: {

@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import {AdminComponent, useAppInfo} from '@myparcel-pdk/admin';
+import {AdminComponent, useAppInfo} from '@myparcel-dev/pdk-admin';
 
 const {title} = useAppInfo();
 </script>

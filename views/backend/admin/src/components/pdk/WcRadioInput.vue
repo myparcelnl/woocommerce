@@ -36,7 +36,7 @@ export default {inheritAttrs: false};
 
 <script lang="ts" setup>
 import {useVModel} from '@vueuse/core';
-import {AdminComponent, type ElementInstance, generateFieldId} from '@myparcel-pdk/admin';
+import {AdminComponent, type ElementInstance, generateFieldId} from '@myparcel-dev/pdk-admin';
 
 // eslint-disable-next-line vue/no-unused-properties
 const props = defineProps<{modelValue: string | number; element: ElementInstance}>();
