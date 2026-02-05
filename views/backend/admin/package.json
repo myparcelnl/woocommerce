@@ -13,12 +13,12 @@
     "test:run": "run ws:test:run \"$(pwd)\" || true"
   },
   "dependencies": {
-    "@myparcel-dev/pdk-admin": "^1.13.0",
-    "@myparcel-dev/pdk-admin-component-tests": "^1.13.0",
-    "@myparcel-dev/pdk-admin-preset-dashicons": "^1.13.0",
-    "@myparcel-dev/pdk-admin-preset-default": "^1.13.0",
+    "@myparcel-dev/pdk-admin": "^1.13.1",
+    "@myparcel-dev/pdk-admin-component-tests": "^1.13.1",
+    "@myparcel-dev/pdk-admin-preset-dashicons": "^1.13.1",
+    "@myparcel-dev/pdk-admin-preset-default": "^1.13.1",
     "@myparcel-dev/ts-utils": "^1.15.0",
-    "@tanstack/vue-query": "^4.27.0"
+    "@tanstack/vue-query": "^4.43.0"
   },
   "devDependencies": {
     "@myparcel-woocommerce/vite-config": "workspace:*",
