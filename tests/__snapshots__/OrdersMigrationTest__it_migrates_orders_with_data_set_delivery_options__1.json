@@ -43,6 +43,7 @@
                 "hideSender": -1,
                 "largeFormat": -1,
                 "onlyRecipient": 0,
+                "priorityDelivery": -1,
                 "receiptCode": -1,
                 "sameDayDelivery": 0,
                 "signature": 1,
