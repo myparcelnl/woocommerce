@@ -14,7 +14,7 @@
     "test:run": "run ws:test:run \"$(pwd)\""
   },
   "dependencies": {
-    "@myparcel-dev/pdk-checkout": "^1.7.2",
+    "@myparcel-dev/pdk-checkout": "^1.7.3",
     "@myparcel-woocommerce/frontend-common": "workspace:^"
   },
   "devDependencies": {
