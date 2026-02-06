@@ -55,7 +55,7 @@ abstract class MockWcClass extends WC_Data
      */
     public function get_meta($key = '', $single = true, $context = 'view')
     {
-        return get_post_meta($this->get_id(), $key);
+        return MockWpMeta::get($this->get_id(), $key);
     }
 
     /**
