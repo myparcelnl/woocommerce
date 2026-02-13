@@ -1,6 +1,6 @@
 import {AdminAction, useActionStore} from '@myparcel-dev/pdk-admin';
 
-const BULK_ACTION_PREFIX = 'myparcelnl';
+const BULK_ACTION_PREFIX = 'myparcelcom';
 
 const BULK_ACTION_MAP = Object.freeze({
   action_edit: AdminAction.OrdersEdit,
