@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.0](https://github.com/myparcelnl/woocommerce/compare/v5.13.3...v6.0.0) (2026-02-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* **config:** determine active platform via API and make plugin generic for all platforms / propositions (#1385)
+
+### :sparkles: New Features
+
+* bump myparcelnl/pdk from 3.1.2 to 3.2.0 in the php-pdk group ([#1554](https://github.com/myparcelnl/woocommerce/issues/1554)) ([7dc65fd](https://github.com/myparcelnl/woocommerce/commit/7dc65fdfe6a65980f8fe3ea870086734ff872141))
+* **config:** determine active platform via API and make plugin generic for all platforms / propositions ([#1385](https://github.com/myparcelnl/woocommerce/issues/1385)) ([4cbfe67](https://github.com/myparcelnl/woocommerce/commit/4cbfe67e27e2e4b36a7799fc4e6af08fa060408a))
+* migrate npm packages to [@myparcel-dev](https://github.com/myparcel-dev) ([#1515](https://github.com/myparcelnl/woocommerce/issues/1515)) ([4090949](https://github.com/myparcelnl/woocommerce/commit/40909491f5a080f480ebd6b41d226c139bf063ea))
+* update @myparcel-dev/pdk-* dependencies ([#1555](https://github.com/myparcelnl/woocommerce/issues/1555)) ([4a886f0](https://github.com/myparcelnl/woocommerce/commit/4a886f0509798f20bddc1603153c405ab3814e04))
+
+
+### :bug: Bug Fixes
+
+* **admin:** fix an issue causing bulk actions not to work ([#1559](https://github.com/myparcelnl/woocommerce/issues/1559)) ([25505e8](https://github.com/myparcelnl/woocommerce/commit/25505e8303956612d8e3c0cf0747f3d0f021f1e1))
+* **admin:** handle bulk order ids in digital stamp range field ([03ae4f9](https://github.com/myparcelnl/woocommerce/commit/03ae4f98ef7438a9a28f05ba8a02721e07aba7a2))
+* **delivery options:** no longer show delivery options when the shipping class is set to 'none' ([#1508](https://github.com/myparcelnl/woocommerce/issues/1508)) ([011e2e3](https://github.com/myparcelnl/woocommerce/commit/011e2e3ebcfb52c4e14ab30d8a53a413a2151576))
+* **delivery-options:** update CDN url to allow for future updates ([#1544](https://github.com/myparcelnl/woocommerce/issues/1544)) ([f39c869](https://github.com/myparcelnl/woocommerce/commit/f39c86922d99e90bbc7918e69f37f04a595223d2))
+* fix several form elements no longer displaying in admin panels ([637d2ac](https://github.com/myparcelnl/woocommerce/commit/637d2ac4486a2a97f95260c6b5202b069951c0cc))
+* **label:** output standard compliant pdfs ([#1539](https://github.com/myparcelnl/woocommerce/issues/1539)) ([245893c](https://github.com/myparcelnl/woocommerce/commit/245893c60115fb50bc503862cd1853689e87085a))
+* prevent using stale data for orders ([#1536](https://github.com/myparcelnl/woocommerce/issues/1536)) ([3564586](https://github.com/myparcelnl/woocommerce/commit/35645869bf3fd74410459b74f8dc06257b466f7a))
+* **product:** don't disable the delivery options in the product settings by default ([#1561](https://github.com/myparcelnl/woocommerce/issues/1561)) ([852505d](https://github.com/myparcelnl/woocommerce/commit/852505dcf58af0949bbb504e271ad9a6b426f936))
+
 ## [5.13.3](https://github.com/myparcelnl/woocommerce/compare/v5.13.2...v5.13.3) (2026-01-06)
 
 
