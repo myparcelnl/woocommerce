@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.1](https://github.com/myparcelnl/woocommerce/compare/v6.0.0...v6.0.1) (2026-02-16)
+
+
+### :bug: Bug Fixes
+
+* **build:** fix an issue with the plugin zip being created incorrectly ([b78e5b5](https://github.com/myparcelnl/woocommerce/commit/b78e5b5853f26c4013cef822daab0e47ff50b69d))
+
 ## [6.0.0](https://github.com/myparcelnl/woocommerce/compare/v5.13.3...v6.0.0) (2026-02-16)
 
 
