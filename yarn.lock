@@ -3564,11 +3564,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-admin-component-tests@npm:^1.14.0":
-  version: 1.14.0
-  resolution: "@myparcel-dev/pdk-admin-component-tests@npm:1.14.0"
+"@myparcel-dev/pdk-admin-component-tests@npm:^1.14.1":
+  version: 1.14.1
+  resolution: "@myparcel-dev/pdk-admin-component-tests@npm:1.14.1"
   dependencies:
-    "@myparcel-dev/pdk-admin": "npm:^1.14.0"
+    "@myparcel-dev/pdk-admin": "npm:^1.14.1"
     "@pinia/testing": "npm:>= 0.1.0 < 1"
     "@vitest/coverage-v8": "npm:^2.1.3"
     "@vue/test-utils": "npm:^2.0.0"
@@ -3577,38 +3577,38 @@ __metadata:
     vitest: "npm:^2.1.3"
   peerDependencies:
     vue: 3.4.31
-  checksum: 10c0/d980cf6e188ed48ac65cce7c063d6fb717af7cf2e91206625a97b6c2141453abaf495189a61fce033a6f7b72cee0a10d4d4c9ff572cad91a03a7b32efb17e48a
+  checksum: 10c0/2069d56f2e600ed99e48405dc2e8328b7a0515b795f4d53a2261b5eb5303b2b8b1327ba4cf5769c4f9830ea1913584df9ba57b9e485d37f47f6cb31a8461a337
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-admin-preset-dashicons@npm:^1.14.0":
-  version: 1.14.0
-  resolution: "@myparcel-dev/pdk-admin-preset-dashicons@npm:1.14.0"
+"@myparcel-dev/pdk-admin-preset-dashicons@npm:^1.14.1":
+  version: 1.14.1
+  resolution: "@myparcel-dev/pdk-admin-preset-dashicons@npm:1.14.1"
   dependencies:
-    "@myparcel-dev/pdk-admin": "npm:^1.14.0"
+    "@myparcel-dev/pdk-admin": "npm:^1.14.1"
     vite: "npm:^5.4.10"
     vue: "npm:3.4.31"
     vue-tsc: "npm:^2.0.0"
-  checksum: 10c0/107dd2d8521a2fe4cca8604576a9730291accf14378104bf25cbc4b941602fa5020507c9b338b03fcee527f64d5cae1f6b38e97a5efb40c236d41b6fba195fce
+  checksum: 10c0/5650d905183895a4286ef9b77ae1c303773c9681c4e6bbb9ab8c9acbff2fc280ec455671431d78bbbadee64221b9fe14bc78d61394cf011870ffdb4597726dd4
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-admin-preset-default@npm:^1.14.0":
-  version: 1.14.0
-  resolution: "@myparcel-dev/pdk-admin-preset-default@npm:1.14.0"
+"@myparcel-dev/pdk-admin-preset-default@npm:^1.14.1":
+  version: 1.14.1
+  resolution: "@myparcel-dev/pdk-admin-preset-default@npm:1.14.1"
   dependencies:
-    "@myparcel-dev/pdk-admin": "npm:^1.14.0"
+    "@myparcel-dev/pdk-admin": "npm:^1.14.1"
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
     "@vuepic/vue-datepicker": "npm:^11.0.2"
     "@vueuse/core": "npm:^10.0.0"
     vue: "npm:3.4.31"
-  checksum: 10c0/41fc9ab37c628e034929db0955765b655187f42cf16b73187d701f49d6167fe06c2afac75c9ac5c15d280502f445d4c9500a7f66537a6050a3a27feac2eb4694
+  checksum: 10c0/770a23e1a66942c8124627eb66759851061697e1dd3466a0c7fd2e596234a2fdea206dc61e85ef344abb456204722307382a11c2da9f59dcef84ca48b5d4f577
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-admin@npm:^1.14.0":
-  version: 1.14.0
-  resolution: "@myparcel-dev/pdk-admin@npm:1.14.0"
+"@myparcel-dev/pdk-admin@npm:^1.14.1":
+  version: 1.14.1
+  resolution: "@myparcel-dev/pdk-admin@npm:1.14.1"
   dependencies:
     "@myparcel-dev/constants": "npm:^2.7.0"
     "@myparcel-dev/pdk-common": "npm:^1.12.0"
@@ -3623,7 +3623,7 @@ __metadata:
     vite: "npm:^5.4.10"
     vue: "npm:3.4.31"
     vue-tsc: "npm:^2.0.0"
-  checksum: 10c0/d6060f4ab5544687601a8bb0ffbf351d867ef0a88c06a41e0109e92a321531aedf104a03fc671cbf8f0b29b279e532b0bd315b3fd120cb9bd02faa4496a4209e
+  checksum: 10c0/7724cd7a8cc8c4571d7f76f69b4de626bbb59eadff327f7eeed0eb6ae5bf14e8c5f33471e91985797bf7da525f7188f7271798b71f321b1d106185bf457de095
   languageName: node
   linkType: hard
 
@@ -3873,10 +3873,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/backend-admin@workspace:views/backend/admin"
   dependencies:
-    "@myparcel-dev/pdk-admin": "npm:^1.14.0"
-    "@myparcel-dev/pdk-admin-component-tests": "npm:^1.14.0"
-    "@myparcel-dev/pdk-admin-preset-dashicons": "npm:^1.14.0"
-    "@myparcel-dev/pdk-admin-preset-default": "npm:^1.14.0"
+    "@myparcel-dev/pdk-admin": "npm:^1.14.1"
+    "@myparcel-dev/pdk-admin-component-tests": "npm:^1.14.1"
+    "@myparcel-dev/pdk-admin-preset-dashicons": "npm:^1.14.1"
+    "@myparcel-dev/pdk-admin-preset-default": "npm:^1.14.1"
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
     "@myparcel-woocommerce/vite-config": "workspace:*"
     "@tanstack/vue-query": "npm:^4.43.0"
