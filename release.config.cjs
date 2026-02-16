@@ -32,7 +32,7 @@ module.exports = {
     // TODO: Uncomment when we're releasing to the WordPress svn repository.
     // '@myparcel-dev/semantic-release-wordpress-readme-generator',
     addExecPlugin({
-      prepareCmd: `yarn pdk-builder release --version $\{nextRelease.version} -v && zip -r ./dist/myparcel-woocommerce-$\{nextRelease.version}.zip -C dist .`,
+      prepareCmd: `yarn pdk-builder release --version $\{nextRelease.version} -v && zip -r ./dist/myparcel-woocommerce-$\{nextRelease.version}.zip dist .`,
     }),
     addGitHubPlugin({
       assets: [
