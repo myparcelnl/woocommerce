@@ -85,7 +85,7 @@ final class PdkEndpointHooks implements WordPressHooksInterface
         );
     }
 
-    function checkDeliveryOptionsPermission()
+    public function checkDeliveryOptionsPermission()
     {
         // Check if the user has permission to view orders (required for delivery options endpoint)
         if (! \current_user_can('read_private_shop_orders')) {
