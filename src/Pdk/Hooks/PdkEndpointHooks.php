@@ -67,8 +67,7 @@ final class PdkEndpointHooks implements WordPressHooksInterface
      * Registers all PDK endpoint routes with WordPress REST API.
      *
      * Routes are registered under the plugin namespace defined by PdkBootstrapper::PLUGIN_NAMESPACE
-     * (e.g., /wp-json/myparcelcom/delivery-options). Uses WordPress default authentication - no custom
-     * permission callback needed.
+     * (e.g., /wp-json/myparcelcom/delivery-options).
      *
      * @return void
      */
@@ -86,6 +85,11 @@ final class PdkEndpointHooks implements WordPressHooksInterface
         );
     }
 
+    /**
+     * Check for a user with sufficient permissions.
+     * Combined with isRequestToWooCommerceRestApi this allows authentication using WooCommerce REST API methods.
+     * @return WP_Error|true
+     */
     public function checkDeliveryOptionsPermission()
     {
         // Check if the user has permission to view orders (required for delivery options endpoint)
