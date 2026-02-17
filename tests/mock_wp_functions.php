@@ -142,6 +142,13 @@ function wp_get_current_user()
     return MockWpUser::get();
 }
 
+
+/**@see \function current_user_can() */
+function current_user_can($permission, ...$args)
+{
+    return MockWpUser::currentUserCan($permission, ...$args);
+}
+
 /**@see \__return_false() */
 function __return_false(): bool
 {
@@ -260,4 +267,13 @@ function register_rest_route(...$args): void
 function untrailingslashit(string $string): string
 {
     return rtrim($string, '/');
+}
+
+function __($text, $domain = 'default'): string
+{
+    return $text;
+}
+
+function rest_authorization_required_code() {
+	return is_user_logged_in() ? 403 : 401;
 }
