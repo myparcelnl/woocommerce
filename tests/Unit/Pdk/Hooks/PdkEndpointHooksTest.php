@@ -39,7 +39,7 @@ it('registers delivery options handler in wp rest api', function () {
     ]);
 });
 
-it('returns the negotated and supported versions in accept and content-type headers', function () {
+it('returns the negotiated and supported versions in accept and content-type headers', function () {
     /** @var \MyParcelNL\WooCommerce\Pdk\Hooks\PdkEndpointHooks $hookClass */
     $hookClass = Pdk::get(PdkEndpointHooks::class);
 
