@@ -274,6 +274,6 @@ function __($text, $domain = 'default'): string
     return $text;
 }
 
-function rest_authorization_required_code() {
+function rest_authorization_required_code(): int {
 	return is_user_logged_in() ? 403 : 401;
 }
