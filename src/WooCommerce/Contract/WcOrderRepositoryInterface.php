@@ -16,6 +16,8 @@ interface WcOrderRepositoryInterface
      */
     public function get($input): WC_Order;
 
+    public function find($id): ?WC_Order;
+
     /**
      * @param  int|string|WC_Order|\WP_Post $input
      *

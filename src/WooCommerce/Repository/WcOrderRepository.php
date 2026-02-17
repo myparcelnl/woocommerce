@@ -42,6 +42,11 @@ final class WcOrderRepository extends Repository implements WcOrderRepositoryInt
         });
     }
 
+    public function find($id): ?WC_Order
+    {
+        return wc_get_order((int) $id) ?: null;
+    }
+
     /**
      * @param  int|string|WC_Order|\WP_Post $input
      *

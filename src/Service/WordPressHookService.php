@@ -23,6 +23,7 @@ use MyParcelNL\WooCommerce\Hooks\WebhookActions;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkAdminEndpointHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkCheckoutPlaceOrderHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkCoreHooks;
+use MyParcelNL\WooCommerce\Pdk\Hooks\PdkEndpointHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkFrontendEndpointHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkOrderHooks;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkOrderListHooks;
@@ -89,6 +90,7 @@ final class WordPressHookService
             PdkAdminEndpointHooks::class,
             PdkCheckoutPlaceOrderHooks::class,
             PdkCoreHooks::class,
+            PdkEndpointHooks::class,
             PdkFrontendEndpointHooks::class,
             PdkOrderHooks::class,
             PdkOrderListHooks::class,
@@ -115,6 +117,7 @@ final class WordPressHookService
         return [
             PdkAdminEndpointHooks::class,
             PdkCoreHooks::class,
+            PdkEndpointHooks::class,
             PdkFrontendEndpointHooks::class,
             PdkPluginSettingsHooks::class,
         ];
