@@ -110,7 +110,7 @@ final class PdkEndpointHooks implements WordPressHooksInterface
     public function isRequestToWooCommerceRestApi($is_rest_api_request): bool
     {
         if (empty($_SERVER['REQUEST_URI'])) {
-            return false;
+            return $is_rest_api_request;
         }
 
         $rest_prefix = trailingslashit(rest_get_url_prefix());
