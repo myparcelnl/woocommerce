@@ -1,4 +1,5 @@
 <?php
+
 /** @noinspection PhpUnhandledExceptionInspection,StaticClosureCanBeUsedInspection */
 
 declare(strict_types=1);
@@ -96,6 +97,29 @@ it('gets order via various inputs', function ($input) {
         return (object) ['ID' => 123];
     },
 ]);
+
+it('finds an existing order by id', function () {
+    wpFactory(WC_Order::class)
+        ->with(['id' => 123])
+        ->make();
+
+    /** @var \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $orderRepository */
+    $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
+
+    $pdkOrder = $orderRepository->find(123);
+
+    expect($pdkOrder)->toBeInstanceOf(PdkOrder::class);
+    expect($pdkOrder->id)->toBe('123');
+});
+
+it('returns null if order not found', function () {
+    /** @var \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $orderRepository */
+    $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
+
+    $pdkOrder = $orderRepository->find(999);
+
+    expect($pdkOrder)->toBeNull();
+});
 
 it('handles errors', function ($input) {
     /** @var \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $orderRepository */
