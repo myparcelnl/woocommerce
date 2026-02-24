@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.2](https://github.com/myparcelnl/woocommerce/compare/v6.0.1...v6.0.2) (2026-02-24)
+
+
+### :bug: Bug Fixes
+
+* **carrier:** fix an issue causing trunkrs not to show up in plugin settings ([#1567](https://github.com/myparcelnl/woocommerce/issues/1567)) ([62418f0](https://github.com/myparcelnl/woocommerce/commit/62418f018778eb69c993c8f9a5213c83255739c8))
+
 ## [6.0.1](https://github.com/myparcelnl/woocommerce/compare/v6.0.0...v6.0.1) (2026-02-16)
 
 
