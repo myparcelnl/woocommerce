@@ -179,7 +179,7 @@ function get_plugins() {
 }
 
 function is_plugin_active($plugin) {
-    return isset(WordPressOptions::getOption('active_plugins', [])[$plugin]);
+    return in_array($plugin, WordPressOptions::getOption('active_plugins', []), true);
 }
 
 function get_term_by($field, $value, $taxonomy = '', $output = 'OBJECT', $filter = 'raw')
