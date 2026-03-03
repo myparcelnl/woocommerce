@@ -93,12 +93,12 @@ return [
     }),
 
     'wooCommerceIsActive' => factory(function (): bool {
-        $plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
-
-        return is_array($plugins) && in_array( 'woocommerce/woocommerce.php', $plugins , true );
+        // is_plugin_active also checks network activated plugins (multisite).
+        return is_plugin_active( 'woocommerce/woocommerce.php' );
     }),
 
     'wooCommerceVersion' => factory(function (): string {
+        // get_plugins returns all plugins, also in multisite environments.
         $plugins = get_plugins();
 
         if (isset($plugins['woocommerce/woocommerce.php'])) {
