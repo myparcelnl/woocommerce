@@ -10,6 +10,7 @@ use MyParcelNL\WooCommerce\Tests\Exception\DieException;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkBootstrapper;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
+use MyParcelNL\WooCommerce\Tests\Mock\WordPressPlugins;
 use MyParcelNL\WooCommerce\Tests\Uses\UseInstantiatePlugin;
 use MyParcelNLWooCommerce;
 use function MyParcelNL\Pdk\Tests\usesShared;

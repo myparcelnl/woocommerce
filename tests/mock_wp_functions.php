@@ -178,6 +178,10 @@ function get_plugins() {
     return WordPressPlugins::getPlugins();
 }
 
+function is_plugin_active($plugin) {
+    return isset(WordPressOptions::getOption('active_plugins', [])[$plugin]);
+}
+
 function get_term_by($field, $value, $taxonomy = '', $output = 'OBJECT', $filter = 'raw')
 {
     if ('id' === $field || 'ID' === $field || 'term_id' === $field) {
