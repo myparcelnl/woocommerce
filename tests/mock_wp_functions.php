@@ -185,6 +185,10 @@ function get_plugins() {
     return WordPressPlugins::getPlugins();
 }
 
+function is_multisite() {
+    return false;
+}
+
 function get_term_by($field, $value, $taxonomy = '', $output = 'OBJECT', $filter = 'raw')
 {
     if ('id' === $field || 'ID' === $field || 'term_id' === $field) {
