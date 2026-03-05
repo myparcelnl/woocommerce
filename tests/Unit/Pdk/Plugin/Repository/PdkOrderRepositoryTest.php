@@ -75,7 +75,7 @@ it('adds autoExported property to order', function () {
 it('gets order via various inputs', function ($input) {
     wpFactory(WC_Order::class)
         ->with(['id' => 123])
-        ->make();
+        ->store();
 
     /** @var \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $orderRepository */
     $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
@@ -101,7 +101,7 @@ it('gets order via various inputs', function ($input) {
 it('finds an existing order by id', function () {
     wpFactory(WC_Order::class)
         ->with(['id' => 123])
-        ->make();
+        ->store();
 
     /** @var \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $orderRepository */
     $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
@@ -109,7 +109,7 @@ it('finds an existing order by id', function () {
     $pdkOrder = $orderRepository->find(123);
 
     expect($pdkOrder)->toBeInstanceOf(PdkOrder::class);
-    expect($pdkOrder->id)->toBe('123');
+    expect($pdkOrder->externalIdentifier)->toBe('123');
 });
 
 it('returns null if order not found', function () {
