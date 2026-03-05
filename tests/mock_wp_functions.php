@@ -186,7 +186,13 @@ function get_plugins() {
 }
 
 function is_multisite() {
-    return false;
+    return WordPressOptions::getOption('is_multisite', false);
+}
+
+/** @see \get_site_option() */
+function get_site_option(string $option, $default = false)
+{
+    return WordPressOptions::getOption('site_' . $option, $default);
 }
 
 function get_term_by($field, $value, $taxonomy = '', $output = 'OBJECT', $filter = 'raw')
