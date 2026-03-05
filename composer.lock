@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "03b450ad304f673ec1a4239398d4a261",
+    "content-hash": "e442f70119ca0bd6e5fdf3896669fb11",
     "packages": [
         {
             "name": "fruitcake/php-cors",
@@ -404,16 +404,16 @@
         },
         {
             "name": "justinrainbow/json-schema",
-            "version": "5.3.1",
+            "version": "5.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jsonrainbow/json-schema.git",
-                "reference": "b5a44b6391a3bbb75c9f2b73e1ef03d6045e1e20"
+                "reference": "2f7abf648939847a789c55c206d4cb9dd0d53e2c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/b5a44b6391a3bbb75c9f2b73e1ef03d6045e1e20",
-                "reference": "b5a44b6391a3bbb75c9f2b73e1ef03d6045e1e20",
+                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/2f7abf648939847a789c55c206d4cb9dd0d53e2c",
+                "reference": "2f7abf648939847a789c55c206d4cb9dd0d53e2c",
                 "shasum": ""
             },
             "require": {
@@ -463,9 +463,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jsonrainbow/json-schema/issues",
-                "source": "https://github.com/jsonrainbow/json-schema/tree/5.3.1"
+                "source": "https://github.com/jsonrainbow/json-schema/tree/5.3.2"
             },
-            "time": "2025-12-12T08:56:22+00:00"
+            "time": "2026-02-27T12:33:19+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -531,22 +531,16 @@
         {
             "name": "myparcelnl/pdk",
             "version": "3.2.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/myparcelnl/pdk.git",
-                "reference": "70628fa5213e491a0aa26deb70404bfd25705ee1"
-            },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/70628fa5213e491a0aa26deb70404bfd25705ee1",
-                "reference": "70628fa5213e491a0aa26deb70404bfd25705ee1",
-                "shasum": ""
+                "type": "path",
+                "url": "/Users/freek.vanrijt/projects/pdk",
+                "reference": "89d10c722f1342ad32464d493d509aa85e07da1f"
             },
             "require": {
                 "ext-zip": "*",
                 "fruitcake/php-cors": "^1.2",
                 "justinrainbow/json-schema": "^5.2",
-                "myparcelnl/sdk": "^10.0.0",
+                "myparcelnl/sdk": "^11.0.0-beta.4",
                 "php": ">=7.4.0",
                 "php-di/php-di": "^6.0.0",
                 "psr/log": "^1.0.0 || ^2.0.0 || ^3.0.0",
@@ -572,7 +566,61 @@
                     "MyParcelNL\\Pdk\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "MyParcelNL\\Pdk\\": [
+                        "tests/Unit/",
+                        "tests/factories"
+                    ],
+                    "MyParcelNL\\Pdk\\Console\\": "private/",
+                    "MyParcelNL\\Pdk\\Tests\\": "tests/"
+                },
+                "files": [
+                    "tests/functions.php",
+                    "tests/usesShared.php"
+                ]
+            },
+            "scripts": {
+                "analyse": [
+                    "php -dmemory_limit=-1 vendor/bin/phpstan analyse"
+                ],
+                "analyse:generate": [
+                    "composer run analyse -- --generate-baseline phpstan-baseline.php --allow-empty-baseline"
+                ],
+                "analyze": [
+                    "composer run analyse"
+                ],
+                "analyze:generate": [
+                    "composer run analyse:generate"
+                ],
+                "console": [
+                    "php bin/console"
+                ],
+                "post-autoload-dump": [
+                    "composer console generate:ide-helper"
+                ],
+                "quality": [
+                    "rector process --dry-run"
+                ],
+                "quality:fix": [
+                    "rector process"
+                ],
+                "test": [
+                    "composer run test:unit && composer run test:integration"
+                ],
+                "test:integration": [
+                    "behat"
+                ],
+                "test:unit": [
+                    "pest"
+                ],
+                "test:unit:coverage": [
+                    "php -dmemory_limit=512M -dpcov.enabled=1 vendor/bin/pest --coverage-clover clover.xml"
+                ],
+                "test:unit:snapshot": [
+                    "pest -d --update-snapshots"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -584,27 +632,26 @@
             ],
             "description": "MyParcel Plugin Development Kit",
             "homepage": "https://myparcel.nl",
-            "support": {
-                "issues": "https://github.com/myparcelnl/pdk/issues",
-                "source": "https://github.com/myparcelnl/pdk/tree/v3.2.2"
-            },
-            "time": "2026-02-20T16:18:03+00:00"
+            "transport-options": {
+                "relative": false
+            }
         },
         {
             "name": "myparcelnl/sdk",
-            "version": "10.7.5",
+            "version": "11.0.0-beta.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/sdk.git",
-                "reference": "2a741ff5dc0300b551e58f186c3b05135546e361"
+                "reference": "bcfafc29ff05a9163a2d530c26ba607866fa9549"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/2a741ff5dc0300b551e58f186c3b05135546e361",
-                "reference": "2a741ff5dc0300b551e58f186c3b05135546e361",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/bcfafc29ff05a9163a2d530c26ba607866fa9549",
+                "reference": "bcfafc29ff05a9163a2d530c26ba607866fa9549",
                 "shasum": ""
             },
             "require": {
+                "guzzlehttp/guzzle": "^7.10",
                 "php": "^7.4 || ^8.0",
                 "setasign/fpdf": "^1.8",
                 "setasign/fpdi": "^2.6"
@@ -651,9 +698,9 @@
             ],
             "support": {
                 "issues": "https://github.com/myparcelnl/sdk/issues",
-                "source": "https://github.com/myparcelnl/sdk/tree/v10.7.5"
+                "source": "https://github.com/myparcelnl/sdk/tree/v11.0.0-beta.5"
             },
-            "time": "2026-01-30T08:33:38+00:00"
+            "time": "2026-03-02T10:31:22+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -2625,11 +2672,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.32",
+            "version": "1.12.33",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/2770dcdf5078d0b0d53f94317e06affe88419aa8",
-                "reference": "2770dcdf5078d0b0d53f94317e06affe88419aa8",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/37982d6fc7cbb746dda7773530cda557cdf119e1",
+                "reference": "37982d6fc7cbb746dda7773530cda557cdf119e1",
                 "shasum": ""
             },
             "require": {
@@ -2674,7 +2721,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-09-30T10:16:31+00:00"
+            "time": "2026-02-28T20:30:03+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -5775,12 +5822,12 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">= 7.4"
     },
-    "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
 }

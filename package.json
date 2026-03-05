@@ -73,7 +73,22 @@
     "@typescript-eslint/parser": "^5.0.0",
     "eslint-plugin-prettier": "^4.2.0",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "@myparcel-dev/pdk-admin": "portal:/Users/freek.vanrijt/projects/js-pdk/apps/admin",
+    "@myparcel-dev/pdk-admin-component-tests": "portal:/Users/freek.vanrijt/projects/js-pdk/apps/admin-component-tests",
+    "@myparcel-dev/pdk-admin-js": "portal:/Users/freek.vanrijt/projects/js-pdk/apps/admin-js",
+    "@myparcel-dev/pdk-admin-preset-bootstrap4": "portal:/Users/freek.vanrijt/projects/js-pdk/apps/admin-preset-bootstrap4",
+    "@myparcel-dev/pdk-admin-preset-dashicons": "portal:/Users/freek.vanrijt/projects/js-pdk/apps/admin-preset-dashicons",
+    "@myparcel-dev/pdk-admin-preset-default": "portal:/Users/freek.vanrijt/projects/js-pdk/apps/admin-preset-default",
+    "@myparcel-dev/pdk-admin-preset-fontawesome": "portal:/Users/freek.vanrijt/projects/js-pdk/apps/admin-preset-fontawesome",
+    "@myparcel-dev/pdk-app-builder": "portal:/Users/freek.vanrijt/projects/js-pdk/apps/app-builder",
+    "@myparcel-dev/pdk-checkout": "portal:/Users/freek.vanrijt/projects/js-pdk/apps/checkout",
+    "@myparcel-dev/pdk-checkout-js": "portal:/Users/freek.vanrijt/projects/js-pdk/apps/checkout-js",
+    "@myparcel-dev/pdk-checkout-common": "portal:/Users/freek.vanrijt/projects/js-pdk/libs/checkout-common",
+    "@myparcel-dev/pdk-checkout-delivery-options": "portal:/Users/freek.vanrijt/projects/js-pdk/libs/checkout-delivery-options",
+    "@myparcel-dev/pdk-checkout-separate-address-fields": "portal:/Users/freek.vanrijt/projects/js-pdk/libs/checkout-separate-address-fields",
+    "@myparcel-dev/pdk-checkout-tax-fields": "portal:/Users/freek.vanrijt/projects/js-pdk/libs/checkout-tax-fields",
+    "@myparcel-dev/pdk-common": "portal:/Users/freek.vanrijt/projects/js-pdk/libs/common"
   },
   "devDependencies": {
     "@automattic/data-stores": "^3.1.0-rc.5",

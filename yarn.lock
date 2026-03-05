@@ -3564,11 +3564,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-admin-component-tests@npm:^1.14.1":
-  version: 1.14.1
-  resolution: "@myparcel-dev/pdk-admin-component-tests@npm:1.14.1"
+"@myparcel-dev/pdk-admin-component-tests@portal:/Users/freek.vanrijt/projects/js-pdk/apps/admin-component-tests::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@myparcel-dev/pdk-admin-component-tests@portal:/Users/freek.vanrijt/projects/js-pdk/apps/admin-component-tests::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A."
   dependencies:
-    "@myparcel-dev/pdk-admin": "npm:^1.14.1"
+    "@myparcel-dev/pdk-admin": "workspace:^1.14.1"
     "@pinia/testing": "npm:>= 0.1.0 < 1"
     "@vitest/coverage-v8": "npm:^2.1.3"
     "@vue/test-utils": "npm:^2.0.0"
@@ -3577,41 +3577,38 @@ __metadata:
     vitest: "npm:^2.1.3"
   peerDependencies:
     vue: 3.4.31
-  checksum: 10c0/2069d56f2e600ed99e48405dc2e8328b7a0515b795f4d53a2261b5eb5303b2b8b1327ba4cf5769c4f9830ea1913584df9ba57b9e485d37f47f6cb31a8461a337
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@myparcel-dev/pdk-admin-preset-dashicons@npm:^1.14.1":
-  version: 1.14.1
-  resolution: "@myparcel-dev/pdk-admin-preset-dashicons@npm:1.14.1"
+"@myparcel-dev/pdk-admin-preset-dashicons@portal:/Users/freek.vanrijt/projects/js-pdk/apps/admin-preset-dashicons::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@myparcel-dev/pdk-admin-preset-dashicons@portal:/Users/freek.vanrijt/projects/js-pdk/apps/admin-preset-dashicons::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A."
   dependencies:
-    "@myparcel-dev/pdk-admin": "npm:^1.14.1"
+    "@myparcel-dev/pdk-admin": "workspace:^1.14.1"
     vite: "npm:^5.4.10"
     vue: "npm:3.4.31"
     vue-tsc: "npm:^2.0.0"
-  checksum: 10c0/5650d905183895a4286ef9b77ae1c303773c9681c4e6bbb9ab8c9acbff2fc280ec455671431d78bbbadee64221b9fe14bc78d61394cf011870ffdb4597726dd4
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@myparcel-dev/pdk-admin-preset-default@npm:^1.14.1":
-  version: 1.14.1
-  resolution: "@myparcel-dev/pdk-admin-preset-default@npm:1.14.1"
+"@myparcel-dev/pdk-admin-preset-default@portal:/Users/freek.vanrijt/projects/js-pdk/apps/admin-preset-default::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@myparcel-dev/pdk-admin-preset-default@portal:/Users/freek.vanrijt/projects/js-pdk/apps/admin-preset-default::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A."
   dependencies:
-    "@myparcel-dev/pdk-admin": "npm:^1.14.1"
+    "@myparcel-dev/pdk-admin": "workspace:^1.14.1"
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
     "@vuepic/vue-datepicker": "npm:^11.0.2"
     "@vueuse/core": "npm:^10.0.0"
     vue: "npm:3.4.31"
-  checksum: 10c0/770a23e1a66942c8124627eb66759851061697e1dd3466a0c7fd2e596234a2fdea206dc61e85ef344abb456204722307382a11c2da9f59dcef84ca48b5d4f577
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@myparcel-dev/pdk-admin@npm:^1.14.1":
-  version: 1.14.1
-  resolution: "@myparcel-dev/pdk-admin@npm:1.14.1"
+"@myparcel-dev/pdk-admin@portal:/Users/freek.vanrijt/projects/js-pdk/apps/admin::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@myparcel-dev/pdk-admin@portal:/Users/freek.vanrijt/projects/js-pdk/apps/admin::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A."
   dependencies:
     "@myparcel-dev/constants": "npm:^2.7.0"
-    "@myparcel-dev/pdk-common": "npm:^1.12.0"
+    "@myparcel-dev/pdk-common": "workspace:^1.12.0"
     "@myparcel-dev/sdk": "npm:^5.0.0"
     "@myparcel-dev/vue-form-builder": "npm:1.0.0-beta.42.6"
     "@tanstack/vue-query": "npm:~4.43.0"
@@ -3623,13 +3620,12 @@ __metadata:
     vite: "npm:^5.4.10"
     vue: "npm:3.4.31"
     vue-tsc: "npm:^2.0.0"
-  checksum: 10c0/7724cd7a8cc8c4571d7f76f69b4de626bbb59eadff327f7eeed0eb6ae5bf14e8c5f33471e91985797bf7da525f7188f7271798b71f321b1d106185bf457de095
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@myparcel-dev/pdk-app-builder@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "@myparcel-dev/pdk-app-builder@npm:4.1.0"
+"@myparcel-dev/pdk-app-builder@portal:/Users/freek.vanrijt/projects/js-pdk/apps/app-builder::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@myparcel-dev/pdk-app-builder@portal:/Users/freek.vanrijt/projects/js-pdk/apps/app-builder::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A."
   dependencies:
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
     "@yarnpkg/parsers": "npm:^3.0.0"
@@ -3645,74 +3641,67 @@ __metadata:
     supports-color: "npm:^9.3.1"
   bin:
     pdk-builder: ./bin/index.js
-  checksum: 10c0/cdba62074a2832d2344ee3b6e754aa981ca91fedef7945bde74290e3d1c0ab0becc24cca29de968f1821dc9d63272b05eef5be5ad05eb37fa74528cb64f9658c
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@myparcel-dev/pdk-checkout-common@npm:^1.7.3":
-  version: 1.7.3
-  resolution: "@myparcel-dev/pdk-checkout-common@npm:1.7.3"
+"@myparcel-dev/pdk-checkout-common@portal:/Users/freek.vanrijt/projects/js-pdk/libs/checkout-common::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@myparcel-dev/pdk-checkout-common@portal:/Users/freek.vanrijt/projects/js-pdk/libs/checkout-common::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A."
   dependencies:
     "@myparcel-dev/constants": "npm:^2.7.0"
     "@myparcel-dev/delivery-options": "npm:^6.25.0"
-    "@myparcel-dev/pdk-common": "npm:^1.12.0"
+    "@myparcel-dev/pdk-common": "workspace:^1.12.0"
     typescript: "npm:^5.2.2"
-  checksum: 10c0/dd700fb12bd9dd663124c3d431e9fb0ff00b4d27cf4e499e662c9b01d19eda47ccb1a83eadeabe766bf5e91f2da9f1f08a68efe67d74a312c69ed1d86c3276bc
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@myparcel-dev/pdk-checkout-delivery-options@npm:^1.7.3":
-  version: 1.7.3
-  resolution: "@myparcel-dev/pdk-checkout-delivery-options@npm:1.7.3"
+"@myparcel-dev/pdk-checkout-delivery-options@portal:/Users/freek.vanrijt/projects/js-pdk/libs/checkout-delivery-options::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@myparcel-dev/pdk-checkout-delivery-options@portal:/Users/freek.vanrijt/projects/js-pdk/libs/checkout-delivery-options::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A."
   dependencies:
     "@myparcel-dev/delivery-options": "npm:^6.25.0"
-    "@myparcel-dev/pdk-checkout-common": "npm:^1.7.3"
+    "@myparcel-dev/pdk-checkout-common": "workspace:^1.7.3"
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
-  checksum: 10c0/28fa66532f197eaaf94f42642261ffb23ec41deda3c51c3f2c3efb242e7a66548f59bcaec805f4517289643979681ae1a48d4e9f91048eeebca63c3c927e193b
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@myparcel-dev/pdk-checkout-separate-address-fields@npm:^1.7.3":
-  version: 1.7.3
-  resolution: "@myparcel-dev/pdk-checkout-separate-address-fields@npm:1.7.3"
+"@myparcel-dev/pdk-checkout-separate-address-fields@portal:/Users/freek.vanrijt/projects/js-pdk/libs/checkout-separate-address-fields::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@myparcel-dev/pdk-checkout-separate-address-fields@portal:/Users/freek.vanrijt/projects/js-pdk/libs/checkout-separate-address-fields::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A."
   dependencies:
-    "@myparcel-dev/pdk-checkout-common": "npm:^1.7.3"
-  checksum: 10c0/1768b5de5d56b6d15838bbca85bcace31110c796a2017367cf82ba53844dff3e96207ac919b8cc1a74f1de8280b41eb4f1ca568cfc994d52057bc79d3e372259
+    "@myparcel-dev/pdk-checkout-common": "workspace:^1.7.3"
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@myparcel-dev/pdk-checkout-tax-fields@npm:^1.7.3":
-  version: 1.7.3
-  resolution: "@myparcel-dev/pdk-checkout-tax-fields@npm:1.7.3"
+"@myparcel-dev/pdk-checkout-tax-fields@portal:/Users/freek.vanrijt/projects/js-pdk/libs/checkout-tax-fields::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@myparcel-dev/pdk-checkout-tax-fields@portal:/Users/freek.vanrijt/projects/js-pdk/libs/checkout-tax-fields::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A."
   dependencies:
     "@myparcel-dev/constants": "npm:^2.7.0"
-    "@myparcel-dev/pdk-checkout-common": "npm:^1.7.3"
-  checksum: 10c0/4f0a1b262b29a4adbffa3a8a1efd4fef5bd2f5ec9e9245c28c4e39dc1446c463eb63c0429d198b97e8dd5bd140729f7580dc1888e977cd143be964615b51f9f4
+    "@myparcel-dev/pdk-checkout-common": "workspace:^1.7.3"
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@myparcel-dev/pdk-checkout@npm:^1.7.3":
-  version: 1.7.3
-  resolution: "@myparcel-dev/pdk-checkout@npm:1.7.3"
+"@myparcel-dev/pdk-checkout@portal:/Users/freek.vanrijt/projects/js-pdk/apps/checkout::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@myparcel-dev/pdk-checkout@portal:/Users/freek.vanrijt/projects/js-pdk/apps/checkout::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A."
   dependencies:
-    "@myparcel-dev/pdk-checkout-common": "npm:^1.7.3"
-    "@myparcel-dev/pdk-checkout-delivery-options": "npm:^1.7.3"
-    "@myparcel-dev/pdk-checkout-separate-address-fields": "npm:^1.7.3"
-    "@myparcel-dev/pdk-checkout-tax-fields": "npm:^1.7.3"
-    "@myparcel-dev/pdk-common": "npm:^1.12.0"
-  checksum: 10c0/d8aa6b4856c2352f36231ad64cba0d40c64b7160926eb62d86d95624dca7efaa1a864c3090b755b0a733f512e4c2bb7203beeea57ec2b091be8b333240491c5b
+    "@myparcel-dev/pdk-checkout-common": "workspace:^1.7.3"
+    "@myparcel-dev/pdk-checkout-delivery-options": "workspace:^1.7.3"
+    "@myparcel-dev/pdk-checkout-separate-address-fields": "workspace:^1.7.3"
+    "@myparcel-dev/pdk-checkout-tax-fields": "workspace:^1.7.3"
+    "@myparcel-dev/pdk-common": "workspace:^1.12.0"
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@myparcel-dev/pdk-common@npm:^1.12.0":
-  version: 1.12.0
-  resolution: "@myparcel-dev/pdk-common@npm:1.12.0"
+"@myparcel-dev/pdk-common@portal:/Users/freek.vanrijt/projects/js-pdk/libs/common::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@myparcel-dev/pdk-common@portal:/Users/freek.vanrijt/projects/js-pdk/libs/common::locator=%40myparcel-woocommerce%2Fmonorepo%40workspace%3A."
   dependencies:
     "@myparcel-dev/constants": "npm:^2.7.0"
     "@myparcel-dev/delivery-options": "npm:^6.25.0"
-  checksum: 10c0/a2a724dbfb42749c978e4b352411c494165182c22dd9fdadac50875e21aaa254bbbe023e148a73e1f584600e4977d2841806e98aee0fb79c9c238fba8dbdcea1
   languageName: node
-  linkType: hard
+  linkType: soft
 
 "@myparcel-dev/sdk@npm:^5.0.0":
   version: 5.0.0

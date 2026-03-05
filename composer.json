@@ -1,9 +1,9 @@
 {
   "name": "myparcelnl/woocommerce",
-  "version": "6.0.2",
+  "version": "6.1.0",
   "require": {
-    "myparcelnl/sdk": "^10.0.0",
-    "myparcelnl/pdk": "^3.1.1",
+    "myparcelnl/sdk": "^11.0.0-beta.4",
+    "myparcelnl/pdk": "*",
     "guzzlehttp/guzzle": "^7.5.0",
     "psr/log": "*",
     "php": ">= 7.4"
@@ -57,5 +57,15 @@
     "allow-plugins": {
       "pestphp/pest-plugin": true
     }
-  }
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "/Users/freek.vanrijt/projects/pdk"
+    },
+    {
+      "type": "path",
+      "url": "/Users/freek.vanrijt/projects/pdk"
+    }
+  ]
 }
