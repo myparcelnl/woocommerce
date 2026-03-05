@@ -93,7 +93,9 @@ return [
     }),
 
     'wooCommerceIsActive' => factory(function (): bool {
-        // is_plugin_active also checks network activated plugins (multisite).
+        // is_plugin_active (from plugin.php) also checks network activated plugins (multisite).
+        include_once ABSPATH . 'wp-admin/includes/plugin.php';
+
         return is_plugin_active( 'woocommerce/woocommerce.php' );
     }),
 
