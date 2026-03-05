@@ -1,4 +1,5 @@
 <?php
+
 /** @noinspection StaticClosureCanBeUsedInspection */
 
 declare(strict_types=1);
@@ -15,6 +16,8 @@ use function MyParcelNL\Pdk\Tests\usesShared;
 usesShared(new UsesMockWcPdkInstance());
 
 it('returns proper permission callback', function (array $roles, bool $expected) {
+    // Clean up any existing roles.
+    MockWpUser::reset();
     foreach ($roles as $role) {
         MockWpUser::addRole($role);
     }

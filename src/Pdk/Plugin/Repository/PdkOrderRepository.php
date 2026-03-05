@@ -89,6 +89,16 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         }
     }
 
+    public function find($id): ?PdkOrder
+    {
+        $order = $this->wcOrderRepository->find($id);
+        if ($order === null) {
+            return null;
+        }
+
+        return $this->getDataFromOrder($order);
+    }
+
     public function getByApiIdentifier(string $uuid): ?PdkOrder
     {
         /**

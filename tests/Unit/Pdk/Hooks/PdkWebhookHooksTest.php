@@ -1,4 +1,5 @@
 <?php
+
 /** @noinspection StaticClosureCanBeUsedInspection */
 
 declare(strict_types=1);
@@ -48,6 +49,10 @@ it('registers webhook handler in wp rest api', function () {
     $hookClass = Pdk::get(PdkWebhookHooks::class);
     $hookClass->apply();
 
+    /** @var \MyParcelNL\WooCommerce\Pdk\Hooks\PdkEndpointHooks $endpointHooksClass */
+    $endpointHooksClass = Pdk::get(PdkEndpointHooks::class);
+    $endpointHooksClass->apply();
+
     expect(MockWpActions::get('rest_api_init'))->toBeArray();
 
     MockWpActions::execute('rest_api_init');
@@ -63,6 +68,14 @@ it('registers webhook handler in wp rest api', function () {
                 'permission_callback' => '__return_true',
             ],
         ],
+        'myparcelcom/delivery-options' => [
+            'override' => false,
+            'args'     =>             [
+                'methods'             => 'GET',
+                'callback'            => [$endpointHooksClass, 'processDeliveryOptionsRequest'],
+                'permission_callback' => [$endpointHooksClass, 'checkDeliveryOptionsPermission'],
+            ]
+        ]
     ]);
 });
 
