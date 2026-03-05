@@ -17,7 +17,7 @@
 
     <div
       v-show="isOpen"
-      :class="['mypa-fixed', 'mypa-left-2', 'mypa-m-auto', 'mypa-max-w-2xl', 'mypa-right-2', 'mypa-top-12']"
+      :class="['mypa-fixed', 'mypa-scrollable-modal', 'mypa-left-2', 'mypa-m-auto', 'mypa-max-w-2xl', 'mypa-right-2', 'mypa-top-12']"
       role="document"
       @click.stop>
       <PdkBox :actions="actions">
