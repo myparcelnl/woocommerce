@@ -27,6 +27,19 @@ it('throws error if woocommerce is not enabled', function () {
     MockWpActions::execute('activate_woocommerce-myparcel');
 })->throws(DieException::class, 'woocommerce');
 
+it('activates plugin if woocommerce is only network-activated on multisite', function () {
+    WordPressOptions::updateOption('active_plugins', []);
+    WordPressOptions::updateOption('is_multisite', true);
+    WordPressOptions::updateOption('site_active_sitewide_plugins', ['woocommerce/woocommerce.php' => true]);
+
+    MockWpActions::execute('activate_woocommerce-myparcel');
+
+    expect(MockWpActions::get('activate_woocommerce-myparcel'))
+        ->toBe([])
+        ->and(constant('MYPARCEL_WC_VERSION'))
+        ->toBeString();
+});
+
 it('activates plugin if prerequisites are met', function () {
     MockWpActions::execute('activate_woocommerce-myparcel');
 
