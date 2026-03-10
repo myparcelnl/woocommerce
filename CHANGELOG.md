@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.0](https://github.com/myparcelnl/woocommerce/compare/v6.0.2...v6.1.0) (2026-03-10)
+
+
+### :bug: Bug Fixes
+
+* make shipping modal scrollable ([#1571](https://github.com/myparcelnl/woocommerce/issues/1571)) ([a449bdb](https://github.com/myparcelnl/woocommerce/commit/a449bdb8e379f8baec7570ce749201ef0ba9b303))
+
+
+### :sparkles: New Features
+
+* **order:** allow myparcel sales channel integration to fetch delivery options data ([#1565](https://github.com/myparcelnl/woocommerce/issues/1565)) ([c2db966](https://github.com/myparcelnl/woocommerce/commit/c2db96663607898f8b444ab3b44b90353a3a35ce))
+
 ## [6.0.2](https://github.com/myparcelnl/woocommerce/compare/v6.0.1...v6.0.2) (2026-02-24)
 
 
