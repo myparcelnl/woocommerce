@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "776f6a8206d8491d9706e4a3286ef5e5",
+    "content-hash": "5516216c9776b9b43e98414203d8eb24",
     "packages": [
         {
             "name": "alcohol/iso4217",
@@ -425,16 +425,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "2.8.0",
+            "version": "2.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "21dc724a0583619cd1652f673303492272778051"
+                "reference": "7d0ed42f28e42d61352a7a79de682e5e67fec884"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/21dc724a0583619cd1652f673303492272778051",
-                "reference": "21dc724a0583619cd1652f673303492272778051",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/7d0ed42f28e42d61352a7a79de682e5e67fec884",
+                "reference": "7d0ed42f28e42d61352a7a79de682e5e67fec884",
                 "shasum": ""
             },
             "require": {
@@ -450,6 +450,7 @@
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.8.2",
                 "http-interop/http-factory-tests": "0.9.0",
+                "jshttp/mime-db": "1.54.0.1",
                 "phpunit/phpunit": "^8.5.44 || ^9.6.25"
             },
             "suggest": {
@@ -521,7 +522,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/2.8.0"
+                "source": "https://github.com/guzzle/psr7/tree/2.9.0"
             },
             "funding": [
                 {
@@ -537,7 +538,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-08-23T21:21:41+00:00"
+            "time": "2026-03-10T16:41:02+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -964,16 +965,16 @@
         },
         {
             "name": "myparcelnl/sdk",
-            "version": "11.0.0-beta.6",
+            "version": "11.0.0-beta.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/sdk.git",
-                "reference": "6ab86dbaf40e6e31631d1525e10546835253f4d0"
+                "reference": "6c9fb421c96d9f0438b32de6150953b697655e57"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/6ab86dbaf40e6e31631d1525e10546835253f4d0",
-                "reference": "6ab86dbaf40e6e31631d1525e10546835253f4d0",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/6c9fb421c96d9f0438b32de6150953b697655e57",
+                "reference": "6c9fb421c96d9f0438b32de6150953b697655e57",
                 "shasum": ""
             },
             "require": {
@@ -1024,9 +1025,9 @@
             ],
             "support": {
                 "issues": "https://github.com/myparcelnl/sdk/issues",
-                "source": "https://github.com/myparcelnl/sdk/tree/v11.0.0-beta.6"
+                "source": "https://github.com/myparcelnl/sdk/tree/v11.0.0-beta.7"
             },
-            "time": "2026-03-05T11:54:21+00:00"
+            "time": "2026-03-10T12:08:17+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -6584,6 +6585,6 @@
     "platform": {
         "php": ">= 7.4"
     },
-    "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
 }
