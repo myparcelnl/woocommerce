@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.2.0](https://github.com/myparcelnl/woocommerce/compare/v6.1.0...v6.2.0) (2026-03-17)
+
+
+### :bug: Bug Fixes
+
+* fix an issue detecting the woocommerce plugin on multisite installations ([#1575](https://github.com/myparcelnl/woocommerce/issues/1575)) ([8c8aaf6](https://github.com/myparcelnl/woocommerce/commit/8c8aaf677ee85cce3c28fef878687249b4232134))
+
+
+### :sparkles: New Features
+
+* **language:** add support for German and Italian ([4cf2a69](https://github.com/myparcelnl/woocommerce/commit/4cf2a69d6acd0ba2c03b562d34a626f048036c1e))
+
 ## [6.1.0](https://github.com/myparcelnl/woocommerce/compare/v6.0.2...v6.1.0) (2026-03-10)
 
 
