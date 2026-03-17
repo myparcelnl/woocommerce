@@ -29,6 +29,7 @@ updates:
     schedule:
       interval: 'daily'
     versioning-strategy: increase-if-necessary
+    group-by: dependency-name
     groups:
       minor-js-updates:
         applies-to: version-updates
