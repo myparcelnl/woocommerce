@@ -29,7 +29,13 @@ export const SHIPPING_ID = 'shipping_address_widget';
 
 export const BILLING_ID = 'billing_address_widget';
 
-export const getConfig = (appIdentifier: string): ConfigObject => {
+type AddressWidgetConfig = ConfigObject & {
+  classNames?: NonNullable<ConfigObject['classNames']> & {
+    input?: string[];
+  };
+};
+
+export const getConfig = (appIdentifier: string): AddressWidgetConfig => {
   const endpoint = useSettings().actions.endpoints[FrontendEndpoint.ProxyAddressesList];
   return {
     appIdentifier,
@@ -44,6 +50,7 @@ export const getConfig = (appIdentifier: string): ConfigObject => {
     classNames: {
       // Do not pass .form-row here as woocommerce will (re)move these items and it will cause issues.
       fieldWrapper: ['form-row-wide'],
+      input: ['input-text'],
     },
     elements: {
       fieldWrapper: 'p',
