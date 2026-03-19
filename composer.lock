@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5516216c9776b9b43e98414203d8eb24",
+    "content-hash": "7ddf665104e905bfc289ef38dd5e9ce5",
     "packages": [
         {
             "name": "alcohol/iso4217",
@@ -965,16 +965,16 @@
         },
         {
             "name": "myparcelnl/sdk",
-            "version": "11.0.0-beta.9",
+            "version": "11.0.0-beta.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/sdk.git",
-                "reference": "3e6c77958f5e12a5d828be278b9ae8cb0e95779d"
+                "reference": "7035fe5471cd265c69e277e330ff8a15ebe58c06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/3e6c77958f5e12a5d828be278b9ae8cb0e95779d",
-                "reference": "3e6c77958f5e12a5d828be278b9ae8cb0e95779d",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/7035fe5471cd265c69e277e330ff8a15ebe58c06",
+                "reference": "7035fe5471cd265c69e277e330ff8a15ebe58c06",
                 "shasum": ""
             },
             "require": {
@@ -1025,9 +1025,9 @@
             ],
             "support": {
                 "issues": "https://github.com/myparcelnl/sdk/issues",
-                "source": "https://github.com/myparcelnl/sdk/tree/v11.0.0-beta.9"
+                "source": "https://github.com/myparcelnl/sdk/tree/v11.0.0-beta.10"
             },
-            "time": "2026-03-16T08:59:28+00:00"
+            "time": "2026-03-18T09:10:41+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -6585,6 +6585,6 @@
     "platform": {
         "php": ">= 7.4"
     },
-    "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
 }
