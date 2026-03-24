@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.2.1](https://github.com/myparcelnl/woocommerce/compare/v6.2.0...v6.2.1) (2026-03-24)
+
+
+### :bug: Bug Fixes
+
+* **webhook:** fix shipments created in backoffice could generate empty woocommerce orders ([#1585](https://github.com/myparcelnl/woocommerce/issues/1585)) ([e2be95e](https://github.com/myparcelnl/woocommerce/commit/e2be95e4dde8624abd5889bd47def58dde186cc7))
+
 ## [6.2.0](https://github.com/myparcelnl/woocommerce/compare/v6.1.0...v6.2.0) (2026-03-17)
 
 
