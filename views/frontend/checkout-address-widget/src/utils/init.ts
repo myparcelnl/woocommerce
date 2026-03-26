@@ -29,13 +29,7 @@ export const SHIPPING_ID = 'shipping_address_widget';
 
 export const BILLING_ID = 'billing_address_widget';
 
-type AddressWidgetConfig = ConfigObject & {
-  classNames?: NonNullable<ConfigObject['classNames']> & {
-    input?: string[];
-  };
-};
-
-export const getConfig = (appIdentifier: string): AddressWidgetConfig => {
+export const getConfig = (appIdentifier: string): ConfigObject => {
   const endpoint = useSettings().actions.endpoints[FrontendEndpoint.ProxyAddressesList];
   return {
     appIdentifier,
