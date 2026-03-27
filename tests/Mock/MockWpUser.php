@@ -33,4 +33,14 @@ final class MockWpUser implements StaticMockInterface
     {
         self::$roles = [];
     }
+
+    public static function currentUserCan(string $capability): bool
+    {
+        // For simplicity, we assume that 'shop_manager' role has 'read_private_shop_orders' capability
+        if ($capability === 'read_private_shop_orders') {
+            return in_array('shop_manager', self::$roles, true);
+        }
+
+        return false;
+    }
 }

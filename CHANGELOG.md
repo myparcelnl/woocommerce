@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.2.1](https://github.com/myparcelnl/woocommerce/compare/v6.2.0...v6.2.1) (2026-03-24)
+
+
+### :bug: Bug Fixes
+
+* **webhook:** fix shipments created in backoffice could generate empty woocommerce orders ([#1585](https://github.com/myparcelnl/woocommerce/issues/1585)) ([e2be95e](https://github.com/myparcelnl/woocommerce/commit/e2be95e4dde8624abd5889bd47def58dde186cc7))
+
+## [6.2.0](https://github.com/myparcelnl/woocommerce/compare/v6.1.0...v6.2.0) (2026-03-17)
+
+
+### :bug: Bug Fixes
+
+* fix an issue detecting the woocommerce plugin on multisite installations ([#1575](https://github.com/myparcelnl/woocommerce/issues/1575)) ([8c8aaf6](https://github.com/myparcelnl/woocommerce/commit/8c8aaf677ee85cce3c28fef878687249b4232134))
+
+
+### :sparkles: New Features
+
+* **language:** add support for German and Italian ([4cf2a69](https://github.com/myparcelnl/woocommerce/commit/4cf2a69d6acd0ba2c03b562d34a626f048036c1e))
+
+## [6.1.0](https://github.com/myparcelnl/woocommerce/compare/v6.0.2...v6.1.0) (2026-03-10)
+
+
+### :bug: Bug Fixes
+
+* make shipping modal scrollable ([#1571](https://github.com/myparcelnl/woocommerce/issues/1571)) ([a449bdb](https://github.com/myparcelnl/woocommerce/commit/a449bdb8e379f8baec7570ce749201ef0ba9b303))
+
+
+### :sparkles: New Features
+
+* **order:** allow myparcel sales channel integration to fetch delivery options data ([#1565](https://github.com/myparcelnl/woocommerce/issues/1565)) ([c2db966](https://github.com/myparcelnl/woocommerce/commit/c2db96663607898f8b444ab3b44b90353a3a35ce))
+
 ## [6.0.2](https://github.com/myparcelnl/woocommerce/compare/v6.0.1...v6.0.2) (2026-02-24)
 
 

@@ -32,6 +32,7 @@ updates:
     groups:
       minor-js-updates:
         applies-to: version-updates
+        group-by: dependency-name
         exclude-patterns:
           - "@myparcel-dev/pdk-*"
         update-types:

@@ -48,7 +48,8 @@
                 "collect": -1,
                 "excludeParcelLockers": -1,
                 "freshFood": -1,
-                "frozen": -1
+                "frozen": -1,
+                "saturdayDelivery": -1
             },
             "deliveryType": "standard",
             "packageType": "package"

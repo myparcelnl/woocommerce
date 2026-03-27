@@ -32,6 +32,7 @@
     ],
     "rest_api_init": [
         "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkAdminEndpointHooks::registerPdkRoutes",
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkEndpointHooks::registerEndpointRoutes",
         "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkFrontendEndpointHooks::registerPdkRoutes",
         "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkWebhookHooks::registerWebhookRoutes"
     ],
@@ -52,6 +53,9 @@
     ],
     "script_loader_tag": [
         "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCoreHooks::changeScriptTag"
+    ],
+    "woocommerce_rest_is_request_to_rest_api": [
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkEndpointHooks::isRequestToWooCommerceRestApi"
     ],
     "add_meta_boxes": [
         "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkOrderHooks::registerSingleOrderPageMetaBox"

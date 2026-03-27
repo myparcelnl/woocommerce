@@ -142,6 +142,13 @@ function wp_get_current_user()
     return MockWpUser::get();
 }
 
+
+/**@see \function current_user_can() */
+function current_user_can($permission, ...$args)
+{
+    return MockWpUser::currentUserCan($permission, ...$args);
+}
+
 /**@see \__return_false() */
 function __return_false(): bool
 {
@@ -176,6 +183,16 @@ function wp_enqueue_style($handle, $src, $deps, $version, $media)
 
 function get_plugins() {
     return WordPressPlugins::getPlugins();
+}
+
+function is_multisite() {
+    return WordPressOptions::getOption('is_multisite', false);
+}
+
+/** @see \get_site_option() */
+function get_site_option(string $option, $default = false)
+{
+    return WordPressOptions::getOption('site_' . $option, $default);
 }
 
 function get_term_by($field, $value, $taxonomy = '', $output = 'OBJECT', $filter = 'raw')
@@ -260,4 +277,13 @@ function register_rest_route(...$args): void
 function untrailingslashit(string $string): string
 {
     return rtrim($string, '/');
+}
+
+function __($text, $domain = 'default'): string
+{
+    return $text;
+}
+
+function rest_authorization_required_code(): int {
+    return is_user_logged_in() ? 403 : 401;
 }
