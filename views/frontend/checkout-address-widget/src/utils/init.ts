@@ -44,6 +44,7 @@ export const getConfig = (appIdentifier: string): ConfigObject => {
     classNames: {
       // Do not pass .form-row here as woocommerce will (re)move these items and it will cause issues.
       fieldWrapper: ['form-row-wide'],
+      input: ['input-text'],
     },
     elements: {
       fieldWrapper: 'p',
