@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.3.0](https://github.com/myparcelnl/woocommerce/compare/v6.2.1...v6.3.0) (2026-03-31)
+
+
+### :sparkles: New Features
+
+* **checkout:** apply input classes to the address widget ([#1582](https://github.com/myparcelnl/woocommerce/issues/1582)) ([16c382c](https://github.com/myparcelnl/woocommerce/commit/16c382c5a6d34ae8c883128752da7f1227d6d50c))
+
+
+### :bug: Bug Fixes
+
+* **security:** fix tar vulnerability ([#1579](https://github.com/myparcelnl/woocommerce/issues/1579)) ([02fea7f](https://github.com/myparcelnl/woocommerce/commit/02fea7f41ebd6d08c621933fd102325b5f0965ee))
+
 ## [6.2.1](https://github.com/myparcelnl/woocommerce/compare/v6.2.0...v6.2.1) (2026-03-24)
 
 
