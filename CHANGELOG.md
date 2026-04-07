@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.25.1](https://github.com/myparcelnl/woocommerce/compare/v4.25.0...v4.25.1) (2026-04-07)
+
+
+### :bug: Bug Fixes
+
+* **v4:** export shipment with weight ([#1594](https://github.com/myparcelnl/woocommerce/issues/1594)) ([1846baa](https://github.com/myparcelnl/woocommerce/commit/1846baa0f987b1eb7c4fed72ac1a7eb61b1f596b))
+
 ## [4.25.0](https://github.com/myparcelnl/woocommerce/compare/v4.24.4...v4.25.0) (2025-03-04)
 
 
