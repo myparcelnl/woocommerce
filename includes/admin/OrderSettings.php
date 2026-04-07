@@ -561,11 +561,35 @@ class OrderSettings
     {
         $weight = $this->extraOptions['weight'] ?? null;
 
-        if (null === $weight && $this->order->meta_exists(WCMYPA_Admin::META_ORDER_WEIGHT)) {
-            $weight = $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
+        if (null === $weight || 0.0 === (float) $weight) {
+            $weight = $this->calculateProductWeight();
         }
 
         $this->weight = (float) $weight;
+    }
+
+    /**
+     * @return float
+     */
+    private function calculateProductWeight(): float
+    {
+        $weight = 0.0;
+
+        foreach ($this->order->get_items() as $item) {
+            $product = $item->get_product();
+
+            if (! $product || $product->is_virtual()) {
+                continue;
+            }
+
+            $productWeight = (float) $product->get_weight();
+
+            if ($productWeight > 0.0) {
+                $weight += $productWeight * $item->get_quantity();
+            }
+        }
+
+        return $weight;
     }
 
     /**
