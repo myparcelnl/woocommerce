@@ -108,9 +108,7 @@
     "pdkOrder": {
         "exported": false,
         "deliveryOptions": {
-            "carrier": {
-                "externalIdentifier": "postnl"
-            },
+            "carrier": "POSTNL",
             "labelAmount": 1,
             "pickupLocation": {
                 "locationCode": "8004-NL-213209",
@@ -123,23 +121,24 @@
                 "street": "Polderplein"
             },
             "shipmentOptions": {
-                "labelDescription": "[ORDER_ID]",
-                "insurance": 0,
                 "ageCheck": 0,
                 "return": 0,
                 "hideSender": -1,
+                "insurance": 0,
                 "largeFormat": 0,
                 "onlyRecipient": 0,
                 "priorityDelivery": -1,
-                "receiptCode": -1,
                 "sameDayDelivery": 0,
+                "saturdayDelivery": -1,
                 "signature": 0,
                 "tracked": -1,
+                "receiptCode": -1,
                 "collect": -1,
                 "excludeParcelLockers": -1,
                 "freshFood": -1,
                 "frozen": -1,
-                "saturdayDelivery": -1
+                "cooledDelivery": -1,
+                "labelDescription": "[ORDER_ID]"
             },
             "deliveryType": "pickup",
             "packageType": "package"
@@ -153,15 +152,11 @@
             "shopId": 111359,
             "referenceIdentifier": "1491",
             "barcode": "3SMYPA681084449",
-            "carrier": {
-                "externalIdentifier": "postnl"
-            },
+            "carrier": "POSTNL",
             "delayed": false,
             "delivered": false,
             "deliveryOptions": {
-                "carrier": {
-                    "externalIdentifier": "postnl"
-                },
+                "carrier": "POSTNL",
                 "labelAmount": 1,
                 "pickupLocation": {
                     "locationCode": "8004-NL-213209",
@@ -173,23 +168,24 @@
                     "street": "Polderplein"
                 },
                 "shipmentOptions": {
-                    "labelDescription": "1491",
-                    "insurance": 1,
                     "ageCheck": -1,
                     "return": -1,
                     "hideSender": -1,
+                    "insurance": 1,
                     "largeFormat": 0,
                     "onlyRecipient": -1,
                     "priorityDelivery": -1,
-                    "receiptCode": -1,
                     "sameDayDelivery": -1,
+                    "saturdayDelivery": -1,
                     "signature": -1,
                     "tracked": -1,
+                    "receiptCode": -1,
                     "collect": -1,
                     "excludeParcelLockers": -1,
                     "freshFood": -1,
                     "frozen": -1,
-                    "saturdayDelivery": -1
+                    "cooledDelivery": -1,
+                    "labelDescription": "1491"
                 },
                 "deliveryType": "pickup",
                 "packageType": "package"
