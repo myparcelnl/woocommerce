@@ -287,6 +287,8 @@ class WcPdkBootstrapper extends PdkBootstrapper
 
             'migrateAction_5_0_0_Orders'          => value("{$name}_migrate_5_0_0_orders"),
             'migrateAction_5_0_0_ProductSettings' => value("{$name}_migrate_5_0_0_product_settings"),
+            'migrateAction_6_1_0_Orders'          => value("{$name}_migrate_6_1_0_orders"),
+            'migrateAction_6_1_0_Shipments'       => value("{$name}_migrate_6_1_0_shipments"),
 
             # WP Cron actions
 

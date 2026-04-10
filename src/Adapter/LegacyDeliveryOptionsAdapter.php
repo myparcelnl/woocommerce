@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Adapter;
 
+use MyParcelNL\Pdk\Carrier\Model\Carrier;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
 use MyParcelNL\Sdk\Support\Str;
@@ -45,11 +46,21 @@ class LegacyDeliveryOptionsAdapter
     {
         $arr = $deliveryOptions->toStorableArray();
 
-        if (! isset($arr['carrier']['externalIdentifier'])) {
+        $carrier = $arr['carrier'] ?? null;
+
+        if (is_array($carrier)) {
+            $carrierName = $carrier['externalIdentifier'] ?? ($carrier['carrier'] ?? null);
+        } elseif (is_string($carrier)) {
+            $carrierName = Carrier::CARRIER_NAME_TO_LEGACY_MAP[$carrier] ?? $carrier;
+        } else {
             return [];
         }
 
-        $arr['carrier']  = $arr['carrier']['externalIdentifier'];
+        if (! is_string($carrierName)) {
+            return [];
+        }
+
+        $arr['carrier'] = $carrierName;
         $arr['isPickup'] = DeliveryOptions::DELIVERY_TYPE_PICKUP_NAME === $arr['deliveryType'];
 
         if (isset($arr['date']) && is_string($arr['date'])) {
