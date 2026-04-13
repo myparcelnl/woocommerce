@@ -41,7 +41,7 @@ describe('initializeCheckoutDeliveryOptions', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    defaultUpdateDeliveryOptions.mockImplementation(() => ({packageType: 'package'}));
+    defaultUpdateDeliveryOptions.mockImplementation(() => ({packageType: 'package', carrier: 'postnl'}));
     warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
   });
 
@@ -57,6 +57,7 @@ describe('initializeCheckoutDeliveryOptions', () => {
 
     expect(config.proxyCapabilities).toBe(`${BASE_URL}?action=proxyCapabilities`);
     expect(config.packageType).toBe('package');
+    expect(config.carrier).toBe('postnl');
   });
 
   it('preserves every entry from endpoint.parameters in the query string', async () => {
@@ -97,7 +98,32 @@ describe('initializeCheckoutDeliveryOptions', () => {
 
     const config = getInitArgs().updateDeliveryOptions({});
 
-    expect(config).toEqual({packageType: 'package'});
+    expect(Object.keys(config)).not.toContain('proxyCapabilities');
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toContain('proxyCapabilities');
+  });
+
+  it('degrades gracefully when the endpoint has no parameters key', async () => {
+    useSettings.mockReturnValue(settingsWith({proxyCapabilities: {}}));
+
+    const {initializeCheckoutDeliveryOptions} = await import('./init');
+    initializeCheckoutDeliveryOptions();
+
+    const config = getInitArgs().updateDeliveryOptions({});
+
+    expect(Object.keys(config)).not.toContain('proxyCapabilities');
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toContain('proxyCapabilities');
+  });
+
+  it('degrades gracefully when endpoint.parameters is empty', async () => {
+    useSettings.mockReturnValue(settingsWith({proxyCapabilities: {parameters: {}}}));
+
+    const {initializeCheckoutDeliveryOptions} = await import('./init');
+    initializeCheckoutDeliveryOptions();
+
+    const config = getInitArgs().updateDeliveryOptions({});
+
     expect(Object.keys(config)).not.toContain('proxyCapabilities');
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toContain('proxyCapabilities');

@@ -13,6 +13,7 @@ import {getHighestShippingClass} from './getHighestShippingClass';
  * Action key for the capabilities proxy endpoint exposed by PDK on
  * `settings.actions.endpoints`. Kept as a local constant because `@myparcel-dev/pdk-common`
  * does not yet have a `FrontendEndpoint.ProxyCapabilities` enum entry.
+ * TODO(pdk-common): remove the cast in getProxyCapabilitiesUrl once FrontendEndpoint.ProxyCapabilities ships.
  */
 const PROXY_CAPABILITIES = 'proxyCapabilities';
 
@@ -29,19 +30,19 @@ const getProxyCapabilitiesUrl = (): string | undefined => {
   >;
   const endpoint = endpoints[PROXY_CAPABILITIES];
 
-  if (!endpoint) {
+  if (!endpoint?.parameters || Object.keys(endpoint.parameters).length === 0) {
     // eslint-disable-next-line no-console
-    console.warn(`[woocommerce-myparcel] Missing '${PROXY_CAPABILITIES}' endpoint in checkout context`);
+    console.warn(
+      `[woocommerce-myparcel] Missing or empty '${PROXY_CAPABILITIES}' endpoint in checkout context`,
+    );
     return undefined;
   }
 
   const query = new URLSearchParams(
-    Object.entries(endpoint.parameters ?? {}).map(([key, value]) => [key, String(value)]),
+    Object.entries(endpoint.parameters).map(([key, value]) => [key, String(value)]),
   ).toString();
 
-  const {baseUrl} = settings.actions;
-
-  return query ? `${baseUrl}?${query}` : baseUrl;
+  return `${settings.actions.baseUrl}?${query}`;
 };
 
 /**
@@ -49,8 +50,6 @@ const getProxyCapabilitiesUrl = (): string | undefined => {
  * through `usePdkCheckout().onInitialize(...)`.
  */
 export const initializeCheckoutDeliveryOptions = (): void => {
-  const proxyCapabilities = getProxyCapabilitiesUrl();
-
   initialize({
     getPackageType() {
       const shippingClass = getHighestShippingClass();
@@ -59,6 +58,7 @@ export const initializeCheckoutDeliveryOptions = (): void => {
     },
     updateDeliveryOptions(state) {
       const baseConfig = defaultUpdateDeliveryOptions(state);
+      const proxyCapabilities = getProxyCapabilitiesUrl();
 
       return proxyCapabilities ? {...baseConfig, proxyCapabilities} : baseConfig;
     },
