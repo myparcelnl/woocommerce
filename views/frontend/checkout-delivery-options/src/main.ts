@@ -1,26 +1,5 @@
 import '../assets/scss/index.scss';
-import {
-  PdkDeliveryOptionsEvent,
-  initializeCheckoutDeliveryOptions as initialize,
-  useEvent,
-  usePdkCheckout,
-  getPackageTypeFromShippingMethod,
-  defaultGetPackageType,
-} from '@myparcel-dev/pdk-checkout';
-import {getHighestShippingClass} from './utils';
-
-const initializeCheckoutDeliveryOptions = () => {
-  initialize({
-    getPackageType() {
-      const shippingClass = getHighestShippingClass();
-
-      return shippingClass ? getPackageTypeFromShippingMethod(shippingClass) : defaultGetPackageType();
-    },
-  });
-
-  document.addEventListener(useEvent(PdkDeliveryOptionsEvent.DeliveryOptionsUpdated), () => {
-    jQuery(document.body).trigger('update_checkout');
-  });
-};
+import {usePdkCheckout} from '@myparcel-dev/pdk-checkout';
+import {initializeCheckoutDeliveryOptions} from './utils';
 
 usePdkCheckout().onInitialize(initializeCheckoutDeliveryOptions);

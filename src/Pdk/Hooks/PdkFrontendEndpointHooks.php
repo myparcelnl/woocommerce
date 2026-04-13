@@ -7,6 +7,7 @@ namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 use MyParcelNL\Pdk\App\Api\PdkEndpoint;
 use MyParcelNL\Pdk\Facade\Pdk;
 use WP_REST_Request;
+use WP_REST_Server;
 
 final class PdkFrontendEndpointHooks extends AbstractPdkEndpointHooks
 {
@@ -35,7 +36,7 @@ final class PdkFrontendEndpointHooks extends AbstractPdkEndpointHooks
         }
 
         register_rest_route(Pdk::get('routeFrontend'), Pdk::get('routeFrontendMyParcel'), [
-            'methods'             => 'GET',
+            'methods'             => WP_REST_Server::ALLMETHODS,
             'callback'            => [$this, 'processFrontendRequest'],
             'permission_callback' => '__return_true',
         ]);
