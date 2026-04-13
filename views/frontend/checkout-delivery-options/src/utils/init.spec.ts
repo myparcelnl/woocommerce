@@ -18,6 +18,10 @@ vi.mock('@myparcel-dev/pdk-checkout', () => ({
   defaultUpdateDeliveryOptions,
 }));
 
+vi.mock('@myparcel-dev/pdk-common', () => ({
+  FrontendEndpoint: {ProxyCapabilities: 'proxyCapabilities'},
+}));
+
 vi.mock('./getHighestShippingClass', () => ({
   getHighestShippingClass: vi.fn(() => undefined),
 }));

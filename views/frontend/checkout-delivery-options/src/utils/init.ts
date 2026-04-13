@@ -7,15 +7,8 @@ import {
   defaultGetPackageType,
   defaultUpdateDeliveryOptions,
 } from '@myparcel-dev/pdk-checkout';
+import {FrontendEndpoint} from '@myparcel-dev/pdk-common';
 import {getHighestShippingClass} from './getHighestShippingClass';
-
-/**
- * Action key for the capabilities proxy endpoint exposed by PDK on
- * `settings.actions.endpoints`. Kept as a local constant because `@myparcel-dev/pdk-common`
- * does not yet have a `FrontendEndpoint.ProxyCapabilities` enum entry.
- * TODO(pdk-common): remove the cast in getProxyCapabilitiesUrl once FrontendEndpoint.ProxyCapabilities ships.
- */
-const PROXY_CAPABILITIES = 'proxyCapabilities';
 
 /**
  * Build the fully qualified URL the delivery-options widget should POST to when
@@ -24,23 +17,17 @@ const PROXY_CAPABILITIES = 'proxyCapabilities';
  */
 const getProxyCapabilitiesUrl = (): string | undefined => {
   const settings = useSettings();
-  const endpoints = settings.actions.endpoints as Record<
-    string,
-    {parameters?: Record<string, unknown>} | undefined
-  >;
-  const endpoint = endpoints[PROXY_CAPABILITIES];
+  const endpoint = settings.actions.endpoints[FrontendEndpoint.ProxyCapabilities];
 
   if (!endpoint?.parameters || Object.keys(endpoint.parameters).length === 0) {
     // eslint-disable-next-line no-console
     console.warn(
-      `[woocommerce-myparcel] Missing or empty '${PROXY_CAPABILITIES}' endpoint in checkout context`,
+      `[woocommerce-myparcel] Missing or empty '${FrontendEndpoint.ProxyCapabilities}' endpoint in checkout context`,
     );
     return undefined;
   }
 
-  const query = new URLSearchParams(
-    Object.entries(endpoint.parameters).map(([key, value]) => [key, String(value)]),
-  ).toString();
+  const query = new URLSearchParams(endpoint.parameters).toString();
 
   return `${settings.actions.baseUrl}?${query}`;
 };
