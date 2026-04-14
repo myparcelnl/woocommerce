@@ -129,10 +129,14 @@ class WcPdkBootstrapper extends PdkBootstrapper
             ]),
 
             'bulkActions' => factory(static function (): array {
-                $orderMode =
-                    ['Shipments', 'OrderV1', 'OrderV2'][Pdk::get(AccountFeaturesServiceInterface::class)
-                        ->getOrderModeVersion()];
+                $orderModeVersion = (int) Pdk::get(AccountFeaturesServiceInterface::class)
+                    ->getOrderModeVersion();
 
+                $orderMode = [
+                    0 => 'Shipments',
+                    1 => 'OrderV1',
+                    2 => 'OrderV2',
+                ][$orderModeVersion] ?? 'Shipments';
                 // Note: Export actions are not filtered here - filtering happens in the frontend
                 // by not rendering export buttons for local pickup orders
                 return Arr::get(Pdk::get('allBulkActions'), $orderMode, []);
