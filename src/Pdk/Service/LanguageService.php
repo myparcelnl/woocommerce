@@ -14,7 +14,7 @@ class LanguageService extends AbstractLanguageService
      *
      * @return string
      */
-    public function getIso2(string $language = null): string
+    public function getIso2(?string $language = null): string
     {
         return substr($language ?? $this->getLanguage(), 0, 2);
     }
