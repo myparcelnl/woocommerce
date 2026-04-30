@@ -18,6 +18,7 @@ use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\App\ShippingMethod\Contract\PdkShippingMethodRepositoryInterface;
 use MyParcelNL\Pdk\App\Tax\Contract\TaxServiceInterface;
+use MyParcelNL\Pdk\App\Webhook\Hook\ShipmentStatusChangeWebhook;
 use MyParcelNL\Pdk\App\Webhook\Contract\PdkWebhookServiceInterface;
 use MyParcelNL\Pdk\App\Webhook\Contract\PdkWebhooksRepositoryInterface;
 use MyParcelNL\Pdk\Audit\Contract\PdkAuditRepositoryInterface;
@@ -67,6 +68,7 @@ use MyParcelNL\WooCommerce\Pdk\Service\WcTaxService;
 use MyParcelNL\WooCommerce\Pdk\Service\WcViewService;
 use MyParcelNL\WooCommerce\Pdk\Service\WcWeightService;
 use MyParcelNL\WooCommerce\Pdk\Settings\Repository\PdkSettingsRepository;
+use MyParcelNL\WooCommerce\Pdk\Webhook\WcShipmentStatusChangeWebhook;
 use MyParcelNL\WooCommerce\Pdk\Webhook\WcWebhooksRepository;
 use MyParcelNL\WooCommerce\Service\WooCommerceService;
 use MyParcelNL\WooCommerce\Service\WordPressService;
@@ -88,6 +90,8 @@ use function DI\value;
  * @see \MyParcelNL\WooCommerce\Pdk\WcPdkBootstrapper for configuration based on the plugin itself.
  */
 return [
+    ShipmentStatusChangeWebhook::class => get(WcShipmentStatusChangeWebhook::class),
+
     'wordPressVersion' => factory(function (): string {
         return get_bloginfo('version');
     }),
