@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.4.0](https://github.com/myparcelnl/woocommerce/compare/v6.3.0...v6.4.0) (2026-05-05)
+
+
+### :bug: Bug Fixes
+
+* add php-scoper patcher to fix php-di conflict ActiveCampaign ([#1604](https://github.com/myparcelnl/woocommerce/issues/1604)) ([32a932c](https://github.com/myparcelnl/woocommerce/commit/32a932c97c68da16097afcaab0188ff078472e36))
+* **security:** fix CVE-2026-40175 and CVE-2025-62718 ([#1603](https://github.com/myparcelnl/woocommerce/issues/1603)) ([aebaf86](https://github.com/myparcelnl/woocommerce/commit/aebaf863acd6a4ca9026163dc716dbe77103279b))
+
+
+### :sparkles: New Features
+
+* add (default) export priority delivery setting ([#1593](https://github.com/myparcelnl/woocommerce/issues/1593)) ([5ef6a01](https://github.com/myparcelnl/woocommerce/commit/5ef6a01f230e0e757f14a89ccca5840e50963a9c))
+
 ## [6.3.0](https://github.com/myparcelnl/woocommerce/compare/v6.2.1...v6.3.0) (2026-03-31)
 
 
