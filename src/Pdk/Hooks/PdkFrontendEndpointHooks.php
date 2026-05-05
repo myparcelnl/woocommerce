@@ -35,7 +35,7 @@ final class PdkFrontendEndpointHooks extends AbstractPdkEndpointHooks
         }
 
         register_rest_route(Pdk::get('routeFrontend'), Pdk::get('routeFrontendMyParcel'), [
-            'methods'             => 'GET',
+            'methods'             => ['GET', 'POST'],
             'callback'            => [$this, 'processFrontendRequest'],
             'permission_callback' => '__return_true',
         ]);

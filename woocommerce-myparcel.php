@@ -29,6 +29,9 @@ use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
 use function MyParcelNL\WooCommerce\bootPdk;
 
 require plugin_dir_path(__FILE__) . 'vendor/autoload.php';
+// Composer's file-hash deduplication can cause another plugin that shares php-di to claim
+// the hash first, preventing our copy of functions.php from loading. Require it explicitly.
+require_once plugin_dir_path(__FILE__) . 'vendor/php-di/php-di/src/functions.php';
 
 final class MyParcelNLWooCommerce
 {
