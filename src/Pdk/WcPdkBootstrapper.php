@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk;
 
+use MyParcelNL\Pdk\Account\Contract\AccountFeaturesServiceInterface;
 use MyParcelNL\Pdk\Base\PdkBootstrapper;
 use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Facade\Pdk;
@@ -112,29 +113,33 @@ class WcPdkBootstrapper extends PdkBootstrapper
              */
 
             'allBulkActions' => value([
-                'default'   => [
+                'Shipments'   => [
                     'action_print',
                     'action_export_print',
                     'action_export',
                     'action_edit',
                 ],
-                'orderMode' => [
+                'OrderV1' => [
                     'action_edit',
                     'action_export',
+                ],
+                'OrderV2' => [
+                    'action_edit',
                 ],
             ]),
 
             'bulkActions' => factory(static function (): array {
-                $orderModeEnabled = Settings::get(OrderSettings::ORDER_MODE, OrderSettings::ID);
-                $all              = Pdk::get('allBulkActions');
+                $orderModeVersion = (int) Pdk::get(AccountFeaturesServiceInterface::class)
+                    ->getOrderModeVersion();
 
-                $actions = $orderModeEnabled
-                    ? Arr::get($all, 'orderMode', [])
-                    : Arr::get($all, 'default', []);
-
+                $orderMode = [
+                    0 => 'Shipments',
+                    1 => 'OrderV1',
+                    2 => 'OrderV2',
+                ][$orderModeVersion] ?? 'Shipments';
                 // Note: Export actions are not filtered here - filtering happens in the frontend
                 // by not rendering export buttons for local pickup orders
-                return $actions;
+                return Arr::get(Pdk::get('allBulkActions'), $orderMode, []);
             }),
 
             ###
