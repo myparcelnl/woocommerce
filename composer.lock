@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8c155a18b1a1bbcdce2daacb5e773b5d",
+    "content-hash": "3ec805d46ff1f5de2c178a7147a91acc",
     "packages": [
         {
             "name": "alcohol/iso4217",
@@ -70,23 +70,23 @@
         },
         {
             "name": "devizzent/cebe-php-openapi",
-            "version": "1.1.5",
+            "version": "1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DEVizzent/cebe-php-openapi.git",
-                "reference": "6e5fcc8810bfe8ad55d1b40764bff6417f485984"
+                "reference": "af42b77f339b6b2920b65bae5df748e47391e11d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DEVizzent/cebe-php-openapi/zipball/6e5fcc8810bfe8ad55d1b40764bff6417f485984",
-                "reference": "6e5fcc8810bfe8ad55d1b40764bff6417f485984",
+                "url": "https://api.github.com/repos/DEVizzent/cebe-php-openapi/zipball/af42b77f339b6b2920b65bae5df748e47391e11d",
+                "reference": "af42b77f339b6b2920b65bae5df748e47391e11d",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "justinrainbow/json-schema": "^5.2 || ^6.0",
                 "php": ">=7.1.0",
-                "symfony/yaml": "^3.4 || ^4 || ^5 || ^6 || ^7 || ^8"
+                "symfony/yaml": "^3.4 || ^4 || ^5 || ^6 || ^7"
             },
             "conflict": {
                 "symfony/yaml": "3.4.0 - 3.4.4 || 4.0.0 - 4.4.17 || 5.0.0 - 5.1.9 || 5.2.0"
@@ -99,6 +99,7 @@
                 "cebe/indent": "*",
                 "mermade/openapi3-examples": "1.0.0",
                 "oai/openapi-specification-3.0": "3.0.3",
+                "oai/openapi-specification-3.1": "3.1.0",
                 "phpstan/phpstan": "^0.12.0",
                 "phpunit/phpunit": "^6.5 || ^7.5 || ^8.5 || ^9.4 || ^11.4"
             },
@@ -141,7 +142,7 @@
                 "issues": "https://github.com/DEVizzent/cebe-php-openapi/issues",
                 "source": "https://github.com/DEVizzent/cebe-php-openapi"
             },
-            "time": "2026-01-23T22:38:14+00:00"
+            "time": "2025-01-16T11:12:34+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -542,16 +543,16 @@
         },
         {
             "name": "justinrainbow/json-schema",
-            "version": "5.3.3",
+            "version": "5.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jsonrainbow/json-schema.git",
-                "reference": "a0b7c13588b102d7d6536823e96d1c88d3dba85e"
+                "reference": "7df70ffaf31d98726801b4bc099e1fbdbe2e5e54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/a0b7c13588b102d7d6536823e96d1c88d3dba85e",
-                "reference": "a0b7c13588b102d7d6536823e96d1c88d3dba85e",
+                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/7df70ffaf31d98726801b4bc099e1fbdbe2e5e54",
+                "reference": "7df70ffaf31d98726801b4bc099e1fbdbe2e5e54",
                 "shasum": ""
             },
             "require": {
@@ -601,9 +602,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jsonrainbow/json-schema/issues",
-                "source": "https://github.com/jsonrainbow/json-schema/tree/5.3.3"
+                "source": "https://github.com/jsonrainbow/json-schema/tree/5.3.4"
             },
-            "time": "2026-03-24T18:47:53+00:00"
+            "time": "2026-05-04T18:54:58+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -900,16 +901,16 @@
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "3.5.0",
+            "version": "3.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/pdk.git",
-                "reference": "5ced437915b2a0d6daec5fe6928243a1a104dc47"
+                "reference": "74bebb92fcbb9ef8618ded126ed124ecdc1b267a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/5ced437915b2a0d6daec5fe6928243a1a104dc47",
-                "reference": "5ced437915b2a0d6daec5fe6928243a1a104dc47",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/74bebb92fcbb9ef8618ded126ed124ecdc1b267a",
+                "reference": "74bebb92fcbb9ef8618ded126ed124ecdc1b267a",
                 "shasum": ""
             },
             "require": {
@@ -959,9 +960,9 @@
             "homepage": "https://myparcel.nl",
             "support": {
                 "issues": "https://github.com/myparcelnl/pdk/issues",
-                "source": "https://github.com/myparcelnl/pdk/tree/v3.5.0"
+                "source": "https://github.com/myparcelnl/pdk/tree/v3.5.1"
             },
-            "time": "2026-04-30T16:38:59+00:00"
+            "time": "2026-05-12T07:51:19+00:00"
         },
         {
             "name": "myparcelnl/sdk",
