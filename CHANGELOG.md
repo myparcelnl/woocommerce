@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.4.1](https://github.com/myparcelnl/woocommerce/compare/v6.4.0...v6.4.1) (2026-05-12)
+
+
+### :bug: Bug Fixes
+
+* enable GLS ([#1611](https://github.com/myparcelnl/woocommerce/issues/1611)) ([2bef100](https://github.com/myparcelnl/woocommerce/commit/2bef100962510b06b923eb218093be341619458a))
+
 ## [6.4.0](https://github.com/myparcelnl/woocommerce/compare/v6.3.0...v6.4.0) (2026-05-05)
 
 
