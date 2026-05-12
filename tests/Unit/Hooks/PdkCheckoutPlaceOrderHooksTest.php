@@ -8,6 +8,8 @@ namespace MyParcelNL\WooCommerce\Hooks;
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\Base\PdkBootstrapper;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
+use MyParcelNL\Sdk\Client\Generated\CoreApi\Model\RefCapabilitiesSharedCarrierV2;
 use MyParcelNL\WooCommerce\Pdk\Hooks\PdkCheckoutPlaceOrderHooks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Order;
@@ -16,7 +18,11 @@ use function MyParcelNL\WooCommerce\Tests\wpFactory;
 
 usesShared(new UsesMockWcPdkInstance());
 
-it('saves delivery options for the blocks checkout', function ($orderId, $deliveryOptions) {
+beforeEach(function () {
+    TestBootstrapper::hasAccount();
+});
+
+it('saves delivery options for the blocks checkout', function ($orderId, $deliveryOptions, $expectedCarrier) {
     $namespace = PdkBootstrapper::PLUGIN_NAMESPACE;
     $GLOBALS['HTTP_RAW_POST_DATA'] = json_encode([
         'extensions' => [
@@ -38,12 +44,8 @@ it('saves delivery options for the blocks checkout', function ($orderId, $delive
     $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
     $pdkOrder        = $orderRepository->get($wcOrder->get_id());
 
-    expect(
-        $pdkOrder->getDeliveryOptions()
-            ->getCarrier()
-            ->getName()
-    )
-        ->toBe($deliveryOptions['carrier'])
+    expect($pdkOrder->getDeliveryOptions()->getCarrier()->carrier)
+        ->toBe($expectedCarrier)
         ->and(
             $pdkOrder->getDeliveryOptions()
                 ->getPackageTypeId()
@@ -56,6 +58,7 @@ it('saves delivery options for the blocks checkout', function ($orderId, $delive
             'carrier'     => 'dhlforyou',
             'packageType' => 2,
         ],
+        'expectedCarrier' => RefCapabilitiesSharedCarrierV2::DHL_FOR_YOU,
     ],
     'postnl order' => [
         'orderId'         => 1,
@@ -63,5 +66,6 @@ it('saves delivery options for the blocks checkout', function ($orderId, $delive
             'carrier'     => 'postnl',
             'packageType' => 1,
         ],
+        'expectedCarrier' => RefCapabilitiesSharedCarrierV2::POSTNL,
     ],
 ]);
