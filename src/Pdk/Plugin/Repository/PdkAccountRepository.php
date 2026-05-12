@@ -7,7 +7,6 @@ namespace MyParcelNL\WooCommerce\Pdk\Plugin\Repository;
 use MyParcelNL\Pdk\Account\Model\Account;
 use MyParcelNL\Pdk\App\Account\Repository\AbstractPdkAccountRepository;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Facade\Platform;
 
 class PdkAccountRepository extends AbstractPdkAccountRepository
 {

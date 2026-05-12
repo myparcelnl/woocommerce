@@ -51,7 +51,7 @@ dataset('orders', [
         return wpFactory(WC_Order::class)->withMeta([
             Pdk::get('metaKeyOrderData') => [
                 'deliveryOptions' => factory(DeliveryOptions::class)
-                    ->withCarrier(Carrier::CARRIER_DHL_FOR_YOU_NAME)
+                    ->withCarrier(Carrier::CARRIER_DHL_FOR_YOU_LEGACY_NAME)
                     ->withDeliveryType(DeliveryOptions::DELIVERY_TYPE_MORNING_NAME)
                     ->withDate('2039-12-31 12:00:00')
                     ->withShipmentOptions([ShipmentOptions::SIGNATURE => TriStateService::ENABLED])
@@ -65,7 +65,7 @@ dataset('orders', [
         return wpFactory(WC_Order::class)->withMeta([
             Pdk::get('metaKeyOrderData') => [
                 'deliveryOptions' => factory(DeliveryOptions::class)
-                    ->withCarrier(Carrier::CARRIER_DHL_FOR_YOU_NAME)
+                    ->withCarrier(Carrier::CARRIER_DHL_FOR_YOU_LEGACY_NAME)
                     ->withDeliveryType(DeliveryOptions::DELIVERY_TYPE_MORNING_NAME)
                     ->withDate('2039-12-31 12:00:00')
                     ->withShipmentOptions(factory(ShipmentOptions::class))

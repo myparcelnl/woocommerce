@@ -10,9 +10,13 @@ use MyParcelNL\Pdk\App\Cart\Model\PdkCart;
 use MyParcelNL\Pdk\App\Order\Model\PdkOrderLine;
 use MyParcelNL\Pdk\App\Order\Model\PdkProduct;
 use MyParcelNL\Pdk\App\ShippingMethod\Model\PdkShippingMethod;
+use MyParcelNL\Pdk\App\Order\Model\ShippingAddress;
 use MyParcelNL\Pdk\Base\Support\Collection;
+use MyParcelNL\Pdk\Carrier\Repository\CarrierCapabilitiesRepository;
+use MyParcelNL\Pdk\Carrier\Service\CapabilitiesValidationService;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
+use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpCache;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Product;
@@ -20,10 +24,43 @@ use WC_Shipping_Flat_Rate;
 use WC_Shipping_Method;
 use WP_Term;
 use function MyParcelNL\Pdk\Tests\factory;
+use function MyParcelNL\Pdk\Tests\mockPdkProperties;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function MyParcelNL\WooCommerce\Tests\wpFactory;
 
 usesShared(new UsesMockWcPdkInstance());
+
+beforeEach(function () {
+    TestBootstrapper::hasAccount();
+
+    // Stub CapabilitiesValidationService so package-type size comparisons in
+    // WcContextService don't depend on a live capabilities API response. The
+    // stub returns deterministic max-weight ordering: mailbox < package_small
+    // < package, matching the expected outcomes in the data sets below.
+    $stub = new class(Pdk::get(CarrierCapabilitiesRepository::class)) extends CapabilitiesValidationService {
+        private const STUB_MAX_WEIGHTS = [
+            'envelope'      => 30,
+            'digital_stamp' => 30,
+            'letter'        => 50,
+            'mailbox'       => 2000,
+            'package_small' => 5000,
+            'package'       => 23000,
+            'pallet'        => 500000,
+        ];
+
+        public function getPackageTypeWeights(string $cc, array $allowedTypes): array
+        {
+            $weights = [];
+            foreach ($allowedTypes as $name => $v2) {
+                $weights[$name] = self::STUB_MAX_WEIGHTS[$name] ?? null;
+            }
+
+            return $weights;
+        }
+    };
+
+    mockPdkProperties([CapabilitiesValidationService::class => $stub]);
+});
 
 function add_term_to_cache(WP_Term $wpTerm, bool $asArray = false): void
 {
@@ -106,6 +143,7 @@ it('creates checkout context', function ($input, $expected) {
 
     $pdkShippingMethod       = factory(PdkShippingMethod::class)
         ->withId('flexible_shipping:456')
+        ->withShippingAddress(factory(ShippingAddress::class)->withCc('NL'))
         ->make();
     $pdkCart->shippingMethod = $pdkShippingMethod;
 

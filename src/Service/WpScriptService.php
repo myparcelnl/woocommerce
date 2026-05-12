@@ -79,8 +79,8 @@ class WpScriptService extends ScriptService
         string $handle,
         string $src,
         array  $deps = [],
-        string $version = null,
-        bool   $inFooter = true
+        ?string $version = null,
+        bool    $inFooter = true
     ): void {
         wp_enqueue_script($handle, $src, $deps, $this->getVersion($version), $inFooter);
     }
@@ -98,8 +98,8 @@ class WpScriptService extends ScriptService
         string $handle,
         string $src,
         array  $deps = [],
-        string $version = null,
-        string $media = 'all'
+        ?string $version = null,
+        string  $media = 'all'
     ): void {
         wp_enqueue_style($handle, $src, $deps, $this->getVersion($version), $media);
     }

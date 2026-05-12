@@ -5,10 +5,12 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
+use MyParcelNL\Pdk\App\Options\Definition\PriorityDeliveryDefinition;
 use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\ProductSettings;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
+use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Product;
@@ -37,10 +39,16 @@ function defaultProductSettings(): array
         ProductSettings::EXCLUDE_PARCEL_LOCKERS   => TriStateService::INHERIT,
         ProductSettings::EXPORT_FRESH_FOOD        => TriStateService::INHERIT,
         ProductSettings::EXPORT_FROZEN            => TriStateService::INHERIT,
+        ProductSettings::EXPORT_COOLED_DELIVERY   => TriStateService::INHERIT,
+        (new PriorityDeliveryDefinition())->getProductSettingsKey() => TriStateService::INHERIT,
     ];
 }
 
 usesShared(new UsesMockWcPdkInstance());
+
+beforeEach(function () {
+    TestBootstrapper::hasAccount();
+});
 
 it('saves product data correctly', function (array $postData, array $productSettings) {
     /** @var PdkProductRepositoryInterface $productRepository */

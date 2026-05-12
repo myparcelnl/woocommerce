@@ -160,27 +160,26 @@
     "pdkOrder": {
         "exported": false,
         "deliveryOptions": {
-            "carrier": {
-                "externalIdentifier": "postnl"
-            },
+            "carrier": null,
             "labelAmount": 1,
             "shipmentOptions": {
-                "insurance": -1,
                 "ageCheck": -1,
                 "return": -1,
                 "hideSender": -1,
+                "insurance": -1,
                 "largeFormat": -1,
                 "onlyRecipient": -1,
                 "priorityDelivery": -1,
-                "receiptCode": -1,
                 "sameDayDelivery": -1,
+                "saturdayDelivery": -1,
                 "signature": -1,
                 "tracked": -1,
+                "receiptCode": -1,
                 "collect": -1,
                 "excludeParcelLockers": -1,
                 "freshFood": -1,
                 "frozen": -1,
-                "saturdayDelivery": -1
+                "cooledDelivery": -1
             },
             "deliveryType": "standard",
             "packageType": "package"
@@ -195,35 +194,32 @@
             "referenceIdentifier": "1520",
             "externalIdentifier": "3SMYPA1234567",
             "barcode": "3SMYPA1234567",
-            "carrier": {
-                "externalIdentifier": "postnl"
-            },
+            "carrier": "POSTNL",
             "delayed": false,
             "delivered": false,
             "deliveryOptions": {
                 "date": "2077-10-23 09:47:51",
-                "carrier": {
-                    "externalIdentifier": "postnl"
-                },
+                "carrier": "POSTNL",
                 "labelAmount": 1,
                 "shipmentOptions": {
-                    "labelDescription": "1520",
-                    "insurance": 1,
                     "ageCheck": -1,
                     "return": -1,
                     "hideSender": -1,
+                    "insurance": 1,
                     "largeFormat": 0,
                     "onlyRecipient": 1,
                     "priorityDelivery": -1,
-                    "receiptCode": -1,
                     "sameDayDelivery": -1,
+                    "saturdayDelivery": -1,
                     "signature": 1,
                     "tracked": -1,
+                    "receiptCode": -1,
                     "collect": -1,
                     "excludeParcelLockers": -1,
                     "freshFood": -1,
                     "frozen": -1,
-                    "saturdayDelivery": -1
+                    "cooledDelivery": -1,
+                    "labelDescription": "1520"
                 },
                 "deliveryType": "standard",
                 "packageType": "package"
@@ -249,35 +245,32 @@
             "shopId": 21523,
             "referenceIdentifier": "1520",
             "barcode": "3SMYPA1234567",
-            "carrier": {
-                "externalIdentifier": "postnl"
-            },
+            "carrier": "POSTNL",
             "delayed": false,
             "delivered": false,
             "deliveryOptions": {
                 "date": "2077-10-23 09:47:51",
-                "carrier": {
-                    "externalIdentifier": "postnl"
-                },
+                "carrier": "POSTNL",
                 "labelAmount": 1,
                 "shipmentOptions": {
-                    "labelDescription": "1520",
-                    "insurance": 1,
                     "ageCheck": -1,
                     "return": -1,
                     "hideSender": -1,
+                    "insurance": 1,
                     "largeFormat": 0,
                     "onlyRecipient": 1,
                     "priorityDelivery": -1,
-                    "receiptCode": -1,
                     "sameDayDelivery": -1,
+                    "saturdayDelivery": -1,
                     "signature": 1,
                     "tracked": -1,
+                    "receiptCode": -1,
                     "collect": -1,
                     "excludeParcelLockers": -1,
                     "freshFood": -1,
                     "frozen": -1,
-                    "saturdayDelivery": -1
+                    "cooledDelivery": -1,
+                    "labelDescription": "1520"
                 },
                 "deliveryType": "standard",
                 "packageType": "package"
