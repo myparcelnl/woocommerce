@@ -14,27 +14,26 @@
         "apiIdentifier": "f146efee-a7e2-47cc-9369-e1b65a37aff9",
         "exported": true,
         "deliveryOptions": {
-            "carrier": {
-                "externalIdentifier": "postnl"
-            },
+            "carrier": null,
             "labelAmount": 1,
             "shipmentOptions": {
-                "insurance": -1,
                 "ageCheck": -1,
                 "return": -1,
                 "hideSender": -1,
+                "insurance": -1,
                 "largeFormat": -1,
                 "onlyRecipient": -1,
                 "priorityDelivery": -1,
-                "receiptCode": -1,
                 "sameDayDelivery": -1,
+                "saturdayDelivery": -1,
                 "signature": -1,
                 "tracked": -1,
+                "receiptCode": -1,
                 "collect": -1,
                 "excludeParcelLockers": -1,
                 "freshFood": -1,
                 "frozen": -1,
-                "saturdayDelivery": -1
+                "cooledDelivery": -1
             },
             "deliveryType": "standard",
             "packageType": "package"

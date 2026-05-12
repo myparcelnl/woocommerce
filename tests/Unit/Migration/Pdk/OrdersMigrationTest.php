@@ -9,6 +9,7 @@ use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
 use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
@@ -18,6 +19,10 @@ use function MyParcelNL\WooCommerce\Tests\createWcOrder;
 use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 
 usesShared(new UsesMockWcPdkInstance());
+
+beforeEach(function () {
+    TestBootstrapper::hasAccount();
+});
 
 it('schedules order migration in chunks', function () {
     /** @var \MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks $tasks */

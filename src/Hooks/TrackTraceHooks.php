@@ -108,7 +108,7 @@ final class TrackTraceHooks implements WordPressHooksInterface
         $date            = $deliveryOptions->getDateAsString();
 
         $rows = [
-            [Language::translate('carrier'), Language::translate("carrier_{$deliveryOptions->carrier->name}")],
+            [Language::translate('carrier'), Language::translate("carrier_{$deliveryOptions->carrier->carrier}")],
             [Language::translate('package_type'), Language::translate("package_type_$deliveryOptions->packageType")],
         ];
 

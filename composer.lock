@@ -947,7 +947,61 @@
                     "MyParcelNL\\Pdk\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "MyParcelNL\\Pdk\\": [
+                        "tests/Unit/",
+                        "tests/factories"
+                    ],
+                    "MyParcelNL\\Pdk\\Console\\": "private/",
+                    "MyParcelNL\\Pdk\\Tests\\": "tests/"
+                },
+                "files": [
+                    "tests/functions.php",
+                    "tests/usesShared.php"
+                ]
+            },
+            "scripts": {
+                "analyse": [
+                    "php -dmemory_limit=-1 vendor/bin/phpstan analyse"
+                ],
+                "analyse:generate": [
+                    "composer run analyse -- --generate-baseline phpstan-baseline.php --allow-empty-baseline"
+                ],
+                "analyze": [
+                    "composer run analyse"
+                ],
+                "analyze:generate": [
+                    "composer run analyse:generate"
+                ],
+                "console": [
+                    "php bin/console"
+                ],
+                "post-autoload-dump": [
+                    "composer console generate:ide-helper"
+                ],
+                "quality": [
+                    "rector process --dry-run"
+                ],
+                "quality:fix": [
+                    "rector process"
+                ],
+                "test": [
+                    "composer run test:unit && composer run test:integration"
+                ],
+                "test:integration": [
+                    "behat"
+                ],
+                "test:unit": [
+                    "php -d auto_prepend_file=tests/bootstrap.php vendor/bin/pest"
+                ],
+                "test:unit:coverage": [
+                    "php -dmemory_limit=512M -dpcov.enabled=1 vendor/bin/pest --coverage-clover clover.xml"
+                ],
+                "test:unit:snapshot": [
+                    "pest -d --update-snapshots"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -6582,15 +6636,15 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "beta",
+    "minimum-stability": "dev",
     "stability-flags": {
-        "myparcelnl/sdk": 10
+        "myparcelnl/pdk": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">= 7.4"
     },
-    "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
 }

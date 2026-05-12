@@ -8,7 +8,7 @@
     "init": [
         "MyParcelNLWooCommerce::initialize"
     ],
-    "wp_loaded": [
+    "woocommerce_init": [
         "MyParcelNLWooCommerce::upgrade"
     ]
 }

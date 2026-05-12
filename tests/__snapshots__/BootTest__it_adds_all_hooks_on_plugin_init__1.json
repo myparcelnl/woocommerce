@@ -6,10 +6,8 @@
         "MyParcelNLWooCommerce::uninstall"
     ],
     "init": [],
-    "wp_loaded": [
-        "MyParcelNLWooCommerce::upgrade"
-    ],
     "woocommerce_init": [
+        "MyParcelNLWooCommerce::upgrade",
         "MyParcelNLWooCommerce::onWoocommerceInit"
     ],
     "woocommerce_blocks_checkout_block_registration": [
@@ -107,6 +105,12 @@
     ],
     "myparcelcom_migrate_5_0_0_product_settings": [
         "MyParcelNL\\WooCommerce\\Migration\\Pdk\\ProductSettingsMigration::migrateProductSettings"
+    ],
+    "myparcelcom_migrate_6_1_0_orders": [
+        "MyParcelNL\\WooCommerce\\Migration\\Migration6_1_0::migrateOrderChunk"
+    ],
+    "myparcelcom_migrate_6_1_0_shipments": [
+        "MyParcelNL\\WooCommerce\\Migration\\Migration6_1_0::migrateShipmentChunk"
     ],
     "woocommerce_get_country_locale": [
         "MyParcelNL\\WooCommerce\\Hooks\\SeparateAddressFieldsHooks::extendLocaleWithSeparateAddressFields",

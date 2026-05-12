@@ -9,12 +9,17 @@ namespace MyParcelNL\WooCommerce\Adapter;
 use MyParcelNL\Pdk\Carrier\Model\Carrier;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
+use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 
 use function MyParcelNL\Pdk\Tests\factory;
 use function MyParcelNL\Pdk\Tests\usesShared;
 
 usesShared(new UsesMockWcPdkInstance());
+
+beforeEach(function () {
+    TestBootstrapper::hasAccount();
+});
 
 it('creates legacy options', function (DeliveryOptions $options, array $expected) {
     /** @var LegacyDeliveryOptionsAdapter $adapter */

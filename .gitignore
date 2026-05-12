@@ -44,3 +44,5 @@ yarn-error.log
 !.idea/remote-mappings.xml
 !.idea/vcs.xml
 !.idea/workspace.xml
+
+.claude/settings.local.json

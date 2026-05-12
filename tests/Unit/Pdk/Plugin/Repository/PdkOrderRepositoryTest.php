@@ -16,6 +16,7 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\OrderSettings;
 use MyParcelNL\Pdk\Tests\Api\Response\ExampleGetShipmentsResponse;
 use MyParcelNL\Pdk\Tests\Bootstrap\MockApi;
+use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use Psr\Log\LoggerInterface;
 use WC_Order;
@@ -26,6 +27,10 @@ use function MyParcelNL\WooCommerce\Tests\wpFactory;
 use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 
 usesShared(new UsesMockWcPdkInstance());
+
+beforeEach(function () {
+    TestBootstrapper::hasAccount();
+});
 
 it('creates a valid pdk order', function (WC_Order_Factory $factory) {
     /** @var \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $orderRepository */
