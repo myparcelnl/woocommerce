@@ -5,12 +5,22 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
+use MyParcelNL\Pdk\App\Options\Definition\AgeCheckDefinition;
+use MyParcelNL\Pdk\App\Options\Definition\CooledDeliveryDefinition;
+use MyParcelNL\Pdk\App\Options\Definition\DirectReturnDefinition;
+use MyParcelNL\Pdk\App\Options\Definition\FreshFoodDefinition;
+use MyParcelNL\Pdk\App\Options\Definition\FrozenDefinition;
+use MyParcelNL\Pdk\App\Options\Definition\HideSenderDefinition;
+use MyParcelNL\Pdk\App\Options\Definition\InsuranceDefinition;
+use MyParcelNL\Pdk\App\Options\Definition\LargeFormatDefinition;
+use MyParcelNL\Pdk\App\Options\Definition\OnlyRecipientDefinition;
 use MyParcelNL\Pdk\App\Options\Definition\PriorityDeliveryDefinition;
+use MyParcelNL\Pdk\App\Options\Definition\SignatureDefinition;
+use MyParcelNL\Pdk\App\Options\Definition\TrackedDefinition;
 use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\ProductSettings;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
-use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Product;
@@ -20,35 +30,31 @@ use function MyParcelNL\WooCommerce\Tests\wpFactory;
 function defaultProductSettings(): array
 {
     return [
-        'id'                                      => ProductSettings::ID,
-        ProductSettings::COUNTRY_OF_ORIGIN        => TriStateService::INHERIT,
-        ProductSettings::CUSTOMS_CODE             => TriStateService::INHERIT,
-        ProductSettings::DISABLE_DELIVERY_OPTIONS => TriStateService::INHERIT,
-        ProductSettings::DROP_OFF_DELAY           => 0,
-        ProductSettings::EXPORT_AGE_CHECK         => TriStateService::INHERIT,
-        ProductSettings::EXPORT_HIDE_SENDER       => TriStateService::INHERIT,
-        ProductSettings::EXPORT_INSURANCE         => TriStateService::INHERIT,
-        ProductSettings::EXPORT_LARGE_FORMAT      => TriStateService::INHERIT,
-        ProductSettings::EXPORT_ONLY_RECIPIENT    => TriStateService::INHERIT,
-        ProductSettings::EXPORT_RETURN            => TriStateService::INHERIT,
-        ProductSettings::EXPORT_SIGNATURE         => TriStateService::INHERIT,
-        ProductSettings::EXPORT_TRACKED           => TriStateService::INHERIT,
-        ProductSettings::FIT_IN_DIGITAL_STAMP     => TriStateService::INHERIT,
-        ProductSettings::FIT_IN_MAILBOX           => TriStateService::INHERIT,
-        ProductSettings::PACKAGE_TYPE             => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
-        ProductSettings::EXCLUDE_PARCEL_LOCKERS   => TriStateService::INHERIT,
-        ProductSettings::EXPORT_FRESH_FOOD        => TriStateService::INHERIT,
-        ProductSettings::EXPORT_FROZEN            => TriStateService::INHERIT,
-        ProductSettings::EXPORT_COOLED_DELIVERY   => TriStateService::INHERIT,
+        'id'                                       => ProductSettings::ID,
+        ProductSettings::COUNTRY_OF_ORIGIN         => TriStateService::INHERIT,
+        ProductSettings::CUSTOMS_CODE              => TriStateService::INHERIT,
+        ProductSettings::DISABLE_DELIVERY_OPTIONS  => TriStateService::INHERIT,
+        ProductSettings::DROP_OFF_DELAY            => 0,
+        (new AgeCheckDefinition())->getProductSettingsKey()      => TriStateService::INHERIT,
+        (new HideSenderDefinition())->getProductSettingsKey()    => TriStateService::INHERIT,
+        (new InsuranceDefinition())->getProductSettingsKey()     => TriStateService::INHERIT,
+        (new LargeFormatDefinition())->getProductSettingsKey()   => TriStateService::INHERIT,
+        (new OnlyRecipientDefinition())->getProductSettingsKey() => TriStateService::INHERIT,
+        (new DirectReturnDefinition())->getProductSettingsKey()  => TriStateService::INHERIT,
+        (new SignatureDefinition())->getProductSettingsKey()     => TriStateService::INHERIT,
+        (new TrackedDefinition())->getProductSettingsKey()       => TriStateService::INHERIT,
+        ProductSettings::FIT_IN_DIGITAL_STAMP      => TriStateService::INHERIT,
+        ProductSettings::FIT_IN_MAILBOX            => TriStateService::INHERIT,
+        ProductSettings::PACKAGE_TYPE              => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
+        ProductSettings::EXCLUDE_PARCEL_LOCKERS    => TriStateService::INHERIT,
+        (new FreshFoodDefinition())->getProductSettingsKey()        => TriStateService::INHERIT,
+        (new FrozenDefinition())->getProductSettingsKey()           => TriStateService::INHERIT,
         (new PriorityDeliveryDefinition())->getProductSettingsKey() => TriStateService::INHERIT,
+        (new CooledDeliveryDefinition())->getProductSettingsKey()   => TriStateService::INHERIT,
     ];
 }
 
 usesShared(new UsesMockWcPdkInstance());
-
-beforeEach(function () {
-    TestBootstrapper::hasAccount();
-});
 
 it('saves product data correctly', function (array $postData, array $productSettings) {
     /** @var PdkProductRepositoryInterface $productRepository */
@@ -92,12 +98,12 @@ it('saves product data correctly', function (array $postData, array $productSett
             'post_ID'                => '7000',
         ],
         'productSettings' => array_replace(defaultProductSettings(), [
-            ProductSettings::COUNTRY_OF_ORIGIN => 'DE',
-            ProductSettings::CUSTOMS_CODE      => '1234',
-            ProductSettings::DROP_OFF_DELAY    => 0,
-            ProductSettings::EXPORT_INSURANCE  => TriStateService::ENABLED,
-            ProductSettings::FIT_IN_MAILBOX    => 10,
-            ProductSettings::PACKAGE_TYPE      => DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME,
+            ProductSettings::COUNTRY_OF_ORIGIN                   => 'DE',
+            ProductSettings::CUSTOMS_CODE                        => '1234',
+            ProductSettings::DROP_OFF_DELAY                      => 0,
+            (new InsuranceDefinition())->getProductSettingsKey() => TriStateService::ENABLED,
+            ProductSettings::FIT_IN_MAILBOX                      => 10,
+            ProductSettings::PACKAGE_TYPE                        => DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME,
         ]),
     ],
     'change all settings' => [
@@ -126,18 +132,18 @@ it('saves product data correctly', function (array $postData, array $productSett
             'post_ID'                     => '7000',
         ],
         'productSettings' => array_replace(defaultProductSettings(), [
-            ProductSettings::COUNTRY_OF_ORIGIN        => 'BE',
-            ProductSettings::CUSTOMS_CODE             => '9422',
-            ProductSettings::DISABLE_DELIVERY_OPTIONS => TriStateService::DISABLED,
-            ProductSettings::DROP_OFF_DELAY           => 3,
-            ProductSettings::EXPORT_AGE_CHECK         => TriStateService::ENABLED,
-            ProductSettings::EXPORT_INSURANCE         => TriStateService::DISABLED,
-            ProductSettings::EXPORT_LARGE_FORMAT      => TriStateService::ENABLED,
-            ProductSettings::EXPORT_ONLY_RECIPIENT    => TriStateService::DISABLED,
-            ProductSettings::EXPORT_RETURN            => TriStateService::ENABLED,
-            ProductSettings::EXPORT_SIGNATURE         => TriStateService::DISABLED,
-            ProductSettings::FIT_IN_MAILBOX           => 12,
-            ProductSettings::PACKAGE_TYPE             => DeliveryOptions::PACKAGE_TYPE_DIGITAL_STAMP_NAME,
+            ProductSettings::COUNTRY_OF_ORIGIN                       => 'BE',
+            ProductSettings::CUSTOMS_CODE                            => '9422',
+            ProductSettings::DISABLE_DELIVERY_OPTIONS                => TriStateService::DISABLED,
+            ProductSettings::DROP_OFF_DELAY                          => 3,
+            (new AgeCheckDefinition())->getProductSettingsKey()      => TriStateService::ENABLED,
+            (new InsuranceDefinition())->getProductSettingsKey()     => TriStateService::DISABLED,
+            (new LargeFormatDefinition())->getProductSettingsKey()   => TriStateService::ENABLED,
+            (new OnlyRecipientDefinition())->getProductSettingsKey() => TriStateService::DISABLED,
+            (new DirectReturnDefinition())->getProductSettingsKey()  => TriStateService::ENABLED,
+            (new SignatureDefinition())->getProductSettingsKey()     => TriStateService::DISABLED,
+            ProductSettings::FIT_IN_MAILBOX                          => 12,
+            ProductSettings::PACKAGE_TYPE                            => DeliveryOptions::PACKAGE_TYPE_DIGITAL_STAMP_NAME,
         ]),
     ],
 ]);
