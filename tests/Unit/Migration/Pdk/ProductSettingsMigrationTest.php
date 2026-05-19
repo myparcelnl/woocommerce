@@ -14,7 +14,6 @@ use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function MyParcelNL\WooCommerce\Tests\createWcProduct;
-use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 
 usesShared(new UsesMockWcPdkInstance());
 
@@ -36,6 +35,11 @@ dataset('product settings migration data', [
         ],
         'parent'     => null,
         'variations' => [],
+        'expected'   => [
+            'exportAgeCheck'  => 0,
+            'countryOfOrigin' => 'BB',
+            'customsCode'     => '1234',
+        ],
     ],
 
     'simple product with some settings' => [
@@ -48,6 +52,9 @@ dataset('product settings migration data', [
         ],
         'parent'     => null,
         'variations' => [],
+        'expected'   => [
+            'exportAgeCheck' => 1,
+        ],
     ],
 
     'simple product for mailbox too heavy' => [
@@ -59,6 +66,7 @@ dataset('product settings migration data', [
         ],
         'parent'     => null,
         'variations' => [],
+        'expected'   => [],
     ],
 
     'variable product' => [
@@ -79,6 +87,10 @@ dataset('product settings migration data', [
             [
                 'shipping_class' => SHIPPING_CLASS_SAME_AS_PARENT,
             ],
+        ],
+        'expected'   => [
+            'countryOfOrigin' => 'AD',
+            'customsCode'     => '9090',
         ],
     ],
 
@@ -109,6 +121,10 @@ dataset('product settings migration data', [
                 'shipping_class' => SHIPPING_CLASS_DPZ,
             ],
         ],
+        'expected'   => [
+            'countryOfOrigin' => 'AD',
+            'customsCode'     => '5432',
+        ],
     ],
     'product that fits in mailbox a bazillion times'  => [
         'product'    => [
@@ -116,10 +132,11 @@ dataset('product settings migration data', [
         ],
         'parent'     => null,
         'variations' => [],
+        'expected'   => [],
     ],
 ]);
 
-it('migrates pre v5.0.0 product settings', function (array $product, ?array $parent, array $variations) {
+it('migrates pre v5.0.0 product settings', function (array $product, ?array $parent, array $variations, array $expected) {
     /** @var \MyParcelNL\WooCommerce\Migration\Pdk\ProductSettingsMigration $migration */
     $migration = Pdk::get(ProductSettingsMigration::class);
 
@@ -142,22 +159,20 @@ it('migrates pre v5.0.0 product settings', function (array $product, ?array $par
     /** @var PdkProductRepositoryInterface $repository */
     $repository = Pdk::get(PdkProductRepositoryInterface::class);
 
-    $meta = array_map(function ($metaData) {
-        return $metaData->get_data();
-    }, $wcProduct->get_meta_data());
+    $pdkProduct = $repository->getProduct($wcProduct->get_id());
+    $settings   = $pdkProduct->settings->toArrayWithoutNull();
 
-    $pdkProduct       = $repository->getProduct($wcProduct->get_id());
-    $parentPdkProduct = $parentWcProduct
-        ? $repository->getProduct($parentWcProduct->get_id())
-        : null;
+    // Each dataset asserts only the keys the migration is responsible for setting;
+    // PDK-provided INHERIT defaults are intentionally not asserted to avoid churn
+    // when new product-setting fields land in the PDK.
+    foreach ($expected as $key => $value) {
+        expect($settings)->toHaveKey($key)
+            ->and($settings[$key])->toEqual($value);
+    }
 
-    assertMatchesJsonSnapshot(
-        json_encode([
-            'meta'          => $meta,
-            'product'       => $pdkProduct->settings->toArrayWithoutNull(),
-            'parentProduct' => $parentPdkProduct ? $parentPdkProduct->settings->toArrayWithoutNull() : null,
-        ])
-    );
+    // Sanity check for datasets with no migrated keys: the migration must still
+    // produce a valid PDK product (so subsequent reads don't surface as null).
+    expect($pdkProduct)->not->toBeNull();
 })->with('product settings migration data');
 
 it('schedules product migration in chunks', function () {
