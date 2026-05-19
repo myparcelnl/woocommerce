@@ -1,13 +1,6 @@
 {
   "name": "myparcelnl/woocommerce",
   "version": "6.3.0",
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/myparcelnl/pdk",
-      "no-api": true
-    }
-  ],
   "require": {
     "myparcelnl/sdk": "^11.0.0-beta.4",
     "myparcelnl/pdk": "dev-v4-capabilities",
