@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk;
 
-use MyParcelNL\Pdk\Account\Contract\AccountFeaturesServiceInterface;
 use MyParcelNL\Pdk\Base\PdkBootstrapper;
-use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
@@ -106,41 +104,9 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'orderListColumnTitle'    => value($title),
             'orderListPreviousColumn' => value('shipping_address'),
 
-            /**
-             * Bulk order actions.
-             *
-             * @example Pdk::get('bulkActions') // gets the bulk actions for the current order mode.
-             */
-
-            'allBulkActions' => value([
-                'Shipments'   => [
-                    'action_print',
-                    'action_export_print',
-                    'action_export',
-                    'action_edit',
-                ],
-                'OrderV1' => [
-                    'action_edit',
-                    'action_export',
-                ],
-                'OrderV2' => [
-                    'action_edit',
-                ],
-            ]),
-
-            'bulkActions' => factory(static function (): array {
-                $orderModeVersion = (int) Pdk::get(AccountFeaturesServiceInterface::class)
-                    ->getOrderModeVersion();
-
-                $orderMode = [
-                    0 => 'Shipments',
-                    1 => 'OrderV1',
-                    2 => 'OrderV2',
-                ][$orderModeVersion] ?? 'Shipments';
-                // Note: Export actions are not filtered here - filtering happens in the frontend
-                // by not rendering export buttons for local pickup orders
-                return Arr::get(Pdk::get('allBulkActions'), $orderMode, []);
-            }),
+            // Bulk order actions: PDK now ships the same Shipments/OrderV1/OrderV2 sets and
+            // an effective-mode-driven factory, so the WooCommerce plugin no longer needs to
+            // override either `allBulkActions` or `bulkActions` here. See pdk-default.php.
 
             ###
             # Single order page
