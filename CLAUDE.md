@@ -73,7 +73,7 @@ For long-running migrations, use **chunked cron jobs**:
 
 1. `CheckoutScriptHooks::loadDeliveryOptionsScripts()` checks `shouldShowDeliveryOptions()` (requires non-virtual products + setting enabled)
 2. `WcFrontendRenderService::renderDeliveryOptions()` creates a context bag and renders `<div id="mypa-delivery-options-wrapper" data-context="...">`
-3. JS (`checkout-core.iife.js`) finds the wrapper, parses context, initializes the delivery options widget
+3. JS (`checkout-core.iife.js`) finds the wrapper, parses context, initializes the delivery options widget. `views/frontend/checkout-delivery-options/src/utils/init.ts` wires the capabilities-proxy URL the V7 widget needs to resolve carriers/options at runtime
 4. User selections are posted as `myparcelcom_checkout_data` (JSON with legacy carrier names)
 5. `CartFeesHooks` processes this on AJAX cart updates; `PdkCheckoutPlaceOrderHooks` saves on order placement
 6. Both create `new DeliveryOptions(json_decode(...))` — the constructor normalizes legacy carrier names
