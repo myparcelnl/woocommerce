@@ -735,6 +735,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/helper-string-parser@npm:^7.29.7":
+  version: 7.29.7
+  resolution: "@babel/helper-string-parser@npm:7.29.7"
+  checksum: 10c0/194bc0f1716e396d5ffde56ad6119745fb9557662c98611590e5e454906783a4ccb21ce93056b8eb69a4909044834e45d96e50ac695bbe9e3221648fe033c06c
+  languageName: node
+  linkType: hard
+
 "@babel/helper-validator-identifier@npm:^7.25.7":
   version: 7.25.7
   resolution: "@babel/helper-validator-identifier@npm:7.25.7"
@@ -753,6 +760,13 @@ __metadata:
   version: 7.28.5
   resolution: "@babel/helper-validator-identifier@npm:7.28.5"
   checksum: 10c0/42aaebed91f739a41f3d80b72752d1f95fd7c72394e8e4bd7cdd88817e0774d80a432451bcba17c2c642c257c483bf1d409dd4548883429ea9493a3bc4ab0847
+  languageName: node
+  linkType: hard
+
+"@babel/helper-validator-identifier@npm:^7.29.7":
+  version: 7.29.7
+  resolution: "@babel/helper-validator-identifier@npm:7.29.7"
+  checksum: 10c0/4795354e7ae0dcafa72de1cd04ec51252dc1498517170beaf019e03effc5b7bf13c6b21a3949a77e07b8125be7f106ed1131350d8ebd4566ae874094a726d62b
   languageName: node
   linkType: hard
 
@@ -807,17 +821,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/parser@npm:^7.24.7":
-  version: 7.29.0
-  resolution: "@babel/parser@npm:7.29.0"
-  dependencies:
-    "@babel/types": "npm:^7.29.0"
-  bin:
-    parser: ./bin/babel-parser.js
-  checksum: 10c0/333b2aa761264b91577a74bee86141ef733f9f9f6d4fc52548e4847dc35dfbf821f58c46832c637bfa761a6d9909d6a68f7d1ed59e17e4ffbb958dc510c17b62
-  languageName: node
-  linkType: hard
-
 "@babel/parser@npm:^7.27.2":
   version: 7.27.2
   resolution: "@babel/parser@npm:7.27.2"
@@ -848,6 +851,17 @@ __metadata:
   bin:
     parser: ./bin/babel-parser.js
   checksum: 10c0/e5a4e69e3ac7acdde995f37cf299a68458cfe7009dff66bd0962fd04920bef287201169006af365af479c08ff216bfefbb595e331f87f6ae7283858aebbc3317
+  languageName: node
+  linkType: hard
+
+"@babel/parser@npm:^7.29.3":
+  version: 7.29.7
+  resolution: "@babel/parser@npm:7.29.7"
+  dependencies:
+    "@babel/types": "npm:^7.29.7"
+  bin:
+    parser: ./bin/babel-parser.js
+  checksum: 10c0/65133038f80b54a714d6027cb77cee3f9a6b5c4c6842ce674301e13947cbcbfa8055e63acaf1b84c085d34226a14425b2c2b97b829e0e226d2e8f1299942a51d
   languageName: node
   linkType: hard
 
@@ -2175,6 +2189,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/types@npm:^7.29.7":
+  version: 7.29.7
+  resolution: "@babel/types@npm:7.29.7"
+  dependencies:
+    "@babel/helper-string-parser": "npm:^7.29.7"
+    "@babel/helper-validator-identifier": "npm:^7.29.7"
+  checksum: 10c0/b6623994c69717fa27294f5fa46d59140338e2d86c6c1c13085c84ef7d53086ee357fbf4fe9abe3dd3da75734dc77c4c0df2f90fb29e667558bb3b3fb705e88f
+  languageName: node
+  linkType: hard
+
 "@bcoe/v8-coverage@npm:^0.2.3":
   version: 0.2.3
   resolution: "@bcoe/v8-coverage@npm:0.2.3"
@@ -3418,6 +3442,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@myparcel-dev/constants@npm:^2.10.0":
+  version: 2.10.0
+  resolution: "@myparcel-dev/constants@npm:2.10.0"
+  dependencies:
+    "@myparcel-dev/ts-utils": "npm:^1.15.0"
+  checksum: 10c0/b7f7907a694a6deb5458b25f2489b3c54c3fc7e640328f18b1f31e908006d57e514aa3bcde4ccd63bed0a5aab0813df0dded6251f4b1319f33a15d6d89006cfb
+  languageName: node
+  linkType: hard
+
 "@myparcel-dev/constants@npm:^2.7.0, @myparcel-dev/constants@npm:^2.9.0":
   version: 2.9.0
   resolution: "@myparcel-dev/constants@npm:2.9.0"
@@ -3443,6 +3476,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@myparcel-dev/delivery-options@npm:^7.0.0":
+  version: 7.4.0
+  resolution: "@myparcel-dev/delivery-options@npm:7.4.0"
+  dependencies:
+    "@myparcel-dev/constants": "npm:^2.10.0"
+    "@myparcel-dev/do-shared": "npm:^7.4.0"
+    "@myparcel-dev/sdk": "npm:^5.0.0"
+    "@myparcel-dev/ts-utils": "npm:^1.15.0"
+    "@vueuse/core": "npm:^10.0.0"
+    leaflet: "npm:^1.9.4"
+    radash: "npm:^12.0.0"
+    vue: "npm:^3.5.26"
+  checksum: 10c0/6e99d84d1ee3a1d9858f474236098a6d70a93d720eb4b4a163ce11fb8b12bfdec99dace1e5f9ebf78f623d9367b8dee9e434cf2c5651521640e9e70abb84c902
+  languageName: node
+  linkType: hard
+
 "@myparcel-dev/do-shared@npm:^6.25.0":
   version: 6.25.0
   resolution: "@myparcel-dev/do-shared@npm:6.25.0"
@@ -3458,6 +3507,24 @@ __metadata:
     vue: "npm:^3.5.26"
     vue-tsc: "npm:^3.2.2"
   checksum: 10c0/c87b42eabf563930727cf0ecec251ed15331f30d58105eada807f70094cfe12a13546162db6ea0f6875bec847c263747f1b622117f292b564fb164b5af1b3a03
+  languageName: node
+  linkType: hard
+
+"@myparcel-dev/do-shared@npm:^7.4.0":
+  version: 7.4.0
+  resolution: "@myparcel-dev/do-shared@npm:7.4.0"
+  dependencies:
+    "@myparcel-dev/constants": "npm:^2.10.0"
+    "@myparcel-dev/do-shared": "npm:^7.4.0"
+    "@myparcel-dev/sdk": "npm:^5.0.0"
+    "@myparcel-dev/ts-utils": "npm:^1.15.0"
+    "@vueuse/core": "npm:^10.6.0"
+    date-fns: "npm:^3.0.0"
+    pinia: "npm:^2.1.7"
+    radash: "npm:^12.0.0"
+    vue: "npm:^3.5.26"
+    vue-tsc: "npm:^3.2.2"
+  checksum: 10c0/dd0f6a7d534ea6eff8b831f593ba953fff6050e95a2909b0f08bb4a484328b00ffd258d56ba9ace1dd7d070a7a2c6c47d5f493d6b42dece58c57a52095dcb61d
   languageName: node
   linkType: hard
 
@@ -3622,11 +3689,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-admin-component-tests@npm:^1.14.1":
-  version: 1.14.1
-  resolution: "@myparcel-dev/pdk-admin-component-tests@npm:1.14.1"
+"@myparcel-dev/pdk-admin-component-tests@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@myparcel-dev/pdk-admin-component-tests@npm:2.0.0"
   dependencies:
-    "@myparcel-dev/pdk-admin": "npm:^1.14.1"
+    "@myparcel-dev/pdk-admin": "npm:^2.0.0"
     "@pinia/testing": "npm:>= 0.1.0 < 1"
     "@vitest/coverage-v8": "npm:^2.1.3"
     "@vue/test-utils": "npm:^2.0.0"
@@ -3634,43 +3701,43 @@ __metadata:
     pinia: "npm:^2.0.0"
     vitest: "npm:^2.1.3"
   peerDependencies:
-    vue: 3.4.31
-  checksum: 10c0/2069d56f2e600ed99e48405dc2e8328b7a0515b795f4d53a2261b5eb5303b2b8b1327ba4cf5769c4f9830ea1913584df9ba57b9e485d37f47f6cb31a8461a337
+    vue: 3.5.35
+  checksum: 10c0/e108369066bd8bd4710e95b54f3d81d286ca812a8c84c65f2a507ebc44739a08f69367773e4252ad84e1870316de971bb51f9be7d2a192aec4b36a8f8db4d554
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-admin-preset-dashicons@npm:^1.14.1":
-  version: 1.14.1
-  resolution: "@myparcel-dev/pdk-admin-preset-dashicons@npm:1.14.1"
+"@myparcel-dev/pdk-admin-preset-dashicons@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@myparcel-dev/pdk-admin-preset-dashicons@npm:2.0.0"
   dependencies:
-    "@myparcel-dev/pdk-admin": "npm:^1.14.1"
+    "@myparcel-dev/pdk-admin": "npm:^2.0.0"
     vite: "npm:^5.4.10"
-    vue: "npm:3.4.31"
+    vue: "npm:3.5.35"
     vue-tsc: "npm:^2.0.0"
-  checksum: 10c0/5650d905183895a4286ef9b77ae1c303773c9681c4e6bbb9ab8c9acbff2fc280ec455671431d78bbbadee64221b9fe14bc78d61394cf011870ffdb4597726dd4
+  checksum: 10c0/40b144f6ffccc7e922d3d54156b49cc4dfd2e0f28551d2ee7ccb10ede3f970c0b1ad746a73c3fe5847b267db87edaa953f8e5379da90319405e6798c98fa13a3
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-admin-preset-default@npm:^1.14.1":
-  version: 1.14.1
-  resolution: "@myparcel-dev/pdk-admin-preset-default@npm:1.14.1"
+"@myparcel-dev/pdk-admin-preset-default@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@myparcel-dev/pdk-admin-preset-default@npm:2.0.0"
   dependencies:
-    "@myparcel-dev/pdk-admin": "npm:^1.14.1"
+    "@myparcel-dev/pdk-admin": "npm:^2.0.0"
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
     "@vuepic/vue-datepicker": "npm:^11.0.2"
     "@vueuse/core": "npm:^10.0.0"
-    vue: "npm:3.4.31"
-  checksum: 10c0/770a23e1a66942c8124627eb66759851061697e1dd3466a0c7fd2e596234a2fdea206dc61e85ef344abb456204722307382a11c2da9f59dcef84ca48b5d4f577
+    vue: "npm:3.5.35"
+  checksum: 10c0/470608053194d0a05ef9361bd432e80e64b09621f57768afe7e90825fc488e2a0caf78537387df86604d31d8a2795ba4622cd1b4de28ea32120144a6d4b9ed15
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-admin@npm:^1.14.1":
-  version: 1.14.1
-  resolution: "@myparcel-dev/pdk-admin@npm:1.14.1"
+"@myparcel-dev/pdk-admin@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@myparcel-dev/pdk-admin@npm:2.0.0"
   dependencies:
-    "@myparcel-dev/constants": "npm:^2.7.0"
-    "@myparcel-dev/pdk-common": "npm:^1.12.0"
-    "@myparcel-dev/sdk": "npm:^5.0.0"
+    "@myparcel-dev/constants": "npm:^2.9.0"
+    "@myparcel-dev/pdk-common": "npm:^2.0.0"
+    "@myparcel-dev/sdk": "npm:^5.1.0"
     "@myparcel-dev/vue-form-builder": "npm:1.0.0-beta.42.6"
     "@tanstack/vue-query": "npm:~4.43.0"
     "@vueuse/core": "npm:^10.0.0"
@@ -3679,9 +3746,9 @@ __metadata:
     lodash-unified: "npm:^1.0.3"
     pinia: "npm:^2.0.0"
     vite: "npm:^5.4.10"
-    vue: "npm:3.4.31"
+    vue: "npm:3.5.35"
     vue-tsc: "npm:^2.0.0"
-  checksum: 10c0/7724cd7a8cc8c4571d7f76f69b4de626bbb59eadff327f7eeed0eb6ae5bf14e8c5f33471e91985797bf7da525f7188f7271798b71f321b1d106185bf457de095
+  checksum: 10c0/6b53f2bfd3417297fa6de28a3fe76288860c73a665a321b6343e5f046566ec7bad1c48163a0088eb166ca6a2109f614213271333be0fa8cf6e540f5a2604b2ac
   languageName: node
   linkType: hard
 
@@ -3707,68 +3774,68 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-checkout-common@npm:^1.7.3":
-  version: 1.7.3
-  resolution: "@myparcel-dev/pdk-checkout-common@npm:1.7.3"
+"@myparcel-dev/pdk-checkout-common@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@myparcel-dev/pdk-checkout-common@npm:2.0.0"
   dependencies:
     "@myparcel-dev/constants": "npm:^2.7.0"
     "@myparcel-dev/delivery-options": "npm:^6.25.0"
-    "@myparcel-dev/pdk-common": "npm:^1.12.0"
+    "@myparcel-dev/pdk-common": "npm:^2.0.0"
     typescript: "npm:^5.2.2"
-  checksum: 10c0/dd700fb12bd9dd663124c3d431e9fb0ff00b4d27cf4e499e662c9b01d19eda47ccb1a83eadeabe766bf5e91f2da9f1f08a68efe67d74a312c69ed1d86c3276bc
+  checksum: 10c0/a549506ea297f539ec88ed3a2714da8d6b534345ee8fd9f1e37af2c44c2816ceeebb066cb956820b3caa2d6a3f7b470757aa4ac7c9f7faa1c73018a1e422a5ec
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-checkout-delivery-options@npm:^1.7.3":
-  version: 1.7.3
-  resolution: "@myparcel-dev/pdk-checkout-delivery-options@npm:1.7.3"
+"@myparcel-dev/pdk-checkout-delivery-options@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@myparcel-dev/pdk-checkout-delivery-options@npm:2.0.0"
   dependencies:
-    "@myparcel-dev/delivery-options": "npm:^6.25.0"
-    "@myparcel-dev/pdk-checkout-common": "npm:^1.7.3"
+    "@myparcel-dev/delivery-options": "npm:^7.0.0"
+    "@myparcel-dev/pdk-checkout-common": "npm:^2.0.0"
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
-  checksum: 10c0/28fa66532f197eaaf94f42642261ffb23ec41deda3c51c3f2c3efb242e7a66548f59bcaec805f4517289643979681ae1a48d4e9f91048eeebca63c3c927e193b
+  checksum: 10c0/6cdffc61ad295afc044a1dab6fc7471a4e5edac3073d1a96f9c32c2071756b504fa844f76629f4b6dbcf17109b8fb657737b0f255701754f5f58bf2c2db69e39
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-checkout-separate-address-fields@npm:^1.7.3":
-  version: 1.7.3
-  resolution: "@myparcel-dev/pdk-checkout-separate-address-fields@npm:1.7.3"
+"@myparcel-dev/pdk-checkout-separate-address-fields@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@myparcel-dev/pdk-checkout-separate-address-fields@npm:2.0.0"
   dependencies:
-    "@myparcel-dev/pdk-checkout-common": "npm:^1.7.3"
-  checksum: 10c0/1768b5de5d56b6d15838bbca85bcace31110c796a2017367cf82ba53844dff3e96207ac919b8cc1a74f1de8280b41eb4f1ca568cfc994d52057bc79d3e372259
+    "@myparcel-dev/pdk-checkout-common": "npm:^2.0.0"
+  checksum: 10c0/f6981a6f80e3fef604b7c7f1fdb2cc82355d9bbae42c8b5f4f3a467b002488d8316a5b17269351b2c0b51c4527225bd552ce6a283742f393447060dc7afa6084
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-checkout-tax-fields@npm:^1.7.3":
-  version: 1.7.3
-  resolution: "@myparcel-dev/pdk-checkout-tax-fields@npm:1.7.3"
+"@myparcel-dev/pdk-checkout-tax-fields@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@myparcel-dev/pdk-checkout-tax-fields@npm:2.0.0"
   dependencies:
     "@myparcel-dev/constants": "npm:^2.7.0"
-    "@myparcel-dev/pdk-checkout-common": "npm:^1.7.3"
-  checksum: 10c0/4f0a1b262b29a4adbffa3a8a1efd4fef5bd2f5ec9e9245c28c4e39dc1446c463eb63c0429d198b97e8dd5bd140729f7580dc1888e977cd143be964615b51f9f4
+    "@myparcel-dev/pdk-checkout-common": "npm:^2.0.0"
+  checksum: 10c0/45b586f3acc022a48a9f193f17093de192d2f3082ada9aa40e5171091e46b105948d969e545ef97ba423d3ed835b2bf019c4672db4077873eb135191a97681ad
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-checkout@npm:^1.7.3":
-  version: 1.7.3
-  resolution: "@myparcel-dev/pdk-checkout@npm:1.7.3"
+"@myparcel-dev/pdk-checkout@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@myparcel-dev/pdk-checkout@npm:2.0.0"
   dependencies:
-    "@myparcel-dev/pdk-checkout-common": "npm:^1.7.3"
-    "@myparcel-dev/pdk-checkout-delivery-options": "npm:^1.7.3"
-    "@myparcel-dev/pdk-checkout-separate-address-fields": "npm:^1.7.3"
-    "@myparcel-dev/pdk-checkout-tax-fields": "npm:^1.7.3"
-    "@myparcel-dev/pdk-common": "npm:^1.12.0"
-  checksum: 10c0/d8aa6b4856c2352f36231ad64cba0d40c64b7160926eb62d86d95624dca7efaa1a864c3090b755b0a733f512e4c2bb7203beeea57ec2b091be8b333240491c5b
+    "@myparcel-dev/pdk-checkout-common": "npm:^2.0.0"
+    "@myparcel-dev/pdk-checkout-delivery-options": "npm:^2.0.0"
+    "@myparcel-dev/pdk-checkout-separate-address-fields": "npm:^2.0.0"
+    "@myparcel-dev/pdk-checkout-tax-fields": "npm:^2.0.0"
+    "@myparcel-dev/pdk-common": "npm:^2.0.0"
+  checksum: 10c0/d4eec7c12eaae1c0ae7764e57d1bfc3ea1d89daff99d2bf636675e7f605e942e67a60082cadaa0b514668523e40d533db21bb24ec4bd86063615e8b02f492a4b
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-common@npm:^1.12.0":
-  version: 1.12.0
-  resolution: "@myparcel-dev/pdk-common@npm:1.12.0"
+"@myparcel-dev/pdk-common@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@myparcel-dev/pdk-common@npm:2.0.0"
   dependencies:
     "@myparcel-dev/constants": "npm:^2.7.0"
     "@myparcel-dev/delivery-options": "npm:^6.25.0"
-  checksum: 10c0/a2a724dbfb42749c978e4b352411c494165182c22dd9fdadac50875e21aaa254bbbe023e148a73e1f584600e4977d2841806e98aee0fb79c9c238fba8dbdcea1
+  checksum: 10c0/7ba1ced0e10aa907899ad2db42c206e04bbb17f3e0ad0c59654ec01d5b78ba7b7576b75792e0785aa560339dc3458c4b4e4facf6c354878e98bfaf5de5eb055e
   languageName: node
   linkType: hard
 
@@ -3789,6 +3856,16 @@ __metadata:
     "@myparcel-dev/constants": "npm:^2.7.0"
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
   checksum: 10c0/e7fb382eae6a689edac96e34e1483aa5a7b99353f3ea2019439cd322447b6642203251af50e9bfc327183a94c2e3d2fa9a6a2e9bcb713af3cdd6a5e79a3d8850
+  languageName: node
+  linkType: hard
+
+"@myparcel-dev/sdk@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "@myparcel-dev/sdk@npm:5.1.0"
+  dependencies:
+    "@myparcel-dev/constants": "npm:^2.7.0"
+    "@myparcel-dev/ts-utils": "npm:^1.15.0"
+  checksum: 10c0/c518a06b3c54827bdcf8e22418ef844c3bc1490a52086a612d7576ba4561488aa512b4aed37dbbb9ccdb65f060edf5232e0905b4980ddd8b4c1bb1cf6fec2630
   languageName: node
   linkType: hard
 
@@ -3933,8 +4010,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/address-widget@workspace:views/frontend/checkout-address-widget"
   dependencies:
-    "@myparcel-dev/pdk-checkout": "npm:^1.7.3"
-    "@myparcel-dev/pdk-checkout-common": "npm:^1.7.3"
+    "@myparcel-dev/pdk-checkout": "npm:^2.0.0"
+    "@myparcel-dev/pdk-checkout-common": "npm:^2.0.0"
     "@myparcel-woocommerce/frontend-common": "workspace:^"
     "@myparcel-woocommerce/vite-config": "workspace:*"
     "@types/jquery": "npm:^3.5.16"
@@ -3948,10 +4025,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/backend-admin@workspace:views/backend/admin"
   dependencies:
-    "@myparcel-dev/pdk-admin": "npm:^1.14.1"
-    "@myparcel-dev/pdk-admin-component-tests": "npm:^1.14.1"
-    "@myparcel-dev/pdk-admin-preset-dashicons": "npm:^1.14.1"
-    "@myparcel-dev/pdk-admin-preset-default": "npm:^1.14.1"
+    "@myparcel-dev/pdk-admin": "npm:^2.0.0"
+    "@myparcel-dev/pdk-admin-component-tests": "npm:^2.0.0"
+    "@myparcel-dev/pdk-admin-preset-dashicons": "npm:^2.0.0"
+    "@myparcel-dev/pdk-admin-preset-default": "npm:^2.0.0"
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
     "@myparcel-woocommerce/vite-config": "workspace:*"
     "@tanstack/vue-query": "npm:^4.43.0"
@@ -3976,7 +4053,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/block-delivery-options@workspace:views/blocks/delivery-options"
   dependencies:
-    "@myparcel-dev/pdk-checkout": "npm:^1.7.3"
+    "@myparcel-dev/pdk-checkout": "npm:^2.0.0"
     "@myparcel-woocommerce/webpack-config": "workspace:*"
     "@woocommerce/block-library": "npm:^2.3.0"
     "@woocommerce/settings": "npm:^1.0.0"
@@ -3995,7 +4072,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/frontend-checkout-core@workspace:views/frontend/checkout-core"
   dependencies:
-    "@myparcel-dev/pdk-checkout": "npm:^1.7.3"
+    "@myparcel-dev/pdk-checkout": "npm:^2.0.0"
     "@myparcel-woocommerce/frontend-common": "workspace:^"
     "@myparcel-woocommerce/vite-config": "workspace:*"
     "@types/jquery": "npm:^3.5.16"
@@ -4008,7 +4085,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/frontend-checkout-delivery-options@workspace:views/frontend/checkout-delivery-options"
   dependencies:
-    "@myparcel-dev/pdk-checkout": "npm:^1.7.3"
+    "@myparcel-dev/pdk-checkout": "npm:^2.0.0"
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
     "@myparcel-woocommerce/frontend-common": "workspace:*"
     "@myparcel-woocommerce/vite-config": "workspace:*"
@@ -4023,7 +4100,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/frontend-checkout-separate-address-fields@workspace:views/frontend/checkout-separate-address-fields"
   dependencies:
-    "@myparcel-dev/pdk-checkout": "npm:^1.7.3"
+    "@myparcel-dev/pdk-checkout": "npm:^2.0.0"
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
     "@myparcel-woocommerce/frontend-common": "workspace:*"
     "@myparcel-woocommerce/vite-config": "workspace:*"
@@ -4038,7 +4115,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/frontend-checkout-tax-fields@workspace:views/frontend/checkout-tax-fields"
   dependencies:
-    "@myparcel-dev/pdk-checkout": "npm:^1.7.3"
+    "@myparcel-dev/pdk-checkout": "npm:^2.0.0"
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
     "@myparcel-woocommerce/frontend-common": "workspace:*"
     "@myparcel-woocommerce/vite-config": "workspace:*"
@@ -8226,19 +8303,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/compiler-core@npm:3.4.31":
-  version: 3.4.31
-  resolution: "@vue/compiler-core@npm:3.4.31"
-  dependencies:
-    "@babel/parser": "npm:^7.24.7"
-    "@vue/shared": "npm:3.4.31"
-    entities: "npm:^4.5.0"
-    estree-walker: "npm:^2.0.2"
-    source-map-js: "npm:^1.2.0"
-  checksum: 10c0/17833fa55af0168da4ec79b1233aba2bf6df9a88cd95be513a122f3433901e70284ce467a504a36547debdf49f887cf807734360a7660fd8f7622bf15c74b01d
-  languageName: node
-  linkType: hard
-
 "@vue/compiler-core@npm:3.5.12":
   version: 3.5.12
   resolution: "@vue/compiler-core@npm:3.5.12"
@@ -8278,13 +8342,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/compiler-dom@npm:3.4.31":
-  version: 3.4.31
-  resolution: "@vue/compiler-dom@npm:3.4.31"
+"@vue/compiler-core@npm:3.5.35":
+  version: 3.5.35
+  resolution: "@vue/compiler-core@npm:3.5.35"
   dependencies:
-    "@vue/compiler-core": "npm:3.4.31"
-    "@vue/shared": "npm:3.4.31"
-  checksum: 10c0/136b2208685d7d67e282a7da5f377f40878c467832789be21aadbe322832541aa20a4e2d0c5faa57b4f5608067eeb680d123fdb08c2ef9b28f0d6a94a3d79dbc
+    "@babel/parser": "npm:^7.29.3"
+    "@vue/shared": "npm:3.5.35"
+    entities: "npm:^7.0.1"
+    estree-walker: "npm:^2.0.2"
+    source-map-js: "npm:^1.2.1"
+  checksum: 10c0/b269e49636631288c34d81f2e7f596d4f0b407c32d7f70f0fa89eb6757180f4f9bc6c8c9924a7760b9736a72d4489ab6c2cef4d4e710f16239c9296e0fd7b970
   languageName: node
   linkType: hard
 
@@ -8308,6 +8375,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vue/compiler-dom@npm:3.5.35":
+  version: 3.5.35
+  resolution: "@vue/compiler-dom@npm:3.5.35"
+  dependencies:
+    "@vue/compiler-core": "npm:3.5.35"
+    "@vue/shared": "npm:3.5.35"
+  checksum: 10c0/491c3f4026824816884e9a6e2d58fd1eaa4686ac5073eb873b2c3241d388f240ea316f3329ed6e84fc8e9e5d548c8780bab566f19f81c1e468355dfb763c2561
+  languageName: node
+  linkType: hard
+
 "@vue/compiler-dom@npm:^3.4.0":
   version: 3.5.12
   resolution: "@vue/compiler-dom@npm:3.5.12"
@@ -8315,23 +8392,6 @@ __metadata:
     "@vue/compiler-core": "npm:3.5.12"
     "@vue/shared": "npm:3.5.12"
   checksum: 10c0/48a67cd28c25e94dccff3c1e18bf2f79b073e486a856e5b30661e89e50d08cd49ababc43de94626c948da77c8dad859909e32d3ab678079e90dfa5d3e1ddc344
-  languageName: node
-  linkType: hard
-
-"@vue/compiler-sfc@npm:3.4.31":
-  version: 3.4.31
-  resolution: "@vue/compiler-sfc@npm:3.4.31"
-  dependencies:
-    "@babel/parser": "npm:^7.24.7"
-    "@vue/compiler-core": "npm:3.4.31"
-    "@vue/compiler-dom": "npm:3.4.31"
-    "@vue/compiler-ssr": "npm:3.4.31"
-    "@vue/shared": "npm:3.4.31"
-    estree-walker: "npm:^2.0.2"
-    magic-string: "npm:^0.30.10"
-    postcss: "npm:^8.4.38"
-    source-map-js: "npm:^1.2.0"
-  checksum: 10c0/b8983a52dd3d5d7f9640dbda5946f01fcb92213a6c3a9a76d1df8f67fd43c59402ab6ff4211a205bf91155c4cd2a45fb39c36a83199bc1256eaeb9f690895b73
   languageName: node
   linkType: hard
 
@@ -8369,13 +8429,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/compiler-ssr@npm:3.4.31":
-  version: 3.4.31
-  resolution: "@vue/compiler-ssr@npm:3.4.31"
+"@vue/compiler-sfc@npm:3.5.35":
+  version: 3.5.35
+  resolution: "@vue/compiler-sfc@npm:3.5.35"
   dependencies:
-    "@vue/compiler-dom": "npm:3.4.31"
-    "@vue/shared": "npm:3.4.31"
-  checksum: 10c0/8083959c21b344f8ee5029c0ea91d50118a32b7c7c430971a721785b0349ce92d82d9cf17d7991a283f79b4ec1c68db4d1d182e035c17aa9116aa07ee115bac0
+    "@babel/parser": "npm:^7.29.3"
+    "@vue/compiler-core": "npm:3.5.35"
+    "@vue/compiler-dom": "npm:3.5.35"
+    "@vue/compiler-ssr": "npm:3.5.35"
+    "@vue/shared": "npm:3.5.35"
+    estree-walker: "npm:^2.0.2"
+    magic-string: "npm:^0.30.21"
+    postcss: "npm:^8.5.15"
+    source-map-js: "npm:^1.2.1"
+  checksum: 10c0/18e28d3d4e3cad5715a242aa47553957cb2f0671b56b3398b0e8e394cf041a336fd875a1166dd6ea4b976e019b32985f1fdbe827f4c8b553ac31f64a053664cb
   languageName: node
   linkType: hard
 
@@ -8396,6 +8463,16 @@ __metadata:
     "@vue/compiler-dom": "npm:3.5.31"
     "@vue/shared": "npm:3.5.31"
   checksum: 10c0/af0e5efa10079b7dcbbbd1bb1bad2075f74c66b13be5985116761f5ca011f220c6b7ca3cb11bd012e0eec13ecc5b60cb3c751a8a432490ba12664264ecd62cba
+  languageName: node
+  linkType: hard
+
+"@vue/compiler-ssr@npm:3.5.35":
+  version: 3.5.35
+  resolution: "@vue/compiler-ssr@npm:3.5.35"
+  dependencies:
+    "@vue/compiler-dom": "npm:3.5.35"
+    "@vue/shared": "npm:3.5.35"
+  checksum: 10c0/b015d0658dff58db362a9d639d7e3b5ad849136de064cbfd3207bd95548e26cc10a5fe7dbbe57cd3148f9ad4ee42a48f518cb3a395c940afcd00043e395d283a
   languageName: node
   linkType: hard
 
@@ -8470,15 +8547,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/reactivity@npm:3.4.31":
-  version: 3.4.31
-  resolution: "@vue/reactivity@npm:3.4.31"
-  dependencies:
-    "@vue/shared": "npm:3.4.31"
-  checksum: 10c0/974ce9c9f26367845d71ab37aa5644b06f5e8e938ebe343004a8cb700505350da70fd315f39aecc46ffa62c474e3fb947529bd3981b66efab8ab45c34189a334
-  languageName: node
-  linkType: hard
-
 "@vue/reactivity@npm:3.5.27":
   version: 3.5.27
   resolution: "@vue/reactivity@npm:3.5.27"
@@ -8497,13 +8565,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/runtime-core@npm:3.4.31":
-  version: 3.4.31
-  resolution: "@vue/runtime-core@npm:3.4.31"
+"@vue/reactivity@npm:3.5.35":
+  version: 3.5.35
+  resolution: "@vue/reactivity@npm:3.5.35"
   dependencies:
-    "@vue/reactivity": "npm:3.4.31"
-    "@vue/shared": "npm:3.4.31"
-  checksum: 10c0/446711364e34520d5f38133950ecb27ede0d235fabb74237b51dc6ef22cce1b5db94033acbf6fc485c2dd3034862492eb247d267487bd36c88cb4ad151ffaf3c
+    "@vue/shared": "npm:3.5.35"
+  checksum: 10c0/720ac936092316ec6b3f7661ce4526b74e47120cd2ae1da6cc4a9bc380578bf9e5070cade6bec3eecfa5003abba3a3a1d94c430f79fb9943e5fc763625cdf4ab
   languageName: node
   linkType: hard
 
@@ -8527,15 +8594,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/runtime-dom@npm:3.4.31":
-  version: 3.4.31
-  resolution: "@vue/runtime-dom@npm:3.4.31"
+"@vue/runtime-core@npm:3.5.35":
+  version: 3.5.35
+  resolution: "@vue/runtime-core@npm:3.5.35"
   dependencies:
-    "@vue/reactivity": "npm:3.4.31"
-    "@vue/runtime-core": "npm:3.4.31"
-    "@vue/shared": "npm:3.4.31"
-    csstype: "npm:^3.1.3"
-  checksum: 10c0/4c0b20f16ad3a676d1a61b07f24d1668166e5b0cc133344eafcecde308952d577005fc4a1fa77fd055dffce5dbacbd4577688f2dc151ac0f2f6e1d31529fdfc6
+    "@vue/reactivity": "npm:3.5.35"
+    "@vue/shared": "npm:3.5.35"
+  checksum: 10c0/79bc6e2dfa3e7af98bbb66a96c8dfb72afdacb075ead1c9fc76753c1617807139d02f06f5a02562fb9b698567e089d6f8e8ac1aae8108fe2d0a388137507a1c4
   languageName: node
   linkType: hard
 
@@ -8563,15 +8628,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/server-renderer@npm:3.4.31":
-  version: 3.4.31
-  resolution: "@vue/server-renderer@npm:3.4.31"
+"@vue/runtime-dom@npm:3.5.35":
+  version: 3.5.35
+  resolution: "@vue/runtime-dom@npm:3.5.35"
   dependencies:
-    "@vue/compiler-ssr": "npm:3.4.31"
-    "@vue/shared": "npm:3.4.31"
-  peerDependencies:
-    vue: 3.4.31
-  checksum: 10c0/1e01142c2f7b6ee9b1e94a25142452fc60ef7fbdd47b4c145db001fbfd20e5c9fab97a74d7c0978b4a0beacc043f330524623b22f1bd7faa353c41feb824c549
+    "@vue/reactivity": "npm:3.5.35"
+    "@vue/runtime-core": "npm:3.5.35"
+    "@vue/shared": "npm:3.5.35"
+    csstype: "npm:^3.2.3"
+  checksum: 10c0/ee144fccf99add8f840a08644196b69e66aed4f9a37840672ebdbdbac3efa50ea8e5e5155a49ad4a8ed9ff07a1ba9e91665b89e3fa71d8a7407396cdce82951d
   languageName: node
   linkType: hard
 
@@ -8599,10 +8664,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/shared@npm:3.4.31":
-  version: 3.4.31
-  resolution: "@vue/shared@npm:3.4.31"
-  checksum: 10c0/45643c0c7aa6b208891aac5798629ee5b982a5e52343c0a23ecc15b7aeb580b606ce78e70daee0fd691ccddb5f10196c4d56c7da4b8716157be1772a43f1c45e
+"@vue/server-renderer@npm:3.5.35":
+  version: 3.5.35
+  resolution: "@vue/server-renderer@npm:3.5.35"
+  dependencies:
+    "@vue/compiler-ssr": "npm:3.5.35"
+    "@vue/shared": "npm:3.5.35"
+  peerDependencies:
+    vue: 3.5.35
+  checksum: 10c0/c9f8dc2c49c14583642b7856d1ce92fe55a84a11a6723c77ebcb81ebea2c6a881c6d663c3db8a5a07b6d31b79bb2695152b3b4cb2d72779bb27813fef9850d41
   languageName: node
   linkType: hard
 
@@ -8624,6 +8694,13 @@ __metadata:
   version: 3.5.31
   resolution: "@vue/shared@npm:3.5.31"
   checksum: 10c0/a727c20ac555569acec5e05966e2b4673c39f8c0d9ac3aa9e97eaffbe2b73e83cf80e8530fd959355964e931b75da67d4674dc027a55ebcfb6ac04ec35ce5c76
+  languageName: node
+  linkType: hard
+
+"@vue/shared@npm:3.5.35":
+  version: 3.5.35
+  resolution: "@vue/shared@npm:3.5.35"
+  checksum: 10c0/1609ecfdbd7a8fbfd630885d390c9b8908ee05ce827aaa30177c9f8b0340b7a4126a4890d0ef80a721fcce25c9055da5e8120a960b1a9bf8c92b190b7e0c9780
   languageName: node
   linkType: hard
 
@@ -15960,7 +16037,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csstype@npm:^3.1.3, csstype@npm:^3.2.2, csstype@npm:^3.2.3":
+"csstype@npm:^3.2.2, csstype@npm:^3.2.3":
   version: 3.2.3
   resolution: "csstype@npm:3.2.3"
   checksum: 10c0/cd29c51e70fa822f1cecd8641a1445bed7063697469d35633b516e60fe8c1bde04b08f6c5b6022136bb669b64c63d4173af54864510fbb4ee23281801841a3ce
@@ -24189,21 +24266,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"magic-string@npm:^0.30.10, magic-string@npm:^0.30.21":
-  version: 0.30.21
-  resolution: "magic-string@npm:0.30.21"
-  dependencies:
-    "@jridgewell/sourcemap-codec": "npm:^1.5.5"
-  checksum: 10c0/299378e38f9a270069fc62358522ddfb44e94244baa0d6a8980ab2a9b2490a1d03b236b447eee309e17eb3bddfa482c61259d47960eb018a904f0ded52780c4a
-  languageName: node
-  linkType: hard
-
 "magic-string@npm:^0.30.12, magic-string@npm:^0.30.5":
   version: 0.30.12
   resolution: "magic-string@npm:0.30.12"
   dependencies:
     "@jridgewell/sourcemap-codec": "npm:^1.5.0"
   checksum: 10c0/469f457d18af37dfcca8617086ea8a65bcd8b60ba8a1182cb024ce43e470ace3c9d1cb6bee58d3b311768fb16bc27bd50bdeebcaa63dadd0fd46cac4d2e11d5f
+  languageName: node
+  linkType: hard
+
+"magic-string@npm:^0.30.21":
+  version: 0.30.21
+  resolution: "magic-string@npm:0.30.21"
+  dependencies:
+    "@jridgewell/sourcemap-codec": "npm:^1.5.5"
+  checksum: 10c0/299378e38f9a270069fc62358522ddfb44e94244baa0d6a8980ab2a9b2490a1d03b236b447eee309e17eb3bddfa482c61259d47960eb018a904f0ded52780c4a
   languageName: node
   linkType: hard
 
@@ -25340,6 +25417,15 @@ __metadata:
   bin:
     nanoid: bin/nanoid.cjs
   checksum: 10c0/40e7f70b3d15f725ca072dfc4f74e81fcf1fbb02e491cf58ac0c79093adc9b0a73b152bcde57df4b79cd097e13023d7504acb38404a4da7bc1cd8e887b82fe0b
+  languageName: node
+  linkType: hard
+
+"nanoid@npm:^3.3.12":
+  version: 3.3.12
+  resolution: "nanoid@npm:3.3.12"
+  bin:
+    nanoid: bin/nanoid.cjs
+  checksum: 10c0/ba142b7b39e11e80c16dd74b0365d407880c87c1cf7e1480956981ae940ee36060fa5b6f092cd1e315184dd19244c657bd017d03327bd3c62247d691c5e8edfb
   languageName: node
   linkType: hard
 
@@ -28274,7 +28360,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.3.11, postcss@npm:^8.4.19, postcss@npm:^8.4.21, postcss@npm:^8.4.23, postcss@npm:^8.4.33, postcss@npm:^8.4.38, postcss@npm:^8.4.43, postcss@npm:^8.4.47, postcss@npm:^8.4.5, postcss@npm:^8.5.6":
+"postcss@npm:^8.3.11, postcss@npm:^8.4.19, postcss@npm:^8.4.21, postcss@npm:^8.4.23, postcss@npm:^8.4.33, postcss@npm:^8.4.43, postcss@npm:^8.4.47, postcss@npm:^8.4.5, postcss@npm:^8.5.6":
   version: 8.5.6
   resolution: "postcss@npm:8.5.6"
   dependencies:
@@ -28282,6 +28368,17 @@ __metadata:
     picocolors: "npm:^1.1.1"
     source-map-js: "npm:^1.2.1"
   checksum: 10c0/5127cc7c91ed7a133a1b7318012d8bfa112da9ef092dddf369ae699a1f10ebbd89b1b9f25f3228795b84585c72aabd5ced5fc11f2ba467eedf7b081a66fad024
+  languageName: node
+  linkType: hard
+
+"postcss@npm:^8.5.15":
+  version: 8.5.15
+  resolution: "postcss@npm:8.5.15"
+  dependencies:
+    nanoid: "npm:^3.3.12"
+    picocolors: "npm:^1.1.1"
+    source-map-js: "npm:^1.2.1"
+  checksum: 10c0/7f2e63ae22fbe43aace1bf652bd99da4e90737c64194d49e51ddc9cd0f9e51ff2861a7d734379b494deffa03a880a5c65eec70bc29ee9ebaa7136dde3eee8f31
   languageName: node
   linkType: hard
 
@@ -33865,21 +33962,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue@npm:3.4.31":
-  version: 3.4.31
-  resolution: "vue@npm:3.4.31"
+"vue@npm:3.5.35":
+  version: 3.5.35
+  resolution: "vue@npm:3.5.35"
   dependencies:
-    "@vue/compiler-dom": "npm:3.4.31"
-    "@vue/compiler-sfc": "npm:3.4.31"
-    "@vue/runtime-dom": "npm:3.4.31"
-    "@vue/server-renderer": "npm:3.4.31"
-    "@vue/shared": "npm:3.4.31"
+    "@vue/compiler-dom": "npm:3.5.35"
+    "@vue/compiler-sfc": "npm:3.5.35"
+    "@vue/runtime-dom": "npm:3.5.35"
+    "@vue/server-renderer": "npm:3.5.35"
+    "@vue/shared": "npm:3.5.35"
   peerDependencies:
     typescript: "*"
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/d9d7ac45f2f9b69b3c2f1cabf2d70cad4e829f7daebc2d2896b5e2e58074fee002d870691cfeb12af891ce1bedac2318269dffc4c581319823ed5e5e9173cd03
+  checksum: 10c0/1662c31ce74f408a79590f3eed962f6eb87c8cecad859f01904cfc7866b1223be7ffc837d9fd544a57320e3029e3a4c54d46273285cc8c0b0f83007dc3e2c988
   languageName: node
   linkType: hard
 
