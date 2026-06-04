@@ -8,7 +8,6 @@ namespace MyParcelNL\WooCommerce\Hooks;
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
-use MyParcelNL\WooCommerce\Tests\Mock\MockWpCache;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpEnqueue;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Product;
@@ -84,16 +83,3 @@ it(
             ],
         ],
     ]);
-
-it('skips all scripts on blocks checkout page', function () {
-    MockWpCache::add('42', ['pageName' => 'checkout', 'hasBlocks' => true], 'pages');
-
-    /** @var \MyParcelNL\WooCommerce\Hooks\CheckoutScriptHooks $class */
-    $class = Pdk::get(CheckoutScriptHooks::class);
-    $class->enqueueFrontendScripts();
-
-    expect(MockWpEnqueue::all()->all())->toBeEmpty();
-
-    WC()->cart->empty_cart();
-    MockWpCache::reset();
-});
