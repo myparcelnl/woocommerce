@@ -12,15 +12,15 @@ use function MyParcelNL\Pdk\Tests\usesShared;
 usesShared(new UsesMockWcPdkInstance());
 
 it('integrates with WooCommerce Blocks', function () {
-    $class      = new DeliveryOptionsBlocksIntegration('delivery-options');
+    $class      = new DeliveryOptionsBlocksIntegration('myparcelnl-delivery-options');
     $scriptData = $class->get_script_data();
 
     expect($class->get_name())
-        ->toBe('pest-delivery-options')
+        ->toBe('myparcelnl-delivery-options')
         ->and($class->get_script_handles())
-        ->toBe(['pest-delivery-options-block-view-script', 'pest-delivery-options-block-editor-script'])
+        ->toBe(['myparcelnl-delivery-options-block-view-script', 'myparcelnl-delivery-options-block-editor-script'])
         ->and($class->get_editor_script_handles())
-        ->toBe(['pest-delivery-options-block-view-script'])
+        ->toBe(['myparcelnl-delivery-options-block-view-script'])
         ->and($scriptData)
         ->toHaveKeys(['context', 'style'])
         ->and($scriptData['context'])
