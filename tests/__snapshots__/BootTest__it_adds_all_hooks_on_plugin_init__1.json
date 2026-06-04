@@ -16,10 +16,7 @@
     "woocommerce_order_status_changed": [
         "MyParcelNL\\WooCommerce\\Hooks\\AutomaticOrderExportHooks::automaticExportOrder"
     ],
-    "before_woocommerce_init": [
-        "MyParcelNL\\WooCommerce\\Hooks\\BlocksIntegrationHooks::declareCheckoutBlocksCompatibility"
-    ],
-    "woocommerce_cart_calculate_fees": [
+"woocommerce_cart_calculate_fees": [
         "MyParcelNL\\WooCommerce\\Hooks\\CartFeesHooks::calculateDeliveryOptionsFees"
     ],
     "wp": [
