@@ -21,8 +21,6 @@ class BlocksIntegrationHooks implements WordPressHooksInterface
      */
     public function apply(): void
     {
-        $this->declareCheckoutBlocksCompatibility();
-
         $this->loadBlocks();
     }
 
