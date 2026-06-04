@@ -104,7 +104,7 @@ function wc_get_page_id(string $page)
         $page = 'myaccount';
     }
 
-    $allPages = MockWpCache::$cache['pages'];
+    $allPages = MockWpCache::$cache['pages'] ?? [];
 
     foreach ($allPages as $pageId => $singlePage) {
         if ($singlePage['data']['pageName'] === $page) {
