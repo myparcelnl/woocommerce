@@ -11,6 +11,7 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Frontend\Contract\ViewServiceInterface;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
+use MyParcelNL\WooCommerce\Contract\WooCommerceServiceInterface;
 use MyParcelNL\WooCommerce\Facade\Filter;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Service\WpScriptService;
@@ -49,6 +50,11 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
         if (! $viewService->isCheckoutPage()) {
             return;
         }
+
+        if (Pdk::get(WooCommerceServiceInterface::class)->isUsingBlocksCheckout()) {
+            return;
+        }
+
         $this->loadCoreScripts();
         $this->loadSeparateAddressFieldsScripts();
         $this->loadAddressWidgetScript();
