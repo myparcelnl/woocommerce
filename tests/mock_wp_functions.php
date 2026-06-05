@@ -161,6 +161,18 @@ function __return_true(): bool
     return true;
 }
 
+/** @see \get_http_origin() */
+function get_http_origin()
+{
+    return $_SERVER['HTTP_ORIGIN'] ?? '';
+}
+
+/** @see \get_allowed_http_origins() */
+function get_allowed_http_origins(): array
+{
+    return ['https://shop.example'];
+}
+
 /**
  * @param $value
  *
