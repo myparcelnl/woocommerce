@@ -11,6 +11,7 @@ use MyParcelNL\Pdk\App\Order\Model\PdkOrderLine;
 use MyParcelNL\Pdk\App\Order\Model\PdkProduct;
 use MyParcelNL\Pdk\App\ShippingMethod\Model\PdkShippingMethod;
 use MyParcelNL\Pdk\App\Order\Model\ShippingAddress;
+use MyParcelNL\Pdk\Base\Contract\WeightServiceInterface;
 use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Carrier\Repository\CarrierCapabilitiesRepository;
 use MyParcelNL\Pdk\Carrier\Service\CapabilitiesValidationService;
@@ -37,7 +38,10 @@ beforeEach(function () {
     // WcContextService don't depend on a live capabilities API response. The
     // stub returns deterministic max-weight ordering: mailbox < package_small
     // < package, matching the expected outcomes in the data sets below.
-    $stub = new class(Pdk::get(CarrierCapabilitiesRepository::class)) extends CapabilitiesValidationService {
+    $stub = new class(
+        Pdk::get(CarrierCapabilitiesRepository::class),
+        Pdk::get(WeightServiceInterface::class)
+    ) extends CapabilitiesValidationService {
         private const STUB_MAX_WEIGHTS = [
             'envelope'      => 30,
             'digital_stamp' => 30,
@@ -48,7 +52,7 @@ beforeEach(function () {
             'pallet'        => 500000,
         ];
 
-        public function getPackageTypeWeights(string $cc, array $allowedTypes): array
+        public function getPackageTypeWeights(string $cc, array $allowedTypes, bool $filterByEnabledCarriers = true): array
         {
             $weights = [];
             foreach ($allowedTypes as $name => $v2) {
