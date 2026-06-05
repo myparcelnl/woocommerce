@@ -53,9 +53,27 @@ final class Migration6_1_0 extends AbstractMigration
     public function migrateAccountData(): void
     {
         $account = $this->accountRepository->getAccount(true);
-        $shop = $account->shops->first();
-        // Fetch the carrier definitions from the API
-        $shop->carriers = $this->carrierCapabilitiesRepository->getContractDefinitions();
+        $shop    = $account && $account->shops ? $account->shops->first() : null;
+
+        if (! $shop) {
+            $this->debug('No account or shop available; skipping carrier capabilities migration.');
+
+            return;
+        }
+
+        try {
+            // Fetch the carrier definitions from the API
+            $shop->carriers = $this->carrierCapabilitiesRepository->getContractDefinitions();
+        } catch (\Throwable $exception) {
+            // Re-throw so the installer does not bump the installed version, letting the
+            // migration retry on the next load instead of leaving carrier data unfetched.
+            $this->warning('Failed to fetch carrier definitions from the API; migration will retry.', [
+                'exception' => $exception->getMessage(),
+            ]);
+
+            throw $exception;
+        }
+
         // Store the updated account data
         $this->accountRepository->store($account);
     }

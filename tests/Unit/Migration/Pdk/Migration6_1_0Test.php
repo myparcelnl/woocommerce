@@ -5,16 +5,61 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
+use MyParcelNL\Pdk\App\Account\Contract\PdkAccountRepositoryInterface;
+use MyParcelNL\Pdk\Carrier\Collection\CarrierCollection;
+use MyParcelNL\Pdk\Carrier\Repository\CarrierCapabilitiesRepository;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\SdkApi\Service\CoreApi\Shipment\CapabilitiesService;
 use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
+use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
+use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
 use MyParcelNL\WooCommerce\Migration\Migration6_1_0;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
+use RuntimeException;
+use function MyParcelNL\Pdk\Tests\mockPdkProperties;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function MyParcelNL\WooCommerce\Tests\createWcOrder;
 
 usesShared(new UsesMockWcPdkInstance());
+
+// --- migrateAccountData (defensive) ---
+
+it('does not fail account data migration when no account or shop is available', function () {
+    /** @var PdkAccountRepositoryInterface $accountRepo */
+    $accountRepo = Pdk::get(PdkAccountRepositoryInterface::class);
+
+    /** @var Migration6_1_0 $migration */
+    $migration = Pdk::get(Migration6_1_0::class);
+
+    // No account configured (and a forced refresh has no valid API key), so getAccount()
+    // returns null. The migration must skip gracefully instead of fataling.
+    $migration->migrateAccountData();
+
+    expect($accountRepo->getAccount())->toBeNull();
+});
+
+it('rethrows when fetching carrier definitions fails so the migration retries', function () {
+    TestBootstrapper::hasAccount();
+
+    $throwingRepo = new class(
+        Pdk::get(StorageInterface::class),
+        Pdk::get(CapabilitiesService::class)
+    ) extends CarrierCapabilitiesRepository {
+        public function getContractDefinitions(?string $carrier = null): CarrierCollection
+        {
+            throw new RuntimeException('API unavailable');
+        }
+    };
+
+    mockPdkProperties([CarrierCapabilitiesRepository::class => $throwingRepo]);
+
+    /** @var Migration6_1_0 $migration */
+    $migration = Pdk::get(Migration6_1_0::class);
+
+    expect(fn () => $migration->migrateAccountData())->toThrow(RuntimeException::class);
+});
 
 // --- migrateCarrierSettings ---
 
