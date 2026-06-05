@@ -54,6 +54,37 @@ it('returns the negotiated and supported versions in accept and content-type hea
     expect($result->get_headers()['Accept'])->toBe('application/json; version=1');
 });
 
+it('allows frontend requests without an origin header', function () {
+    /** @var \MyParcelNL\WooCommerce\Pdk\Hooks\PdkFrontendEndpointHooks $hookClass */
+    $hookClass = Pdk::get(PdkFrontendEndpointHooks::class);
+
+    unset($_SERVER['HTTP_ORIGIN']);
+
+    expect($hookClass->checkOrigin())->toBeTrue();
+});
+
+it('allows frontend requests from the same origin', function () {
+    /** @var \MyParcelNL\WooCommerce\Pdk\Hooks\PdkFrontendEndpointHooks $hookClass */
+    $hookClass = Pdk::get(PdkFrontendEndpointHooks::class);
+
+    $_SERVER['HTTP_ORIGIN'] = 'https://shop.example';
+
+    expect($hookClass->checkOrigin())->toBeTrue();
+
+    unset($_SERVER['HTTP_ORIGIN']);
+});
+
+it('rejects frontend requests from a foreign origin', function () {
+    /** @var \MyParcelNL\WooCommerce\Pdk\Hooks\PdkFrontendEndpointHooks $hookClass */
+    $hookClass = Pdk::get(PdkFrontendEndpointHooks::class);
+
+    $_SERVER['HTTP_ORIGIN'] = 'https://evil.example';
+
+    expect($hookClass->checkOrigin())->toBeFalse();
+
+    unset($_SERVER['HTTP_ORIGIN']);
+});
+
 it('requires read order permissions to access delivery options endpoint', function () {
     /** @var \MyParcelNL\WooCommerce\Pdk\Hooks\PdkEndpointHooks $hookClass */
     $hookClass = Pdk::get(PdkEndpointHooks::class);

@@ -24,6 +24,26 @@ final class PdkFrontendEndpointHooks extends AbstractPdkEndpointHooks
     }
 
     /**
+     * Restrict the public frontend route to same-origin browser requests.
+     *
+     * Same-origin GET requests and non-browser callers send no Origin header and pass
+     * through; browser requests carrying a foreign Origin are rejected. The allowed
+     * list is filterable via the WordPress `allowed_http_origins` hook.
+     *
+     * @return bool
+     */
+    public function checkOrigin(): bool
+    {
+        $origin = get_http_origin();
+
+        if (! $origin) {
+            return true;
+        }
+
+        return in_array($origin, get_allowed_http_origins(), true);
+    }
+
+    /**
      * @return void
      */
     public function registerPdkRoutes(): void
@@ -35,9 +55,9 @@ final class PdkFrontendEndpointHooks extends AbstractPdkEndpointHooks
         }
 
         register_rest_route(Pdk::get('routeFrontend'), Pdk::get('routeFrontendMyParcel'), [
-            'methods'             => 'GET',
+            'methods'             => ['GET', 'POST'],
             'callback'            => [$this, 'processFrontendRequest'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [$this, 'checkOrigin'],
         ]);
     }
 }

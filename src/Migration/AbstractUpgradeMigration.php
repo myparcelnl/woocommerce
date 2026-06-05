@@ -45,7 +45,7 @@ abstract class AbstractUpgradeMigration
      *
      * @return array|null
      */
-    protected function migrateSettings(array $map, ?array $newSettings, array $oldSettings = null): ?array
+    protected function migrateSettings(array $map, ?array $newSettings, ?array $oldSettings = null): ?array
     {
         $oldSettings = $oldSettings ?? $newSettings;
 

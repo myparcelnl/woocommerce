@@ -7,6 +7,7 @@ namespace MyParcelNL\WooCommerce\Hooks;
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\OrderSettings;
+use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Order_Factory;
 use function MyParcelNL\Pdk\Tests\factory;
@@ -14,6 +15,10 @@ use function MyParcelNL\Pdk\Tests\usesShared;
 use function Spatie\Snapshots\assertMatchesHtmlSnapshot;
 
 usesShared(new UsesMockWcPdkInstance());
+
+beforeEach(function () {
+    TestBootstrapper::hasAccount();
+});
 
 it('renders order details in account', function (WC_Order_Factory $factory) {
     factory(OrderSettings::class)

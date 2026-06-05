@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk;
 
 use MyParcelNL\Pdk\Base\PdkBootstrapper;
-use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
@@ -105,37 +104,9 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'orderListColumnTitle'    => value($title),
             'orderListPreviousColumn' => value('shipping_address'),
 
-            /**
-             * Bulk order actions.
-             *
-             * @example Pdk::get('bulkActions') // gets the bulk actions for the current order mode.
-             */
-
-            'allBulkActions' => value([
-                'default'   => [
-                    'action_print',
-                    'action_export_print',
-                    'action_export',
-                    'action_edit',
-                ],
-                'orderMode' => [
-                    'action_edit',
-                    'action_export',
-                ],
-            ]),
-
-            'bulkActions' => factory(static function (): array {
-                $orderModeEnabled = Settings::get(OrderSettings::ORDER_MODE, OrderSettings::ID);
-                $all              = Pdk::get('allBulkActions');
-
-                $actions = $orderModeEnabled
-                    ? Arr::get($all, 'orderMode', [])
-                    : Arr::get($all, 'default', []);
-
-                // Note: Export actions are not filtered here - filtering happens in the frontend
-                // by not rendering export buttons for local pickup orders
-                return $actions;
-            }),
+            // Bulk order actions: PDK now ships the same Shipments/OrderV1/OrderV2 sets and
+            // an effective-mode-driven factory, so the WooCommerce plugin no longer needs to
+            // override either `allBulkActions` or `bulkActions` here. See pdk-default.php.
 
             ###
             # Single order page
@@ -282,6 +253,8 @@ class WcPdkBootstrapper extends PdkBootstrapper
 
             'migrateAction_5_0_0_Orders'          => value("{$name}_migrate_5_0_0_orders"),
             'migrateAction_5_0_0_ProductSettings' => value("{$name}_migrate_5_0_0_product_settings"),
+            'migrateAction_6_1_0_Orders'          => value("{$name}_migrate_6_1_0_orders"),
+            'migrateAction_6_1_0_Shipments'       => value("{$name}_migrate_6_1_0_shipments"),
 
             # WP Cron actions
 

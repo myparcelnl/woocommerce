@@ -24,20 +24,17 @@ use MyParcelNL\Pdk\Audit\Contract\PdkAuditRepositoryInterface;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Base\Contract\WeightServiceInterface;
 use MyParcelNL\Pdk\Base\PdkBootstrapper;
-use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Context\Contract\ContextServiceInterface;
 use MyParcelNL\Pdk\Facade\Language;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Pdk as PdkFacade;
 use MyParcelNL\Pdk\Facade\Platform;
-use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Frontend\Contract\FrontendRenderServiceInterface;
 use MyParcelNL\Pdk\Frontend\Contract\ScriptServiceInterface;
 use MyParcelNL\Pdk\Frontend\Contract\ViewServiceInterface;
 use MyParcelNL\Pdk\Language\Contract\LanguageServiceInterface;
 use MyParcelNL\Pdk\Proposition\Service\PropositionService;
 use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
-use MyParcelNL\Pdk\Settings\Model\OrderSettings;
 use MyParcelNL\WooCommerce\Contract\WooCommerceServiceInterface;
 use MyParcelNL\WooCommerce\Contract\WordPressServiceInterface;
 use MyParcelNL\WooCommerce\Contract\WpFilterServiceInterface;
@@ -164,14 +161,8 @@ return [
         ];
     }),
 
-    'bulkActions' => factory(static function (): array {
-        $orderModeEnabled = Settings::get(OrderSettings::ORDER_MODE, OrderSettings::ID);
-        $all              = PdkFacade::get('allBulkActions');
-
-        return $orderModeEnabled
-            ? Arr::get($all, 'orderMode', [])
-            : Arr::get($all, 'default', []);
-    }),
+    // `bulkActions` is now provided by PDK's pdk-default.php (effective-mode-driven factory).
+    // The WooCommerce plugin no longer overrides it.
 
     'orderListPageId' => factory(static function (): string {
         if (! WooCommerce::isUsingHpos()) {

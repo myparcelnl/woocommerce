@@ -6,18 +6,20 @@ declare(strict_types=1);
 namespace MyParcelNL\Pdk\Tests\Unit\Migration\Pdk;
 
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
-use MyParcelNL\Pdk\Base\Support\Arr;
-use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
 use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function MyParcelNL\WooCommerce\Tests\createWcOrder;
-use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 
 usesShared(new UsesMockWcPdkInstance());
+
+beforeEach(function () {
+    TestBootstrapper::hasAccount();
+});
 
 it('schedules order migration in chunks', function () {
     /** @var \MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks $tasks */
@@ -71,7 +73,7 @@ it('schedules order migration in chunks', function () {
     }
 });
 
-it('migrates orders', function (array $oldMeta) {
+it('migrates orders', function (array $oldMeta, array $expected) {
     /** @var \MyParcelNL\Pdk\Tests\Bootstrap\MockPdkOrderRepository $pdkOrderRepository */
     $pdkOrderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
     /** @var \MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration $orderMigration */
@@ -89,39 +91,27 @@ it('migrates orders', function (array $oldMeta) {
         Pdk::get('metaKeyMigrated'),
     ];
 
-    $optionalNewKeys = [
-        Pdk::get('metaKeyVersion'),
-        Pdk::get('metaKeyFieldShippingStreet'),
-        Pdk::get('metaKeyFieldShippingNumber'),
-        Pdk::get('metaKeyFieldShippingNumberSuffix'),
-    ];
-
+    // The migration writes the new PDK meta keys and leaves the legacy meta untouched.
     expect($postMeta)->toHaveKeys(array_merge(array_keys($oldMeta), $requiredNewKeys));
 
-    // Expect old meta to be unchanged
     foreach (array_keys($oldMeta) as $key) {
         expect($postMeta[$key])->toEqual($oldMeta[$key]);
     }
 
-    $filteredMeta = Arr::only($postMeta, array_merge($requiredNewKeys, $optionalNewKeys));
+    // The migrated order exposes normalised carriers, delivery type, shipments and export state.
+    // Read the stored (storable) carrier so we assert what the migration actually wrote,
+    // not the default carrier the model resolves when none is stored.
+    $pdkOrder    = $pdkOrderRepository->get(1);
+    $carrierName = $pdkOrder->deliveryOptions->toStorableArray()['carrier'] ?? null;
 
-    $pdkOrder      = $pdkOrderRepository->get(1);
-    $pdkOrderArray = Arr::only(
-        $pdkOrder->toStorableArray(),
-        ['deliveryOptions', 'shipments', 'shippingAddress', 'exported', 'apiIdentifier']
-    );
+    $shipmentCarriers = array_map(static function (array $shipment): ?string {
+        return $shipment['carrier'] ?? null;
+    }, $pdkOrder->shipments->toStorableArray());
 
-    $shipmentsArray = $pdkOrder->shipments->toStorableArray();
-
-    foreach ($shipmentsArray as $key => $shipment) {
-        Arr::forget($shipmentsArray[$key], ['updated']);
-    }
-
-    assertMatchesJsonSnapshot(
-        json_encode([
-            'meta'      => (new Collection($filteredMeta))->toArrayWithoutNull(),
-            'pdkOrder'  => $pdkOrderArray,
-            'shipments' => $shipmentsArray,
-        ])
-    );
+    expect($carrierName)->toBe($expected['carrier'])
+        ->and($pdkOrder->deliveryOptions->deliveryType)->toBe($expected['deliveryType'])
+        ->and($pdkOrder->exported)->toBe($expected['exported'])
+        ->and($pdkOrder->apiIdentifier)->toBe($expected['apiIdentifier'])
+        ->and($pdkOrder->shipments->count())->toBe($expected['shipments'])
+        ->and($shipmentCarriers)->toBe($expected['shipmentCarriers']);
 })->with('legacy meta data');

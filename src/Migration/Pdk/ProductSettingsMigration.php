@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use Exception;
+use MyParcelNL\Pdk\App\Options\Definition\AgeCheckDefinition;
 use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\CustomsSettings;
-use MyParcelNL\Pdk\Settings\Model\ProductSettings;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use WC_Data;
 use WC_Meta_Data;
@@ -30,13 +30,6 @@ final class ProductSettingsMigration extends AbstractPdkMigration
     private const LEGACY_META_KEY_AGE_CHECK         = '_myparcel_age_check';
     private const LEGACY_META_KEY_HS_VARIATION      = '_myparcel_hs_code_variation';
     private const LEGACY_META_KEY_COUNTRY_VARIATION = '_myparcel_country_of_origin_variation';
-    private const PRODUCT_SETTINGS_MAP              = [
-        self::LEGACY_META_KEY_HS_CODE           => CustomsSettings::CUSTOMS_CODE,
-        self::LEGACY_META_KEY_COUNTRY           => CustomsSettings::COUNTRY_OF_ORIGIN,
-        self::LEGACY_META_KEY_AGE_CHECK         => ProductSettings::EXPORT_AGE_CHECK,
-        self::LEGACY_META_KEY_HS_VARIATION      => CustomsSettings::CUSTOMS_CODE,
-        self::LEGACY_META_KEY_COUNTRY_VARIATION => CustomsSettings::COUNTRY_OF_ORIGIN,
-    ];
     private const SECONDS_APART                     = 5;
 
     /**
@@ -151,6 +144,25 @@ final class ProductSettingsMigration extends AbstractPdkMigration
     }
 
     /**
+     * Map of legacy WC meta keys to PDK settings keys. Returned by method (rather than a
+     * class const) because PDK product settings keys for export-options are now derived
+     * from Definition classes (e.g. AgeCheckDefinition::getProductSettingsKey()), which
+     * cannot be evaluated in a const expression.
+     *
+     * @return array<string, string>
+     */
+    private function getProductSettingsMap(): array
+    {
+        return [
+            self::LEGACY_META_KEY_HS_CODE           => CustomsSettings::CUSTOMS_CODE,
+            self::LEGACY_META_KEY_COUNTRY           => CustomsSettings::COUNTRY_OF_ORIGIN,
+            self::LEGACY_META_KEY_AGE_CHECK         => (new AgeCheckDefinition())->getProductSettingsKey(),
+            self::LEGACY_META_KEY_HS_VARIATION      => CustomsSettings::CUSTOMS_CODE,
+            self::LEGACY_META_KEY_COUNTRY_VARIATION => CustomsSettings::COUNTRY_OF_ORIGIN,
+        ];
+    }
+
+    /**
      * @param  \WC_Data $data
      *
      * @return \MyParcelNL\Pdk\Base\Support\Collection
@@ -175,7 +187,7 @@ final class ProductSettingsMigration extends AbstractPdkMigration
         $meta       = $this->getMetaData($wcProduct);
         $pdkProduct = $this->pdkProductRepository->getProduct($wcProduct->get_id());
 
-        foreach (self::PRODUCT_SETTINGS_MAP as $oldKey => $newKey) {
+        foreach ($this->getProductSettingsMap() as $oldKey => $newKey) {
             $metaData = $meta->firstWhere('key', $oldKey);
 
             if (! $metaData) {

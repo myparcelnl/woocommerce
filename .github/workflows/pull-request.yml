@@ -6,6 +6,7 @@ on:
       - main
       - beta
       - alpha
+      - capabilities
 
   repository_dispatch:
     types: [trigger-pr-build]

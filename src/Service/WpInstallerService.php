@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Service;
 
-use MyParcelNL\Pdk\Account\Platform;
 use MyParcelNL\Pdk\App\Installer\Service\InstallerService;
-use MyParcelNL\Pdk\Facade\Pdk;
 
 final class WpInstallerService extends InstallerService
 {

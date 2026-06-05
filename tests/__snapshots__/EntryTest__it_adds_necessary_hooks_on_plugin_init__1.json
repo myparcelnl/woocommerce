@@ -6,7 +6,7 @@
         "MyParcelNLWooCommerce::uninstall"
     ],
     "init": [],
-    "wp_loaded": [
+    "woocommerce_init": [
         "MyParcelNLWooCommerce::upgrade"
     ],
     "rest_api_init": [

@@ -36,6 +36,14 @@ dataset('legacy meta data', [
                 ],
             ],
         ],
+        [
+            'carrier'         => 'POSTNL',
+            'deliveryType'    => 'standard',
+            'shipments'       => 0,
+            'shipmentCarriers' => [],
+            'exported'        => false,
+            'apiIdentifier'   => null,
+        ],
     ],
 
     'delivery options: dhlforyou' => [
@@ -66,6 +74,14 @@ dataset('legacy meta data', [
                     'extra_assurance'   => false,
                 ],
             ],
+        ],
+        [
+            'carrier'         => 'DHL_FOR_YOU',
+            'deliveryType'    => 'standard',
+            'shipments'       => 0,
+            'shipmentCarriers' => [],
+            'exported'        => false,
+            'apiIdentifier'   => null,
         ],
     ],
 
@@ -178,6 +194,14 @@ dataset('legacy meta data', [
                     ],
                 ],
             ],
+        ],
+        [
+            'carrier'         => null,
+            'deliveryType'    => 'standard',
+            'shipments'       => 1,
+            'shipmentCarriers' => ['POSTNL'],
+            'exported'        => false,
+            'apiIdentifier'   => null,
         ],
     ],
 
@@ -372,6 +396,14 @@ dataset('legacy meta data', [
                 ],
             ],
         ],
+        [
+            'carrier'         => null,
+            'deliveryType'    => 'standard',
+            'shipments'       => 2,
+            'shipmentCarriers' => ['POSTNL', 'POSTNL'],
+            'exported'        => false,
+            'apiIdentifier'   => null,
+        ],
     ],
 
     'shipments with pickup location' => [
@@ -501,6 +533,14 @@ dataset('legacy meta data', [
                 ],
             ],
         ],
+        [
+            'carrier'         => 'POSTNL',
+            'deliveryType'    => 'pickup',
+            'shipments'       => 1,
+            'shipmentCarriers' => ['POSTNL'],
+            'exported'        => false,
+            'apiIdentifier'   => null,
+        ],
     ],
 
     'split address' => [
@@ -509,6 +549,14 @@ dataset('legacy meta data', [
             OrdersMigration::LEGACY_META_SHIPPING_STREET_NAME         => 'Antareslaan',
             OrdersMigration::LEGACY_META_SHIPPING_HOUSE_NUMBER        => '31',
             OrdersMigration::LEGACY_META_SHIPPING_HOUSE_NUMBER_SUFFIX => '',
+        ],
+        [
+            'carrier'         => null,
+            'deliveryType'    => 'standard',
+            'shipments'       => 0,
+            'shipmentCarriers' => [],
+            'exported'        => false,
+            'apiIdentifier'   => null,
         ],
     ],
 
@@ -520,6 +568,14 @@ dataset('legacy meta data', [
                 'pps_uuid'        => 'f146efee-a7e2-47cc-9369-e1b65a37aff9',
                 'pps_export_date' => '2023-07-26 13:02:23',
             ],
+        ],
+        [
+            'carrier'         => null,
+            'deliveryType'    => 'standard',
+            'shipments'       => 0,
+            'shipmentCarriers' => [],
+            'exported'        => true,
+            'apiIdentifier'   => 'f146efee-a7e2-47cc-9369-e1b65a37aff9',
         ],
     ],
 ]);
