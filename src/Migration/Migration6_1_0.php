@@ -53,6 +53,9 @@ final class Migration6_1_0 extends AbstractMigration
     public function migrateAccountData(): void
     {
         $account = $this->accountRepository->getAccount(true);
+        // PHPStan types Account::$shops as a non-null ShopCollection, but the guard is kept
+        // intentionally to stay safe against partial/corrupted account data during upgrade.
+        // @phpstan-ignore booleanAnd.rightAlwaysTrue
         $shop    = $account && $account->shops ? $account->shops->first() : null;
 
         if (! $shop) {
