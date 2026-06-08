@@ -21,8 +21,6 @@ class BlocksIntegrationHooks implements WordPressHooksInterface
      */
     public function apply(): void
     {
-        add_action('before_woocommerce_init', [$this, 'declareCheckoutBlocksCompatibility']);
-
         $this->loadBlocks();
     }
 

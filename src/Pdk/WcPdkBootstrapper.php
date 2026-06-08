@@ -167,7 +167,7 @@ class WcPdkBootstrapper extends PdkBootstrapper
             ###
 
             'wooCommerceBlocksCheckout' => value([
-                'delivery-options' => DeliveryOptionsBlocksIntegration::class,
+                'myparcelnl-delivery-options' => DeliveryOptionsBlocksIntegration::class,
             ]),
 
             ###
