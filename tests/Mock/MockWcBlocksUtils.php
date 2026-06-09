@@ -18,8 +18,7 @@ class MockWcBlocksUtils extends MockWcClass
      */
     public static function has_block_in_page($page, $block_name)
     {
-        $data = MockWpCache::get($page, 'pages');
-
-        return is_array($data) && ! empty($data['hasBlocks']);
+        //todo: extend this function when we want to check for specific blocks in tests
+        return MockWpCache::get($page, 'pages')['hasBlocks'];
     }
 }
