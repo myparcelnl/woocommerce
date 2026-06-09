@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.5.0](https://github.com/myparcelnl/woocommerce/compare/v6.4.1...v6.5.0) (2026-06-09)
+
+
+### :bug: Bug Fixes
+
+* bump js-cookie from 3.0.5 to 3.0.7 ([#1619](https://github.com/myparcelnl/woocommerce/issues/1619)) ([7152b5b](https://github.com/myparcelnl/woocommerce/commit/7152b5b23d5c618e5f6431e4156d73e7ea4ae876))
+* bump setasign/fpdi from 2.6.6 to 2.6.7 ([#1615](https://github.com/myparcelnl/woocommerce/issues/1615)) ([e6dac56](https://github.com/myparcelnl/woocommerce/commit/e6dac5640ef592b502951b0d79366d282bcbd139))
+* bump symfony/yaml from 5.4.45 to 5.4.53 ([#1620](https://github.com/myparcelnl/woocommerce/issues/1620)) ([652371d](https://github.com/myparcelnl/woocommerce/commit/652371d1515b188876707361d88238604057e254))
+* bump the minor-php-updates group across 1 directory with 2 updates ([#1616](https://github.com/myparcelnl/woocommerce/issues/1616)) ([248d078](https://github.com/myparcelnl/woocommerce/commit/248d078b6c10fe3ef588e7b87ad67945410618ae))
+* bump ws from 8.13.0 to 8.20.1 ([#1614](https://github.com/myparcelnl/woocommerce/issues/1614)) ([7cfd7ad](https://github.com/myparcelnl/woocommerce/commit/7cfd7ada86b2d191f3b6e1f02024925a8d9ceb02))
+* **deps-dev:** bump postcss in / ([#1608](https://github.com/myparcelnl/woocommerce/issues/1608)) ([efca153](https://github.com/myparcelnl/woocommerce/commit/efca1531338bd6b434af6d6735a2e1756b381144))
+* **deps:** bump basic-ftp from 5.2.0 to 5.3.1 ([#1607](https://github.com/myparcelnl/woocommerce/issues/1607)) ([08158ff](https://github.com/myparcelnl/woocommerce/commit/08158ff0a50aa629b93ee28befb4b821db8d3a55))
+* **deps:** bump follow-redirects from 1.15.9 to 1.16.0 ([#1602](https://github.com/myparcelnl/woocommerce/issues/1602)) ([e3cbac7](https://github.com/myparcelnl/woocommerce/commit/e3cbac7c090dbeb9e5e0447d1ca9c248c9307b83))
+
+
+### :sparkles: New Features
+
+* bump @babel/plugin-transform-modules-systemjs from 7.25.7 to 7.29.4 ([#1610](https://github.com/myparcelnl/woocommerce/issues/1610)) ([a0964da](https://github.com/myparcelnl/woocommerce/commit/a0964dade78de899d15caaedb3216bd0ac4a96dd))
+* bump fast-uri from 3.0.3 to 3.1.2 ([#1609](https://github.com/myparcelnl/woocommerce/issues/1609)) ([5dac733](https://github.com/myparcelnl/woocommerce/commit/5dac73328a2fb894aa3a5c6553009ba7794678c9))
+* bump guzzlehttp/guzzle from 7.11.0 to 7.11.1 in the minor-php-updates group ([#1631](https://github.com/myparcelnl/woocommerce/issues/1631)) ([2c9fa95](https://github.com/myparcelnl/woocommerce/commit/2c9fa95e2f5cd4cb160e497d244e09f0d014c37e))
+* bump php-stubs/woocommerce-stubs from 10.7.0 to 10.8.0 in the minor-php-updates group across 1 directory ([#1630](https://github.com/myparcelnl/woocommerce/issues/1630)) ([e03e9be](https://github.com/myparcelnl/woocommerce/commit/e03e9be9fb20a16dab01a0bce935ac8b21986ea8))
+* **capabilities:** drive carriers, delivery options, and shipment options from the MyParcel API ([#1612](https://github.com/myparcelnl/woocommerce/issues/1612)) ([abef523](https://github.com/myparcelnl/woocommerce/commit/abef52356d740d9e79e1745154ec17a9ab9446a9)), closes [myparcelnl/pdk#459](https://github.com/myparcelnl/pdk/issues/459) [myparcelnl/js-pdk#346](https://github.com/myparcelnl/js-pdk/issues/346)
+
 ## [6.4.1](https://github.com/myparcelnl/woocommerce/compare/v6.4.0...v6.4.1) (2026-05-12)
 
 
