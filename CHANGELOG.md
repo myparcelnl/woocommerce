@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.5.1](https://github.com/myparcelnl/woocommerce/compare/v6.5.0...v6.5.1) (2026-06-10)
+
+
+### :bug: Bug Fixes
+
+* fix fatal errors when upgrading to v6.5.0 from > v6.1.0 ([#1637](https://github.com/myparcelnl/woocommerce/issues/1637)) ([b2bc8d1](https://github.com/myparcelnl/woocommerce/commit/b2bc8d122cd96fc67e496daec33faf60baa93e63))
+
 ## [6.5.0](https://github.com/myparcelnl/woocommerce/compare/v6.4.1...v6.5.0) (2026-06-09)
 
 
