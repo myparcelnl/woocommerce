@@ -1,4 +1,5 @@
 <?php
+
 /** @noinspection StaticClosureCanBeUsedInspection */
 
 declare(strict_types=1);
@@ -13,7 +14,7 @@ use MyParcelNL\Pdk\SdkApi\Service\CoreApi\Shipment\CapabilitiesService;
 use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
 use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
 use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
-use MyParcelNL\WooCommerce\Migration\Migration6_1_0;
+use MyParcelNL\WooCommerce\Migration\Migration6_5_1;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
@@ -30,8 +31,8 @@ it('does not fail account data migration when no account or shop is available', 
     /** @var PdkAccountRepositoryInterface $accountRepo */
     $accountRepo = Pdk::get(PdkAccountRepositoryInterface::class);
 
-    /** @var Migration6_1_0 $migration */
-    $migration = Pdk::get(Migration6_1_0::class);
+    /** @var Migration6_5_1 $migration */
+    $migration = Pdk::get(Migration6_5_1::class);
 
     // No account configured (and a forced refresh has no valid API key), so getAccount()
     // returns null. The migration must skip gracefully instead of fataling.
@@ -55,10 +56,10 @@ it('rethrows when fetching carrier definitions fails so the migration retries', 
 
     mockPdkProperties([CarrierCapabilitiesRepository::class => $throwingRepo]);
 
-    /** @var Migration6_1_0 $migration */
-    $migration = Pdk::get(Migration6_1_0::class);
+    /** @var Migration6_5_1 $migration */
+    $migration = Pdk::get(Migration6_5_1::class);
 
-    expect(fn () => $migration->migrateAccountData())->toThrow(RuntimeException::class);
+    expect(fn() => $migration->migrateAccountData())->toThrow(RuntimeException::class);
 });
 
 // --- migrateCarrierSettings ---
@@ -74,8 +75,8 @@ it('remaps legacy carrier setting keys to new format', function () {
         'dhlparcelconnect' => ['delivery_enabled' => '0'],
     ]);
 
-    /** @var Migration6_1_0 $migration */
-    $migration = Pdk::get(Migration6_1_0::class);
+    /** @var Migration6_5_1 $migration */
+    $migration = Pdk::get(Migration6_5_1::class);
     $migration->migrateCarrierSettings();
 
     $result = $settingsRepo->get($settingsKey);
@@ -91,8 +92,8 @@ it('remaps legacy carrier setting keys to new format', function () {
 });
 
 it('does not fail when carrier settings are empty', function () {
-    /** @var Migration6_1_0 $migration */
-    $migration = Pdk::get(Migration6_1_0::class);
+    /** @var Migration6_5_1 $migration */
+    $migration = Pdk::get(Migration6_5_1::class);
     $migration->migrateCarrierSettings();
 
     /** @var \MyParcelNL\Pdk\Tests\Bootstrap\MockSettingsRepository $settingsRepo */
@@ -112,8 +113,8 @@ it('preserves carrier settings that already use new key format', function () {
         'BPOST'  => ['delivery_enabled' => '1'],
     ]);
 
-    /** @var Migration6_1_0 $migration */
-    $migration = Pdk::get(Migration6_1_0::class);
+    /** @var Migration6_5_1 $migration */
+    $migration = Pdk::get(Migration6_5_1::class);
     $migration->migrateCarrierSettings();
 
     $result = $settingsRepo->get($settingsKey);
@@ -133,14 +134,14 @@ it('schedules order data migration', function () {
         createWcOrder(['id' => $i]);
     }
 
-    /** @var Migration6_1_0 $migration */
-    $migration = Pdk::get(Migration6_1_0::class);
+    /** @var Migration6_5_1 $migration */
+    $migration = Pdk::get(Migration6_5_1::class);
     $migration->updateOrderData();
 
     $allTasks = $tasks->all();
 
     expect($allTasks->count())->toBeGreaterThanOrEqual(1)
-        ->and($allTasks->pluck('callback'))->each->toBe(Pdk::get('migrateAction_6_1_0_Orders'))
+        ->and($allTasks->pluck('callback'))->each->toBe(Pdk::get('migrateAction_6_5_1_Orders'))
         ->and($allTasks->first()['args'][0]['orderIds'])->not->toBeEmpty()
         ->and($allTasks->first()['args'][0]['chunk'])->toBe(1);
 });
@@ -153,14 +154,14 @@ it('schedules shipment data migration', function () {
         createWcOrder(['id' => $i]);
     }
 
-    /** @var Migration6_1_0 $migration */
-    $migration = Pdk::get(Migration6_1_0::class);
+    /** @var Migration6_5_1 $migration */
+    $migration = Pdk::get(Migration6_5_1::class);
     $migration->updateShipmentData();
 
     $allTasks = $tasks->all();
 
     expect($allTasks->count())->toBeGreaterThanOrEqual(1)
-        ->and($allTasks->pluck('callback'))->each->toBe(Pdk::get('migrateAction_6_1_0_Shipments'));
+        ->and($allTasks->pluck('callback'))->each->toBe(Pdk::get('migrateAction_6_5_1_Shipments'));
 });
 
 // --- migrateOrderChunk (carrier normalization) ---
@@ -189,8 +190,8 @@ it('normalises the carrier field in order data', function (array $orderData, str
 
     createWcOrder(['id' => 1, 'meta' => [$metaKey => $orderData]]);
 
-    /** @var Migration6_1_0 $migration */
-    $migration = Pdk::get(Migration6_1_0::class);
+    /** @var Migration6_5_1 $migration */
+    $migration = Pdk::get(Migration6_5_1::class);
     $migration->migrateOrderChunk([
         'orderIds' => [1],
         'chunk'    => 1,
@@ -204,8 +205,8 @@ it('normalises the carrier field in order data', function (array $orderData, str
 it('skips orders without order data meta', function () {
     createWcOrder(['id' => 1]);
 
-    /** @var Migration6_1_0 $migration */
-    $migration = Pdk::get(Migration6_1_0::class);
+    /** @var Migration6_5_1 $migration */
+    $migration = Pdk::get(Migration6_5_1::class);
     $migration->migrateOrderChunk([
         'orderIds' => [1],
         'chunk'    => 1,
@@ -240,8 +241,8 @@ it('normalises the carrier field in shipment data', function (array $shipments, 
 
     createWcOrder(['id' => 1, 'meta' => [$metaKey => $shipments]]);
 
-    /** @var Migration6_1_0 $migration */
-    $migration = Pdk::get(Migration6_1_0::class);
+    /** @var Migration6_5_1 $migration */
+    $migration = Pdk::get(Migration6_5_1::class);
     $migration->migrateShipmentChunk([
         'orderIds' => [1],
         'chunk'    => 1,

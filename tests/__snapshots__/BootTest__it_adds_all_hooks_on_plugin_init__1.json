@@ -106,11 +106,11 @@
     "myparcelcom_migrate_5_0_0_product_settings": [
         "MyParcelNL\\WooCommerce\\Migration\\Pdk\\ProductSettingsMigration::migrateProductSettings"
     ],
-    "myparcelcom_migrate_6_1_0_orders": [
-        "MyParcelNL\\WooCommerce\\Migration\\Migration6_1_0::migrateOrderChunk"
+    "myparcelcom_migrate_6_5_1_orders": [
+        "MyParcelNL\\WooCommerce\\Migration\\Migration6_5_1::migrateOrderChunk"
     ],
-    "myparcelcom_migrate_6_1_0_shipments": [
-        "MyParcelNL\\WooCommerce\\Migration\\Migration6_1_0::migrateShipmentChunk"
+    "myparcelcom_migrate_6_5_1_shipments": [
+        "MyParcelNL\\WooCommerce\\Migration\\Migration6_5_1::migrateShipmentChunk"
     ],
     "woocommerce_get_country_locale": [
         "MyParcelNL\\WooCommerce\\Hooks\\SeparateAddressFieldsHooks::extendLocaleWithSeparateAddressFields",

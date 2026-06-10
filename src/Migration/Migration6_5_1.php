@@ -12,7 +12,7 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
 use WC_Order;
 
-final class Migration6_1_0 extends AbstractMigration
+final class Migration6_5_1 extends AbstractMigration
 {
     protected CarrierCapabilitiesRepository $carrierCapabilitiesRepository;
     protected PdkAccountRepositoryInterface $accountRepository;
@@ -33,7 +33,7 @@ final class Migration6_1_0 extends AbstractMigration
 
     public function getVersion(): string
     {
-        return '6.1.0';
+        return '6.5.1';
     }
 
     public function down(): void {}
@@ -115,7 +115,7 @@ final class Migration6_1_0 extends AbstractMigration
     {
         $this->schedulePagedMigration(
             Pdk::get('metaKeyOrderData'),
-            Pdk::get('migrateAction_6_1_0_Orders')
+            Pdk::get('migrateAction_6_5_1_Orders')
         );
     }
 
@@ -183,7 +183,7 @@ final class Migration6_1_0 extends AbstractMigration
     {
         $this->schedulePagedMigration(
             Pdk::get('metaKeyOrderShipments'),
-            Pdk::get('migrateAction_6_1_0_Shipments')
+            Pdk::get('migrateAction_6_5_1_Shipments')
         );
     }
 
