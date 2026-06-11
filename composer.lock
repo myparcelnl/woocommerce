@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d295a4d99f3592752a76e22deed30aae",
+    "content-hash": "6c2f6a202385c0192b409d8c67f13ace",
     "packages": [
         {
             "name": "fruitcake/php-cors",
@@ -533,16 +533,16 @@
         },
         {
             "name": "myparcelnl/sdk",
-            "version": "11.0.0-beta.20",
+            "version": "11.0.0-beta.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/sdk.git",
-                "reference": "dc625d4c093a717a235d3f7730b5d06d89db837d"
+                "reference": "3044ce7cc807918fcd079f6845672ecee50ae91e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/dc625d4c093a717a235d3f7730b5d06d89db837d",
-                "reference": "dc625d4c093a717a235d3f7730b5d06d89db837d",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/3044ce7cc807918fcd079f6845672ecee50ae91e",
+                "reference": "3044ce7cc807918fcd079f6845672ecee50ae91e",
                 "shasum": ""
             },
             "require": {
@@ -593,9 +593,9 @@
             ],
             "support": {
                 "issues": "https://github.com/myparcelnl/sdk/issues",
-                "source": "https://github.com/myparcelnl/sdk/tree/v11.0.0-beta.20"
+                "source": "https://github.com/myparcelnl/sdk/tree/v11.0.0-beta.22"
             },
-            "time": "2026-06-01T09:18:24+00:00"
+            "time": "2026-06-09T08:26:43+00:00"
         },
         {
             "name": "php-di/invoker",
