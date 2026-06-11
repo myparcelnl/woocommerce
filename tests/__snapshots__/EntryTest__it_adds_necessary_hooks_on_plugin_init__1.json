@@ -1,4 +1,7 @@
 {
+    "before_woocommerce_init": [
+        "MyParcelNLWooCommerce::declareBlocksCompatibility"
+    ],
     "activate_woocommerce-myparcel": [
         "MyParcelNLWooCommerce::install"
     ],

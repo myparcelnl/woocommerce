@@ -17,6 +17,7 @@
 declare(strict_types=1);
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationRegistry;
+use Automattic\WooCommerce\Utilities\FeaturesUtil;
 use MyParcelNL\Pdk\Base\Pdk as PdkInstance;
 use MyParcelNL\Pdk\Base\PdkBootstrapper;
 use MyParcelNL\Pdk\Facade\Installer;
@@ -41,6 +42,8 @@ final class MyParcelNLWooCommerce
     public function __construct()
     {
         $this->boot();
+
+        add_action('before_woocommerce_init', [$this, 'declareBlocksCompatibility']);
 
         register_activation_hook(__FILE__, [$this, 'install']);
         register_deactivation_hook(__FILE__, [$this, 'uninstall']);
@@ -125,6 +128,16 @@ final class MyParcelNLWooCommerce
         $loader = Pdk::get(WcBlocksLoader::class);
         $loader->setRegistry($integrationRegistry);
         $loader->registerBlocks(Pdk::get('wooCommerceBlocksCheckout'));
+    }
+
+    /**
+     * @return void
+     */
+    public function declareBlocksCompatibility(): void
+    {
+        if (class_exists('\Automattic\WooCommerce\Utilities\FeaturesUtil')) {
+            FeaturesUtil::declare_compatibility('cart_checkout_blocks', __FILE__);
+        }
     }
 
     /**

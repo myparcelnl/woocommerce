@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Integration;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
-use MyParcelNL\Pdk\Facade\Pdk;
 
 abstract class AbstractBlocksIntegration implements IntegrationInterface
 {
@@ -19,9 +18,7 @@ abstract class AbstractBlocksIntegration implements IntegrationInterface
      */
     public function __construct(string $blockName)
     {
-        $appInfo = Pdk::getAppInfo();
-
-        $this->name = "$appInfo->name-$blockName";
+        $this->name = $blockName;
     }
 
     /**

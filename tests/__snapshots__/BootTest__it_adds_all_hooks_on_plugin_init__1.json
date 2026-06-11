@@ -1,4 +1,7 @@
 {
+    "before_woocommerce_init": [
+        "MyParcelNLWooCommerce::declareBlocksCompatibility"
+    ],
     "activate_woocommerce-myparcel": [
         "MyParcelNLWooCommerce::install"
     ],
@@ -15,9 +18,6 @@
     ],
     "woocommerce_order_status_changed": [
         "MyParcelNL\\WooCommerce\\Hooks\\AutomaticOrderExportHooks::automaticExportOrder"
-    ],
-    "before_woocommerce_init": [
-        "MyParcelNL\\WooCommerce\\Hooks\\BlocksIntegrationHooks::declareCheckoutBlocksCompatibility"
     ],
     "woocommerce_cart_calculate_fees": [
         "MyParcelNL\\WooCommerce\\Hooks\\CartFeesHooks::calculateDeliveryOptionsFees"

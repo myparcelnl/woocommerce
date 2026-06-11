@@ -5,7 +5,7 @@ import {getSetting} from '@woocommerce/settings';
 import {ExperimentalOrderShippingPackages} from '@woocommerce/blocks-checkout';
 import {CHECKOUT_STORE_KEY} from '@woocommerce/block-data';
 
-const NAME = 'myparcelnl-delivery-options';
+const NAME = 'myparcelcom-delivery-options';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const DeliveryOptionsWrapper = () => {

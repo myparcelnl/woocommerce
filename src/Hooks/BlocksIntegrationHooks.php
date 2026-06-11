@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
-use Automattic\WooCommerce\Utilities\FeaturesUtil;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 
@@ -21,25 +20,7 @@ class BlocksIntegrationHooks implements WordPressHooksInterface
      */
     public function apply(): void
     {
-        add_action('before_woocommerce_init', [$this, 'declareCheckoutBlocksCompatibility']);
-
         $this->loadBlocks();
-    }
-
-    /**
-     * @return void
-     */
-    public function declareCheckoutBlocksCompatibility(): void
-    {
-        // @codeCoverageIgnoreStart
-        if (! class_exists('\Automattic\WooCommerce\Utilities\FeaturesUtil')) {
-            return;
-        }
-
-        $appInfo = Pdk::getAppInfo();
-
-        FeaturesUtil::declare_compatibility('cart_checkout_blocks', $appInfo->path);
-        // @codeCoverageIgnoreEnd
     }
 
     /**
