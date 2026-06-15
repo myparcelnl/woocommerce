@@ -101,17 +101,30 @@ class PdkOrderListHooks implements WordPressHooksInterface
             return;
         }
 
-        // Check if the order has local pickup
+        $wcOrder = null;
+
         try {
-            if ($this->wcOrderRepository->hasLocalPickup($orderOrId)) {
-                // Don't render anything for local pickup orders
+            $wcOrder = $this->wcOrderRepository->get($orderOrId);
+            if ($this->wcOrderRepository->hasLocalPickup($wcOrder)) {
                 return;
             }
         } catch (\InvalidArgumentException $e) {
             // If we can't determine due to invalid input, continue with normal rendering
         }
 
-        $pdkOrder = $this->pdkOrderRepository->get($orderOrId);
+        /** @var \MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository $pdkOrderRepository */
+        $pdkOrderRepository = $this->pdkOrderRepository;
+        $pdkOrder = $wcOrder !== null
+            ? $pdkOrderRepository->getForOrderList($wcOrder)
+            : null;
+
+        if (null === $pdkOrder) {
+            try {
+                $pdkOrder = $pdkOrderRepository->get($orderOrId);
+            } catch (\InvalidArgumentException $e) {
+                return;
+            }
+        }
 
         echo Frontend::renderOrderListItem($pdkOrder);
     }
