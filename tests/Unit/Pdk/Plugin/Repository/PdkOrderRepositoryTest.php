@@ -262,3 +262,40 @@ it('handles errors', function ($input) {
             return ['id' => 1];
         },
     ]);
+
+it('getForOrderList does not load order items', function () {
+    $wcOrder = wpFactory(WC_Order::class)->make();
+
+    /** @var \MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository $orderRepository */
+    $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
+
+    $pdkOrder = $orderRepository->getForOrderList($wcOrder);
+
+    // Lines are an empty collection — getItems() was never called.
+    expect($pdkOrder)->toBeInstanceOf(PdkOrder::class)
+        ->and($pdkOrder->lines->count())->toBe(0);
+});
+
+it('getForOrderList excludes notes and lines from toArray', function () {
+    $wcOrder = wpFactory(WC_Order::class)->make();
+
+    /** @var \MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository $orderRepository */
+    $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
+
+    $pdkOrder = $orderRepository->getForOrderList($wcOrder);
+    $array    = $pdkOrder->toArrayWithoutNull();
+
+    expect($array)->not->toHaveKey('notes')
+        ->and($array)->not->toHaveKey('lines');
+});
+
+it('get() still loads order items (regression)', function () {
+    $wcOrder = wpFactory(WC_Order::class)->make();
+
+    /** @var PdkOrderRepositoryInterface $orderRepository */
+    $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
+
+    $pdkOrder = $orderRepository->get($wcOrder);
+
+    expect($pdkOrder->lines->count())->toBeGreaterThan(0);
+});
