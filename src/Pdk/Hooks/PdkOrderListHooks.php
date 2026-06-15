@@ -112,10 +112,19 @@ class PdkOrderListHooks implements WordPressHooksInterface
             // If we can't determine due to invalid input, continue with normal rendering
         }
 
-        /** @var \MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository $this->pdkOrderRepository */
+        /** @var \MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository $pdkOrderRepository */
+        $pdkOrderRepository = $this->pdkOrderRepository;
         $pdkOrder = $wcOrder !== null
-            ? $this->pdkOrderRepository->getForOrderList($wcOrder)
-            : $this->pdkOrderRepository->get($orderOrId);
+            ? $pdkOrderRepository->getForOrderList($wcOrder)
+            : null;
+
+        if (null === $pdkOrder) {
+            try {
+                $pdkOrder = $pdkOrderRepository->get($orderOrId);
+            } catch (\InvalidArgumentException $e) {
+                return;
+            }
+        }
 
         echo Frontend::renderOrderListItem($pdkOrder);
     }
