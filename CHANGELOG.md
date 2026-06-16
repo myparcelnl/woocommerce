@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.5.2](https://github.com/myparcelnl/woocommerce/compare/v6.5.1...v6.5.2) (2026-06-16)
+
+
+### :bug: Bug Fixes
+
+* **checkout:** fix infinite loading or "blocks not supported" notices when using blocks checkout ([#1632](https://github.com/myparcelnl/woocommerce/issues/1632)) ([de5be08](https://github.com/myparcelnl/woocommerce/commit/de5be08ced4b9f23fa6d5efeb7a01784ea56779f))
+
 ## [6.5.1](https://github.com/myparcelnl/woocommerce/compare/v6.5.0...v6.5.1) (2026-06-10)
 
 
