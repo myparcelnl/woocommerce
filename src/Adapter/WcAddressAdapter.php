@@ -158,7 +158,7 @@ class WcAddressAdapter
         if ($this->getAddressField($order, Pdk::get('fieldAddress1'), $addressType)) {
             return [];
         }
-        // Check if the hidden address is filled, use it when available and don't send the fullStreet in that case.
+        // Check if the hidden address is filled, use it when available and don't send the separate fields in that case.
         if ($this->getOrderMeta($order, Pdk::get('checkoutAddressHiddenInputName'), $addressType)) {
             return [];
         }
