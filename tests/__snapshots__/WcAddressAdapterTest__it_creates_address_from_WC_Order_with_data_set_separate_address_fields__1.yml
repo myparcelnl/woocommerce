@@ -9,6 +9,8 @@ company: MyParcel
 postalCode: 2132WT
 region: NH
 state: NH
-fullStreet: 'Siriusdreef 66 -68'
+street: Siriusdreef
+number: '66'
+numberSuffix: '-68'
 eoriNumber: null
 vatNumber: null

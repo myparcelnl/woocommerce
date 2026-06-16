@@ -170,7 +170,11 @@ class WcAddressAdapter
         $hasSeparateAddress = $street || $number || $numberSuffix;
 
         return $hasSeparateAddress && in_array($country, Pdk::get('countriesWithSeparateAddressFields'), true)
-            ? ['fullStreet' => trim("$street $number $numberSuffix")]
+            ? [
+                'street'       => $street ?: null,
+                'number'       => $number ?: null,
+                'numberSuffix' => $numberSuffix ?: null,
+            ]
             : [];
     }
 
