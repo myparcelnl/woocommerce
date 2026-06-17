@@ -94,6 +94,28 @@ dataset('addresses', function () {
             ],
         ],
 
+        'separate address fields with address_1 set' => [
+            'addressType' => 'shipping',
+            'address'     => [
+                'billing_email'       => 'test@test.com',
+                'billing_phone'       => '0612345678',
+                'shipping_address_1'  => 'Siriusdreef 66',
+                'shipping_address_2'  => '',
+                'shipping_city'       => 'Hoofddorp',
+                'shipping_company'    => 'MyParcel',
+                'shipping_country'    => 'NL',
+                'shipping_first_name' => 'Sirius',
+                'shipping_last_name'  => 'Parcel',
+                'shipping_postcode'   => '2132WT',
+                'shipping_state'      => 'NL-NH',
+            ],
+            'meta'        => [
+                '_shipping_street_name'         => 'Siriusdreef',
+                '_shipping_house_number'        => '66',
+                '_shipping_house_number_suffix' => '-68',
+            ],
+        ],
+
         'vat fields' => [
             'addressType' => 'shipping',
             'address'     => [
