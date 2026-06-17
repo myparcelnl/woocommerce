@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Migration;
 
 use MyParcelNL\Pdk\App\Installer\Contract\MigrationInterface;
-use MyParcelNL\Sdk\Factory\ConsignmentFactory;
-use MyParcelNL\Sdk\Model\Consignment\PostNLConsignment;
 
 final class Migration4_1_0 extends AbstractUpgradeMigration implements MigrationInterface
 {
@@ -160,24 +158,21 @@ final class Migration4_1_0 extends AbstractUpgradeMigration implements Migration
     }
 
     /**
-     * @return array
-     * @throws \Exception
+     * Returns the PostNL insurance tiers that were valid when plugin v4.1.0 was current.
+     *
+     * These amounts are intentionally hardcoded rather than fetched from the capabilities API.
+     * This migration transforms data that was created under the old consignment-based SDK; the
+     * valid tiers at that time were a fixed ladder in whole euros. Using live capabilities here
+     * would be wrong: the API may return different values today, causing the same stored setting
+     * to round to a different tier depending on when the migration runs.
+     *
+     * @return array<int, int>
      */
     private function getNewInsuranceAmounts(): array
     {
-        $amounts = [];
+        $amounts = [0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000];
 
-        /**
-         * @type PostNLConsignment $carrier
-         */
-        $carrier             = ConsignmentFactory::createByCarrierName('postnl');
-        $amountPossibilities = $carrier->getInsurancePossibilities();
-
-        foreach ($amountPossibilities as $value) {
-            $amounts[$value] = $value;
-        }
-
-        return $amounts;
+        return array_combine($amounts, $amounts);
     }
 
     private function migrateCheckoutSettings(): void
