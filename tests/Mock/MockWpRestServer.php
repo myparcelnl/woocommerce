@@ -12,11 +12,19 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class MockWpRestServer extends MockWpClass implements ResetInterface
 {
-    use HasInstance;
-
     public const CREATABLE = 'creatable';
 
     private $routes = [];
+
+    private static $instance;
+
+    public static function getInstance(): self
+    {
+        if (null === self::$instance) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
 
     /**
      * @return array
