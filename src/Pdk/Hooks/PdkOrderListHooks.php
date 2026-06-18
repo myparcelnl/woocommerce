@@ -10,6 +10,7 @@ use MyParcelNL\Pdk\Facade\Language;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Facade\WooCommerce;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
+use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
 use MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface;
 
 class PdkOrderListHooks implements WordPressHooksInterface
@@ -112,15 +113,11 @@ class PdkOrderListHooks implements WordPressHooksInterface
             // If we can't determine due to invalid input, continue with normal rendering
         }
 
-        /** @var \MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository $pdkOrderRepository */
-        $pdkOrderRepository = $this->pdkOrderRepository;
-        $pdkOrder = $wcOrder !== null
-            ? $pdkOrderRepository->getForOrderList($wcOrder)
-            : null;
-
-        if (null === $pdkOrder) {
+        if ($wcOrder !== null && $this->pdkOrderRepository instanceof PdkOrderRepository) {
+            $pdkOrder = $this->pdkOrderRepository->getForOrderList($wcOrder);
+        } else {
             try {
-                $pdkOrder = $pdkOrderRepository->get($orderOrId);
+                $pdkOrder = $this->pdkOrderRepository->get($orderOrId);
             } catch (\InvalidArgumentException $e) {
                 return;
             }
