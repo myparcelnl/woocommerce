@@ -158,10 +158,10 @@ class WcAddressAdapter
         if ($this->getOrderMeta($order, Pdk::get('checkoutAddressHiddenInputName'), $addressType)) {
             return [];
         }
-        $street       = $this->getOrderMeta($order, Pdk::get('fieldStreet'), $addressType);
-        $number       = $this->getOrderMeta($order, Pdk::get('fieldNumber'), $addressType);
-        $numberSuffix = $this->getOrderMeta($order, Pdk::get('fieldNumberSuffix'), $addressType);
-        $country = $this->getAddressField($order, Pdk::get('fieldCountry'), $addressType);
+        $street       = trim($this->getOrderMeta($order, Pdk::get('fieldStreet'), $addressType) ?: '');
+        $number       = trim($this->getOrderMeta($order, Pdk::get('fieldNumber'), $addressType) ?: '');
+        $numberSuffix = trim($this->getOrderMeta($order, Pdk::get('fieldNumberSuffix'), $addressType) ?: '');
+        $country      = $this->getAddressField($order, Pdk::get('fieldCountry'), $addressType);
 
         $hasSeparateAddress = $street || $number || $numberSuffix;
 
