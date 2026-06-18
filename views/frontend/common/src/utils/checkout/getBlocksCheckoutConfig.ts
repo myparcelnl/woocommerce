@@ -4,7 +4,7 @@ import {type CheckoutConfig} from '../../types';
 import {useWcCartStore} from './useWcCartStore';
 import {getShippingRate} from './getShippingRate';
 
-const MYPARCEL_BLOCK_FIELDS_PREFIX = 'myparcelnl/';
+const MYPARCEL_BLOCK_FIELDS_PREFIX = 'myparcelcom/';
 
 // eslint-disable-next-line max-lines-per-function
 export const getBlocksCheckoutConfig = (): CheckoutConfig => {
