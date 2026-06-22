@@ -864,6 +864,39 @@ class WCMYPA_Admin
     }
 
     /**
+     * Authorization guard for admin AJAX endpoints that read or modify order data.
+     *
+     * Verifies the request nonce (CSRF protection) and the current user's
+     * capabilities (authorization). Without this, any logged-in user — including
+     * self-registered customers — can call these endpoints. The capability check
+     * is filterable through `wc_myparcel_check_privs`, so access can be granted
+     * to shop managers or to roles defined by other plugins instead of being
+     * limited to administrators.
+     *
+     * Halts the request with a 403 JSON response when the check fails.
+     *
+     * @param string $nonceField The $_REQUEST key holding the nonce. Endpoints
+     *                           differ: most send it as `security`, the export
+     *                           endpoint sends it as `_wpnonce`.
+     */
+    public static function verifyAjaxAuthorization(string $nonceField = 'security'): void
+    {
+        if (! check_ajax_referer(WCMYPA::NONCE_ACTION, $nonceField, false)) {
+            wp_send_json_error(['message' => 'Invalid security token.'], 403);
+        }
+
+        $userCannotManageOrders = ! current_user_can('manage_woocommerce_orders')
+            && ! current_user_can('edit_shop_orders');
+
+        if (apply_filters('wc_myparcel_check_privs', $userCannotManageOrders)) {
+            wp_send_json_error(
+                ['message' => __('You do not have sufficient permissions to access this page.', 'woocommerce-myparcel')],
+                403
+            );
+        }
+    }
+
+    /**
      * On saving shipment options from the bulk options form.
      *
      * @throws Exception
@@ -871,6 +904,8 @@ class WCMYPA_Admin
      */
     public function save_shipment_options_ajax(): void
     {
+        self::verifyAjaxAuthorization();
+
         $post = wp_unslash(filter_input_array(INPUT_POST));
 
         parse_str($post['form_data'], $form_data);
