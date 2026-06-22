@@ -503,7 +503,7 @@ class WCMYPA_Admin
      */
     public function order_list_ajax_get_shipment_summary(): void
     {
-        self::verifyAjaxAuthorization();
+        self::denyUnauthorizedAjaxRequest();
 
         include('views/html-order-shipment-summary.php');
         die();
@@ -655,7 +655,7 @@ class WCMYPA_Admin
      */
     public function ajaxGetShipmentOptions(): void
     {
-        self::verifyAjaxAuthorization();
+        self::denyUnauthorizedAjaxRequest();
 
         // Order is used in views/html-order-shipment-options.php
         $order = wc_get_order((int) filter_input(INPUT_POST, 'orderId'));
@@ -869,22 +869,13 @@ class WCMYPA_Admin
     }
 
     /**
-     * Authorization guard for admin AJAX endpoints that read or modify order data.
+     * Blocks admin AJAX requests that fail the nonce (CSRF) or capability check,
+     * sending a 403 JSON response. The capability check is filterable via
+     * `wc_myparcel_check_privs`.
      *
-     * Verifies the request nonce (CSRF protection) and the current user's
-     * capabilities (authorization). Without this, any logged-in user — including
-     * self-registered customers — can call these endpoints. The capability check
-     * is filterable through `wc_myparcel_check_privs`, so access can be granted
-     * to shop managers or to roles defined by other plugins instead of being
-     * limited to administrators.
-     *
-     * Halts the request with a 403 JSON response when the check fails.
-     *
-     * @param string $nonceField The $_REQUEST key holding the nonce. Endpoints
-     *                           differ: most send it as `security`, the export
-     *                           endpoint sends it as `_wpnonce`.
+     * @param string $nonceField $_REQUEST key holding the nonce (`security`, or `_wpnonce` for export).
      */
-    public static function verifyAjaxAuthorization(string $nonceField = 'security'): void
+    public static function denyUnauthorizedAjaxRequest(string $nonceField = 'security'): void
     {
         if (! check_ajax_referer(WCMYPA::NONCE_ACTION, $nonceField, false)) {
             wp_send_json_error(['message' => 'Invalid security token.'], 403);
@@ -909,7 +900,7 @@ class WCMYPA_Admin
      */
     public function save_shipment_options_ajax(): void
     {
-        self::verifyAjaxAuthorization();
+        self::denyUnauthorizedAjaxRequest();
 
         $post = wp_unslash(filter_input_array(INPUT_POST));
 

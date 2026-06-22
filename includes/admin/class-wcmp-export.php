@@ -684,7 +684,7 @@ class WCMP_Export
     public function export()
     {
         // Verify the nonce and that the current user may manage shop orders.
-        WCMYPA_Admin::verifyAjaxAuthorization('_wpnonce');
+        WCMYPA_Admin::denyUnauthorizedAjaxRequest('_wpnonce');
 
         $return = [];
 
