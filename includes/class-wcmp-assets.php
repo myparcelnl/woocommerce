@@ -163,7 +163,8 @@ class WCMP_Assets
             $handle,
             sprintf('%s/%s/js/%s', WCMYPA()->plugin_url(), $path, $file),
             $dependencies,
-            WC_MYPARCEL_NL_VERSION
+            WC_MYPARCEL_NL_VERSION,
+            ['in_footer' => true]
         );
     }
 }
