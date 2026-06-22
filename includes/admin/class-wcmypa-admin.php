@@ -500,7 +500,7 @@ class WCMYPA_Admin
      */
     public function order_list_ajax_get_shipment_summary(): void
     {
-        check_ajax_referer(WCMYPA::NONCE_ACTION, 'security');
+        self::verifyAjaxAuthorization();
 
         include('views/html-order-shipment-summary.php');
         die();
@@ -652,6 +652,8 @@ class WCMYPA_Admin
      */
     public function ajaxGetShipmentOptions(): void
     {
+        self::verifyAjaxAuthorization();
+
         // Order is used in views/html-order-shipment-options.php
         $order = wc_get_order((int) filter_input(INPUT_POST, 'orderId'));
 
