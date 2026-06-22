@@ -1,10 +1,10 @@
 === MyParcel ===
-Contributors: richardperdaan, edielemoine, joerimyparcel
+Contributors: richardperdaan, joerimyparcel
 Tags: woocommerce, delivery, packages, myparcel, shipping
 Requires at least: 5.2.0
-Tested up to: 6.7
+Tested up to: 7.0
 Stable tag: 4.25.1
-Requires PHP: 7.1
+Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 

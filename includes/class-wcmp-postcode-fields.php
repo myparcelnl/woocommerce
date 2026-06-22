@@ -242,7 +242,8 @@ class WCMP_NL_Postcode_Fields
                 'checkout',
                 WCMYPA()->plugin_url() . '/assets/js/checkout.js',
                 ['jquery', 'wc-checkout'],
-                WC_MYPARCEL_NL_VERSION
+                WC_MYPARCEL_NL_VERSION,
+                ['in_footer' => true]
             );
             wp_enqueue_script('checkout');
         }
