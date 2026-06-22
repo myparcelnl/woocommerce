@@ -211,6 +211,7 @@ class WCMYPA_Admin
         $hasDeliveryDate = filter_input(INPUT_GET, 'deliveryDate');
 
         if ($hasDeliveryDate && in_array($typenow, wc_get_order_types('order-meta-boxes'))) {
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query -- Low-frequency admin-only filter on the orders list; only runs when an admin explicitly filters by delivery date.
             $deliveryDate['meta_query'] = [
                 [
                     'key'     => '_myparcel_delivery_date',
