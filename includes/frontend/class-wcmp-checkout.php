@@ -81,7 +81,18 @@ class WCMP_Checkout
      */
     public static function save_delivery_options(int $orderId): void
     {
-        // TODO nonce verification
+        $nonce = sanitize_text_field(
+            wp_unslash(
+                $_POST['woocommerce-process-checkout-nonce']
+                ?? $_POST['_wpnonce']
+                ?? ''
+            )
+        );
+
+        if (! wp_verify_nonce($nonce, 'woocommerce-process_checkout')) {
+            return;
+        }
+
         $order                = WCX::get_order($orderId);
         $shippingMethod       = sanitize_text_field(
             wp_unslash(
