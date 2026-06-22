@@ -283,8 +283,9 @@ class WCMYPA_Admin
      */
     public function saveVariationCountryOfOriginField(int $variationId, int $loop): void
     {
-        if (! isset($_POST[self::META_COUNTRY_OF_ORIGIN_VARIATION][$loop])) return;
-        $countryOfOriginValue = sanitize_title(wp_unslash($_POST[self::META_COUNTRY_OF_ORIGIN_VARIATION][$loop]));
+        // Nonce verified upstream by WC_AJAX::save_variations() before the woocommerce_save_product_variation hook fires.
+        if (! isset($_POST[self::META_COUNTRY_OF_ORIGIN_VARIATION][$loop])) return; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        $countryOfOriginValue = sanitize_title(wp_unslash($_POST[self::META_COUNTRY_OF_ORIGIN_VARIATION][$loop])); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
         if (! empty($countryOfOriginValue) && (new WC_Countries())->country_exists($countryOfOriginValue)) {
             update_post_meta($variationId, self::META_COUNTRY_OF_ORIGIN_VARIATION, $countryOfOriginValue);
@@ -329,8 +330,9 @@ class WCMYPA_Admin
      */
     public function save_variation_hs_code_field($variationId, $loop)
     {
-        if (!isset($_POST[self::META_HS_CODE_VARIATION][$loop])) return;
-        $hsCodeValue = sanitize_title(wp_unslash($_POST[self::META_HS_CODE_VARIATION][$loop]));
+        // Nonce verified upstream by WC_AJAX::save_variations() before the woocommerce_save_product_variation hook fires.
+        if (!isset($_POST[self::META_HS_CODE_VARIATION][$loop])) return; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        $hsCodeValue = sanitize_title(wp_unslash($_POST[self::META_HS_CODE_VARIATION][$loop])); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
         if (! $hsCodeValue || ! ctype_digit(str_replace(' ', '', $hsCodeValue))) {
             return;
