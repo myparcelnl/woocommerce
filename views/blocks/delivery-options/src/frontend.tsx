@@ -13,6 +13,10 @@ const CART_UPDATE_DEBOUNCE_MS = 300;
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
+// Tracks whether the wrapper has mounted before this page load. The first mount drives the PDK's
+// one-time initialization (which mounts the widget); only later remounts need an explicit render.
+let hasInitiallyMounted = false;
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const DeliveryOptionsWrapper = () => {
   const data = getSetting<{style?: string; context: string}>(`${NAME}_data`, {});
@@ -53,6 +57,16 @@ const DeliveryOptionsWrapper = () => {
 
     document.addEventListener('myparcel_updated_delivery_options', handleUpdatedDeliveryOptions);
     document.dispatchEvent(new CustomEvent('myparcel_wc_delivery_options_ready'));
+
+    // Blocks recreates this wrapper's DOM when toggling "Verzenden"/"Afhalen in de winkel". The PDK
+    // only initializes the widget once per page load, so on remounts we must tell the widget to
+    // (re)mount into the fresh #myparcel-delivery-options element. `myparcel_render_delivery_options`
+    // is the widget's public render event; it unmounts any stale app and mounts fresh.
+    if (hasInitiallyMounted) {
+      document.dispatchEvent(new Event('myparcel_render_delivery_options'));
+    }
+
+    hasInitiallyMounted = true;
 
     return () => {
       document.removeEventListener('myparcel_updated_delivery_options', handleUpdatedDeliveryOptions);
