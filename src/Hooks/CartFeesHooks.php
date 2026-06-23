@@ -60,6 +60,13 @@ final class CartFeesHooks implements WordPressHooksInterface
             return;
         }
 
+        // Local pickup ("Afhalen in de winkel") ships no parcel, so MyParcel delivery-options
+        // surcharges must not be charged even if a selection lingers from before the customer
+        // switched away from "Verzenden".
+        if ($this->isLocalPickupChosen()) {
+            return;
+        }
+
         $deliveryOptionsData = $this->resolveDeliveryOptionsData();
 
         if (empty($deliveryOptionsData)) {
@@ -99,6 +106,34 @@ final class CartFeesHooks implements WordPressHooksInterface
 
             $cart->add_fee(Language::translate($fee->translation), $amount, (bool) $tax, $tax);
         });
+    }
+
+    /**
+     * Whether the customer chose local pickup for the whole cart. Matches both the classic
+     * shipping-zone method (`local_pickup:N`) and the blocks "Afhalen in de winkel" method
+     * (`pickup_location:N`). Returns false on mixed carts that still ship a parcel.
+     */
+    private function isLocalPickupChosen(): bool
+    {
+        if (! WC()->session) {
+            return false;
+        }
+
+        $chosenMethods = (array) WC()->session->get('chosen_shipping_methods', []);
+
+        if (empty($chosenMethods)) {
+            return false;
+        }
+
+        foreach ($chosenMethods as $method) {
+            $method = (string) $method;
+
+            if (strpos($method, 'local_pickup') !== 0 && strpos($method, 'pickup_location') !== 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
