@@ -115,6 +115,7 @@ final class CartFeesHooks implements WordPressHooksInterface
      */
     private function isLocalPickupChosen(): bool
     {
+        // @phpstan-ignore booleanNot.alwaysFalse (WC()->session is nullable; the WooCommerce stub omits null)
         if (! WC()->session) {
             return false;
         }
@@ -149,6 +150,7 @@ final class CartFeesHooks implements WordPressHooksInterface
         woocommerce_store_api_register_update_callback([
             'namespace' => PdkBootstrapper::PLUGIN_NAMESPACE . '-delivery-options',
             'callback'  => static function (array $data): void {
+                // @phpstan-ignore if.alwaysTrue (WC()->session is nullable; the WooCommerce stub omits null)
                 if (WC()->session) {
                     WC()->session->set(self::DELIVERY_OPTIONS_SESSION_KEY, $data);
                 }
@@ -158,6 +160,7 @@ final class CartFeesHooks implements WordPressHooksInterface
 
     public function clearDeliveryOptionsSession(): void
     {
+        // @phpstan-ignore if.alwaysTrue (WC()->session is nullable; the WooCommerce stub omits null)
         if (WC()->session) {
             WC()->session->set(self::DELIVERY_OPTIONS_SESSION_KEY, null);
         }
@@ -186,6 +189,7 @@ final class CartFeesHooks implements WordPressHooksInterface
         }
 
         // Blocks checkout: the Store API update callback stashes the selection in the session.
+        // @phpstan-ignore if.alwaysTrue (WC()->session is nullable; the WooCommerce stub omits null)
         if (WC()->session) {
             $sessionData = WC()->session->get(self::DELIVERY_OPTIONS_SESSION_KEY);
 
