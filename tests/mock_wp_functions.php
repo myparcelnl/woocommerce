@@ -183,6 +183,12 @@ function wp_unslash($value)
     return $value;
 }
 
+/** @see \is_admin() */
+function is_admin(): bool
+{
+    return false;
+}
+
 function wp_enqueue_script($handle, $src = '', $deps = [], $ver = false, $in_footer = false)
 {
     MockWpEnqueue::add($handle, $src, $deps, $ver, $in_footer);

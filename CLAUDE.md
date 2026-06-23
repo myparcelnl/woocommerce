@@ -89,13 +89,13 @@ For long-running migrations, use **chunked cron jobs**:
 Always run PHP tests via Docker to use the correct PHP version:
 
 ```bash
-cd ~/projects/docker-wordpress && PHP_VERSION=7.4 docker compose run --rm php bash -c 'cd /var/www/html/wp-content/plugins/myparcelnl-woocommerce && ./vendor/bin/pest <args>'
+cd ~/projects/docker-wordpress && PHP_VERSION=7.4 docker compose run --rm php bash -c 'cd /var/www/html/wp-content/plugins/woocommerce-myparcel && ./vendor/bin/pest <args>'
 ```
 
 Before running tests, install composer dependencies inside the container:
 
 ```bash
-cd ~/projects/docker-wordpress && docker compose run --rm php bash -c "cd /var/www/html/wp-content/plugins/myparcelnl-woocommerce && composer install --ignore-platform-req=ext-gd"
+cd ~/projects/docker-wordpress && docker compose run --rm php bash -c "cd /var/www/html/wp-content/plugins/woocommerce-myparcel && composer install --ignore-platform-req=ext-gd"
 ```
 
 Never run `./vendor/bin/pest` or `composer install` directly on the host — the host PHP version may differ from the Docker container.

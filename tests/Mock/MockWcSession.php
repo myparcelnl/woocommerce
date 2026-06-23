@@ -16,17 +16,16 @@ class MockWcSession implements StaticMockInterface
     ];
 
     /**
-     * @param $key
+     * Mirrors WC_Session::get(): returns the stored value or the given default (null) when unset.
      *
-     * @return array
+     * @param  mixed $key
+     * @param  mixed $default
+     *
+     * @return mixed
      */
-    public function get($key): array
+    public function get($key, $default = null)
     {
-        return self::$session[$key] ?? [
-            'rates' => [
-                'flat_rate:0' => [],
-            ],
-        ];
+        return self::$session[$key] ?? $default;
     }
 
     /**

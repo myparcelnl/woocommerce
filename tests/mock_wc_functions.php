@@ -18,6 +18,16 @@ function get_woocommerce_currency(): string
 function register_block_type($blockType, $args = []): void {}
 
 /**
+ * Captures registered Store API update callbacks keyed by namespace so tests can invoke them.
+ *
+ * @see \Automattic\WooCommerce\StoreApi\Schemas\ExtendSchema::register_update_callback()
+ */
+function woocommerce_store_api_register_update_callback($args): void
+{
+    $GLOBALS['__mpwc_store_api_update_callbacks'][$args['namespace']] = $args['callback'];
+}
+
+/**
  * @return \stdClass[]
  * @see \wc_get_order_notes()
  */
