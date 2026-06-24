@@ -276,17 +276,17 @@ it('getForOrderList does not load order items', function () {
         ->and($pdkOrder->lines->count())->toBe(0);
 });
 
-it('getForOrderList excludes notes and lines from toArray', function () {
+it('getForOrderList returns empty notes without querying the DB', function () {
     $wcOrder = wpFactory(WC_Order::class)->make();
 
     /** @var \MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository $orderRepository */
     $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
 
     $pdkOrder = $orderRepository->getForOrderList($wcOrder);
-    $array    = $pdkOrder->toArrayWithoutNull();
 
-    expect($array)->not->toHaveKey('notes')
-        ->and($array)->not->toHaveKey('lines');
+    // notes is pre-populated as [] so getNotesAttribute() never hits the DB.
+    expect($pdkOrder->notes->count())->toBe(0)
+        ->and($pdkOrder->lines->count())->toBe(0);
 });
 
 it('get() still loads order items (regression)', function () {
