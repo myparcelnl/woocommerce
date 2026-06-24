@@ -106,7 +106,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     public function getForOrderList(WC_Order $order): PdkOrder
     {
-        return $this->getDataFromOrder($order, false)->without('notes', 'lines');
+        return $this->getDataFromOrder($order, false);
     }
 
     public function getByApiIdentifier(string $uuid): ?PdkOrder
@@ -229,7 +229,14 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
                 ->all();
         }
 
-        return new PdkOrder(array_replace($orderData, $savedOrderData));
+        $mergedData = array_replace($orderData, $savedOrderData);
+
+        if (! $includeLines) {
+            // Prevent getNotesAttribute() from executing a DB query per order in the list.
+            $mergedData['notes'] = [];
+        }
+
+        return new PdkOrder($mergedData);
     }
 
     /**
