@@ -99,6 +99,16 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         return $this->getDataFromOrder($order);
     }
 
+    /**
+     * @param  \WC_Order $order
+     *
+     * @return \MyParcelNL\Pdk\App\Order\Model\PdkOrder
+     */
+    public function getForOrderList(WC_Order $order): PdkOrder
+    {
+        return $this->getDataFromOrder($order, false);
+    }
+
     public function getByApiIdentifier(string $uuid): ?PdkOrder
     {
         /**
@@ -170,15 +180,15 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
 
     /**
      * @param  \WC_Order $order
+     * @param  bool      $includeLines
      *
      * @return \MyParcelNL\Pdk\App\Order\Model\PdkOrder
      * @throws \Exception
      * @noinspection PhpCastIsUnnecessaryInspection
      */
-    private function getDataFromOrder(WC_Order $order): PdkOrder
+    private function getDataFromOrder(WC_Order $order, bool $includeLines = true): PdkOrder
     {
         $savedOrderData = $order->get_meta(Pdk::get('metaKeyOrderData')) ?: [];
-        $items          = $this->getOrderItems($order);
 
         $shippingAddress = $this->addressAdapter->fromWcOrder($order);
 
@@ -192,18 +202,6 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'externalIdentifier'    => $order->get_id(),
             'referenceIdentifier'   => $order->get_order_number(),
             'billingAddress'        => $this->addressAdapter->fromWcOrder($order, Pdk::get('wcAddressTypeBilling')),
-            'lines'                 => $items
-                ->map(function (array $item) {
-                    $quantity = $item['item']->get_quantity();
-                    $price    = $quantity ? (float) $item['item']->get_total() / $quantity : 0;
-
-                    return new PdkOrderLine([
-                        'quantity' => $quantity,
-                        'price'    => (int) ($price * 100),
-                        'product'  => $item['pdkProduct'],
-                    ]);
-                })
-                ->all(),
             'shippingAddress'       => $shippingAddress,
             'orderPrice'            => $order->get_total(),
             'orderPriceAfterVat'    => (float) $order->get_total() + (float) $order->get_cart_tax(),
@@ -215,7 +213,30 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'orderDate'             => $this->getDate($order->get_date_created()),
         ];
 
-        return new PdkOrder(array_replace($orderData, $savedOrderData));
+        if ($includeLines) {
+            $items              = $this->getOrderItems($order);
+            $orderData['lines'] = $items
+                ->map(function (array $item) {
+                    $quantity = $item['item']->get_quantity();
+                    $price    = $quantity ? (float) $item['item']->get_total() / $quantity : 0;
+
+                    return new PdkOrderLine([
+                        'quantity' => $quantity,
+                        'price'    => (int) ($price * 100),
+                        'product'  => $item['pdkProduct'],
+                    ]);
+                })
+                ->all();
+        }
+
+        $mergedData = array_replace($orderData, $savedOrderData);
+
+        if (! $includeLines) {
+            // Prevent getNotesAttribute() from executing a DB query per order in the list.
+            $mergedData['notes'] = [];
+        }
+
+        return new PdkOrder($mergedData);
     }
 
     /**
