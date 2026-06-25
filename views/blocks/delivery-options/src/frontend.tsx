@@ -3,7 +3,7 @@ import React, {useEffect} from 'react';
 import {registerPlugin} from '@wordpress/plugins';
 import {getSetting} from '@woocommerce/settings';
 import {ExperimentalOrderShippingPackages, extensionCartUpdate} from '@woocommerce/blocks-checkout';
-import {CHECKOUT_STORE_KEY} from '@woocommerce/block-data';
+import {CART_STORE_KEY, CHECKOUT_STORE_KEY} from '@woocommerce/block-data';
 
 const NAME = 'myparcelcom-delivery-options';
 
@@ -31,6 +31,30 @@ const DeliveryOptionsWrapper = () => {
     let cartUpdateTimeout: ReturnType<typeof setTimeout> | undefined;
     // The latest valid selection that still needs to reach the Store API session.
     let pendingSelection: Record<string, unknown> | undefined;
+    // JSON of the last selection actually pushed, so widget re-emits with identical data (e.g. on the
+    // remount that happens when toggling Verzenden/Afhalen) don't trigger a redundant cart push.
+    let lastPushedSelection: string | undefined;
+    // The selected shipping rate observed on the previous settle check; the push only fires once this
+    // is unchanged across a settle window AND the cart is idle (see flushCartUpdate).
+    let lastSettleRate: string | undefined;
+
+    // Snapshot of the cart's shipping selection + busy flags, used to gate our push and to enforce the
+    // self-heal invariant below. `rate` is the selected rate id (or 'NONE'); `pkg` is its package id.
+    const cartState = (): {rate: string; pkg?: unknown; busy: boolean} => {
+      const cart = wp.data.select(CART_STORE_KEY) as Record<string, undefined | ((...a: unknown[]) => unknown)>;
+      const pkg = (
+        cart?.getShippingRates?.() as
+          | undefined
+          | {package_id?: unknown; shipping_rates?: {rate_id: string; selected: boolean}[]}[]
+      )?.[0];
+      const rate = (pkg?.shipping_rates ?? []).find((r) => r.selected);
+
+      return {
+        rate: rate?.rate_id ?? 'NONE',
+        pkg: pkg?.package_id,
+        busy: Boolean(cart?.isShippingRateBeingSelected?.() || cart?.isCustomerDataUpdating?.()),
+      };
+    };
 
     // Push the latest pending selection to the Store API now, cancelling any debounce. Returns the
     // request promise so the pre-submit flush below can rely on extensionCartUpdate having been
@@ -46,13 +70,53 @@ const DeliveryOptionsWrapper = () => {
         return Promise.resolve();
       }
 
+      // Only push once the cart has fully settled. extensionCartUpdate applies the *entire* server
+      // cart response back into the cart store, so issuing it while a shipping-rate selection is in
+      // flight — or in the brief idle gap between two rapid selections — races WooCommerce's own
+      // commit: the server returns a snapshot with the previous method still selected, which
+      // overwrites the client and drops the pending selection (a fast "Afhalen" -> "Verzenden"
+      // toggle snaps back to local pickup, hiding the delivery options). We therefore require the
+      // cart to be idle AND the selected rate to be unchanged across a settle window before pushing.
+      const before = cartState();
+
+      if (before.busy || before.rate !== lastSettleRate) {
+        lastSettleRate = before.rate;
+        cartUpdateTimeout = setTimeout(() => {
+          cartUpdateTimeout = undefined;
+          void flushCartUpdate();
+        }, CART_UPDATE_DEBOUNCE_MS);
+
+        return Promise.resolve();
+      }
+
       const selection = pendingSelection;
       pendingSelection = undefined;
+      lastPushedSelection = JSON.stringify(selection);
 
-      return extensionCartUpdate({namespace: NAME, data: selection}).catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn('[woocommerce-myparcel] delivery-options cart update failed', error);
-      });
+      return extensionCartUpdate({namespace: NAME, data: selection})
+        .then(() => {
+          // Invariant: extensionCartUpdate must not change the chosen shipping rate. It applies the
+          // server's *entire* cart response, which during a rapid Verzenden/Afhalen toggle can carry
+          // a stale rate (the server momentarily still has the previous method) and overwrite the
+          // customer's choice — making the delivery options vanish. No client-side "cart is busy"
+          // signal reliably prevents this (the flags read idle while a selection is committing
+          // server-side), so we enforce the invariant after the fact: if our push moved the rate,
+          // re-select the original one to reconverge client and server. selectShippingRate commits to
+          // the server, so once it lands every subsequent push echoes the correct rate and this stops.
+          const after = cartState();
+
+          if (before.rate !== 'NONE' && after.rate !== before.rate) {
+            const cartDispatch = wp.data.dispatch(CART_STORE_KEY) as {
+              selectShippingRate?: (rateId: string, packageId?: unknown) => unknown;
+            };
+
+            void cartDispatch.selectShippingRate?.(before.rate, before.pkg);
+          }
+        })
+        .catch((error) => {
+          // eslint-disable-next-line no-console
+          console.warn('[woocommerce-myparcel] delivery-options cart update failed', error);
+        });
     };
 
     const handleUpdatedDeliveryOptions = (event: Event): void => {
@@ -67,6 +131,14 @@ const DeliveryOptionsWrapper = () => {
 
       // Persist the selection so it's saved on order placement.
       void setExtensionData(NAME, detail);
+
+      // The widget re-emits its current selection whenever it remounts — which Blocks does every time
+      // the customer toggles "Verzenden"/"Afhalen in de winkel". That re-emit carries the *same* data
+      // we already pushed, so skip it: pushing here would fire a cart update mid-toggle and race the
+      // shipping-rate commit. Genuine selection changes still differ and fall through.
+      if (JSON.stringify(detail) === lastPushedSelection) {
+        return;
+      }
 
       // Debounce the Store API push so the cart recalculates delivery-options fees in the order
       // summary without firing a request per tick. Only the latest selection is sent.
