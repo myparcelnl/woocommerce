@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Tests\Mock;
 
-use MyParcelNL\Sdk\Concerns\HasInstance;
 use Symfony\Contracts\Service\ResetInterface;
 
 /**
@@ -12,11 +11,19 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class MockWpRestServer extends MockWpClass implements ResetInterface
 {
-    use HasInstance;
-
     public const CREATABLE = 'creatable';
 
     private $routes = [];
+
+    private static $instance;
+
+    public static function getInstance(): self
+    {
+        if (null === self::$instance) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
 
     /**
      * @return array
