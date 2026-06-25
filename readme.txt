@@ -3,7 +3,7 @@ Contributors: richardperdaan, joerimyparcel
 Tags: woocommerce, delivery, packages, myparcel, shipping
 Requires at least: 5.2.0
 Tested up to: 7.0
-Stable tag: 4.25.1
+Stable tag: 4.25.2
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
@@ -102,6 +102,10 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 6. MyParcel pickup delivery options
 
 == Changelog ==
+
+= 4.25.2 (2026-06-25) =
+
+* Fixed bug: prevent unauthorized shipment data manipulating (#1649)
 
 = 4.25.1 (2026-04-07) =
 

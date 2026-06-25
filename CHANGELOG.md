@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.25.2](https://github.com/myparcelnl/woocommerce/compare/v4.25.1...v4.25.2) (2026-06-25)
+
+
+### :bug: Bug Fixes
+
+* **v4:** prevent unauthorized shipment data manipulating ([#1649](https://github.com/myparcelnl/woocommerce/issues/1649)) ([8bfaa5f](https://github.com/myparcelnl/woocommerce/commit/8bfaa5fb10a51cea641d9204334d7f6a43d346e7))
+
 ## [4.25.1](https://github.com/myparcelnl/woocommerce/compare/v4.25.0...v4.25.1) (2026-04-07)
 
 
