@@ -47,7 +47,8 @@ class WCMP_Assets
                     "wc-enhanced-select",
                     WC()->plugin_url() . "/assets/js/admin/wc-enhanced-select" . $suffix . ".js",
                     ["jquery", version_compare(WC()->version, "3.2.0", ">=") ? "selectWoo" : "select2"],
-                    WC_VERSION
+                    WC_VERSION,
+                    ['in_footer' => true]
                 );
             }
             wp_enqueue_script("wc-enhanced-select");
@@ -57,7 +58,8 @@ class WCMP_Assets
                 "woocommerce_admin_styles",
                 WC()->plugin_url() . "/assets/css/admin.css",
                 [],
-                WC_VERSION
+                WC_VERSION,
+                ['in_footer' => true]
             );
         }
 
@@ -161,7 +163,8 @@ class WCMP_Assets
             $handle,
             sprintf('%s/%s/js/%s', WCMYPA()->plugin_url(), $path, $file),
             $dependencies,
-            WC_MYPARCEL_NL_VERSION
+            WC_MYPARCEL_NL_VERSION,
+            ['in_footer' => true]
         );
     }
 }

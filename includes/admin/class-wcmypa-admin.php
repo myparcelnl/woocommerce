@@ -211,6 +211,7 @@ class WCMYPA_Admin
         $hasDeliveryDate = filter_input(INPUT_GET, 'deliveryDate');
 
         if ($hasDeliveryDate && in_array($typenow, wc_get_order_types('order-meta-boxes'))) {
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query -- Low-frequency admin-only filter on the orders list; only runs when an admin explicitly filters by delivery date.
             $deliveryDate['meta_query'] = [
                 [
                     'key'     => '_myparcel_delivery_date',
@@ -283,8 +284,9 @@ class WCMYPA_Admin
      */
     public function saveVariationCountryOfOriginField(int $variationId, int $loop): void
     {
-        if (! isset($_POST[self::META_COUNTRY_OF_ORIGIN_VARIATION][$loop])) return;
-        $countryOfOriginValue = sanitize_title(wp_unslash($_POST[self::META_COUNTRY_OF_ORIGIN_VARIATION][$loop]));
+        // Nonce verified upstream by WC_AJAX::save_variations() before the woocommerce_save_product_variation hook fires.
+        if (! isset($_POST[self::META_COUNTRY_OF_ORIGIN_VARIATION][$loop])) return; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        $countryOfOriginValue = sanitize_title(wp_unslash($_POST[self::META_COUNTRY_OF_ORIGIN_VARIATION][$loop])); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
         if (! empty($countryOfOriginValue) && (new WC_Countries())->country_exists($countryOfOriginValue)) {
             update_post_meta($variationId, self::META_COUNTRY_OF_ORIGIN_VARIATION, $countryOfOriginValue);
@@ -329,8 +331,9 @@ class WCMYPA_Admin
      */
     public function save_variation_hs_code_field($variationId, $loop)
     {
-        if (!isset($_POST[self::META_HS_CODE_VARIATION][$loop])) return;
-        $hsCodeValue = sanitize_title(wp_unslash($_POST[self::META_HS_CODE_VARIATION][$loop]));
+        // Nonce verified upstream by WC_AJAX::save_variations() before the woocommerce_save_product_variation hook fires.
+        if (!isset($_POST[self::META_HS_CODE_VARIATION][$loop])) return; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        $hsCodeValue = sanitize_title(wp_unslash($_POST[self::META_HS_CODE_VARIATION][$loop])); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
         if (! $hsCodeValue || ! ctype_digit(str_replace(' ', '', $hsCodeValue))) {
             return;
@@ -500,7 +503,7 @@ class WCMYPA_Admin
      */
     public function order_list_ajax_get_shipment_summary(): void
     {
-        check_ajax_referer(WCMYPA::NONCE_ACTION, 'security');
+        self::denyUnauthorizedAjaxRequest();
 
         include('views/html-order-shipment-summary.php');
         die();
@@ -652,6 +655,8 @@ class WCMYPA_Admin
      */
     public function ajaxGetShipmentOptions(): void
     {
+        self::denyUnauthorizedAjaxRequest();
+
         // Order is used in views/html-order-shipment-options.php
         $order = wc_get_order((int) filter_input(INPUT_POST, 'orderId'));
 
@@ -864,6 +869,30 @@ class WCMYPA_Admin
     }
 
     /**
+     * Blocks admin AJAX requests that fail the nonce (CSRF) or capability check,
+     * sending a 403 JSON response. The capability check is filterable via
+     * `wc_myparcel_check_privs`.
+     *
+     * @param string $nonceField $_REQUEST key holding the nonce (`security`, or `_wpnonce` for export).
+     */
+    public static function denyUnauthorizedAjaxRequest(string $nonceField = 'security'): void
+    {
+        if (! check_ajax_referer(WCMYPA::NONCE_ACTION, $nonceField, false)) {
+            wp_send_json_error(['message' => 'Invalid security token.'], 403);
+        }
+
+        $userCannotManageOrders = ! current_user_can('manage_woocommerce_orders')
+            && ! current_user_can('edit_shop_orders');
+
+        if (apply_filters('wc_myparcel_check_privs', $userCannotManageOrders)) {
+            wp_send_json_error(
+                ['message' => __('You do not have sufficient permissions to access this page.', 'woocommerce-myparcel')],
+                403
+            );
+        }
+    }
+
+    /**
      * On saving shipment options from the bulk options form.
      *
      * @throws Exception
@@ -871,6 +900,8 @@ class WCMYPA_Admin
      */
     public function save_shipment_options_ajax(): void
     {
+        self::denyUnauthorizedAjaxRequest();
+
         $post = wp_unslash(filter_input_array(INPUT_POST));
 
         parse_str($post['form_data'], $form_data);

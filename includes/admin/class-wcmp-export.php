@@ -683,29 +683,10 @@ class WCMP_Export
      */
     public function export()
     {
-        // Check the nonce
-        if (! check_ajax_referer(WCMYPA::NONCE_ACTION, '_wpnonce', false)) {
-            die("Ajax security check failed. Did you pass a valid nonce in \$_REQUEST['_wpnonce']?");
-        }
-
-        if (! is_user_logged_in()) {
-            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'woocommerce-myparcel'));
-        }
+        // Verify the nonce and that the current user may manage shop orders.
+        WCMYPA_Admin::denyUnauthorizedAjaxRequest('_wpnonce');
 
         $return = [];
-
-        // Check the user privileges (maybe use order ids for filter?)
-        if (apply_filters(
-            'wc_myparcel_check_privs',
-            ! current_user_can('manage_woocommerce_orders') && ! current_user_can('edit_shop_orders')
-        )) {
-            $return['error'] = __(
-                'You do not have sufficient permissions to access this page.',
-                'woocommerce-myparcel'
-            );
-            echo wp_json_encode($return);
-            die();
-        }
 
         $requestVars = array_merge(
             filter_input_array(INPUT_GET) ?? [],
