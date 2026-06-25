@@ -154,23 +154,23 @@ class WcAddressAdapter
      */
     private function getSeparateAddressFromOrder(WC_Order $order, string $addressType): array
     {
-        // if there is already an address, which might be updated in the admin, use that
-        if ($this->getAddressField($order, Pdk::get('fieldAddress1'), $addressType)) {
-            return [];
-        }
-        // Check if the hidden address is filled, use it when available and don't send the fullStreet in that case.
+        // If the address widget JSON is present, getAddressFields() already handled it — don't override.
         if ($this->getOrderMeta($order, Pdk::get('checkoutAddressHiddenInputName'), $addressType)) {
             return [];
         }
-        $street       = $this->getOrderMeta($order, Pdk::get('fieldStreet'), $addressType);
-        $number       = $this->getOrderMeta($order, Pdk::get('fieldNumber'), $addressType);
-        $numberSuffix = $this->getOrderMeta($order, Pdk::get('fieldNumberSuffix'), $addressType);
-        $country = $this->getAddressField($order, Pdk::get('fieldCountry'), $addressType);
+        $street       = trim($this->getOrderMeta($order, Pdk::get('fieldStreet'), $addressType) ?: '');
+        $number       = trim($this->getOrderMeta($order, Pdk::get('fieldNumber'), $addressType) ?: '');
+        $numberSuffix = trim($this->getOrderMeta($order, Pdk::get('fieldNumberSuffix'), $addressType) ?: '');
+        $country      = $this->getAddressField($order, Pdk::get('fieldCountry'), $addressType);
 
         $hasSeparateAddress = $street || $number || $numberSuffix;
 
         return $hasSeparateAddress && in_array($country, Pdk::get('countriesWithSeparateAddressFields'), true)
-            ? ['fullStreet' => trim("$street $number $numberSuffix")]
+            ? [
+                'street'       => $street ?: null,
+                'number'       => $number ?: null,
+                'numberSuffix' => $numberSuffix ?: null,
+            ]
             : [];
     }
 

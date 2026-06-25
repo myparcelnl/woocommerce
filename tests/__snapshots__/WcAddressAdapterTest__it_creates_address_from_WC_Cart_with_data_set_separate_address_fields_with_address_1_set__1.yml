@@ -1,7 +1,7 @@
 email: test@test.com
 phone: '0612345678'
 person: 'Sirius Parcel'
-address1: ''
+address1: 'Siriusdreef 66'
 address2: ''
 cc: NL
 city: Hoofddorp
@@ -9,8 +9,3 @@ company: MyParcel
 postalCode: 2132WT
 region: NH
 state: NH
-street: Siriusdreef
-number: '66'
-numberSuffix: '-68'
-eoriNumber: null
-vatNumber: null
