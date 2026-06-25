@@ -9,12 +9,16 @@ use MyParcelNL\Pdk\App\Options\Definition\SignatureDefinition;
 use MyParcelNL\Pdk\Base\Support\SettingKey;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
+use MyParcelNL\Pdk\Settings\Model\ProductSettings;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
+use MyParcelNL\Pdk\Types\Service\TriStateService;
 use MyParcelNL\Sdk\Client\Generated\CoreApi\Model\RefTypesDeliveryTypeV2;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Cart;
+use WC_Product;
 use function MyParcelNL\Pdk\Tests\usesShared;
+use function MyParcelNL\WooCommerce\Tests\wpFactory;
 
 usesShared(new UsesMockWcPdkInstance());
 
@@ -36,6 +40,37 @@ if (! function_exists(__NAMESPACE__ . '\\filter_input_array')) {
 
         return \filter_input_array($type, $options, $addEmpty);
     }
+}
+
+/**
+ * Builds a cart containing one product so it qualifies (or not) for delivery options. The fee guard
+ * resolves WC_Cart -> PdkCart and reads PdkShippingMethod::hasDeliveryOptions, which is true only for
+ * a deliverable (non-virtual) product that doesn't have delivery options disabled. Each call uses a
+ * fresh product id so the per-id PdkProduct cache can't bleed between tests.
+ */
+function cartWithProduct(bool $needsShipping = true, array $productSettings = [], float $shippingTotal = 0.0): WC_Cart
+{
+    static $nextId = 7100;
+
+    $factory = wpFactory(WC_Product::class)
+        ->withId($nextId++)
+        ->withNeedsShipping($needsShipping);
+
+    if ($productSettings) {
+        $factory = $factory->withMeta([Pdk::get('metaKeyProductSettings') => $productSettings]);
+    }
+
+    $cart                = new WC_Cart(['shipping_total' => $shippingTotal]);
+    $cart->cart_contents = [
+        'item' => [
+            'data'              => $factory->make(),
+            'quantity'          => 1,
+            'line_subtotal'     => 0.0,
+            'line_subtotal_tax' => 0.0,
+        ],
+    ];
+
+    return $cart;
 }
 
 beforeEach(function () {
@@ -70,7 +105,7 @@ it('adds delivery-options fees from the blocks session when no post data is pres
         ],
     ]);
 
-    $cart = new WC_Cart();
+    $cart = cartWithProduct();
 
     /** @var CartFeesHooks $hooks */
     $hooks = Pdk::get(CartFeesHooks::class);
@@ -89,7 +124,7 @@ it('still adds fees when a regular shipping method is chosen', function () {
     ]);
     WC()->session->set('chosen_shipping_methods', ['flat_rate:1']);
 
-    $cart = new WC_Cart();
+    $cart = cartWithProduct();
 
     /** @var CartFeesHooks $hooks */
     $hooks = Pdk::get(CartFeesHooks::class);
@@ -135,7 +170,7 @@ it('adds no fees when the blocks pickup_location method is chosen', function () 
 });
 
 it('adds no fees when there is no selection in post data or session', function () {
-    $cart = new WC_Cart();
+    $cart = cartWithProduct();
 
     /** @var CartFeesHooks $hooks */
     $hooks = Pdk::get(CartFeesHooks::class);
@@ -181,7 +216,7 @@ it('adds fees from the classic post_data selection (AJAX recalculation)', functi
         ]),
     ]);
 
-    $cart = new WC_Cart();
+    $cart = cartWithProduct();
 
     /** @var CartFeesHooks $hooks */
     $hooks = Pdk::get(CartFeesHooks::class);
@@ -200,7 +235,7 @@ it('adds fees from the directly posted selection (classic checkout finalization)
         ],
     ]);
 
-    $cart = new WC_Cart();
+    $cart = cartWithProduct();
 
     /** @var CartFeesHooks $hooks */
     $hooks = Pdk::get(CartFeesHooks::class);
@@ -221,7 +256,7 @@ it('prefers the posted selection over the stashed session selection', function (
     // Session selection has no signature → only 1 fee; it must be ignored when post data is present.
     WC()->session->set(SESSION_KEY, ['carrier' => 'postnl']);
 
-    $cart = new WC_Cart();
+    $cart = cartWithProduct();
 
     /** @var CartFeesHooks $hooks */
     $hooks = Pdk::get(CartFeesHooks::class);
@@ -240,7 +275,7 @@ it('still adds fees when only some packages use local pickup', function () {
     // Mixed cart: one package is picked up, another still ships a parcel → fees still apply.
     WC()->session->set('chosen_shipping_methods', ['local_pickup:1', 'flat_rate:2']);
 
-    $cart = new WC_Cart();
+    $cart = cartWithProduct();
 
     /** @var CartFeesHooks $hooks */
     $hooks = Pdk::get(CartFeesHooks::class);
@@ -264,7 +299,7 @@ it('clamps the pickup discount so shipping + pickup never goes below zero', func
     ]);
 
     // Shipping is only 2.00, so the -5.00 pickup discount must be clamped to -2.00.
-    $cart = new WC_Cart(['shipping_total' => 2.0]);
+    $cart = cartWithProduct(true, [], 2.0);
 
     /** @var CartFeesHooks $hooks */
     $hooks = Pdk::get(CartFeesHooks::class);
@@ -289,7 +324,7 @@ it('applies the full pickup discount when shipping covers it', function () {
     ]);
 
     // Shipping (10.00) fully covers the discount, so the full -3.00 applies.
-    $cart = new WC_Cart(['shipping_total' => 10.0]);
+    $cart = cartWithProduct(true, [], 10.0);
 
     /** @var CartFeesHooks $hooks */
     $hooks = Pdk::get(CartFeesHooks::class);
@@ -297,4 +332,47 @@ it('applies the full pickup discount when shipping covers it', function () {
 
     expect($cart->fees)->toHaveCount(1)
         ->and($cart->fees[0]['amount'])->toBe(-3.0);
+});
+
+it('adds no fees when the cart no longer needs shipping (virtual-only)', function () {
+    $selection = [
+        'carrier'         => 'postnl',
+        'shipmentOptions' => [
+            (new SignatureDefinition())->getShipmentOptionsKey() => true,
+        ],
+    ];
+    WC()->session->set(SESSION_KEY, $selection);
+
+    // A virtual product makes the cart non-deliverable, so a lingering selection must not be charged.
+    $cart = cartWithProduct(false);
+
+    /** @var CartFeesHooks $hooks */
+    $hooks = Pdk::get(CartFeesHooks::class);
+    $hooks->calculateDeliveryOptionsFees($cart);
+
+    // Skip-only: no fees, and the stashed selection is left intact (restored if a parcel is re-added).
+    expect($cart->fees)->toBeEmpty()
+        ->and(WC()->session->get(SESSION_KEY))->toBe($selection);
+});
+
+it('adds no fees when a product has delivery options disabled', function () {
+    $selection = [
+        'carrier'         => 'postnl',
+        'shipmentOptions' => [
+            (new SignatureDefinition())->getShipmentOptionsKey() => true,
+        ],
+    ];
+    WC()->session->set(SESSION_KEY, $selection);
+
+    // Deliverable product, but its product setting disables delivery options for the whole cart.
+    $cart = cartWithProduct(true, [
+        ProductSettings::DISABLE_DELIVERY_OPTIONS => TriStateService::ENABLED,
+    ]);
+
+    /** @var CartFeesHooks $hooks */
+    $hooks = Pdk::get(CartFeesHooks::class);
+    $hooks->calculateDeliveryOptionsFees($cart);
+
+    expect($cart->fees)->toBeEmpty()
+        ->and(WC()->session->get(SESSION_KEY))->toBe($selection);
 });
