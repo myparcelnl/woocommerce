@@ -42,6 +42,16 @@ You can download the .zip file of the [latest release], or install it on your we
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
+## Running PDK console commands
+
+This plugin is built on the [MyParcel PDK](https://github.com/myparcelnl/pdk). With the PDK linked locally for development (`pdk-dev-on`), you can run any PDK console command from the plugin root:
+
+```sh
+composer console <command>
+```
+
+Run `composer console list` to see all available commands, or `composer console help <command>` for a command's full usage.
+
 [Backoffice]: https://backoffice.myparcel.nl/
 [Delivery options]: https://github.com/myparcelnl/delivery-options
 [Plugin manual]: https://developer.myparcel.nl/nl/documentatie/10.woocommerce.html

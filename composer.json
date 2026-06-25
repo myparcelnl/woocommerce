@@ -12,6 +12,7 @@
     "php": "7.4"
   },
   "scripts": {
+    "console": "php vendor/myparcelnl/pdk/bin/console",
     "analyse": "php -dmemory_limit=-1 vendor/bin/phpstan analyse",
     "analyse:generate": "composer run analyse -- --generate-baseline phpstan-baseline.php --allow-empty-baseline",
     "analyze": "composer run analyse",
