@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Hooks;
 
 use Exception;
+use MyParcelNL\Pdk\App\Cart\Model\PdkCart;
 use MyParcelNL\Pdk\App\Cart\Model\PdkCartFee;
 use MyParcelNL\Pdk\App\DeliveryOptions\Contract\DeliveryOptionsFeesServiceInterface;
+use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\Base\PdkBootstrapper;
 use MyParcelNL\Pdk\Facade\Language;
 use MyParcelNL\Pdk\Facade\Logger;
@@ -60,10 +62,9 @@ final class CartFeesHooks implements WordPressHooksInterface
             return;
         }
 
-        // Local pickup ("Afhalen in de winkel") ships no parcel, so MyParcel delivery-options
-        // surcharges must not be charged even if a selection lingers from before the customer
-        // switched away from "Verzenden".
-        if ($this->isLocalPickupChosen()) {
+        // Don't charge for a parcel that won't ship. Skip-only: a stashed selection is left in place,
+        // so it applies again once the cart qualifies (this re-runs on every recalculation).
+        if ($this->isLocalPickupChosen() || ! $this->cartHasDeliveryOptions($cart)) {
             return;
         }
 
@@ -106,6 +107,24 @@ final class CartFeesHooks implements WordPressHooksInterface
 
             $cart->add_fee(Language::translate($fee->translation), $amount, (bool) $tax, $tax);
         });
+    }
+
+    /**
+     * Whether delivery options apply to this cart (false for virtual-only carts or products that
+     * disable them). A minimal PdkCart is enough: only its lines drive PdkShippingMethod::hasDeliveryOptions.
+     */
+    private function cartHasDeliveryOptions(WC_Cart $cart): bool
+    {
+        $productRepository = Pdk::get(PdkProductRepositoryInterface::class);
+
+        $lines = array_map(static function (array $item) use ($productRepository): array {
+            return [
+                'quantity' => (int) $item['quantity'],
+                'product'  => $productRepository->getProduct($item['data']),
+            ];
+        }, array_values($cart->get_cart()));
+
+        return (new PdkCart(['lines' => $lines]))->shippingMethod->hasDeliveryOptions;
     }
 
     /**
