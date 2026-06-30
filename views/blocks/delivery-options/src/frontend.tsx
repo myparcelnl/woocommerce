@@ -23,6 +23,7 @@ const DeliveryOptionsWrapper = () => {
 
   useEffect(() => {
     const dispatch = wp.data.dispatch(CHECKOUT_STORE_KEY);
+    const select = wp.data.select(CHECKOUT_STORE_KEY);
 
     // Public checkout action since WooCommerce 9.9.0; fall back to the deprecated one on older versions.
     const setExtensionData = dispatch.setExtensionData ?? dispatch.__internalSetExtensionData;
@@ -157,11 +158,27 @@ const DeliveryOptionsWrapper = () => {
       scheduleCartUpdate();
     };
 
-    // No pre-submit flush: forcing an extensionCartUpdate at order placement raced WooCommerce's own
-    // shipping-rate commit and could revert the chosen method on the resulting order (by order time
-    // the shipping method is already locked server-side, so re-asserting it from here is too late).
-    // The order POST carries the selection in its `extensions` payload (via setExtensionData above),
-    // so the chosen option is always saved on the order itself.
+    // We never push to the cart at order placement: forcing an extensionCartUpdate here raced
+    // WooCommerce's own shipping-rate commit and reverted the chosen method on the order. Instead the
+    // selection rides along in the order POST's `extensions` payload (setExtensionData above) and the
+    // server primes the fee from it (CartFeesHooks::stashBlocksCheckoutSelection).
+    //
+    // What we *do* need here: cancel any still-pending debounced push so it can't fire concurrently
+    // with the order POST. A cart-extensions request overlapping the checkout request races the
+    // draft-order build and duplicates its line items/fees. This only clears a timer — no cart write,
+    // no shipping touch — so it can't affect the chosen method.
+    let wasBeforeProcessing = false;
+    const unsubscribe = wp.data.subscribe(() => {
+      const isBeforeProcessing = Boolean(select.isBeforeProcessing?.());
+
+      if (isBeforeProcessing && !wasBeforeProcessing && cartUpdateTimeout) {
+        clearTimeout(cartUpdateTimeout);
+        cartUpdateTimeout = undefined;
+      }
+
+      wasBeforeProcessing = isBeforeProcessing;
+    }, CHECKOUT_STORE_KEY);
+
     document.addEventListener('myparcel_updated_delivery_options', handleUpdatedDeliveryOptions);
     document.dispatchEvent(new CustomEvent('myparcel_wc_delivery_options_ready'));
 
@@ -177,6 +194,7 @@ const DeliveryOptionsWrapper = () => {
 
     return () => {
       document.removeEventListener('myparcel_updated_delivery_options', handleUpdatedDeliveryOptions);
+      unsubscribe();
 
       if (cartUpdateTimeout) {
         clearTimeout(cartUpdateTimeout);

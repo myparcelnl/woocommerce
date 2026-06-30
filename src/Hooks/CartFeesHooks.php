@@ -45,6 +45,12 @@ final class CartFeesHooks implements WordPressHooksInterface
         // the Store API callback directly instead of deferring it — still before any REST request.
         $this->registerStoreApiUpdateCallback();
 
+        // Blocks order placement: prime the session from the checkout request *before* the order is
+        // built, so an order placed within the debounce window (before the live extensionCartUpdate
+        // fires) still charges the chosen option's fee. This hook runs before the order-building cart
+        // recalculation (OrderController::update_order_from_cart), which is what sets the order's fees.
+        add_action('woocommerce_store_api_checkout_update_customer_from_request', [$this, 'stashBlocksCheckoutSelection'], 10, 2);
+
         // Drop the stashed selection once it's no longer relevant, so it can't apply to a later cart.
         add_action('woocommerce_checkout_order_processed', [$this, 'clearDeliveryOptionsSession']);
         add_action('woocommerce_blocks_checkout_order_processed', [$this, 'clearDeliveryOptionsSession']);
@@ -175,6 +181,36 @@ final class CartFeesHooks implements WordPressHooksInterface
                 }
             },
         ]);
+    }
+
+    /**
+     * Stashes the blocks-checkout selection in the session during order placement, before the order
+     * is built from the cart. Without this, an order placed within the debounce window (before the
+     * live extensionCartUpdate fires) would charge the fee from the previous selection. Reads the
+     * raw request body — the same source PdkCheckoutPlaceOrderHooks uses — because the request's
+     * `extensions` param only carries namespaces registered on the checkout schema.
+     *
+     * @param  \WC_Customer     $customer Unused; part of the hook signature.
+     * @param  \WP_REST_Request $request  Unused; the selection is read from the raw body (see above).
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function stashBlocksCheckoutSelection($customer, $request): void
+    {
+        // eslint-disable-next-line camelcase
+        global $HTTP_RAW_POST_DATA;
+
+        if (! is_string($HTTP_RAW_POST_DATA) || '' === $HTTP_RAW_POST_DATA) {
+            return;
+        }
+
+        $decoded = json_decode(wp_unslash($HTTP_RAW_POST_DATA), true);
+        $key     = PdkBootstrapper::PLUGIN_NAMESPACE . '-delivery-options';
+        $data    = is_array($decoded) ? ($decoded['extensions'][$key] ?? null) : null;
+
+        // @phpstan-ignore if.alwaysTrue (WC()->session is nullable; the WooCommerce stub omits null)
+        if (! empty($data) && is_array($data) && WC()->session) {
+            WC()->session->set(self::DELIVERY_OPTIONS_SESSION_KEY, $data);
+        }
     }
 
     public function clearDeliveryOptionsSession(): void
