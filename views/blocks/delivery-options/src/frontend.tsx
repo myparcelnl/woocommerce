@@ -60,7 +60,11 @@ const DeliveryOptionsWrapper = () => {
     // request promise so the pre-submit flush below can rely on extensionCartUpdate having been
     // dispatched (it marks the cart as calculating, which the blocks checkout waits on before
     // placing the order — so the session is written server-side before the order POST).
-    const flushCartUpdate = (): Promise<unknown> => {
+    //
+    // `force` bypasses the settle gate. The gate exists to avoid racing interactive shipping-method
+    // toggles; at order placement there is no such toggle in progress, and deferring there would let
+    // the order POST before the session is written (a fee mismatch), so the pre-submit caller forces.
+    const flushCartUpdate = (force = false): Promise<unknown> => {
       if (cartUpdateTimeout) {
         clearTimeout(cartUpdateTimeout);
         cartUpdateTimeout = undefined;
@@ -79,7 +83,7 @@ const DeliveryOptionsWrapper = () => {
       // cart to be idle AND the selected rate to be unchanged across a settle window before pushing.
       const before = cartState();
 
-      if (before.busy || before.rate !== lastSettleRate) {
+      if (!force && (before.busy || before.rate !== lastSettleRate)) {
         lastSettleRate = before.rate;
         cartUpdateTimeout = setTimeout(() => {
           cartUpdateTimeout = undefined;
@@ -162,9 +166,11 @@ const DeliveryOptionsWrapper = () => {
     const unsubscribe = wp.data.subscribe(() => {
       const isBeforeProcessing = Boolean(select.isBeforeProcessing?.());
 
-      // Rising edge only, and only when there's actually something pending to flush.
+      // Rising edge only, and only when there's actually something pending to flush. Force past the
+      // settle gate: the session must be written before the order POST, and no shipping toggle is in
+      // progress at order placement.
       if (isBeforeProcessing && !wasBeforeProcessing && (cartUpdateTimeout || pendingSelection)) {
-        void flushCartUpdate();
+        void flushCartUpdate(true);
       }
 
       wasBeforeProcessing = isBeforeProcessing;
