@@ -23,7 +23,6 @@ const DeliveryOptionsWrapper = () => {
 
   useEffect(() => {
     const dispatch = wp.data.dispatch(CHECKOUT_STORE_KEY);
-    const select = wp.data.select(CHECKOUT_STORE_KEY);
 
     // Public checkout action since WooCommerce 9.9.0; fall back to the deprecated one on older versions.
     const setExtensionData = dispatch.setExtensionData ?? dispatch.__internalSetExtensionData;
@@ -56,11 +55,10 @@ const DeliveryOptionsWrapper = () => {
       };
     };
 
-    // Push the pending selection to the Store API right now, cancelling any scheduled push. Returns
-    // the request promise so the pre-submit flush below can rely on extensionCartUpdate having been
-    // dispatched (it marks the cart as calculating, which the blocks checkout waits on before placing
-    // the order — so the session is written server-side before the order POST). Deciding *when* it is
-    // safe to push is the scheduler's job (see scheduleCartUpdate); this function just pushes.
+    // Push the pending selection to the Store API now, cancelling any scheduled push. This drives the
+    // live fee in the cart/order summary; the selection is persisted for the order separately via
+    // setExtensionData. Deciding *when* it is safe to push is the scheduler's job (scheduleCartUpdate);
+    // this function just pushes.
     const flushCartUpdate = (): Promise<unknown> => {
       if (cartUpdateTimeout) {
         clearTimeout(cartUpdateTimeout);
@@ -159,24 +157,11 @@ const DeliveryOptionsWrapper = () => {
       scheduleCartUpdate();
     };
 
-    // Flush any debounced selection the moment the customer places the order. Without this, an
-    // order placed within the debounce window would recalculate fees from the *previous* selection
-    // (the session the fee calc reads is only written by extensionCartUpdate) while the order is
-    // saved with the latest one — charging a fee that doesn't match the chosen delivery option.
-    let wasBeforeProcessing = false;
-    const unsubscribe = wp.data.subscribe(() => {
-      const isBeforeProcessing = Boolean(select.isBeforeProcessing?.());
-
-      // Rising edge only, and only when there's actually something pending to flush. Push immediately
-      // (cancelling any scheduled settle wait): the session must be written before the order POST, and
-      // no shipping toggle is in progress at order placement.
-      if (isBeforeProcessing && !wasBeforeProcessing && (cartUpdateTimeout || pendingSelection)) {
-        void flushCartUpdate();
-      }
-
-      wasBeforeProcessing = isBeforeProcessing;
-    }, CHECKOUT_STORE_KEY);
-
+    // No pre-submit flush: forcing an extensionCartUpdate at order placement raced WooCommerce's own
+    // shipping-rate commit and could revert the chosen method on the resulting order (by order time
+    // the shipping method is already locked server-side, so re-asserting it from here is too late).
+    // The order POST carries the selection in its `extensions` payload (via setExtensionData above),
+    // so the chosen option is always saved on the order itself.
     document.addEventListener('myparcel_updated_delivery_options', handleUpdatedDeliveryOptions);
     document.dispatchEvent(new CustomEvent('myparcel_wc_delivery_options_ready'));
 
@@ -192,7 +177,6 @@ const DeliveryOptionsWrapper = () => {
 
     return () => {
       document.removeEventListener('myparcel_updated_delivery_options', handleUpdatedDeliveryOptions);
-      unsubscribe();
 
       if (cartUpdateTimeout) {
         clearTimeout(cartUpdateTimeout);
