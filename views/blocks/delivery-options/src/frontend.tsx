@@ -56,15 +56,12 @@ const DeliveryOptionsWrapper = () => {
       };
     };
 
-    // Push the latest pending selection to the Store API now, cancelling any debounce. Returns the
-    // request promise so the pre-submit flush below can rely on extensionCartUpdate having been
-    // dispatched (it marks the cart as calculating, which the blocks checkout waits on before
-    // placing the order — so the session is written server-side before the order POST).
-    //
-    // `force` bypasses the settle gate. The gate exists to avoid racing interactive shipping-method
-    // toggles; at order placement there is no such toggle in progress, and deferring there would let
-    // the order POST before the session is written (a fee mismatch), so the pre-submit caller forces.
-    const flushCartUpdate = (force = false): Promise<unknown> => {
+    // Push the pending selection to the Store API right now, cancelling any scheduled push. Returns
+    // the request promise so the pre-submit flush below can rely on extensionCartUpdate having been
+    // dispatched (it marks the cart as calculating, which the blocks checkout waits on before placing
+    // the order — so the session is written server-side before the order POST). Deciding *when* it is
+    // safe to push is the scheduler's job (see scheduleCartUpdate); this function just pushes.
+    const flushCartUpdate = (): Promise<unknown> => {
       if (cartUpdateTimeout) {
         clearTimeout(cartUpdateTimeout);
         cartUpdateTimeout = undefined;
@@ -74,28 +71,13 @@ const DeliveryOptionsWrapper = () => {
         return Promise.resolve();
       }
 
-      // Only push once the cart has fully settled. extensionCartUpdate applies the *entire* server
-      // cart response back into the cart store, so issuing it while a shipping-rate selection is in
-      // flight — or in the brief idle gap between two rapid selections — races WooCommerce's own
-      // commit: the server returns a snapshot with the previous method still selected, which
-      // overwrites the client and drops the pending selection (a fast "Afhalen" -> "Verzenden"
-      // toggle snaps back to local pickup, hiding the delivery options). We therefore require the
-      // cart to be idle AND the selected rate to be unchanged across a settle window before pushing.
-      const before = cartState();
-
-      if (!force && (before.busy || before.rate !== lastSettleRate)) {
-        lastSettleRate = before.rate;
-        cartUpdateTimeout = setTimeout(() => {
-          cartUpdateTimeout = undefined;
-          void flushCartUpdate();
-        }, CART_UPDATE_DEBOUNCE_MS);
-
-        return Promise.resolve();
-      }
-
       const selection = pendingSelection;
       pendingSelection = undefined;
       lastPushedSelection = JSON.stringify(selection);
+
+      // The shipping selection the customer has chosen, captured the instant before our push, so the
+      // self-heal below can detect (and undo) any change the push's response makes to it.
+      const before = cartState();
 
       return extensionCartUpdate({namespace: NAME, data: selection})
         .then(() => {
@@ -123,6 +105,33 @@ const DeliveryOptionsWrapper = () => {
         });
     };
 
+    // Debounced, settle-aware scheduler for the cart push. extensionCartUpdate applies the *entire*
+    // server cart response back into the cart store, so pushing while a shipping-rate selection is in
+    // flight — or in the brief idle gap between two rapid selections — races WooCommerce's own commit:
+    // the server returns a snapshot with the previous method still selected, which overwrites the
+    // client and drops the pending selection (a fast "Afhalen" -> "Verzenden" toggle snaps back to
+    // local pickup, hiding the delivery options). So we wait until the cart is idle AND the selected
+    // rate has held steady across a settle window before pushing; until then we keep re-arming.
+    const scheduleCartUpdate = (): void => {
+      if (cartUpdateTimeout) {
+        clearTimeout(cartUpdateTimeout);
+      }
+
+      cartUpdateTimeout = setTimeout(() => {
+        cartUpdateTimeout = undefined;
+
+        const {busy, rate} = cartState();
+
+        if (busy || rate !== lastSettleRate) {
+          lastSettleRate = rate;
+          scheduleCartUpdate();
+          return;
+        }
+
+        void flushCartUpdate();
+      }, CART_UPDATE_DEBOUNCE_MS);
+    };
+
     const handleUpdatedDeliveryOptions = (event: Event): void => {
       const {detail} = event as CustomEvent;
 
@@ -144,18 +153,10 @@ const DeliveryOptionsWrapper = () => {
         return;
       }
 
-      // Debounce the Store API push so the cart recalculates delivery-options fees in the order
-      // summary without firing a request per tick. Only the latest selection is sent.
+      // Schedule a debounced, settle-aware push so the cart recalculates delivery-options fees in the
+      // order summary without firing a request per tick. Only the latest selection is sent.
       pendingSelection = detail;
-
-      if (cartUpdateTimeout) {
-        clearTimeout(cartUpdateTimeout);
-      }
-
-      cartUpdateTimeout = setTimeout(() => {
-        cartUpdateTimeout = undefined;
-        void flushCartUpdate();
-      }, CART_UPDATE_DEBOUNCE_MS);
+      scheduleCartUpdate();
     };
 
     // Flush any debounced selection the moment the customer places the order. Without this, an
@@ -166,11 +167,11 @@ const DeliveryOptionsWrapper = () => {
     const unsubscribe = wp.data.subscribe(() => {
       const isBeforeProcessing = Boolean(select.isBeforeProcessing?.());
 
-      // Rising edge only, and only when there's actually something pending to flush. Force past the
-      // settle gate: the session must be written before the order POST, and no shipping toggle is in
-      // progress at order placement.
+      // Rising edge only, and only when there's actually something pending to flush. Push immediately
+      // (cancelling any scheduled settle wait): the session must be written before the order POST, and
+      // no shipping toggle is in progress at order placement.
       if (isBeforeProcessing && !wasBeforeProcessing && (cartUpdateTimeout || pendingSelection)) {
-        void flushCartUpdate(true);
+        void flushCartUpdate();
       }
 
       wasBeforeProcessing = isBeforeProcessing;
