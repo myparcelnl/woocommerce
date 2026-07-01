@@ -45,10 +45,9 @@ final class CartFeesHooks implements WordPressHooksInterface
         // the Store API callback directly instead of deferring it — still before any REST request.
         $this->registerStoreApiUpdateCallback();
 
-        // Blocks order placement: prime the session from the checkout request *before* the order is
-        // built, so an order placed within the debounce window (before the live extensionCartUpdate
-        // fires) still charges the chosen option's fee. This hook runs before the order-building cart
-        // recalculation (OrderController::update_order_from_cart), which is what sets the order's fees.
+        // Blocks order placement: prime the session from the checkout request before the order-building
+        // cart recalc (OrderController::update_order_from_cart) sets the fees, so an order placed within
+        // the debounce window (before the live extensionCartUpdate fires) still charges the chosen fee.
         add_action('woocommerce_store_api_checkout_update_customer_from_request', [$this, 'stashBlocksCheckoutSelection'], 10, 2);
 
         // Drop the stashed selection once it's no longer relevant, so it can't apply to a later cart.
@@ -184,19 +183,18 @@ final class CartFeesHooks implements WordPressHooksInterface
     }
 
     /**
-     * Stashes the blocks-checkout selection in the session during order placement, before the order
-     * is built from the cart. Without this, an order placed within the debounce window (before the
-     * live extensionCartUpdate fires) would charge the fee from the previous selection. Reads the
-     * raw request body — the same source PdkCheckoutPlaceOrderHooks uses — because the request's
-     * `extensions` param only carries namespaces registered on the checkout schema.
+     * Primes the session with the blocks-checkout selection at order placement, before the order is
+     * built from the cart — otherwise an order placed within the debounce window (before the live
+     * extensionCartUpdate fires) charges the previous selection's fee. Reads the raw body (like
+     * PdkCheckoutPlaceOrderHooks) because the request's `extensions` param only carries namespaces
+     * registered on the checkout schema.
      *
      * @param  \WC_Customer     $customer Unused; part of the hook signature.
-     * @param  \WP_REST_Request $request  Unused; the selection is read from the raw body (see above).
+     * @param  \WP_REST_Request $request  Unused; the selection is read from the raw body.
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function stashBlocksCheckoutSelection($customer, $request): void
     {
-        // eslint-disable-next-line camelcase
         global $HTTP_RAW_POST_DATA;
 
         if (! is_string($HTTP_RAW_POST_DATA) || '' === $HTTP_RAW_POST_DATA) {

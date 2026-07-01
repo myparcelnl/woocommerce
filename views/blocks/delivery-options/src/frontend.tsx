@@ -13,11 +13,8 @@ const CART_UPDATE_DEBOUNCE_MS = 300;
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
-// A stable key over only the fee-relevant fields of a selection (carrier, deliveryType, packageType,
-// isPickup, shipmentOptions) — the chosen `date` is dropped because it doesn't affect the fee and the
-// widget recomputes it on remount. Used to dedupe pushes: a shipping toggle remounts the widget and
-// re-emits the same selection, which must NOT trigger a cart refresh (that would race the shipping
-// commit); only a genuine option change produces a different key.
+// Fee-relevant key of a selection (drops the volatile `date`). Dedupes pushes so the widget's
+// remount re-emit on a shipping toggle — same options — doesn't fire a needless, race-prone refresh.
 const feeKey = (selection: Record<string, unknown>): string => {
   const {date, ...rest} = selection;
   void date;
@@ -25,13 +22,10 @@ const feeKey = (selection: Record<string, unknown>): string => {
   return JSON.stringify(rest);
 };
 
-// Tracks whether the wrapper has mounted before this page load. The first mount drives the PDK's
-// one-time initialization (which mounts the widget); only later remounts need an explicit render.
+// First mount runs the PDK's one-time widget init; later remounts (one per toggle) need an explicit re-render.
 let hasInitiallyMounted = false;
 
-// The fee-relevant key of the last selection actually pushed. Module-level so it survives the
-// remounts Blocks does on every shipping/pickup toggle — otherwise the post-toggle re-emit wouldn't
-// be recognized as already-pushed and would fire a clobbering cart refresh.
+// Last pushed fee-key. Module-level so it survives the toggle remounts (else the re-emit looks new).
 let lastPushedFeeKey: string | undefined;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -46,34 +40,28 @@ const DeliveryOptionsWrapper = () => {
     const setExtensionData = dispatch.setExtensionData ?? dispatch.__internalSetExtensionData;
 
     let cartUpdateTimeout: ReturnType<typeof setTimeout> | undefined;
-    // The latest valid selection that still needs to reach the Store API session.
+    // Latest selection awaiting a push.
     let pendingSelection: Record<string, unknown> | undefined;
-    // The selected shipping rate observed on the previous settle check; the push only fires once this
-    // is unchanged across a settle window AND the cart is idle (see flushCartUpdate).
+    // Selected rate seen on the previous settle check; the push waits until it holds steady.
     let lastSettleRate: string | undefined;
 
-    // Snapshot of the cart's shipping selection + busy flags, used to gate our push and to enforce the
-    // self-heal invariant below. `rate` is the selected rate id (or 'NONE'); `pkg` is its package id.
-    const cartState = (): {rate: string; pkg?: unknown; busy: boolean} => {
+    // Selected shipping rate id (or 'NONE') and whether the cart is mid-update — the scheduler holds
+    // the push until the cart is idle and the rate has settled.
+    const cartState = (): {rate: string; busy: boolean} => {
       const cart = wp.data.select(CART_STORE_KEY) as Record<string, undefined | ((...a: unknown[]) => unknown)>;
-      const pkg = (
-        cart?.getShippingRates?.() as
-          | undefined
-          | {package_id?: unknown; shipping_rates?: {rate_id: string; selected: boolean}[]}[]
-      )?.[0];
-      const rate = (pkg?.shipping_rates ?? []).find((r) => r.selected);
+      const rates = (
+        cart?.getShippingRates?.() as undefined | {shipping_rates?: {rate_id: string; selected: boolean}[]}[]
+      )?.[0]?.shipping_rates;
+      const rate = (rates ?? []).find((r) => r.selected);
 
       return {
         rate: rate?.rate_id ?? 'NONE',
-        pkg: pkg?.package_id,
         busy: Boolean(cart?.isShippingRateBeingSelected?.() || cart?.isCustomerDataUpdating?.()),
       };
     };
 
-    // Push the pending selection to the Store API now, cancelling any scheduled push. This drives the
-    // live fee in the cart/order summary; the selection is persisted for the order separately via
-    // setExtensionData. Deciding *when* it is safe to push is the scheduler's job (scheduleCartUpdate);
-    // this function just pushes.
+    // Push the pending selection now (drives the live summary fee). The scheduler decides when this is
+    // safe to call; the selection is separately persisted for the order via setExtensionData.
     const flushCartUpdate = (): Promise<unknown> => {
       if (cartUpdateTimeout) {
         clearTimeout(cartUpdateTimeout);
@@ -84,11 +72,8 @@ const DeliveryOptionsWrapper = () => {
         return Promise.resolve();
       }
 
-      // Never push while the order is being placed. A cart-extensions request concurrent with the
-      // order POST races WooCommerce's draft-order build and duplicates its line items/fees. The
-      // selection is still persisted via setExtensionData and the server stashes it for the fee at
-      // order time (CartFeesHooks::stashBlocksCheckoutSelection), so skipping the push here is safe.
-      // Keep the pending selection so a push still happens if the order doesn't go through.
+      // Don't push while the order is being placed — a cart request concurrent with the order POST
+      // duplicates its line items. The server stashes the fee at order time, so skipping here is safe.
       if (select.isBeforeProcessing?.() || select.isProcessing?.()) {
         return Promise.resolve();
       }
@@ -97,14 +82,9 @@ const DeliveryOptionsWrapper = () => {
       pendingSelection = undefined;
       lastPushedFeeKey = feeKey(selection);
 
-      // The shipping selection the customer has chosen, captured the instant before our push, so the
-      // self-heal below can detect (and undo) any change the push's response makes to it.
-      const before = cartState();
-
-      // Mark the checkout "calculating" for the whole push. WooCommerce's place-order flow waits for
-      // isCalculating to clear before building the order, so this makes it block on our in-flight
-      // request instead of running concurrently — an overlapping cart request duplicates the order's
-      // line items, and an in-flight request can't be cancelled, so we make the checkout wait for it.
+      // Mark the checkout "calculating" for the push so WooCommerce's place-order flow blocks on it:
+      // an in-flight cart request overlapping the order POST duplicates the order's line items, and it
+      // can't be cancelled once sent — so we make the checkout wait for it to finish.
       const checkoutCalc = dispatch as {
         __internalIncrementCalculating?: () => void;
         __internalDecrementCalculating?: () => void;
@@ -112,25 +92,6 @@ const DeliveryOptionsWrapper = () => {
       checkoutCalc.__internalIncrementCalculating?.();
 
       return extensionCartUpdate({namespace: NAME, data: selection})
-        .then(() => {
-          // Invariant: extensionCartUpdate must not change the chosen shipping rate. It applies the
-          // server's *entire* cart response, which during a rapid Verzenden/Afhalen toggle can carry
-          // a stale rate (the server momentarily still has the previous method) and overwrite the
-          // customer's choice — making the delivery options vanish. No client-side "cart is busy"
-          // signal reliably prevents this (the flags read idle while a selection is committing
-          // server-side), so we enforce the invariant after the fact: if our push moved the rate,
-          // re-select the original one to reconverge client and server. selectShippingRate commits to
-          // the server, so once it lands every subsequent push echoes the correct rate and this stops.
-          const after = cartState();
-
-          if (before.rate !== 'NONE' && after.rate !== before.rate) {
-            const cartDispatch = wp.data.dispatch(CART_STORE_KEY) as {
-              selectShippingRate?: (rateId: string, packageId?: unknown) => unknown;
-            };
-
-            void cartDispatch.selectShippingRate?.(before.rate, before.pkg);
-          }
-        })
         .catch((error) => {
           // eslint-disable-next-line no-console
           console.warn('[woocommerce-myparcel] delivery-options cart update failed', error);
@@ -140,13 +101,9 @@ const DeliveryOptionsWrapper = () => {
         });
     };
 
-    // Debounced, settle-aware scheduler for the cart push. extensionCartUpdate applies the *entire*
-    // server cart response back into the cart store, so pushing while a shipping-rate selection is in
-    // flight — or in the brief idle gap between two rapid selections — races WooCommerce's own commit:
-    // the server returns a snapshot with the previous method still selected, which overwrites the
-    // client and drops the pending selection (a fast "Afhalen" -> "Verzenden" toggle snaps back to
-    // local pickup, hiding the delivery options). So we wait until the cart is idle AND the selected
-    // rate has held steady across a settle window before pushing; until then we keep re-arming.
+    // Debounced push scheduler. extensionCartUpdate replaces the whole cart, so pushing during a
+    // shipping change reverts the chosen method; wait out the debounce, then hold until the cart is
+    // idle and the rate has settled before pushing. Re-arms until then.
     const scheduleCartUpdate = (): void => {
       if (cartUpdateTimeout) {
         clearTimeout(cartUpdateTimeout);
@@ -170,58 +127,32 @@ const DeliveryOptionsWrapper = () => {
     const handleUpdatedDeliveryOptions = (event: Event): void => {
       const {detail} = event as CustomEvent;
 
-      // The widget emits `null`/`undefined` when there's no valid selection yet (initial load,
-      // loading, or reset). Forwarding that as `data` makes the Store API reject the request, so
-      // skip until we have an actual delivery-options object.
+      // The widget emits null/undefined when there's no valid selection yet; the Store API rejects
+      // that, so wait for a real object.
       if (!isPlainObject(detail)) {
         return;
       }
 
-      // Persist the selection so it's saved on order placement.
+      // Persist the selection so it's saved on the order.
       void setExtensionData(NAME, detail);
 
-      // The widget re-emits its current selection whenever it remounts — which Blocks does every time
-      // the customer toggles "Verzenden"/"Afhalen in de winkel". That re-emit carries the same
-      // fee-relevant selection we already pushed, so skip it: pushing here would fire a cart update
-      // mid-toggle and race the shipping-rate commit. Genuine option changes differ and fall through.
+      // Skip re-emits of the same options — the widget re-emits on the remount every toggle causes,
+      // and a push here would race the shipping commit. Genuine changes differ and fall through.
       if (feeKey(detail) === lastPushedFeeKey) {
         return;
       }
 
-      // Schedule a debounced, settle-aware push so the cart recalculates delivery-options fees in the
-      // order summary without firing a request per tick. Only the latest selection is sent.
+      // Debounced push so the summary fee recalculates without a request per tick.
       pendingSelection = detail;
       scheduleCartUpdate();
     };
 
-    // We never push to the cart at order placement: forcing an extensionCartUpdate here raced
-    // WooCommerce's own shipping-rate commit and reverted the chosen method on the order. Instead the
-    // selection rides along in the order POST's `extensions` payload (setExtensionData above) and the
-    // server primes the fee from it (CartFeesHooks::stashBlocksCheckoutSelection).
-    //
-    // What we *do* need here: cancel any still-pending debounced push so it can't fire concurrently
-    // with the order POST. A cart-extensions request overlapping the checkout request races the
-    // draft-order build and duplicates its line items/fees. This only clears a timer — no cart write,
-    // no shipping touch — so it can't affect the chosen method.
-    let wasBeforeProcessing = false;
-    const unsubscribe = wp.data.subscribe(() => {
-      const isBeforeProcessing = Boolean(select.isBeforeProcessing?.());
-
-      if (isBeforeProcessing && !wasBeforeProcessing && cartUpdateTimeout) {
-        clearTimeout(cartUpdateTimeout);
-        cartUpdateTimeout = undefined;
-      }
-
-      wasBeforeProcessing = isBeforeProcessing;
-    }, CHECKOUT_STORE_KEY);
-
     document.addEventListener('myparcel_updated_delivery_options', handleUpdatedDeliveryOptions);
     document.dispatchEvent(new CustomEvent('myparcel_wc_delivery_options_ready'));
 
-    // Blocks recreates this wrapper's DOM when toggling "Verzenden"/"Afhalen in de winkel". The PDK
-    // only initializes the widget once per page load, so on remounts we must tell the widget to
-    // (re)mount into the fresh #myparcel-delivery-options element. `myparcel_render_delivery_options`
-    // is the widget's public render event; it unmounts any stale app and mounts fresh.
+    // Blocks recreates this wrapper on every Verzenden/Afhalen toggle, but the PDK inits the widget
+    // once per page load — so on remounts tell it to re-mount into the fresh element via its public
+    // render event (it unmounts any stale app and mounts fresh).
     if (hasInitiallyMounted) {
       document.dispatchEvent(new Event('myparcel_render_delivery_options'));
     }
@@ -230,7 +161,6 @@ const DeliveryOptionsWrapper = () => {
 
     return () => {
       document.removeEventListener('myparcel_updated_delivery_options', handleUpdatedDeliveryOptions);
-      unsubscribe();
 
       if (cartUpdateTimeout) {
         clearTimeout(cartUpdateTimeout);
