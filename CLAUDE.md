@@ -78,11 +78,46 @@ For long-running migrations, use **chunked cron jobs**:
 5. `CartFeesHooks` processes this on AJAX cart updates; `PdkCheckoutPlaceOrderHooks` saves on order placement
 6. Both create `new DeliveryOptions(json_decode(...))` — the constructor normalizes legacy carrier names
 
+### Blocks checkout: delivery-option fee gotchas (hard-won — don't relearn)
+
+The live delivery-option fee in the **blocks** checkout uses `extensionCartUpdate`
+(`views/blocks/delivery-options/src/frontend.tsx`). Its response applies the **entire** server cart
+back into `wc/store/cart` (`receiveCart`), so a badly-timed push corrupts other cart state. There is
+**no** WC Blocks alternative that puts a fee in the grand total (checkout filters and totals
+slot/fills are display-only). These invariants must hold — each fixes a real bug we hit:
+
+- **Never push at order placement.** Forcing `extensionCartUpdate` there reverts the chosen shipping
+  method on the resulting order. The order POST already carries the selection in its `extensions`
+  payload; the server primes the fee from it in `CartFeesHooks::stashBlocksCheckoutSelection` (hooked
+  on `woocommerce_store_api_checkout_update_customer_from_request`, which runs *before*
+  `OrderController::update_order_from_cart` recalculates fees). Do **not** read `php://input` in the
+  fee calc (`woocommerce_cart_calculate_fees`) — it corrupts the order build (duplicate lines, 500s).
+- **The push must block the place-order flow while in flight.** An `extensionCartUpdate` overlapping
+  the order POST duplicates the order's line items/fees, and an in-flight request can't be cancelled.
+  Wrap the push in `dispatch(CHECKOUT_STORE_KEY).__internalIncrementCalculating()` /
+  `__internalDecrementCalculating()` (the `isCalculating` the place-order flow already waits on).
+- **Dedupe widget re-emits on a fee-relevant key** (ignore the volatile `date`) held **module-level**
+  so it survives the remount Blocks does on every shipping/pickup toggle; otherwise the toggle
+  re-emit fires a spurious push that races the shipping commit.
+
+**Known WooCommerce core bug (not ours):** rapidly toggling "Afhalen in de winkel" ↔ "Verzenden" then
+ordering can place the order on the *previous* method (WC fails to commit the final local-pickup
+toggle server-side). Reproduces with all our checkout JS disabled. Normal single toggles are fine;
+treat rapid back-and-forth as an upstream stress-case.
+
 ## Development Environment
 
 - The plugin runs inside a Docker-based WordPress setup. Use `docker compose exec php wp ...` from the docker-wordpress project root for WP-CLI commands.
 - PDK (PHP) is linked locally as a path dependency in `composer.json` — check the `repositories` section for the local path.
 - JS-PDK apps are linked via `portal:` in `package.json` — check `devDependencies` for the local paths.
+
+### Building JS (nx cache gotcha)
+
+Editing the shared `views/frontend/common` package does **not** invalidate nx's build cache for
+dependent bundles (e.g. `frontend-checkout-core`), so a plain `yarn build` can silently replay a
+stale bundle and your change won't reach the browser. Build with `--skip-nx-cache` (or run
+`npx nx reset` first). Verify a change landed with `grep` on the `dist/*.iife.js` / `dist/*.js`
+(the dev build keeps variable names; the production build minifies).
 
 ### Running Tests
 
