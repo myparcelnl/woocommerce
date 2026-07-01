@@ -22,6 +22,9 @@
     "woocommerce_cart_calculate_fees": [
         "MyParcelNL\\WooCommerce\\Hooks\\CartFeesHooks::calculateDeliveryOptionsFees"
     ],
+    "woocommerce_store_api_checkout_update_customer_from_request": [
+        "MyParcelNL\\WooCommerce\\Hooks\\CartFeesHooks::stashBlocksCheckoutSelection"
+    ],
     "woocommerce_checkout_order_processed": [
         "MyParcelNL\\WooCommerce\\Hooks\\CartFeesHooks::clearDeliveryOptionsSession",
         "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCheckoutPlaceOrderHooks::saveDeliveryOptions"
