@@ -72,7 +72,7 @@ final class WcContextService extends ContextService
 
         $highestShippingClass = $disableDeliveryOptions
             ? null
-            : $this->resolveHighestShippingClass($cart, $candidates, $checkoutContext->config->packageType);
+            : $this->resolveHighestShippingClass($cart, $candidates, $checkoutContext->config->packageType ?? null);
 
         $settingsToMerge = [
             'highestShippingClass' => $highestShippingClass ?? '', // frontend expects empty string when not set
