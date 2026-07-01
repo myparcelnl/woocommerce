@@ -45,9 +45,9 @@ const DeliveryOptionsWrapper = () => {
     // Selected rate seen on the previous settle check; the push waits until it holds steady.
     let lastSettleRate: string | undefined;
 
-    // Selected shipping rate id (or 'NONE') and whether the cart is mid-update — the scheduler holds
-    // the push until the cart is idle and the rate has settled.
-    const cartState = (): {rate: string; busy: boolean} => {
+    // Selected shipping rate id (or undefined when none) and whether the cart is mid-update — the
+    // scheduler holds the push until the cart is idle and the rate has settled.
+    const cartState = (): {rate: string | undefined; busy: boolean} => {
       const cart = wp.data.select(CART_STORE_KEY) as Record<string, undefined | ((...a: unknown[]) => unknown)>;
       const rates = (
         cart?.getShippingRates?.() as undefined | {shipping_rates?: {rate_id: string; selected: boolean}[]}[]
@@ -55,7 +55,7 @@ const DeliveryOptionsWrapper = () => {
       const rate = (rates ?? []).find((r) => r.selected);
 
       return {
-        rate: rate?.rate_id ?? 'NONE',
+        rate: rate?.rate_id,
         busy: Boolean(cart?.isShippingRateBeingSelected?.() || cart?.isCustomerDataUpdating?.()),
       };
     };
