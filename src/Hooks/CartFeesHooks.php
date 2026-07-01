@@ -205,7 +205,7 @@ final class CartFeesHooks implements WordPressHooksInterface
         $key     = PdkBootstrapper::PLUGIN_NAMESPACE . '-delivery-options';
         $data    = is_array($decoded) ? ($decoded['extensions'][$key] ?? null) : null;
 
-        // @phpstan-ignore if.alwaysTrue (WC()->session is nullable; the WooCommerce stub omits null)
+        // @phpstan-ignore booleanAnd.rightAlwaysTrue (WC()->session is nullable; the WooCommerce stub omits null)
         if (! empty($data) && is_array($data) && WC()->session) {
             WC()->session->set(self::DELIVERY_OPTIONS_SESSION_KEY, $data);
         }
