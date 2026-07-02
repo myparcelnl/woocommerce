@@ -112,3 +112,46 @@ describe('getClassicCheckoutConfig - getForm', () => {
     expect(form.querySelector('#place_order')).not.toBeNull();
   });
 });
+
+describe('getClassicCheckoutConfig - formChange', () => {
+  beforeEach(() => {
+    document.body.innerHTML = '';
+    // Minimal jQuery stub: jQuery(el).on('change', h) -> el.addEventListener('change', h).
+    (globalThis as unknown as {jQuery: unknown}).jQuery = (el: EventTarget) => ({
+      on: (event: string, handler: EventListener) => el.addEventListener(event, handler),
+    });
+  });
+
+  const fireChange = (selector: string) => {
+    const el = document.querySelector(selector)!;
+    el.dispatchEvent(new Event('change', {bubbles: true}));
+  };
+
+  it('fires the callback on change in the single form', () => {
+    document.body.innerHTML = SINGLE_FORM;
+    let calls = 0;
+
+    getClassicCheckoutConfig().config.formChange(() => {
+      calls += 1;
+    });
+    fireChange('input[name="shipping_method[0]"]');
+
+    expect(calls).toBe(1);
+  });
+
+  it('fires the callback on change in ANY Divi checkout form', () => {
+    document.body.innerHTML = DIVI_FORMS;
+    let calls = 0;
+
+    getClassicCheckoutConfig().config.formChange(() => {
+      calls += 1;
+    });
+
+    // Shipping method lives in the order-details form...
+    fireChange('.et_pb_wc_checkout_order_details input[name="shipping_method[0]"]');
+    // ...billing field lives in a different form.
+    fireChange('.et_pb_wc_checkout_billing input[name="billing_first_name"]');
+
+    expect(calls).toBe(2);
+  });
+});
