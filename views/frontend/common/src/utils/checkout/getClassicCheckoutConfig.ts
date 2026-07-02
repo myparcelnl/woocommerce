@@ -1,6 +1,14 @@
-import {AddressType, useConfig} from '@myparcel-dev/pdk-checkout-common';
-import {useUtil, AddressField, PdkUtil, SeparateAddressField} from '@myparcel-dev/pdk-checkout';
+import {AddressType} from '@myparcel-dev/pdk-checkout-common';
+import {AddressField, SeparateAddressField} from '@myparcel-dev/pdk-checkout';
 import {type CheckoutConfig} from '../../types';
+
+/**
+ * All WooCommerce checkout forms on the page. Standard WooCommerce renders exactly one; the Divi 5
+ * checkout renders five (one per Divi module), each with name="checkout". Callers must treat the
+ * checkout as the union of these forms, never assuming a single element.
+ */
+const getCheckoutForms = (): HTMLFormElement[] =>
+  Array.from(document.querySelectorAll<HTMLFormElement>('form[name="checkout"]'));
 
 // eslint-disable-next-line max-lines-per-function
 export const getClassicCheckoutConfig = (): CheckoutConfig => {
@@ -26,23 +34,35 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
 
     config: {
       formChange(callback) {
-        jQuery(this.getForm()).on('change', () => {
-          callback();
+        getCheckoutForms().forEach((form) => {
+          jQuery(form).on('change', () => {
+            callback();
+          });
         });
       },
 
       getForm() {
-        const getElement = useUtil(PdkUtil.GetElement);
+        const forms = getCheckoutForms();
 
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return getElement('form[name="checkout"]')!;
+        // The form that carries the place-order button is the one WooCommerce (and Divi) actually
+        // submits, so our hidden delivery-options input must live there. On a normal single-form
+        // checkout this is simply that one form.
+        // isClassicCheckout() guarantees at least one form[name="checkout"] exists, so forms[0]! is safe.
+        return (
+          forms.find((form) =>
+            form.querySelector('#place_order, [name="woocommerce_checkout_place_order"]'),
+          ) ?? forms[0]!
+        );
       },
 
       getFormData() {
-        const form = useConfig().getForm();
-        const formData = new FormData(form);
+        return getCheckoutForms().reduce<Record<string, FormDataEntryValue>>((merged, form) => {
+          for (const [key, value] of new FormData(form).entries()) {
+            merged[key] = value;
+          }
 
-        return Object.fromEntries(formData.entries());
+          return merged;
+        }, {});
       },
 
       getAddressType(value: string): AddressType {
