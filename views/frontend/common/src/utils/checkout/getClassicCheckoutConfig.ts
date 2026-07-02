@@ -2,6 +2,14 @@ import {AddressType, useConfig} from '@myparcel-dev/pdk-checkout-common';
 import {useUtil, AddressField, PdkUtil, SeparateAddressField} from '@myparcel-dev/pdk-checkout';
 import {type CheckoutConfig} from '../../types';
 
+/**
+ * All WooCommerce checkout forms on the page. Standard WooCommerce renders exactly one; the Divi 5
+ * checkout renders five (one per Divi module), each with name="checkout". Callers must treat the
+ * checkout as the union of these forms, never assuming a single element.
+ */
+const getCheckoutForms = (): HTMLFormElement[] =>
+  Array.from(document.querySelectorAll<HTMLFormElement>('form[name="checkout"]'));
+
 // eslint-disable-next-line max-lines-per-function
 export const getClassicCheckoutConfig = (): CheckoutConfig => {
   return {
@@ -39,10 +47,13 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
       },
 
       getFormData() {
-        const form = useConfig().getForm();
-        const formData = new FormData(form);
+        return getCheckoutForms().reduce<Record<string, FormDataEntryValue>>((merged, form) => {
+          for (const [key, value] of new FormData(form).entries()) {
+            merged[key] = value;
+          }
 
-        return Object.fromEntries(formData.entries());
+          return merged;
+        }, {});
       },
 
       getAddressType(value: string): AddressType {
