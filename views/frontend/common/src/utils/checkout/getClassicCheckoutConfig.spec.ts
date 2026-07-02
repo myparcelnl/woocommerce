@@ -88,3 +88,27 @@ describe('getClassicCheckoutConfig - getFormData', () => {
     expect(data['billing_first_name']).toBe('Jane');
   });
 });
+
+const getForm = () => getClassicCheckoutConfig().config.getForm();
+
+describe('getClassicCheckoutConfig - getForm', () => {
+  beforeEach(() => {
+    document.body.innerHTML = '';
+  });
+
+  it('returns the single checkout form when there is only one', () => {
+    document.body.innerHTML = SINGLE_FORM;
+
+    expect(getForm().querySelector('#place_order')).not.toBeNull();
+  });
+
+  it('returns the form containing #place_order (the submit form) on Divi', () => {
+    document.body.innerHTML = DIVI_FORMS;
+
+    const form = getForm();
+
+    // The submit form is inside the payment-info module, not the first (billing) form.
+    expect(form.closest('.et_pb_wc_checkout_payment_info')).not.toBeNull();
+    expect(form.querySelector('#place_order')).not.toBeNull();
+  });
+});
