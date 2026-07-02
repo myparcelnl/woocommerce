@@ -82,23 +82,34 @@ const DeliveryOptionsWrapper = () => {
       pendingSelection = undefined;
       lastPushedFeeKey = feeKey(selection);
 
+      // Push the fee, warning-and-continuing on failure so the promise never rejects.
+      const runPush = (): Promise<unknown> =>
+        extensionCartUpdate({namespace: NAME, data: selection}).catch((error) => {
+          // eslint-disable-next-line no-console
+          console.warn('[woocommerce-myparcel] delivery-options cart update failed', error);
+        });
+
       // Mark the checkout "calculating" for the push so WooCommerce's place-order flow blocks on it:
       // an in-flight cart request overlapping the order POST duplicates the order's line items, and it
       // can't be cancelled once sent — so we make the checkout wait for it to finish.
+      //
+      // `disableCheckoutFor` is the public thunk since WooCommerce 9.9.0; fall back to the deprecated
+      // increment/decrement pair on older versions (mirrors the setExtensionData fallback above).
       const checkoutCalc = dispatch as {
+        disableCheckoutFor?: (asyncFunc: () => Promise<unknown>) => Promise<unknown>;
         __internalIncrementCalculating?: () => void;
         __internalDecrementCalculating?: () => void;
       };
+
+      if (checkoutCalc.disableCheckoutFor) {
+        return checkoutCalc.disableCheckoutFor(runPush);
+      }
+
       checkoutCalc.__internalIncrementCalculating?.();
 
-      return extensionCartUpdate({namespace: NAME, data: selection})
-        .catch((error) => {
-          // eslint-disable-next-line no-console
-          console.warn('[woocommerce-myparcel] delivery-options cart update failed', error);
-        })
-        .finally(() => {
-          checkoutCalc.__internalDecrementCalculating?.();
-        });
+      return runPush().finally(() => {
+        checkoutCalc.__internalDecrementCalculating?.();
+      });
     };
 
     // Debounced push scheduler. extensionCartUpdate replaces the whole cart, so pushing during a
