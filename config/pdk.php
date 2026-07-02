@@ -116,7 +116,7 @@ return [
         return '?';
     }),
 
-    'minimumWooCommerceVersion' => value('5.0.0'),
+    'minimumWooCommerceVersion' => value('8.6.0'),
 
     'isWooCommerceVersionSupported' => factory(function (): bool {
         return version_compare(WooCommerce::getVersion(), PdkFacade::get('minimumWooCommerceVersion'), '>=');

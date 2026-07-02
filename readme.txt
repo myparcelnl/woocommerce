@@ -2,7 +2,9 @@
 Contributors: freekkie, joerimyparcel, nabilazahaf, richardperdaan
 Tags: woocommerce, export, delivery, packages, myparcel
 Requires at least: 5.2.0
-Tested up to: 6.8
+Tested up to: 7.0
+WC requires at least: 8.6
+WC tested up to: 10.3
 Stable tag: 4.24.3
 Requires PHP: 7.4
 License: MIT
