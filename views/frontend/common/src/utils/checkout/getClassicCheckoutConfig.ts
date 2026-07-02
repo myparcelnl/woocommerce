@@ -1,4 +1,4 @@
-import {AddressType, useConfig} from '@myparcel-dev/pdk-checkout-common';
+import {AddressType} from '@myparcel-dev/pdk-checkout-common';
 import {AddressField, SeparateAddressField} from '@myparcel-dev/pdk-checkout';
 import {type CheckoutConfig} from '../../types';
 
@@ -34,8 +34,10 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
 
     config: {
       formChange(callback) {
-        jQuery(this.getForm()).on('change', () => {
-          callback();
+        getCheckoutForms().forEach((form) => {
+          jQuery(form).on('change', () => {
+            callback();
+          });
         });
       },
 
