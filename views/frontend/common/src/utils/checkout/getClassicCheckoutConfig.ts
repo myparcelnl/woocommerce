@@ -1,5 +1,5 @@
 import {AddressType, useConfig} from '@myparcel-dev/pdk-checkout-common';
-import {useUtil, AddressField, PdkUtil, SeparateAddressField} from '@myparcel-dev/pdk-checkout';
+import {AddressField, SeparateAddressField} from '@myparcel-dev/pdk-checkout';
 import {type CheckoutConfig} from '../../types';
 
 /**
@@ -40,10 +40,16 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
       },
 
       getForm() {
-        const getElement = useUtil(PdkUtil.GetElement);
+        const forms = getCheckoutForms();
 
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return getElement('form[name="checkout"]')!;
+        // The form that carries the place-order button is the one WooCommerce (and Divi) actually
+        // submits, so our hidden delivery-options input must live there. On a normal single-form
+        // checkout this is simply that one form.
+        return (
+          forms.find((form) =>
+            form.querySelector('#place_order, [name="woocommerce_checkout_place_order"]'),
+          ) ?? forms[0]
+        );
       },
 
       getFormData() {
