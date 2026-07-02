@@ -185,23 +185,23 @@ final class CartFeesHooks implements WordPressHooksInterface
     /**
      * Primes the session with the blocks-checkout selection at order placement, before the order is
      * built from the cart — otherwise an order placed within the debounce window (before the live
-     * extensionCartUpdate fires) charges the previous selection's fee. Reads the raw body (like
-     * PdkCheckoutPlaceOrderHooks) because the request's `extensions` param only carries namespaces
-     * registered on the checkout schema.
+     * extensionCartUpdate fires) charges the previous selection's fee. Reads the raw request body
+     * because the request's `extensions` param only carries namespaces registered on the checkout
+     * schema.
      *
      * @param  \WC_Customer     $customer Unused; part of the hook signature.
-     * @param  \WP_REST_Request $request  Unused; the selection is read from the raw body.
+     * @param  \WP_REST_Request $request  Carries the raw checkout body with the selection.
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function stashBlocksCheckoutSelection($customer, $request): void
     {
-        global $HTTP_RAW_POST_DATA;
+        $body = $request->get_body();
 
-        if (! is_string($HTTP_RAW_POST_DATA) || '' === $HTTP_RAW_POST_DATA) {
+        if (! is_string($body) || '' === $body) {
             return;
         }
 
-        $decoded = json_decode(wp_unslash($HTTP_RAW_POST_DATA), true);
+        $decoded = json_decode(wp_unslash($body), true);
         $key     = PdkBootstrapper::PLUGIN_NAMESPACE . '-delivery-options';
         $data    = is_array($decoded) ? ($decoded['extensions'][$key] ?? null) : null;
 
@@ -225,20 +225,23 @@ final class CartFeesHooks implements WordPressHooksInterface
      */
     private function resolveDeliveryOptionsData(): ?array
     {
-        $post = wp_unslash(filter_input_array(INPUT_POST));
+        $input = filter_input_array(INPUT_POST);
+        $post  = is_array($input) ? wp_unslash($input) : [];
 
         if (isset($post['post_data'])) {
             // non-default post data for AJAX calls
             parse_str($post['post_data'], $postData);
         } else {
             // checkout finalization
-            $postData = $post ?? [];
+            $postData = $post;
         }
 
         $posted = $postData[Pdk::get('checkoutHiddenInputName')] ?? null;
 
         if (! empty($posted)) {
-            return json_decode(stripslashes($posted), true);
+            $decoded = json_decode(stripslashes($posted), true);
+
+            return is_array($decoded) ? $decoded : null;
         }
 
         // Blocks checkout: the Store API update callback stashes the selection in the session.

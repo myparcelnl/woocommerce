@@ -195,6 +195,44 @@ it('registers a store api update callback that stashes the selection in the sess
     expect(WC()->session->get(SESSION_KEY))->toBe(['carrier' => 'postnl']);
 });
 
+it('stashes the blocks-checkout selection from the request body at order placement', function () {
+    WC()->session->set(SESSION_KEY, null);
+
+    $request = new class {
+        public function get_body(): string
+        {
+            return json_encode([
+                'extensions' => [
+                    'myparcelcom-delivery-options' => ['carrier' => 'postnl'],
+                ],
+            ]);
+        }
+    };
+
+    /** @var CartFeesHooks $hooks */
+    $hooks = Pdk::get(CartFeesHooks::class);
+    $hooks->stashBlocksCheckoutSelection(WC()->customer, $request);
+
+    expect(WC()->session->get(SESSION_KEY))->toBe(['carrier' => 'postnl']);
+});
+
+it('does not stash anything when the request body has no selection', function () {
+    WC()->session->set(SESSION_KEY, null);
+
+    $request = new class {
+        public function get_body(): string
+        {
+            return '{}';
+        }
+    };
+
+    /** @var CartFeesHooks $hooks */
+    $hooks = Pdk::get(CartFeesHooks::class);
+    $hooks->stashBlocksCheckoutSelection(WC()->customer, $request);
+
+    expect(WC()->session->get(SESSION_KEY))->toBeNull();
+});
+
 it('clears the stashed selection from the session', function () {
     WC()->session->set(SESSION_KEY, ['carrier' => 'postnl']);
 
