@@ -111,6 +111,18 @@ describe('getClassicCheckoutConfig - getForm', () => {
     expect(form.closest('.et_pb_wc_checkout_payment_info')).not.toBeNull();
     expect(form.querySelector('#place_order')).not.toBeNull();
   });
+
+  it('falls back to the first checkout form when no form has a submit control', () => {
+    document.body.innerHTML = `
+      <form name="checkout" class="checkout"><input name="billing_first_name" value="A" /></form>
+      <form name="checkout" class="checkout"><input name="billing_last_name" value="B" /></form>
+    `;
+
+    const form = getForm();
+
+    // No #place_order anywhere → first form wins.
+    expect(form.querySelector('input[name="billing_first_name"]')).not.toBeNull();
+  });
 });
 
 describe('getClassicCheckoutConfig - formChange', () => {

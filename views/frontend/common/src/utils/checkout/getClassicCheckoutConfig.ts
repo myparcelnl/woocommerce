@@ -47,10 +47,11 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
         // The form that carries the place-order button is the one WooCommerce (and Divi) actually
         // submits, so our hidden delivery-options input must live there. On a normal single-form
         // checkout this is simply that one form.
+        // isClassicCheckout() guarantees at least one form[name="checkout"] exists, so forms[0]! is safe.
         return (
           forms.find((form) =>
             form.querySelector('#place_order, [name="woocommerce_checkout_place_order"]'),
-          ) ?? forms[0]
+          ) ?? forms[0]!
         );
       },
 
