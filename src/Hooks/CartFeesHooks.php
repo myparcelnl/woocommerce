@@ -52,7 +52,7 @@ final class CartFeesHooks implements WordPressHooksInterface
 
         // Drop the stashed selection once it's no longer relevant, so it can't apply to a later cart.
         add_action('woocommerce_checkout_order_processed', [$this, 'clearDeliveryOptionsSession']);
-        add_action('woocommerce_blocks_checkout_order_processed', [$this, 'clearDeliveryOptionsSession']);
+        add_action('woocommerce_store_api_checkout_order_processed', [$this, 'clearDeliveryOptionsSession']);
         add_action('woocommerce_cart_emptied', [$this, 'clearDeliveryOptionsSession']);
     }
 
