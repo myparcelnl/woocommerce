@@ -22,6 +22,19 @@
     "woocommerce_cart_calculate_fees": [
         "MyParcelNL\\WooCommerce\\Hooks\\CartFeesHooks::calculateDeliveryOptionsFees"
     ],
+    "woocommerce_store_api_checkout_update_customer_from_request": [
+        "MyParcelNL\\WooCommerce\\Hooks\\CartFeesHooks::stashBlocksCheckoutSelection"
+    ],
+    "woocommerce_checkout_order_processed": [
+        "MyParcelNL\\WooCommerce\\Hooks\\CartFeesHooks::clearDeliveryOptionsSession",
+        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCheckoutPlaceOrderHooks::saveDeliveryOptions"
+    ],
+    "woocommerce_store_api_checkout_order_processed": [
+        "MyParcelNL\\WooCommerce\\Hooks\\CartFeesHooks::clearDeliveryOptionsSession"
+    ],
+    "woocommerce_cart_emptied": [
+        "MyParcelNL\\WooCommerce\\Hooks\\CartFeesHooks::clearDeliveryOptionsSession"
+    ],
     "wp": [
         "MyParcelNL\\WooCommerce\\Hooks\\CheckoutScriptHooks::enqueueFrontendScripts"
     ],
@@ -34,10 +47,7 @@
         "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkFrontendEndpointHooks::registerPdkRoutes",
         "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkWebhookHooks::registerWebhookRoutes"
     ],
-    "woocommerce_checkout_order_processed": [
-        "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCheckoutPlaceOrderHooks::saveDeliveryOptions"
-    ],
-    "woocommerce_blocks_checkout_order_processed": [
+    "woocommerce_store_api_checkout_update_order_from_request": [
         "MyParcelNL\\WooCommerce\\Pdk\\Hooks\\PdkCheckoutPlaceOrderHooks::saveBlocksDeliveryOptions"
     ],
     "admin_enqueue_scripts": [

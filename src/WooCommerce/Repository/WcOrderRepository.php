@@ -79,8 +79,12 @@ final class WcOrderRepository extends Repository implements WcOrderRepositoryInt
      */
     public function hasLocalPickup($input): bool
     {
-        return $this->get($input)
-            ->has_shipping_method('local_pickup');
+        $order = $this->get($input);
+
+        // Classic checkout uses `local_pickup`, blocks checkout uses `pickup_location` — match both,
+        // consistent with CartFeesHooks::isLocalPickupChosen.
+        return $order->has_shipping_method('local_pickup')
+            || $order->has_shipping_method('pickup_location');
     }
 
     protected function getKeyPrefix(): string

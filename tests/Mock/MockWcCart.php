@@ -17,6 +17,41 @@ class MockWcCart extends MockWcClass
     public $cart_contents = [];
 
     /**
+     * Fees recorded via add_fee(), so tests can assert what was applied to the cart.
+     *
+     * @var array<int, array{name: string, amount: float, taxable: bool, taxClass: string}>
+     */
+    public $fees = [];
+
+    /**
+     * @param  string $name
+     * @param  float  $amount
+     * @param  bool   $taxable
+     * @param  string $taxClass
+     *
+     * @return void
+     * @see \WC_Cart::add_fee()
+     */
+    public function add_fee($name, $amount, $taxable = false, $taxClass = ''): void
+    {
+        $this->fees[] = [
+            'name'     => $name,
+            'amount'   => (float) $amount,
+            'taxable'  => (bool) $taxable,
+            'taxClass' => $taxClass,
+        ];
+    }
+
+    /**
+     * @return float
+     * @see \WC_Cart::get_shipping_total()
+     */
+    public function get_shipping_total(): float
+    {
+        return (float) ($this->attributes['shipping_total'] ?? 0);
+    }
+
+    /**
      * @param  int   $productId
      * @param  int   $quantity
      * @param  int   $variationId

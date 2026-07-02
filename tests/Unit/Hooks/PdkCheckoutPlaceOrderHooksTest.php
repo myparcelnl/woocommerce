@@ -24,7 +24,7 @@ beforeEach(function () {
 
 it('saves delivery options for the blocks checkout', function ($orderId, $deliveryOptions, $expectedCarrier) {
     $namespace = PdkBootstrapper::PLUGIN_NAMESPACE;
-    $GLOBALS['HTTP_RAW_POST_DATA'] = json_encode([
+    $body      = json_encode([
         'extensions' => [
             "$namespace-delivery-options" => [
                 'carrier'     => $deliveryOptions['carrier'],
@@ -33,13 +33,29 @@ it('saves delivery options for the blocks checkout', function ($orderId, $delive
         ],
     ]);
 
+    // The Store API hook passes a WP_REST_Request; the selection is read from its raw body.
+    $request = new class($body) {
+        /** @var string */
+        private $body;
+
+        public function __construct(string $body)
+        {
+            $this->body = $body;
+        }
+
+        public function get_body(): string
+        {
+            return $this->body;
+        }
+    };
+
     $wcOrder            =
         wpFactory(WC_Order::class)
             ->withId($orderId)
             ->make();
     $checkoutHooksClass = Pdk::get(PdkCheckoutPlaceOrderHooks::class);
 
-    $checkoutHooksClass->saveBlocksDeliveryOptions($wcOrder);
+    $checkoutHooksClass->saveBlocksDeliveryOptions($wcOrder, $request);
 
     $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
     $pdkOrder        = $orderRepository->get($wcOrder->get_id());

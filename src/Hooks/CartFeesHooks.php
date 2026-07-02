@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Hooks;
 
 use Exception;
+use MyParcelNL\Pdk\App\Cart\Model\PdkCart;
 use MyParcelNL\Pdk\App\Cart\Model\PdkCartFee;
 use MyParcelNL\Pdk\App\DeliveryOptions\Contract\DeliveryOptionsFeesServiceInterface;
+use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
+use MyParcelNL\Pdk\Base\PdkBootstrapper;
 use MyParcelNL\Pdk\Facade\Language;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
@@ -15,8 +18,20 @@ use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Pdk\Service\WcTaxService;
 use WC_Cart;
 
+/**
+ * Adds the delivery-options fees (signature, same-day, pickup discount, ...) to the cart total
+ * during checkout.
+ *
+ * Classic checkout re-posts the selection in $_POST on every recalculation; blocks checkout
+ * recalculates via a stateless Store API request that carries no post data. The blocks frontend
+ * therefore pushes the selection through the cart-extensions endpoint, the update callback stashes
+ * it in the WC session, and resolveDeliveryOptionsData() reads from whichever source applies so the
+ * fee logic stays identical for both checkouts.
+ */
 final class CartFeesHooks implements WordPressHooksInterface
 {
+    private const DELIVERY_OPTIONS_SESSION_KEY = '_myparcelcom_delivery_options';
+
     /** @var WcTaxService */
     private $taxService;
 
@@ -25,6 +40,20 @@ final class CartFeesHooks implements WordPressHooksInterface
     public function apply(): void
     {
         add_action('woocommerce_cart_calculate_fees', [$this, 'calculateDeliveryOptionsFees'], 20);
+
+        // apply() runs on init priority 9999, after woocommerce_init has already fired, so register
+        // the Store API callback directly instead of deferring it — still before any REST request.
+        $this->registerStoreApiUpdateCallback();
+
+        // Blocks order placement: prime the session from the checkout request before the order-building
+        // cart recalc (OrderController::update_order_from_cart) sets the fees, so an order placed within
+        // the debounce window (before the live extensionCartUpdate fires) still charges the chosen fee.
+        add_action('woocommerce_store_api_checkout_update_customer_from_request', [$this, 'stashBlocksCheckoutSelection'], 10, 2);
+
+        // Drop the stashed selection once it's no longer relevant, so it can't apply to a later cart.
+        add_action('woocommerce_checkout_order_processed', [$this, 'clearDeliveryOptionsSession']);
+        add_action('woocommerce_store_api_checkout_order_processed', [$this, 'clearDeliveryOptionsSession']);
+        add_action('woocommerce_cart_emptied', [$this, 'clearDeliveryOptionsSession']);
     }
 
     /**
@@ -38,17 +67,13 @@ final class CartFeesHooks implements WordPressHooksInterface
             return;
         }
 
-        $post = wp_unslash(filter_input_array(INPUT_POST));
-
-        if (isset($post['post_data'])) {
-            // non-default post data for AJAX calls
-            parse_str($post['post_data'], $postData);
-        } else {
-            // checkout finalization
-            $postData = $post;
+        // Don't charge for a parcel that won't ship. Skip-only: a stashed selection is left in place,
+        // so it applies again once the cart qualifies (this re-runs on every recalculation).
+        if ($this->isLocalPickupChosen() || ! $this->cartHasDeliveryOptions($cart)) {
+            return;
         }
 
-        $deliveryOptionsData = $postData[Pdk::get('checkoutHiddenInputName')] ?? null;
+        $deliveryOptionsData = $this->resolveDeliveryOptionsData();
 
         if (empty($deliveryOptionsData)) {
             return;
@@ -57,7 +82,7 @@ final class CartFeesHooks implements WordPressHooksInterface
         $deliveryOptions = null;
 
         try {
-            $deliveryOptions = new DeliveryOptions(json_decode(stripslashes($deliveryOptionsData), true));
+            $deliveryOptions = new DeliveryOptions($deliveryOptionsData);
 
             /** @var DeliveryOptionsFeesServiceInterface $feesService */
             $feesService = Pdk::get(DeliveryOptionsFeesServiceInterface::class);
@@ -77,15 +102,158 @@ final class CartFeesHooks implements WordPressHooksInterface
 
         $fees->each(function (PdkCartFee $fee) use ($tax, $cart) {
             $amount = $fee->amount;
-            
+
             // For pickup fee, ensure total shipping costs don't go below 0
             if ($fee->id === 'delivery_type_pickup') {
                 $shippingTotal = $cart->get_shipping_total();
                 // Limit the pickup discount so shipping + pickup >= 0
                 $amount = max(-$shippingTotal, $fee->amount);
             }
-            
+
             $cart->add_fee(Language::translate($fee->translation), $amount, (bool) $tax, $tax);
         });
+    }
+
+    /**
+     * Whether delivery options apply to this cart (false for virtual-only carts or products that
+     * disable them). A minimal PdkCart is enough: only its lines drive PdkShippingMethod::hasDeliveryOptions.
+     */
+    private function cartHasDeliveryOptions(WC_Cart $cart): bool
+    {
+        $productRepository = Pdk::get(PdkProductRepositoryInterface::class);
+
+        $lines = array_map(static function (array $item) use ($productRepository): array {
+            return [
+                'quantity' => (int) $item['quantity'],
+                'product'  => $productRepository->getProduct($item['data']),
+            ];
+        }, array_values($cart->get_cart()));
+
+        return (new PdkCart(['lines' => $lines]))->shippingMethod->hasDeliveryOptions;
+    }
+
+    /**
+     * Whether the customer chose local pickup for the whole cart. Matches both the classic
+     * shipping-zone method (`local_pickup:N`) and the blocks "Afhalen in de winkel" method
+     * (`pickup_location:N`). Returns false on mixed carts that still ship a parcel.
+     */
+    private function isLocalPickupChosen(): bool
+    {
+        // @phpstan-ignore booleanNot.alwaysFalse (WC()->session is nullable; the WooCommerce stub omits null)
+        if (! WC()->session) {
+            return false;
+        }
+
+        $chosenMethods = (array) WC()->session->get('chosen_shipping_methods', []);
+
+        if (empty($chosenMethods)) {
+            return false;
+        }
+
+        foreach ($chosenMethods as $method) {
+            $method = (string) $method;
+
+            if (strpos($method, 'local_pickup') !== 0 && strpos($method, 'pickup_location') !== 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Stashes the blocks-checkout selection in the session when extensionCartUpdate fires, for
+     * calculateDeliveryOptionsFees() to read on the recalculation that follows.
+     */
+    public function registerStoreApiUpdateCallback(): void
+    {
+        if (! function_exists('woocommerce_store_api_register_update_callback')) {
+            return;
+        }
+
+        woocommerce_store_api_register_update_callback([
+            'namespace' => PdkBootstrapper::PLUGIN_NAMESPACE . '-delivery-options',
+            'callback'  => static function (array $data): void {
+                // @phpstan-ignore if.alwaysTrue (WC()->session is nullable; the WooCommerce stub omits null)
+                if (WC()->session) {
+                    WC()->session->set(self::DELIVERY_OPTIONS_SESSION_KEY, $data);
+                }
+            },
+        ]);
+    }
+
+    /**
+     * Primes the session with the blocks-checkout selection at order placement, before the order is
+     * built from the cart — otherwise an order placed within the debounce window (before the live
+     * extensionCartUpdate fires) charges the previous selection's fee. Reads the raw request body
+     * because the request's `extensions` param only carries namespaces registered on the checkout
+     * schema.
+     *
+     * @param  \WC_Customer     $customer Unused; part of the hook signature.
+     * @param  \WP_REST_Request $request  Carries the raw checkout body with the selection.
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function stashBlocksCheckoutSelection($customer, $request): void
+    {
+        $body = $request->get_body();
+
+        if (! is_string($body) || '' === $body) {
+            return;
+        }
+
+        $decoded = json_decode(wp_unslash($body), true);
+        $key     = PdkBootstrapper::PLUGIN_NAMESPACE . '-delivery-options';
+        $data    = is_array($decoded) ? ($decoded['extensions'][$key] ?? null) : null;
+
+        // @phpstan-ignore booleanAnd.rightAlwaysTrue (WC()->session is nullable; the WooCommerce stub omits null)
+        if (! empty($data) && is_array($data) && WC()->session) {
+            WC()->session->set(self::DELIVERY_OPTIONS_SESSION_KEY, $data);
+        }
+    }
+
+    public function clearDeliveryOptionsSession(): void
+    {
+        // @phpstan-ignore if.alwaysTrue (WC()->session is nullable; the WooCommerce stub omits null)
+        if (WC()->session) {
+            WC()->session->set(self::DELIVERY_OPTIONS_SESSION_KEY, null);
+        }
+    }
+
+    /**
+     * Returns the selection from the posted checkout input (classic) or, failing that, the WC
+     * session written by the Store API callback (blocks).
+     */
+    private function resolveDeliveryOptionsData(): ?array
+    {
+        $input = filter_input_array(INPUT_POST);
+        $post  = is_array($input) ? wp_unslash($input) : [];
+
+        if (isset($post['post_data'])) {
+            // non-default post data for AJAX calls
+            parse_str($post['post_data'], $postData);
+        } else {
+            // checkout finalization
+            $postData = $post;
+        }
+
+        $posted = $postData[Pdk::get('checkoutHiddenInputName')] ?? null;
+
+        if (! empty($posted)) {
+            $decoded = json_decode(stripslashes($posted), true);
+
+            return is_array($decoded) ? $decoded : null;
+        }
+
+        // Blocks checkout: the Store API update callback stashes the selection in the session.
+        // @phpstan-ignore if.alwaysTrue (WC()->session is nullable; the WooCommerce stub omits null)
+        if (WC()->session) {
+            $sessionData = WC()->session->get(self::DELIVERY_OPTIONS_SESSION_KEY);
+
+            if (! empty($sessionData)) {
+                return $sessionData;
+            }
+        }
+
+        return null;
     }
 }
