@@ -62,6 +62,27 @@ const DIVI_FORMS = `
   </div>
 `;
 
+/**
+ * Divi 5 duplicate billing fieldset: a visible billing form followed by an additional-info form
+ * whose billing input is hidden by a display:none ancestor (Divi hides `.col-1`, not the input).
+ * `postcode` is the value the hidden duplicate carries — parameterised so tests can model both a
+ * fresh checkout (empty duplicate) and a returning customer (stale non-empty duplicate).
+ */
+const DIVI_DUPLICATE_BILLING = (hiddenPostcode: string): string => `
+  <div class="et_pb_wc_checkout_billing">
+    <form name="checkout" class="checkout woocommerce-checkout">
+      <input type="text" name="billing_postcode" value="1234AB" />
+    </form>
+  </div>
+  <div class="et_pb_wc_checkout_additional_info">
+    <form name="checkout" class="checkout woocommerce-checkout">
+      <div class="col-1" style="display:none">
+        <input type="text" name="billing_postcode" value="${hiddenPostcode}" />
+      </div>
+    </form>
+  </div>
+`;
+
 const getFormData = () => getClassicCheckoutConfig().config.getFormData();
 
 describe('getClassicCheckoutConfig - getFormData', () => {
@@ -86,6 +107,20 @@ describe('getClassicCheckoutConfig - getFormData', () => {
     // shipping_method lives in the order-details form, billing in the billing form
     expect(data['shipping_method[0]']).toBe('flat_rate:1');
     expect(data['billing_first_name']).toBe('Jane');
+  });
+
+  it('ignores an empty hidden duplicate so the visible billing value survives (fresh checkout)', () => {
+    document.body.innerHTML = DIVI_DUPLICATE_BILLING('');
+
+    // The hidden duplicate is empty and comes later in DOM order; it must not clobber to ''.
+    expect(getFormData()['billing_postcode']).toBe('1234AB');
+  });
+
+  it('ignores a stale hidden duplicate so the edited visible value survives (returning customer)', () => {
+    document.body.innerHTML = DIVI_DUPLICATE_BILLING('9999ZZ');
+
+    // The hidden duplicate carries a stale non-empty value; the visible edited value must win.
+    expect(getFormData()['billing_postcode']).toBe('1234AB');
   });
 });
 
@@ -122,6 +157,62 @@ describe('getClassicCheckoutConfig - getForm', () => {
 
     // No #place_order anywhere → first form wins.
     expect(form.querySelector('input[name="billing_first_name"]')).not.toBeNull();
+  });
+});
+
+const getAddressType = (value = '') => getClassicCheckoutConfig().config.getAddressType(value);
+
+describe('getClassicCheckoutConfig - getAddressType', () => {
+  beforeEach(() => {
+    document.body.innerHTML = '';
+  });
+
+  it('returns Billing when there is no checkbox', () => {
+    document.body.innerHTML = SINGLE_FORM;
+
+    expect(getAddressType()).toBe('billing');
+  });
+
+  it('returns Billing when the checkbox is unchecked', () => {
+    document.body.innerHTML = `
+      <form name="checkout"><input type="checkbox" name="ship_to_different_address" value="1" /></form>
+    `;
+
+    expect(getAddressType()).toBe('billing');
+  });
+
+  it('returns Shipping when the checkbox is checked', () => {
+    document.body.innerHTML = `
+      <form name="checkout"><input type="checkbox" name="ship_to_different_address" value="1" checked /></form>
+    `;
+
+    expect(getAddressType()).toBe('shipping');
+  });
+
+  it('ignores a checked duplicate hidden by a display:none ancestor (Divi)', () => {
+    document.body.innerHTML = `
+      <div class="et_pb_wc_checkout_shipping">
+        <form name="checkout"><input type="checkbox" name="ship_to_different_address" value="1" /></form>
+      </div>
+      <div class="et_pb_wc_checkout_additional_info">
+        <form name="checkout">
+          <div class="col-1" style="display:none">
+            <input type="checkbox" name="ship_to_different_address" value="1" checked />
+          </div>
+        </form>
+      </div>
+    `;
+
+    expect(getAddressType()).toBe('billing');
+  });
+
+  it('ignores the passed value and reads the live checkbox', () => {
+    document.body.innerHTML = `
+      <form name="checkout"><input type="checkbox" name="ship_to_different_address" value="1" /></form>
+    `;
+
+    // Passed '1' would map to Shipping under the old value-based mapping; the unchecked box wins.
+    expect(getAddressType('1')).toBe('billing');
   });
 });
 
