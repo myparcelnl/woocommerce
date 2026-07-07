@@ -12,7 +12,6 @@
  * License: MIT
  * License URI: https://opensource.org/license/mit
  * Requires Plugins: woocommerce
- * WC requires at least: 8.6
  * WC tested up to: 10.3
  */
 

@@ -30,7 +30,7 @@ use WC_Cart;
  */
 final class CartFeesHooks implements WordPressHooksInterface
 {
-    private const DELIVERY_OPTIONS_SESSION_KEY = '_myparcelcom_delivery_options';
+    private const DELIVERY_OPTIONS_SESSION_KEY = '_' . PdkBootstrapper::PLUGIN_NAMESPACE . '_delivery_options';
 
     /** @var WcTaxService */
     private $taxService;
