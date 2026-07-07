@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Migration;
 
 use MyParcelNL\Pdk\App\Installer\Contract\MigrationInterface;
-use MyParcelNL\Sdk\Factory\ConsignmentFactory;
-use MyParcelNL\Sdk\Model\Consignment\PostNLConsignment;
 
 final class Migration4_1_0 extends AbstractUpgradeMigration implements MigrationInterface
 {
@@ -142,8 +140,6 @@ final class Migration4_1_0 extends AbstractUpgradeMigration implements Migration
 
     /**
      * In case the current amount is not valid, choose the closest value from the allowed values (rounded up).
-     *
-     * @throws \Exception
      */
     private function correctPostNlInsurance(): void
     {
@@ -160,24 +156,16 @@ final class Migration4_1_0 extends AbstractUpgradeMigration implements Migration
     }
 
     /**
+     * PostNL insurance amounts as they were at the time of this migration, copied from the legacy SDK's
+     * PostNLConsignment::getLocalInsurancePossibilities(), which was removed in sdk v11.0.0-beta.22.
+     *
      * @return array
-     * @throws \Exception
      */
     private function getNewInsuranceAmounts(): array
     {
-        $amounts = [];
+        $amountPossibilities = [100, 250, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000];
 
-        /**
-         * @type PostNLConsignment $carrier
-         */
-        $carrier             = ConsignmentFactory::createByCarrierName('postnl');
-        $amountPossibilities = $carrier->getInsurancePossibilities();
-
-        foreach ($amountPossibilities as $value) {
-            $amounts[$value] = $value;
-        }
-
-        return $amounts;
+        return array_combine($amountPossibilities, $amountPossibilities);
     }
 
     private function migrateCheckoutSettings(): void
