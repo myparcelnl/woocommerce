@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.6.0](https://github.com/myparcelnl/woocommerce/compare/v6.5.2...v6.6.0) (2026-07-07)
+
+
+### :sparkles: New Features
+
+* bump form-data from 3.0.4 to 3.0.5 ([#1642](https://github.com/myparcelnl/woocommerce/issues/1642)) ([5a163ee](https://github.com/myparcelnl/woocommerce/commit/5a163eee9c740afc8d1723fa9b71a78c8425e2d8))
+* bump joi from 17.13.3 to 17.13.4 ([#1639](https://github.com/myparcelnl/woocommerce/issues/1639)) ([489fec4](https://github.com/myparcelnl/woocommerce/commit/489fec46fb752543976a442582460265ba37ac7b))
+* bump launch-editor from 2.9.1 to 2.14.1 ([#1643](https://github.com/myparcelnl/woocommerce/issues/1643)) ([db122de](https://github.com/myparcelnl/woocommerce/commit/db122de2239f272b0fce0b9278d2b5ff675cecac))
+* **pdk:** update PDK from 4.0.1 to 4.1.1 ([#1663](https://github.com/myparcelnl/woocommerce/issues/1663)) ([66fb711](https://github.com/myparcelnl/woocommerce/commit/66fb711155efc5d7686f85d428345ef9ca67e196))
+
 ## [6.5.2](https://github.com/myparcelnl/woocommerce/compare/v6.5.1...v6.5.2) (2026-06-16)
 
 
