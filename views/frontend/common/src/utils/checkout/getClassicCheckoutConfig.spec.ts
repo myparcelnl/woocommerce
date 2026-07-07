@@ -122,6 +122,28 @@ describe('getClassicCheckoutConfig - getFormData', () => {
     // The hidden duplicate carries a stale non-empty value; the visible edited value must win.
     expect(getFormData()['billing_postcode']).toBe('1234AB');
   });
+
+  it('keeps a shipping method WooCommerce renders as a single hidden input', () => {
+    // When exactly one shipping method is available, WooCommerce renders it as
+    // <input type="hidden" name="shipping_method[0]"> instead of a radio. Such an input has a
+    // UA-stylesheet computed display of `none` (modelled here with an explicit style, since
+    // happy-dom does not apply that UA rule). It carries a real value and must NOT be treated as a
+    // Divi display:none-container duplicate and dropped — doing so empties the shipping method and
+    // disables delivery options.
+    document.body.innerHTML = `
+      <form name="checkout" class="checkout woocommerce-checkout">
+        <input type="text" name="billing_first_name" value="Jane" />
+        <ul id="shipping_method">
+          <li>
+            <input type="hidden" name="shipping_method[0]" value="flat_rate:1" style="display:none" />
+            <label>Flat rate</label>
+          </li>
+        </ul>
+      </form>
+    `;
+
+    expect(getFormData()['shipping_method[0]']).toBe('flat_rate:1');
+  });
 });
 
 const getForm = () => getClassicCheckoutConfig().config.getForm();
@@ -206,6 +228,24 @@ describe('getClassicCheckoutConfig - getAddressType', () => {
     expect(getAddressType()).toBe('billing');
   });
 
+  it('ignores a self-hidden checkbox that precedes the visible one and reads the visible one', () => {
+    // Divi renders extra ship_to_different_address inputs whose OWN display is none (not via a
+    // hidden container). getAddressType must locate the one the user actually toggles, so a
+    // self-hidden unchecked box appearing earlier in the DOM must not shadow the visible checked box.
+    document.body.innerHTML = `
+      <div class="et_pb_wc_checkout_payment_info">
+        <form name="checkout">
+          <input type="checkbox" name="ship_to_different_address" value="1" style="display:none" />
+        </form>
+      </div>
+      <div class="et_pb_wc_checkout_shipping">
+        <form name="checkout"><input type="checkbox" name="ship_to_different_address" value="1" checked /></form>
+      </div>
+    `;
+
+    expect(getAddressType()).toBe('shipping');
+  });
+
   it('ignores the passed value and reads the live checkbox', () => {
     document.body.innerHTML = `
       <form name="checkout"><input type="checkbox" name="ship_to_different_address" value="1" /></form>
@@ -256,5 +296,21 @@ describe('getClassicCheckoutConfig - formChange', () => {
     fireChange('.et_pb_wc_checkout_billing input[name="billing_first_name"]');
 
     expect(calls).toBe(2);
+  });
+
+  it('fires the callback on WooCommerce\'s updated_checkout event', () => {
+    // WooCommerce re-renders the shipping-method radios via AJAX and auto-selects one WITHOUT
+    // firing a bubbling `change`. Only `updated_checkout` (on document.body) marks that re-render
+    // complete, so formChange must listen to it or the store keeps a stale/empty shipping method
+    // and delivery options stay hidden after a ship-to-different-address toggle.
+    document.body.innerHTML = SINGLE_FORM;
+    let calls = 0;
+
+    getClassicCheckoutConfig().config.formChange(() => {
+      calls += 1;
+    });
+    document.body.dispatchEvent(new Event('updated_checkout', {bubbles: true}));
+
+    expect(calls).toBe(1);
   });
 });
