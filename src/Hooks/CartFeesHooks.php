@@ -14,6 +14,7 @@ use MyParcelNL\Pdk\Facade\Language;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
+use MyParcelNL\WooCommerce\Hooks\Contract\WooCommerceInitCallbacksInterface;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Pdk\Service\WcTaxService;
 use WC_Cart;
@@ -28,7 +29,7 @@ use WC_Cart;
  * it in the WC session, and resolveDeliveryOptionsData() reads from whichever source applies so the
  * fee logic stays identical for both checkouts.
  */
-final class CartFeesHooks implements WordPressHooksInterface
+final class CartFeesHooks implements WordPressHooksInterface, WooCommerceInitCallbacksInterface
 {
     private const DELIVERY_OPTIONS_SESSION_KEY = '_' . PdkBootstrapper::PLUGIN_NAMESPACE . '_delivery_options';
 
@@ -41,10 +42,6 @@ final class CartFeesHooks implements WordPressHooksInterface
     {
         add_action('woocommerce_cart_calculate_fees', [$this, 'calculateDeliveryOptionsFees'], 20);
 
-        // apply() runs on init priority 9999, after woocommerce_init has already fired, so register
-        // the Store API callback directly instead of deferring it — still before any REST request.
-        $this->registerStoreApiUpdateCallback();
-
         // Blocks order placement: prime the session from the checkout request before the order-building
         // cart recalc (OrderController::update_order_from_cart) sets the fees, so an order placed within
         // the debounce window (before the live extensionCartUpdate fires) still charges the chosen fee.
@@ -54,6 +51,15 @@ final class CartFeesHooks implements WordPressHooksInterface
         add_action('woocommerce_checkout_order_processed', [$this, 'clearDeliveryOptionsSession']);
         add_action('woocommerce_store_api_checkout_order_processed', [$this, 'clearDeliveryOptionsSession']);
         add_action('woocommerce_cart_emptied', [$this, 'clearDeliveryOptionsSession']);
+    }
+
+    /**
+     * Register the blocks-checkout Store API update callback once WooCommerce is initialized, so it's
+     * in place before any Store API request is dispatched.
+     */
+    public function onWoocommerceInit(): void
+    {
+        $this->registerStoreApiUpdateCallback();
     }
 
     /**

@@ -129,6 +129,7 @@ final class WordPressHookService
     private function getWoocommerceInitHooks(): array
     {
         return [
+            CartFeesHooks::class,
             SeparateAddressFieldsHooks::class,
             TaxFieldsHooks::class,
         ];
