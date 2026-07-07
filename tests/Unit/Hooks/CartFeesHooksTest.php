@@ -9,6 +9,7 @@ use MyParcelNL\Pdk\App\Options\Definition\SignatureDefinition;
 use MyParcelNL\Pdk\Base\Support\SettingKey;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
+use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\Pdk\Settings\Model\ProductSettings;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
@@ -17,6 +18,8 @@ use MyParcelNL\Sdk\Client\Generated\CoreApi\Model\RefTypesDeliveryTypeV2;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Cart;
 use WC_Product;
+use WP_Term;
+use function MyParcelNL\Pdk\Tests\factory;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function MyParcelNL\WooCommerce\Tests\wpFactory;
 
@@ -48,13 +51,21 @@ if (! function_exists(__NAMESPACE__ . '\\filter_input_array')) {
  * a deliverable (non-virtual) product that doesn't have delivery options disabled. Each call uses a
  * fresh product id so the per-id PdkProduct cache can't bleed between tests.
  */
-function cartWithProduct(bool $needsShipping = true, array $productSettings = [], float $shippingTotal = 0.0): WC_Cart
-{
+function cartWithProduct(
+    bool $needsShipping = true,
+    array $productSettings = [],
+    float $shippingTotal = 0.0,
+    ?int $shippingClassId = null
+): WC_Cart {
     static $nextId = 7100;
 
     $factory = wpFactory(WC_Product::class)
         ->withId($nextId++)
         ->withNeedsShipping($needsShipping);
+
+    if (null !== $shippingClassId) {
+        $factory = $factory->withShippingClassId($shippingClassId);
+    }
 
     if ($productSettings) {
         $factory = $factory->withMeta([Pdk::get('metaKeyProductSettings') => $productSettings]);
@@ -413,4 +424,89 @@ it('adds no fees when a product has delivery options disabled', function () {
 
     expect($cart->fees)->toBeEmpty()
         ->and(WC()->session->get(SESSION_KEY))->toBe($selection);
+});
+
+it('adds no fees when the chosen shipping method has delivery options disabled in the matrix', function () {
+    // The allowed-shipping-methods matrix assigns package types to flat_rate:99 only, so the chosen
+    // flat_rate:1 resolves to no package types → the widget shows nothing → no fee should apply.
+    factory(CheckoutSettings::class)
+        ->withAllowedShippingMethods(['package' => ['flat_rate:99']])
+        ->store();
+
+    $selection = [
+        'carrier'         => 'postnl',
+        'shipmentOptions' => [
+            (new SignatureDefinition())->getShipmentOptionsKey() => true,
+        ],
+    ];
+    WC()->session->set(SESSION_KEY, $selection);
+    WC()->session->set('chosen_shipping_methods', ['flat_rate:1']);
+
+    $cart = cartWithProduct();
+
+    /** @var CartFeesHooks $hooks */
+    $hooks = Pdk::get(CartFeesHooks::class);
+    $hooks->calculateDeliveryOptionsFees($cart);
+
+    expect($cart->fees)->toBeEmpty();
+});
+
+it('adds no fees when a product shipping class has delivery options disabled in the matrix', function () {
+    // The chosen method flat_rate:1 IS enabled in the matrix (so the method gate passes), but the
+    // cart product's shipping class (999) is assigned to no package type → delivery options are
+    // disabled for the whole cart (mirrors WcContextService), so no fee should apply.
+    factory(CheckoutSettings::class)
+        ->withAllowedShippingMethods(['mailbox' => ['flat_rate:1', 'shipping_class:12']])
+        ->store();
+
+    $term          = new WP_Term();
+    $term->term_id = 999;
+    $term->slug    = $term->name = 'disabled-class';
+    wp_cache_add('999', $term, 'terms');
+
+    WC()->session->set(SESSION_KEY, [
+        'carrier'         => 'postnl',
+        'shipmentOptions' => [
+            (new SignatureDefinition())->getShipmentOptionsKey() => true,
+        ],
+    ]);
+    WC()->session->set('chosen_shipping_methods', ['flat_rate:1']);
+
+    $cart = cartWithProduct(true, [], 0.0, 999);
+
+    /** @var CartFeesHooks $hooks */
+    $hooks = Pdk::get(CartFeesHooks::class);
+    $hooks->calculateDeliveryOptionsFees($cart);
+
+    expect($cart->fees)->toBeEmpty();
+});
+
+it('still adds fees when the chosen method and shipping class are enabled in the matrix', function () {
+    // Regression guard: a configured matrix that DOES include the chosen method and the product's
+    // shipping class must not block the fee.
+    factory(CheckoutSettings::class)
+        ->withAllowedShippingMethods(['mailbox' => ['flat_rate:1', 'shipping_class:999']])
+        ->store();
+
+    $term          = new WP_Term();
+    $term->term_id = 999;
+    $term->slug    = $term->name = 'enabled-class';
+    wp_cache_add('999', $term, 'terms');
+
+    WC()->session->set(SESSION_KEY, [
+        'carrier'         => 'postnl',
+        'shipmentOptions' => [
+            (new SignatureDefinition())->getShipmentOptionsKey() => true,
+        ],
+    ]);
+    WC()->session->set('chosen_shipping_methods', ['flat_rate:1']);
+
+    $cart = cartWithProduct(true, [], 0.0, 999);
+
+    /** @var CartFeesHooks $hooks */
+    $hooks = Pdk::get(CartFeesHooks::class);
+    $hooks->calculateDeliveryOptionsFees($cart);
+
+    expect($cart->fees)->toHaveCount(2)
+        ->and(array_column($cart->fees, 'amount'))->toBe([4.5, 1.1]);
 });

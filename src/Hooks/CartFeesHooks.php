@@ -13,9 +13,12 @@ use MyParcelNL\Pdk\Base\PdkBootstrapper;
 use MyParcelNL\Pdk\Facade\Language;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Facade\Settings;
+use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\WooCommerce\Hooks\Contract\WooCommerceInitCallbacksInterface;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
+use MyParcelNL\WooCommerce\Pdk\Service\WcShippingClassMatrixService;
 use MyParcelNL\WooCommerce\Pdk\Service\WcTaxService;
 use WC_Cart;
 
@@ -36,7 +39,14 @@ final class CartFeesHooks implements WordPressHooksInterface, WooCommerceInitCal
     /** @var WcTaxService */
     private $taxService;
 
-    public function __construct(WcTaxService $taxService) { $this->taxService = $taxService; }
+    /** @var WcShippingClassMatrixService */
+    private $shippingClassMatrixService;
+
+    public function __construct(WcTaxService $taxService, WcShippingClassMatrixService $shippingClassMatrixService)
+    {
+        $this->taxService                 = $taxService;
+        $this->shippingClassMatrixService = $shippingClassMatrixService;
+    }
 
     public function apply(): void
     {
@@ -121,8 +131,12 @@ final class CartFeesHooks implements WordPressHooksInterface, WooCommerceInitCal
     }
 
     /**
-     * Whether delivery options apply to this cart (false for virtual-only carts or products that
-     * disable them). A minimal PdkCart is enough: only its lines drive PdkShippingMethod::hasDeliveryOptions.
+     * Whether delivery options apply to this cart — i.e. whether the checkout widget would show any
+     * option for it, so the fee mirrors what the customer actually sees. Returns false when:
+     * - a product is virtual or has delivery options disabled (PdkShippingMethod::hasDeliveryOptions);
+     * - the chosen shipping method is assigned no package type in the allowed-shipping-methods matrix
+     *   (empty allowedPackageTypes — the merchant switched delivery options off for that method); or
+     * - a product's shipping class is assigned no package type in that matrix (mirrors WcContextService).
      */
     private function cartHasDeliveryOptions(WC_Cart $cart): bool
     {
@@ -135,7 +149,67 @@ final class CartFeesHooks implements WordPressHooksInterface, WooCommerceInitCal
             ];
         }, array_values($cart->get_cart()));
 
-        return (new PdkCart(['lines' => $lines]))->shippingMethod->hasDeliveryOptions;
+        // Build with the chosen shipping method so allowedPackageTypes resolves against the matrix.
+        $shippingMethod = (new PdkCart([
+            'lines'          => $lines,
+            'shippingMethod' => ['id' => $this->getChosenShippingMethodId()],
+        ]))->shippingMethod;
+
+        if (! $shippingMethod->hasDeliveryOptions) {
+            return false;
+        }
+
+        if ($shippingMethod->allowedPackageTypes->isEmpty()) {
+            return false;
+        }
+
+        return ! $this->cartHasShippingClassWithoutDeliveryOptions($cart);
+    }
+
+    /**
+     * Whether any cart product's shipping class is assigned to no package type in the
+     * allowed-shipping-methods matrix, which disables delivery options for the whole cart. An empty
+     * matrix is unconfigured (legacy default: everything allowed), so it never disables.
+     */
+    private function cartHasShippingClassWithoutDeliveryOptions(WC_Cart $cart): bool
+    {
+        $allowedShippingMethods = Settings::get(CheckoutSettings::ALLOWED_SHIPPING_METHODS, CheckoutSettings::ID);
+
+        if (empty($allowedShippingMethods)) {
+            return false;
+        }
+
+        foreach ($cart->get_cart() as $item) {
+            $shippingClassName = $this->shippingClassMatrixService->resolveShippingClassName(
+                $item['data']->get_shipping_class()
+            );
+
+            if (null === $shippingClassName) {
+                continue;
+            }
+
+            if (null === $this->shippingClassMatrixService->getAssociatedPackageType($shippingClassName, $allowedShippingMethods)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * The first chosen shipping method rate id from the session (e.g. "flat_rate:1"), or null when
+     * none is chosen yet.
+     */
+    private function getChosenShippingMethodId(): ?string
+    {
+        // @phpstan-ignore booleanNot.alwaysFalse (WC()->session is nullable; the WooCommerce stub omits null)
+        if (! WC()->session) {
+            return null;
+        }
+
+        $chosenMethods = (array) WC()->session->get('chosen_shipping_methods', []);
+
+        return isset($chosenMethods[0]) ? (string) $chosenMethods[0] : null;
     }
 
     /**
