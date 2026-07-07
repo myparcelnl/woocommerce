@@ -6,7 +6,6 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 
 use MyParcelNL\Pdk\App\Options\Definition\AgeCheckDefinition;
-use MyParcelNL\Pdk\App\Options\Definition\CooledDeliveryDefinition;
 use MyParcelNL\Pdk\App\Options\Definition\DirectReturnDefinition;
 use MyParcelNL\Pdk\App\Options\Definition\FreshFoodDefinition;
 use MyParcelNL\Pdk\App\Options\Definition\FrozenDefinition;
@@ -50,7 +49,6 @@ function defaultProductSettings(): array
         (new FreshFoodDefinition())->getProductSettingsKey()        => TriStateService::INHERIT,
         (new FrozenDefinition())->getProductSettingsKey()           => TriStateService::INHERIT,
         (new PriorityDeliveryDefinition())->getProductSettingsKey() => TriStateService::INHERIT,
-        (new CooledDeliveryDefinition())->getProductSettingsKey()   => TriStateService::INHERIT,
     ];
 }
 
