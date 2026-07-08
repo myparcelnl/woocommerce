@@ -38,7 +38,10 @@ final class WcOrderRepository extends Repository implements WcOrderRepositoryInt
                 return $input;
             }
 
-            return new WC_Order($id);
+            // wc_get_order() reuses WC's object cache, populated by WC's own list-table
+            // rendering before our column hook fires. Falls back to a fresh instance
+            // when called outside the order list context (e.g. during checkout).
+            return wc_get_order((int) $id) ?: new WC_Order($id);
         });
     }
 
