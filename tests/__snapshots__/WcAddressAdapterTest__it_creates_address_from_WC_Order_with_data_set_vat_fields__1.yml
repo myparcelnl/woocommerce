@@ -9,5 +9,10 @@ company: MyParcel
 postalCode: '2131 BC'
 region: NH
 state: NH
+street: Hoofdweg
+number: '679'
+numberSuffix: null
+boxNumber: null
+streetAdditionalInfo: null
 eoriNumber: NL123456789
 vatNumber: NL123456789B01

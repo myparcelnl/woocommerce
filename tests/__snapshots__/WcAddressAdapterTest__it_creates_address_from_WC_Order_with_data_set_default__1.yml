@@ -9,5 +9,10 @@ company: MyParcel
 postalCode: 2132JE
 region: NH
 state: NH
+street: Antareslaan
+number: '31'
+numberSuffix: null
+boxNumber: null
+streetAdditionalInfo: null
 eoriNumber: null
 vatNumber: null

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Adapter;
 
+use Exception;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Base\Model\MyParcelAddress;
+use MyParcelNL\Sdk\Helper\SplitStreet;
 use WC_Cart;
 use WC_Customer;
 use WC_Order;
@@ -158,20 +160,64 @@ class WcAddressAdapter
         if ($this->getOrderMeta($order, Pdk::get('checkoutAddressHiddenInputName'), $addressType)) {
             return [];
         }
+
+        $country = $this->getAddressField($order, Pdk::get('fieldCountry'), $addressType);
+
+        if (! in_array($country, Pdk::get('countriesWithSeparateAddressFields'), true)) {
+            return [];
+        }
+
         $street       = trim($this->getOrderMeta($order, Pdk::get('fieldStreet'), $addressType) ?: '');
         $number       = trim($this->getOrderMeta($order, Pdk::get('fieldNumber'), $addressType) ?: '');
         $numberSuffix = trim($this->getOrderMeta($order, Pdk::get('fieldNumberSuffix'), $addressType) ?: '');
-        $country      = $this->getAddressField($order, Pdk::get('fieldCountry'), $addressType);
 
-        $hasSeparateAddress = $street || $number || $numberSuffix;
-
-        return $hasSeparateAddress && in_array($country, Pdk::get('countriesWithSeparateAddressFields'), true)
-            ? [
+        if ($street || $number || $numberSuffix) {
+            return [
                 'street'       => $street ?: null,
                 'number'       => $number ?: null,
                 'numberSuffix' => $numberSuffix ?: null,
-            ]
-            : [];
+            ];
+        }
+
+        return $this->splitAddress1($order, $addressType, $country);
+    }
+
+    /**
+     * The fulfilment API does not split a full street into street and house number server-side, so without this the
+     * house number ends up in the street field when exporting in order mode.
+     *
+     * @param  \WC_Order $order
+     * @param  string    $addressType
+     * @param  string    $country
+     *
+     * @return array
+     */
+    private function splitAddress1(WC_Order $order, string $addressType, string $country): array
+    {
+        $address1 = trim((string) $this->getAddressField($order, Pdk::get('fieldAddress1'), $addressType));
+
+        if (! $address1) {
+            return [];
+        }
+
+        try {
+            // Pass the destination country as local country too, so NL→BE orders are also split with the BE regex.
+            $fullStreet = SplitStreet::splitStreet($address1, $country, $country);
+        } catch (Exception $e) {
+            // Send the address as-is when it cannot be split.
+            return [];
+        }
+
+        $number   = $fullStreet->getNumber();
+        $address2 = trim((string) $this->getAddressField($order, Pdk::get('fieldAddress2'), $addressType));
+
+        return [
+            'street'               => $fullStreet->getStreet() ?: null,
+            'number'               => null !== $number ? (string) $number : null,
+            'numberSuffix'         => $fullStreet->getNumberSuffix() ?: null,
+            'boxNumber'            => $fullStreet->getBoxNumber() ?: null,
+            'streetAdditionalInfo' => $address2 ?: null,
+        ];
     }
 
     /**

@@ -9,5 +9,10 @@ company: MyParcel
 postalCode: '2000'
 region: ''
 state: ''
+street: 'Adriaan Brouwerstraat'
+number: '16'
+numberSuffix: null
+boxNumber: null
+streetAdditionalInfo: null
 eoriNumber: null
 vatNumber: null
