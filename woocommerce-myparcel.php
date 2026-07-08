@@ -157,6 +157,8 @@ final class MyParcelNLWooCommerce
     {
         $version = $this->getVersion();
 
+        $this->clearPdkCacheOnVersionChange($version);
+
         bootPdk(
             $version,
             plugin_dir_path(__FILE__),
@@ -201,6 +203,61 @@ final class MyParcelNLWooCommerce
         }
 
         return $errors;
+    }
+
+    /**
+     * Remove compiled container caches left behind by another plugin version. The compiled
+     * container bakes in definitions and paths of the version that created it; reusing it across
+     * up- or downgrades causes fatal errors before the installer gets a chance to clean up.
+     * Runs before the container is booted, so it must not use the PDK itself.
+     *
+     * @param  string $version
+     *
+     * @return void
+     */
+    private function clearPdkCacheOnVersionChange(string $version): void
+    {
+        $optionKey = sprintf('_%s_installed_version', PdkBootstrapper::PLUGIN_NAMESPACE);
+
+        if (get_option($optionKey) === $version) {
+            return;
+        }
+
+        $this->deleteDirectoryContents(PdkInstance::CACHE_DIR);
+    }
+
+    /**
+     * @param  string $directory
+     *
+     * @return void
+     */
+    private function deleteDirectoryContents(string $directory): void
+    {
+        if (! is_dir($directory)) {
+            return;
+        }
+
+        $entries = @scandir($directory);
+
+        if (false === $entries) {
+            return;
+        }
+
+        foreach (array_diff($entries, ['.', '..']) as $entry) {
+            $path = "$directory/$entry";
+
+            if (is_dir($path) && ! is_link($path)) {
+                $this->deleteDirectoryContents($path);
+                @rmdir($path);
+                continue;
+            }
+
+            if (function_exists('opcache_invalidate') && 'php' === pathinfo($path, PATHINFO_EXTENSION)) {
+                @opcache_invalidate($path, true);
+            }
+
+            @unlink($path);
+        }
     }
 
     private function getApiKey(): ?string
