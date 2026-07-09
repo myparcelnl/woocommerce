@@ -10,11 +10,20 @@ const getCheckoutForms = (): HTMLFormElement[] =>
   Array.from(document.querySelectorAll<HTMLFormElement>('form[name="checkout"]'));
 
 /**
- * True if any node from `start` up to (not including) <body> is `display:none`. Uses getComputedStyle
- * because checkVisibility()/offsetParent are unavailable under happy-dom 14.
+ * True if `start` or an ancestor is `display:none`. Prefers the browser's native checkVisibility()
+ * (one call, no per-node work); falls back to a getComputedStyle ancestor walk for older browsers and
+ * happy-dom (tests), which lack it. Both paths consider display only (visibility/opacity ignored).
  */
 const hasDisplayNoneAncestor = (start: Element | null): boolean => {
-  for (let node = start; node && node !== document.body; node = node.parentElement) {
+  if (!start) {
+    return false;
+  }
+
+  if (typeof start.checkVisibility === 'function') {
+    return !start.checkVisibility();
+  }
+
+  for (let node: Element | null = start; node && node !== document.body; node = node.parentElement) {
     if (window.getComputedStyle(node).display === 'none') {
       return true;
     }
