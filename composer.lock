@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "95d29b751c5a68c2ffa375226b730efa",
+    "content-hash": "7ac6ed6155530441797f10f4f8d6df21",
     "packages": [
         {
             "name": "fruitcake/php-cors",
@@ -471,16 +471,16 @@
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "4.1.1",
+            "version": "4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/pdk.git",
-                "reference": "08913fe4eca2ddbd95b312dc162d145c0254644e"
+                "reference": "b77a3d55b508da849bc7ef743fb5959939583e89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/08913fe4eca2ddbd95b312dc162d145c0254644e",
-                "reference": "08913fe4eca2ddbd95b312dc162d145c0254644e",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/b77a3d55b508da849bc7ef743fb5959939583e89",
+                "reference": "b77a3d55b508da849bc7ef743fb5959939583e89",
                 "shasum": ""
             },
             "require": {
@@ -496,7 +496,7 @@
                 "behat/behat": "^3.13",
                 "brick/varexporter": "^0.4",
                 "guzzlehttp/guzzle": "^7.5",
-                "league/openapi-psr7-validator": "^0.22",
+                "league/openapi-psr7-validator": "^0.24",
                 "mockery/mockery": "^1.6",
                 "myparcelnl/devtools": "^1.0.0",
                 "nette/robot-loader": "^3.0.0",
@@ -527,9 +527,9 @@
             "homepage": "https://myparcel.nl",
             "support": {
                 "issues": "https://github.com/myparcelnl/pdk/issues",
-                "source": "https://github.com/myparcelnl/pdk/tree/v4.1.1"
+                "source": "https://github.com/myparcelnl/pdk/tree/v4.2.1"
             },
-            "time": "2026-07-07T08:25:04+00:00"
+            "time": "2026-07-09T14:23:19+00:00"
         },
         {
             "name": "myparcelnl/sdk",
