@@ -14,7 +14,7 @@ use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
-use WP_Term;
+use MyParcelNL\WooCommerce\Pdk\Service\WcShippingClassMatrixService;
 
 final class WcContextService extends ContextService
 {
@@ -25,8 +25,8 @@ final class WcContextService extends ContextService
      */
     public function createCheckoutContext(?PdkCart $cart): CheckoutContext
     {
-        $allowedShippingMethods  = Settings::get(CheckoutSettings::ALLOWED_SHIPPING_METHODS, CheckoutSettings::ID);
-        $createShippingClassName = Pdk::get('createShippingClassName');
+        $allowedShippingMethods = Settings::get(CheckoutSettings::ALLOWED_SHIPPING_METHODS, CheckoutSettings::ID);
+        $matrixService          = Pdk::get(WcShippingClassMatrixService::class);
 
         $disableDeliveryOptions = false;
         // Candidate list of shipping-class → package-type pairs collected from cart products.
@@ -42,14 +42,12 @@ final class WcContextService extends ContextService
                     continue;
                 }
 
-                $shippingClass = $WC_product->get_shipping_class();
-                if (! $shippingClass) {
+                $shippingClassName = $matrixService->resolveShippingClassName($WC_product->get_shipping_class());
+                if (null === $shippingClassName) {
                     continue;
                 }
 
-                $shippingClassName = $createShippingClassName($this->getShippingClassId($shippingClass));
-
-                $packageType = $this->getAssociatedPackageType($shippingClassName, $allowedShippingMethods);
+                $packageType = $matrixService->getAssociatedPackageType($shippingClassName, $allowedShippingMethods);
 
                 if ((string) TriStateService::INHERIT === $packageType) {
                     continue;
@@ -72,7 +70,7 @@ final class WcContextService extends ContextService
 
         $highestShippingClass = $disableDeliveryOptions
             ? null
-            : $this->resolveHighestShippingClass($cart, $candidates, $checkoutContext->config->packageType);
+            : $this->resolveHighestShippingClass($cart, $candidates, $checkoutContext->config->packageType ?? null);
 
         $settingsToMerge = [
             'highestShippingClass' => $highestShippingClass ?? '', // frontend expects empty string when not set
@@ -166,52 +164,4 @@ final class WcContextService extends ContextService
         return null;
     }
 
-    /**
-     * @param  string $shippingClassName
-     * @param  array  $allowedShippingMethods
-     *
-     * @return null|string the package type name or null if none is associated
-     */
-    protected function getAssociatedPackageType(string $shippingClassName, array $allowedShippingMethods): ?string
-    {
-        foreach ($allowedShippingMethods as $packageType => $methods) {
-            if (in_array($shippingClassName, $methods, true)) {
-                return (string) $packageType;
-            }
-        }
-
-        // No package type associated with this shipping class, this means don’t display
-        // delivery options.
-        return null;
-    }
-
-    /**
-     * @param  string $shippingClass
-     *
-     * @return null|int
-     */
-    private function getShippingClassId(string $shippingClass): ?int
-    {
-        $term = get_term_by('slug', $shippingClass, 'product_shipping_class');
-
-        return $this->getTermId($term);
-    }
-
-    /**
-     * @param  WP_Term|array|null $term
-     *
-     * @return null|int
-     */
-    private function getTermId($term): ?int
-    {
-        $termId = null;
-
-        if ($term instanceof WP_Term) {
-            $termId = $term->term_id;
-        } elseif (is_array($term)) {
-            $termId = $term['term_id'] ?? null;
-        }
-
-        return $termId ? (int) $termId : null;
-    }
 }

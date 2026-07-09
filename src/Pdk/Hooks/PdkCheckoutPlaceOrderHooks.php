@@ -34,25 +34,32 @@ final class PdkCheckoutPlaceOrderHooks implements WordPressHooksInterface
     public function apply(): void
     {
         add_action('woocommerce_checkout_order_processed', [$this, 'saveDeliveryOptions'], 10, 3);
-        add_action('woocommerce_blocks_checkout_order_processed', [$this, 'saveBlocksDeliveryOptions'], 10, 1);
+        add_action('woocommerce_store_api_checkout_update_order_from_request', [$this, 'saveBlocksDeliveryOptions'], 10, 2);
     }
 
     /**
      * Saves the delivery options to the new PDK order.
      *
-     * @param  WC_Order $wcOrder
+     * @param  WC_Order         $wcOrder
+     * @param  \WP_REST_Request $request Carries the raw checkout body with the selection.
      *
      * @return void
      */
-    public function saveBlocksDeliveryOptions(WC_Order $wcOrder): void
+    public function saveBlocksDeliveryOptions(WC_Order $wcOrder, $request): void
     {
-        // eslint-disable-next-line camelcase
-        global $HTTP_RAW_POST_DATA;
         $namespace = PdkBootstrapper::PLUGIN_NAMESPACE;
 
         try {
-            $postData            = json_decode(wp_unslash($HTTP_RAW_POST_DATA), true);
-            $deliveryOptionsData = $postData['extensions']["$namespace-delivery-options"] ?? null;
+            $body = $request->get_body();
+
+            if (! is_string($body) || '' === $body) {
+                return;
+            }
+
+            $postData            = json_decode(wp_unslash($body), true);
+            $deliveryOptionsData = is_array($postData)
+                ? ($postData['extensions']["$namespace-delivery-options"] ?? null)
+                : null;
 
             if (empty($deliveryOptionsData)) {
                 return;

@@ -12,6 +12,7 @@
  * License: MIT
  * License URI: https://opensource.org/license/mit
  * Requires Plugins: woocommerce
+ * WC tested up to: 10.3
  */
 
 declare(strict_types=1);
@@ -26,7 +27,6 @@ use MyParcelNL\WooCommerce\Facade\WooCommerce;
 use MyParcelNL\WooCommerce\Integration\WcBlocksLoader;
 use MyParcelNL\WooCommerce\Service\WordPressHookService;
 
-use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
 use function MyParcelNL\WooCommerce\bootPdk;
 
 require plugin_dir_path(__FILE__) . 'vendor/autoload.php';
