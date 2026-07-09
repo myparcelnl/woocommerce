@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.7.0](https://github.com/myparcelnl/woocommerce/compare/v6.6.0...v6.7.0) (2026-07-09)
+
+
+### :sparkles: New Features
+
+* bump @sigstore/core from 3.1.0 to 3.2.1 ([#1659](https://github.com/myparcelnl/woocommerce/issues/1659)) ([f5ee8e0](https://github.com/myparcelnl/woocommerce/commit/f5ee8e08684e4ed9bea751153a43df112bec008b))
+* bump @sigstore/verify from 3.1.0 to 3.1.1 ([#1660](https://github.com/myparcelnl/woocommerce/issues/1660)) ([43ccb6d](https://github.com/myparcelnl/woocommerce/commit/43ccb6d9f06add5f70d00700d8cab8cbd1cc8e8f))
+* bump actions/cache from 5 to 6 ([#1655](https://github.com/myparcelnl/woocommerce/issues/1655)) ([8911d1f](https://github.com/myparcelnl/woocommerce/commit/8911d1fee669aeecbdc855c1e1ad3a7cb6725e2b))
+* bump actions/checkout from 6 to 7 ([#1656](https://github.com/myparcelnl/woocommerce/issues/1656)) ([c0f64c1](https://github.com/myparcelnl/woocommerce/commit/c0f64c1696c056465c06cc58454af84ab6055247))
+* bump http-proxy-middleware from 2.0.9 to 2.0.10 ([#1658](https://github.com/myparcelnl/woocommerce/issues/1658)) ([c150f0f](https://github.com/myparcelnl/woocommerce/commit/c150f0f576211748c808b75ce402288416a81078))
+* bump the minor-php-updates group across 1 directory with 2 updates ([#1657](https://github.com/myparcelnl/woocommerce/issues/1657)) ([3f301a4](https://github.com/myparcelnl/woocommerce/commit/3f301a4ea948e681b2b81dfc6f5d88314c7e9aa6))
+* **order-grid:** eliminate per-order SQL queries for items and notes ([#1640](https://github.com/myparcelnl/woocommerce/issues/1640)) ([ec4025c](https://github.com/myparcelnl/woocommerce/commit/ec4025c6f989171aed925dea0e2694b4d9f9529f))
+
+
+### :bug: Bug Fixes
+
+* **checkout:** fix prices in blocks checkout not updating ([#1652](https://github.com/myparcelnl/woocommerce/issues/1652)) ([0f56a61](https://github.com/myparcelnl/woocommerce/commit/0f56a6102becc7d21d71bf2ecb8b43573b774e2b))
+* fix issues with stale cache causing issues when updating the plugin ([#1669](https://github.com/myparcelnl/woocommerce/issues/1669)) ([49a2149](https://github.com/myparcelnl/woocommerce/commit/49a2149cc599cc94b786e2c45f13dab97e739130))
+
 ## [6.6.0](https://github.com/myparcelnl/woocommerce/compare/v6.5.2...v6.6.0) (2026-07-07)
 
 
