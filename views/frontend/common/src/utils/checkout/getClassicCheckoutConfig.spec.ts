@@ -63,10 +63,9 @@ const DIVI_FORMS = `
 `;
 
 /**
- * Divi 5 duplicate billing fieldset: a visible billing form followed by an additional-info form
- * whose billing input is hidden by a display:none ancestor (Divi hides `.col-1`, not the input).
- * `postcode` is the value the hidden duplicate carries — parameterised so tests can model both a
- * fresh checkout (empty duplicate) and a returning customer (stale non-empty duplicate).
+ * Divi 5 duplicate billing fieldset: a visible billing form + an additional-info form whose billing
+ * input sits under a display:none ancestor (`.col-1`, not the input). `hiddenPostcode` models the
+ * duplicate's value — empty (fresh checkout) or stale non-empty (returning customer).
  */
 const DIVI_DUPLICATE_BILLING = (hiddenPostcode: string): string => `
   <div class="et_pb_wc_checkout_billing">
@@ -124,12 +123,9 @@ describe('getClassicCheckoutConfig - getFormData', () => {
   });
 
   it('keeps a shipping method WooCommerce renders as a single hidden input', () => {
-    // When exactly one shipping method is available, WooCommerce renders it as
-    // <input type="hidden" name="shipping_method[0]"> instead of a radio. Such an input has a
-    // UA-stylesheet computed display of `none` (modelled here with an explicit style, since
-    // happy-dom does not apply that UA rule). It carries a real value and must NOT be treated as a
-    // Divi display:none-container duplicate and dropped — doing so empties the shipping method and
-    // disables delivery options.
+    // A single shipping method renders as <input type=hidden name=shipping_method[0]> — display:none
+    // via the UA stylesheet (set explicitly here; happy-dom doesn't apply that rule). It carries a real
+    // value, so it must NOT be dropped as a Divi container-hidden duplicate.
     document.body.innerHTML = `
       <form name="checkout" class="checkout woocommerce-checkout">
         <input type="text" name="billing_first_name" value="Jane" />
@@ -229,9 +225,8 @@ describe('getClassicCheckoutConfig - getAddressType', () => {
   });
 
   it('ignores a self-hidden checkbox that precedes the visible one and reads the visible one', () => {
-    // Divi renders extra ship_to_different_address inputs whose OWN display is none (not via a
-    // hidden container). getAddressType must locate the one the user actually toggles, so a
-    // self-hidden unchecked box appearing earlier in the DOM must not shadow the visible checked box.
+    // Divi renders extra self-hidden ship_to_different_address inputs; an earlier one must not shadow
+    // the visible checkbox the user actually toggles.
     document.body.innerHTML = `
       <div class="et_pb_wc_checkout_payment_info">
         <form name="checkout">
@@ -299,10 +294,8 @@ describe('getClassicCheckoutConfig - formChange', () => {
   });
 
   it('fires the callback on WooCommerce\'s updated_checkout event', () => {
-    // WooCommerce re-renders the shipping-method radios via AJAX and auto-selects one WITHOUT
-    // firing a bubbling `change`. Only `updated_checkout` (on document.body) marks that re-render
-    // complete, so formChange must listen to it or the store keeps a stale/empty shipping method
-    // and delivery options stay hidden after a ship-to-different-address toggle.
+    // WooCommerce's AJAX re-render auto-selects the shipping method without a bubbling `change`;
+    // only `updated_checkout` signals it, so formChange must listen to that too.
     document.body.innerHTML = SINGLE_FORM;
     let calls = 0;
 
