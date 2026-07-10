@@ -88,13 +88,14 @@ it('maps the shipping address per destination country', function (string $factor
         ->and($address->city)->toBe($expected['city'])
         ->and($address->postalCode)->toBe($expected['postalCode'])
         ->and($address->street)->toBe($expected['street'])
+        ->and($address->number)->toBe($expected['number'])
         ->and($address->person)->toBe($expected['person'])
         ->and($address->company)->toBe($expected['company']);
 })->with([
-    'NL' => ['', ['cc' => 'NL', 'city' => 'Hoofddorp', 'postalCode' => '2132 JE', 'street' => 'Antareslaan 31', 'person' => 'John Doe', 'company' => 'MyParcel']],
-    'BE' => ['withShippingAddressInBelgium', ['cc' => 'BE', 'city' => 'Antwerpen', 'postalCode' => '1000', 'street' => 'Adriaan Brouwerstraat 16', 'person' => 'Fomo Parcel', 'company' => 'MyParcel BE']],
-    'DE' => ['withShippingAddressInGermany', ['cc' => 'DE', 'city' => 'Berlin', 'postalCode' => '10249', 'street' => 'Straßmannstraße 2', 'person' => 'Bier Parcel', 'company' => 'MyParcel DE']],
-    'US' => ['withShippingAddressInTheUsa', ['cc' => 'US', 'city' => 'New York', 'postalCode' => '10001', 'street' => '123 Fake St', 'person' => 'Abe Lincoln', 'company' => 'MyParcel US']],
+    'NL' => ['', ['cc' => 'NL', 'city' => 'Hoofddorp', 'postalCode' => '2132 JE', 'street' => 'Antareslaan', 'number' => '31', 'person' => 'John Doe', 'company' => 'MyParcel']],
+    'BE' => ['withShippingAddressInBelgium', ['cc' => 'BE', 'city' => 'Antwerpen', 'postalCode' => '1000', 'street' => 'Adriaan Brouwerstraat', 'number' => '16', 'person' => 'Fomo Parcel', 'company' => 'MyParcel BE']],
+    'DE' => ['withShippingAddressInGermany', ['cc' => 'DE', 'city' => 'Berlin', 'postalCode' => '10249', 'street' => 'Straßmannstraße 2', 'number' => null, 'person' => 'Bier Parcel', 'company' => 'MyParcel DE']],
+    'US' => ['withShippingAddressInTheUsa', ['cc' => 'US', 'city' => 'New York', 'postalCode' => '10001', 'street' => '123 Fake St', 'number' => null, 'person' => 'Abe Lincoln', 'company' => 'MyParcel US']],
 ]);
 
 it('reads saved delivery options and normalises the legacy carrier', function () {
