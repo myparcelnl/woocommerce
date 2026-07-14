@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Adapter;
 
+use MyParcelNL\Pdk\App\Cart\Model\PdkCart;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Cart;
@@ -314,3 +315,36 @@ it('creates address from WC_Cart', function (string $addressType, array $address
 
     assertMatchesSnapshot($adapter->fromWcCart($cart, $addressType));
 })->with('addresses');
+
+it('passes the cart company through to the pdk cart as isBusiness, without storing the company', function (
+    ?string $company,
+    bool    $expected
+) {
+    /** @var WcAddressAdapter $adapter */
+    $adapter = Pdk::get(WcAddressAdapter::class);
+
+    $address = [
+        'shipping_address_1' => 'Antareslaan 31',
+        'shipping_city'      => 'Hoofddorp',
+        'shipping_country'   => 'NL',
+        'shipping_postcode'  => '2132JE',
+    ];
+
+    if (null !== $company) {
+        $address['shipping_company'] = $company;
+    }
+
+    $cart   = new WC_Cart(['customer' => new WC_Customer($address)]);
+    $result = $adapter->fromWcCart($cart, 'shipping');
+
+    // Build the cart the same way the repository does — the bare PDK Address derives isBusiness
+    // from the company and drops the name, so no personal data is stored on the PII-free cart.
+    $shippingAddress = (new PdkCart(['shippingMethod' => ['shippingAddress' => $result]]))
+        ->shippingMethod->shippingAddress;
+
+    expect($shippingAddress->isBusiness)->toBe($expected)
+        ->and($shippingAddress->toArray())->not->toHaveKey('company');
+})->with([
+    'business (company entered)' => ['Acme B.V.', true],
+    'consumer (no company)'      => [null, false],
+]);
