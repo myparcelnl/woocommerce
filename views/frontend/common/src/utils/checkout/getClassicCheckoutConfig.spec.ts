@@ -19,6 +19,18 @@ vi.mock('@myparcel-dev/pdk-checkout', () => ({
   SeparateAddressField: {Street: 'street', Number: 'number', NumberSuffix: 'numberSuffix'},
 }));
 
+// happy-dom doesn't implement checkVisibility(); minimal display-only polyfill matching how
+// getClassicCheckoutConfig uses it (no options: display:none on self or ancestor → not visible).
+Element.prototype.checkVisibility ??= function (this: Element): boolean {
+  for (let node: Element | null = this; node; node = node.parentElement) {
+    if (window.getComputedStyle(node).display === 'none') {
+      return false;
+    }
+  }
+
+  return true;
+};
+
 /** A single WooCommerce checkout form: billing field + checked shipping method + submit. */
 const SINGLE_FORM = `
   <form name="checkout" class="checkout woocommerce-checkout">
@@ -248,19 +260,6 @@ describe('getClassicCheckoutConfig - getAddressType', () => {
 
     // Passed '1' would map to Shipping under the old value-based mapping; the unchecked box wins.
     expect(getAddressType('1')).toBe('billing');
-  });
-
-  it('uses native checkVisibility() when available (fast path)', () => {
-    // happy-dom lacks checkVisibility, so stubbing it proves the fast path is taken: the checkbox has
-    // no display:none, so the getComputedStyle fallback would read it as visible → Shipping. Reporting
-    // it hidden via checkVisibility must instead skip it → Billing.
-    document.body.innerHTML = `
-      <form name="checkout"><input type="checkbox" name="ship_to_different_address" value="1" checked /></form>
-    `;
-    const checkbox = document.querySelector<HTMLInputElement>('input[name="ship_to_different_address"]')!;
-    checkbox.checkVisibility = () => false;
-
-    expect(getAddressType()).toBe('billing');
   });
 });
 
