@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.7.1](https://github.com/myparcelnl/woocommerce/compare/v6.7.0...v6.7.1) (2026-07-14)
+
+
+### :bug: Bug Fixes
+
+* **address:** send street and number as separate fields for NL/BE orders ([#1644](https://github.com/myparcelnl/woocommerce/issues/1644)) ([44f8055](https://github.com/myparcelnl/woocommerce/commit/44f80550fbbeee8b0e4764ce39cc4d890854f96e))
+* parse number correct in order mode ([#1670](https://github.com/myparcelnl/woocommerce/issues/1670)) ([14c084a](https://github.com/myparcelnl/woocommerce/commit/14c084a0f753525e1c442cde50e8c9aa801a654f))
+* prevent and correct autofill of full address into street name field ([#1674](https://github.com/myparcelnl/woocommerce/issues/1674)) ([7a3f427](https://github.com/myparcelnl/woocommerce/commit/7a3f427da240aaa693176d3390b2c3a82300aa11))
+
 ## [6.7.0](https://github.com/myparcelnl/woocommerce/compare/v6.6.0...v6.7.0) (2026-07-09)
 
 
