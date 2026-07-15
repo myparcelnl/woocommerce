@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.7.2](https://github.com/myparcelnl/woocommerce/compare/v6.7.1...v6.7.2) (2026-07-15)
+
+
+### :bug: Bug Fixes
+
+* declare HPOS (custom_order_tables) compatibility ([#1672](https://github.com/myparcelnl/woocommerce/issues/1672)) ([0ef1d6f](https://github.com/myparcelnl/woocommerce/commit/0ef1d6fc06039a89d135729696335b6618a1c245))
+
 ## [6.7.1](https://github.com/myparcelnl/woocommerce/compare/v6.7.0...v6.7.1) (2026-07-14)
 
 
