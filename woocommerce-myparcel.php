@@ -43,7 +43,7 @@ final class MyParcelNLWooCommerce
     {
         $this->boot();
 
-        add_action('before_woocommerce_init', [$this, 'declareBlocksCompatibility']);
+        add_action('before_woocommerce_init', [$this, 'declareWooCommerceCompatibility']);
 
         register_activation_hook(__FILE__, [$this, 'install']);
         register_deactivation_hook(__FILE__, [$this, 'uninstall']);
@@ -133,10 +133,11 @@ final class MyParcelNLWooCommerce
     /**
      * @return void
      */
-    public function declareBlocksCompatibility(): void
+    public function declareWooCommerceCompatibility(): void
     {
         if (class_exists('\Automattic\WooCommerce\Utilities\FeaturesUtil')) {
             FeaturesUtil::declare_compatibility('cart_checkout_blocks', __FILE__);
+            FeaturesUtil::declare_compatibility('custom_order_tables', __FILE__);
         }
     }
 
