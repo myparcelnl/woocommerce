@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.7.3](https://github.com/myparcelnl/woocommerce/compare/v6.7.2...v6.7.3) (2026-07-16)
+
+
+### :bug: Bug Fixes
+
+* **settings:** prevent an empty settings page when an error occurs ([#1692](https://github.com/myparcelnl/woocommerce/issues/1692)) ([233d747](https://github.com/myparcelnl/woocommerce/commit/233d7471733d20ae616fd8afeb03c2c84c22dd8a))
+
 ## [6.7.2](https://github.com/myparcelnl/woocommerce/compare/v6.7.1...v6.7.2) (2026-07-15)
 
 
