@@ -16,6 +16,7 @@ updates:
       prefix: 'build'
       include: 'scope'
     versioning-strategy: increase-if-necessary
+    open-pull-requests-limit: 20
     groups:
       minor-php-updates:
         applies-to: version-updates
@@ -38,6 +39,7 @@ updates:
       prefix: 'build'
       include: 'scope'
     versioning-strategy: increase-if-necessary
+    open-pull-requests-limit: 20
     groups:
       minor-js-updates:
         applies-to: version-updates
