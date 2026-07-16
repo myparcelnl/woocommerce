@@ -4313,7 +4313,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel-woocommerce/webpack-config@workspace:views/webpack-config"
   dependencies:
-    "@woocommerce/dependency-extraction-webpack-plugin": "npm:^3.0.0"
+    "@woocommerce/dependency-extraction-webpack-plugin": "npm:^5.1.0"
     "@wordpress/scripts": "npm:^30.0.0"
     typescript: "npm:^5.7.3"
     webpack: "npm:^5.0.0"
@@ -9283,12 +9283,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@woocommerce/dependency-extraction-webpack-plugin@npm:^3.0.0":
-  version: 3.1.0
-  resolution: "@woocommerce/dependency-extraction-webpack-plugin@npm:3.1.0"
+"@woocommerce/dependency-extraction-webpack-plugin@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "@woocommerce/dependency-extraction-webpack-plugin@npm:5.1.0"
   dependencies:
-    "@wordpress/dependency-extraction-webpack-plugin": "npm:^3.7.0"
-  checksum: 10c0/67ee2ead8f8bfe52c2997d5f4212579784f080b0b2e8df1fe94d9a833a7218614d911799cec4d182d1f71373b4c8162748db427cd62a5b495fd3c7ef34101078
+    "@wordpress/dependency-extraction-webpack-plugin": "npm:next"
+  checksum: 10c0/3c8c060497f6dfa6e825779a6a864ef2cf6efa8ce967df530372e8aabf5dc71c5445c1253dcc6f4a6f5d3bfb0437f64143623ad866d13b5fd5cb7a785ddb1bb4
   languageName: node
   linkType: hard
 
@@ -10675,7 +10675,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wordpress/dependency-extraction-webpack-plugin@npm:^3.4.2, @wordpress/dependency-extraction-webpack-plugin@npm:^3.7.0":
+"@wordpress/dependency-extraction-webpack-plugin@npm:^3.4.2":
   version: 3.7.0
   resolution: "@wordpress/dependency-extraction-webpack-plugin@npm:3.7.0"
   dependencies:
@@ -10695,6 +10695,17 @@ __metadata:
   peerDependencies:
     webpack: ^5.0.0
   checksum: 10c0/ca009962547dc18bc3e944f7dc709b98412eb257b80b8264378860b9b9efeaca0c9ef3f2af074359b3317d559cd13a78cca572d36b3529030c9b57a5b0abed69
+  languageName: node
+  linkType: hard
+
+"@wordpress/dependency-extraction-webpack-plugin@npm:next":
+  version: 6.50.2-next.v.202607070741.0
+  resolution: "@wordpress/dependency-extraction-webpack-plugin@npm:6.50.2-next.v.202607070741.0"
+  dependencies:
+    json2php: "npm:^0.0.9"
+  peerDependencies:
+    webpack: ^5.0.0
+  checksum: 10c0/bbb1ef73d3e78fd56038a7e2855ee53308b1cd0680198bd0eb7f8927591ee37a950e1961161dd36d12f6bce72ad8d025a9eefe14b362dea35dfc8f158725b7f1
   languageName: node
   linkType: hard
 
@@ -23134,6 +23145,13 @@ __metadata:
   version: 0.0.7
   resolution: "json2php@npm:0.0.7"
   checksum: 10c0/b7ef04b9abe6f38b2b60b378b1272fd9b57cad2ecd6ca5485aee8f39b9ab63e50c5d73278f068de454ea1fff0243ae3c2b4029b7187275887e073ad903a038ab
+  languageName: node
+  linkType: hard
+
+"json2php@npm:^0.0.9":
+  version: 0.0.9
+  resolution: "json2php@npm:0.0.9"
+  checksum: 10c0/a40e594d6efecad764679317ba015bdc89bdd69ae6930a15340645d401debfe9bb25feeeb4c327480ceb0efc6b263a61aaa41288b32a13a27768c80457ccb18e
   languageName: node
   linkType: hard
 
