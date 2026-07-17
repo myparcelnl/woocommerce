@@ -19,6 +19,7 @@ declare(strict_types=1);
 
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
+use MyParcelNL\WooCommerce\includes\admin\UpgradeBanner;
 use MyParcelNL\WooCommerce\includes\admin\views\MyParcelWidget;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
@@ -256,6 +257,8 @@ if (! class_exists('WCMYPA')) :
                 'message_insurance_belgium_2022',
                 [MessagesRepository::SETTINGS_PAGE, MessagesRepository::PLUGINS_PAGE]
             );
+
+            UpgradeBanner::show();
         }
 
         /**
