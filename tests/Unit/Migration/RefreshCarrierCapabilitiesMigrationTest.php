@@ -16,6 +16,8 @@ use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
 use MyParcelNL\Pdk\Tests\Api\Response\ExampleGetAccountsResponse;
 use MyParcelNL\Pdk\Tests\Bootstrap\MockApi;
 use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
+use MyParcelNL\Pdk\Tests\SdkApi\MockSdkApiHandler;
+use MyParcelNL\Pdk\Tests\SdkApi\Response\ExampleContractDefinitionsResponse;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use RuntimeException;
 use function MyParcelNL\Pdk\Tests\mockPdkProperties;
@@ -74,33 +76,51 @@ it('rethrows when fetching carrier definitions fails so the migration retries', 
     expect(fn() => loadRefreshCarrierCapabilitiesMigration()->up())->toThrow(RuntimeException::class);
 });
 
-it('stores the freshly fetched carriers on the shop', function () {
+dataset('insurance shapes from the api', [
+    // What the API sends today. The nested wrapper carries different amounts, so if the wrong
+    // set of limits ever survived, the assertions below would catch it.
+    'flat limits alongside the deprecated nested wrapper' => [
+        [
+            'min'           => ['amount' => 0, 'currency' => 'EUR'],
+            'max'           => ['amount' => 500_000, 'currency' => 'EUR'],
+            'default'       => ['amount' => 0, 'currency' => 'EUR'],
+            'insuredAmount' => [
+                'min'     => ['amount' => 1, 'currency' => 'EUR'],
+                'max'     => ['amount' => 2, 'currency' => 'EUR'],
+                'default' => ['amount' => 3, 'currency' => 'EUR'],
+            ],
+        ],
+    ],
+    // What the API sends once the nested wrapper is removed.
+    'flat limits only'                                   => [
+        [
+            'min'     => ['amount' => 0, 'currency' => 'EUR'],
+            'max'     => ['amount' => 500_000, 'currency' => 'EUR'],
+            'default' => ['amount' => 0, 'currency' => 'EUR'],
+        ],
+    ],
+]);
+
+it('stores only the flat insurance limits', function (array $insurance) {
     TestBootstrapper::hasAccount();
     // The migration forces an account refresh, which calls the accounts endpoint.
     MockApi::enqueue(new ExampleGetAccountsResponse());
-
-    $stubRepo = new class(
-        Pdk::get(StorageInterface::class),
-        Pdk::get(CapabilitiesService::class)
-    ) extends CarrierCapabilitiesRepository {
-        public function getContractDefinitions(?string $carrier = null): CarrierCollection
-        {
-            return new CarrierCollection([
-                [
-                    'carrier' => 'POSTNL',
-                    'options' => [
-                        'insurance' => [
-                            'min'     => ['amount' => 0, 'currency' => 'EUR'],
-                            'max'     => ['amount' => 500_000, 'currency' => 'EUR'],
-                            'default' => ['amount' => 0, 'currency' => 'EUR'],
-                        ],
-                    ],
-                ],
-            ]);
-        }
-    };
-
-    mockPdkProperties([CarrierCapabilitiesRepository::class => $stubRepo]);
+    // Goes through the real CapabilitiesService and repository, so the nested wrapper is
+    // dropped by the code that actually does it rather than by a stub.
+    MockSdkApiHandler::enqueue(new ExampleContractDefinitionsResponse([
+        [
+            'carrier'          => 'POSTNL',
+            'packageTypes'     => ['PACKAGE'],
+            'deliveryTypes'    => ['STANDARD_DELIVERY'],
+            'transactionTypes' => ['B2C'],
+            'options'          => [
+                'insurance' => array_merge(
+                    ['isSelectedByDefault' => false, 'isRequired' => false],
+                    $insurance
+                ),
+            ],
+        ],
+    ]));
 
     loadRefreshCarrierCapabilitiesMigration()->up();
 
@@ -109,11 +129,11 @@ it('stores the freshly fetched carriers on the shop', function () {
     $carrier     = $accountRepo->getAccount()
         ->shops->first()
         ->carriers->firstWhere('carrier', 'POSTNL');
-    $insurance   = $carrier->options->getInsurance();
+    $stored      = $carrier->options->getInsurance();
 
-    // The stored shape is what the admin and the calculator read back, so the flat limits
-    // have to survive being written to storage.
-    expect($insurance->getMax()->getAmount())->toBe(500_000)
-        ->and($insurance->getMin()->getAmount())->toBe(0)
-        ->and($insurance->getInsuredAmount())->toBeNull();
-});
+    // Same stored result either way: the flat limits, and no nested wrapper left behind.
+    expect($stored->getInsuredAmount())->toBeNull()
+        ->and($stored->getMin()->getAmount())->toBe(0)
+        ->and($stored->getMax()->getAmount())->toBe(500_000)
+        ->and($stored->getDefault()->getAmount())->toBe(0);
+})->with('insurance shapes from the api');
