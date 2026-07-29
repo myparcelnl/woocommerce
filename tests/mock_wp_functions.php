@@ -281,6 +281,11 @@ function wp_cache_get($key, string $group = '', bool $force = false, &$found = n
     return MockWpCache::get($key, $group, $force, $found);
 }
 
+function wp_cache_delete($key, string $group = ''): bool
+{
+    return MockWpCache::delete((string) $key, $group);
+}
+
 /**
  * @return \WP_REST_Server|MockWpRestServer
  * @see \rest_get_server()
