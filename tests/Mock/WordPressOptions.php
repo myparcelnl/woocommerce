@@ -35,6 +35,11 @@ final class WordPressOptions
         self::$options[$option] = $value;
     }
 
+    public static function deleteOption(string $option): void
+    {
+        unset(self::$options[$option]);
+    }
+
     public static function reset(): void
     {
         self::$options = [];
