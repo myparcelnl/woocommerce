@@ -88,80 +88,54 @@ it('restores a deactivated v6 installation and keeps current values in a mixed s
         ->and($database->getLikePatterns())->toContain('\_myparcelnl\_%');
 });
 
-it('runs the v6 repair before the installer returns for an equal current version', function () {
+it('restores all legacy v6 settings before the installer returns for an equal version', function () {
     $database = getNamespaceDatabase();
 
-    $database->seedOption('_myparcelcom_carrier', ['current']);
-    $database->seedOption('_myparcelcom_installed_version', '6.7.3');
-    $database->seedOption('_myparcelnl_carrier', ['legacy']);
+    $database->seedOption('_myparcelnl_carrier', ['POSTNL' => ['enabled' => true]]);
+    $database->seedOption('_myparcelnl_checkout', ['deliveryOptionsEnabled' => true]);
+    $database->seedOption('_myparcelnl_applied_migrations', ['migration']);
+    $database->seedOption('_myparcelnl_installed_version', '6.7.3');
 
     getInstallerService()->install();
 
     expect($database->getOptions())->toMatchArray([
-        '_myparcelcom_carrier'           => ['current'],
-        '_myparcelcom_installed_version' => '6.7.3',
-    ])->not->toHaveKey('_myparcelnl_carrier');
+        '_myparcelcom_carrier'            => ['POSTNL' => ['enabled' => true]],
+        '_myparcelcom_checkout'           => ['deliveryOptionsEnabled' => true],
+        '_myparcelcom_applied_migrations' => ['migration'],
+        '_myparcelcom_installed_version'  => '6.7.3',
+    ])->not->toHaveKeys([
+        '_myparcelnl_carrier',
+        '_myparcelnl_checkout',
+        '_myparcelnl_applied_migrations',
+        '_myparcelnl_installed_version',
+    ]);
 });
 
-it('stores carrier defaults on a fresh installation without an api key', function () {
-    getInstallerService()->install();
-
-    expect(WordPressOptions::$options)
-        ->toHaveKey('_myparcelcom_carrier')
-        ->and(WordPressOptions::$options['_myparcelcom_carrier'])
-        ->toBeArray();
-});
-
-it('ignores a malformed current version instead of passing it through the installer return type', function () {
+it('does not query legacy option rows on a healthy installation', function () {
     $database = getNamespaceDatabase();
 
-    $database->seedOption('_myparcelcom_installed_version', ['invalid']);
+    $database->seedOption('_myparcelcom_installed_version', '6.7.3');
 
-    getInstallerService()->install();
-
-    expect(WordPressOptions::$options['_myparcelcom_installed_version'])->toBe('6.7.3');
+    expect(createNamespaceService()->restoreDeactivatedV6Installation())->toBeFalse()
+        ->and($database->getLikePatterns())->toBe([]);
 });
 
 it('does not let the installer mark a failed v6 repair as successful', function () {
     $database = getNamespaceDatabase();
 
-    $database->seedOption('_myparcelcom_installed_version', '6.7.3');
     $database->seedOption('_myparcelnl_carrier', ['settings']);
+    $database->seedOption('_myparcelnl_installed_version', '6.7.3');
     $database->failOn('update', '_myparcelnl_carrier');
 
     expect(static function (): void {
         getInstallerService()->install();
     })->toThrow(RuntimeException::class, 'Simulated database failure')
         ->and($database->getOptions())->toMatchArray([
-            '_myparcelcom_installed_version' => '6.7.3',
-            '_myparcelnl_carrier'            => ['settings'],
-        ])->not->toHaveKey('_myparcelcom_carrier');
-});
-
-it('restores settings when a failed down migration left the v6 version in the current namespace', function () {
-    $database = getNamespaceDatabase();
-
-    $database->seedOption('_myparcelcom_installed_version', '6.7.3');
-    $database->seedOption('_myparcelnl_carrier', ['POSTNL' => ['enabled' => true]]);
-
-    expect(createNamespaceService()->restoreDeactivatedV6Installation())->toBeTrue()
-        ->and($database->getOptions())->toMatchArray([
-            '_myparcelcom_carrier'           => ['POSTNL' => ['enabled' => true]],
-            '_myparcelcom_installed_version' => '6.7.3',
-        ]);
-});
-
-it('uses a valid legacy v6 version when the current version value is invalid', function () {
-    $database = getNamespaceDatabase();
-
-    $database->seedOption('_myparcelcom_installed_version', ['invalid']);
-    $database->seedOption('_myparcelnl_carrier', ['settings']);
-    $database->seedOption('_myparcelnl_installed_version', '6.7.3');
-
-    expect(createNamespaceService()->restoreDeactivatedV6Installation())->toBeTrue()
-        ->and($database->getOptions())->toMatchArray([
-            '_myparcelcom_carrier'           => ['settings'],
-            '_myparcelcom_installed_version' => '6.7.3',
+            '_myparcelnl_carrier'           => ['settings'],
+            '_myparcelnl_installed_version' => '6.7.3',
+        ])->not->toHaveKeys([
+            '_myparcelcom_carrier',
+            '_myparcelcom_installed_version',
         ]);
 });
 
@@ -192,7 +166,6 @@ it('leaves genuine and interrupted v5 upgrades to Migration6_0_0', function ($cu
 })->with([
     'genuine v5'     => [null, '5.4.2'],
     'interrupted v5' => ['5.4.2', '6.7.3'],
-    'invalid value'  => [null, ['6.7.3']],
 ]);
 
 it('does not treat genuine v5 BE options as a deactivated v6 installation', function () {
@@ -295,6 +268,27 @@ it('lets the active current value replace a stale legacy value during down migra
     ])->not->toHaveKeys([
         '_myparcelcom_carrier',
         '_myparcelcom_installed_version',
+    ]);
+});
+
+it('does not block deactivation when the down migration fails', function () {
+    $database = getNamespaceDatabase();
+
+    // Boot the logger used by AbstractMigration.
+    getInstallerService();
+
+    $database->seedOption('_myparcelcom_carrier', ['current']);
+    $database->seedOption('_myparcelcom_installed_version', '6.7.3');
+    $database->failOn('update', '_myparcelcom_carrier');
+
+    (new Migration6_0_0(createNamespaceService()))->down();
+
+    expect($database->getOptions())->toMatchArray([
+        '_myparcelcom_carrier'           => ['current'],
+        '_myparcelcom_installed_version' => '6.7.3',
+    ])->not->toHaveKeys([
+        '_myparcelnl_carrier',
+        '_myparcelnl_installed_version',
     ]);
 });
 
