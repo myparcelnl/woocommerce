@@ -29,6 +29,9 @@ final class WpOptionNamespaceService
     /**
      * Restores a v6+ installation whose options were moved to the v5 namespace during deactivation.
      *
+     * The legacy v6 installed-version marker is used as the repair signal so healthy requests do not
+     * need to scan the options table for legacy rows.
+     *
      * A current version below v6 means a genuine or interrupted v5 upgrade. That state must continue
      * through Migration6_0_0 instead of being reconciled as a deactivated v6 installation.
      */
@@ -41,25 +44,14 @@ final class WpOptionNamespaceService
             null
         );
 
-        if ($this->isVersionBeforeV6($currentVersion)) {
-            return false;
-        }
-
-        if (! $this->isV6OrLater($currentVersion) && ! $this->isV6OrLater($legacyVersion)) {
-            return false;
-        }
-
-        if (empty($this->getOptionNames(self::LEGACY_NAMESPACE))) {
+        if ($this->isVersionBeforeV6($currentVersion) || ! $this->isV6OrLater($legacyVersion)) {
             return false;
         }
 
         $this->migrateOptions(
             self::LEGACY_NAMESPACE,
             PdkBootstrapper::PLUGIN_NAMESPACE,
-            self::CONFLICT_KEEP_TARGET,
-            $this->isV6OrLater($legacyVersion) && null === $this->getMajorVersion($currentVersion)
-                ? [$currentVersionOption]
-                : []
+            self::CONFLICT_KEEP_TARGET
         );
 
         return true;
@@ -71,15 +63,13 @@ final class WpOptionNamespaceService
      * @param  string   $from
      * @param  string   $to
      * @param  string   $conflictStrategy
-     * @param  string[] $replaceTargetOptions
      *
      * @return void
      */
     public function migrateOptions(
         string $from,
         string $to,
-        string $conflictStrategy,
-        array  $replaceTargetOptions = []
+        string $conflictStrategy
     ): void {
         if (! in_array($conflictStrategy, [self::CONFLICT_KEEP_TARGET, self::CONFLICT_REPLACE_TARGET], true)) {
             throw new RuntimeException(sprintf('Unknown option conflict strategy "%s".', $conflictStrategy));
@@ -100,7 +90,7 @@ final class WpOptionNamespaceService
 
             $sourcePrefix = $this->createOptionPrefix($from);
             $targetPrefix = $this->createOptionPrefix($to);
-            $optionNames  = $this->sortOptionNames($this->getOptionNames($from, true));
+            $optionNames  = $this->sortOptionNames($this->getOptionNames($from));
 
             foreach ($optionNames as $sourceName) {
                 $targetName = $targetPrefix . substr($sourceName, strlen($sourcePrefix));
@@ -108,10 +98,7 @@ final class WpOptionNamespaceService
                 $touchedOptions[] = $targetName;
 
                 if ($this->optionExists($targetName)) {
-                    if (
-                        self::CONFLICT_KEEP_TARGET === $conflictStrategy
-                        && ! in_array($targetName, $replaceTargetOptions, true)
-                    ) {
+                    if (self::CONFLICT_KEEP_TARGET === $conflictStrategy) {
                         $this->deleteOption($sourceName);
 
                         continue;
@@ -156,20 +143,15 @@ final class WpOptionNamespaceService
 
     /**
      * @param  string $namespace
-     * @param  bool   $forUpdate
      *
      * @return string[]
      */
-    private function getOptionNames(string $namespace, bool $forUpdate = false): array
+    private function getOptionNames(string $namespace): array
     {
         global $wpdb;
 
         $like  = $wpdb->esc_like($this->createOptionPrefix($namespace)) . '%';
-        $query = "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s ORDER BY option_name";
-
-        if ($forUpdate) {
-            $query .= ' FOR UPDATE';
-        }
+        $query = "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s ORDER BY option_name FOR UPDATE";
 
         $prepared = $wpdb->prepare($query, $like);
 

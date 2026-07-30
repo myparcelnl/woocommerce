@@ -36,8 +36,7 @@ final class Migration6_0_0 extends AbstractMigration
             // We do not support back-migration to 'myparcelbe'. This needs to be done manually if needed.
         } catch (Throwable $e) {
             $this->error('Could not migrate options back to the legacy namespace.', ['error' => $e->getMessage()]);
-
-            throw $e;
+            // The failure should be visible in the logs, but must not block plugin deactivation.
         }
     }
 
