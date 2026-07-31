@@ -257,6 +257,9 @@ class WcPdkBootstrapper extends PdkBootstrapper
             'migrateAction_6_5_1_Orders'          => value("{$name}_migrate_6_5_1_orders"),
             'migrateAction_6_5_1_Shipments'       => value("{$name}_migrate_6_5_1_shipments"),
 
+            // Timestamped migrations are named after their slug rather than a version.
+            'migrateAction_NoTracking_ProductSettings' => value("{$name}_migrate_no_tracking_product_settings"),
+
             # WP Cron actions
 
             'webhookAddActions'       => value("{$name}_all_actions"),

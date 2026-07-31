@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use MyParcelNL\Pdk\App\Installer\Migration\AbstractTimestampedMigration;
+use MyParcelNL\Pdk\App\Installer\Service\PagedMigrationService;
 use MyParcelNL\Pdk\App\Options\Definition\NoTrackingDefinition;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
@@ -69,6 +70,36 @@ return new class extends AbstractTimestampedMigration {
         $settingsRepository->store($settingsKey, $settings);
 
         Logger::debug('Inverted the tracking option in carrier settings', ['carriers' => $converted]);
+
+        $this->scheduleProductSettings();
+    }
+
+    /**
+     * Queue the per-product pass.
+     *
+     * Product settings are stored per product, so converting every one inline would time out a large
+     * shop. Each chunk is handed to a registered action instead, which is why the work itself lives in
+     * NoTrackingChunkMigrator rather than here.
+     */
+    private function scheduleProductSettings(): void
+    {
+        /** @var PagedMigrationService $pagedMigrationService */
+        $pagedMigrationService = Pdk::get(PagedMigrationService::class);
+
+        $pagedMigrationService->schedulePages(
+            Pdk::get('migrateAction_NoTracking_ProductSettings'),
+            static function (int $page, int $pageSize): array {
+                return array_map(static function (WC_Product $product): int {
+                    return $product->get_id();
+                }, wc_get_products([
+                    'limit'        => $pageSize,
+                    'page'         => $page,
+                    'meta_key'     => Pdk::get('metaKeyProductSettings'),
+                    'meta_compare' => 'EXISTS',
+                    'return'       => 'objects',
+                ]));
+            }
+        );
     }
 
     /**
