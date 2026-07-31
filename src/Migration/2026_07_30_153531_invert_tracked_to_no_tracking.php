@@ -1,0 +1,93 @@
+<?php
+
+declare(strict_types=1);
+
+use MyParcelNL\Pdk\App\Installer\Migration\AbstractTimestampedMigration;
+use MyParcelNL\Pdk\App\Options\Definition\NoTrackingDefinition;
+use MyParcelNL\Pdk\Facade\Logger;
+use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
+use MyParcelNL\Pdk\Types\Service\TriStateService;
+
+/**
+ * Converts stored tracking choices to the inverted no tracking option.
+ *
+ * The tracked option was replaced by its inverse, so every stored value has to flip: a merchant who had
+ * tracking switched on must end up with the opt-out switched off. Reading an old value under the new key
+ * would mean the opposite of what they chose, which is why this cannot be left to a read-time fallback.
+ *
+ * Only the carrier settings are converted here, because they are a single stored record. Product
+ * settings and stored order data are converted per record in scheduled chunks.
+ */
+return new class extends AbstractTimestampedMigration {
+    /**
+     * The key the option used to be stored under.
+     *
+     * A literal on purpose: NoTrackingDefinition replaced TrackedDefinition, so there is no class left to
+     * derive the old key from. Migrations name the historical keys they read.
+     */
+    private const LEGACY_TRACKED_KEY = 'exportTracked';
+
+    /**
+     * Flip the option in the carrier settings, which are one stored blob keyed by carrier.
+     *
+     * Runs inline: there is a single record to rewrite, however many carriers it holds. Carriers without
+     * the old key are left alone, and the old key is dropped once converted, so running this twice is a
+     * no-op rather than a second flip.
+     */
+    public function up(): void
+    {
+        /** @var PdkSettingsRepositoryInterface $settingsRepository */
+        $settingsRepository = Pdk::get(PdkSettingsRepositoryInterface::class);
+
+        $settingsKey = Pdk::get('createSettingsKey')('carrier');
+        $settings    = $settingsRepository->get($settingsKey);
+
+        if (empty($settings) || ! is_array($settings)) {
+            return;
+        }
+
+        $newKey    = (new NoTrackingDefinition())->getCarrierSettingsKey();
+        $converted = [];
+
+        foreach ($settings as $carrier => $carrierSettings) {
+            if (! is_array($carrierSettings) || ! array_key_exists(self::LEGACY_TRACKED_KEY, $carrierSettings)) {
+                continue;
+            }
+
+            $carrierSettings[$newKey] = $this->invert($carrierSettings[self::LEGACY_TRACKED_KEY]);
+            unset($carrierSettings[self::LEGACY_TRACKED_KEY]);
+
+            $settings[$carrier] = $carrierSettings;
+            $converted[]        = $carrier;
+        }
+
+        if (! $converted) {
+            return;
+        }
+
+        $settingsRepository->store($settingsKey, $settings);
+
+        Logger::debug('Inverted the tracking option in carrier settings', ['carriers' => $converted]);
+    }
+
+    /**
+     * Flip an explicit choice, leaving "not set" alone.
+     *
+     * Inherit means the merchant never chose, so inverting it would invent a preference. Values are cast
+     * because older stored settings hold them as strings.
+     *
+     * @param  mixed $value
+     */
+    private function invert($value): int
+    {
+        switch ((int) $value) {
+            case TriStateService::ENABLED:
+                return TriStateService::DISABLED;
+            case TriStateService::DISABLED:
+                return TriStateService::ENABLED;
+            default:
+                return TriStateService::INHERIT;
+        }
+    }
+};
