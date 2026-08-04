@@ -7,6 +7,7 @@ namespace MyParcelNL\WooCommerce\Pdk\Hooks;
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\Facade\Frontend;
 use MyParcelNL\Pdk\Facade\Language;
+use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Facade\WooCommerce;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
@@ -114,7 +115,15 @@ class PdkOrderListHooks implements WordPressHooksInterface
         }
 
         if ($wcOrder !== null && $this->pdkOrderRepository instanceof PdkOrderRepository) {
-            $pdkOrder = $this->pdkOrderRepository->getForOrderList($wcOrder);
+            try {
+                $pdkOrder = $this->pdkOrderRepository->getForOrderList($wcOrder);
+            } catch (\Throwable $e) {
+                Logger::info('Could not retrieve PDK order for order list', [
+                    'order_id' => $wcOrder->get_id(),
+                    'error'    => $e->getMessage(),
+                ]);
+                return;
+            }
         } else {
             try {
                 $pdkOrder = $this->pdkOrderRepository->get($orderOrId);
