@@ -259,6 +259,7 @@ class WcPdkBootstrapper extends PdkBootstrapper
 
             // Timestamped migrations are named after their slug rather than a version.
             'migrateAction_NoTracking_ProductSettings' => value("{$name}_migrate_no_tracking_product_settings"),
+            'migrateAction_NoTracking_Orders'          => value("{$name}_migrate_no_tracking_orders"),
 
             # WP Cron actions
 
