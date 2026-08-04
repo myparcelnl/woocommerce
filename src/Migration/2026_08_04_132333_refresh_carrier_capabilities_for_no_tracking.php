@@ -41,14 +41,16 @@ return new class extends AbstractTimestampedMigration {
         try {
             $shop->carriers = $capabilitiesRepository->getContractDefinitions(null, true);
         } catch (Throwable $exception) {
-            // Re-throw so the migration is not marked as applied, letting it retry on the next load
-            // instead of leaving the carriers without the new option. Until it succeeds the option
-            // simply does not appear, which is the safe direction: tracking stays on.
-            Logger::warning('Failed to refresh carrier capabilities; migration will retry.', [
+            // Report the failure rather than throwing: the upgrade carries on, nothing is stored so the
+            // existing carrier data is left intact, and the migration stays unrecorded so it is attempted
+            // again on the next load. Until it succeeds the option simply does not appear, which is the
+            // safe direction: tracking stays on.
+            $this->markFailed('Could not refresh carrier capabilities for the no tracking option.', [
                 'exception' => $exception->getMessage(),
+                'class'     => get_class($exception),
             ]);
 
-            throw $exception;
+            return;
         }
 
         $accountRepository->store($account);
