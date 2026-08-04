@@ -67,6 +67,12 @@ function update_option(string $option, $value, $autoload = null)
     WordPressOptions::updateOption($option, $value, $autoload);
 }
 
+/** @see \delete_option() */
+function delete_option(string $option): bool
+{
+    return WordPressOptions::deleteOption($option);
+}
+
 /** @see \apply_filters() */
 function apply_filters($tag, $value, ...$args)
 {
@@ -279,11 +285,6 @@ function wp_cache_add(string $key, $data, string $group = '', int $expire = 0): 
 function wp_cache_get($key, string $group = '', bool $force = false, &$found = null)
 {
     return MockWpCache::get($key, $group, $force, $found);
-}
-
-function wp_cache_delete($key, string $group = ''): bool
-{
-    return MockWpCache::delete((string) $key, $group);
 }
 
 /**

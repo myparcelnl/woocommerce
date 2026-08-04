@@ -10,8 +10,6 @@ final class MockWpCache implements StaticMockInterface
 {
     public static $cache = [];
 
-    public static $deleted = [];
-
     public static function add(string $key, $data, string $group = '', int $expire = 0): bool
     {
         if (! self::$cache[$group]) {
@@ -39,8 +37,7 @@ final class MockWpCache implements StaticMockInterface
 
     public static function reset(): void
     {
-        self::$cache   = [];
-        self::$deleted = [];
+        self::$cache = [];
     }
 
     public static function set(string $key, $data, string $group = '', int $expire = 0): bool
@@ -57,13 +54,5 @@ final class MockWpCache implements StaticMockInterface
         } catch (Exception $e) {
             return false;
         }
-    }
-
-    public static function delete(string $key, string $group = ''): bool
-    {
-        self::$deleted[] = compact('key', 'group');
-        unset(self::$cache[$group][$key]);
-
-        return true;
     }
 }
