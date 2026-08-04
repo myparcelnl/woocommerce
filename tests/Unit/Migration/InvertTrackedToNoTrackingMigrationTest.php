@@ -12,7 +12,9 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
+use RuntimeException;
 
+use function MyParcelNL\Pdk\Tests\mockPdkProperties;
 use function MyParcelNL\Pdk\Tests\usesShared;
 
 usesShared(new UsesMockWcPdkInstance());
@@ -60,6 +62,25 @@ it('is a timestamped migration the installer can discover', function () {
 
     expect($migration)->toBeInstanceOf(TimestampedMigrationInterface::class)
         ->and($migration->getId())->toBe(MIGRATION_ID);
+});
+
+it('reports failure without throwing when the settings cannot be read', function () {
+    // A failure must not leave the shop unable to finish upgrading. Anything already converted stays
+    // converted, because the old key is dropped as each record is written.
+    mockPdkProperties([
+        PdkSettingsRepositoryInterface::class => new class {
+            public function get(string $key)
+            {
+                throw new RuntimeException('Settings unavailable');
+            }
+        },
+    ]);
+
+    $migration = loadInvertMigration();
+
+    $migration->up();
+
+    expect($migration->hasFailed())->toBeTrue();
 });
 
 it('turns tracking on into no tracking off', function () {

@@ -38,6 +38,21 @@ return new class extends AbstractTimestampedMigration {
      */
     public function up(): void
     {
+        try {
+            $this->convert();
+        } catch (Throwable $exception) {
+            // Report rather than throw, so a failure cannot leave the shop unable to finish upgrading.
+            // Anything already converted stays converted: the old key is dropped as each record is
+            // written, so the retry picks up where this run stopped.
+            $this->markFailed('Could not convert stored tracking choices to no tracking.', [
+                'exception' => $exception->getMessage(),
+                'class'     => get_class($exception),
+            ]);
+        }
+    }
+
+    private function convert(): void
+    {
         /** @var PdkSettingsRepositoryInterface $settingsRepository */
         $settingsRepository = Pdk::get(PdkSettingsRepositoryInterface::class);
 
