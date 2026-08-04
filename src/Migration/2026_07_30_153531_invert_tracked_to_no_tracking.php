@@ -72,6 +72,34 @@ return new class extends AbstractTimestampedMigration {
         Logger::debug('Inverted the tracking option in carrier settings', ['carriers' => $converted]);
 
         $this->scheduleProductSettings();
+        $this->scheduleOrders();
+    }
+
+    /**
+     * Queue the per-order pass.
+     *
+     * An order holds the option in two places, its own delivery options and each shipment created from
+     * it, and both are converted in the same chunk. Orders are found by the order data key alone, which
+     * is enough: PdkOrderRepository writes both stores in one update, so an order holding shipments
+     * holds order data too.
+     */
+    private function scheduleOrders(): void
+    {
+        /** @var PagedMigrationService $pagedMigrationService */
+        $pagedMigrationService = Pdk::get(PagedMigrationService::class);
+
+        $pagedMigrationService->schedulePages(
+            Pdk::get('migrateAction_NoTracking_Orders'),
+            static function (int $page, int $pageSize): array {
+                return wc_get_orders([
+                    'limit'        => $pageSize,
+                    'paged'        => $page,
+                    'meta_key'     => Pdk::get('metaKeyOrderData'),
+                    'meta_compare' => 'EXISTS',
+                    'return'       => 'ids',
+                ]);
+            }
+        );
     }
 
     /**

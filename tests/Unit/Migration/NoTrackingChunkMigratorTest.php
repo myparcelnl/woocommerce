@@ -14,6 +14,7 @@ use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Product;
 
 use function MyParcelNL\Pdk\Tests\usesShared;
+use function MyParcelNL\WooCommerce\Tests\createWcOrder;
 use function MyParcelNL\WooCommerce\Tests\wpFactory;
 
 usesShared(new UsesMockWcPdkInstance());
@@ -102,6 +103,120 @@ it('converts every product in the chunk', function () {
 
     expect(storedNoTracking(8006))->toBe(TriStateService::DISABLED)
         ->and(storedNoTracking(8007))->toBe(TriStateService::ENABLED);
+});
+
+/**
+ * Both stored order data and each stored shipment nest the options the same way, because a Shipment
+ * carries DeliveryOptions which carries ShipmentOptions.
+ */
+function withShipmentOptions(array $options): array
+{
+    return ['deliveryOptions' => ['shipmentOptions' => $options]];
+}
+
+function givenOrderMeta(string $metaKeyConfig, $value): int
+{
+    $order = createWcOrder();
+    $order->update_meta_data(Pdk::get($metaKeyConfig), $value);
+    $order->save();
+
+    return $order->get_id();
+}
+
+function readOrderMeta(int $orderId, string $metaKeyConfig)
+{
+    return wc_get_order($orderId)->get_meta(Pdk::get($metaKeyConfig));
+}
+
+function givenOrderWithBothStores(array $orderDataOptions, array $shipmentsOptions): int
+{
+    $order = createWcOrder();
+    $order->update_meta_data(Pdk::get('metaKeyOrderData'), withShipmentOptions($orderDataOptions));
+    $order->update_meta_data(
+        Pdk::get('metaKeyOrderShipments'),
+        array_map('MyParcelNL\WooCommerce\Migration\withShipmentOptions', $shipmentsOptions)
+    );
+    $order->save();
+
+    return $order->get_id();
+}
+
+function migrateOrderChunkFor(array $ids): void
+{
+    /** @var NoTrackingChunkMigrator $migrator */
+    $migrator = Pdk::get(NoTrackingChunkMigrator::class);
+
+    $migrator->migrateOrderChunk(['ids' => $ids, 'chunk' => 1]);
+}
+
+it('flips the option on stored order data', function () {
+    $orderId = givenOrderMeta(
+        'metaKeyOrderData',
+        withShipmentOptions([NoTrackingChunkMigrator::LEGACY_SHIPMENT_OPTION_KEY => TriStateService::ENABLED])
+    );
+
+    migrateOrderChunkFor([$orderId]);
+
+    $options = readOrderMeta($orderId, 'metaKeyOrderData')['deliveryOptions']['shipmentOptions'];
+
+    expect($options['noTracking'])->toBe(TriStateService::DISABLED)
+        ->and($options)->not->toHaveKey(NoTrackingChunkMigrator::LEGACY_SHIPMENT_OPTION_KEY);
+});
+
+it('leaves order data without the old option alone', function () {
+    $orderId = givenOrderMeta('metaKeyOrderData', withShipmentOptions(['signature' => TriStateService::ENABLED]));
+
+    migrateOrderChunkFor([$orderId]);
+
+    expect(readOrderMeta($orderId, 'metaKeyOrderData')['deliveryOptions']['shipmentOptions'])
+        ->toBe(['signature' => TriStateService::ENABLED]);
+});
+
+it('flips the option on every stored shipment of an order', function () {
+    // A shipment that went out untracked must keep saying so, under the option that now expresses it.
+    $orderId = givenOrderMeta('metaKeyOrderShipments', [
+        withShipmentOptions([NoTrackingChunkMigrator::LEGACY_SHIPMENT_OPTION_KEY => TriStateService::ENABLED]),
+        withShipmentOptions([NoTrackingChunkMigrator::LEGACY_SHIPMENT_OPTION_KEY => TriStateService::DISABLED]),
+    ]);
+
+    migrateOrderChunkFor([$orderId]);
+
+    $shipments = readOrderMeta($orderId, 'metaKeyOrderShipments');
+
+    expect($shipments[0]['deliveryOptions']['shipmentOptions']['noTracking'])->toBe(TriStateService::DISABLED)
+        ->and($shipments[1]['deliveryOptions']['shipmentOptions']['noTracking'])->toBe(TriStateService::ENABLED);
+});
+
+it('converts the order data and its shipments in the same pass', function () {
+    // The reason both stores share one pass: an order is loaded and saved once, not twice.
+    $orderId = givenOrderWithBothStores(
+        [NoTrackingChunkMigrator::LEGACY_SHIPMENT_OPTION_KEY => TriStateService::ENABLED],
+        [[NoTrackingChunkMigrator::LEGACY_SHIPMENT_OPTION_KEY => TriStateService::DISABLED]]
+    );
+
+    migrateOrderChunkFor([$orderId]);
+
+    expect(readOrderMeta($orderId, 'metaKeyOrderData')['deliveryOptions']['shipmentOptions']['noTracking'])
+        ->toBe(TriStateService::DISABLED)
+        ->and(
+            readOrderMeta($orderId, 'metaKeyOrderShipments')[0]['deliveryOptions']['shipmentOptions']['noTracking']
+        )->toBe(TriStateService::ENABLED);
+});
+
+it('is safe to run over the same order twice', function () {
+    $orderId = givenOrderWithBothStores(
+        [NoTrackingChunkMigrator::LEGACY_SHIPMENT_OPTION_KEY => TriStateService::DISABLED],
+        [[NoTrackingChunkMigrator::LEGACY_SHIPMENT_OPTION_KEY => TriStateService::DISABLED]]
+    );
+
+    migrateOrderChunkFor([$orderId]);
+    migrateOrderChunkFor([$orderId]);
+
+    expect(readOrderMeta($orderId, 'metaKeyOrderData')['deliveryOptions']['shipmentOptions']['noTracking'])
+        ->toBe(TriStateService::ENABLED)
+        ->and(
+            readOrderMeta($orderId, 'metaKeyOrderShipments')[0]['deliveryOptions']['shipmentOptions']['noTracking']
+        )->toBe(TriStateService::ENABLED);
 });
 
 it('does nothing when the chunk holds no ids', function () {
