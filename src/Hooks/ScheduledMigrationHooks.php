@@ -40,6 +40,11 @@ final class ScheduledMigrationHooks implements WordPressHooksInterface
             Pdk::get('migrateAction_NoTracking_ProductSettings'),
             [$migrator, 'migrateProductSettingsChunk']
         );
+
+        add_action(
+            Pdk::get('migrateAction_NoTracking_Orders'),
+            [$migrator, 'migrateOrderChunk']
+        );
     }
 
     /**
