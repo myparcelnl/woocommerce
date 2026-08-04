@@ -118,10 +118,16 @@ class PdkOrderListHooks implements WordPressHooksInterface
             try {
                 $pdkOrder = $this->pdkOrderRepository->getForOrderList($wcOrder);
             } catch (\Throwable $e) {
-                Logger::info('Could not retrieve PDK order for order list', [
-                    'order_id' => $wcOrder->get_id(),
-                    'error'    => $e->getMessage(),
-                ]);
+                static $hasLogged = false;
+
+                if (! $hasLogged) {
+                    $hasLogged = true;
+                    Logger::debug('Could not retrieve PDK order for order list', [
+                        'order_id'  => $wcOrder->get_id(),
+                        'exception' => $e,
+                    ]);
+                }
+
                 return;
             }
         } else {
