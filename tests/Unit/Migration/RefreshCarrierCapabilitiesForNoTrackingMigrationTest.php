@@ -120,8 +120,12 @@ it('stores carriers that carry the new option', function () {
         ->and($carrier->options->getNoTracking()->getIsSelectedByDefault())->toBeFalse();
 });
 
-it('rethrows when fetching carrier definitions fails so the migration retries', function () {
+it('reports failure without throwing when fetching carrier definitions fails', function () {
     TestBootstrapper::hasAccount();
+    // The migration forces an account refresh, which calls the accounts endpoint. Without a queued
+    // response the mock throws, which is how the earlier version of this test passed without ever
+    // reaching the repository below.
+    MockApi::enqueue(new ExampleGetAccountsResponse());
 
     $throwingRepo = new class(
         Pdk::get(StorageInterface::class),
@@ -135,7 +139,11 @@ it('rethrows when fetching carrier definitions fails so the migration retries', 
 
     mockPdkProperties([CarrierCapabilitiesRepository::class => $throwingRepo]);
 
-    // Throwing is the only way to retry: the installer marks a migration as applied straight after up()
-    // returns, so swallowing the error would leave the carriers without the new option for good.
-    expect(fn() => loadRefreshMigration()->up())->toThrow(RuntimeException::class);
+    $migration = loadRefreshMigration();
+
+    // Throwing would abort the upgrade and have the shop retry a fatal on every load. Reporting failure
+    // keeps the migration unrecorded, so the work is attempted again without blocking anything.
+    $migration->up();
+
+    expect($migration->hasFailed())->toBeTrue();
 });
