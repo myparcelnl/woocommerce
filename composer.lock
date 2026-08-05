@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2dfc61b949592491fa4a9aa43f576b63",
+    "content-hash": "017916171b42233e6cb0cb097925c370",
     "packages": [
         {
             "name": "fruitcake/php-cors",
@@ -471,22 +471,22 @@
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "4.4.2",
+            "version": "4.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/pdk.git",
-                "reference": "969983205baa438ba9b84d0eeea7658ef3df12ea"
+                "reference": "43122bfdb6a530a86eca10cc63cd391de6c579a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/969983205baa438ba9b84d0eeea7658ef3df12ea",
-                "reference": "969983205baa438ba9b84d0eeea7658ef3df12ea",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/43122bfdb6a530a86eca10cc63cd391de6c579a3",
+                "reference": "43122bfdb6a530a86eca10cc63cd391de6c579a3",
                 "shasum": ""
             },
             "require": {
                 "ext-zip": "*",
                 "fruitcake/php-cors": "^1.2",
-                "myparcelnl/sdk": "^11.0.0-beta.28@beta",
+                "myparcelnl/sdk": "^11.0.0-beta.30@beta",
                 "php": ">=7.4.0",
                 "php-di/php-di": "^6.0.0",
                 "psr/log": "^1.0.0 || ^2.0.0 || ^3.0.0",
@@ -527,9 +527,9 @@
             "homepage": "https://myparcel.nl",
             "support": {
                 "issues": "https://github.com/myparcelnl/pdk/issues",
-                "source": "https://github.com/myparcelnl/pdk/tree/v4.4.2"
+                "source": "https://github.com/myparcelnl/pdk/tree/v4.5.0"
             },
-            "time": "2026-07-17T16:32:02+00:00"
+            "time": "2026-08-05T09:02:58+00:00"
         },
         {
             "name": "myparcelnl/sdk",
@@ -4641,16 +4641,16 @@
         },
         {
             "name": "symfony/polyfill-intl-grapheme",
-            "version": "v1.38.1",
+            "version": "v1.41.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-grapheme.git",
-                "reference": "e9247d281d694a5120554d9afaf54e070e88a603"
+                "reference": "bb899c1db0aa8127dc3afe8cda4a67eb24915f8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/e9247d281d694a5120554d9afaf54e070e88a603",
-                "reference": "e9247d281d694a5120554d9afaf54e070e88a603",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/bb899c1db0aa8127dc3afe8cda4a67eb24915f8d",
+                "reference": "bb899c1db0aa8127dc3afe8cda4a67eb24915f8d",
                 "shasum": ""
             },
             "require": {
@@ -4699,7 +4699,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.38.1"
+                "source": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.41.0"
             },
             "funding": [
                 {
@@ -4719,7 +4719,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-26T05:58:03+00:00"
+            "time": "2026-07-28T08:25:59+00:00"
         },
         {
             "name": "symfony/polyfill-intl-normalizer",
@@ -5722,12 +5722,12 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">= 7.4"
     },
-    "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
 }
