@@ -23,7 +23,18 @@ return new class extends AbstractTimestampedMigration {
     {
         /** @var PdkAccountRepositoryInterface $accountRepository */
         $accountRepository = Pdk::get(PdkAccountRepositoryInterface::class);
-        $account           = $accountRepository->getAccount(true);
+
+        try {
+            $account = $accountRepository->getAccount(true);
+        } catch (Throwable $exception) {
+            $this->markFailed('Could not refresh carrier capabilities for the no tracking option.', [
+                'exception' => $exception->getMessage(),
+                'class'     => get_class($exception),
+                'stage'     => 'account_refresh',
+            ]);
+
+            return;
+        }
         // PHPStan types Account::$shops as a non-null ShopCollection, but the guard is kept
         // intentionally to stay safe against partial or corrupted account data during an upgrade.
         // @phpstan-ignore booleanAnd.rightAlwaysTrue
