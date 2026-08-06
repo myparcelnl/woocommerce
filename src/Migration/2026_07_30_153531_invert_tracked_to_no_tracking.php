@@ -135,15 +135,13 @@ return new class extends AbstractTimestampedMigration {
         $pagedMigrationService->schedulePages(
             Pdk::get('migrateAction_NoTracking_ProductSettings'),
             static function (int $page, int $pageSize): array {
-                return array_map(static function (WC_Product $product): int {
-                    return $product->get_id();
-                }, wc_get_products([
+                return wc_get_products([
                     'limit'        => $pageSize,
                     'page'         => $page,
                     'meta_key'     => Pdk::get('metaKeyProductSettings'),
                     'meta_compare' => 'EXISTS',
-                    'return'       => 'objects',
-                ]));
+                    'return'       => 'ids',
+                ]);
             }
         );
     }
