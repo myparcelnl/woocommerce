@@ -9,6 +9,7 @@ use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
+use Throwable;
 
 /**
  * Flips the tracking option on records that are migrated in scheduled chunks.
@@ -65,10 +66,16 @@ class NoTrackingChunkMigrator
         }
 
         $converted = 0;
+        $failed    = 0;
 
         foreach ($ids as $productId) {
-            if ($this->migrateProduct((int) $productId)) {
-                $converted++;
+            try {
+                if ($this->migrateProduct((int) $productId)) {
+                    $converted++;
+                }
+            } catch (Throwable $exception) {
+                $failed++;
+                $this->logRecordFailure('product', (int) $productId, $exception);
             }
         }
 
@@ -77,6 +84,7 @@ class NoTrackingChunkMigrator
             'chunk'     => $data['chunk'] ?? null,
             'products'  => count($ids),
             'converted' => $converted,
+            'failed'    => $failed,
         ]);
     }
 
@@ -97,37 +105,82 @@ class NoTrackingChunkMigrator
      */
     public function migrateOrderChunk(array $data): void
     {
+        $ids = $data['ids'] ?? [];
+
+        $converted = 0;
+        $failed    = 0;
+
+        foreach ($ids as $orderId) {
+            try {
+                if ($this->migrateOrder((int) $orderId)) {
+                    $converted++;
+                }
+            } catch (Throwable $exception) {
+                $failed++;
+                $this->logRecordFailure('order', (int) $orderId, $exception);
+            }
+        }
+
+        Logger::debug('Converted the tracking option on a chunk of orders', [
+            'migration' => self::class,
+            'chunk'     => $data['chunk'] ?? null,
+            'orders'    => count($ids),
+            'converted' => $converted,
+            'failed'    => $failed,
+        ]);
+    }
+
+    /**
+     * @return bool Whether the order held an old value that was converted
+     */
+    private function migrateOrder(int $orderId): bool
+    {
+        $order = wc_get_order($orderId);
+
+        if (! $order) {
+            return false;
+        }
+
         $orderDataKey = Pdk::get('metaKeyOrderData');
         $shipmentsKey = Pdk::get('metaKeyOrderShipments');
 
-        foreach ($data['ids'] ?? [] as $orderId) {
-            $order = wc_get_order((int) $orderId);
+        $converted = false;
 
-            if (! $order) {
-                continue;
-            }
+        $orderData = $order->get_meta($orderDataKey);
 
-            $converted = false;
-
-            $orderData = $order->get_meta($orderDataKey);
-
-            if (is_array($orderData) && $this->invertShipmentOption($orderData)) {
-                $order->update_meta_data($orderDataKey, $orderData);
-                $converted = true;
-            }
-
-            $shipments = $order->get_meta($shipmentsKey);
-
-            if (is_array($shipments) && $this->invertShipments($shipments)) {
-                $order->update_meta_data($shipmentsKey, $shipments);
-                $converted = true;
-            }
-
-            // One save for both stores, mirroring how the repository writes them.
-            if ($converted) {
-                $order->save();
-            }
+        if (is_array($orderData) && $this->invertShipmentOption($orderData)) {
+            $order->update_meta_data($orderDataKey, $orderData);
+            $converted = true;
         }
+
+        $shipments = $order->get_meta($shipmentsKey);
+
+        if (is_array($shipments) && $this->invertShipments($shipments)) {
+            $order->update_meta_data($shipmentsKey, $shipments);
+            $converted = true;
+        }
+
+        // One save for both stores, mirroring how the repository writes them.
+        if ($converted) {
+            $order->save();
+        }
+
+        return $converted;
+    }
+
+    /**
+     * A chunk is scheduled once and never retried, so a record that cannot be converted is skipped and
+     * named in the log rather than allowed to take the rest of its batch with it.
+     */
+    private function logRecordFailure(string $type, int $id, Throwable $exception): void
+    {
+        Logger::error('Could not convert the tracking option on a record', [
+            'migration' => self::class,
+            'type'      => $type,
+            'id'        => $id,
+            'exception' => $exception->getMessage(),
+            'class'     => get_class($exception),
+        ]);
     }
 
     /**
