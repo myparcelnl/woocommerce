@@ -29,13 +29,6 @@ return new class extends AbstractTimestampedMigration {
      */
     private const LEGACY_TRACKED_KEY = 'exportTracked';
 
-    /**
-     * Flip the option in the carrier settings, which are one stored blob keyed by carrier.
-     *
-     * Runs inline: there is a single record to rewrite, however many carriers it holds. Carriers without
-     * the old key are left alone, and the old key is dropped once converted, so running this twice is a
-     * no-op rather than a second flip.
-     */
     public function up(): void
     {
         try {
@@ -53,6 +46,23 @@ return new class extends AbstractTimestampedMigration {
 
     private function convert(): void
     {
+        $this->convertCarrierSettings();
+
+        // Always queued, whatever the carrier settings held. A shop can carry the option per product or
+        // per order without ever having set it per carrier, so these passes cannot hang off that result.
+        $this->scheduleProductSettings();
+        $this->scheduleOrders();
+    }
+
+    /**
+     * Flip the option in the carrier settings, which are one stored blob keyed by carrier.
+     *
+     * Runs inline: there is a single record to rewrite, however many carriers it holds. Carriers without
+     * the old key are left alone, and the old key is dropped once converted, so running this twice is a
+     * no-op rather than a second flip.
+     */
+    private function convertCarrierSettings(): void
+    {
         /** @var PdkSettingsRepositoryInterface $settingsRepository */
         $settingsRepository = Pdk::get(PdkSettingsRepositoryInterface::class);
 
@@ -60,9 +70,6 @@ return new class extends AbstractTimestampedMigration {
         $settings    = $settingsRepository->get($settingsKey);
 
         if (empty($settings) || ! is_array($settings)) {
-            $this->scheduleProductSettings();
-            $this->scheduleOrders();
-
             return;
         }
 
@@ -88,9 +95,6 @@ return new class extends AbstractTimestampedMigration {
         $settingsRepository->store($settingsKey, $settings);
 
         Logger::debug('Inverted the tracking option in carrier settings', ['carriers' => $converted]);
-
-        $this->scheduleProductSettings();
-        $this->scheduleOrders();
     }
 
     /**
