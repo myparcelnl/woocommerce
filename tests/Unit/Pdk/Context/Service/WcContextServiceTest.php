@@ -52,8 +52,12 @@ beforeEach(function () {
             'pallet'        => 500000,
         ];
 
-        public function getPackageTypeWeights(string $cc, array $allowedTypes, bool $filterByEnabledCarriers = true): array
-        {
+        public function getPackageTypeWeights(
+            string  $cc,
+            array   $allowedTypes,
+            bool    $filterByEnabledCarriers = true,
+            ?bool   $isBusiness = null
+        ): array {
             $weights = [];
             foreach ($allowedTypes as $name => $v2) {
                 $weights[$name] = self::STUB_MAX_WEIGHTS[$name] ?? null;
