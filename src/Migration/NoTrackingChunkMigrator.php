@@ -12,30 +12,21 @@ use MyParcelNL\Pdk\Types\Service\TriStateService;
 use Throwable;
 
 /**
- * Flips the tracking option on records that are migrated in scheduled chunks.
- *
- * Carrier settings are one record and are converted by the migration itself. Product settings are stored
- * per product, so converting them all inline would time out a large shop. The migration schedules chunks
- * instead, and each chunk is dispatched back into this class.
+ * Flips the tracking option on the records the migration converts in scheduled chunks.
  *
  * This class exists because a scheduled action has to resolve to something addressable in a later
  * request. A timestamped migration is an anonymous class, so it can schedule work but can never be the
- * callback for it.
+ * callback for it. It also holds the pieces both halves need: the historical keys and the flip itself.
  */
 class NoTrackingChunkMigrator
 {
     /**
-     * The key the option used to be stored under.
+     * The keys the option used to be stored under, on a settings record and on a shipment's options.
      *
-     * A literal on purpose: NoTrackingDefinition replaced TrackedDefinition, so there is no class left to
-     * derive the old key from. Migrations name the historical keys they read.
+     * Literals on purpose: NoTrackingDefinition replaced TrackedDefinition, so there is no class left to
+     * derive them from. Migrations name the historical keys they read.
      */
-    public const LEGACY_TRACKED_KEY = 'exportTracked';
-
-    /**
-     * The key the option used to be stored under on a shipment's options, as opposed to on a settings
-     * record. Also a literal, for the same reason.
-     */
+    public const LEGACY_TRACKED_KEY         = 'exportTracked';
     public const LEGACY_SHIPMENT_OPTION_KEY = 'tracked';
 
     /**
@@ -49,88 +40,96 @@ class NoTrackingChunkMigrator
     }
 
     /**
-     * Cron callback: flip the option on one chunk of products.
+     * Flip an explicit choice, leaving "not set" alone.
      *
-     * Products without a stored choice are skipped, and the old key disappears because saving rewrites
-     * the whole settings record from the model, which no longer knows that key. That makes a second run
-     * over the same product a no-op rather than a second flip.
+     * Inherit means the merchant never chose, so inverting it would invent a preference.
+     *
+     * @param  mixed $value Cast, because older stored settings hold these as strings
+     */
+    public static function invert($value): int
+    {
+        switch ((int) $value) {
+            case TriStateService::ENABLED:
+                return TriStateService::DISABLED;
+            case TriStateService::DISABLED:
+                return TriStateService::ENABLED;
+            default:
+                return TriStateService::INHERIT;
+        }
+    }
+
+    /**
+     * Cron callback: flip the option on one chunk of products.
      *
      * @param  array $data Chunk context as scheduled: ids under "ids", chunk number under "chunk"
      */
     public function migrateProductSettingsChunk(array $data): void
     {
-        $ids = $data['ids'] ?? [];
-
-        if (empty($ids)) {
-            return;
-        }
-
-        $converted = 0;
-        $failed    = 0;
-
-        foreach ($ids as $productId) {
-            try {
-                if ($this->migrateProduct((int) $productId)) {
-                    $converted++;
-                }
-            } catch (Throwable $exception) {
-                $failed++;
-                $this->logRecordFailure('product', (int) $productId, $exception);
-            }
-        }
-
-        Logger::debug('Converted the tracking option on a chunk of products', [
-            'migration' => self::class,
-            'chunk'     => $data['chunk'] ?? null,
-            'products'  => count($ids),
-            'converted' => $converted,
-            'failed'    => $failed,
-        ]);
+        $this->migrateChunk($data, 'product', function (int $id): bool {
+            return $this->migrateProduct($id);
+        });
     }
 
     /**
      * Cron callback: flip the option on everything one chunk of orders stores.
      *
-     * An order holds the option twice: once as the choice made for the order, which still drives a
-     * re-export, and once per shipment created from it. Both are handled in the same pass because
-     * PdkOrderRepository writes them together in one update, so any order holding one holds the other,
-     * and loading and saving each order once instead of twice halves the work.
-     *
-     * Converting the stored shipments is not rewriting history. Those records round-trip through the PDK
-     * models — written with toStorableArray(), read back into a ShipmentCollection — and the models no
-     * longer know the old key, so leaving it would drop it on the next read and erase it on the next
-     * save. Flipping it states the same fact in the vocabulary the code now uses.
-     *
      * @param  array $data Chunk context as scheduled: ids under "ids", chunk number under "chunk"
      */
     public function migrateOrderChunk(array $data): void
     {
-        $ids = $data['ids'] ?? [];
+        $this->migrateChunk($data, 'order', function (int $id): bool {
+            return $this->migrateOrder($id);
+        });
+    }
 
+    /**
+     * Convert one chunk, one record at a time.
+     *
+     * A chunk is scheduled once and never retried, so a record that cannot be converted is skipped and
+     * named in the log rather than allowed to take the rest of its batch with it.
+     */
+    private function migrateChunk(array $data, string $type, callable $migrate): void
+    {
+        $ids       = $data['ids'] ?? [];
         $converted = 0;
         $failed    = 0;
 
-        foreach ($ids as $orderId) {
+        foreach ($ids as $id) {
             try {
-                if ($this->migrateOrder((int) $orderId)) {
+                if ($migrate((int) $id)) {
                     $converted++;
                 }
             } catch (Throwable $exception) {
                 $failed++;
-                $this->logRecordFailure('order', (int) $orderId, $exception);
+
+                Logger::error('Could not convert the tracking option on a record', [
+                    'migration' => self::class,
+                    'type'      => $type,
+                    'id'        => (int) $id,
+                    'exception' => $exception->getMessage(),
+                    'class'     => get_class($exception),
+                ]);
             }
         }
 
-        Logger::debug('Converted the tracking option on a chunk of orders', [
+        Logger::debug('Converted the tracking option on a chunk of records', [
             'migration' => self::class,
+            'type'      => $type,
             'chunk'     => $data['chunk'] ?? null,
-            'orders'    => count($ids),
+            'records'   => count($ids),
             'converted' => $converted,
             'failed'    => $failed,
         ]);
     }
 
     /**
+     * An order holds the option twice: once as the choice made for the order, which still drives a
+     * re-export, and once per shipment created from it. Both are converted in one load and one save,
+     * mirroring how PdkOrderRepository writes them.
+     *
+     * Converting the stored shipments is not rewriting history. Those records round-trip through the PDK
+     * models, which no longer know the old key, so leaving it would drop it on the next read anyway.
+     *
      * @return bool Whether the order held an old value that was converted
      */
     private function migrateOrder(int $orderId): bool
@@ -160,7 +159,6 @@ class NoTrackingChunkMigrator
             $converted = true;
         }
 
-        // One save for both stores, mirroring how the repository writes them.
         if ($converted) {
             $order->save();
         }
@@ -169,23 +167,6 @@ class NoTrackingChunkMigrator
     }
 
     /**
-     * A chunk is scheduled once and never retried, so a record that cannot be converted is skipped and
-     * named in the log rather than allowed to take the rest of its batch with it.
-     */
-    private function logRecordFailure(string $type, int $id, Throwable $exception): void
-    {
-        Logger::error('Could not convert the tracking option on a record', [
-            'migration' => self::class,
-            'type'      => $type,
-            'id'        => $id,
-            'exception' => $exception->getMessage(),
-            'class'     => get_class($exception),
-        ]);
-    }
-
-    /**
-     * Flip the option on each stored shipment of an order, in place.
-     *
      * @param  array $shipments Modified in place where a shipment held an old value
      *
      * @return bool Whether any shipment was converted
@@ -205,8 +186,6 @@ class NoTrackingChunkMigrator
     }
 
     /**
-     * Flip the option inside a record holding delivery options, in place.
-     *
      * Both stored order data and each stored shipment nest the options the same way, because a Shipment
      * carries DeliveryOptions which carries ShipmentOptions.
      *
@@ -222,9 +201,9 @@ class NoTrackingChunkMigrator
             return false;
         }
 
-        $newKey = (new NoTrackingDefinition())->getShipmentOptionsKey();
-
-        $options[$newKey] = $this->invert($options[self::LEGACY_SHIPMENT_OPTION_KEY]);
+        $options[(new NoTrackingDefinition())->getShipmentOptionsKey()] = self::invert(
+            $options[self::LEGACY_SHIPMENT_OPTION_KEY]
+        );
         unset($options[self::LEGACY_SHIPMENT_OPTION_KEY]);
 
         $record['deliveryOptions']['shipmentOptions'] = $options;
@@ -233,6 +212,9 @@ class NoTrackingChunkMigrator
     }
 
     /**
+     * Saving rewrites the whole settings record from the model, which no longer knows the old key, so a
+     * second run over the same product is a no-op rather than a second flip.
+     *
      * @return bool Whether the product held an old value that was converted
      */
     private function migrateProduct(int $productId): bool
@@ -255,31 +237,11 @@ class NoTrackingChunkMigrator
 
         $product->settings->setAttribute(
             (new NoTrackingDefinition())->getProductSettingsKey(),
-            $this->invert($stored[self::LEGACY_TRACKED_KEY])
+            self::invert($stored[self::LEGACY_TRACKED_KEY])
         );
 
         $this->productRepository->update($product);
 
         return true;
-    }
-
-    /**
-     * Flip an explicit choice, leaving "not set" alone.
-     *
-     * Inherit means the merchant never chose, so inverting it would invent a preference. Values are cast
-     * because older stored settings hold them as strings.
-     *
-     * @param  mixed $value
-     */
-    private function invert($value): int
-    {
-        switch ((int) $value) {
-            case TriStateService::ENABLED:
-                return TriStateService::DISABLED;
-            case TriStateService::DISABLED:
-                return TriStateService::ENABLED;
-            default:
-                return TriStateService::INHERIT;
-        }
     }
 }
