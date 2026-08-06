@@ -60,6 +60,9 @@ return new class extends AbstractTimestampedMigration {
         $settings    = $settingsRepository->get($settingsKey);
 
         if (empty($settings) || ! is_array($settings)) {
+            $this->scheduleProductSettings();
+            $this->scheduleOrders();
+
             return;
         }
 
