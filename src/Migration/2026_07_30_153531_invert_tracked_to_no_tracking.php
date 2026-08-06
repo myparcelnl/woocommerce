@@ -8,7 +8,7 @@ use MyParcelNL\Pdk\App\Options\Definition\NoTrackingDefinition;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
-use MyParcelNL\Pdk\Types\Service\TriStateService;
+use MyParcelNL\WooCommerce\Migration\NoTrackingChunkMigrator;
 
 /**
  * Converts stored tracking choices to the inverted no tracking option.
@@ -21,22 +21,13 @@ use MyParcelNL\Pdk\Types\Service\TriStateService;
  * settings and stored order data are converted per record in scheduled chunks.
  */
 return new class extends AbstractTimestampedMigration {
-    /**
-     * The key the option used to be stored under.
-     *
-     * A literal on purpose: NoTrackingDefinition replaced TrackedDefinition, so there is no class left to
-     * derive the old key from. Migrations name the historical keys they read.
-     */
-    private const LEGACY_TRACKED_KEY = 'exportTracked';
-
     public function up(): void
     {
         try {
             $this->convert();
         } catch (Throwable $exception) {
             // Report rather than throw, so a failure cannot leave the shop unable to finish upgrading.
-            // Anything already converted stays converted: the old key is dropped as each record is
-            // written, so the retry picks up where this run stopped.
+            // Anything already converted stays converted, so the retry picks up where this run stopped.
             $this->markFailed('Could not convert stored tracking choices to no tracking.', [
                 'exception' => $exception->getMessage(),
                 'class'     => get_class($exception),
@@ -55,10 +46,8 @@ return new class extends AbstractTimestampedMigration {
     }
 
     /**
-     * Flip the option in the carrier settings, which are one stored blob keyed by carrier.
-     *
-     * Runs inline: there is a single record to rewrite, however many carriers it holds. Carriers without
-     * the old key are left alone, and the old key is dropped once converted, so running this twice is a
+     * Carrier settings are one stored blob keyed by carrier, so this runs inline. Carriers without the
+     * old key are left alone, and the old key is dropped once converted, so running this twice is a
      * no-op rather than a second flip.
      */
     private function convertCarrierSettings(): void
@@ -73,16 +62,17 @@ return new class extends AbstractTimestampedMigration {
             return;
         }
 
+        $legacyKey = NoTrackingChunkMigrator::LEGACY_TRACKED_KEY;
         $newKey    = (new NoTrackingDefinition())->getCarrierSettingsKey();
         $converted = [];
 
         foreach ($settings as $carrier => $carrierSettings) {
-            if (! is_array($carrierSettings) || ! array_key_exists(self::LEGACY_TRACKED_KEY, $carrierSettings)) {
+            if (! is_array($carrierSettings) || ! array_key_exists($legacyKey, $carrierSettings)) {
                 continue;
             }
 
-            $carrierSettings[$newKey] = $this->invert($carrierSettings[self::LEGACY_TRACKED_KEY]);
-            unset($carrierSettings[self::LEGACY_TRACKED_KEY]);
+            $carrierSettings[$newKey] = NoTrackingChunkMigrator::invert($carrierSettings[$legacyKey]);
+            unset($carrierSettings[$legacyKey]);
 
             $settings[$carrier] = $carrierSettings;
             $converted[]        = $carrier;
@@ -98,12 +88,8 @@ return new class extends AbstractTimestampedMigration {
     }
 
     /**
-     * Queue the per-order pass.
-     *
-     * An order holds the option in two places, its own delivery options and each shipment created from
-     * it, and both are converted in the same chunk. Orders are found by the order data key alone, which
-     * is enough: PdkOrderRepository writes both stores in one update, so an order holding shipments
-     * holds order data too.
+     * Orders are found by the order data key alone, which is enough: PdkOrderRepository writes an order's
+     * own options and its shipments in one update, so an order holding shipments holds order data too.
      */
     private function scheduleOrders(): void
     {
@@ -125,11 +111,8 @@ return new class extends AbstractTimestampedMigration {
     }
 
     /**
-     * Queue the per-product pass.
-     *
      * Product settings are stored per product, so converting every one inline would time out a large
-     * shop. Each chunk is handed to a registered action instead, which is why the work itself lives in
-     * NoTrackingChunkMigrator rather than here.
+     * shop. Each chunk is handed to a registered action instead.
      */
     private function scheduleProductSettings(): void
     {
@@ -148,25 +131,5 @@ return new class extends AbstractTimestampedMigration {
                 ]);
             }
         );
-    }
-
-    /**
-     * Flip an explicit choice, leaving "not set" alone.
-     *
-     * Inherit means the merchant never chose, so inverting it would invent a preference. Values are cast
-     * because older stored settings hold them as strings.
-     *
-     * @param  mixed $value
-     */
-    private function invert($value): int
-    {
-        switch ((int) $value) {
-            case TriStateService::ENABLED:
-                return TriStateService::DISABLED;
-            case TriStateService::DISABLED:
-                return TriStateService::ENABLED;
-            default:
-                return TriStateService::INHERIT;
-        }
     }
 };
