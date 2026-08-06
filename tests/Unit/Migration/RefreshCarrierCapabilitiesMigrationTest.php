@@ -56,8 +56,11 @@ it('skips without failing when no account or shop is available', function () {
     expect($accountRepo->getAccount())->toBeNull();
 });
 
-it('rethrows when fetching carrier definitions fails so the migration retries', function () {
+it('reports failure instead of throwing when fetching carrier definitions fails', function () {
     TestBootstrapper::hasAccount();
+    // The migration forces an account refresh before it gets as far as the carriers. Without a
+    // response queued that call throws, and the test would pass on the wrong exception.
+    MockApi::enqueue(new ExampleGetAccountsResponse());
 
     $throwingRepo = new class(
         Pdk::get(StorageInterface::class),
@@ -71,9 +74,13 @@ it('rethrows when fetching carrier definitions fails so the migration retries', 
 
     mockPdkProperties([CarrierCapabilitiesRepository::class => $throwingRepo]);
 
-    // Throwing is the only way to retry: the installer marks a migration as applied straight
-    // after up() returns, so swallowing the error would strand the old carrier data.
-    expect(fn() => loadRefreshCarrierCapabilitiesMigration()->up())->toThrow(RuntimeException::class);
+    $migration = loadRefreshCarrierCapabilitiesMigration();
+    $migration->up();
+
+    // Reporting failure keeps the migration out of applied_migrations, so it is attempted again
+    // on the next load. Reaching this line at all is the other half of the point: a carrier API
+    // that is briefly unavailable no longer takes the page down with it.
+    expect($migration->hasFailed())->toBeTrue();
 });
 
 dataset('insurance shapes from the api', [

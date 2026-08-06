@@ -39,13 +39,16 @@ return new class extends AbstractTimestampedMigration {
         try {
             $shop->carriers = $capabilitiesRepository->getContractDefinitions();
         } catch (Throwable $exception) {
-            // Re-throw so the migration is not marked as applied, letting it retry on the next
-            // load instead of leaving the carriers on the old shape.
-            Logger::warning('Failed to refresh carrier capabilities; migration will retry.', [
-                'exception' => $exception->getMessage(),
+            // Reporting failure leaves the migration unrecorded, so it is attempted again on the
+            // next load. Throwing would do that too, but it would take the page down with it.
+            $this->markFailed('Failed to refresh carrier capabilities.', [
+                'message' => $exception->getMessage(),
+                'file'    => $exception->getFile() . ':' . $exception->getLine(),
+                'class'   => get_class($exception),
+                'trace'   => $exception->getTraceAsString(),
             ]);
 
-            throw $exception;
+            return;
         }
 
         $accountRepository->store($account);
