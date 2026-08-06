@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.8.0](https://github.com/myparcelnl/woocommerce/compare/v6.7.3...v6.8.0) (2026-08-06)
+
+
+### :sparkles: New Features
+
+* **checkout:** show the right delivery options for business and consumer orders ([#1675](https://github.com/myparcelnl/woocommerce/issues/1675)) ([d813e6d](https://github.com/myparcelnl/woocommerce/commit/d813e6dcabab23421e2a89246ce320d127f043eb))
+* send width, height and length during export ([#1770](https://github.com/myparcelnl/woocommerce/issues/1770)) ([082d90c](https://github.com/myparcelnl/woocommerce/commit/082d90c2f2da9bc25da4a5ad75f988ddcd14e710))
+
 ## [6.7.3](https://github.com/myparcelnl/woocommerce/compare/v6.7.2...v6.7.3) (2026-07-16)
 
 
