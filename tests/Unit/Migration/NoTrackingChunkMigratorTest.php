@@ -8,11 +8,19 @@ namespace MyParcelNL\WooCommerce\Migration;
 
 use MyParcelNL\Pdk\App\Options\Definition\NoTrackingDefinition;
 use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
+use MyParcelNL\Pdk\App\Order\Model\PdkProduct;
+use MyParcelNL\Pdk\Base\Contract\WeightServiceInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
+use MyParcelNL\WooCommerce\Pdk\Product\Repository\WcPdkProductRepository;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWcData;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
+use RuntimeException;
+use WC_Order;
 use WC_Product;
 
+use function MyParcelNL\Pdk\Tests\mockPdkProperties;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function MyParcelNL\WooCommerce\Tests\createWcOrder;
 use function MyParcelNL\WooCommerce\Tests\wpFactory;
@@ -227,4 +235,80 @@ it('does nothing when the chunk holds no ids', function () {
     // Still unset rather than flipped: the migrator converts the ids it was handed, not everything it
     // can find.
     expect(storedNoTracking(8008))->toBe(TriStateService::INHERIT);
+});
+
+/**
+ * Makes one product fail on write, the way a broken record or an unavailable store would.
+ */
+function givenProductUpdateFailsFor(int $failingId): void
+{
+    $repository = new class(
+        Pdk::get(StorageInterface::class),
+        Pdk::get(WeightServiceInterface::class)
+    ) extends WcPdkProductRepository {
+        /** @var int */
+        public $failingId = 0;
+
+        public function update(PdkProduct $product): void
+        {
+            if ((int) $product->externalIdentifier === $this->failingId) {
+                throw new RuntimeException('Product could not be saved');
+            }
+
+            parent::update($product);
+        }
+    };
+
+    $repository->failingId = $failingId;
+
+    mockPdkProperties([PdkProductRepositoryInterface::class => $repository]);
+}
+
+/**
+ * Stores an order that throws when it is written, so a chunk can hold one record that cannot be saved.
+ */
+function givenOrderThatCannotBeSaved(array $orderDataOptions): int
+{
+    $order = new class extends WC_Order {
+        public function save(): void
+        {
+            throw new RuntimeException('Order could not be saved');
+        }
+    };
+
+    $order->set_id(9101);
+    $order->update_meta_data(Pdk::get('metaKeyOrderData'), withShipmentOptions($orderDataOptions));
+
+    MockWcData::create($order);
+
+    return $order->get_id();
+}
+
+it('keeps converting the rest of the chunk when one product cannot be saved', function () {
+    givenProductWithStoredSettings(8009, [NoTrackingChunkMigrator::LEGACY_TRACKED_KEY => TriStateService::ENABLED]);
+    givenProductWithStoredSettings(8010, [NoTrackingChunkMigrator::LEGACY_TRACKED_KEY => TriStateService::ENABLED]);
+
+    givenProductUpdateFailsFor(8009);
+
+    migrateProductChunk([8009, 8010]);
+
+    // A chunk is scheduled once and never retried, so one unusable record must not take the rest of its
+    // batch down with it.
+    expect(storedNoTracking(8010))->toBe(TriStateService::DISABLED);
+});
+
+it('keeps converting the rest of the chunk when one order cannot be saved', function () {
+    $failingId = givenOrderThatCannotBeSaved([
+        NoTrackingChunkMigrator::LEGACY_SHIPMENT_OPTION_KEY => TriStateService::ENABLED,
+    ]);
+
+    $goodId = givenOrderMeta(
+        'metaKeyOrderData',
+        withShipmentOptions([NoTrackingChunkMigrator::LEGACY_SHIPMENT_OPTION_KEY => TriStateService::ENABLED])
+    );
+
+    migrateOrderChunkFor([$failingId, $goodId]);
+
+    expect(readOrderMeta($goodId, 'metaKeyOrderData')['deliveryOptions']['shipmentOptions']['noTracking'])
+        ->toBe(TriStateService::DISABLED);
 });
