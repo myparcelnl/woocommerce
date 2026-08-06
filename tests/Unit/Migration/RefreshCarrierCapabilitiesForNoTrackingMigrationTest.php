@@ -120,6 +120,25 @@ it('stores carriers that carry the new option', function () {
         ->and($carrier->options->getNoTracking()->getIsSelectedByDefault())->toBeFalse();
 });
 
+it('reports failure without throwing when the account cannot be refreshed', function () {
+    // The forced account refresh calls the API, so it can fail on its own before the carrier definitions
+    // are ever asked for. That path has to report failure too, rather than abort the upgrade.
+    mockPdkProperties([
+        PdkAccountRepositoryInterface::class => new class {
+            public function getAccount(bool $fresh = false)
+            {
+                throw new RuntimeException('Accounts endpoint unavailable');
+            }
+        },
+    ]);
+
+    $migration = loadRefreshMigration();
+
+    $migration->up();
+
+    expect($migration->hasFailed())->toBeTrue();
+});
+
 it('reports failure without throwing when fetching carrier definitions fails', function () {
     TestBootstrapper::hasAccount();
     // The migration forces an account refresh, which calls the accounts endpoint. Without a queued
