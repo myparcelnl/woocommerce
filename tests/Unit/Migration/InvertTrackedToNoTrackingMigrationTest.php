@@ -11,11 +11,15 @@ use MyParcelNL\Pdk\App\Options\Definition\NoTrackingDefinition;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
+use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use RuntimeException;
+use WC_Product;
 
 use function MyParcelNL\Pdk\Tests\mockPdkProperties;
 use function MyParcelNL\Pdk\Tests\usesShared;
+use function MyParcelNL\WooCommerce\Tests\createWcOrder;
+use function MyParcelNL\WooCommerce\Tests\wpFactory;
 
 usesShared(new UsesMockWcPdkInstance());
 
@@ -51,6 +55,43 @@ function storeCarrierSettings(array $settings): void
 function readCarrierSettings(): array
 {
     return carrierSettingsRepository()->get(Pdk::get('createSettingsKey')('carrier')) ?: [];
+}
+
+/**
+ * The names of the actions the migration queued work under, which is how a test tells which of the two
+ * chunk passes it started.
+ */
+function scheduledMigrationCallbacks(): array
+{
+    /** @var WordPressScheduledTasks $tasks */
+    $tasks = Pdk::get(WordPressScheduledTasks::class);
+
+    return array_values(array_unique($tasks->all()->pluck('callback')->toArray()));
+}
+
+/**
+ * A pass only queues a chunk when its fetcher finds something, so give both of them one record.
+ *
+ * The scheduled tasks are stored statically, so constructing the mock is what clears anything an
+ * earlier test left behind.
+ */
+function givenRecordsToPageOver(): void
+{
+    new WordPressScheduledTasks();
+
+    wpFactory(WC_Product::class)
+        ->withId(1)
+        ->make();
+
+    createWcOrder(['id' => 1]);
+}
+
+function expectBothPassesScheduled(): void
+{
+    expect(scheduledMigrationCallbacks())->toContain(
+        Pdk::get('migrateAction_NoTracking_ProductSettings'),
+        Pdk::get('migrateAction_NoTracking_Orders')
+    );
 }
 
 it('is a timestamped migration the installer can discover', function () {
@@ -153,8 +194,38 @@ it('leaves other settings on the same carrier untouched', function () {
     expect(readCarrierSettings()['POSTNL']['exportSignature'])->toBe(TriStateService::ENABLED);
 });
 
-it('does nothing when no carrier settings are stored at all', function () {
+it('stores no carrier settings when there were none to convert', function () {
     loadInvertMigration()->up();
 
     expect(readCarrierSettings())->toBe([]);
+});
+
+it('schedules the product and order passes after converting carrier settings', function () {
+    givenRecordsToPageOver();
+    storeCarrierSettings(['POSTNL' => [LEGACY_TRACKED_KEY => TriStateService::ENABLED]]);
+
+    loadInvertMigration()->up();
+
+    expectBothPassesScheduled();
+});
+
+it('schedules the product and order passes when no carrier settings are stored', function () {
+    // A shop can hold the option per product or per order without ever having set it per carrier.
+    givenRecordsToPageOver();
+
+    loadInvertMigration()->up();
+
+    expectBothPassesScheduled();
+});
+
+it('schedules the product and order passes when the carrier settings hold no old key', function () {
+    // The common shape: carrier settings exist for other options, but tracking was never toggled per
+    // carrier. There is nothing to convert here, and the per-product and per-order values still have to
+    // be picked up.
+    givenRecordsToPageOver();
+    storeCarrierSettings(['POSTNL' => ['exportSignature' => TriStateService::ENABLED]]);
+
+    loadInvertMigration()->up();
+
+    expectBothPassesScheduled();
 });
