@@ -81,17 +81,10 @@ class WCMP_Checkout
      */
     public static function save_delivery_options(int $orderId): void
     {
-        $nonce = sanitize_text_field(
-            wp_unslash(
-                $_POST['woocommerce-process-checkout-nonce']
-                ?? $_POST['_wpnonce']
-                ?? ''
-            )
-        );
-
-        if (! wp_verify_nonce($nonce, 'woocommerce-process_checkout')) {
-            return;
-        }
+        /**
+         * Nonce is already checked when hook ‘woocommerce_checkout_update_order_meta’ is executed.
+         * DO NOT CHECK NONCE, as the posted value is invalid when an account is created during checkout.
+         */
 
         $order                = WCX::get_order($orderId);
         $shippingMethod       = sanitize_text_field(
