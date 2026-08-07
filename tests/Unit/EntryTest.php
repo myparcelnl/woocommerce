@@ -49,10 +49,14 @@ it('activates plugin if prerequisites are met', function () {
         ->toBeString();
 });
 
-it('runs uninstall on deactivate', function () {
+it('keeps settings when deactivated', function () {
+    WordPressOptions::updateOption('_myparcelcom_carrier', ['POSTNL' => ['enabled' => true]]);
+
     MockWpActions::execute('deactivate_woocommerce-myparcel');
 
-    expect(MockWpActions::get('deactivate_woocommerce-myparcel'))->toBe([]);
+    expect(MockWpActions::toArray())->not->toHaveKey('deactivate_woocommerce-myparcel')
+        ->and(WordPressOptions::getOption('_myparcelcom_carrier'))
+        ->toBe(['POSTNL' => ['enabled' => true]]);
 });
 
 it('adds necessary hooks on plugin init', function () {
