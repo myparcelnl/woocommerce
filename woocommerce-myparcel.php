@@ -46,7 +46,6 @@ final class MyParcelNLWooCommerce
         add_action('before_woocommerce_init', [$this, 'declareWooCommerceCompatibility']);
 
         register_activation_hook(__FILE__, [$this, 'install']);
-        register_deactivation_hook(__FILE__, [$this, 'uninstall']);
         add_action('init', [$this, 'initialize'], 9999);
         /**
          * Since wordpress 3.1 register_activation_hook is not called when a plugin is updated.
@@ -139,15 +138,6 @@ final class MyParcelNLWooCommerce
             FeaturesUtil::declare_compatibility('cart_checkout_blocks', __FILE__);
             FeaturesUtil::declare_compatibility('custom_order_tables', __FILE__);
         }
-    }
-
-    /**
-     * @return void
-     * @throws \Exception
-     */
-    public function uninstall(): void
-    {
-        Installer::uninstall();
     }
 
     /**
