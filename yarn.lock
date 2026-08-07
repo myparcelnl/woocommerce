@@ -8486,45 +8486,44 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.2.79":
-  version: 18.3.11
-  resolution: "@types/react@npm:18.3.11"
+"@types/react@npm:*":
+  version: 19.2.18
+  resolution: "@types/react@npm:19.2.18"
   dependencies:
-    "@types/prop-types": "npm:*"
-    csstype: "npm:^3.0.2"
-  checksum: 10c0/ce80512246ca5bda69db85b9f4f1835189334acfb6b2c4f3eda8cabff1ff1a3ea9ce4f3b895bdbc18c94140aa45592331aa3fdeb557f525c1b048de7ce84fc0e
+    csstype: "npm:^3.2.2"
+  checksum: 10c0/d04216172b4b4362b310017c210dfbe019fb4f4e7dffd0313e70b3acb3051d5c3e76e7e84e3cf4c6a3c824993ffadfe3949e589a6398a09d4200e7670e2962de
   languageName: node
   linkType: hard
 
 "@types/react@npm:^16.9.0":
-  version: 16.14.62
-  resolution: "@types/react@npm:16.14.62"
+  version: 16.14.70
+  resolution: "@types/react@npm:16.14.70"
   dependencies:
     "@types/prop-types": "npm:*"
     "@types/scheduler": "npm:^0.16"
-    csstype: "npm:^3.0.2"
-  checksum: 10c0/3c913ae6c49b3ee8504e2e6f603db6440a0b99d737b607b2df8f39a50484b089c547f239294615de6b877f5db5217f23bc2610b232034612985afd4621ca8ace
+    csstype: "npm:^3.2.2"
+  checksum: 10c0/045b4ec6b117d4cc50b569c8d3c084e98163b6273d7b09ffab28075c921279e1d272aafcfd32abe7d7b32c634ffab56de1c8dce9dba0bd6a566e4b8196cd5695
   languageName: node
   linkType: hard
 
 "@types/react@npm:^17.0.37":
-  version: 17.0.83
-  resolution: "@types/react@npm:17.0.83"
+  version: 17.0.93
+  resolution: "@types/react@npm:17.0.93"
   dependencies:
     "@types/prop-types": "npm:*"
     "@types/scheduler": "npm:^0.16"
-    csstype: "npm:^3.0.2"
-  checksum: 10c0/c8f76790190a9df42099f5f78d08dd4095f2da3bd97ff7cce0001d5a97ff3ffb31f703575acf2c457606e0d0b229ca8d1ba0ff459b77a4e44c5ea5154fe3fb4b
+    csstype: "npm:^3.2.2"
+  checksum: 10c0/46c47d8ad8905482a22007c5702b6f02f2498933dabfbde3542d321bf027e30a5a16aea822eebb151962cf7b3f68daa1791ed7b4a31b6b83aa00f013f577fea1
   languageName: node
   linkType: hard
 
-"@types/react@npm:^18, @types/react@npm:^18.3.27":
-  version: 18.3.27
-  resolution: "@types/react@npm:18.3.27"
+"@types/react@npm:^18, @types/react@npm:^18.2.79, @types/react@npm:^18.3.27":
+  version: 18.3.31
+  resolution: "@types/react@npm:18.3.31"
   dependencies:
     "@types/prop-types": "npm:*"
     csstype: "npm:^3.2.2"
-  checksum: 10c0/a761d2f58de03d0714806cc65d32bb3d73fb33a08dd030d255b47a295e5fff2a775cf1c20b786824d8deb6454eaccce9bc6998d9899c14fc04bbd1b0b0b72897
+  checksum: 10c0/44180549dd045f536ececd39e39aacdf828e76adc1c4a90b132f453e23cc370c4648d9102ae401172ebd8fd8b1977a901a39e214e53ec77171b27514b588c179
   languageName: node
   linkType: hard
 
