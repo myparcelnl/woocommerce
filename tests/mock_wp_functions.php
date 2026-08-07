@@ -67,12 +67,6 @@ function update_option(string $option, $value, $autoload = null)
     WordPressOptions::updateOption($option, $value, $autoload);
 }
 
-/** @see \delete_option() */
-function delete_option(string $option): bool
-{
-    return WordPressOptions::deleteOption($option);
-}
-
 /** @see \apply_filters() */
 function apply_filters($tag, $value, ...$args)
 {

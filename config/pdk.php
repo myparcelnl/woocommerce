@@ -196,10 +196,6 @@ return [
         return plugin_basename(Pdk::getAppInfo()->path);
     }),
 
-    'migrationDirectory' => factory(function (): string {
-        return rtrim(Pdk::getAppInfo()->path, '/') . '/src/Migration';
-    }),
-
     'urlDocumentation' => value('https://developer.myparcel.nl/nl/documentatie/10.woocommerce.html'),
     'urlReleaseNotes'  => value('https://github.com/myparcelnl/woocommerce/releases'),
 
