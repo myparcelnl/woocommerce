@@ -23,7 +23,7 @@ use function MyParcelNL\WooCommerce\Tests\wpFactory;
 
 usesShared(new UsesMockWcPdkInstance());
 
-const MIGRATION_ID = '2026_08_04_110000_invert_tracked_to_no_tracking';
+const INVERT_MIGRATION_ID = '2026_08_04_110000_invert_tracked_to_no_tracking';
 
 /** The key the option used to be stored under, before NoTrackingDefinition replaced TrackedDefinition. */
 const LEGACY_TRACKED_KEY = 'exportTracked';
@@ -34,7 +34,7 @@ const LEGACY_TRACKED_KEY = 'exportTracked';
  */
 function loadInvertMigration(): TimestampedMigrationInterface
 {
-    return require __DIR__ . '/../../../src/Migration/' . MIGRATION_ID . '.php';
+    return require __DIR__ . '/../../../src/Migration/' . INVERT_MIGRATION_ID . '.php';
 }
 
 function noTrackingKey(): string
@@ -99,17 +99,17 @@ it('is a timestamped migration the installer can discover', function () {
 
     // The installer injects identity from the filename, so the migration must accept it and report it
     // back rather than deriving one itself.
-    $migration->setIdentity(MIGRATION_ID);
+    $migration->setIdentity(INVERT_MIGRATION_ID);
 
     expect($migration)->toBeInstanceOf(TimestampedMigrationInterface::class)
-        ->and($migration->getId())->toBe(MIGRATION_ID);
+        ->and($migration->getId())->toBe(INVERT_MIGRATION_ID);
 });
 
 it('runs after the migration that restores v6 options', function () {
     // A shop upgrading from v6 still holds its settings under the old prefix, so there is no carrier
     // record to convert until the restore has put one in place. Timestamped migrations run in filename
     // order, so this one has to sort later than the restore.
-    expect(MIGRATION_ID > '2026_08_04_101714_restore_v6_options')->toBeTrue();
+    expect(INVERT_MIGRATION_ID > '2026_08_04_101714_restore_v6_options')->toBeTrue();
 });
 
 it('reports failure without throwing when the settings cannot be read', function () {
