@@ -22,7 +22,9 @@ final class WordPressOptions
      */
     public static function getOption(string $name, $default = false)
     {
-        return self::$options[$name] ?? $default;
+        return array_key_exists($name, self::$options)
+            ? self::$options[$name]
+            : $default;
     }
 
     /**
@@ -33,6 +35,17 @@ final class WordPressOptions
     public static function updateOption($option, $value, $autoload = null): void
     {
         self::$options[$option] = $value;
+    }
+
+    public static function deleteOption(string $option): bool
+    {
+        if (! array_key_exists($option, self::$options)) {
+            return false;
+        }
+
+        unset(self::$options[$option]);
+
+        return true;
     }
 
     public static function reset(): void
