@@ -48,7 +48,7 @@ it('rethrows when fetching carrier definitions fails so the migration retries', 
         Pdk::get(StorageInterface::class),
         Pdk::get(CapabilitiesService::class)
     ) extends CarrierCapabilitiesRepository {
-        public function getContractDefinitions(?string $carrier = null): CarrierCollection
+        public function getContractDefinitions(?string $carrier = null, bool $fresh = false): CarrierCollection
         {
             throw new RuntimeException('API unavailable');
         }
