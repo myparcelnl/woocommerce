@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.26.0](https://github.com/myparcelnl/woocommerce/compare/v4.25.2...v4.26.0) (2026-08-11)
+
+
+### :bug: Bug Fixes
+
+* **v4:** save delivery options when account is created during checkout ([#1763](https://github.com/myparcelnl/woocommerce/issues/1763)) ([193d36a](https://github.com/myparcelnl/woocommerce/commit/193d36a81b7648c7ed803d40176db57a6cd31b33))
+
+
+### :sparkles: New Features
+
+* add admin banner announcing MyParcel for WooCommerce 6.0 ([#1733](https://github.com/myparcelnl/woocommerce/issues/1733)) ([81b9104](https://github.com/myparcelnl/woocommerce/commit/81b91046bc98299d66cfa06c4024e3c2bfdb954c))
+
 ## [4.25.2](https://github.com/myparcelnl/woocommerce/compare/v4.25.1...v4.25.2) (2026-06-25)
 
 

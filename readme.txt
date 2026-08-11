@@ -3,7 +3,7 @@ Contributors: richardperdaan, joerimyparcel
 Tags: woocommerce, delivery, packages, myparcel, shipping
 Requires at least: 5.2.0
 Tested up to: 7.0
-Stable tag: 4.25.2
+Stable tag: 4.26.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
@@ -102,6 +102,11 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 6. MyParcel pickup delivery options
 
 == Changelog ==
+
+= 4.26.0 (2026-08-11) =
+
+* New: add admin banner announcing MyParcel for WooCommerce 6.0 (#1733)
+* Fixed bug: save delivery options when account is created during checkout (#1763)
 
 = 4.25.2 (2026-06-25) =
 
