@@ -12,17 +12,20 @@ class MessagesRepository
 {
     use HasInstance;
 
-    public const ORDERS_PAGE   = 'edit-shop_order';
-    public const SETTINGS_PAGE = 'woocommerce_page_wcmp_settings';
-    public const PLUGINS_PAGE  = 'plugins';
+    public const ORDERS_PAGE      = 'edit-shop_order';
+    public const ORDERS_PAGE_HPOS = 'woocommerce_page_wc-orders';
+    public const SETTINGS_PAGE    = 'woocommerce_page_wcmp_settings';
+    public const PLUGINS_PAGE     = 'plugins';
+    public const HOME_PAGE        = 'woocommerce_page_wc-admin';
 
     private const OPTION_NOTICE_DISMISSED = 'myparcel_notice_dismissed';
     private const OPTION_NOTICE_PERSISTED = 'myparcel_notice_persisted';
 
     // https://wp-mix.com/wordpress-basic-allowed-html-wp_kses/
     public const ALLOWED_HTML = [
-        'p' => ['class' => [],],
-        'a' => ['href' => [], 'class' => [], 'rel' => [], 'target' => [],],
+        'h3' => ['class' => [],],
+        'p'  => ['class' => [],],
+        'a'  => ['href' => [], 'class' => [], 'rel' => [], 'target' => [],],
     ];
 
     /**
@@ -97,16 +100,31 @@ class MessagesRepository
             if ($this->shouldMessageBeShown($message)) {
                 $cssClassDismiss = $message['messageId'] ? 'is-dismissible' : '';
                 printf(
-                    '<div class="wcmp__notice notice myparcel-dismiss-notice notice-%s %s" data-messageid="%s"><p>%s</p></div>',
+                    '<div class="wcmp__notice notice myparcel-dismiss-notice notice-%s %s" data-messageid="%s">%s</div>',
                     esc_html($message['level']),
                     esc_html($cssClassDismiss),
                     esc_html($message['messageId']),
-                    wp_kses($message['message'], self::ALLOWED_HTML)
+                    wp_kses($this->wrapMessage($message['message']), self::ALLOWED_HTML)
                 );
             }
         }
 
         $this->messages = [];
+    }
+
+    /**
+     * Wrap plain messages in a paragraph. Messages that already start with a
+     * block-level tag (e.g. a heading) are passed through unchanged.
+     *
+     * @param  string $message
+     *
+     * @return string
+     */
+    private function wrapMessage(string $message): string
+    {
+        return preg_match('~^\s*<(?:p|h[1-6]|div|ul|ol)\b~i', $message)
+            ? $message
+            : "<p>$message</p>";
     }
 
     /**
