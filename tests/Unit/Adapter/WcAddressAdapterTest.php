@@ -348,3 +348,40 @@ it('passes the cart company through to the pdk cart as isBusiness, without stori
     'business (company entered)' => ['Acme B.V.', true],
     'consumer (no company)'      => [null, false],
 ]);
+
+it('allows filtering address fields through the wcAddressFields filter', function () {
+    /** @var WcAddressAdapter $adapter */
+    $adapter = Pdk::get(WcAddressAdapter::class);
+
+    $address = [
+        'billing_email'       => 'test@test.com',
+        'billing_phone'       => '0612345678',
+        'shipping_address_1'  => 'Antareslaan 31',
+        'shipping_address_2'  => '',
+        'shipping_city'       => 'Hoofddorp',
+        'shipping_company'    => 'MyParcel',
+        'shipping_country'    => 'NL',
+        'shipping_first_name' => 'Felicia',
+        'shipping_last_name'  => 'Parcel',
+        'shipping_postcode'   => '2132JE',
+        'shipping_state'      => 'NL-NH',
+    ];
+
+    $order = wpFactory(WC_Order::class)
+        ->fromScratch()
+        ->with(array_merge($address, ['id' => 1234, 'meta' => []]))
+        ->make();
+
+    add_filter('mpwc_checkout_wc_address_fields', function (array $fields, $object, string $addressType) {
+        expect($object)->toBeInstanceOf(WC_Order::class)
+            ->and($addressType)->toBe('shipping');
+
+        $fields['company'] = 'Filtered Company';
+
+        return $fields;
+    }, 10, 3);
+
+    $result = $adapter->fromWcOrder($order, 'shipping');
+
+    expect($result['company'])->toBe('Filtered Company');
+});
