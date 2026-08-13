@@ -14,7 +14,7 @@
     "clean": "run ws:clean \"$(pwd)\""
   },
   "dependencies": {
-    "@myparcel-dev/pdk-checkout": "^2.1.0"
+    "@myparcel-dev/pdk-checkout": "^2.1.2"
   },
   "devDependencies": {
     "@myparcel-woocommerce/webpack-config": "workspace:*",
