@@ -17,6 +17,9 @@ updates:
       include: 'scope'
     versioning-strategy: increase-if-necessary
     open-pull-requests-limit: 20
+    cooldown:
+      exclude:
+        - 'myparcelnl/*'
     groups:
       minor-php-updates:
         applies-to: version-updates
@@ -40,6 +43,11 @@ updates:
       include: 'scope'
     versioning-strategy: increase-if-necessary
     open-pull-requests-limit: 20
+    cooldown:
+      exclude:
+        - '@myparcel/*'
+        - '@myparcel-dev/*'
+        - '@myparcel-eslint/*'
     groups:
       minor-js-updates:
         applies-to: version-updates
