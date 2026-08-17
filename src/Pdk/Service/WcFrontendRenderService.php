@@ -23,16 +23,18 @@ class WcFrontendRenderService extends FrontendRenderService
      */
     public function renderDeliveryOptions(PdkCart $cart): string
     {
-        ob_start();
-
-        do_action('woocommerce_myparcel_before_delivery_options');
-
         $customCss = Settings::get(CheckoutSettings::DELIVERY_OPTIONS_CUSTOM_CSS, CheckoutSettings::ID);
         $context   = $this->contextService->createContexts([Context::ID_CHECKOUT], ['cart' => $cart]);
 
         if (false === Arr::get($context, Context::ID_CHECKOUT . '.settings.' . CheckoutSettings::ENABLE_DELIVERY_OPTIONS)) {
             return '';
         }
+
+        // Buffer the rendering only. Building the context can throw, and a buffer left open
+        // captures the rest of the checkout page.
+        ob_start();
+
+        do_action('woocommerce_myparcel_before_delivery_options');
 
         printf(
             '<div id="mypa-delivery-options-wrapper" class="%s__delivery-options" data-context="%s">%s<div id="myparcel-delivery-options"></div></div>',

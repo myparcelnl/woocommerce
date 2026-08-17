@@ -112,6 +112,12 @@ function add_action($tag, $functionToAdd, $priority = 10, $acceptedArgs = 1)
     add_filter($tag, $functionToAdd, $priority, $acceptedArgs);
 }
 
+/**@see \do_action() */
+function do_action($tag, ...$args)
+{
+    MockWpActions::execute($tag, ...$args);
+}
+
 /**@see \did_action() */
 function did_action($tag): bool
 {

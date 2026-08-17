@@ -5,8 +5,11 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
+use MyParcelNL\Pdk\Context\Contract\ContextServiceInterface;
 use MyParcelNL\WooCommerce\Integration\DeliveryOptionsBlocksIntegration;
+use MyParcelNL\WooCommerce\Tests\Mock\MockThrowingContextService;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
+use function MyParcelNL\Pdk\Tests\mockPdkProperties;
 use function MyParcelNL\Pdk\Tests\usesShared;
 
 usesShared(new UsesMockWcPdkInstance());
@@ -25,4 +28,13 @@ it('integrates with WooCommerce Blocks', function () {
         ->toHaveKeys(['context', 'style'])
         ->and($scriptData['context'])
         ->toBeString();
+});
+
+it('passes an empty context to the block when building it fails', function () {
+    mockPdkProperties([ContextServiceInterface::class => new MockThrowingContextService()]);
+
+    $class = new DeliveryOptionsBlocksIntegration('myparcelcom-delivery-options');
+
+    // The blocks checkout must render without delivery options instead of returning a 500.
+    expect($class->get_script_data()['context'])->toBe('');
 });

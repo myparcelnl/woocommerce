@@ -7,6 +7,7 @@ namespace MyParcelNL\WooCommerce\Hooks;
 use MyParcelNL\Pdk\App\Cart\Contract\PdkCartRepositoryInterface;
 use MyParcelNL\Pdk\Facade\AccountSettings;
 use MyParcelNL\Pdk\Facade\Frontend;
+use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Frontend\Contract\ViewServiceInterface;
@@ -14,6 +15,7 @@ use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\WooCommerce\Facade\Filter;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Service\WpScriptService;
+use Throwable;
 use WC_Product;
 
 final class CheckoutScriptHooks implements WordPressHooksInterface
@@ -79,7 +81,10 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
     /**
      * Output the delivery options template.
      *
-     * @throws \Exception
+     * Rendering builds the checkout context, which calls the MyParcel API. That call can fail for
+     * reasons the shop cannot control, and this method runs inside the checkout template. An
+     * exception here therefore kills the whole checkout page. Show the checkout without delivery
+     * options instead.
      */
     public function renderDeliveryOptions(): void
     {
@@ -92,7 +97,14 @@ final class CheckoutScriptHooks implements WordPressHooksInterface
         /** @var PdkCartRepositoryInterface $repository */
         $repository = Pdk::get(PdkCartRepositoryInterface::class);
 
-        echo Frontend::renderDeliveryOptions($repository->get($wcCart));
+        try {
+            echo Frontend::renderDeliveryOptions($repository->get($wcCart));
+        } catch (Throwable $throwable) {
+            Logger::error(
+                'Failed to render delivery options in the checkout.',
+                ['exception' => $throwable]
+            );
+        }
     }
 
     /**

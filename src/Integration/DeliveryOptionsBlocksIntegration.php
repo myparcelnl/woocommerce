@@ -7,10 +7,12 @@ namespace MyParcelNL\WooCommerce\Integration;
 use MyParcelNL\Pdk\App\Cart\Contract\PdkCartRepositoryInterface;
 use MyParcelNL\Pdk\Context\Context;
 use MyParcelNL\Pdk\Context\Contract\ContextServiceInterface;
+use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\Pdk\Base\Support\Arr;
+use Throwable;
 
 class DeliveryOptionsBlocksIntegration extends AbstractBlocksIntegration
 {
@@ -26,6 +28,10 @@ class DeliveryOptionsBlocksIntegration extends AbstractBlocksIntegration
     }
 
     /**
+     * Building the context calls the MyParcel API, which can fail for reasons the shop cannot
+     * control. This method feeds the block script data, so an exception here breaks the whole
+     * blocks checkout. Render the checkout without delivery options instead.
+     *
      * @return string
      */
     private function getCartContext(): string
@@ -36,10 +42,20 @@ class DeliveryOptionsBlocksIntegration extends AbstractBlocksIntegration
         $cartRepository = Pdk::get(PdkCartRepositoryInterface::class);
 
         $cart = WC()->cart;
-        $context = $contextService->createContexts(
-            [Context::ID_CHECKOUT],
-            ['cart' => ! empty($cart->cart_contents) ? $cartRepository->get($cart) : null]
-        );
+
+        try {
+            $context = $contextService->createContexts(
+                [Context::ID_CHECKOUT],
+                ['cart' => ! empty($cart->cart_contents) ? $cartRepository->get($cart) : null]
+            );
+        } catch (Throwable $throwable) {
+            Logger::error(
+                'Failed to create the delivery options context for the blocks checkout.',
+                ['exception' => $throwable]
+            );
+
+            return '';
+        }
 
         if (false === Arr::get($context, Context::ID_CHECKOUT . '.settings.' . CheckoutSettings::ENABLE_DELIVERY_OPTIONS)) {
             return '';
