@@ -42,6 +42,13 @@ class WcPdkBootstrapper extends PdkBootstrapper
     ): array {
         return array_replace(self::$config, [
             ###
+            # Migrations
+            ###
+
+            // The pdk defaults this to its own package root, where no plugin migration lives.
+            'migrationDirectory' => value(sprintf('%s/src/Migration', rtrim($path, '/'))),
+
+            ###
             # Meta Keys
             ###
 
