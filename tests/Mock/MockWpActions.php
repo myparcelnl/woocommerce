@@ -39,6 +39,26 @@ final class MockWpActions implements StaticMockInterface
     }
 
     /**
+     * @param  string            $tag
+     * @param  callable|string $functionToRemove
+     * @param  int             $priority
+     *
+     * @return void
+     */
+    public static function remove(string $tag, $functionToRemove, int $priority): void
+    {
+        $actions = self::get($tag);
+
+        foreach ($actions as $index => $action) {
+            if ($action['function'] === $functionToRemove && $action['priority'] === $priority) {
+                unset($actions[$index]);
+            }
+        }
+
+        self::$actions->put($tag, array_values($actions));
+    }
+
+    /**
      * @return \MyParcelNL\Pdk\Base\Support\Collection
      */
     public static function all(): Collection
