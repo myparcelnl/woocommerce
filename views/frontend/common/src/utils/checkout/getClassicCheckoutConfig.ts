@@ -1,6 +1,33 @@
-import {AddressType, useConfig} from '@myparcel-dev/pdk-checkout-common';
-import {useUtil, AddressField, PdkUtil, SeparateAddressField} from '@myparcel-dev/pdk-checkout';
+import {AddressType} from '@myparcel-dev/pdk-checkout-common';
+import {AddressField, SeparateAddressField} from '@myparcel-dev/pdk-checkout';
 import {type CheckoutConfig} from '../../types';
+
+/**
+ * All `form[name="checkout"]` on the page. Standard WooCommerce renders one; Divi 5 renders five (one
+ * per module), so treat the checkout as their union rather than a single form.
+ */
+const getCheckoutForms = (): HTMLFormElement[] =>
+  Array.from(document.querySelectorAll<HTMLFormElement>('form[name="checkout"]'));
+
+/**
+ * True if `start` or an ancestor is `display:none`, via native checkVisibility() (supported in all
+ * evergreen browsers; polyfilled for happy-dom in tests). Without options it considers display only
+ * (visibility/opacity ignored).
+ */
+const hasDisplayNoneAncestor = (start: Element | null): boolean => (start ? !start.checkVisibility() : false);
+
+/**
+ * Element or an ancestor is hidden. Own display counts, so this picks the one *visible* control among
+ * Divi's duplicate ship_to_different_address checkboxes (Divi also renders self-hidden copies).
+ */
+const isHidden = (element: Element): boolean => hasDisplayNoneAncestor(element);
+
+/**
+ * An *ancestor container* is hidden (own display ignored). Divi hides its duplicate billing fieldset on
+ * a container, not the inputs; this drops that fieldset while keeping self-hidden real inputs like
+ * WooCommerce's single `shipping_method[0]`.
+ */
+const isInHiddenContainer = (element: Element): boolean => hasDisplayNoneAncestor(element.parentElement);
 
 // eslint-disable-next-line max-lines-per-function
 export const getClassicCheckoutConfig = (): CheckoutConfig => {
@@ -26,27 +53,68 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
 
     config: {
       formChange(callback) {
-        jQuery(this.getForm()).on('change', () => {
+        getCheckoutForms().forEach((form) => {
+          jQuery(form).on('change', () => {
+            callback();
+          });
+        });
+
+        // WooCommerce re-selects the shipping-method radio after its AJAX re-render WITHOUT a bubbling
+        // `change`, so the form-level listener misses it; `updated_checkout` catches that. set() is
+        // equality-guarded, so a redundant callback is a safe no-op.
+        jQuery(document.body).on('updated_checkout', () => {
           callback();
         });
       },
 
       getForm() {
-        const getElement = useUtil(PdkUtil.GetElement);
+        const forms = getCheckoutForms();
 
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return getElement('form[name="checkout"]')!;
+        // Our hidden delivery-options input must live on the form that gets submitted: the one with the
+        // place-order button. forms[0]! is safe — isClassicCheckout() guarantees at least one form.
+        return (
+          forms.find((form) =>
+            form.querySelector('#place_order, [name="woocommerce_checkout_place_order"]'),
+          ) ?? forms[0]!
+        );
       },
 
       getFormData() {
-        const form = useConfig().getForm();
-        const formData = new FormData(form);
+        return getCheckoutForms().reduce<Record<string, FormDataEntryValue>>((merged, form) => {
+          // Divi's hidden duplicate billing fieldset isn't disabled, so FormData includes it and, being
+          // later in DOM order, would clobber live values. Skip names inside a display:none container,
+          // but keep self-hidden real inputs like `shipping_method[0]`. form.elements avoids escaping.
+          const hiddenNames = new Set<string>();
 
-        return Object.fromEntries(formData.entries());
+          for (const control of Array.from(form.elements)) {
+            const name = control.getAttribute('name');
+
+            if (name && isInHiddenContainer(control)) {
+              hiddenNames.add(name);
+            }
+          }
+
+          for (const [key, value] of new FormData(form).entries()) {
+            if (hiddenNames.has(key)) {
+              continue;
+            }
+
+            merged[key] = value;
+          }
+
+          return merged;
+        }, {});
       },
 
-      getAddressType(value: string): AddressType {
-        return value === '1' ? AddressType.Shipping : AddressType.Billing;
+      // The value js-pdk passes lags one form-read behind and omits an unchecked box; read the live DOM.
+      getAddressType(): AddressType {
+        const checkbox = getCheckoutForms()
+          .flatMap((form) =>
+            Array.from(form.querySelectorAll<HTMLInputElement>('input[name="ship_to_different_address"]')),
+          )
+          .find((input) => !isHidden(input));
+
+        return checkbox?.checked ? AddressType.Shipping : AddressType.Billing;
       },
 
       hasAddressType(addressType: AddressType) {

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bc3cbf2c71b4406bd477a790156f3794",
+    "content-hash": "ef28b541625821827541c2bc5b5b8f07",
     "packages": [
         {
             "name": "fruitcake/php-cors",
@@ -471,16 +471,16 @@
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "4.7.0",
+            "version": "4.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/pdk.git",
-                "reference": "ed9c0d5e919a87c0daf37fadd20b87c51c141fc6"
+                "reference": "a09bcabdb311b48e0a8ddae0eb58274b85f20e69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/ed9c0d5e919a87c0daf37fadd20b87c51c141fc6",
-                "reference": "ed9c0d5e919a87c0daf37fadd20b87c51c141fc6",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/a09bcabdb311b48e0a8ddae0eb58274b85f20e69",
+                "reference": "a09bcabdb311b48e0a8ddae0eb58274b85f20e69",
                 "shasum": ""
             },
             "require": {
@@ -527,9 +527,9 @@
             "homepage": "https://myparcel.nl",
             "support": {
                 "issues": "https://github.com/myparcelnl/pdk/issues",
-                "source": "https://github.com/myparcelnl/pdk/tree/v4.7.0"
+                "source": "https://github.com/myparcelnl/pdk/tree/v4.7.2"
             },
-            "time": "2026-08-06T11:23:43+00:00"
+            "time": "2026-08-12T09:40:29+00:00"
         },
         {
             "name": "myparcelnl/sdk",
@@ -2472,16 +2472,16 @@
         },
         {
             "name": "php-stubs/woocommerce-stubs",
-            "version": "v10.9.4",
+            "version": "v11.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-stubs/woocommerce-stubs.git",
-                "reference": "a569e43283b86178628beb7aa22cc34b4076b435"
+                "reference": "923dd29055713886efd7f85ea2510b9c6955a714"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/woocommerce-stubs/zipball/a569e43283b86178628beb7aa22cc34b4076b435",
-                "reference": "a569e43283b86178628beb7aa22cc34b4076b435",
+                "url": "https://api.github.com/repos/php-stubs/woocommerce-stubs/zipball/923dd29055713886efd7f85ea2510b9c6955a714",
+                "reference": "923dd29055713886efd7f85ea2510b9c6955a714",
                 "shasum": ""
             },
             "require": {
@@ -2510,9 +2510,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-stubs/woocommerce-stubs/issues",
-                "source": "https://github.com/php-stubs/woocommerce-stubs/tree/v10.9.4"
+                "source": "https://github.com/php-stubs/woocommerce-stubs/tree/v11.0.0"
             },
-            "time": "2026-07-16T18:17:41+00:00"
+            "time": "2026-08-04T19:31:58+00:00"
         },
         {
             "name": "php-stubs/wordpress-stubs",
@@ -5706,12 +5706,12 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">= 7.4"
     },
-    "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
 }

@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.8.1](https://github.com/myparcelnl/woocommerce/compare/v6.8.0...v6.8.1) (2026-08-11)
+
+
+### :bug: Bug Fixes
+
+* **address-widget:** pin yarn to 4.17.1 so the build runs ([#1773](https://github.com/myparcelnl/woocommerce/issues/1773)) ([d9d5fc4](https://github.com/myparcelnl/woocommerce/commit/d9d5fc47cd9180971ac5ac7f2992f5d5ea33bf64))
+* display order grid normally when carrier is unavailable on order ([#1765](https://github.com/myparcelnl/woocommerce/issues/1765)) ([42adda4](https://github.com/myparcelnl/woocommerce/commit/42adda438151a35900d7949dea8ef608f5ff8bd3))
+
 ## [6.8.0](https://github.com/myparcelnl/woocommerce/compare/v6.7.3...v6.8.0) (2026-08-06)
 
 

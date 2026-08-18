@@ -20,6 +20,7 @@ use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpCache;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
+use RuntimeException;
 use WC_Product;
 use WC_Shipping_Flat_Rate;
 use WC_Shipping_Method;
@@ -58,6 +59,11 @@ beforeEach(function () {
             bool    $filterByEnabledCarriers = true,
             ?bool   $isBusiness = null
         ): array {
+            if ('' === $cc) {
+                // The capabilities endpoint rejects an empty recipient.country_code with a 422.
+                throw new RuntimeException('capabilities called without a destination country');
+            }
+
             $weights = [];
             foreach ($allowedTypes as $name => $v2) {
                 $weights[$name] = self::STUB_MAX_WEIGHTS[$name] ?? null;
@@ -96,6 +102,29 @@ function add_product_to_cart(int $product_id = 6789, ?int $shippingClassId = nul
     WC()->cart->add_to_cart($product_id);
 }
 
+function pdk_cart_from_wc_cart(): PdkCart
+{
+    return new PdkCart([
+        'lines' => (new Collection(array_map(function (array $item) {
+            $wcProduct     = $item['data'];
+            $pdkProduct    = new PdkProduct([
+                'externalIdentifier' => $wcProduct->id,
+                'title'              => $wcProduct->name,
+                'sku'                => $wcProduct->sku,
+            ]);
+            $priceAfterVat = $item['line_subtotal'] + $item['line_subtotal_tax'];
+
+            return [
+                'quantity'      => (int) $item['quantity'],
+                'price'         => (int) (100 * (float) $item['line_subtotal']),
+                'vat'           => (int) (100 * (float) $item['line_subtotal_tax']),
+                'priceAfterVat' => (int) (100 * (float) $priceAfterVat),
+                'product'       => $pdkProduct,
+            ];
+        }, array_values(WC()->cart->cart_contents))))->mapInto(PdkOrderLine::class),
+    ]);
+}
+
 it('creates checkout context', function ($input, $expected) {
     MockWPCache::reset();
     WC()->cart->empty_cart();
@@ -128,26 +157,7 @@ it('creates checkout context', function ($input, $expected) {
         }
     }
 
-    $adaptedCart = [
-        'lines' => (new Collection(array_map(function (array $item) {
-            $wcProduct     = $item['data'];
-            $pdkProduct    = new PdkProduct([
-                'externalIdentifier' => $wcProduct->id,
-                'title'              => $wcProduct->name,
-                'sku'                => $wcProduct->sku,
-            ]);
-            $priceAfterVat = $item['line_subtotal'] + $item['line_subtotal_tax'];
-
-            return [
-                'quantity'      => (int) $item['quantity'],
-                'price'         => (int) (100 * (float) $item['line_subtotal']),
-                'vat'           => (int) (100 * (float) $item['line_subtotal_tax']),
-                'priceAfterVat' => (int) (100 * (float) $priceAfterVat),
-                'product'       => $pdkProduct,
-            ];
-        }, array_values(WC()->cart->cart_contents))))->mapInto(PdkOrderLine::class),
-    ];
-    $pdkCart     = new PdkCart($adaptedCart);
+    $pdkCart = pdk_cart_from_wc_cart();
 
     $pdkShippingMethod       = factory(PdkShippingMethod::class)
         ->withId('flexible_shipping:456')
@@ -336,3 +346,46 @@ it('creates checkout context', function ($input, $expected) {
         ],
     ],
 ]);
+
+it('falls back to the default package type when the cart has no destination country', function () {
+    MockWPCache::reset();
+    WC()->cart->empty_cart();
+
+    $contextService = Pdk::get(WcContextService::class);
+
+    factory(CheckoutSettings::class)
+        ->withAllowedShippingMethods([
+            'mailbox' => ['shipping_class:12'],
+            'package' => ['shipping_class:7'],
+        ])
+        ->store();
+
+    foreach ([999 => 12, 1010 => 7] as $productId => $shippingClassId) {
+        $wpTerm          = new WP_Term();
+        $wpTerm->term_id = $shippingClassId;
+        $wpTerm->name    = $wpTerm->slug = bin2hex(random_bytes(5));
+
+        add_product_to_cart($productId, $shippingClassId);
+        add_term_to_cache($wpTerm);
+    }
+
+    /**
+     * WooCommerce gives an empty string - never null - for a customer without a country. That
+     * happens with "no location by default", geolocation off and a guest with a fresh session.
+     * An empty country must not reach the capabilities endpoint, which answers 422 for it.
+     */
+    $pdkCart                 = pdk_cart_from_wc_cart();
+    $pdkCart->shippingMethod = factory(PdkShippingMethod::class)
+        ->withId('flexible_shipping:456')
+        ->withShippingAddress(factory(ShippingAddress::class)->withCc(''))
+        ->make();
+
+    wpFactory(WC_Shipping_Flat_Rate::class)
+        ->withId(456)
+        ->store();
+
+    $checkoutContext = $contextService->createCheckoutContext($pdkCart);
+
+    // shipping_class:7 maps to the default package type, so it wins the fallback.
+    expect($checkoutContext->settings['highestShippingClass'])->toBe('shipping_class:7');
+});
