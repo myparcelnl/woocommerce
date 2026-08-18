@@ -34,9 +34,24 @@ class NoTrackingChunkMigrator
      */
     private $productRepository;
 
+    /**
+     * @var string
+     */
+    private $shipmentOptionKey;
+
+    /**
+     * @var string
+     */
+    private $productSettingsKey;
+
     public function __construct(PdkProductRepositoryInterface $productRepository)
     {
         $this->productRepository = $productRepository;
+
+        // Resolved once per chunk: the definition is stateless and a chunk touches many records.
+        $definition               = new NoTrackingDefinition();
+        $this->shipmentOptionKey  = $definition->getShipmentOptionsKey();
+        $this->productSettingsKey = $definition->getProductSettingsKey();
     }
 
     /**
@@ -201,9 +216,7 @@ class NoTrackingChunkMigrator
             return false;
         }
 
-        $options[(new NoTrackingDefinition())->getShipmentOptionsKey()] = self::invert(
-            $options[self::LEGACY_SHIPMENT_OPTION_KEY]
-        );
+        $options[$this->shipmentOptionKey] = self::invert($options[self::LEGACY_SHIPMENT_OPTION_KEY]);
         unset($options[self::LEGACY_SHIPMENT_OPTION_KEY]);
 
         $record['deliveryOptions']['shipmentOptions'] = $options;
@@ -236,7 +249,7 @@ class NoTrackingChunkMigrator
         $product = $this->productRepository->getProduct($productId);
 
         $product->settings->setAttribute(
-            (new NoTrackingDefinition())->getProductSettingsKey(),
+            $this->productSettingsKey,
             self::invert($stored[self::LEGACY_TRACKED_KEY])
         );
 
