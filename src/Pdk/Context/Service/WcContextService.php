@@ -111,7 +111,10 @@ final class WcContextService extends ContextService
             && (string) TriStateService::INHERIT !== $cartPackageType;
         $cc                   = $cart->shippingMethod->shippingAddress->cc ?? null;
 
-        if (null === $cc) {
+        // WooCommerce gives an empty string, not null, for a customer without a country. The
+        // capabilities endpoint answers 422 for an empty recipient.country_code, so treat both as
+        // "no destination".
+        if (! $cc) {
             Logger::warning(
                 'Cannot determine largest package type without destination country; falling back to default',
                 [

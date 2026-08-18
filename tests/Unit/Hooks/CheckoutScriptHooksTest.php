@@ -6,13 +6,16 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Hooks;
 
+use MyParcelNL\Pdk\Context\Contract\ContextServiceInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
+use MyParcelNL\WooCommerce\Tests\Mock\MockThrowingContextService;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpEnqueue;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Product;
 
 use function MyParcelNL\Pdk\Tests\factory;
+use function MyParcelNL\Pdk\Tests\mockPdkProperties;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function MyParcelNL\WooCommerce\Tests\wpFactory;
 
@@ -82,3 +85,26 @@ it(
             ],
         ],
     ]);
+
+it('renders nothing when the delivery options template fails', function () {
+    mockPdkProperties([ContextServiceInterface::class => new MockThrowingContextService()]);
+
+    $product = wpFactory(WC_Product::class)
+        ->withId(1)
+        ->make();
+
+    WC()->cart->add_to_cart($product->get_id());
+    WC()->cart->set_needs_shipping(true);
+
+    /** @var \MyParcelNL\WooCommerce\Hooks\CheckoutScriptHooks $class */
+    $class = Pdk::get(CheckoutScriptHooks::class);
+
+    ob_start();
+    $class->renderDeliveryOptions();
+    $output = ob_get_clean();
+
+    // The checkout must stay usable without delivery options, not die on a white screen.
+    expect($output)->toBe('');
+
+    WC()->cart->empty_cart();
+});
