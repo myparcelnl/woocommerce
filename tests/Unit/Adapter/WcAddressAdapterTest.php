@@ -372,16 +372,20 @@ it('allows filtering address fields through the wcAddressFields filter', functio
         ->with(array_merge($address, ['id' => 1234, 'meta' => []]))
         ->make();
 
-    add_filter('mpwc_checkout_wc_address_fields', function (array $fields, $object, string $addressType) {
+    $filter = function (array $fields, $object, string $addressType) {
         expect($object)->toBeInstanceOf(WC_Order::class)
             ->and($addressType)->toBe('shipping');
 
         $fields['company'] = 'Filtered Company';
 
         return $fields;
-    }, 10, 3);
+    };
+
+    add_filter('mpwc_checkout_wc_address_fields', $filter, 10, 3);
 
     $result = $adapter->fromWcOrder($order, 'shipping');
 
     expect($result['company'])->toBe('Filtered Company');
+
+    remove_filter('mpwc_checkout_wc_address_fields', $filter, 10);
 });
