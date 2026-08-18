@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.9.0](https://github.com/myparcelnl/woocommerce/compare/v6.8.1...v6.9.0) (2026-08-18)
+
+
+### :sparkles: New Features
+
+* support divi 5 checkout ([#1661](https://github.com/myparcelnl/woocommerce/issues/1661)) ([2a0c61a](https://github.com/myparcelnl/woocommerce/commit/2a0c61a63d2e7f304e630137542e1845c38e3f52))
+
+
+### :bug: Bug Fixes
+
+* **carrier:** fix trunkrs not showing up by resolving issues with same day delivery settings ([#1777](https://github.com/myparcelnl/woocommerce/issues/1777)) ([969f1fb](https://github.com/myparcelnl/woocommerce/commit/969f1fb3819fb4d11c165923367af0230b63da72))
+* fix an error while the country was empty in checkout ([#1800](https://github.com/myparcelnl/woocommerce/issues/1800)) ([22804f9](https://github.com/myparcelnl/woocommerce/commit/22804f9ec8bc85ec849f02e836ee99f8848928b3))
+* **settings:** preserve settings on deactivation ([#1772](https://github.com/myparcelnl/woocommerce/issues/1772)) ([4b02e65](https://github.com/myparcelnl/woocommerce/commit/4b02e6578c33b238168836d63296fc0ebf53815a)), closes [#521](https://github.com/myparcelnl/woocommerce/issues/521)
+
 ## [6.8.1](https://github.com/myparcelnl/woocommerce/compare/v6.8.0...v6.8.1) (2026-08-11)
 
 
