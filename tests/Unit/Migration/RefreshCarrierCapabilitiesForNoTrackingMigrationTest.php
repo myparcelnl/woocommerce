@@ -49,14 +49,14 @@ it('is a timestamped migration the installer can discover', function () {
 it('runs after the migration that inverts the stored option', function () {
     // The refresh has to happen once the feature flag is being sent, and timestamped migrations run in
     // filename order, so this one has to sort later than the inversion.
-    expect(REFRESH_MIGRATION_ID > INVERT_MIGRATION_ID)->toBeTrue();
+    expect(REFRESH_MIGRATION_ID > '2026_08_04_110000_invert_tracked_to_no_tracking')->toBeTrue();
 });
 
 it('skips without failing when no account or shop is available', function () {
     /** @var PdkAccountRepositoryInterface $accountRepository */
     $accountRepository = Pdk::get(PdkAccountRepositoryInterface::class);
 
-    // A fresh install has nothing to refresh, so skipping beats fataling.
+    // A fresh install has nothing to refresh, so it skips instead of throwing.
     loadRefreshMigration()->up();
 
     expect($accountRepository->getAccount())->toBeNull();

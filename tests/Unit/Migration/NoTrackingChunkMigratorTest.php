@@ -57,6 +57,21 @@ function storedNoTracking(int $id): int
     return $productRepository->getProduct($id)->settings->{$key};
 }
 
+it('flips a stored value whatever shape it was saved in', function (
+    $stored,
+    int $expected
+) {
+    expect(NoTrackingChunkMigrator::invert($stored))->toBe($expected);
+})->with([
+    'int on'           => [TriStateService::ENABLED, TriStateService::DISABLED],
+    'int off'          => [TriStateService::DISABLED, TriStateService::ENABLED],
+    'int inherit'      => [TriStateService::INHERIT, TriStateService::INHERIT],
+    'numeric string on'  => ['1', TriStateService::DISABLED],
+    'numeric string off' => ['0', TriStateService::ENABLED],
+    'bool on'          => [true, TriStateService::DISABLED],
+    'bool off'         => [false, TriStateService::ENABLED],
+]);
+
 it('turns tracking on into no tracking off', function () {
     // The merchant wanted tracking on this product, so the opt-out must end up switched off.
     givenProductWithStoredSettings(8001, [NoTrackingChunkMigrator::LEGACY_TRACKED_KEY => TriStateService::ENABLED]);
