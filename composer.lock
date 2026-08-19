@@ -533,16 +533,16 @@
         },
         {
             "name": "myparcelnl/sdk",
-            "version": "11.0.0-beta.31",
+            "version": "11.0.0-beta.32",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/sdk.git",
-                "reference": "41abe4589adfd2bb424281a4be609bbf42411dd8"
+                "reference": "fd7baf513e6f686e06b7ab2cb1d474b98f35ab6d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/41abe4589adfd2bb424281a4be609bbf42411dd8",
-                "reference": "41abe4589adfd2bb424281a4be609bbf42411dd8",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/fd7baf513e6f686e06b7ab2cb1d474b98f35ab6d",
+                "reference": "fd7baf513e6f686e06b7ab2cb1d474b98f35ab6d",
                 "shasum": ""
             },
             "require": {
@@ -593,9 +593,9 @@
             ],
             "support": {
                 "issues": "https://github.com/myparcelnl/sdk/issues",
-                "source": "https://github.com/myparcelnl/sdk/tree/v11.0.0-beta.31"
+                "source": "https://github.com/myparcelnl/sdk/tree/v11.0.0-beta.32"
             },
-            "time": "2026-07-30T08:09:36+00:00"
+            "time": "2026-08-18T09:32:29+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -5706,12 +5706,12 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">= 7.4"
     },
-    "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
 }
