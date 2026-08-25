@@ -29,26 +29,6 @@ const isHidden = (element: Element): boolean => hasDisplayNoneAncestor(element);
  */
 const isInHiddenContainer = (element: Element): boolean => hasDisplayNoneAncestor(element.parentElement);
 
-/**
- * Names that have at least one control outside a hidden container. Hidden controls are valid form
- * values, so visibility is only used to resolve duplicate names rendered by layouts such as Divi.
- */
-const getNamesInVisibleContainers = (forms: HTMLFormElement[]): Set<string> => {
-  const names = new Set<string>();
-
-  forms.forEach((form) => {
-    Array.from(form.elements).forEach((control) => {
-      const name = control.getAttribute('name');
-
-      if (name && !isInHiddenContainer(control)) {
-        names.add(name);
-      }
-    });
-  });
-
-  return names;
-};
-
 // eslint-disable-next-line max-lines-per-function
 export const getClassicCheckoutConfig = (): CheckoutConfig => {
   return {
@@ -100,33 +80,44 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
       },
 
       getFormData() {
-        const forms = getCheckoutForms();
-        const namesInVisibleContainers = getNamesInVisibleContainers(forms);
-
-        return forms.reduce<Record<string, FormDataEntryValue>>((merged, form) => {
-          // Divi's hidden duplicate billing fieldset isn't disabled, so FormData includes it and, being
-          // later in DOM order, would clobber live values. Only skip a hidden value when another control
-          // with that name has a visible container. Unique hidden fields remain valid form values.
+        const visibleNames = new Set<string>();
+        const formStates = getCheckoutForms().map((form) => {
           const hiddenNames = new Set<string>();
 
-          for (const control of Array.from(form.elements)) {
+          for (const control of form.elements) {
             const name = control.getAttribute('name');
 
-            if (name && isInHiddenContainer(control)) {
-              hiddenNames.add(name);
-            }
-          }
-
-          for (const [key, value] of new FormData(form).entries()) {
-            if (hiddenNames.has(key) && namesInVisibleContainers.has(key)) {
+            if (!name) {
               continue;
             }
 
-            merged[key] = value;
+            if (isInHiddenContainer(control)) {
+              hiddenNames.add(name);
+            } else {
+              visibleNames.add(name);
+            }
           }
 
-          return merged;
-        }, {});
+          return {form, hiddenNames};
+        });
+
+        // Visible names are global because Divi puts duplicate fields in separate forms. Hidden names
+        // stay scoped to their form, so only the hidden duplicate is skipped. Unique hidden fields are
+        // valid form values and remain in the merged data.
+        return formStates.reduce<Record<string, FormDataEntryValue>>(
+          (merged, {form, hiddenNames}) => {
+            for (const [key, value] of new FormData(form).entries()) {
+              if (hiddenNames.has(key) && visibleNames.has(key)) {
+                continue;
+              }
+
+              merged[key] = value;
+            }
+
+            return merged;
+          },
+          {},
+        );
       },
 
       // The value js-pdk passes lags one form-read behind and omits an unchecked box; read the live DOM.
