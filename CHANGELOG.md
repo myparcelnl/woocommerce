@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.9.1](https://github.com/myparcelnl/woocommerce/compare/v6.9.0...v6.9.1) (2026-08-25)
+
+
+### :bug: Bug Fixes
+
+* **insurance:** refresh stored carrier data to stop using deprecated insurance amounts ([#1748](https://github.com/myparcelnl/woocommerce/issues/1748)) ([7f439eb](https://github.com/myparcelnl/woocommerce/commit/7f439eb1f0c86370882374a3567abc51ae663823)), closes [myparcelnl/pdk#511](https://github.com/myparcelnl/pdk/issues/511) [myparcelnl/pdk#511](https://github.com/myparcelnl/pdk/issues/511) [myparcelnl/js-pdk#383](https://github.com/myparcelnl/js-pdk/issues/383)
+
 ## [6.9.0](https://github.com/myparcelnl/woocommerce/compare/v6.8.1...v6.9.0) (2026-08-18)
 
 
