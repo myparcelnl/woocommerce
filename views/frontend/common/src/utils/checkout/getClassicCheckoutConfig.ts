@@ -29,6 +29,26 @@ const isHidden = (element: Element): boolean => hasDisplayNoneAncestor(element);
  */
 const isInHiddenContainer = (element: Element): boolean => hasDisplayNoneAncestor(element.parentElement);
 
+/**
+ * Names that have at least one control outside a hidden container. Hidden controls are valid form
+ * values, so visibility is only used to resolve duplicate names rendered by layouts such as Divi.
+ */
+const getNamesInVisibleContainers = (forms: HTMLFormElement[]): Set<string> => {
+  const names = new Set<string>();
+
+  forms.forEach((form) => {
+    Array.from(form.elements).forEach((control) => {
+      const name = control.getAttribute('name');
+
+      if (name && !isInHiddenContainer(control)) {
+        names.add(name);
+      }
+    });
+  });
+
+  return names;
+};
+
 // eslint-disable-next-line max-lines-per-function
 export const getClassicCheckoutConfig = (): CheckoutConfig => {
   return {
@@ -80,10 +100,13 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
       },
 
       getFormData() {
-        return getCheckoutForms().reduce<Record<string, FormDataEntryValue>>((merged, form) => {
+        const forms = getCheckoutForms();
+        const namesInVisibleContainers = getNamesInVisibleContainers(forms);
+
+        return forms.reduce<Record<string, FormDataEntryValue>>((merged, form) => {
           // Divi's hidden duplicate billing fieldset isn't disabled, so FormData includes it and, being
-          // later in DOM order, would clobber live values. Skip names inside a display:none container,
-          // but keep self-hidden real inputs like `shipping_method[0]`. form.elements avoids escaping.
+          // later in DOM order, would clobber live values. Only skip a hidden value when another control
+          // with that name has a visible container. Unique hidden fields remain valid form values.
           const hiddenNames = new Set<string>();
 
           for (const control of Array.from(form.elements)) {
@@ -95,7 +118,7 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
           }
 
           for (const [key, value] of new FormData(form).entries()) {
-            if (hiddenNames.has(key)) {
+            if (hiddenNames.has(key) && namesInVisibleContainers.has(key)) {
               continue;
             }
 
