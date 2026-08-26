@@ -6,18 +6,26 @@ namespace MyParcelNL\WooCommerce\Migration;
 
 use MyParcelNL\Pdk\App\Options\Definition\NoTrackingDefinition;
 use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
+use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
 use Throwable;
 use WC_Product;
 
 /**
- * Flips the tracking option on the records the migration converts in scheduled chunks.
+ * Converts the tracking option on stored records, one page per scheduled run.
  *
  * This class exists because a scheduled action has to resolve to something addressable in a later
  * request. A timestamped migration is an anonymous class, so it can schedule work but can never be the
- * callback for it. It also holds the pieces both halves need: the historical keys and the flip itself.
+ * callback for it. So the queries live here too, not in the migration: a run has to find its own work
+ * to be able to resume.
+ *
+ * Each run books its successor before it converts anything, and drops that successor once its query
+ * comes back empty. A run killed by a timeout or a fatal therefore still has a successor waiting, and
+ * that successor re-runs the query rather than a frozen list of ids, so it picks up whatever is left.
+ * Mirrors WCS_Background_Updater, which reschedules first for the same reason.
  */
 class NoTrackingChunkMigrator
 {
@@ -29,6 +37,20 @@ class NoTrackingChunkMigrator
      */
     public const LEGACY_TRACKED_KEY         = 'exportTracked';
     public const LEGACY_SHIPMENT_OPTION_KEY = 'tracked';
+
+    /**
+     * How many records one run converts, and how long the next run waits. The delay keeps a shop from
+     * spending every request on the migration, at the cost of taking longer to finish.
+     */
+    private const PAGE_SIZE            = 100;
+    private const SECONDS_BETWEEN_RUNS = 60;
+
+    /**
+     * Where the order pass keeps its place. Products need no cursor: a converted product no longer
+     * matches its query, so every run asks for the first page again. Orders keep their order data key
+     * whatever the option holds, so that pass has to remember how far it got.
+     */
+    public const CURSOR_ORDERS = 'noTrackingMigrationOrderPage';
 
     /**
      * @var \MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface
@@ -45,9 +67,24 @@ class NoTrackingChunkMigrator
      */
     private $productSettingsKey;
 
-    public function __construct(PdkProductRepositoryInterface $productRepository)
-    {
-        $this->productRepository = $productRepository;
+    /**
+     * @var \MyParcelNL\Pdk\Base\Contract\CronServiceInterface
+     */
+    private $cronService;
+
+    /**
+     * @var \MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface
+     */
+    private $settingsRepository;
+
+    public function __construct(
+        PdkProductRepositoryInterface   $productRepository,
+        CronServiceInterface            $cronService,
+        PdkSettingsRepositoryInterface  $settingsRepository
+    ) {
+        $this->productRepository  = $productRepository;
+        $this->cronService        = $cronService;
+        $this->settingsRepository = $settingsRepository;
 
         // Resolved once per chunk: the definition is stateless and a chunk touches many records.
         $definition               = new NoTrackingDefinition();
@@ -75,44 +112,80 @@ class NoTrackingChunkMigrator
     }
 
     /**
-     * Cron callback: flip the option on one chunk of products.
-     *
-     * @param  array $data Chunk context as scheduled: ids under "ids", chunk number under "chunk"
+     * Cron callback: convert one page of products, and leave a successor booked until none are left.
      */
-    public function migrateProductSettingsChunk(array $data): void
+    public function migrateProductSettingsChunk(): void
     {
-        $this->migrateChunk($data, 'product', function (int $id): bool {
+        $cronAction = Pdk::get('migrateAction_NoTracking_ProductSettings');
+
+        $this->scheduleNextRun($cronAction);
+
+        $ids = $this->findProducts();
+
+        if (empty($ids)) {
+            $this->stopPass($cronAction, 'product');
+
+            return;
+        }
+
+        $this->convertPage($ids, 'product', function (int $id): bool {
             return $this->migrateProduct($id);
         });
     }
 
     /**
-     * Cron callback: flip the option on everything one chunk of orders stores.
-     *
-     * @param  array $data Chunk context as scheduled: ids under "ids", chunk number under "chunk"
+     * Cron callback: convert one page of orders, and leave a successor booked until none are left.
      */
-    public function migrateOrderChunk(array $data): void
+    public function migrateOrderChunk(): void
     {
-        $this->migrateChunk($data, 'order', function (int $id): bool {
+        $cronAction = Pdk::get('migrateAction_NoTracking_Orders');
+
+        $this->scheduleNextRun($cronAction);
+
+        $page = (int) ($this->settingsRepository->get(self::CURSOR_ORDERS) ?: 1);
+        $ids  = $this->findOrders($page);
+
+        if (empty($ids)) {
+            $this->stopPass($cronAction, 'order');
+            $this->settingsRepository->store(self::CURSOR_ORDERS, null);
+
+            return;
+        }
+
+        $this->convertPage($ids, 'order', function (int $id): bool {
             return $this->migrateOrder($id);
         });
+
+        // Advanced only now the page is converted. A run killed while converting repeats this page on
+        // the next attempt, rather than stepping over it.
+        $this->settingsRepository->store(self::CURSOR_ORDERS, $page + 1);
     }
 
     /**
-     * Convert one chunk, one record at a time.
-     *
-     * A chunk is scheduled once and never retried, so a record that cannot be converted is skipped and
-     * named in the log rather than allowed to take the rest of its batch with it.
+     * Drop the successor booked at the start of the run, which ends the chain.
      */
-    private function migrateChunk(array $data, string $type, callable $migrate): void
+    private function stopPass(string $cronAction, string $type): void
     {
-        $ids       = $data['ids'] ?? [];
+        wp_unschedule_hook($cronAction);
+
+        Logger::debug('No records left to convert', [
+            'migration' => self::class,
+            'type'      => $type,
+        ]);
+    }
+
+    /**
+     * A record that cannot be converted is skipped and named in the log, rather than allowed to take
+     * the rest of its page with it.
+     */
+    private function convertPage(array $ids, string $type, callable $convert): void
+    {
         $converted = 0;
         $failed    = 0;
 
         foreach ($ids as $id) {
             try {
-                if ($migrate((int) $id)) {
+                if ($convert((int) $id)) {
                     $converted++;
                 }
             } catch (Throwable $exception) {
@@ -128,13 +201,64 @@ class NoTrackingChunkMigrator
             }
         }
 
-        Logger::debug('Converted the tracking option on a chunk of records', [
+        Logger::debug('Converted the tracking option on a page of records', [
             'migration' => self::class,
             'type'      => $type,
-            'chunk'     => $data['chunk'] ?? null,
             'records'   => count($ids),
             'converted' => $converted,
             'failed'    => $failed,
+        ]);
+    }
+
+    /**
+     * Losing the successor means the records left over wait for the next upgrade run instead of the
+     * next minute, so it is reported rather than passed over.
+     */
+    private function scheduleNextRun(string $cronAction): void
+    {
+        try {
+            $this->cronService->schedule($cronAction, time() + self::SECONDS_BETWEEN_RUNS);
+        } catch (Throwable $exception) {
+            Logger::error('Could not book the next run of the no tracking migration', [
+                'migration' => self::class,
+                'action'    => $cronAction,
+                'exception' => $exception->getMessage(),
+                'class'     => get_class($exception),
+            ]);
+        }
+    }
+
+    /**
+     * Products that still hold the old key. Converting drops it, so a converted product falls out of
+     * this query and the first page is always the work that is left.
+     */
+    private function findProducts(): array
+    {
+        return wc_get_products([
+            'limit'        => self::PAGE_SIZE,
+            'page'         => 1,
+            'meta_key'     => Pdk::get('metaKeyProductSettings'),
+            'meta_value'   => sprintf('"%s"', self::LEGACY_TRACKED_KEY),
+            'meta_compare' => 'LIKE',
+            'return'       => 'ids',
+        ]);
+    }
+
+    /**
+     * One page of orders holding stored order data.
+     *
+     * The query cannot narrow to the old key the way the product one does: an order keeps its order
+     * data whatever the option holds, and the key can sit on a stored shipment while the order's own
+     * options no longer have it. So this pass walks every order and remembers its page instead.
+     */
+    private function findOrders(int $page): array
+    {
+        return wc_get_orders([
+            'limit'        => self::PAGE_SIZE,
+            'paged'        => $page,
+            'meta_key'     => Pdk::get('metaKeyOrderData'),
+            'meta_compare' => 'EXISTS',
+            'return'       => 'ids',
         ]);
     }
 

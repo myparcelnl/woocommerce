@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use MyParcelNL\Pdk\App\Installer\Migration\AbstractTimestampedMigration;
-use MyParcelNL\Pdk\App\Installer\Service\PagedMigrationService;
+use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\App\Options\Definition\NoTrackingDefinition;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
@@ -18,7 +18,8 @@ use MyParcelNL\WooCommerce\Migration\NoTrackingChunkMigrator;
  * would mean the opposite of what they chose, which is why this cannot be left to a read-time fallback.
  *
  * Only the carrier settings are converted here, because they are a single stored record. Product
- * settings and stored order data are converted per record in scheduled chunks.
+ * settings and stored order data are converted a page at a time by a scheduled pass that keeps
+ * itself going until nothing is left.
  *
  * Trashed products and orders are left alone. Neither wc_get_products() nor wc_get_orders() documents
  * a way to include them, and reaching around those APIs is what WooCommerce warns against. A record
@@ -50,8 +51,7 @@ return new class extends AbstractTimestampedMigration {
 
         // Always queued, whatever the carrier settings held. A shop can carry the option per product or
         // per order without ever having set it per carrier, so these passes cannot hang off that result.
-        $this->scheduleProductSettings();
-        $this->scheduleOrders();
+        $this->scheduleConversionPasses();
     }
 
     /**
@@ -97,48 +97,19 @@ return new class extends AbstractTimestampedMigration {
     }
 
     /**
-     * Orders are found by the order data key alone, which is enough: PdkOrderRepository writes an order's
-     * own options and its shipments in one update, so an order holding shipments holds order data too.
+     * Product settings and stored order data are one record each, so converting them all inline would
+     * time out a large shop. Each pass is started once here and then keeps itself going until its
+     * query runs out of records.
+     *
+     * NoTrackingChunkMigrator owns those queries rather than this migration, because a later run has
+     * to be able to find its own work: an anonymous migration class cannot be a cron callback.
      */
-    private function scheduleOrders(): void
+    private function scheduleConversionPasses(): void
     {
-        /** @var PagedMigrationService $pagedMigrationService */
-        $pagedMigrationService = Pdk::get(PagedMigrationService::class);
+        /** @var CronServiceInterface $cronService */
+        $cronService = Pdk::get(CronServiceInterface::class);
 
-        $pagedMigrationService->schedulePages(
-            Pdk::get('migrateAction_NoTracking_Orders'),
-            static function (int $page, int $pageSize): array {
-                return wc_get_orders([
-                    'limit'        => $pageSize,
-                    'paged'        => $page,
-                    'meta_key'     => Pdk::get('metaKeyOrderData'),
-                    'meta_compare' => 'EXISTS',
-                    'return'       => 'ids',
-                ]);
-            }
-        );
-    }
-
-    /**
-     * Product settings are stored per product, so converting every one inline would time out a large
-     * shop. Each chunk is handed to a registered action instead.
-     */
-    private function scheduleProductSettings(): void
-    {
-        /** @var PagedMigrationService $pagedMigrationService */
-        $pagedMigrationService = Pdk::get(PagedMigrationService::class);
-
-        $pagedMigrationService->schedulePages(
-            Pdk::get('migrateAction_NoTracking_ProductSettings'),
-            static function (int $page, int $pageSize): array {
-                return wc_get_products([
-                    'limit'        => $pageSize,
-                    'page'         => $page,
-                    'meta_key'     => Pdk::get('metaKeyProductSettings'),
-                    'meta_compare' => 'EXISTS',
-                    'return'       => 'ids',
-                ]);
-            }
-        );
+        $cronService->schedule(Pdk::get('migrateAction_NoTracking_ProductSettings'), time());
+        $cronService->schedule(Pdk::get('migrateAction_NoTracking_Orders'), time());
     }
 };

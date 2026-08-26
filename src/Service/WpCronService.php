@@ -5,11 +5,17 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Service;
 
 use InvalidArgumentException;
+use RuntimeException;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
 
 class WpCronService implements CronServiceInterface
 {
+    /**
+     * The code wp_schedule_single_event() reports when an identical event is already waiting.
+     */
+    private const DUPLICATE_EVENT_CODE = 'duplicate_event';
+
     /**
      * @param  callable|string|callable-string $callback
      * @param                                  ...$args
@@ -32,6 +38,7 @@ class WpCronService implements CronServiceInterface
      * @param                                  ...$args
      *
      * @return void
+     * @throws \RuntimeException When WordPress refused to schedule the event.
      * @throws \Exception
      */
     public function schedule($callback, int $timestamp, ...$args): void
@@ -44,7 +51,24 @@ class WpCronService implements CronServiceInterface
             update_option(Pdk::get('webhookAddActions'), $this->getActions($callback, $hook));
         }
 
-        wp_schedule_single_event($timestamp, $hook, $args);
+        $result = wp_schedule_single_event($timestamp, $hook, $args, true);
+
+        // An identical event that is still waiting is the outcome the caller asked for, so it is not
+        // a failure. Reporting it as one would keep a migration retrying work it already queued.
+        if (is_wp_error($result) && self::DUPLICATE_EVENT_CODE === $result->get_error_code()) {
+            return;
+        }
+
+        if (is_wp_error($result)) {
+            throw new RuntimeException(
+                sprintf('Could not schedule "%s": %s', $hook, $result->get_error_message())
+            );
+        }
+
+        // A filter can refuse an event by returning false, without saying why.
+        if (false === $result) {
+            throw new RuntimeException(sprintf('Could not schedule "%s".', $hook));
+        }
     }
 
     /**
