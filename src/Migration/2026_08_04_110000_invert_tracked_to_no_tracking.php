@@ -19,6 +19,15 @@ use MyParcelNL\WooCommerce\Migration\NoTrackingChunkMigrator;
  *
  * Only the carrier settings are converted here, because they are a single stored record. Product
  * settings and stored order data are converted per record in scheduled chunks.
+ *
+ * Trashed products and orders are left alone. Neither wc_get_products() nor wc_get_orders() documents
+ * a way to include them, and reaching around those APIs is what WooCommerce warns against. A record
+ * restored from trash keeps the old key, which reads as "not set" rather than as the wrong choice.
+ *
+ * Variations are converted through their parent, because the page holds only products that carry the
+ * settings key themselves. A variation whose parent has no settings record is therefore not converted.
+ * Saving a variable product in the admin writes a parent record, so reaching that case needs a
+ * variation that got its settings another way, such as an import.
  */
 return new class extends AbstractTimestampedMigration {
     public function up(): void

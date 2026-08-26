@@ -10,6 +10,7 @@ use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
 use Throwable;
+use WC_Product;
 
 /**
  * Flips the tracking option on the records the migration converts in scheduled chunks.
@@ -225,10 +226,13 @@ class NoTrackingChunkMigrator
     }
 
     /**
-     * Saving rewrites the whole settings record from the model, which no longer knows the old key, so a
-     * second run over the same product is a no-op rather than a second flip.
+     * Converts a product and every variation under it.
      *
-     * @return bool Whether the product held an old value that was converted
+     * A variation holds its own product settings, and a page of products holds the parents only:
+     * wc_get_products() cannot return variations, because 'variation' is not one of the product types
+     * it documents. ProductSettingsMigration reaches them the same way.
+     *
+     * @return bool Whether the product or any of its variations held an old value that was converted
      */
     private function migrateProduct(int $productId): bool
     {
@@ -238,6 +242,27 @@ class NoTrackingChunkMigrator
             return false;
         }
 
+        $converted = $this->convertStoredSettings($wcProduct);
+
+        foreach ($wcProduct->get_children() as $childId) {
+            $child = wc_get_product($childId);
+
+            if ($child) {
+                $converted = $this->convertStoredSettings($child) || $converted;
+            }
+        }
+
+        return $converted;
+    }
+
+    /**
+     * Saving rewrites the whole settings record from the model, which no longer knows the old key, so a
+     * second run over the same record is a no-op rather than a second flip.
+     *
+     * @return bool Whether the record held an old value that was converted
+     */
+    private function convertStoredSettings(WC_Product $wcProduct): bool
+    {
         // Read the raw meta rather than the settings model: the model's attributes come from the option
         // definitions, which no longer include the old key, so it cannot report the stored value.
         $stored = $wcProduct->get_meta(Pdk::get('metaKeyProductSettings'));
@@ -246,7 +271,7 @@ class NoTrackingChunkMigrator
             return false;
         }
 
-        $product = $this->productRepository->getProduct($productId);
+        $product = $this->productRepository->getProduct($wcProduct->get_id());
 
         $product->settings->setAttribute(
             $this->productSettingsKey,

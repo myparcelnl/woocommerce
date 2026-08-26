@@ -327,3 +327,33 @@ it('keeps converting the rest of the chunk when one order cannot be saved', func
     expect(readOrderMeta($goodId, 'metaKeyOrderData')['deliveryOptions']['shipmentOptions']['noTracking'])
         ->toBe(TriStateService::DISABLED);
 });
+
+it('converts the settings stored on a variation', function () {
+    // A page of products holds the parents only, so the chunk has to reach the variations itself.
+    // wc_get_products() cannot return them: 'variation' is not a documented product type.
+    wpFactory(WC_Product::class)
+        ->withId(8101)
+        ->withChildren([8102])
+        ->withMeta([Pdk::get('metaKeyProductSettings') => []])
+        ->make();
+
+    givenProductWithStoredSettings(8102, [NoTrackingChunkMigrator::LEGACY_TRACKED_KEY => TriStateService::ENABLED]);
+
+    migrateProductChunk([8101]);
+
+    expect(storedNoTracking(8102))->toBe(TriStateService::DISABLED);
+});
+
+it('leaves a variation that never stored the option alone', function () {
+    wpFactory(WC_Product::class)
+        ->withId(8111)
+        ->withChildren([8112])
+        ->withMeta([Pdk::get('metaKeyProductSettings') => []])
+        ->make();
+
+    givenProductWithStoredSettings(8112, ['exportSignature' => TriStateService::ENABLED]);
+
+    migrateProductChunk([8111]);
+
+    expect(storedNoTracking(8112))->toBe(TriStateService::INHERIT);
+});
