@@ -49,9 +49,11 @@ final class MyParcelNLWooCommerce
         add_action('init', [$this, 'initialize'], 9999);
         /**
          * Since wordpress 3.1 register_activation_hook is not called when a plugin is updated.
-         * The 'woocommerce_init' action may run before 'init' or 'wp_loaded' so we register our upgrade here to run before our own "onInit" action runs.
+         * WooCommerce registers its post types and taxonomies on 'init' priority 5 and its order
+         * statuses on priority 9, and migrations query orders and products, so the upgrade runs
+         * after both. It stays before our own 'init' hooks on 9999.
          */
-        add_action('woocommerce_init', [$this, 'upgrade'], 9998);
+        add_action('init', [$this, 'upgrade'], 9998);
 
         if (!$this->getApiKey()) {
             return;
@@ -109,6 +111,11 @@ final class MyParcelNLWooCommerce
      */
     public function upgrade(): void
     {
+        // 'init' fires whether or not WooCommerce is there, unlike the 'woocommerce_init' this used to run on.
+        if (! WooCommerce::isActive()) {
+            return;
+        }
+
         // The install function will check whether we are installing a new plugin or upgrading an existing one and run the appropiate migrations.
         Installer::install();
     }

@@ -6,9 +6,7 @@
         "MyParcelNLWooCommerce::install"
     ],
     "init": [
+        "MyParcelNLWooCommerce::upgrade",
         "MyParcelNLWooCommerce::initialize"
-    ],
-    "woocommerce_init": [
-        "MyParcelNLWooCommerce::upgrade"
     ]
 }
