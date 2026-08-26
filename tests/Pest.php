@@ -11,6 +11,7 @@ namespace MyParcelNL\WooCommerce\Tests;
  */
 
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcData;
+use MyParcelNL\WooCommerce\Tests\Mock\MockQueries;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkBootstrapper;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcSession;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcShipping;
@@ -34,6 +35,7 @@ uses()
          */
         $resetInterfaces = [
             MockWcData::class,
+            MockQueries::class,
             MockWcPdkBootstrapper::class,
             MockWcSession::class,
             MockWcShipping::class,

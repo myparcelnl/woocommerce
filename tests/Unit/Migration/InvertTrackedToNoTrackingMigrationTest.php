@@ -11,6 +11,7 @@ use MyParcelNL\Pdk\App\Options\Definition\NoTrackingDefinition;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
+use MyParcelNL\WooCommerce\Migration\NoTrackingChunkMigrator;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use RuntimeException;
@@ -235,4 +236,37 @@ it('schedules the product and order passes when the carrier settings hold no old
     loadInvertMigration()->up();
 
     expectBothPassesScheduled();
+});
+
+
+it('starts each pass once instead of one task per page', function () {
+    // The passes keep themselves going, so the migration only has to start them. One task each, no
+    // frozen list of ids.
+    givenRecordsToPageOver();
+
+    loadInvertMigration()->up();
+
+    /** @var WordPressScheduledTasks $tasks */
+    $tasks = Pdk::get(WordPressScheduledTasks::class);
+
+    expect($tasks->all())->toHaveCount(2)
+        ->and(scheduledMigrationCallbacks())->toContain(
+            Pdk::get('migrateAction_NoTracking_ProductSettings'),
+            Pdk::get('migrateAction_NoTracking_Orders')
+        );
+});
+
+it('reports failure when the chunks could not be scheduled', function () {
+    // The migration is only done once the work is queued. If scheduling was refused, nothing would
+    // ever convert the records, so it has to stay pending instead of recording itself as applied.
+    givenRecordsToPageOver();
+
+    /** @var WordPressScheduledTasks $tasks */
+    $tasks = Pdk::get(WordPressScheduledTasks::class);
+    $tasks->failWith('invalid_timestamp');
+
+    $migration = loadInvertMigration();
+    $migration->up();
+
+    expect($migration->hasFailed())->toBeTrue();
 });

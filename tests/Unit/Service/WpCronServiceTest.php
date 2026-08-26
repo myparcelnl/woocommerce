@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Service;
 
 use InvalidArgumentException;
+use RuntimeException;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Tests\Mock\MockCallableClass;
@@ -71,3 +72,32 @@ it('throws exception when input is not a string or array', function () {
 
     update_option(Pdk::get('webhookAddActions'), []);
 })->throws(InvalidArgumentException::class);
+
+it('reports a scheduling failure instead of passing it over in silence', function () {
+    // wp_schedule_single_event() returns false or a WP_Error when it refuses an event. A caller that
+    // ignores that thinks work is queued when nothing is.
+    /** @var WordPressScheduledTasks $tasks */
+    $tasks = Pdk::get(WordPressScheduledTasks::class);
+    $tasks->failWith('invalid_timestamp');
+
+    /** @var CronServiceInterface $cronService */
+    $cronService = Pdk::get(CronServiceInterface::class);
+
+    expect(static function () use ($cronService) {
+        $cronService->schedule('some_action', time() + 1000, ['ids' => [1]]);
+    })->toThrow(RuntimeException::class);
+});
+
+it('accepts a duplicate event, because the work is already queued', function () {
+    // An identical event still waiting is the same outcome the caller wanted, so it is not a failure.
+    /** @var WordPressScheduledTasks $tasks */
+    $tasks = Pdk::get(WordPressScheduledTasks::class);
+    $tasks->failWith('duplicate_event');
+
+    /** @var CronServiceInterface $cronService */
+    $cronService = Pdk::get(CronServiceInterface::class);
+
+    $cronService->schedule('some_action', time() + 1000, ['ids' => [1]]);
+
+    expect($tasks->all())->toBeEmpty();
+});
