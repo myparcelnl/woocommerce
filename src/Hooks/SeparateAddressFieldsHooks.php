@@ -447,8 +447,7 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
      */
     private function extendWithSeparateAddressFields(array $fields, string $form): array
     {
-        return array_merge(
-            $fields,
+        $separateAddressFields = array_merge(
             $this->createField($form, 'fieldStreet', 'street'),
             $this->createField($form, 'fieldNumber', 'number', ['type' => 'number']),
             $this->createField(
@@ -458,5 +457,18 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
                 ['maxlength' => Pdk::get('numberSuffixMaxLength')]
             )
         );
+
+        /**
+         * WooCommerce applies the country locale (which carries `required`/`hidden`, see
+         * extendLocaleWithSeparateAddressFields) BEFORE this filter runs. Merge with the existing
+         * definitions so those values survive; replacing them wholesale disabled the server-side
+         * required validation of street and house number (#1805). Our attributes stay leading on
+         * conflicts, so the field customization filters keep working as before.
+         */
+        foreach ($separateAddressFields as $key => $attributes) {
+            $fields[$key] = array_merge($fields[$key] ?? [], $attributes);
+        }
+
+        return $fields;
     }
 }
