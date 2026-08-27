@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.9.2](https://github.com/myparcelnl/woocommerce/compare/v6.9.1...v6.9.2) (2026-08-27)
+
+
+### :bug: Bug Fixes
+
+* **checkout:** preserve unique hidden form fields ([#1807](https://github.com/myparcelnl/woocommerce/issues/1807)) ([3e363b6](https://github.com/myparcelnl/woocommerce/commit/3e363b641597ae8a4cde7d36a702aecb9fe412d6))
+
 ## [6.9.1](https://github.com/myparcelnl/woocommerce/compare/v6.9.0...v6.9.1) (2026-08-25)
 
 
