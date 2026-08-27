@@ -134,6 +134,33 @@ describe('getClassicCheckoutConfig - getFormData', () => {
     expect(getFormData()['billing_postcode']).toBe('1234AB');
   });
 
+  it('keeps a unique field hidden by the address widget', () => {
+    document.body.innerHTML = `
+      <form name="checkout" class="checkout woocommerce-checkout">
+        <p id="billing_postcode_field" style="display:none">
+          <input type="text" name="billing_postcode" value="1502VP" />
+        </p>
+      </form>
+    `;
+
+    expect(getFormData()['billing_postcode']).toBe('1502VP');
+  });
+
+  it('ignores a checked hidden checkbox when a visible unchecked duplicate exists', () => {
+    document.body.innerHTML = `
+      <form name="checkout">
+        <input type="checkbox" name="ship_to_different_address" value="1" />
+      </form>
+      <form name="checkout">
+        <div style="display:none">
+          <input type="checkbox" name="ship_to_different_address" value="1" checked />
+        </div>
+      </form>
+    `;
+
+    expect(getFormData()['ship_to_different_address']).toBeUndefined();
+  });
+
   it('keeps a shipping method WooCommerce renders as a single hidden input', () => {
     // A single shipping method renders as <input type=hidden name=shipping_method[0]> — display:none
     // via the UA stylesheet (set explicitly here; happy-dom doesn't apply that rule). It carries a real

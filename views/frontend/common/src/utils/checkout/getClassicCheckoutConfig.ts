@@ -80,30 +80,44 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
       },
 
       getFormData() {
-        return getCheckoutForms().reduce<Record<string, FormDataEntryValue>>((merged, form) => {
-          // Divi's hidden duplicate billing fieldset isn't disabled, so FormData includes it and, being
-          // later in DOM order, would clobber live values. Skip names inside a display:none container,
-          // but keep self-hidden real inputs like `shipping_method[0]`. form.elements avoids escaping.
+        const visibleNames = new Set<string>();
+        const formStates = getCheckoutForms().map((form) => {
           const hiddenNames = new Set<string>();
 
-          for (const control of Array.from(form.elements)) {
+          for (const control of form.elements) {
             const name = control.getAttribute('name');
 
-            if (name && isInHiddenContainer(control)) {
-              hiddenNames.add(name);
-            }
-          }
-
-          for (const [key, value] of new FormData(form).entries()) {
-            if (hiddenNames.has(key)) {
+            if (!name) {
               continue;
             }
 
-            merged[key] = value;
+            if (isInHiddenContainer(control)) {
+              hiddenNames.add(name);
+            } else {
+              visibleNames.add(name);
+            }
           }
 
-          return merged;
-        }, {});
+          return {form, hiddenNames};
+        });
+
+        // Visible names are global because Divi puts duplicate fields in separate forms. Hidden names
+        // stay scoped to their form, so only the hidden duplicate is skipped. Unique hidden fields are
+        // valid form values and remain in the merged data.
+        return formStates.reduce<Record<string, FormDataEntryValue>>(
+          (merged, {form, hiddenNames}) => {
+            for (const [key, value] of new FormData(form).entries()) {
+              if (hiddenNames.has(key) && visibleNames.has(key)) {
+                continue;
+              }
+
+              merged[key] = value;
+            }
+
+            return merged;
+          },
+          {},
+        );
       },
 
       // The value js-pdk passes lags one form-read behind and omits an unchecked box; read the live DOM.
