@@ -11,7 +11,7 @@
   // Increase the width of the MyParcel column in the orders list.
   // Default is 12ch and causes the shipment buttons to float outside the column.
   // 23ch comfortably fits a 15-character barcode.
-  .wp-list-table .column-myparcelnl {
+  .wp-list-table .column-myparcelcom {
     @apply mypa-w-[23ch];
 
     .postbox .inside {
