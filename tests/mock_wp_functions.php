@@ -112,6 +112,12 @@ function add_filter($tag, $functionToAdd, $priority = 10, $acceptedArgs = 1)
     MockWpActions::add($tag, $functionToAdd, $priority, $acceptedArgs);
 }
 
+/**@see \remove_filter() */
+function remove_filter($tag, $functionToRemove, $priority = 10)
+{
+    MockWpActions::remove($tag, $functionToRemove, $priority);
+}
+
 /**@see \add_action() */
 function add_action($tag, $functionToAdd, $priority = 10, $acceptedArgs = 1)
 {
