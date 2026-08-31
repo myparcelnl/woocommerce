@@ -447,8 +447,7 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
      */
     private function extendWithSeparateAddressFields(array $fields, string $form): array
     {
-        return array_merge(
-            $fields,
+        $separateAddressFields = array_merge(
             $this->createField($form, 'fieldStreet', 'street'),
             $this->createField($form, 'fieldNumber', 'number', ['type' => 'number']),
             $this->createField(
@@ -458,5 +457,19 @@ class SeparateAddressFieldsHooks extends AbstractFieldsHooks implements WooComme
                 ['maxlength' => Pdk::get('numberSuffixMaxLength')]
             )
         );
+
+        /**
+         * The separate address fields already exist in $fields at this point: they are added
+         * through woocommerce_default_address_fields and modified per country through
+         * woocommerce_get_country_locale, which sets 'required' and 'hidden'. Replacing the
+         * whole field definition here would drop those properties, causing street and number
+         * to render as "(optional)" and skip checkout validation for NL/BE. So merge our
+         * definition underneath the existing one instead of on top of it.
+         */
+        foreach ($separateAddressFields as $key => $field) {
+            $fields[$key] = array_merge($field, $fields[$key] ?? []);
+        }
+
+        return $fields;
     }
 }
