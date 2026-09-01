@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.9.3](https://github.com/myparcelnl/woocommerce/compare/v6.9.2...v6.9.3) (2026-09-01)
+
+
+### :bug: Bug Fixes
+
+* **admin:** fix display of actions on the orders page ([#1810](https://github.com/myparcelnl/woocommerce/issues/1810)) ([a01c3fb](https://github.com/myparcelnl/woocommerce/commit/a01c3fbc09c7d24be6339d534266ec98e994abbb))
+* **checkout:** enforce required validation of separate address fields ([#1808](https://github.com/myparcelnl/woocommerce/issues/1808)) ([127f397](https://github.com/myparcelnl/woocommerce/commit/127f3974cd48240b9de8b2118b9140ec73bc0053))
+
 ## [6.9.2](https://github.com/myparcelnl/woocommerce/compare/v6.9.1...v6.9.2) (2026-08-27)
 
 
