@@ -170,6 +170,44 @@ it('keeps the contract id encoded in the legacy identifier', function () {
         ->and($migrated[0]['deliveryOptions']['contractId'])->toBe(42);
 });
 
+it('keeps the contract id encoded in the carrier-key array shape', function () {
+    $order = makeOrderWithMeta([
+        LEGACY_SHIPMENTS_KEY => [
+            [
+                'id'      => 224628800,
+                'barcode' => '3SMYPA402029015',
+                'carrier' => ['carrier' => 'postnl:42'],
+            ],
+        ],
+    ]);
+
+    loadLegacyOrderMetaMigration()->up();
+
+    $migrated = wc_get_order($order->get_id())->get_meta(CURRENT_SHIPMENTS_KEY);
+
+    expect($migrated[0]['carrier'])->toBe('POSTNL')
+        ->and($migrated[0]['contractId'])->toBe(42);
+});
+
+it('does not finalise an order whose carrier cannot be normalised', function () {
+    $order = makeOrderWithMeta([
+        LEGACY_SHIPMENTS_KEY => [
+            [
+                'id'      => 224628801,
+                'barcode' => '3SMYPA402029016',
+                'carrier' => ['id' => 999999],
+            ],
+        ],
+    ]);
+
+    loadLegacyOrderMetaMigration()->up();
+
+    $reloaded = wc_get_order($order->get_id());
+
+    expect($reloaded->meta_exists(CURRENT_SHIPMENTS_KEY))->toBeFalse()
+        ->and($reloaded->get_meta(LEGACY_SHIPMENTS_KEY))->toBeArray()->toHaveCount(1);
+});
+
 it('migrates valid orders that sit behind a full page of unusable ones', function () {
     // Enough broken records to fill more than one page. A run that stopped at the first page it
     // could not migrate would never reach the valid order behind them.
@@ -182,6 +220,26 @@ it('migrates valid orders that sit behind a full page of unusable ones', functio
     loadLegacyOrderMetaMigration()->up();
 
     expect(wc_get_order($valid->get_id())->get_meta(CURRENT_SHIPMENTS_KEY))->toBeArray()->toHaveCount(1);
+});
+
+it('bounds scanning empty records and resumes from the stored cursor', function () {
+    for ($i = 0; $i < 260; $i++) {
+        makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => []]);
+    }
+
+    $valid = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [legacyShipment()]]);
+
+    $first = loadLegacyOrderMetaMigration();
+    $first->up();
+
+    expect($first->hasFailed())->toBeTrue()
+        ->and(wc_get_order($valid->get_id())->meta_exists(CURRENT_SHIPMENTS_KEY))->toBeFalse();
+
+    $second = loadLegacyOrderMetaMigration();
+    $second->up();
+
+    expect($second->hasFailed())->toBeFalse()
+        ->and(wc_get_order($valid->get_id())->get_meta(CURRENT_SHIPMENTS_KEY))->toBeArray()->toHaveCount(1);
 });
 
 it('bounds a single run and resumes on the next one', function () {

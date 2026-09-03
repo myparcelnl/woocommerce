@@ -31,14 +31,13 @@ return new class extends AbstractTimestampedMigration {
      */
     private const META_KEYS = ['order_shipments', 'order_data'];
 
-    /**
-     * Bounds a single run. When more work remains the migration reports failure, which leaves it
-     * unrecorded so the installer picks it up again on the next load and continues where it
-     * stopped.
-     */
-    private const MAX_ORDERS_PER_RUN = 250;
-
     private const PAGE_SIZE = 50;
+
+    /**
+     * Bounds both reads and writes to at most five pages per request. Counting pages instead of
+     * successful migrations also bounds a shop that has many empty or malformed legacy values.
+     */
+    private const MAX_PAGES_PER_RUN = 5;
 
     /**
      * Remembers the page each key pair reached, so a resumed run does not walk the orders it
@@ -51,6 +50,16 @@ return new class extends AbstractTimestampedMigration {
      * @var int
      */
     private $migrated = 0;
+
+    /**
+     * @var int
+     */
+    private $scanned = 0;
+
+    /**
+     * @var int
+     */
+    private $pagesScanned = 0;
 
     public function up(): void
     {
@@ -65,6 +74,7 @@ return new class extends AbstractTimestampedMigration {
                 if (! $done) {
                     $this->markFailed('Legacy order meta remains; continuing on the next run.', [
                         'migratedThisRun' => $this->migrated,
+                        'scannedThisRun'  => $this->scanned,
                     ]);
 
                     return;
@@ -78,7 +88,7 @@ return new class extends AbstractTimestampedMigration {
     /**
      * Walks the orders holding this legacy key page by page. The page always advances, so orders
      * that cannot be migrated - an empty or malformed legacy value - never block the ones behind
-     * them. Only successful migrations count towards the run limit.
+     * them. Scanned pages count towards the run limit, whether their orders migrate or not.
      *
      * @return bool False when the run limit was reached before finishing this key.
      */
@@ -104,10 +114,11 @@ return new class extends AbstractTimestampedMigration {
             }
 
             $page++;
+            $this->pagesScanned++;
+            $this->scanned += count($orderIds);
+            $this->setCursor($legacyKey, $page);
 
-            if ($this->migrated >= self::MAX_ORDERS_PER_RUN) {
-                $this->setCursor($legacyKey, $page);
-
+            if ($this->pagesScanned >= self::MAX_PAGES_PER_RUN) {
                 return false;
             }
         }
@@ -172,7 +183,18 @@ return new class extends AbstractTimestampedMigration {
             return false;
         }
 
-        $order->update_meta_data($currentKey, $this->normalize($value, $currentKey));
+        $normalized = $this->normalize($value, $currentKey);
+
+        if (null === $normalized) {
+            Logger::warning('Skipped legacy order meta with an unsupported carrier.', [
+                'orderId' => $orderId,
+                'from'    => $legacyKey,
+            ]);
+
+            return false;
+        }
+
+        $order->update_meta_data($currentKey, $normalized);
         $order->save();
 
         Logger::debug('Migrated legacy order meta', [
@@ -192,14 +214,20 @@ return new class extends AbstractTimestampedMigration {
      * @param  array  $value
      * @param  string $currentKey
      *
-     * @return array
+     * @return null|array Null when at least one stored carrier cannot be safely normalised.
      */
-    private function normalize(array $value, string $currentKey): array
+    private function normalize(array $value, string $currentKey): ?array
     {
         if (self::CURRENT_PREFIX . 'order_shipments' === $currentKey) {
             foreach ($value as $index => $shipment) {
                 if (is_array($shipment)) {
-                    $value[$index] = $this->normalizeCarriers($shipment);
+                    $normalized = $this->normalizeCarriers($shipment);
+
+                    if (null === $normalized) {
+                        return null;
+                    }
+
+                    $value[$index] = $normalized;
                 }
             }
 
@@ -214,14 +242,22 @@ return new class extends AbstractTimestampedMigration {
      *
      * @param  array $record
      *
-     * @return array
+     * @return null|array Null when a stored carrier cannot be safely normalised.
      */
-    private function normalizeCarriers(array $record): array
+    private function normalizeCarriers(array $record): ?array
     {
         $record = $this->normalizeCarrierOn($record);
 
+        if (null === $record) {
+            return null;
+        }
+
         if (isset($record['deliveryOptions']) && is_array($record['deliveryOptions'])) {
             $record['deliveryOptions'] = $this->normalizeCarrierOn($record['deliveryOptions']);
+
+            if (null === $record['deliveryOptions']) {
+                return null;
+            }
         }
 
         return $record;
@@ -234,21 +270,28 @@ return new class extends AbstractTimestampedMigration {
      *
      * @param  array $record
      *
-     * @return array
+     * @return null|array Null when a non-empty carrier value cannot be safely normalised.
      */
-    private function normalizeCarrierOn(array $record): array
+    private function normalizeCarrierOn(array $record): ?array
     {
         if (! array_key_exists('carrier', $record)) {
             return $record;
         }
 
-        $name = $this->toCarrierName($record['carrier']);
+        $carrier = $record['carrier'];
 
-        if (null === $name) {
+        // A missing carrier intentionally falls back to the shop default at runtime.
+        if (null === $carrier || '' === $carrier || [] === $carrier) {
             return $record;
         }
 
-        $contractId = $this->toContractId($record['carrier']);
+        $name = $this->toCarrierName($carrier);
+
+        if (null === $name || ! Carrier::isSupported($name)) {
+            return null;
+        }
+
+        $contractId = $this->toContractId($carrier);
 
         if (null !== $contractId && ! isset($record['contractId'])) {
             $record['contractId'] = $contractId;
@@ -303,11 +346,13 @@ return new class extends AbstractTimestampedMigration {
     private function toContractId($carrier): ?int
     {
         if (is_array($carrier)) {
-            if (isset($carrier['contractId']) && is_numeric($carrier['contractId'])) {
-                return (int) $carrier['contractId'];
+            $storedContractId = $carrier['contractId'] ?? ($carrier['contract_id'] ?? null);
+
+            if (is_numeric($storedContractId)) {
+                return (int) $storedContractId;
             }
 
-            $raw = $carrier['externalIdentifier'] ?? null;
+            $raw = $carrier['externalIdentifier'] ?? ($carrier['carrier'] ?? null);
         } else {
             $raw = $carrier;
         }
