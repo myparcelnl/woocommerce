@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use MyParcelNL\Pdk\App\Installer\Migration\AbstractTimestampedMigration;
-use MyParcelNL\Pdk\Carrier\Contract\CarrierRepositoryInterface;
+use MyParcelNL\Pdk\Carrier\Model\Carrier;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
 
@@ -46,14 +46,21 @@ return new class extends AbstractTimestampedMigration {
             return;
         }
 
-        $batch = array_slice($orderIds, 0, self::MAX_ORDERS_PER_RUN);
-
         /** @var OrdersMigration $ordersMigration */
         $ordersMigration = Pdk::get(OrdersMigration::class);
+        $converted       = 0;
 
         // One order at a time: the conversion writes the order itself, so finishing each one before
         // starting the next keeps at most a single order half-converted if the run is interrupted.
-        foreach ($batch as $orderId) {
+        foreach ($orderIds as $orderId) {
+            $order = wc_get_order($orderId);
+
+            // An empty legacy value holds nothing to convert. Skipping leaves the order in the
+            // query, which is why a run that converts nothing must not ask for another one.
+            if (! $order || ! $order->get_meta(self::LEGACY_SHIPMENTS_KEY)) {
+                continue;
+            }
+
             $ordersMigration->migrateOrder([
                 'orderIds'  => [$orderId],
                 'chunk'     => 1,
@@ -61,12 +68,12 @@ return new class extends AbstractTimestampedMigration {
             ]);
 
             $this->resolveCarrierIds($orderId);
+            $converted++;
         }
 
-        if (count($orderIds) > count($batch)) {
+        if ($converted > 0 && count($orderIds) >= self::MAX_ORDERS_PER_RUN) {
             $this->markFailed('More orders with 4.x shipments remain; continuing on the next run.', [
-                'migratedThisRun' => count($batch),
-                'remaining'       => count($orderIds) - count($batch),
+                'migratedThisRun' => $converted,
             ]);
         }
     }
@@ -91,9 +98,7 @@ return new class extends AbstractTimestampedMigration {
             return;
         }
 
-        /** @var CarrierRepositoryInterface $carrierRepository */
-        $carrierRepository = Pdk::get(CarrierRepositoryInterface::class);
-        $changed           = false;
+        $changed = false;
 
         foreach ($shipments as $index => $shipment) {
             $legacyId = is_array($shipment) && is_array($shipment['carrier'] ?? null)
@@ -104,13 +109,16 @@ return new class extends AbstractTimestampedMigration {
                 continue;
             }
 
-            $carrier = $carrierRepository->findByLegacyId((int) $legacyId);
+            // The static map, not the carrier repository: that repository reads the carriers stored
+            // on the account, which an account refresh can leave empty, and a migration must not
+            // depend on it.
+            $carrierName = Carrier::v2NameFromLegacyId((int) $legacyId);
 
-            if (! $carrier) {
+            if (! $carrierName) {
                 continue;
             }
 
-            $shipments[$index]['carrier'] = $carrier->carrier;
+            $shipments[$index]['carrier'] = $carrierName;
             $changed                      = true;
         }
 
@@ -121,60 +129,48 @@ return new class extends AbstractTimestampedMigration {
     }
 
     /**
-     * Orders that still hold 4.x shipments and have no current data that would be overwritten.
+     * One page of orders that still hold 4.x shipments and have no current data that would be
+     * overwritten. Both conditions live in the query: excluding the current keys is what keeps the
+     * result set shrinking as orders are converted, and it avoids loading every order into memory.
+     *
+     * A present but empty current key counts as data - it was cleared on purpose - which is exactly
+     * what NOT EXISTS expresses.
      *
      * @return int[]
      */
     private function getConvertibleOrderIds(): array
     {
-        $orders = wc_get_orders([
-            'limit'      => -1,
-            'status'     => 'any',
-            'meta_query' => [
-                [
-                    'key'     => self::LEGACY_SHIPMENTS_KEY,
-                    'compare' => 'EXISTS',
-                ],
+        $metaQuery = [
+            'relation' => 'AND',
+            [
+                'key'     => self::LEGACY_SHIPMENTS_KEY,
+                'compare' => 'EXISTS',
             ],
+        ];
+
+        foreach (self::CURRENT_KEYS as $currentKey) {
+            $metaQuery[] = [
+                'key'     => $currentKey,
+                'compare' => 'NOT EXISTS',
+            ];
+        }
+
+        $orderIds = wc_get_orders([
+            'limit'      => self::MAX_ORDERS_PER_RUN,
+            'return'     => 'ids',
+            'status'     => 'any',
+            'orderby'    => 'ID',
+            'order'      => 'ASC',
+            'meta_query' => $metaQuery,
         ]);
 
-        if (! is_array($orders)) {
+        if (! is_array($orderIds)) {
             return [];
         }
 
-        $orderIds = [];
-
-        foreach ($orders as $order) {
-            $order = is_object($order) && method_exists($order, 'get_id')
-                ? $order
-                : wc_get_order((int) $order);
-
-            if (! $order || ! $order->get_meta(self::LEGACY_SHIPMENTS_KEY)) {
-                continue;
-            }
-
-            if ($this->hasCurrentData($order)) {
-                continue;
-            }
-
-            $orderIds[] = (int) $order->get_id();
-        }
-
-        return $orderIds;
-    }
-
-    /**
-     * @param  \WC_Order $order
-     */
-    private function hasCurrentData($order): bool
-    {
-        foreach (self::CURRENT_KEYS as $key) {
-            // Present but empty still counts: that data was cleared on purpose.
-            if ($order->meta_exists($key)) {
-                return true;
-            }
-        }
-
-        return false;
+        // 'return' => 'ids' yields ids, but not every data store honours it; accept orders too.
+        return array_map(static function ($order): int {
+            return is_object($order) && method_exists($order, 'get_id') ? (int) $order->get_id() : (int) $order;
+        }, $orderIds);
     }
 };
