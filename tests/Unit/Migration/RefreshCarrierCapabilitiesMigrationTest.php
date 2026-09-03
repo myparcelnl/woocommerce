@@ -8,22 +8,25 @@ namespace MyParcelNL\WooCommerce\Migration;
 
 use MyParcelNL\Pdk\App\Account\Contract\PdkAccountRepositoryInterface;
 use MyParcelNL\Pdk\App\Installer\Contract\TimestampedMigrationInterface;
+use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Carrier\Collection\CarrierCollection;
 use MyParcelNL\Pdk\Carrier\Repository\CarrierCapabilitiesRepository;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\SdkApi\Service\CoreApi\Shipment\CapabilitiesService;
+use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
 use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
 use MyParcelNL\Pdk\Tests\Api\Response\ExampleGetAccountsResponse;
 use MyParcelNL\Pdk\Tests\Bootstrap\MockApi;
 use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
 use MyParcelNL\Pdk\Tests\SdkApi\MockSdkApiHandler;
 use MyParcelNL\Pdk\Tests\SdkApi\Response\ExampleContractDefinitionsResponse;
+use MyParcelNL\Pdk\Tests\Uses\UsesSdkApiMock;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use RuntimeException;
 use function MyParcelNL\Pdk\Tests\mockPdkProperties;
 use function MyParcelNL\Pdk\Tests\usesShared;
 
-usesShared(new UsesMockWcPdkInstance());
+usesShared(new UsesMockWcPdkInstance(), new UsesSdkApiMock());
 
 /**
  * Loads the migration the same way the installer does: require the file and take the
@@ -49,18 +52,57 @@ it('skips without failing when no account or shop is available', function () {
     /** @var PdkAccountRepositoryInterface $accountRepo */
     $accountRepo = Pdk::get(PdkAccountRepositoryInterface::class);
 
-    // No account configured, so a forced refresh returns null. Skipping beats fataling:
-    // a fresh install has nothing to refresh.
+    // A fresh install has no stored account to refresh.
     loadRefreshCarrierCapabilitiesMigration()->up();
 
     expect($accountRepo->getAccount())->toBeNull();
 });
 
+it('skips without failing when the api key is invalid', function () {
+    TestBootstrapper::hasAccount();
+
+    /** @var PdkSettingsRepositoryInterface $settingsRepository */
+    $settingsRepository            = Pdk::get(PdkSettingsRepositoryInterface::class);
+    $accountSettings               = $settingsRepository->all()->account;
+    $accountSettings->apiKeyValid = false;
+    $settingsRepository->storeSettings($accountSettings);
+
+    $migration = loadRefreshCarrierCapabilitiesMigration();
+    $migration->up();
+
+    expect($migration->hasFailed())->toBeFalse();
+});
+
+it('preserves local account data while refreshing carrier capabilities', function () {
+    TestBootstrapper::hasAccount();
+
+    /** @var PdkAccountRepositoryInterface $accountRepo */
+    $accountRepo = Pdk::get(PdkAccountRepositoryInterface::class);
+    $account     = $accountRepo->getAccount();
+    $shop        = $account->shops->first();
+
+    $shop->defaultCarrier          = 'DHL_FOR_YOU';
+    $account->subscriptionFeatures = new Collection(['some_feature']);
+    $accountRepo->store($account);
+
+    // A forced account refresh would consume this response and lose both local fields.
+    MockApi::enqueue(new ExampleGetAccountsResponse());
+    MockSdkApiHandler::enqueue(new ExampleContractDefinitionsResponse());
+
+    loadRefreshCarrierCapabilitiesMigration()->up();
+
+    $storedAccount = $accountRepo->getAccount();
+    $storedShop    = $storedAccount->shops->first();
+
+    expect($storedShop->defaultCarrier)->toBe('DHL_FOR_YOU')
+        ->and($storedAccount->subscriptionFeatures->toArray())->toBe(['some_feature'])
+        ->and($storedShop->carriers->first()->carrier)->toBe('POSTNL')
+        ->and($storedShop->carriers->contains('carrier', 'DHL_FOR_YOU'))->toBeTrue()
+        ->and(MockApi::getLastRequest())->toBeNull();
+});
+
 it('reports failure instead of throwing when fetching carrier definitions fails', function () {
     TestBootstrapper::hasAccount();
-    // The migration forces an account refresh before it gets as far as the carriers. Without a
-    // response queued that call throws, and the test would pass on the wrong exception.
-    MockApi::enqueue(new ExampleGetAccountsResponse());
 
     $throwingRepo = new class(
         Pdk::get(StorageInterface::class),
@@ -110,8 +152,6 @@ dataset('insurance shapes from the api', [
 
 it('stores only the flat insurance limits', function (array $insurance) {
     TestBootstrapper::hasAccount();
-    // The migration forces an account refresh, which calls the accounts endpoint.
-    MockApi::enqueue(new ExampleGetAccountsResponse());
     // Goes through the real CapabilitiesService and repository, so the nested wrapper is
     // dropped by the code that actually does it rather than by a stub.
     MockSdkApiHandler::enqueue(new ExampleContractDefinitionsResponse([

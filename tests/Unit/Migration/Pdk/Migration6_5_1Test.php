@@ -7,13 +7,19 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
 use MyParcelNL\Pdk\App\Account\Contract\PdkAccountRepositoryInterface;
+use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Carrier\Collection\CarrierCollection;
 use MyParcelNL\Pdk\Carrier\Repository\CarrierCapabilitiesRepository;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\SdkApi\Service\CoreApi\Shipment\CapabilitiesService;
 use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
 use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
+use MyParcelNL\Pdk\Tests\Api\Response\ExampleGetAccountsResponse;
+use MyParcelNL\Pdk\Tests\Bootstrap\MockApi;
 use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
+use MyParcelNL\Pdk\Tests\SdkApi\MockSdkApiHandler;
+use MyParcelNL\Pdk\Tests\SdkApi\Response\ExampleContractDefinitionsResponse;
+use MyParcelNL\Pdk\Tests\Uses\UsesSdkApiMock;
 use MyParcelNL\WooCommerce\Migration\Migration6_5_1;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
@@ -23,7 +29,7 @@ use function MyParcelNL\Pdk\Tests\mockPdkProperties;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function MyParcelNL\WooCommerce\Tests\createWcOrder;
 
-usesShared(new UsesMockWcPdkInstance());
+usesShared(new UsesMockWcPdkInstance(), new UsesSdkApiMock());
 
 // --- migrateAccountData (defensive) ---
 
@@ -39,6 +45,55 @@ it('does not fail account data migration when no account or shop is available', 
     $migration->migrateAccountData();
 
     expect($accountRepo->getAccount())->toBeNull();
+});
+
+it('skips account data migration when the api key is invalid', function () {
+    TestBootstrapper::hasAccount();
+
+    /** @var PdkSettingsRepositoryInterface $settingsRepository */
+    $settingsRepository            = Pdk::get(PdkSettingsRepositoryInterface::class);
+    $accountSettings               = $settingsRepository->all()->account;
+    $accountSettings->apiKeyValid = false;
+    $settingsRepository->storeSettings($accountSettings);
+
+    /** @var Migration6_5_1 $migration */
+    $migration = Pdk::get(Migration6_5_1::class);
+    $migration->migrateAccountData();
+
+    /** @var PdkAccountRepositoryInterface $accountRepository */
+    $accountRepository = Pdk::get(PdkAccountRepositoryInterface::class);
+
+    expect($accountRepository->getAccount())->not->toBeNull();
+});
+
+it('preserves local account data while refreshing carrier capabilities', function () {
+    TestBootstrapper::hasAccount();
+
+    /** @var PdkAccountRepositoryInterface $accountRepo */
+    $accountRepo = Pdk::get(PdkAccountRepositoryInterface::class);
+    $account     = $accountRepo->getAccount();
+    $shop        = $account->shops->first();
+
+    $shop->defaultCarrier          = 'DHL_FOR_YOU';
+    $account->subscriptionFeatures = new Collection(['some_feature']);
+    $accountRepo->store($account);
+
+    // A forced account refresh would consume this response and lose both local fields.
+    MockApi::enqueue(new ExampleGetAccountsResponse());
+    MockSdkApiHandler::enqueue(new ExampleContractDefinitionsResponse());
+
+    /** @var Migration6_5_1 $migration */
+    $migration = Pdk::get(Migration6_5_1::class);
+    $migration->migrateAccountData();
+
+    $storedAccount = $accountRepo->getAccount();
+    $storedShop    = $storedAccount->shops->first();
+
+    expect($storedShop->defaultCarrier)->toBe('DHL_FOR_YOU')
+        ->and($storedAccount->subscriptionFeatures->toArray())->toBe(['some_feature'])
+        ->and($storedShop->carriers->first()->carrier)->toBe('POSTNL')
+        ->and($storedShop->carriers->contains('carrier', 'DHL_FOR_YOU'))->toBeTrue()
+        ->and(MockApi::getLastRequest())->toBeNull();
 });
 
 it('rethrows when fetching carrier definitions fails so the migration retries', function () {

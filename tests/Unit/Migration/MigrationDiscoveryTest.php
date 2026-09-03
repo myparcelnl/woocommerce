@@ -35,5 +35,8 @@ it('keeps the timestamped migrations where the installer looks for them', functi
         }
     ));
 
-    expect($found)->toContain('2026_07_29_092726_refresh_carrier_capabilities.php');
+    expect($found)->toContain(
+        '2026_07_29_092726_refresh_carrier_capabilities.php',
+        '2026_09_03_130123_restore_account_data.php'
+    );
 });
