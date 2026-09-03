@@ -6975,9 +6975,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@semantic-release/release-notes-generator@npm:@myparcel-dev/semantic-release-release-notes-generator@^10.1.0":
-  version: 10.1.1
-  resolution: "@myparcel-dev/semantic-release-release-notes-generator@npm:10.1.1"
+"@semantic-release/release-notes-generator@npm:^10.0.0":
+  version: 10.0.3
+  resolution: "@semantic-release/release-notes-generator@npm:10.0.3"
   dependencies:
     conventional-changelog-angular: "npm:^5.0.0"
     conventional-changelog-writer: "npm:^5.0.0"
@@ -6991,7 +6991,7 @@ __metadata:
     read-pkg-up: "npm:^7.0.0"
   peerDependencies:
     semantic-release: ">=18.0.0-beta.1"
-  checksum: 10c0/880df76b1b34cd6306102a171ca31932e149ff786cce4999fba12875f3da5e02343c5e16e54830b2aa5a32803aee9c6d8879e99b3a7cc11a0f90b41702d1ac3d
+  checksum: 10c0/bf1a5244d7df353afbb68cf0e5f1d40bd4e6472bd75bd0b0c7547a179bce14b6a9ef5529e5fdec5c15566e798acc91991e14914a3083bad828d17bd8d0c0e45b
   languageName: node
   linkType: hard
 
