@@ -50,9 +50,7 @@ describe('initializeCheckoutDeliveryOptions', () => {
   });
 
   it('composes the proxyCapabilities URL from baseUrl + endpoint.parameters', async () => {
-    useSettings.mockReturnValue(
-      settingsWith({proxyCapabilities: {parameters: {action: 'proxyCapabilities'}}}),
-    );
+    useSettings.mockReturnValue(settingsWith({proxyCapabilities: {parameters: {action: 'proxyCapabilities'}}}));
 
     const {initializeCheckoutDeliveryOptions} = await import('./init');
     initializeCheckoutDeliveryOptions();
@@ -82,9 +80,7 @@ describe('initializeCheckoutDeliveryOptions', () => {
   });
 
   it('always exposes a proxyCapabilities key on the resulting config (sentinel)', async () => {
-    useSettings.mockReturnValue(
-      settingsWith({proxyCapabilities: {parameters: {action: 'proxyCapabilities'}}}),
-    );
+    useSettings.mockReturnValue(settingsWith({proxyCapabilities: {parameters: {action: 'proxyCapabilities'}}}));
 
     const {initializeCheckoutDeliveryOptions} = await import('./init');
     initializeCheckoutDeliveryOptions();
@@ -134,9 +130,7 @@ describe('initializeCheckoutDeliveryOptions', () => {
   });
 
   it('hands the PDK both a getPackageType and an updateDeliveryOptions callback', async () => {
-    useSettings.mockReturnValue(
-      settingsWith({proxyCapabilities: {parameters: {action: 'proxyCapabilities'}}}),
-    );
+    useSettings.mockReturnValue(settingsWith({proxyCapabilities: {parameters: {action: 'proxyCapabilities'}}}));
 
     const {initializeCheckoutDeliveryOptions} = await import('./init');
     initializeCheckoutDeliveryOptions();
