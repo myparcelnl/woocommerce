@@ -68,9 +68,12 @@ function wc_get_order_statuses()
 }
 
 /**
- * Honours the arguments the plugin actually relies on: EXISTS/NOT EXISTS meta queries, a result
- * limit and 'ids' as return type. Without them a paging migration cannot be tested, because every
- * run would keep receiving the orders it just handled.
+ * Honours the arguments the plugin actually relies on: the flat meta_key/meta_compare filter, page
+ * size, page number and 'ids' as return type. Without them a paging migration cannot be tested,
+ * because every run would keep receiving the orders it just handled.
+ *
+ * Only the flat form is supported, deliberately: the legacy post-storage data store ignores a
+ * meta_query, so a mock that honoured one would hide a bug that only appears on a non-HPOS shop.
  *
  * @see \wc_get_orders()
  */
@@ -78,16 +81,15 @@ function wc_get_orders($args)
 {
     $orders = MockWcData::getByClass(WC_Order::class);
 
-    foreach ($args['meta_query'] ?? [] as $clause) {
-        // Skip the 'relation' => 'AND' entry; every clause is applied conjunctively anyway.
-        if (! is_array($clause) || ! isset($clause['key'])) {
-            continue;
-        }
+    $compare = $args['meta_compare'] ?? null;
 
-        $orders = array_values(array_filter($orders, static function ($order) use ($clause): bool {
-            $exists = $order->meta_exists($clause['key']);
+    // Only the presence comparisons are modelled; anything else (NOT LIKE, =, ...) passes through
+    // untouched rather than being silently misread as a presence check.
+    if (isset($args['meta_key']) && in_array($compare, ['EXISTS', 'NOT EXISTS'], true)) {
+        $orders = array_values(array_filter($orders, static function ($order) use ($args, $compare): bool {
+            $exists = $order->meta_exists($args['meta_key']);
 
-            return 'NOT EXISTS' === ($clause['compare'] ?? 'EXISTS') ? ! $exists : $exists;
+            return 'NOT EXISTS' === $compare ? ! $exists : $exists;
         }));
     }
 
@@ -98,7 +100,8 @@ function wc_get_orders($args)
     $limit = (int) ($args['limit'] ?? -1);
 
     if ($limit > 0) {
-        $orders = array_slice($orders, 0, $limit);
+        $page   = max(1, (int) ($args['paged'] ?? 1));
+        $orders = array_slice($orders, ($page - 1) * $limit, $limit);
     }
 
     if ('ids' === ($args['return'] ?? null)) {

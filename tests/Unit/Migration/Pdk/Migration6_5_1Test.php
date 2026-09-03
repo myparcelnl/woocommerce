@@ -185,8 +185,9 @@ it('schedules order data migration', function () {
     /** @var WordPressScheduledTasks $tasks */
     $tasks = Pdk::get(WordPressScheduledTasks::class);
 
+    // The migration only selects orders that actually hold the meta key it migrates.
     for ($i = 1; $i <= 5; $i++) {
-        createWcOrder(['id' => $i]);
+        createWcOrder(['id' => $i, 'meta' => [Pdk::get('metaKeyOrderData') => ['carrier' => 'postnl']]]);
     }
 
     /** @var Migration6_5_1 $migration */
@@ -205,8 +206,12 @@ it('schedules shipment data migration', function () {
     /** @var WordPressScheduledTasks $tasks */
     $tasks = Pdk::get(WordPressScheduledTasks::class);
 
+    // The migration only selects orders that actually hold the meta key it migrates.
     for ($i = 1; $i <= 5; $i++) {
-        createWcOrder(['id' => $i]);
+        createWcOrder([
+            'id'   => $i,
+            'meta' => [Pdk::get('metaKeyOrderShipments') => [['carrier' => 'postnl']]],
+        ]);
     }
 
     /** @var Migration6_5_1 $migration */

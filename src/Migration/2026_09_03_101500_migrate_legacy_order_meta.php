@@ -34,9 +34,18 @@ return new class extends AbstractTimestampedMigration {
     /**
      * Bounds a single run. When more work remains the migration reports failure, which leaves it
      * unrecorded so the installer picks it up again on the next load and continues where it
-     * stopped - the guard makes already migrated orders free to skip.
+     * stopped.
      */
     private const MAX_ORDERS_PER_RUN = 250;
+
+    private const PAGE_SIZE = 50;
+
+    /**
+     * Remembers the page each key pair reached, so a resumed run does not walk the orders it
+     * already handled. Orders keep their legacy key after migrating, which keeps the result set -
+     * and therefore the paging - stable between runs.
+     */
+    private const CURSOR_OPTION = '_myparcelcom_migrate_legacy_order_meta_cursor';
 
     /**
      * @var int
@@ -45,6 +54,10 @@ return new class extends AbstractTimestampedMigration {
 
     public function up(): void
     {
+        if (! function_exists('wc_get_orders')) {
+            return;
+        }
+
         foreach (self::LEGACY_PREFIXES as $legacyPrefix) {
             foreach (self::META_KEYS as $metaKey) {
                 $done = $this->migrateKey($legacyPrefix . $metaKey, self::CURRENT_PREFIX . $metaKey);
@@ -58,72 +71,72 @@ return new class extends AbstractTimestampedMigration {
                 }
             }
         }
+
+        $this->clearCursors();
     }
 
     /**
-     * Walks the orders one page at a time. A migrated order gains the current key and therefore
-     * drops out of the next query, so the same page size keeps moving forward without an offset.
+     * Walks the orders holding this legacy key page by page. The page always advances, so orders
+     * that cannot be migrated - an empty or malformed legacy value - never block the ones behind
+     * them. Only successful migrations count towards the run limit.
      *
      * @return bool False when the run limit was reached before finishing this key.
      */
     private function migrateKey(string $legacyKey, string $currentKey): bool
     {
-        while ($this->migrated < self::MAX_ORDERS_PER_RUN) {
-            $orderIds = $this->getOrderIds($legacyKey, $currentKey);
+        $page = $this->getCursor($legacyKey);
+
+        while (true) {
+            $orderIds = $this->getOrderIds($legacyKey, $page);
 
             if (empty($orderIds)) {
+                // Remember where this key ran out, so a later run resumes at the end instead of
+                // walking every page it already finished.
+                $this->setCursor($legacyKey, $page);
+
                 return true;
             }
-
-            $migratedThisPage = 0;
 
             foreach ($orderIds as $orderId) {
-                if ($this->migrated >= self::MAX_ORDERS_PER_RUN) {
-                    return false;
-                }
-
-                if ($this->migrateOrder((int) $orderId, $legacyKey, $currentKey)) {
+                if ($this->migrateOrder($orderId, $legacyKey, $currentKey)) {
                     $this->migrated++;
-                    $migratedThisPage++;
                 }
             }
 
-            // Nothing on this page could be migrated - its rows lack the current key but hold
-            // no usable value, so they would be returned again forever. Leave them be.
-            if (0 === $migratedThisPage) {
-                return true;
+            $page++;
+
+            if ($this->migrated >= self::MAX_ORDERS_PER_RUN) {
+                $this->setCursor($legacyKey, $page);
+
+                return false;
             }
         }
-
-        return false;
     }
 
     /**
-     * One page of orders that still hold the legacy key and do not have the current one yet.
-     * Excluding the current key in the query is what bounds the result set: without it every
-     * already migrated order would be fetched again on each run.
+     * One page of orders that hold the legacy key.
+     *
+     * Deliberately uses the flat meta_key/meta_compare arguments instead of a meta_query: the
+     * legacy post-storage data store passes these through to WP_Query, while a meta_query is
+     * silently ignored there and only honoured by HPOS. A meta_query combined with a limit would
+     * therefore return the first N orders of the whole shop on a non-HPOS install.
+     *
+     * Already migrated orders stay in the result set - the legacy key is never removed - and are
+     * skipped by the guard in migrateOrder().
      *
      * @return int[]
      */
-    private function getOrderIds(string $legacyKey, string $currentKey): array
+    private function getOrderIds(string $legacyKey, int $page): array
     {
         $orderIds = wc_get_orders([
-            'limit'      => self::MAX_ORDERS_PER_RUN,
-            'return'     => 'ids',
-            'status'     => 'any',
-            'orderby'    => 'ID',
-            'order'      => 'ASC',
-            'meta_query' => [
-                'relation' => 'AND',
-                [
-                    'key'     => $legacyKey,
-                    'compare' => 'EXISTS',
-                ],
-                [
-                    'key'     => $currentKey,
-                    'compare' => 'NOT EXISTS',
-                ],
-            ],
+            'limit'        => self::PAGE_SIZE,
+            'paged'        => $page,
+            'return'       => 'ids',
+            'status'       => 'any',
+            'orderby'      => 'ID',
+            'order'        => 'ASC',
+            'meta_key'     => $legacyKey,
+            'meta_compare' => 'EXISTS',
         ]);
 
         if (! is_array($orderIds)) {
@@ -131,9 +144,13 @@ return new class extends AbstractTimestampedMigration {
         }
 
         // 'return' => 'ids' yields ids, but not every data store honours it; accept orders too.
-        return array_map(static function ($order): int {
-            return is_object($order) && method_exists($order, 'get_id') ? (int) $order->get_id() : (int) $order;
+        // WooCommerce types the result as WC_Order[], hence the scalar check rather than a cast.
+        $ids = array_map(static function ($order): int {
+            // @phpstan-ignore function.impossibleType
+            return (int) (is_scalar($order) ? $order : $order->get_id());
         }, $orderIds);
+
+        return array_values(array_filter($ids));
     }
 
     private function migrateOrder(int $orderId, string $legacyKey, string $currentKey): bool
@@ -201,22 +218,43 @@ return new class extends AbstractTimestampedMigration {
      */
     private function normalizeCarriers(array $record): array
     {
-        if (array_key_exists('carrier', $record)) {
-            $name = $this->toCarrierName($record['carrier']);
+        $record = $this->normalizeCarrierOn($record);
 
-            if (null !== $name) {
-                $record['carrier'] = $name;
-            }
+        if (isset($record['deliveryOptions']) && is_array($record['deliveryOptions'])) {
+            $record['deliveryOptions'] = $this->normalizeCarrierOn($record['deliveryOptions']);
         }
 
-        if (isset($record['deliveryOptions']) && is_array($record['deliveryOptions'])
-            && array_key_exists('carrier', $record['deliveryOptions'])) {
-            $name = $this->toCarrierName($record['deliveryOptions']['carrier']);
+        return $record;
+    }
 
-            if (null !== $name) {
-                $record['deliveryOptions']['carrier'] = $name;
-            }
+    /**
+     * Replaces the carrier with its current identifier and keeps the contract that was encoded in
+     * the legacy value: "postnl:42" carries contract 42, which is a separate attribute today and
+     * would otherwise be lost. An existing contractId always wins.
+     *
+     * @param  array $record
+     *
+     * @return array
+     */
+    private function normalizeCarrierOn(array $record): array
+    {
+        if (! array_key_exists('carrier', $record)) {
+            return $record;
         }
+
+        $name = $this->toCarrierName($record['carrier']);
+
+        if (null === $name) {
+            return $record;
+        }
+
+        $contractId = $this->toContractId($record['carrier']);
+
+        if (null !== $contractId && ! isset($record['contractId'])) {
+            $record['contractId'] = $contractId;
+        }
+
+        $record['carrier'] = $name;
 
         return $record;
     }
@@ -253,5 +291,58 @@ return new class extends AbstractTimestampedMigration {
         $legacyName = explode(':', $raw, 2)[0];
 
         return array_flip(Carrier::CARRIER_NAME_TO_LEGACY_MAP)[$legacyName] ?? $legacyName;
+    }
+
+    /**
+     * The contract encoded behind the colon in a legacy identifier, or on the carrier object.
+     *
+     * @param  mixed $carrier
+     *
+     * @return null|int
+     */
+    private function toContractId($carrier): ?int
+    {
+        if (is_array($carrier)) {
+            if (isset($carrier['contractId']) && is_numeric($carrier['contractId'])) {
+                return (int) $carrier['contractId'];
+            }
+
+            $raw = $carrier['externalIdentifier'] ?? null;
+        } else {
+            $raw = $carrier;
+        }
+
+        if (! is_string($raw)) {
+            return null;
+        }
+
+        $parts = explode(':', $raw, 2);
+
+        return isset($parts[1]) && is_numeric($parts[1]) ? (int) $parts[1] : null;
+    }
+
+    private function getCursor(string $legacyKey): int
+    {
+        $cursors = get_option(self::CURSOR_OPTION, []);
+
+        return is_array($cursors) ? max(1, (int) ($cursors[$legacyKey] ?? 1)) : 1;
+    }
+
+    private function setCursor(string $legacyKey, int $page): void
+    {
+        $cursors = get_option(self::CURSOR_OPTION, []);
+
+        if (! is_array($cursors)) {
+            $cursors = [];
+        }
+
+        $cursors[$legacyKey] = $page;
+
+        update_option(self::CURSOR_OPTION, $cursors);
+    }
+
+    private function clearCursors(): void
+    {
+        update_option(self::CURSOR_OPTION, []);
     }
 };
