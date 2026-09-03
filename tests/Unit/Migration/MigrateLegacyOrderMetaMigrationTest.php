@@ -100,6 +100,87 @@ it('does not resurrect shipments that were deliberately removed', function () {
     expect(wc_get_order($order->get_id())->get_meta(CURRENT_SHIPMENTS_KEY))->toBe([]);
 });
 
+it('converts a carrier stored as a numeric id', function () {
+    // What a 5.x install actually holds once OrdersMigration converted a 4.x shipment.
+    $order = makeOrderWithMeta([
+        LEGACY_SHIPMENTS_KEY => [
+            [
+                'id'              => 224628798,
+                'barcode'         => '3SMYPA402029013',
+                'carrier'         => ['id' => 1],
+                'deliveryOptions' => ['carrier' => ['id' => 1]],
+            ],
+        ],
+    ]);
+
+    loadLegacyOrderMetaMigration()->up();
+
+    $migrated = wc_get_order($order->get_id())->get_meta(CURRENT_SHIPMENTS_KEY);
+
+    expect($migrated[0]['carrier'])->toBe('POSTNL')
+        ->and($migrated[0]['deliveryOptions']['carrier'])->toBe('POSTNL');
+});
+
+it('migrates the belgian namespace too', function () {
+    $order = makeOrderWithMeta(['_myparcelbe_order_shipments' => [legacyShipment()]]);
+
+    loadLegacyOrderMetaMigration()->up();
+
+    $migrated = wc_get_order($order->get_id())->get_meta(CURRENT_SHIPMENTS_KEY);
+
+    expect($migrated)->toBeArray()->toHaveCount(1)
+        ->and($migrated[0]['carrier'])->toBe('POSTNL');
+});
+
+it('normalises the carrier inside order data as well', function () {
+    $order = makeOrderWithMeta([
+        '_myparcelnl_order_data' => [
+            'exported'        => true,
+            'deliveryOptions' => ['carrier' => ['externalIdentifier' => 'postnl:1']],
+        ],
+    ]);
+
+    loadLegacyOrderMetaMigration()->up();
+
+    $migrated = wc_get_order($order->get_id())->get_meta('_myparcelcom_order_data');
+
+    expect($migrated['deliveryOptions']['carrier'])->toBe('POSTNL')
+        ->and($migrated['exported'])->toBeTrue();
+});
+
+it('bounds a single run and resumes on the next one', function () {
+    $total = 260;
+
+    for ($i = 0; $i < $total; $i++) {
+        makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [legacyShipment()]]);
+    }
+
+    $countMigrated = static function () use ($total): int {
+        $migrated = 0;
+
+        foreach (wc_get_orders(['limit' => -1]) as $order) {
+            if ($order->meta_exists(CURRENT_SHIPMENTS_KEY)) {
+                $migrated++;
+            }
+        }
+
+        return $migrated;
+    };
+
+    $first = loadLegacyOrderMetaMigration();
+    $first->up();
+
+    // Stops at the run limit and reports failure, which leaves it unrecorded so it runs again.
+    expect($first->hasFailed())->toBeTrue()
+        ->and($countMigrated())->toBe(250);
+
+    $second = loadLegacyOrderMetaMigration();
+    $second->up();
+
+    expect($countMigrated())->toBe($total)
+        ->and($second->hasFailed())->toBeFalse();
+});
+
 it('leaves the legacy meta in place so a repeated run is harmless', function () {
     $order = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [legacyShipment()]]);
 

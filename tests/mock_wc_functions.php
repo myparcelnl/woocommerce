@@ -67,10 +67,47 @@ function wc_get_order_statuses()
     ];
 }
 
-/** @see \wc_get_orders() */
+/**
+ * Honours the arguments the plugin actually relies on: EXISTS/NOT EXISTS meta queries, a result
+ * limit and 'ids' as return type. Without them a paging migration cannot be tested, because every
+ * run would keep receiving the orders it just handled.
+ *
+ * @see \wc_get_orders()
+ */
 function wc_get_orders($args)
 {
-    return MockWcData::getByClass(WC_Order::class);
+    $orders = MockWcData::getByClass(WC_Order::class);
+
+    foreach ($args['meta_query'] ?? [] as $clause) {
+        // Skip the 'relation' => 'AND' entry; every clause is applied conjunctively anyway.
+        if (! is_array($clause) || ! isset($clause['key'])) {
+            continue;
+        }
+
+        $orders = array_values(array_filter($orders, static function ($order) use ($clause): bool {
+            $exists = $order->meta_exists($clause['key']);
+
+            return 'NOT EXISTS' === ($clause['compare'] ?? 'EXISTS') ? ! $exists : $exists;
+        }));
+    }
+
+    usort($orders, static function ($a, $b): int {
+        return (int) $a->get_id() <=> (int) $b->get_id();
+    });
+
+    $limit = (int) ($args['limit'] ?? -1);
+
+    if ($limit > 0) {
+        $orders = array_slice($orders, 0, $limit);
+    }
+
+    if ('ids' === ($args['return'] ?? null)) {
+        return array_map(static function ($order) {
+            return $order->get_id();
+        }, $orders);
+    }
+
+    return $orders;
 }
 
 /** @see \wc_get_product() */
