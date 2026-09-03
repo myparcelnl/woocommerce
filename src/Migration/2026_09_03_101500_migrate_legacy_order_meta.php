@@ -61,36 +61,67 @@ return new class extends AbstractTimestampedMigration {
     }
 
     /**
+     * Walks the orders one page at a time. A migrated order gains the current key and therefore
+     * drops out of the next query, so the same page size keeps moving forward without an offset.
+     *
      * @return bool False when the run limit was reached before finishing this key.
      */
     private function migrateKey(string $legacyKey, string $currentKey): bool
     {
-        foreach ($this->getOrderIds($legacyKey) as $orderId) {
-            if ($this->migrated >= self::MAX_ORDERS_PER_RUN) {
-                return false;
+        while ($this->migrated < self::MAX_ORDERS_PER_RUN) {
+            $orderIds = $this->getOrderIds($legacyKey, $currentKey);
+
+            if (empty($orderIds)) {
+                return true;
             }
 
-            if ($this->migrateOrder((int) $orderId, $legacyKey, $currentKey)) {
-                $this->migrated++;
+            $migratedThisPage = 0;
+
+            foreach ($orderIds as $orderId) {
+                if ($this->migrated >= self::MAX_ORDERS_PER_RUN) {
+                    return false;
+                }
+
+                if ($this->migrateOrder((int) $orderId, $legacyKey, $currentKey)) {
+                    $this->migrated++;
+                    $migratedThisPage++;
+                }
+            }
+
+            // Nothing on this page could be migrated - its rows lack the current key but hold
+            // no usable value, so they would be returned again forever. Leave them be.
+            if (0 === $migratedThisPage) {
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
     /**
+     * One page of orders that still hold the legacy key and do not have the current one yet.
+     * Excluding the current key in the query is what bounds the result set: without it every
+     * already migrated order would be fetched again on each run.
+     *
      * @return int[]
      */
-    private function getOrderIds(string $legacyKey): array
+    private function getOrderIds(string $legacyKey, string $currentKey): array
     {
         $orderIds = wc_get_orders([
-            'limit'      => -1,
+            'limit'      => self::MAX_ORDERS_PER_RUN,
             'return'     => 'ids',
             'status'     => 'any',
+            'orderby'    => 'ID',
+            'order'      => 'ASC',
             'meta_query' => [
+                'relation' => 'AND',
                 [
                     'key'     => $legacyKey,
                     'compare' => 'EXISTS',
+                ],
+                [
+                    'key'     => $currentKey,
+                    'compare' => 'NOT EXISTS',
                 ],
             ],
         ]);
@@ -192,8 +223,12 @@ return new class extends AbstractTimestampedMigration {
 
     /**
      * Accepts every shape the plugin has stored: {"externalIdentifier": "postnl:1"},
-     * {"carrier": "postnl"}, "postnl:1" and "postnl". Returns the current identifier, or null when
-     * there is nothing usable to convert.
+     * {"carrier": "postnl"}, {"id": 1}, "postnl:1" and "postnl". Returns the current identifier, or
+     * null when there is nothing usable to convert.
+     *
+     * The numeric id is resolved through the static map rather than the carrier repository: that
+     * repository reads the carriers stored on the account, which an account refresh can leave
+     * empty, and a migration must not depend on it.
      *
      * @param  mixed $carrier
      *
@@ -202,6 +237,10 @@ return new class extends AbstractTimestampedMigration {
     private function toCarrierName($carrier): ?string
     {
         if (is_array($carrier)) {
+            if (isset($carrier['id']) && is_numeric($carrier['id'])) {
+                return Carrier::v2NameFromLegacyId((int) $carrier['id']);
+            }
+
             $raw = $carrier['externalIdentifier'] ?? ($carrier['carrier'] ?? null);
         } else {
             $raw = $carrier;
