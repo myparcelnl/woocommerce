@@ -52,7 +52,16 @@ final class Migration6_5_1 extends AbstractMigration
      */
     public function migrateAccountData(): void
     {
-        $account = $this->accountRepository->getAccount(true);
+        $accountSettings = $this->settingsRepository->all()->account;
+
+        if (! $accountSettings->apiKey || ! $accountSettings->apiKeyValid) {
+            $this->debug('No valid API key available; skipping carrier capabilities migration.');
+
+            return;
+        }
+
+        // Keep plugin-managed account fields that are absent from the accounts API response.
+        $account = $this->accountRepository->getAccount();
         // PHPStan types Account::$shops as a non-null ShopCollection, but the guard is kept
         // intentionally to stay safe against partial/corrupted account data during upgrade.
         // @phpstan-ignore booleanAnd.rightAlwaysTrue

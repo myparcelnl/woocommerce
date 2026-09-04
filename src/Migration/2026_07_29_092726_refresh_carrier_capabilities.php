@@ -7,6 +7,7 @@ use MyParcelNL\Pdk\App\Installer\Migration\AbstractTimestampedMigration;
 use MyParcelNL\Pdk\Carrier\Repository\CarrierCapabilitiesRepository;
 use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
 
 /**
  * Re-fetches the stored carrier data so insurance limits are in the flat format.
@@ -19,9 +20,20 @@ use MyParcelNL\Pdk\Facade\Pdk;
 return new class extends AbstractTimestampedMigration {
     public function up(): void
     {
+        /** @var PdkSettingsRepositoryInterface $settingsRepository */
+        $settingsRepository = Pdk::get(PdkSettingsRepositoryInterface::class);
+        $accountSettings    = $settingsRepository->all()->account;
+
+        if (! $accountSettings->apiKey || ! $accountSettings->apiKeyValid) {
+            Logger::debug('No valid API key available; skipping carrier capabilities refresh.');
+
+            return;
+        }
+
         /** @var PdkAccountRepositoryInterface $accountRepository */
         $accountRepository = Pdk::get(PdkAccountRepositoryInterface::class);
-        $account           = $accountRepository->getAccount(true);
+        // Keep plugin-managed account fields that are absent from the accounts API response.
+        $account           = $accountRepository->getAccount();
         // PHPStan types Account::$shops as a non-null ShopCollection, but the guard is kept
         // intentionally to stay safe against partial/corrupted account data during upgrade.
         // @phpstan-ignore booleanAnd.rightAlwaysTrue
