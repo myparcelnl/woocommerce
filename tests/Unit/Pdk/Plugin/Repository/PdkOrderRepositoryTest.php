@@ -10,6 +10,7 @@ use InvalidArgumentException;
 use MyParcelNL\Pdk\App\Api\Backend\PdkBackendActions;
 use MyParcelNL\Pdk\App\Options\Definition\SignatureDefinition;
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
+use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\App\Order\Model\PdkOrder;
 use MyParcelNL\Pdk\App\Order\Model\PdkOrderNote;
 use MyParcelNL\Pdk\Audit\Contract\PdkAuditRepositoryInterface;
@@ -22,7 +23,12 @@ use MyParcelNL\Pdk\Shipment\Model\ShipmentOptions;
 use MyParcelNL\Pdk\Tests\Api\Response\ExampleGetShipmentsResponse;
 use MyParcelNL\Pdk\Tests\Bootstrap\MockApi;
 use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
+use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
+use MyParcelNL\WooCommerce\Adapter\LegacyDeliveryOptionsAdapter;
+use MyParcelNL\WooCommerce\Adapter\WcAddressAdapter;
+use MyParcelNL\WooCommerce\Tests\Mock\TrackingWcOrder;
+use MyParcelNL\WooCommerce\Tests\Mock\TrackingWcOrderRepository;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use Psr\Log\LoggerInterface;
 use WC_Order;
@@ -299,4 +305,31 @@ it('get() still loads order items (regression)', function () {
     $pdkOrder = $orderRepository->get($wcOrder);
 
     expect($pdkOrder->lines->count())->toBeGreaterThan(0);
+});
+
+it('writes order data through a fresh order instance', function () {
+    $wcOrder = wpFactory(WC_Order::class)->make();
+
+    /** @var \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $defaultRepository */
+    $defaultRepository = Pdk::get(PdkOrderRepositoryInterface::class);
+    $pdkOrder          = $defaultRepository->get($wcOrder);
+
+    $cachedOrder  = (new TrackingWcOrder($wcOrder->get_id()))->failOnSave();
+    $freshOrder   = new TrackingWcOrder($wcOrder->get_id());
+    $wcRepository = new TrackingWcOrderRepository($cachedOrder, $freshOrder);
+
+    $repository = new PdkOrderRepository(
+        Pdk::get(StorageInterface::class),
+        Pdk::get(PdkProductRepositoryInterface::class),
+        $wcRepository,
+        Pdk::get(WcAddressAdapter::class),
+        Pdk::get(LegacyDeliveryOptionsAdapter::class)
+    );
+
+    $repository->update($pdkOrder);
+
+    expect($cachedOrder->getSaveCount())->toBe(0)
+        ->and($freshOrder->getSaveCount())->toBe(1)
+        ->and($wcRepository->getFreshOrderCallCount())->toBe(1)
+        ->and($wcRepository->getLastCacheUpdate())->toBe($freshOrder);
 });

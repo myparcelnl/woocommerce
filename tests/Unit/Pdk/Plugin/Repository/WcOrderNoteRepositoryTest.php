@@ -11,7 +11,11 @@ use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\App\Order\Model\PdkOrderNote;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Fulfilment\Model\OrderNote;
+use MyParcelNL\Pdk\Storage\Contract\StorageInterface;
 use MyParcelNL\Sdk\Support\Arr;
+use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\WcOrderNoteRepository;
+use MyParcelNL\WooCommerce\Tests\Mock\TrackingWcOrder;
+use MyParcelNL\WooCommerce\Tests\Mock\TrackingWcOrderRepository;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use RuntimeException;
 use WC_DateTime;
@@ -185,4 +189,34 @@ it('updates many order notes', function () {
             'orderIdentifier' => '29300',
             'note'            => 'maybe',
         ]);
+});
+
+it('writes order notes through a fresh order instance', function () {
+    $wcOrder = createWcOrder(['id' => 29400]);
+
+    /** @var \MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface $pdkOrderRepository */
+    $pdkOrderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
+
+    $cachedOrder  = (new TrackingWcOrder($wcOrder->get_id()))->failOnSave();
+    $freshOrder   = new TrackingWcOrder($wcOrder->get_id());
+    $wcRepository = new TrackingWcOrderRepository($cachedOrder, $freshOrder);
+
+    $repository = new WcOrderNoteRepository(
+        Pdk::get(StorageInterface::class),
+        $pdkOrderRepository,
+        $wcRepository
+    );
+
+    $note = factory(PdkOrderNote::class)
+        ->withOrderIdentifier((string) $wcOrder->get_id())
+        ->withExternalIdentifier('29401')
+        ->withNote('hello')
+        ->make();
+
+    $repository->update($note);
+
+    expect($cachedOrder->getSaveCount())->toBe(0)
+        ->and($freshOrder->getSaveCount())->toBe(1)
+        ->and($wcRepository->getFreshOrderCallCount())->toBe(1)
+        ->and($wcRepository->getLastCacheUpdate())->toBe($freshOrder);
 });

@@ -14,6 +14,11 @@ use MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface;
 final class AutomaticOrderExportHooks implements WordPressHooksInterface
 {
     /**
+     * @var array<int, bool>
+     */
+    private $ordersInProgress = [];
+
+    /**
      * @var \MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface
      */
     private $wcOrderRepository;
@@ -41,12 +46,22 @@ final class AutomaticOrderExportHooks implements WordPressHooksInterface
         $automaticExportStatus = Settings::get(OrderSettings::PROCESS_DIRECTLY, OrderSettings::ID);
         $prefixedNewStatus     = sprintf('wc-%s', $newStatus);
 
-        if ($prefixedNewStatus !== $automaticExportStatus || $this->wcOrderRepository->hasLocalPickup($orderId)) {
+        if ($prefixedNewStatus !== $automaticExportStatus || isset($this->ordersInProgress[$orderId])) {
             return;
         }
 
-        Actions::executeAutomatic(PdkBackendActions::EXPORT_ORDERS, [
-            'orderIds' => [$orderId],
-        ]);
+        $this->ordersInProgress[$orderId] = true;
+
+        try {
+            if ($this->wcOrderRepository->hasLocalPickup($orderId)) {
+                return;
+            }
+
+            Actions::executeAutomatic(PdkBackendActions::EXPORT_ORDERS, [
+                'orderIds' => [$orderId],
+            ]);
+        } finally {
+            unset($this->ordersInProgress[$orderId]);
+        }
     }
 }
