@@ -211,56 +211,48 @@ return new class extends AbstractTimestampedMigration {
      * Migration6_5_1 converts those shapes, but it never saw these orders - their data was under
      * the old key when it ran - so the conversion happens here, before the value is stored.
      *
+     * A carrier lives in two places: on the record itself and on its delivery options. Shipments
+     * hold a list of such records, order data holds a single one.
+     *
+     * Returns null as soon as one carrier has no supported name. The caller then writes nothing at
+     * all, so the order keeps its legacy data and a later run can convert it once we do support
+     * that carrier. Writing it half-converted would leave the order unreadable instead.
+     *
      * @param  array  $value
      * @param  string $currentKey
      *
-     * @return null|array Null when at least one stored carrier cannot be safely normalised.
+     * @return null|array
      */
     private function normalize(array $value, string $currentKey): ?array
     {
-        if (self::CURRENT_PREFIX . 'order_shipments' === $currentKey) {
-            foreach ($value as $index => $shipment) {
-                if (is_array($shipment)) {
-                    $normalized = $this->normalizeCarriers($shipment);
+        $isList  = self::CURRENT_PREFIX . 'order_shipments' === $currentKey;
+        $records = $isList ? $value : [$value];
 
-                    if (null === $normalized) {
-                        return null;
-                    }
-
-                    $value[$index] = $normalized;
-                }
+        foreach ($records as $index => $record) {
+            if (! is_array($record)) {
+                continue;
             }
 
-            return $value;
-        }
+            $record = $this->normalizeCarrierOn($record);
 
-        return $this->normalizeCarriers($value);
-    }
-
-    /**
-     * Normalises the carrier on the record itself and on its delivery options.
-     *
-     * @param  array $record
-     *
-     * @return null|array Null when a stored carrier cannot be safely normalised.
-     */
-    private function normalizeCarriers(array $record): ?array
-    {
-        $record = $this->normalizeCarrierOn($record);
-
-        if (null === $record) {
-            return null;
-        }
-
-        if (isset($record['deliveryOptions']) && is_array($record['deliveryOptions'])) {
-            $record['deliveryOptions'] = $this->normalizeCarrierOn($record['deliveryOptions']);
-
-            if (null === $record['deliveryOptions']) {
+            if (null === $record) {
                 return null;
             }
+
+            if (isset($record['deliveryOptions']) && is_array($record['deliveryOptions'])) {
+                $deliveryOptions = $this->normalizeCarrierOn($record['deliveryOptions']);
+
+                if (null === $deliveryOptions) {
+                    return null;
+                }
+
+                $record['deliveryOptions'] = $deliveryOptions;
+            }
+
+            $records[$index] = $record;
         }
 
-        return $record;
+        return $isList ? $records : $records[0];
     }
 
     /**
@@ -281,7 +273,7 @@ return new class extends AbstractTimestampedMigration {
         $carrier = $record['carrier'];
 
         // A missing carrier intentionally falls back to the shop default at runtime.
-        if (null === $carrier || '' === $carrier || [] === $carrier) {
+        if (empty($carrier)) {
             return $record;
         }
 
