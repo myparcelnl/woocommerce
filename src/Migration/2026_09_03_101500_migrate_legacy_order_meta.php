@@ -5,6 +5,7 @@ declare(strict_types=1);
 use MyParcelNL\Pdk\App\Installer\Migration\AbstractTimestampedMigration;
 use MyParcelNL\Pdk\Carrier\Model\Carrier;
 use MyParcelNL\Pdk\Facade\Logger;
+use MyParcelNL\WooCommerce\Migration\Migration6_5_1;
 
 /**
  * Moves order meta left behind under the pre-6.0.0 namespaces.
@@ -215,8 +216,8 @@ return new class extends AbstractTimestampedMigration {
      * hold a list of such records, order data holds a single one.
      *
      * Returns null as soon as one carrier has no supported name. The caller then writes nothing at
-     * all, so the order keeps its legacy data and a later run can convert it once we do support
-     * that carrier. Writing it half-converted would leave the order unreadable instead.
+     * all, so the order keeps its legacy data and a future migration can convert it once we do
+     * support that carrier. Writing it half-converted would leave the order unreadable instead.
      *
      * @param  array  $value
      * @param  string $currentKey
@@ -273,89 +274,30 @@ return new class extends AbstractTimestampedMigration {
         $carrier = $record['carrier'];
 
         // A missing carrier intentionally falls back to the shop default at runtime.
-        if (empty($carrier)) {
+        if (null === $carrier || '' === $carrier || [] === $carrier) {
             return $record;
         }
 
-        $name = $this->toCarrierName($carrier);
+        $parsed = Migration6_5_1::parseLegacyCarrier($carrier);
 
-        if (null === $name || ! Carrier::isSupported($name)) {
+        if (null === $parsed) {
             return null;
         }
 
-        $contractId = $this->toContractId($carrier);
+        [$legacyName, $contractId] = $parsed;
+        $name = array_flip(Carrier::CARRIER_NAME_TO_LEGACY_MAP)[$legacyName] ?? $legacyName;
 
-        if (null !== $contractId && ! isset($record['contractId'])) {
-            $record['contractId'] = $contractId;
+        if (! Carrier::isSupported($name)) {
+            return null;
+        }
+
+        if (is_numeric($contractId) && ! isset($record['contractId'])) {
+            $record['contractId'] = (int) $contractId;
         }
 
         $record['carrier'] = $name;
 
         return $record;
-    }
-
-    /**
-     * Accepts every shape the plugin has stored: {"externalIdentifier": "postnl:1"},
-     * {"carrier": "postnl"}, {"id": 1}, "postnl:1" and "postnl". Returns the current identifier, or
-     * null when there is nothing usable to convert.
-     *
-     * The numeric id is resolved through the static map rather than the carrier repository: that
-     * repository reads the carriers stored on the account, which an account refresh can leave
-     * empty, and a migration must not depend on it.
-     *
-     * @param  mixed $carrier
-     *
-     * @return null|string
-     */
-    private function toCarrierName($carrier): ?string
-    {
-        if (is_array($carrier)) {
-            if (isset($carrier['id']) && is_numeric($carrier['id'])) {
-                return Carrier::v2NameFromLegacyId((int) $carrier['id']);
-            }
-
-            $raw = $carrier['externalIdentifier'] ?? ($carrier['carrier'] ?? null);
-        } else {
-            $raw = $carrier;
-        }
-
-        if (! is_string($raw) || '' === $raw) {
-            return null;
-        }
-
-        $legacyName = explode(':', $raw, 2)[0];
-
-        return array_flip(Carrier::CARRIER_NAME_TO_LEGACY_MAP)[$legacyName] ?? $legacyName;
-    }
-
-    /**
-     * The contract encoded behind the colon in a legacy identifier, or on the carrier object.
-     *
-     * @param  mixed $carrier
-     *
-     * @return null|int
-     */
-    private function toContractId($carrier): ?int
-    {
-        if (is_array($carrier)) {
-            $storedContractId = $carrier['contractId'] ?? ($carrier['contract_id'] ?? null);
-
-            if (is_numeric($storedContractId)) {
-                return (int) $storedContractId;
-            }
-
-            $raw = $carrier['externalIdentifier'] ?? ($carrier['carrier'] ?? null);
-        } else {
-            $raw = $carrier;
-        }
-
-        if (! is_string($raw)) {
-            return null;
-        }
-
-        $parts = explode(':', $raw, 2);
-
-        return isset($parts[1]) && is_numeric($parts[1]) ? (int) $parts[1] : null;
     }
 
     private function getCursor(string $legacyKey): int
