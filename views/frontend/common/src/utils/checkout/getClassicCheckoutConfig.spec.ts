@@ -106,7 +106,7 @@ describe('getClassicCheckoutConfig - getFormData', () => {
 
     const data = getFormData();
 
-    expect(data['billing_first_name']).toBe('Jane');
+    expect(data.billing_first_name).toBe('Jane');
     expect(data['shipping_method[0]']).toBe('flat_rate:1');
   });
 
@@ -117,21 +117,21 @@ describe('getClassicCheckoutConfig - getFormData', () => {
 
     // shipping_method lives in the order-details form, billing in the billing form
     expect(data['shipping_method[0]']).toBe('flat_rate:1');
-    expect(data['billing_first_name']).toBe('Jane');
+    expect(data.billing_first_name).toBe('Jane');
   });
 
   it('ignores an empty hidden duplicate so the visible billing value survives (fresh checkout)', () => {
     document.body.innerHTML = DIVI_DUPLICATE_BILLING('');
 
     // The hidden duplicate is empty and comes later in DOM order; it must not clobber to ''.
-    expect(getFormData()['billing_postcode']).toBe('1234AB');
+    expect(getFormData().billing_postcode).toBe('1234AB');
   });
 
   it('ignores a stale hidden duplicate so the edited visible value survives (returning customer)', () => {
     document.body.innerHTML = DIVI_DUPLICATE_BILLING('9999ZZ');
 
     // The hidden duplicate carries a stale non-empty value; the visible edited value must win.
-    expect(getFormData()['billing_postcode']).toBe('1234AB');
+    expect(getFormData().billing_postcode).toBe('1234AB');
   });
 
   it('keeps a unique field hidden by the address widget', () => {
@@ -143,7 +143,7 @@ describe('getClassicCheckoutConfig - getFormData', () => {
       </form>
     `;
 
-    expect(getFormData()['billing_postcode']).toBe('1502VP');
+    expect(getFormData().billing_postcode).toBe('1502VP');
   });
 
   it('ignores a checked hidden checkbox when a visible unchecked duplicate exists', () => {
@@ -158,7 +158,7 @@ describe('getClassicCheckoutConfig - getFormData', () => {
       </form>
     `;
 
-    expect(getFormData()['ship_to_different_address']).toBeUndefined();
+    expect(getFormData().ship_to_different_address).toBeUndefined();
   });
 
   it('keeps a shipping method WooCommerce renders as a single hidden input', () => {
@@ -332,7 +332,7 @@ describe('getClassicCheckoutConfig - formChange', () => {
     expect(calls).toBe(2);
   });
 
-  it('fires the callback on WooCommerce\'s updated_checkout event', () => {
+  it("fires the callback on WooCommerce's updated_checkout event", () => {
     // WooCommerce's AJAX re-render auto-selects the shipping method without a bubbling `change`;
     // only `updated_checkout` signals it, so formChange must listen to that too.
     document.body.innerHTML = SINGLE_FORM;
