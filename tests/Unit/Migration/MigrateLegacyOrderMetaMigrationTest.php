@@ -208,6 +208,22 @@ it('does not finalise an order whose carrier cannot be normalised', function () 
         ->and($reloaded->get_meta(LEGACY_SHIPMENTS_KEY))->toBeArray()->toHaveCount(1);
 });
 
+it('does not treat false-like invalid carriers as a missing carrier', function ($carrier) {
+    $order = makeOrderWithMeta([
+        LEGACY_SHIPMENTS_KEY => [
+            [
+                'id'      => 224628802,
+                'barcode' => '3SMYPA402029017',
+                'carrier' => $carrier,
+            ],
+        ],
+    ]);
+
+    loadLegacyOrderMetaMigration()->up();
+
+    expect(wc_get_order($order->get_id())->meta_exists(CURRENT_SHIPMENTS_KEY))->toBeFalse();
+})->with([0, '0', false]);
+
 it('migrates valid orders that sit behind a full page of unusable ones', function () {
     // Enough broken records to fill more than one page. A run that stopped at the first page it
     // could not migrate would never reach the valid order behind them.

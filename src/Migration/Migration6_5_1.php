@@ -166,7 +166,7 @@ final class Migration6_5_1 extends AbstractMigration
                 continue;
             }
 
-            $parsed = $this->parseLegacyCarrier($metaData['deliveryOptions']['carrier'] ?? null);
+            $parsed = self::parseLegacyCarrier($metaData['deliveryOptions']['carrier'] ?? null);
 
             if (! $parsed) {
                 continue;
@@ -239,7 +239,7 @@ final class Migration6_5_1 extends AbstractMigration
             $changed = false;
 
             foreach ($shipments as &$shipment) {
-                $parsed = $this->parseLegacyCarrier($shipment['carrier'] ?? null);
+                $parsed = self::parseLegacyCarrier($shipment['carrier'] ?? null);
 
                 if ($parsed) {
                     [$legacyName, $contractId] = $parsed;
@@ -274,18 +274,29 @@ final class Migration6_5_1 extends AbstractMigration
     }
 
     /**
-     * Extracts the legacy carrier name from the various stored formats and strips the contract ID suffix.
+     * Parses the carrier formats shared by this migration and later repair migrations, including
+     * numeric carrier ids and contract ids stored either as a field or as a name suffix.
      *
      * @param  mixed $carrier
      *
-     * @return null|string[] [carrierName, contractId] or null if not parseable
+     * @return null|array{0: string, 1: null|int|string} [carrierName, contractId] or null if not parseable
      */
-    private function parseLegacyCarrier($carrier): ?array
+    public static function parseLegacyCarrier($carrier): ?array
     {
         if (is_array($carrier)) {
+            $storedContractId = $carrier['contractId'] ?? ($carrier['contract_id'] ?? null);
+            $contractId       = is_numeric($storedContractId) ? $storedContractId : null;
+
+            if (isset($carrier['id']) && is_numeric($carrier['id'])) {
+                $name = Carrier::v2NameFromLegacyId((int) $carrier['id']);
+
+                return null === $name ? null : [$name, $contractId];
+            }
+
             $raw = $carrier['externalIdentifier'] ?? ($carrier['carrier'] ?? null);
         } elseif (is_string($carrier)) {
             $raw = $carrier;
+            $contractId = null;
         } else {
             return null;
         }
@@ -294,9 +305,12 @@ final class Migration6_5_1 extends AbstractMigration
             return null;
         }
 
-        $parts      = explode(':', $raw, 2);
-        $name       = $parts[0];
-        $contractId = $parts[1] ?? null;
+        $parts = explode(':', $raw, 2);
+        $name  = $parts[0];
+
+        if (null === $contractId && isset($parts[1]) && is_numeric($parts[1])) {
+            $contractId = $parts[1];
+        }
 
         return [$name, $contractId];
     }
@@ -312,7 +326,7 @@ final class Migration6_5_1 extends AbstractMigration
      */
     private function migrateCarrierField(array &$data, string $key, array $legacyToNewMap): bool
     {
-        $parsed = $this->parseLegacyCarrier($data[$key] ?? null);
+        $parsed = self::parseLegacyCarrier($data[$key] ?? null);
 
         if (! $parsed) {
             return false;
