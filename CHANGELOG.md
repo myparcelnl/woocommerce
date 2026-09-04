@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.9.4](https://github.com/myparcelnl/woocommerce/compare/v6.9.3...v6.9.4) (2026-09-04)
+
+
+### :bug: Bug Fixes
+
+* **migrations:** restore lost account data ([#1815](https://github.com/myparcelnl/woocommerce/issues/1815)) ([517acac](https://github.com/myparcelnl/woocommerce/commit/517acac659b7ce73e8ff053d48ee08f1b254b055))
+
 ## [6.9.3](https://github.com/myparcelnl/woocommerce/compare/v6.9.2...v6.9.3) (2026-09-01)
 
 
