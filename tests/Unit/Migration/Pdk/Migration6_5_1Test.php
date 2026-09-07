@@ -235,6 +235,10 @@ dataset('order carrier variants', [
         ['deliveryOptions' => ['carrier' => 'postnl:123']],
         'POSTNL',
     ],
+    'numeric legacy id' => [
+        ['deliveryOptions' => ['carrier' => ['id' => 1]]],
+        'POSTNL',
+    ],
     'object with externalIdentifier' => [
         ['deliveryOptions' => ['carrier' => ['externalIdentifier' => 'dhlforyou']]],
         'DHL_FOR_YOU',
@@ -284,7 +288,7 @@ dataset('shipment carrier variants', [
     ],
     'legacy string with contract suffix' => [
         [['carrier' => 'postnl:42']],
-        [['carrier' => 'POSTNL', 'contractId' => '42']],
+        [['carrier' => 'POSTNL', 'contractId' => 42]],
     ],
     'object with externalIdentifier' => [
         [['carrier' => ['externalIdentifier' => 'dhlforyou']]],
@@ -316,3 +320,17 @@ it('normalises the carrier field in shipment data', function (array $shipments, 
         }
     }
 })->with('shipment carrier variants');
+
+it('preserves the contract in order delivery options', function () {
+    $metaKey = Pdk::get('metaKeyOrderData');
+    createWcOrder(['id' => 1, 'meta' => [$metaKey => [
+        'deliveryOptions' => ['carrier' => ['carrier' => 'postnl:42']],
+    ]]]);
+
+    Pdk::get(Migration6_5_1::class)->migrateOrderChunk(['orderIds' => [1]]);
+
+    expect(MockWpMeta::get(1, $metaKey)['deliveryOptions'])->toBe([
+        'carrier'    => 'POSTNL',
+        'contractId' => 42,
+    ]);
+});
