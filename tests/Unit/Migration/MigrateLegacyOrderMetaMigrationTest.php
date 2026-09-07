@@ -7,12 +7,21 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Migration;
 
 use MyParcelNL\Pdk\App\Installer\Contract\TimestampedMigrationInterface;
+use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
+use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\WooCommerce\Hooks\ScheduledMigrationHooks;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
+use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Order;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function MyParcelNL\WooCommerce\Tests\wpFactory;
 
 usesShared(new UsesMockWcPdkInstance());
+
+beforeEach(function () {
+    (new ScheduledMigrationHooks())->apply();
+});
 
 const LEGACY_SHIPMENTS_KEY  = '_myparcelnl_order_shipments';
 const CURRENT_SHIPMENTS_KEY = '_myparcelcom_order_shipments';
@@ -23,6 +32,31 @@ const CURRENT_SHIPMENTS_KEY = '_myparcelcom_order_shipments';
 function loadLegacyOrderMetaMigration(): TimestampedMigrationInterface
 {
     return require __DIR__ . '/../../../src/Migration/2026_09_03_101500_migrate_legacy_order_meta.php';
+}
+
+/**
+ * Execute the scheduled WordPress actions, including their registered callbacks.
+ */
+function runLegacyOrderMetaTask(array $task): void
+{
+    // MockWpActions::execute consumes hooks after one call. Dispatch their registered
+    // callbacks directly so multiple chunks behave like separate cron executions.
+    foreach (MockWpActions::get($task['callback']) as $action) {
+        Pdk::get(CronServiceInterface::class)->dispatch($action['function'], ...$task['args']);
+    }
+}
+
+function runLegacyOrderMetaTasks(): void
+{
+    foreach (Pdk::get(WordPressScheduledTasks::class)->all() as $task) {
+        runLegacyOrderMetaTask($task);
+    }
+}
+
+function runLegacyOrderMetaMigration(): void
+{
+    loadLegacyOrderMetaMigration()->up();
+    runLegacyOrderMetaTasks();
 }
 
 /**
@@ -66,7 +100,7 @@ it('is a timestamped migration the installer can discover', function () {
 it('moves legacy shipments to the current key and converts the carrier', function () {
     $order = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [legacyShipment()]]);
 
-    loadLegacyOrderMetaMigration()->up();
+    runLegacyOrderMetaMigration();
 
     $migrated = wc_get_order($order->get_id())->get_meta(CURRENT_SHIPMENTS_KEY);
 
@@ -83,7 +117,7 @@ it('leaves an order alone when the current key already holds shipments', functio
         CURRENT_SHIPMENTS_KEY => $existing,
     ]);
 
-    loadLegacyOrderMetaMigration()->up();
+    runLegacyOrderMetaMigration();
 
     expect(wc_get_order($order->get_id())->get_meta(CURRENT_SHIPMENTS_KEY))->toBe($existing);
 });
@@ -95,7 +129,7 @@ it('does not resurrect shipments that were deliberately removed', function () {
         CURRENT_SHIPMENTS_KEY => [],
     ]);
 
-    loadLegacyOrderMetaMigration()->up();
+    runLegacyOrderMetaMigration();
 
     expect(wc_get_order($order->get_id())->get_meta(CURRENT_SHIPMENTS_KEY))->toBe([]);
 });
@@ -113,7 +147,7 @@ it('converts a carrier stored as a numeric id', function () {
         ],
     ]);
 
-    loadLegacyOrderMetaMigration()->up();
+    runLegacyOrderMetaMigration();
 
     $migrated = wc_get_order($order->get_id())->get_meta(CURRENT_SHIPMENTS_KEY);
 
@@ -124,7 +158,7 @@ it('converts a carrier stored as a numeric id', function () {
 it('migrates the belgian namespace too', function () {
     $order = makeOrderWithMeta(['_myparcelbe_order_shipments' => [legacyShipment()]]);
 
-    loadLegacyOrderMetaMigration()->up();
+    runLegacyOrderMetaMigration();
 
     $migrated = wc_get_order($order->get_id())->get_meta(CURRENT_SHIPMENTS_KEY);
 
@@ -140,7 +174,7 @@ it('normalises the carrier inside order data as well', function () {
         ],
     ]);
 
-    loadLegacyOrderMetaMigration()->up();
+    runLegacyOrderMetaMigration();
 
     $migrated = wc_get_order($order->get_id())->get_meta('_myparcelcom_order_data');
 
@@ -160,7 +194,7 @@ it('keeps the contract id encoded in the legacy identifier', function () {
         ],
     ]);
 
-    loadLegacyOrderMetaMigration()->up();
+    runLegacyOrderMetaMigration();
 
     $migrated = wc_get_order($order->get_id())->get_meta(CURRENT_SHIPMENTS_KEY);
 
@@ -181,7 +215,7 @@ it('keeps the contract id encoded in the carrier-key array shape', function () {
         ],
     ]);
 
-    loadLegacyOrderMetaMigration()->up();
+    runLegacyOrderMetaMigration();
 
     $migrated = wc_get_order($order->get_id())->get_meta(CURRENT_SHIPMENTS_KEY);
 
@@ -200,7 +234,7 @@ it('does not finalise an order whose carrier cannot be normalised', function () 
         ],
     ]);
 
-    loadLegacyOrderMetaMigration()->up();
+    runLegacyOrderMetaMigration();
 
     $reloaded = wc_get_order($order->get_id());
 
@@ -219,7 +253,7 @@ it('does not treat false-like invalid carriers as a missing carrier', function (
         ],
     ]);
 
-    loadLegacyOrderMetaMigration()->up();
+    runLegacyOrderMetaMigration();
 
     expect(wc_get_order($order->get_id())->meta_exists(CURRENT_SHIPMENTS_KEY))->toBeFalse();
 })->with([0, '0', false]);
@@ -233,73 +267,146 @@ it('migrates valid orders that sit behind a full page of unusable ones', functio
 
     $valid = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [legacyShipment()]]);
 
-    loadLegacyOrderMetaMigration()->up();
+    runLegacyOrderMetaMigration();
 
     expect(wc_get_order($valid->get_id())->get_meta(CURRENT_SHIPMENTS_KEY))->toBeArray()->toHaveCount(1);
 });
 
-it('bounds scanning empty records and resumes from the stored cursor', function () {
+it('schedules bounded cron chunks without writing order meta during the upgrade', function () {
+    for ($i = 0; $i < 260; $i++) {
+        makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [legacyShipment()]]);
+    }
+
+    // An unrelated order must never enter the chunks, even when it predates this migration.
+    $unrelated = makeOrderWithMeta([]);
+    $migration = loadLegacyOrderMetaMigration();
+    $migration->up();
+
+    $tasks = Pdk::get(WordPressScheduledTasks::class)->all();
+    $chunks = $tasks->map(static function (array $task): array {
+        return $task['args'][0]['orderIds'];
+    })->all();
+    $countMigrated = static function (): int {
+        return count(wc_get_orders([
+            'limit'        => -1,
+            'meta_key'     => CURRENT_SHIPMENTS_KEY,
+            'meta_compare' => 'EXISTS',
+        ]));
+    };
+
+    expect($migration->hasFailed())->toBeFalse()
+        ->and(array_map('count', $chunks))->toBe([100, 100, 60])
+        ->and(array_unique(array_merge(...$chunks)))->toHaveCount(260)
+        ->and($countMigrated())->toBe(0);
+
+    $first = $tasks->first();
+    runLegacyOrderMetaTask($first);
+
+    expect($countMigrated())->toBe(100);
+
+    foreach ($tasks->slice(1) as $task) {
+        runLegacyOrderMetaTask($task);
+    }
+
+    expect($countMigrated())->toBe(260)
+        ->and(wc_get_order($unrelated->get_id())->meta_exists(CURRENT_SHIPMENTS_KEY))->toBeFalse();
+});
+
+it('processes valid data after multiple chunks of empty legacy values', function () {
     for ($i = 0; $i < 260; $i++) {
         makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => []]);
     }
 
     $valid = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [legacyShipment()]]);
 
-    $first = loadLegacyOrderMetaMigration();
-    $first->up();
+    runLegacyOrderMetaMigration();
 
-    expect($first->hasFailed())->toBeTrue()
-        ->and(wc_get_order($valid->get_id())->meta_exists(CURRENT_SHIPMENTS_KEY))->toBeFalse();
-
-    $second = loadLegacyOrderMetaMigration();
-    $second->up();
-
-    expect($second->hasFailed())->toBeFalse()
-        ->and(wc_get_order($valid->get_id())->get_meta(CURRENT_SHIPMENTS_KEY))->toBeArray()->toHaveCount(1);
+    expect(wc_get_order($valid->get_id())->get_meta(CURRENT_SHIPMENTS_KEY))->toHaveCount(1);
 });
 
-it('bounds a single run and resumes on the next one', function () {
-    $total = 260;
+it('preserves current meta written after the migration was scheduled', function (array $current) {
+    $order = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [legacyShipment()]]);
 
-    for ($i = 0; $i < $total; $i++) {
-        makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [legacyShipment()]]);
-    }
+    loadLegacyOrderMetaMigration()->up();
 
-    $countMigrated = static function () use ($total): int {
-        $migrated = 0;
+    $order->update_meta_data(CURRENT_SHIPMENTS_KEY, $current);
+    $order->save();
+    runLegacyOrderMetaTasks();
 
-        foreach (wc_get_orders(['limit' => -1]) as $order) {
-            if ($order->meta_exists(CURRENT_SHIPMENTS_KEY)) {
-                $migrated++;
-            }
-        }
+    expect(wc_get_order($order->get_id())->get_meta(CURRENT_SHIPMENTS_KEY))->toBe($current);
+})->with([
+    'new export' => [[['id' => 1, 'carrier' => 'POSTNL', 'barcode' => 'NEW']]],
+    'removed shipments' => [[]],
+]);
 
-        return $migrated;
-    };
+it('leaves the entire legacy value intact when one nested carrier is unsupported', function () {
+    $legacy = [legacyShipment(), [
+        'carrier' => 'postnl',
+        'deliveryOptions' => ['carrier' => ['id' => 999999]],
+    ]];
+    $order = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => $legacy]);
+    $valid = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [legacyShipment()]]);
 
-    $first = loadLegacyOrderMetaMigration();
-    $first->up();
+    runLegacyOrderMetaMigration();
 
-    // Stops at the run limit and reports failure, which leaves it unrecorded so it runs again.
-    expect($first->hasFailed())->toBeTrue()
-        ->and($countMigrated())->toBe(250);
+    $reloaded = wc_get_order($order->get_id());
+    expect($reloaded->meta_exists(CURRENT_SHIPMENTS_KEY))->toBeFalse()
+        ->and($reloaded->get_meta(LEGACY_SHIPMENTS_KEY))->toBe($legacy)
+        ->and(wc_get_order($valid->get_id())->get_meta(CURRENT_SHIPMENTS_KEY))->toHaveCount(1);
+});
 
-    $second = loadLegacyOrderMetaMigration();
-    $second->up();
+it('does not copy malformed shipment records into the current namespace', function (array $legacy) {
+    $order = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => $legacy]);
 
-    expect($countMigrated())->toBe($total)
-        ->and($second->hasFailed())->toBeFalse();
+    runLegacyOrderMetaMigration();
+
+    $reloaded = wc_get_order($order->get_id());
+    expect($reloaded->meta_exists(CURRENT_SHIPMENTS_KEY))->toBeFalse()
+        ->and($reloaded->get_meta(LEGACY_SHIPMENTS_KEY))->toBe($legacy);
+})->with([
+    'scalar shipment' => [[legacyShipment(), 'broken']],
+    'scalar delivery options' => [[['carrier' => 'postnl', 'deliveryOptions' => 'broken']]],
+]);
+
+it('preserves existing contract ids and track and trace data', function () {
+    $shipment = legacyShipment();
+    $shipment['contractId'] = 42;
+    $shipment['deliveryOptions']['contractId'] = 43;
+    $order = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [$shipment]]);
+
+    runLegacyOrderMetaMigration();
+
+    $migrated = wc_get_order($order->get_id())->get_meta(CURRENT_SHIPMENTS_KEY)[0];
+    expect($migrated['contractId'])->toBe(42)
+        ->and($migrated['deliveryOptions']['contractId'])->toBe(43)
+        ->and($migrated['id'])->toBe($shipment['id'])
+        ->and($migrated['barcode'])->toBe($shipment['barcode'])
+        ->and($migrated['linkConsumerPortal'])->toBe($shipment['linkConsumerPortal']);
 });
 
 it('leaves the legacy meta in place so a repeated run is harmless', function () {
     $order = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [legacyShipment()]]);
 
-    $migration = loadLegacyOrderMetaMigration();
-    $migration->up();
-    $migration->up();
+    runLegacyOrderMetaMigration();
+    runLegacyOrderMetaMigration();
 
     $reloaded = wc_get_order($order->get_id());
 
     expect($reloaded->get_meta(LEGACY_SHIPMENTS_KEY))->toBeArray()->toHaveCount(1)
         ->and($reloaded->get_meta(CURRENT_SHIPMENTS_KEY))->toHaveCount(1);
 });
+
+it('keeps contract ids from all stored carrier object formats', function (array $carrier, int $contractId) {
+    $order = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [['carrier' => $carrier]]]);
+
+    runLegacyOrderMetaMigration();
+
+    expect(wc_get_order($order->get_id())->get_meta(CURRENT_SHIPMENTS_KEY)[0])->toBe([
+        'carrier' => 'POSTNL',
+        'contractId' => $contractId,
+    ]);
+})->with([
+    'id with identifier suffix' => [['id' => 1, 'externalIdentifier' => 'postnl:42'], 42],
+    'explicit contract wins' => [['id' => 1, 'externalIdentifier' => 'postnl:42', 'contractId' => 43], 43],
+    'snake case contract' => [['carrier' => 'postnl:42', 'contract_id' => 44], 44],
+]);
