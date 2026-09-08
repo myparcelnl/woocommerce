@@ -255,7 +255,7 @@ final class Migration6_5_1 extends AbstractMigration
                 return null;
             }
 
-            $record = $this->normalizeCarrierOn($record);
+            $record = $this->normalizeCarrierOn($record, $isList);
 
             if (null === $record) {
                 return null;
@@ -266,7 +266,7 @@ final class Migration6_5_1 extends AbstractMigration
                     return null;
                 }
 
-                $deliveryOptions = $this->normalizeCarrierOn($record['deliveryOptions']);
+                $deliveryOptions = $this->normalizeCarrierOn($record['deliveryOptions'], false);
 
                 if (null === $deliveryOptions) {
                     return null;
@@ -282,60 +282,25 @@ final class Migration6_5_1 extends AbstractMigration
     }
 
     /**
-     * Replaces the carrier with its current identifier and keeps the contract that was encoded in
-     * the legacy value: "postnl:42" carries contract 42, which is a separate attribute today and
-     * would otherwise be lost. An existing contractId always wins.
+     * Converts stored carrier formats to a supported V2 name before saving the record.
+     * Missing carriers stay unchanged. Invalid carriers return null to skip the complete value.
+     * Existing contract IDs win; new IDs use the Shipment (string) or DeliveryOptions (int) type.
      *
      * @param  array $record
+     * @param  bool  $isShipment
      *
-     * @return null|array Null when a non-empty carrier value cannot be safely normalised.
+     * @return null|array
      */
-    private function normalizeCarrierOn(array $record): ?array
+    private function normalizeCarrierOn(array $record, bool $isShipment): ?array
     {
-        if (! array_key_exists('carrier', $record)) {
-            return $record;
-        }
+        $carrier = $record['carrier'] ?? null;
 
-        $carrier = $record['carrier'];
-
-        // A missing carrier intentionally falls back to the shop default at runtime.
         if (null === $carrier || '' === $carrier || [] === $carrier) {
             return $record;
         }
 
-        $parsed = $this->parseLegacyCarrier($carrier);
-
-        if (null === $parsed) {
-            return null;
-        }
-
-        [$legacyName, $contractId] = $parsed;
-        $name = array_flip(Carrier::CARRIER_NAME_TO_LEGACY_MAP)[$legacyName] ?? $legacyName;
-
-        if (! Carrier::isSupported($name)) {
-            return null;
-        }
-
-        if (is_numeric($contractId) && ! isset($record['contractId'])) {
-            $record['contractId'] = (int) $contractId;
-        }
-
-        $record['carrier'] = $name;
-
-        return $record;
-    }
-
-    /**
-     * Parses the carrier formats shared by this migration and later repair migrations, including
-     * numeric carrier ids and contract ids stored either as a field or as a name suffix.
-     *
-     * @param  mixed $carrier
-     *
-     * @return null|array{0: string, 1: null|int|string} [carrierName, contractId] or null if not parseable
-     */
-    private function parseLegacyCarrier($carrier): ?array
-    {
-        $name = null;
+        $name       = null;
+        $contractId = null;
 
         if (is_array($carrier)) {
             $storedContractId = $carrier['contractId'] ?? ($carrier['contract_id'] ?? null);
@@ -345,26 +310,29 @@ final class Migration6_5_1 extends AbstractMigration
                 $name = Carrier::v2NameFromLegacyId((int) $carrier['id']);
             }
 
-            $raw = $carrier['externalIdentifier'] ?? ($carrier['carrier'] ?? null);
-        } elseif (is_string($carrier)) {
-            $raw        = $carrier;
-            $contractId = null;
-        } else {
+            $carrier = $carrier['externalIdentifier'] ?? ($carrier['carrier'] ?? null);
+        }
+
+        if (is_string($carrier)) {
+            $parts = explode(':', $carrier, 2);
+            $name  = $name ?? (array_flip(Carrier::CARRIER_NAME_TO_LEGACY_MAP)[$parts[0]] ?? $parts[0]);
+
+            if (null === $contractId && isset($parts[1]) && is_numeric($parts[1])) {
+                $contractId = $parts[1];
+            }
+        }
+
+        if (null === $name || ! Carrier::isSupported($name)) {
             return null;
         }
 
-        if (! is_string($raw)) {
-            return null === $name ? null : [$name, $contractId];
+        $record['carrier'] = $name;
+
+        if (null !== $contractId && ! isset($record['contractId'])) {
+            $record['contractId'] = $isShipment ? (string) $contractId : (int) $contractId;
         }
 
-        $parts = explode(':', $raw, 2);
-        $name  = $name ?? $parts[0];
-
-        if (null === $contractId && isset($parts[1]) && is_numeric($parts[1])) {
-            $contractId = $parts[1];
-        }
-
-        return [$name, $contractId];
+        return $record;
     }
 
     /**
