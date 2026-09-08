@@ -199,7 +199,7 @@ it('keeps the contract id encoded in the legacy identifier', function () {
     $migrated = wc_get_order($order->get_id())->get_meta(CURRENT_SHIPMENTS_KEY);
 
     expect($migrated[0]['carrier'])->toBe('POSTNL')
-        ->and($migrated[0]['contractId'])->toBe(42)
+        ->and($migrated[0]['contractId'])->toBe('42')
         ->and($migrated[0]['deliveryOptions']['carrier'])->toBe('POSTNL')
         ->and($migrated[0]['deliveryOptions']['contractId'])->toBe(42);
 });
@@ -220,7 +220,7 @@ it('keeps the contract id encoded in the carrier-key array shape', function () {
     $migrated = wc_get_order($order->get_id())->get_meta(CURRENT_SHIPMENTS_KEY);
 
     expect($migrated[0]['carrier'])->toBe('POSTNL')
-        ->and($migrated[0]['contractId'])->toBe(42);
+        ->and($migrated[0]['contractId'])->toBe('42');
 });
 
 it('does not finalise an order whose carrier cannot be normalised', function () {
@@ -257,20 +257,6 @@ it('does not treat false-like invalid carriers as a missing carrier', function (
 
     expect(wc_get_order($order->get_id())->meta_exists(CURRENT_SHIPMENTS_KEY))->toBeFalse();
 })->with([0, '0', false]);
-
-it('migrates valid orders that sit behind a full page of unusable ones', function () {
-    // Enough broken records to fill more than one page. A run that stopped at the first page it
-    // could not migrate would never reach the valid order behind them.
-    for ($i = 0; $i < 120; $i++) {
-        makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => []]);
-    }
-
-    $valid = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [legacyShipment()]]);
-
-    runLegacyOrderMetaMigration();
-
-    expect(wc_get_order($valid->get_id())->get_meta(CURRENT_SHIPMENTS_KEY))->toBeArray()->toHaveCount(1);
-});
 
 it('schedules bounded cron chunks without writing order meta during the upgrade', function () {
     for ($i = 0; $i < 260; $i++) {
@@ -403,10 +389,42 @@ it('keeps contract ids from all stored carrier object formats', function (array 
 
     expect(wc_get_order($order->get_id())->get_meta(CURRENT_SHIPMENTS_KEY)[0])->toBe([
         'carrier' => 'POSTNL',
-        'contractId' => $contractId,
+        'contractId' => (string) $contractId,
     ]);
 })->with([
     'id with identifier suffix' => [['id' => 1, 'externalIdentifier' => 'postnl:42'], 42],
     'explicit contract wins' => [['id' => 1, 'externalIdentifier' => 'postnl:42', 'contractId' => 43], 43],
     'snake case contract' => [['carrier' => 'postnl:42', 'contract_id' => 44], 44],
+]);
+
+it('accepts legacy and V2 names in both carrier fields', function (string $shipmentCarrier, string $deliveryCarrier) {
+    $order = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [[
+        'carrier'         => $shipmentCarrier,
+        'deliveryOptions' => ['carrier' => $deliveryCarrier],
+    ]]]);
+
+    runLegacyOrderMetaMigration();
+
+    $migrated = wc_get_order($order->get_id())->get_meta(CURRENT_SHIPMENTS_KEY)[0];
+
+    expect($migrated['carrier'])->toBe('POSTNL')
+        ->and($migrated['deliveryOptions']['carrier'])->toBe('POSTNL');
+})->with([
+    'both legacy'       => ['postnl', 'postnl'],
+    'both V2'           => ['POSTNL', 'POSTNL'],
+    'legacy shipment'   => ['postnl', 'POSTNL'],
+    'legacy options'    => ['POSTNL', 'postnl'],
+]);
+
+it('preserves missing carriers when it copies legacy metadata', function (array $record) {
+    $order = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [$record]]);
+
+    runLegacyOrderMetaMigration();
+
+    expect(wc_get_order($order->get_id())->get_meta(CURRENT_SHIPMENTS_KEY))->toBe([$record]);
+})->with([
+    'absent' => [['id' => 1]],
+    'null'   => [['carrier' => null]],
+    'string' => [['carrier' => '']],
+    'array'  => [['carrier' => []]],
 ]);

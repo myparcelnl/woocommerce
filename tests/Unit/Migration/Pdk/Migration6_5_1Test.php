@@ -288,7 +288,7 @@ dataset('shipment carrier variants', [
     ],
     'legacy string with contract suffix' => [
         [['carrier' => 'postnl:42']],
-        [['carrier' => 'POSTNL', 'contractId' => 42]],
+        [['carrier' => 'POSTNL', 'contractId' => '42']],
     ],
     'object with externalIdentifier' => [
         [['carrier' => ['externalIdentifier' => 'dhlforyou']]],
