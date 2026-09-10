@@ -67,10 +67,50 @@ function wc_get_order_statuses()
     ];
 }
 
-/** @see \wc_get_orders() */
+/**
+ * Honours the arguments the plugin actually relies on: the flat meta_key/meta_compare filter, page
+ * size, page number and 'ids' as return type. Without them a paging migration cannot be tested,
+ * because every run would keep receiving the orders it just handled.
+ *
+ * Only the flat form is supported, deliberately: the legacy post-storage data store ignores a
+ * meta_query, so a mock that honoured one would hide a bug that only appears on a non-HPOS shop.
+ *
+ * @see \wc_get_orders()
+ */
 function wc_get_orders($args)
 {
-    return MockWcData::getByClass(WC_Order::class);
+    $orders = MockWcData::getByClass(WC_Order::class);
+
+    $compare = $args['meta_compare'] ?? null;
+
+    // Only the presence comparisons are modelled; anything else (NOT LIKE, =, ...) passes through
+    // untouched rather than being silently misread as a presence check.
+    if (isset($args['meta_key']) && in_array($compare, ['EXISTS', 'NOT EXISTS'], true)) {
+        $orders = array_values(array_filter($orders, static function ($order) use ($args, $compare): bool {
+            $exists = $order->meta_exists($args['meta_key']);
+
+            return 'NOT EXISTS' === $compare ? ! $exists : $exists;
+        }));
+    }
+
+    usort($orders, static function ($a, $b): int {
+        return (int) $a->get_id() <=> (int) $b->get_id();
+    });
+
+    $limit = (int) ($args['limit'] ?? -1);
+
+    if ($limit > 0) {
+        $page   = max(1, (int) ($args['paged'] ?? 1));
+        $orders = array_slice($orders, ($page - 1) * $limit, $limit);
+    }
+
+    if ('ids' === ($args['return'] ?? null)) {
+        return array_map(static function ($order) {
+            return $order->get_id();
+        }, $orders);
+    }
+
+    return $orders;
 }
 
 /** @see \wc_get_product() */

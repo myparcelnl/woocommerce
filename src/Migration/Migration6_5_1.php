@@ -129,57 +129,13 @@ final class Migration6_5_1 extends AbstractMigration
     }
 
     /**
-     * Cron callback: normalises the carrier field in _myparcelcom_order_data for a chunk of orders.
-     * Handles all legacy formats:
-     *   - plain lowercase string: "postnl"
-     *   - old SDK object:         {"externalIdentifier": "postnl"}
-     *   - transitional array:     {"carrier": "postnl", ...}
+     * Normalises order data, optionally copying it from a legacy namespace.
      *
-     * @param  array $data
-     *
-     * @return void
+     * @param array $data
      */
     public function migrateOrderChunk(array $data): void
     {
-        $orderIds       = $data['orderIds'] ?? [];
-        $chunk          = $data['chunk'] ?? null;
-        $legacyToNewMap = array_flip(Carrier::CARRIER_NAME_TO_LEGACY_MAP);
-
-        if (empty($orderIds)) {
-            return;
-        }
-
-        $this->debug(
-            sprintf(
-                'Start order data migration for orders %d..%d (chunk %d)',
-                $orderIds[0],
-                $orderIds[count($orderIds) - 1],
-                $chunk
-            )
-        );
-
-        foreach ($orderIds as $orderId) {
-            $order    = new WC_Order($orderId);
-            $metaData = $order->get_meta(Pdk::get('metaKeyOrderData'));
-
-            if (empty($metaData) || ! is_array($metaData)) {
-                continue;
-            }
-
-            $parsed = $this->parseLegacyCarrier($metaData['deliveryOptions']['carrier'] ?? null);
-
-            if (! $parsed) {
-                continue;
-            }
-
-            [$legacyName] = $parsed;
-            $metaData['deliveryOptions']['carrier'] = $legacyToNewMap[$legacyName] ?? $legacyName;
-
-            $order->update_meta_data(Pdk::get('metaKeyOrderData'), $metaData);
-            $order->save();
-
-            $this->debug("Order $orderId carrier migrated.");
-        }
+        $this->migrateMetaChunk($data, Pdk::get('metaKeyOrderData'), false);
     }
 
     /**
@@ -197,137 +153,186 @@ final class Migration6_5_1 extends AbstractMigration
     }
 
     /**
-     * Cron callback: normalises the carrier field in _myparcelcom_order_shipments for a chunk of orders.
-     * Handles legacy formats where carrier was stored as an object:
-     *   - old SDK object:    {"externalIdentifier": "postnl", ...}
-     *   - transitional:      {"carrier": "postnl", ...}
-     *   - plain string:      "postnl"
+     * Normalises shipments, optionally copying them from a legacy namespace.
      *
-     * Migrates to a plain string with the new carrier identifier: "POSTNL"
-     *
-     * @param  array $data
-     *
-     * @return void
+     * @param array $data
      */
     public function migrateShipmentChunk(array $data): void
     {
-        $orderIds       = $data['orderIds'] ?? [];
-        $chunk          = $data['chunk'] ?? null;
-        $legacyToNewMap = array_flip(Carrier::CARRIER_NAME_TO_LEGACY_MAP);
+        $this->migrateMetaChunk($data, Pdk::get('metaKeyOrderShipments'), true);
+    }
 
-        if (empty($orderIds)) {
-            return;
+    /**
+     * Schedule the same chunks for data that the namespace change in 6.0.0 missed.
+     * The source key stays in the job context; no legacy data is exposed under the
+     * current key until the callback has normalised the complete value.
+     */
+    public function updateLegacyOrderMeta(): void
+    {
+        foreach (['_myparcelnl_', '_myparcelbe_'] as $prefix) {
+            foreach ([
+                'order_shipments' => Pdk::get('migrateAction_6_5_1_Shipments'),
+                'order_data'      => Pdk::get('migrateAction_6_5_1_Orders'),
+            ] as $suffix => $action) {
+                $legacyKey = $prefix . $suffix;
+
+                $this->schedulePagedMigration($legacyKey, $action, ['legacyMetaKey' => $legacyKey]);
+            }
         }
+    }
 
-        $this->debug(
-            sprintf(
-                'Start shipment data migration for orders %d..%d (chunk %d)',
-                $orderIds[0],
-                $orderIds[count($orderIds) - 1],
-                $chunk
-            )
-        );
+    /**
+     * Recheck the destination when the job runs: an order may have been exported or
+     * had its shipments removed after scheduling. Preserve even an empty current key.
+     *
+     * @param array  $data
+     * @param string $currentKey
+     * @param bool   $isList
+     */
+    private function migrateMetaChunk(array $data, string $currentKey, bool $isList): void
+    {
+        $sourceKey = $data['legacyMetaKey'] ?? $currentKey;
 
-        foreach ($orderIds as $orderId) {
-            $order     = new WC_Order($orderId);
-            $shipments = $order->get_meta(Pdk::get('metaKeyOrderShipments'));
+        foreach ($data['orderIds'] ?? [] as $orderId) {
+            $order = wc_get_order($orderId);
 
-            if (empty($shipments) || ! is_array($shipments)) {
+            if (! $order instanceof WC_Order
+                || ($sourceKey !== $currentKey && $order->meta_exists($currentKey))) {
                 continue;
             }
 
-            $changed = false;
+            $value = $order->get_meta($sourceKey);
 
-            foreach ($shipments as &$shipment) {
-                $parsed = $this->parseLegacyCarrier($shipment['carrier'] ?? null);
-
-                if ($parsed) {
-                    [$legacyName, $contractId] = $parsed;
-                    $newName = $legacyToNewMap[$legacyName] ?? $legacyName;
-
-                    if ($newName !== $shipment['carrier']) {
-                        $shipment['carrier'] = $newName;
-                        $changed = true;
-                    }
-
-                    if ($contractId && ! isset($shipment['contractId'])) {
-                        $shipment['contractId'] = $contractId;
-                        $changed = true;
-                    }
-                }
-
-                if (isset($shipment['deliveryOptions'])) {
-                    $changed = $this->migrateCarrierField($shipment['deliveryOptions'], 'carrier', $legacyToNewMap) || $changed;
-                }
-            }
-            unset($shipment);
-
-            if (! $changed) {
+            if (! is_array($value) || empty($value)) {
                 continue;
             }
 
-            $order->update_meta_data(Pdk::get('metaKeyOrderShipments'), $shipments);
+            $normalized = $this->normalizeOrderMeta($value, $isList);
+
+            if (null === $normalized) {
+                $this->warning('Skipped order meta with malformed data or an unsupported carrier.', [
+                    'orderId' => $orderId,
+                    'from'    => $sourceKey,
+                ]);
+
+                continue;
+            }
+
+            if ($sourceKey === $currentKey && $normalized === $value) {
+                continue;
+            }
+
+            $order->update_meta_data($currentKey, $normalized);
             $order->save();
 
-            $this->debug("Order $orderId shipments migrated.");
+            $this->debug('Migrated order meta', [
+                'orderId' => $orderId,
+                'from'    => $sourceKey,
+                'to'      => $currentKey,
+            ]);
         }
     }
 
     /**
-     * Extracts the legacy carrier name from the various stored formats and strips the contract ID suffix.
+     * A carrier lives in two places: on the record itself and on its delivery options. Shipments
+     * hold a list of such records, order data holds a single one.
      *
-     * @param  mixed $carrier
+     * Returns null as soon as one carrier has no supported name. The caller then writes nothing at
+     * all, so the order keeps its legacy data and a future migration can convert it once we do
+     * support that carrier. Writing it half-converted would leave the order unreadable instead.
      *
-     * @return null|string[] [carrierName, contractId] or null if not parseable
+     * @param  array  $value
+     * @param  bool   $isList
+     *
+     * @return null|array
      */
-    private function parseLegacyCarrier($carrier): ?array
+    private function normalizeOrderMeta(array $value, bool $isList): ?array
     {
+        $records = $isList ? $value : [$value];
+
+        foreach ($records as $index => $record) {
+            if (! is_array($record)) {
+                return null;
+            }
+
+            $record = $this->normalizeCarrierOn($record, $isList);
+
+            if (null === $record) {
+                return null;
+            }
+
+            if (isset($record['deliveryOptions'])) {
+                if (! is_array($record['deliveryOptions'])) {
+                    return null;
+                }
+
+                $deliveryOptions = $this->normalizeCarrierOn($record['deliveryOptions'], false);
+
+                if (null === $deliveryOptions) {
+                    return null;
+                }
+
+                $record['deliveryOptions'] = $deliveryOptions;
+            }
+
+            $records[$index] = $record;
+        }
+
+        return $isList ? $records : $records[0];
+    }
+
+    /**
+     * Converts stored carrier formats to a supported V2 name before saving the record.
+     * Missing carriers stay unchanged. Invalid carriers return null to skip the complete value.
+     * Existing contract IDs win; new IDs use the Shipment (string) or DeliveryOptions (int) type.
+     *
+     * @param  array $record
+     * @param  bool  $isShipment
+     *
+     * @return null|array
+     */
+    private function normalizeCarrierOn(array $record, bool $isShipment): ?array
+    {
+        $carrier = $record['carrier'] ?? null;
+
+        if (null === $carrier || '' === $carrier || [] === $carrier) {
+            return $record;
+        }
+
+        $name       = null;
+        $contractId = null;
+
         if (is_array($carrier)) {
-            $raw = $carrier['externalIdentifier'] ?? ($carrier['carrier'] ?? null);
-        } elseif (is_string($carrier)) {
-            $raw = $carrier;
-        } else {
+            $storedContractId = $carrier['contractId'] ?? ($carrier['contract_id'] ?? null);
+            $contractId       = is_numeric($storedContractId) ? $storedContractId : null;
+
+            if (isset($carrier['id']) && is_numeric($carrier['id'])) {
+                $name = Carrier::v2NameFromLegacyId((int) $carrier['id']);
+            }
+
+            $carrier = $carrier['externalIdentifier'] ?? ($carrier['carrier'] ?? null);
+        }
+
+        if (is_string($carrier)) {
+            $parts = explode(':', $carrier, 2);
+            $name  = $name ?? (array_flip(Carrier::CARRIER_NAME_TO_LEGACY_MAP)[$parts[0]] ?? $parts[0]);
+
+            if (null === $contractId && isset($parts[1]) && is_numeric($parts[1])) {
+                $contractId = $parts[1];
+            }
+        }
+
+        if (null === $name || ! Carrier::isSupported($name)) {
             return null;
         }
 
-        if (! is_string($raw)) {
-            return null;
+        $record['carrier'] = $name;
+
+        if (null !== $contractId && ! isset($record['contractId'])) {
+            $record['contractId'] = $isShipment ? (string) $contractId : (int) $contractId;
         }
 
-        $parts      = explode(':', $raw, 2);
-        $name       = $parts[0];
-        $contractId = $parts[1] ?? null;
-
-        return [$name, $contractId];
-    }
-
-    /**
-     * Migrates a carrier field in-place from legacy formats to the new string identifier.
-     *
-     * @param  array  $data
-     * @param  string $key
-     * @param  array  $legacyToNewMap
-     *
-     * @return bool Whether the field was changed.
-     */
-    private function migrateCarrierField(array &$data, string $key, array $legacyToNewMap): bool
-    {
-        $parsed = $this->parseLegacyCarrier($data[$key] ?? null);
-
-        if (! $parsed) {
-            return false;
-        }
-
-        [$legacyName] = $parsed;
-        $newName = $legacyToNewMap[$legacyName] ?? $legacyName;
-
-        if ($newName === $data[$key]) {
-            return false;
-        }
-
-        $data[$key] = $newName;
-
-        return true;
+        return $record;
     }
 
     /**
@@ -335,10 +340,11 @@ final class Migration6_5_1 extends AbstractMigration
      *
      * @param  string $metaKey     The meta key to filter orders by.
      * @param  string $cronAction  The cron action name to schedule.
+     * @param  array  $context     Extra context for the chunk callback.
      *
      * @return void
      */
-    private function schedulePagedMigration(string $metaKey, string $cronAction): void
+    private function schedulePagedMigration(string $metaKey, string $cronAction, array $context = []): void
     {
         $page       = 1;
         $chunkIndex = 0;
@@ -352,6 +358,8 @@ final class Migration6_5_1 extends AbstractMigration
                 'meta_key'     => $metaKey,
                 'meta_compare' => 'EXISTS',
                 'return'       => 'ids',
+                'orderby'      => 'ID',
+                'order'        => 'ASC',
             ]);
 
             if (empty($orderIds)) {
@@ -362,7 +370,7 @@ final class Migration6_5_1 extends AbstractMigration
             $chunkContext = [
                 'orderIds' => $orderIds,
                 'chunk'    => $chunkIndex + 1,
-            ];
+            ] + $context;
 
             $this->cronService->schedule($cronAction, $time, $chunkContext);
 
