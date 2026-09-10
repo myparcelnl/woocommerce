@@ -30,6 +30,7 @@ use MyParcelNL\WooCommerce\Adapter\WcAddressAdapter;
 use MyParcelNL\WooCommerce\Tests\Mock\TrackingWcOrder;
 use MyParcelNL\WooCommerce\Tests\Mock\TrackingWcOrderRepository;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
+use MyParcelNL\WooCommerce\WooCommerce\Contract\WcOrderRepositoryInterface;
 use Psr\Log\LoggerInterface;
 use WC_Order;
 use WC_Order_Factory;
@@ -127,6 +128,46 @@ it('reads saved delivery options and normalises the legacy carrier', function ()
         ->and($deliveryOptions->deliveryType)->toBe('morning')
         ->and($deliveryOptions->date->format('Y-m-d H:i:s'))->toBe('2039-12-31 12:00:00')
         ->and($deliveryOptions->shipmentOptions->signature)->toBe(TriStateService::ENABLED);
+});
+
+it('serves updated delivery options from the order cache', function () {
+    /** @var PdkOrderRepositoryInterface $orderRepository */
+    $orderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
+    /** @var WcOrderRepositoryInterface $wcOrderRepository */
+    $wcOrderRepository = Pdk::get(WcOrderRepositoryInterface::class);
+
+    // Unlike the regular WC_Order test double, this order keeps meta on the object itself.
+    // A cloned order therefore cannot see meta written to another clone, just like in WooCommerce.
+    $wcOrder = new class(['id' => 123]) extends WC_Order {
+        /** @var array<string, mixed> */
+        private $localMeta = [];
+
+        public function get_meta($key = '', $single = true, $context = 'view')
+        {
+            return $this->localMeta[(string) $key] ?? null;
+        }
+
+        public function update_meta_data($key, $value, $metaId = 0): void
+        {
+            $this->localMeta[(string) $key] = $value;
+        }
+    };
+
+    // Prime the request-local repository cache before the delivery options are saved.
+    $wcOrderRepository->get($wcOrder);
+
+    $pdkOrder = new PdkOrder([
+        'externalIdentifier' => '123',
+        'deliveryOptions'    => factory(DeliveryOptions::class)
+            ->withCarrier(Carrier::CARRIER_DHL_FOR_YOU_LEGACY_NAME)
+            ->make(),
+    ]);
+
+    $orderRepository->update($pdkOrder);
+
+    $cachedOrder = $orderRepository->get(123);
+
+    expect($cachedOrder->deliveryOptions->carrier->carrier)->toBe('DHL_FOR_YOU');
 });
 
 it('reads saved shipment options', function () {
