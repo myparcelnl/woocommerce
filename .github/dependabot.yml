@@ -47,7 +47,6 @@ updates:
       exclude:
         - '@myparcel/*'
         - '@myparcel-dev/*'
-        - '@myparcel-eslint/*'
     groups:
       minor-js-updates:
         applies-to: version-updates

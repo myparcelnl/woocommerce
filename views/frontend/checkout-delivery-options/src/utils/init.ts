@@ -1,3 +1,4 @@
+import {FrontendEndpoint} from '@myparcel-dev/pdk-common';
 import {
   PdkDeliveryOptionsEvent,
   initializeCheckoutDeliveryOptions as initialize,
@@ -7,7 +8,6 @@ import {
   defaultGetPackageType,
   defaultUpdateDeliveryOptions,
 } from '@myparcel-dev/pdk-checkout';
-import {FrontendEndpoint} from '@myparcel-dev/pdk-common';
 import {getHighestShippingClass} from './getHighestShippingClass';
 
 /**

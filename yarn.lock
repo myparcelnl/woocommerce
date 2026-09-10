@@ -4400,6 +4400,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@myparcel-dev/prettier-config@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@myparcel-dev/prettier-config@npm:2.0.1"
+  checksum: 10c0/04952affe76ff080c883c92e511004365bdb47956882616f275e48318dcd36029bd80de75bd812ec7bb4615dcfc0f41a48e64a19868b1570f4556354af9f0190
+  languageName: node
+  linkType: hard
+
 "@myparcel-dev/sdk@npm:^4.1.1":
   version: 4.1.1
   resolution: "@myparcel-dev/sdk@npm:4.1.1"
@@ -4689,6 +4696,7 @@ __metadata:
     "@myparcel-dev/eslint-config-prettier-typescript": "npm:^1.4.0"
     "@myparcel-dev/eslint-config-prettier-typescript-vue": "npm:^1.4.0"
     "@myparcel-dev/pdk-app-builder": "npm:^4.1.3"
+    "@myparcel-dev/prettier-config": "npm:^2.0.1"
     "@myparcel-dev/semantic-release-config": "npm:^6.0.10"
     "@myparcel-dev/semantic-release-wordpress-readme-generator": "npm:^1.3.0"
     "@semantic-release/git": "npm:^10.0.1"

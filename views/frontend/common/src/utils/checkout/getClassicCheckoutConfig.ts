@@ -73,9 +73,8 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
         // Our hidden delivery-options input must live on the form that gets submitted: the one with the
         // place-order button. forms[0]! is safe — isClassicCheckout() guarantees at least one form.
         return (
-          forms.find((form) =>
-            form.querySelector('#place_order, [name="woocommerce_checkout_place_order"]'),
-          ) ?? forms[0]!
+          forms.find((form) => form.querySelector('#place_order, [name="woocommerce_checkout_place_order"]')) ??
+          forms[0]!
         );
       },
 
@@ -104,20 +103,17 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
         // Visible names are global because Divi puts duplicate fields in separate forms. Hidden names
         // stay scoped to their form, so only the hidden duplicate is skipped. Unique hidden fields are
         // valid form values and remain in the merged data.
-        return formStates.reduce<Record<string, FormDataEntryValue>>(
-          (merged, {form, hiddenNames}) => {
-            for (const [key, value] of new FormData(form).entries()) {
-              if (hiddenNames.has(key) && visibleNames.has(key)) {
-                continue;
-              }
-
-              merged[key] = value;
+        return formStates.reduce<Record<string, FormDataEntryValue>>((merged, {form, hiddenNames}) => {
+          for (const [key, value] of new FormData(form).entries()) {
+            if (hiddenNames.has(key) && visibleNames.has(key)) {
+              continue;
             }
 
-            return merged;
-          },
-          {},
-        );
+            merged[key] = value;
+          }
+
+          return merged;
+        }, {});
       },
 
       // The value js-pdk passes lags one form-read behind and omits an unchecked box; read the live DOM.
