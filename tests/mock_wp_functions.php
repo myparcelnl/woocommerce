@@ -79,13 +79,45 @@ function apply_filters($tag, $value, ...$args)
     return MockWpActions::applyFilters($tag, $value, ...$args);
 }
 
-/** @see \wp_schedule_single_event() */
-function wp_schedule_single_event($timestamp, $callback, $args)
+/**
+ * @see \wp_unschedule_hook()
+ *
+ * Clears every event for a hook, which is how a self-rescheduling pass stops itself.
+ */
+function wp_unschedule_hook($hook, $wp_error = false)
 {
     /** @var \MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks $tasks */
     $tasks = Pdk::get(WordPressScheduledTasks::class);
 
+    return $tasks->clearHook($hook);
+}
+
+/** @see \is_wp_error() */
+function is_wp_error($thing): bool
+{
+    return $thing instanceof WP_Error;
+}
+
+/**
+ * @see \wp_schedule_single_event()
+ *
+ * Returns what WordPress returns: true when scheduled, and a WP_Error or false when not. A test sets
+ * the failure through WordPressScheduledTasks::failWith().
+ */
+function wp_schedule_single_event($timestamp, $callback, $args, $wp_error = false)
+{
+    /** @var \MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks $tasks */
+    $tasks = Pdk::get(WordPressScheduledTasks::class);
+
+    $failure = $tasks->failureCode();
+
+    if (null !== $failure) {
+        return $wp_error ? new WP_Error($failure, sprintf('Mocked failure: %s', $failure)) : false;
+    }
+
     $tasks->add($callback, $timestamp, $args);
+
+    return true;
 }
 
 /**@see \plugin_dir_path() */

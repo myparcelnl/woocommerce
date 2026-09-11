@@ -7,6 +7,7 @@ namespace MyParcelNL\WooCommerce\Hooks;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Hooks\Contract\WordPressHooksInterface;
 use MyParcelNL\WooCommerce\Migration\Migration6_5_1;
+use MyParcelNL\WooCommerce\Migration\NoTrackingChunkMigrator;
 use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
 use MyParcelNL\WooCommerce\Migration\Pdk\ProductSettingsMigration;
 
@@ -19,6 +20,31 @@ final class ScheduledMigrationHooks implements WordPressHooksInterface
     {
         $this->addPdkMigrations();
         $this->addMigration651();
+        $this->addNoTrackingMigration();
+    }
+
+    /**
+     * Chunked passes for the timestamped no tracking migration.
+     *
+     * The migration schedules the work and this registers the callback that runs it, because a scheduled
+     * action has to resolve to something addressable in a later request.
+     *
+     * @return void
+     */
+    private function addNoTrackingMigration(): void
+    {
+        /** @var \MyParcelNL\WooCommerce\Migration\NoTrackingChunkMigrator $migrator */
+        $migrator = Pdk::get(NoTrackingChunkMigrator::class);
+
+        add_action(
+            Pdk::get('migrateAction_NoTracking_ProductSettings'),
+            [$migrator, 'migrateProductSettingsChunk']
+        );
+
+        add_action(
+            Pdk::get('migrateAction_NoTracking_Orders'),
+            [$migrator, 'migrateOrderChunk']
+        );
     }
 
     /**
