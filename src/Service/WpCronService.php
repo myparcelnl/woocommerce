@@ -65,7 +65,9 @@ class WpCronService implements CronServiceInterface
             );
         }
 
-        // A filter can refuse an event by returning false, without saying why.
+        // Before WordPress 5.7 the $wp_error argument does not exist, and a refused event comes back as
+        // false. The stubs describe current WordPress, where this comparison cannot be true.
+        // @phpstan-ignore identical.alwaysFalse
         if (false === $result) {
             throw new RuntimeException(sprintf('Could not schedule "%s".', $hook));
         }
