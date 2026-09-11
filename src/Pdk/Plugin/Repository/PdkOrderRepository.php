@@ -156,7 +156,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     public function update(PdkOrder $order): PdkOrder
     {
-        $wcOrder = $this->wcOrderRepository->get($order->externalIdentifier);
+        $wcOrder = $this->wcOrderRepository->getFresh($order->externalIdentifier);
 
         $order->shipments = $this
             ->getShipments($wcOrder)
@@ -174,6 +174,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         );
 
         $wcOrder->save();
+        $this->wcOrderRepository->updateCache($wcOrder);
 
         return $this->save($order->externalIdentifier, $order);
     }
