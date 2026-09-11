@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Tests\Unit;
 
+use MyParcelNL\Pdk\App\Installer\Contract\MigrationServiceInterface;
 use MyParcelNL\Pdk\Base\PdkBootstrapper;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Tests\Exception\DieException;
@@ -20,6 +21,19 @@ function bootPlugin() {
         return;
     }
     require __DIR__ . '/../../woocommerce-myparcel.php';
+}
+
+/**
+ * The identities the installer records in applied_migrations: the class name of each registered
+ * migration and the file name of each timestamped one.
+ */
+function allUpgradeMigrationIds(): array
+{
+    $timestamped = array_map(static function (string $path): string {
+        return pathinfo($path, PATHINFO_FILENAME);
+    }, glob(Pdk::get('migrationDirectory') . '/[0-9]*.php') ?: []);
+
+    return array_merge(Pdk::get(MigrationServiceInterface::class)->getUpgradeMigrations(), $timestamped);
 }
 
 /**
@@ -41,9 +55,11 @@ it('adds all hooks on plugin init', function () {
     // only now you may start the plugin
     bootPlugin();
 
-    // A normal request already has the current version stored, so the installer returns early.
-    // The upgrade runs on 'init' now, so without this, executing 'init' would run a full install.
+    // A normal request already has the current version stored and every migration recorded as
+    // applied, so the installer returns early. The upgrade runs on 'init' now, so without this,
+    // executing 'init' would run a full install and the carrier refresh migrations would call the API.
     WordPressOptions::updateOption(Pdk::get('settingKeyInstalledVersion'), Pdk::getAppInfo()->version);
+    WordPressOptions::updateOption(Pdk::get('settingKeyAppliedMigrations'), allUpgradeMigrationIds());
 
     MockWpActions::execute('init');
 
