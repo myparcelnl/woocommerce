@@ -1,4 +1,5 @@
 <?php
+
 /** @noinspection StaticClosureCanBeUsedInspection */
 
 declare(strict_types=1);
@@ -22,7 +23,7 @@ it('dispatches jobs', function () {
     /** @var \MyParcelNL\Pdk\Base\Contract\CronServiceInterface $cronService */
     $cronService = Pdk::get(CronServiceInterface::class);
 
-    $cronService->dispatch([new MockCallableClass(),'updateOption'], 'arg1', 'arg2');
+    $cronService->dispatch([new MockCallableClass(), 'updateOption'], 'arg1', 'arg2');
 
     expect(get_option('arg1'))->toBe('arg2');
 });

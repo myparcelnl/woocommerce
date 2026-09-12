@@ -10,10 +10,13 @@ use MyParcelNL\Pdk\Carrier\Model\Carrier;
 use MyParcelNL\Pdk\Carrier\Repository\CarrierCapabilitiesRepository;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
+use Throwable;
 use WC_Order;
 
 final class Migration6_5_1 extends AbstractMigration
 {
+    private const MAX_CHUNK_RETRIES = 3;
+
     protected CarrierCapabilitiesRepository $carrierCapabilitiesRepository;
     protected PdkAccountRepositoryInterface $accountRepository;
     protected PdkSettingsRepositoryInterface $settingsRepository;
@@ -191,46 +194,90 @@ final class Migration6_5_1 extends AbstractMigration
      */
     private function migrateMetaChunk(array $data, string $currentKey, bool $isList): void
     {
-        $sourceKey = $data['legacyMetaKey'] ?? $currentKey;
+        $sourceKey      = $data['legacyMetaKey'] ?? $currentKey;
+        $failedOrderIds = [];
 
         foreach ($data['orderIds'] ?? [] as $orderId) {
-            $order = wc_get_order($orderId);
-
-            if (! $order instanceof WC_Order
-                || ($sourceKey !== $currentKey && $order->meta_exists($currentKey))) {
-                continue;
-            }
-
-            $value = $order->get_meta($sourceKey);
-
-            if (! is_array($value) || empty($value)) {
-                continue;
-            }
-
-            $normalized = $this->normalizeOrderMeta($value, $isList);
-
-            if (null === $normalized) {
-                $this->warning('Skipped order meta with malformed data or an unsupported carrier.', [
-                    'orderId' => $orderId,
-                    'from'    => $sourceKey,
+            try {
+                $this->migrateOrderMeta($orderId, $sourceKey, $currentKey, $isList);
+            } catch (Throwable $exception) {
+                $failedOrderIds[] = $orderId;
+                $this->error('Could not migrate order meta.', [
+                    'orderId'   => $orderId,
+                    'from'      => $sourceKey,
+                    'exception' => $exception->getMessage(),
                 ]);
-
-                continue;
             }
+        }
 
-            if ($sourceKey === $currentKey && $normalized === $value) {
-                continue;
-            }
+        if (empty($failedOrderIds)) {
+            return;
+        }
 
-            $order->update_meta_data($currentKey, $normalized);
-            $order->save();
+        $attempt = (int) ($data['attempt'] ?? 0);
 
-            $this->debug('Migrated order meta', [
-                'orderId' => $orderId,
-                'from'    => $sourceKey,
-                'to'      => $currentKey,
+        if ($attempt >= self::MAX_CHUNK_RETRIES) {
+            $this->error('Order meta migration retry limit reached; manual retry required.', [
+                'orderIds' => $failedOrderIds,
+                'from'     => $sourceKey,
+            ]);
+
+            return;
+        }
+
+        $data['orderIds'] = $failedOrderIds;
+        $data['attempt']  = $attempt + 1;
+        $action = Pdk::get($isList ? 'migrateAction_6_5_1_Shipments' : 'migrateAction_6_5_1_Orders');
+
+        try {
+            $this->cronService->schedule($action, time() + 60 * $data['attempt'], $data);
+        } catch (Throwable $exception) {
+            $this->error('Could not schedule order meta migration retry; manual retry required.', [
+                'orderIds'  => $failedOrderIds,
+                'from'      => $sourceKey,
+                'exception' => $exception->getMessage(),
             ]);
         }
+    }
+
+    private function migrateOrderMeta(int $orderId, string $sourceKey, string $currentKey, bool $isList): void
+    {
+        $order = wc_get_order($orderId);
+
+        if (! $order instanceof WC_Order
+            || ($sourceKey !== $currentKey && $order->meta_exists($currentKey))) {
+            return;
+        }
+
+        $value = $order->get_meta($sourceKey);
+
+        if (! is_array($value) || empty($value)) {
+            return;
+        }
+
+        $normalized = $this->normalizeOrderMeta($value, $isList);
+
+        if (null === $normalized) {
+            $this->warning('Skipped order meta with malformed data or an unsupported carrier; original metadata retained.', [
+                'orderId' => $orderId,
+                'from'    => $sourceKey,
+            ]);
+
+            return;
+        }
+
+        if ($sourceKey === $currentKey && $normalized === $value) {
+            return;
+        }
+
+        $order->update_meta_data($currentKey, $normalized);
+        $order->save();
+
+        $this->debug('Migrated order meta', [
+            'orderId' => $orderId,
+            'from'    => $sourceKey,
+            'to'      => $currentKey,
+        ]);
     }
 
     /**
@@ -307,15 +354,17 @@ final class Migration6_5_1 extends AbstractMigration
             $contractId       = is_numeric($storedContractId) ? $storedContractId : null;
 
             if (isset($carrier['id']) && is_numeric($carrier['id'])) {
-                $name = Carrier::v2NameFromLegacyId((int) $carrier['id']);
+                // Deprecated UPS (id 8) follows the same UPS Standard mapping as the legacy name.
+                $name = 8 === (int) $carrier['id'] ? 'UPS_STANDARD' : Carrier::v2NameFromLegacyId((int) $carrier['id']);
             }
 
             $carrier = $carrier['externalIdentifier'] ?? ($carrier['carrier'] ?? null);
         }
 
         if (is_string($carrier)) {
-            $parts = explode(':', $carrier, 2);
-            $name  = $name ?? (array_flip(Carrier::CARRIER_NAME_TO_LEGACY_MAP)[$parts[0]] ?? $parts[0]);
+            $parts          = explode(':', $carrier, 2);
+            $legacyToNewMap = ['ups' => 'UPS_STANDARD'] + array_flip(Carrier::CARRIER_NAME_TO_LEGACY_MAP);
+            $name           = $name ?? ($legacyToNewMap[$parts[0]] ?? $parts[0]);
 
             if (null === $contractId && isset($parts[1]) && is_numeric($parts[1])) {
                 $contractId = $parts[1];
@@ -323,6 +372,8 @@ final class Migration6_5_1 extends AbstractMigration
         }
 
         if (null === $name || ! Carrier::isSupported($name)) {
+            // Retired carriers such as Instabox have no supported replacement. Preserve the
+            // complete original value instead of assigning another carrier or losing shipments.
             return null;
         }
 

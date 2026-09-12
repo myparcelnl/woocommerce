@@ -8,6 +8,8 @@ use InvalidArgumentException;
 use RuntimeException;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
+use RuntimeException;
+use WP_Error;
 
 class WpCronService implements CronServiceInterface
 {

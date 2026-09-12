@@ -17,6 +17,12 @@ return new class extends AbstractTimestampedMigration {
             return;
         }
 
-        Pdk::get(Migration6_5_1::class)->updateLegacyOrderMeta();
+        try {
+            Pdk::get(Migration6_5_1::class)->updateLegacyOrderMeta();
+        } catch (Throwable $exception) {
+            $this->markFailed('Could not schedule legacy order meta migration; it will be retried.', [
+                'exception' => $exception->getMessage(),
+            ]);
+        }
     }
 };
