@@ -186,6 +186,7 @@ class WcPdkBootstrapper extends PdkBootstrapper
                  */
                 'separateAddressFieldsPriority'    => 'mpwc_checkout_separate_address_fields_priority',
                 'taxFieldsPriority'                => 'mpwc_checkout_tax_fields_priority',
+                'wcAddressFields'                  => 'mpwc_checkout_wc_address_fields',
 
                 /**
                  * Field classes
