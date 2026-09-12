@@ -9,11 +9,14 @@ namespace MyParcelNL\WooCommerce\Migration;
 use MyParcelNL\Pdk\App\Installer\Contract\TimestampedMigrationInterface;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\WooCommerce\Hooks\ScheduledMigrationHooks;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Order;
+use WP_Error;
+use RuntimeException;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function MyParcelNL\WooCommerce\Tests\wpFactory;
 
@@ -427,4 +430,172 @@ it('preserves missing carriers when it copies legacy metadata', function (array 
     'null'   => [['carrier' => null]],
     'string' => [['carrier' => '']],
     'array'  => [['carrier' => []]],
+]);
+
+it('leaves the migration pending when scheduling fails and can schedule it again', function () {
+    $order = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [legacyShipment()]]);
+    $tasks = Pdk::get(WordPressScheduledTasks::class);
+    $tasks->scheduleResult = new WP_Error('could_not_set', 'Could not save cron events');
+    $migration = loadLegacyOrderMetaMigration();
+
+    $migration->up();
+
+    expect($migration->hasFailed())->toBeTrue()
+        ->and($tasks->all())->toHaveCount(0)
+        ->and($order->meta_exists(CURRENT_SHIPMENTS_KEY))->toBeFalse();
+
+    $tasks->scheduleResult = true;
+    $retry = loadLegacyOrderMetaMigration();
+    $retry->up();
+    runLegacyOrderMetaTasks();
+
+    expect($retry->hasFailed())->toBeFalse()
+        ->and($order->get_meta(CURRENT_SHIPMENTS_KEY)[0]['carrier'])->toBe('POSTNL');
+});
+
+/** Model a database write failure: update_meta_data only changes memory until save succeeds. */
+function orderWithFailingMigrationSave(WC_Order $order, int $failures = 1): WC_Order
+{
+    $failing = new class($order->get_id()) extends WC_Order {
+        public $failuresRemaining;
+        private $pendingMeta = [];
+
+        public function update_meta_data($key, $value, $meta_id = 0): void
+        {
+            $this->pendingMeta[$key] = $value;
+        }
+
+        public function save(): void
+        {
+            if ($this->failuresRemaining > 0) {
+                $this->failuresRemaining--;
+                throw new RuntimeException('Temporary order write failure');
+            }
+
+            foreach ($this->pendingMeta as $key => $value) {
+                parent::update_meta_data($key, $value);
+            }
+            $this->pendingMeta = [];
+        }
+    };
+    $failing->failuresRemaining = $failures;
+
+    return $failing;
+}
+
+it('continues the chunk and retries only the failed orders', function (string $suffix) {
+    $sourceKey  = '_myparcelnl_' . $suffix;
+    $currentKey = '_myparcelcom_' . $suffix;
+    $legacy     = 'order_shipments' === $suffix ? [legacyShipment()] : legacyShipment();
+    $failed     = makeOrderWithMeta([$sourceKey => $legacy]);
+    $valid      = makeOrderWithMeta([$sourceKey => $legacy]);
+    loadLegacyOrderMetaMigration()->up();
+    $failed = orderWithFailingMigrationSave($failed);
+    $tasks  = Pdk::get(WordPressScheduledTasks::class);
+
+    runLegacyOrderMetaTask($tasks->all()->first());
+    $retry = $tasks->all()->last();
+
+    expect($failed->meta_exists($currentKey))->toBeFalse()
+        ->and($valid->meta_exists($currentKey))->toBeTrue()
+        ->and($retry['args'][0]['orderIds'])->toBe([$failed->get_id()])
+        ->and($retry['args'][0]['legacyMetaKey'])->toBe($sourceKey)
+        ->and($retry['args'][0]['attempt'])->toBe(1)
+        ->and($retry['time'])->toBeGreaterThanOrEqual(time() + 55);
+
+    runLegacyOrderMetaTask($retry);
+
+    expect($failed->meta_exists($currentKey))->toBeTrue()
+        ->and($failed->get_meta($sourceKey))->toBe($legacy)
+        ->and($tasks->all())->toHaveCount(2);
+})->with(['order_shipments', 'order_data']);
+
+it('stops retrying a persistently failing order after three retries', function () {
+    $order = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [legacyShipment()]]);
+    loadLegacyOrderMetaMigration()->up();
+    $failed = orderWithFailingMigrationSave($order, 10);
+    $tasks  = Pdk::get(WordPressScheduledTasks::class);
+
+    for ($attempt = 0; $attempt < 4; $attempt++) {
+        runLegacyOrderMetaTask($tasks->all()->last());
+    }
+
+    expect($tasks->all())->toHaveCount(4)
+        ->and($failed->meta_exists(CURRENT_SHIPMENTS_KEY))->toBeFalse()
+        ->and($failed->get_meta(LEGACY_SHIPMENTS_KEY))->toBe([legacyShipment()])
+        ->and(array_column(Logger::getLogs('error'), 'message'))
+        ->toContain('[PDK]: Order meta migration retry limit reached; manual retry required.');
+});
+
+it('logs a retry scheduling failure without interrupting the other orders', function () {
+    $failed = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [legacyShipment()]]);
+    $valid  = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [legacyShipment()]]);
+    loadLegacyOrderMetaMigration()->up();
+    $failed = orderWithFailingMigrationSave($failed);
+    $tasks  = Pdk::get(WordPressScheduledTasks::class);
+    $tasks->scheduleResult = false;
+
+    runLegacyOrderMetaTask($tasks->all()->first());
+
+    expect($failed->meta_exists(CURRENT_SHIPMENTS_KEY))->toBeFalse()
+        ->and($valid->meta_exists(CURRENT_SHIPMENTS_KEY))->toBeTrue()
+        ->and(array_column(Logger::getLogs('error'), 'message'))
+        ->toContain('[PDK]: Could not schedule order meta migration retry; manual retry required.');
+});
+
+it('keeps current metadata written before a failed order is retried', function () {
+    $order = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [legacyShipment()]]);
+    loadLegacyOrderMetaMigration()->up();
+    $failed = orderWithFailingMigrationSave($order);
+    $tasks  = Pdk::get(WordPressScheduledTasks::class);
+    runLegacyOrderMetaTask($tasks->all()->first());
+    $newExport = [['id' => 42, 'carrier' => 'POSTNL', 'barcode' => 'NEW']];
+    $failed->update_meta_data(CURRENT_SHIPMENTS_KEY, $newExport);
+    $failed->save();
+
+    runLegacyOrderMetaTask($tasks->all()->last());
+
+    expect($failed->get_meta(CURRENT_SHIPMENTS_KEY))->toBe($newExport);
+});
+
+it('maps retired UPS identifiers to UPS Standard without blocking other shipments', function ($carrier) {
+    $shipment = legacyShipment();
+    $shipment['carrier'] = $carrier;
+    $shipment['deliveryOptions']['carrier'] = $carrier;
+    $order = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [$shipment, legacyShipment()]]);
+
+    runLegacyOrderMetaMigration();
+
+    $migrated = $order->get_meta(CURRENT_SHIPMENTS_KEY);
+    expect($migrated)->toHaveCount(2)
+        ->and($migrated[0]['carrier'])->toBe('UPS_STANDARD')
+        ->and($migrated[0]['deliveryOptions']['carrier'])->toBe('UPS_STANDARD')
+        ->and($migrated[0]['barcode'])->toBe($shipment['barcode'])
+        ->and($migrated[0]['linkConsumerPortal'])->toBe($shipment['linkConsumerPortal'])
+        ->and($migrated[1]['carrier'])->toBe('POSTNL')
+        ->and($order->get_meta(LEGACY_SHIPMENTS_KEY))->toBe([$shipment, legacyShipment()]);
+})->with([
+    'name' => ['ups'],
+    'identifier with contract' => [['externalIdentifier' => 'ups:42']],
+    'carrier with contract' => [['carrier' => 'ups:42']],
+    'legacy id' => [['id' => 8]],
+]);
+
+it('preserves and reports historical Instabox data without assigning a different carrier', function ($carrier) {
+    $shipment = legacyShipment();
+    $shipment['carrier'] = $carrier;
+    $shipment['deliveryOptions']['carrier'] = $carrier;
+    $legacy = [legacyShipment(), $shipment];
+    $order  = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => $legacy]);
+
+    runLegacyOrderMetaMigration();
+
+    expect($order->get_meta(LEGACY_SHIPMENTS_KEY))->toBe($legacy)
+        ->and($order->meta_exists(CURRENT_SHIPMENTS_KEY))->toBeFalse()
+        ->and(array_column(Logger::getLogs('warning'), 'message'))
+        ->toContain('[PDK]: Skipped order meta with malformed data or an unsupported carrier; original metadata retained.');
+})->with([
+    'name' => ['instabox'],
+    'identifier' => [['externalIdentifier' => 'instabox:42']],
+    'legacy id' => [['id' => 5]],
 ]);

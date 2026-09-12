@@ -6,6 +6,8 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Service;
 
 use InvalidArgumentException;
+use RuntimeException;
+use WP_Error;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Tests\Mock\MockCallableClass;
@@ -71,3 +73,26 @@ it('throws exception when input is not a string or array', function () {
 
     update_option(Pdk::get('webhookAddActions'), []);
 })->throws(InvalidArgumentException::class);
+
+it('reports a rejected cron event to the caller', function ($result) {
+    Pdk::get(WordPressScheduledTasks::class)->scheduleResult = $result;
+
+    expect(function () {
+        Pdk::get(CronServiceInterface::class)->schedule('migration_hook', time() + 60, ['orderIds' => [1]]);
+    })->toThrow(RuntimeException::class, 'Could not schedule cron event migration_hook')
+        ->and(Pdk::get(WordPressScheduledTasks::class)->all())->toHaveCount(0);
+})->with([
+    'false' => [false],
+    'WordPress error' => [new WP_Error('could_not_set', 'Could not save cron events')],
+]);
+
+it('accepts an already scheduled identical cron event', function () {
+    $tasks = Pdk::get(WordPressScheduledTasks::class);
+    $cron  = Pdk::get(CronServiceInterface::class);
+    $cron->schedule('migration_hook', time() + 60, ['orderIds' => [1]]);
+    $tasks->scheduleResult = new WP_Error('duplicate_event', 'An identical event already exists');
+
+    $cron->schedule('migration_hook', time() + 60, ['orderIds' => [1]]);
+
+    expect($tasks->all())->toHaveCount(1);
+});

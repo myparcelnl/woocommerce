@@ -8,6 +8,9 @@ use MyParcelNL\Pdk\Base\Support\Collection;
 
 final class WordPressScheduledTasks
 {
+    /** @var bool|\WP_Error */
+    public $scheduleResult = true;
+
     /**
      * @var \MyParcelNL\Pdk\Base\Support\Collection
      */

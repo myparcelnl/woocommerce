@@ -7,6 +7,8 @@ namespace MyParcelNL\WooCommerce\Service;
 use InvalidArgumentException;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
+use RuntimeException;
+use WP_Error;
 
 class WpCronService implements CronServiceInterface
 {
@@ -44,7 +46,20 @@ class WpCronService implements CronServiceInterface
             update_option(Pdk::get('webhookAddActions'), $this->getActions($callback, $hook));
         }
 
-        wp_schedule_single_event($timestamp, $hook, $args);
+        $result = wp_schedule_single_event($timestamp, $hook, $args, true);
+
+        // A retry may encounter a chunk that was already scheduled by an earlier pass.
+        if ($result instanceof WP_Error && 'duplicate_event' === $result->get_error_code()) {
+            return;
+        }
+
+        if ($result instanceof WP_Error) {
+            throw new RuntimeException(sprintf(
+                'Could not schedule cron event %s: %s',
+                $hook,
+                $result->get_error_message()
+            ));
+        }
     }
 
     /**

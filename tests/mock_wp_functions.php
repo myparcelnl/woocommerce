@@ -80,12 +80,20 @@ function apply_filters($tag, $value, ...$args)
 }
 
 /** @see \wp_schedule_single_event() */
-function wp_schedule_single_event($timestamp, $callback, $args)
+function wp_schedule_single_event($timestamp, $callback, $args, $wp_error = false)
 {
     /** @var \MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks $tasks */
     $tasks = Pdk::get(WordPressScheduledTasks::class);
 
+    if (true !== $tasks->scheduleResult) {
+        return $wp_error
+            ? ($tasks->scheduleResult ?: new WP_Error('schedule_event_false', 'WordPress rejected the event'))
+            : false;
+    }
+
     $tasks->add($callback, $timestamp, $args);
+
+    return true;
 }
 
 /**@see \plugin_dir_path() */
