@@ -47,12 +47,15 @@ const shippingAddress = (): Record<string, string> => ({
   postcode: '2132 JE',
 });
 
-const cartSelectors = {
+/** Rebuilt per test, so a test can drop a selector an older WooCommerce Blocks does not have. */
+let cartSelectors: Record<string, unknown>;
+
+const createCartSelectors = (): Record<string, unknown> => ({
   getCustomerData: () => ({billingAddress: shippingAddress(), shippingAddress: shippingAddress()}),
   // eslint-disable-next-line @typescript-eslint/naming-convention
   getShippingRates: () => [{shipping_rates: [{rate_id: cart.rateId, selected: true}]}],
   isCustomerDataUpdating: () => cart.saving,
-};
+});
 
 /** Run one `wp.data` store tick. */
 const tick = async (): Promise<void> => {
@@ -79,6 +82,8 @@ beforeEach(() => {
   cart.company = '';
   cart.saving = false;
   cart.rateId = 'flat_rate:1';
+
+  cartSelectors = createCartSelectors();
 
   window.wp = {
     data: {
@@ -141,6 +146,48 @@ describe('getBlocksCheckoutConfig', () => {
     await tick();
 
     cart.saving = false;
+    cart.rateId = 'local_pickup:2';
+    await tick();
+
+    expect(updateContextMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('fetches a new context once, after the save, when the shipping method changes mid-save', async () => {
+    listen();
+
+    cart.company = 'MyParcel';
+    cart.saving = true;
+    await tick();
+
+    cart.rateId = 'local_pickup:2';
+    await tick();
+
+    // Fetching now would build the context from the company the server still has.
+    expect(updateContextMock).not.toHaveBeenCalled();
+
+    cart.saving = false;
+    await tick();
+
+    expect(updateContextMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps refreshing on a shipping method change when the store cannot report saving', async () => {
+    delete cartSelectors.isCustomerDataUpdating;
+    listen();
+
+    cart.rateId = 'local_pickup:2';
+    await tick();
+
+    expect(updateContextMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps refreshing on a shipping method change after a company change it cannot track', async () => {
+    delete cartSelectors.isCustomerDataUpdating;
+    listen();
+
+    cart.company = 'MyParcel';
+    await tick();
+
     cart.rateId = 'local_pickup:2';
     await tick();
 
