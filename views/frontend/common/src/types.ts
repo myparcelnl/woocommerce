@@ -52,6 +52,7 @@ export type WcCartStore = StoreInstance<
       getCustomerData(): {
         shippingAddress: Record<string, string>;
       };
+      isCustomerDataUpdating(): boolean;
       // eslint-disable-next-line @typescript-eslint/naming-convention
       getShippingRates(): [{shipping_rates: WcShippingRate[]}];
     }
