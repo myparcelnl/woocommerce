@@ -52,6 +52,8 @@ export type WcCartStore = StoreInstance<
       getCustomerData(): {
         shippingAddress: Record<string, string>;
       };
+      /** Absent in older WooCommerce Blocks versions. */
+      isCustomerDataUpdating?(): boolean;
       // eslint-disable-next-line @typescript-eslint/naming-convention
       getShippingRates(): [{shipping_rates: WcShippingRate[]}];
     }

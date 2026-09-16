@@ -6,6 +6,16 @@ import {getShippingRate} from './getShippingRate';
 
 const MYPARCEL_BLOCK_FIELDS_PREFIX = 'myparcelcom/';
 
+/**
+ * Whether the recipient counts as a business: a filled-in company name. Mirrors the PDK's
+ * `Address::deriveIsBusiness()`. The blocks checkout ships to the shipping address only.
+ *
+ * The flag decides which carriers the capabilities call returns — DHL Euro Plus is business only —
+ * and it is derived server-side, so a flip needs a fresh checkout context.
+ */
+const isBusinessRecipient = (customerData: {shippingAddress: Record<string, string>}): boolean =>
+  Boolean((customerData.shippingAddress?.company ?? '').trim());
+
 // eslint-disable-next-line max-lines-per-function
 export const getBlocksCheckoutConfig = (): CheckoutConfig => {
   const addressFields = {
@@ -45,6 +55,16 @@ export const getBlocksCheckoutConfig = (): CheckoutConfig => {
         const wcCartStore = useWcCartStore();
         let previousShippingRate = getShippingRate();
         let previousCustomerData = JSON.stringify(wcCartStore.selectors.getCustomerData());
+        let previousIsBusiness = isBusinessRecipient(wcCartStore.selectors.getCustomerData());
+        // Older WooCommerce Blocks versions have no way to report a save in progress. Without it
+        // there is no moment that is known to be safe to refetch, so the business flag is left
+        // alone there, the same way the blocks integration treats this selector as optional.
+        const canDetectSaving = typeof wcCartStore.selectors.isCustomerDataUpdating === 'function';
+        // Set when the business flag flipped. The refetch waits for WooCommerce to save the new
+        // company: the customer data in the store updates on every keystroke, while the save to the
+        // server is debounced, and a context built before it lands still carries the old flag.
+        let businessRefreshPending = false;
+        let previousSaving = false;
 
         wp.data.subscribe(async () => {
           const currentShippingRate = getShippingRate();
@@ -52,9 +72,22 @@ export const getBlocksCheckoutConfig = (): CheckoutConfig => {
 
           const shippingMethodChanged = previousShippingRate?.rate_id !== currentShippingRate?.rate_id;
           const customerDataChanged = previousCustomerData !== JSON.stringify(currentCustomerData);
+          const currentIsBusiness = isBusinessRecipient(currentCustomerData);
 
-          if (!shippingMethodChanged && !customerDataChanged) {
-            return;
+          if (currentIsBusiness !== previousIsBusiness) {
+            previousIsBusiness = currentIsBusiness;
+            businessRefreshPending = canDetectSaving;
+          }
+
+          // An address change always goes through a save request, so its end is the moment the
+          // server knows the new company.
+          const saving = Boolean(wcCartStore.selectors.isCustomerDataUpdating?.());
+          const businessChangeSaved = businessRefreshPending && previousSaving && !saving;
+
+          previousSaving = saving;
+
+          if (businessChangeSaved) {
+            businessRefreshPending = false;
           }
 
           if (customerDataChanged) {
@@ -63,8 +96,18 @@ export const getBlocksCheckoutConfig = (): CheckoutConfig => {
 
           if (shippingMethodChanged) {
             previousShippingRate = currentShippingRate;
+          }
 
+          // Both reasons need the same fresh context, so one refetch per tick is enough. While a
+          // company change is still being saved, a shipping method change waits for it: fetching
+          // now would build the context from the company the server still has, and that response
+          // can land after the fresh one. The pending refetch carries the new shipping method too.
+          if ((shippingMethodChanged || businessChangeSaved) && !businessRefreshPending) {
             await updateContext();
+          }
+
+          if (!shippingMethodChanged && !customerDataChanged) {
+            return;
           }
 
           callback();
