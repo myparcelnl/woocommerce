@@ -51,7 +51,7 @@ Plugin settings are stored in `wp_options` with key prefix `_myparcelcom_` (from
 
 ### Migration System
 
-Migrations are registered in `WcMigrationService` and run by the PDK `InstallerService`. A migration runs when its `getVersion()` is greater than the stored `settingKeyInstalledVersion`.
+Migrations are registered in `WcMigrationService` (class migrations) or auto-discovered as timestamped files in `src/Migration/`, and run by the PDK `InstallerService`. A migration runs once: its identity (the class name, or the file name for a timestamped migration) is recorded in the `applied_migrations` setting, independent of the plugin version.
 
 For long-running migrations, use **chunked cron jobs**:
 1. `up()` queries affected records and splits into chunks
@@ -106,6 +106,8 @@ toggle server-side). Reproduces with all our checkout JS disabled. Normal single
 treat rapid back-and-forth as an upstream stress-case.
 
 ## Development Environment
+
+The supported WordPress range is declared once, in `readme.txt` (`Requires at least`). Before treating a WordPress version guard as dead code, check the `@since` lines in core against that minimum.
 
 - The plugin runs inside a Docker-based WordPress setup. Use `docker compose exec php wp ...` from the docker-wordpress project root for WP-CLI commands.
 - PDK (PHP) is linked locally as a path dependency in `composer.json` — check the `repositories` section for the local path.
