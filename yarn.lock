@@ -4847,7 +4847,7 @@ __metadata:
     "@myparcel-dev/semantic-release-config": "npm:^6.0.10"
     "@myparcel-dev/semantic-release-wordpress-readme-generator": "npm:^1.3.0"
     "@semantic-release/git": "npm:^10.0.1"
-    "@types/node": "npm:^20.0.0"
+    "@types/node": "npm:^22.20.3"
     "@types/react": "npm:*"
     "@types/react-dom": "npm:*"
     "@types/wordpress__block-editor": "npm:*"
@@ -8495,12 +8495,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.0.0":
+"@types/node@npm:*":
   version: 20.16.11
   resolution: "@types/node@npm:20.16.11"
   dependencies:
     undici-types: "npm:~6.19.2"
   checksum: 10c0/bba43f447c3c80548513954dae174e18132e9149d572c09df4a282772960d33e229d05680fb5364997c03489c22fe377d1dbcd018a3d4ff1cfbcfcdaa594a9c3
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^22.20.3":
+  version: 22.20.3
+  resolution: "@types/node@npm:22.20.3"
+  dependencies:
+    undici-types: "npm:~6.21.0"
+  checksum: 10c0/27034f3f66d7044494f0be7b20b17eecbb1f6deab9e2ea8b004d79e896f4a90cde954da9a433a145e800f3db3e5c5c4761a65366434997c77102ba364dcbedd0
   languageName: node
   linkType: hard
 
@@ -33966,6 +33975,13 @@ __metadata:
   version: 6.19.8
   resolution: "undici-types@npm:6.19.8"
   checksum: 10c0/078afa5990fba110f6824823ace86073b4638f1d5112ee26e790155f481f2a868cc3e0615505b6f4282bdf74a3d8caad715fd809e870c2bb0704e3ea6082f344
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~6.21.0":
+  version: 6.21.0
+  resolution: "undici-types@npm:6.21.0"
+  checksum: 10c0/c01ed51829b10aa72fc3ce64b747f8e74ae9b60eafa19a7b46ef624403508a54c526ffab06a14a26b3120d055e1104d7abe7c9017e83ced038ea5cf52f8d5e04
   languageName: node
   linkType: hard
 
