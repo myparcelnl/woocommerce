@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.10.0](https://github.com/myparcelnl/woocommerce/compare/v6.9.4...v6.10.0) (2026-09-16)
+
+
+### :sparkles: New Features
+
+* **shipments:** enable tracking by default for shipments that support it ([#1768](https://github.com/myparcelnl/woocommerce/issues/1768)) ([0680c06](https://github.com/myparcelnl/woocommerce/commit/0680c06cce4c066cf95ff9080dffcc093614488e))
+
+
+### :bug: Bug Fixes
+
+* **export:** prevent recursive automatic exports ([#1819](https://github.com/myparcelnl/woocommerce/issues/1819)) ([964f277](https://github.com/myparcelnl/woocommerce/commit/964f277e2634d6b757318105aded95a912281aea))
+
 ## [6.9.4](https://github.com/myparcelnl/woocommerce/compare/v6.9.3...v6.9.4) (2026-09-04)
 
 
