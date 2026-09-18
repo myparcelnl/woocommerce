@@ -46,3 +46,5 @@ yarn-error.log
 !.idea/workspace.xml
 
 .claude/settings.local.json
+
+.claude/worktrees

@@ -12,3 +12,5 @@ private/wc-types/
 tests/__snapshots__/**/*.html
 CHANGELOG.md
 composer.lock
+
+/.nx/workspace-data
