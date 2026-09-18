@@ -13,6 +13,9 @@ const createDefaultConfig = (env) => {
   return {
     plugins: [customTsConfig()],
     build: {
+      lib: {cssFileName: "style"},
+      // Vite 7 changed the default target to "baseline-widely-available" (Safari 16+); keep the Vite 5 targets.
+      target: ["es2020", "edge88", "firefox78", "chrome87", "safari14"],
       minify: !isDev,
       sourcemap: isDev,
       rollupOptions: {
@@ -31,7 +34,7 @@ const createDefaultConfig = (env) => {
       passWithNoTests: true,
       setupFiles: [`${dirname}/test-setup.ts`],
       coverage: {
-        all: true,
+        include: ["src/**"],
         enabled: false,
         reporter: ['text', 'clover'],
       },
