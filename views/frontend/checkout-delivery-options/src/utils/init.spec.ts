@@ -42,11 +42,17 @@ const getInitArgs = () => {
 
 describe('initializeCheckoutDeliveryOptions', () => {
   let warnSpy: MockInstance<Parameters<Console['warn']>, ReturnType<Console['warn']>>;
+  let deliveryOptionsUpdated: EventListener;
+  const trigger = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
     defaultUpdateDeliveryOptions.mockImplementation(() => ({packageType: 'package', carrier: 'postnl'}));
     warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    vi.spyOn(document, 'addEventListener').mockImplementation((_name, callback) => {
+      deliveryOptionsUpdated = callback as EventListener;
+    });
+    vi.stubGlobal('jQuery', () => ({trigger}));
   });
 
   it('composes the proxyCapabilities URL from baseUrl + endpoint.parameters', async () => {
@@ -139,5 +145,39 @@ describe('initializeCheckoutDeliveryOptions', () => {
 
     expect(typeof args.getPackageType).toBe('function');
     expect(typeof args.updateDeliveryOptions).toBe('function');
+  });
+
+  it('does not repeat a checkout update when a context refresh emits the same selection', async () => {
+    const {initializeCheckoutDeliveryOptions} = await import('./init');
+    initializeCheckoutDeliveryOptions();
+    const selection = {carrier: 'dpd', deliveryType: 'pickup', date: '2026-09-18T10:00:00Z'};
+
+    deliveryOptionsUpdated(new CustomEvent('deliveryOptionsUpdated', {detail: selection}));
+    deliveryOptionsUpdated(new CustomEvent('deliveryOptionsUpdated', {detail: {...selection}}));
+
+    expect(trigger).toHaveBeenCalledTimes(1);
+    expect(trigger).toHaveBeenCalledWith('update_checkout');
+
+    deliveryOptionsUpdated(
+      new CustomEvent('deliveryOptionsUpdated', {
+        detail: {...selection, deliveryType: 'standard'},
+      }),
+    );
+    expect(trigger).toHaveBeenCalledTimes(2);
+  });
+
+  it('refreshes the checkout when only the selected delivery date changes', async () => {
+    const {initializeCheckoutDeliveryOptions} = await import('./init');
+    initializeCheckoutDeliveryOptions();
+    const selection = {carrier: 'dpd', deliveryType: 'standard', date: '2026-09-19T10:00:00Z'};
+
+    deliveryOptionsUpdated(new CustomEvent('deliveryOptionsUpdated', {detail: selection}));
+    deliveryOptionsUpdated(
+      new CustomEvent('deliveryOptionsUpdated', {
+        detail: {...selection, date: '2026-09-20T10:00:00Z'},
+      }),
+    );
+
+    expect(trigger).toHaveBeenCalledTimes(2);
   });
 });

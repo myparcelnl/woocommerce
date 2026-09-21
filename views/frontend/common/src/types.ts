@@ -58,6 +58,10 @@ export type WcCartStore = StoreInstance<
       isCustomerDataUpdating?(): boolean;
       // eslint-disable-next-line @typescript-eslint/naming-convention
       getShippingRates(): [{shipping_rates: WcShippingRate[]}];
+      getCartData(): {items: {key: string; id: number; quantity: number}[]};
+      isItemPendingQuantity(key: string): boolean;
+      isItemPendingDelete(key: string): boolean;
+      isShippingRateBeingSelected(): boolean;
     }
   >
 >;
