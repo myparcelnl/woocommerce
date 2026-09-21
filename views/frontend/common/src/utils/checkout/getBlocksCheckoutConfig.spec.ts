@@ -30,13 +30,26 @@ vi.mock('@myparcel-dev/pdk-checkout', () => ({
   refreshContextIfBusinessChanged: refreshContextMock,
 }));
 
+type CartItem = {key: string; id: number; quantity: number};
+
 /** Everything the fake cart store needs to answer the selectors the config calls. */
 const cart = {
   company: '',
   /** True while WooCommerce is saving the customer data to the server. */
   saving: false,
   rateId: 'flat_rate:1',
+  /** True while WooCommerce is saving a new shipping method selection. */
+  selectingRate: false,
+  items: [] as CartItem[],
+  /** Other cart data that changes without a change to the items, for example a fee. */
+  totals: {total: 0},
+  /** Keys of the items that WooCommerce is still saving a new quantity for. */
+  pendingQuantity: [] as string[],
+  /** Keys of the items that WooCommerce is still deleting on the server. */
+  pendingDelete: [] as string[],
 };
+
+const DEFAULT_ITEMS: CartItem[] = [{key: 'variant-a', id: 100, quantity: 1}];
 
 /** The subscriber the config registers through `wp.data.subscribe`. */
 let subscriber: () => Promise<void> | void;
@@ -59,7 +72,11 @@ const createCartSelectors = (): Record<string, unknown> => ({
   getCustomerData: () => ({billingAddress: shippingAddress(), shippingAddress: shippingAddress()}),
   // eslint-disable-next-line @typescript-eslint/naming-convention
   getShippingRates: () => [{shipping_rates: [{rate_id: cart.rateId, selected: true}]}],
+  getCartData: () => ({items: cart.items, totals: cart.totals}),
   isCustomerDataUpdating: () => cart.saving,
+  isItemPendingQuantity: (key: string) => cart.pendingQuantity.includes(key),
+  isItemPendingDelete: (key: string) => cart.pendingDelete.includes(key),
+  isShippingRateBeingSelected: () => cart.selectingRate,
 });
 
 /** Run one `wp.data` store tick. */
@@ -75,9 +92,13 @@ const saveCustomerData = async (): Promise<void> => {
   await tick();
 };
 
-/** Register the config's form listener. */
-const listen = (): void => {
-  getBlocksCheckoutConfig().config.formChange?.(vi.fn());
+/** Register the config's form listener and return the callback it calls on a form change. */
+const listen = (): ReturnType<typeof vi.fn> => {
+  const callback = vi.fn();
+
+  getBlocksCheckoutConfig().config.formChange?.(callback);
+
+  return callback;
 };
 
 beforeEach(() => {
@@ -87,6 +108,11 @@ beforeEach(() => {
   cart.company = '';
   cart.saving = false;
   cart.rateId = 'flat_rate:1';
+  cart.selectingRate = false;
+  cart.items = [...DEFAULT_ITEMS];
+  cart.totals = {total: 0};
+  cart.pendingQuantity = [];
+  cart.pendingDelete = [];
 
   cartSelectors = createCartSelectors();
 
@@ -178,5 +204,116 @@ describe('getBlocksCheckoutConfig', () => {
     await tick();
 
     expect(updateContextMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not fetch again when other cart data changes, for example a delivery options fee', async () => {
+    const callback = listen();
+
+    cart.totals = {total: 50};
+    await tick();
+
+    expect(updateContextMock).not.toHaveBeenCalled();
+    expect(callback).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ['quantity', [{key: 'variant-a', id: 100, quantity: 2}]],
+    ['variation', [{key: 'variant-b', id: 101, quantity: 1}]],
+    [
+      'added item',
+      [
+        {key: 'variant-a', id: 100, quantity: 1},
+        {key: 'unknown', id: 200, quantity: 1},
+      ],
+    ],
+    ['removed item', []],
+  ])('fetches a new context once after a saved %s change', async (_label, items) => {
+    const callback = listen();
+
+    cart.items = items;
+    await tick();
+    await tick();
+
+    expect(updateContextMock).toHaveBeenCalledTimes(1);
+    expect(callback).toHaveBeenCalledTimes(1);
+  });
+
+  it.each(['pendingQuantity', 'pendingDelete'] as const)(
+    'waits until the server has saved the item (%s)',
+    async (pending) => {
+      listen();
+
+      cart.items = [{key: 'variant-a', id: 100, quantity: 2}];
+      cart[pending] = ['variant-a'];
+      await tick();
+
+      expect(updateContextMock).not.toHaveBeenCalled();
+
+      cart[pending] = [];
+      await tick();
+
+      expect(updateContextMock).toHaveBeenCalledTimes(1);
+    },
+  );
+
+  it('waits until the server has deleted an item that is no longer in the cart data', async () => {
+    const callback = listen();
+
+    cart.items = [];
+    cart.pendingDelete = ['variant-a'];
+    await tick();
+
+    expect(updateContextMock).not.toHaveBeenCalled();
+
+    cart.pendingDelete = [];
+    await tick();
+
+    expect(updateContextMock).toHaveBeenCalledTimes(1);
+    expect(callback).toHaveBeenCalledTimes(1);
+  });
+
+  it('reads the selected shipping method before it fetches the context for it', async () => {
+    const callback = listen();
+
+    cart.rateId = 'flat_rate:2';
+    cart.selectingRate = true;
+    await tick();
+
+    expect(updateContextMock).not.toHaveBeenCalled();
+
+    cart.selectingRate = false;
+    await tick();
+
+    expect(callback.mock.invocationCallOrder[0]).toBeLessThan(updateContextMock.mock.invocationCallOrder[0]);
+  });
+
+  it('calls the form listener on an address change without fetching a new context', async () => {
+    const callback = listen();
+
+    cart.company = 'MyParcel';
+    await tick();
+
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(updateContextMock).not.toHaveBeenCalled();
+  });
+
+  it('keeps calling the form listener when the context request fails', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const error = new TypeError('Failed to fetch');
+    const callback = listen();
+
+    updateContextMock.mockRejectedValueOnce(error);
+    cart.items = [{key: 'variant-a', id: 100, quantity: 2}];
+
+    await expect(tick()).resolves.toBeUndefined();
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(warn).toHaveBeenCalledWith('[woocommerce-myparcel] delivery-options context update failed', error);
+
+    cart.items = [{key: 'variant-a', id: 100, quantity: 3}];
+    await tick();
+
+    expect(callback).toHaveBeenCalledTimes(2);
+    expect(updateContextMock).toHaveBeenCalledTimes(2);
+    warn.mockRestore();
   });
 });
