@@ -54,6 +54,11 @@ export type WcCartStore = StoreInstance<
       };
       // eslint-disable-next-line @typescript-eslint/naming-convention
       getShippingRates(): [{shipping_rates: WcShippingRate[]}];
+      getCartData(): {items: {key: string; id: number; quantity: number}[]};
+      isItemPendingQuantity(key: string): boolean;
+      isItemPendingDelete(key: string): boolean;
+      isCustomerDataUpdating(): boolean;
+      isShippingRateBeingSelected(): boolean;
     }
   >
 >;

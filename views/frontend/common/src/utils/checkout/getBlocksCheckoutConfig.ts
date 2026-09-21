@@ -39,21 +39,42 @@ export const getBlocksCheckoutConfig = (): CheckoutConfig => {
 
     config: {
       /**
-       * Update whenever the shipping method or the address changes.
+       * Refresh weight after WooCommerce has saved a cart or shipping-method change.
        */
       formChange(callback) {
         const wcCartStore = useWcCartStore();
         let previousShippingRate = getShippingRate();
         let previousCustomerData = JSON.stringify(wcCartStore.selectors.getCustomerData());
+        const cartItemsKey = (): string =>
+          JSON.stringify(wcCartStore.selectors.getCartData().items.map(({key, id, quantity}) => ({key, id, quantity})));
+        let previousCartItems = cartItemsKey();
+        let previousCartKeys = wcCartStore.selectors.getCartData().items.map(({key}) => key);
 
         wp.data.subscribe(async () => {
+          const currentCartKeys = wcCartStore.selectors.getCartData().items.map(({key}) => key);
+          // Retain removed keys until the server has finished deleting those cart items.
+          const pendingItem = [...new Set([...previousCartKeys, ...currentCartKeys])].some(
+            (key) => wcCartStore.selectors.isItemPendingQuantity(key) || wcCartStore.selectors.isItemPendingDelete(key),
+          );
+
+          // Quantity changes can be optimistic. Fetch only after the server has the new cart.
+          if (
+            pendingItem ||
+            wcCartStore.selectors.isCustomerDataUpdating() ||
+            wcCartStore.selectors.isShippingRateBeingSelected()
+          ) {
+            return;
+          }
+
           const currentShippingRate = getShippingRate();
           const currentCustomerData = wcCartStore.selectors.getCustomerData();
+          const currentCartItems = cartItemsKey();
 
           const shippingMethodChanged = previousShippingRate?.rate_id !== currentShippingRate?.rate_id;
           const customerDataChanged = previousCustomerData !== JSON.stringify(currentCustomerData);
+          const cartItemsChanged = previousCartItems !== currentCartItems;
 
-          if (!shippingMethodChanged && !customerDataChanged) {
+          if (!shippingMethodChanged && !customerDataChanged && !cartItemsChanged) {
             return;
           }
 
@@ -61,13 +82,19 @@ export const getBlocksCheckoutConfig = (): CheckoutConfig => {
             previousCustomerData = JSON.stringify(currentCustomerData);
           }
 
-          if (shippingMethodChanged) {
-            previousShippingRate = currentShippingRate;
-
-            await updateContext();
-          }
-
+          previousShippingRate = currentShippingRate;
+          previousCartItems = currentCartItems;
+          previousCartKeys = currentCartKeys;
           callback();
+
+          if (shippingMethodChanged || cartItemsChanged) {
+            try {
+              await updateContext();
+            } catch (error) {
+              // eslint-disable-next-line no-console
+              console.warn('[woocommerce-myparcel] delivery-options context update failed', error);
+            }
+          }
         });
       },
 
