@@ -33,6 +33,10 @@ require plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 // Composer's file-hash deduplication can cause another plugin that shares php-di to claim
 // the hash first, preventing our copy of functions.php from loading. Require it explicitly.
 require_once plugin_dir_path(__FILE__) . 'vendor/php-di/php-di/src/functions.php';
+// Same problem with symfony/deprecation-contracts. ActiveCampaign for WooCommerce claims the
+// hash but only declares AcVendor\trigger_deprecation, so the global function stays undefined
+// and every Guzzle deprecation becomes a fatal error.
+require_once plugin_dir_path(__FILE__) . 'vendor/symfony/deprecation-contracts/function.php';
 
 final class MyParcelNLWooCommerce
 {
