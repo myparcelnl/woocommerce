@@ -62,7 +62,7 @@ export const getBlocksCheckoutConfig = (): CheckoutConfig => {
 
     config: {
       /**
-       * Update whenever the shipping method or the address changes.
+       * Update whenever the shipping method, the address or the cart items change.
        */
       formChange(callback) {
         const wcCartStore = useWcCartStore();
@@ -73,38 +73,61 @@ export const getBlocksCheckoutConfig = (): CheckoutConfig => {
         // address, so it is the moment to let the PDK compare its context. Older WooCommerce Blocks
         // versions cannot report a save, and then there is no such moment to offer.
         let previousSaving = false;
+        const cartItemsKey = (): string =>
+          JSON.stringify(wcCartStore.selectors.getCartData().items.map(({key, id, quantity}) => ({key, id, quantity})));
+        let previousCartItems = cartItemsKey();
+        let previousCartKeys = wcCartStore.selectors.getCartData().items.map(({key}) => key);
 
         wp.data.subscribe(async () => {
-          const currentShippingRate = getShippingRate();
-          const currentCustomerData = wcCartStore.selectors.getCustomerData();
-
-          const shippingMethodChanged = previousShippingRate?.rate_id !== currentShippingRate?.rate_id;
-          const customerDataChanged = previousCustomerData !== JSON.stringify(currentCustomerData);
-
           const saving = Boolean(wcCartStore.selectors.isCustomerDataUpdating?.());
           const saveFinished = previousSaving && !saving;
 
           previousSaving = saving;
 
-          if (customerDataChanged) {
-            previousCustomerData = JSON.stringify(currentCustomerData);
-          }
-
-          if (shippingMethodChanged) {
-            previousShippingRate = currentShippingRate;
-
-            await updateContext();
-          }
-
           if (saveFinished) {
             await refreshContextIfBusinessChanged();
           }
 
-          if (!shippingMethodChanged && !customerDataChanged) {
+          const currentCartKeys = wcCartStore.selectors.getCartData().items.map(({key}) => key);
+          // Retain removed keys until the server has finished deleting those cart items.
+          const pendingItem = [...new Set([...previousCartKeys, ...currentCartKeys])].some(
+            (key) => wcCartStore.selectors.isItemPendingQuantity(key) || wcCartStore.selectors.isItemPendingDelete(key),
+          );
+
+          // Quantity changes can be optimistic. Fetch only after the server has the new cart.
+          if (pendingItem || saving || wcCartStore.selectors.isShippingRateBeingSelected()) {
             return;
           }
 
+          const currentShippingRate = getShippingRate();
+          const currentCustomerData = wcCartStore.selectors.getCustomerData();
+          const currentCartItems = cartItemsKey();
+
+          const shippingMethodChanged = previousShippingRate?.rate_id !== currentShippingRate?.rate_id;
+          const customerDataChanged = previousCustomerData !== JSON.stringify(currentCustomerData);
+          const cartItemsChanged = previousCartItems !== currentCartItems;
+
+          if (!shippingMethodChanged && !customerDataChanged && !cartItemsChanged) {
+            return;
+          }
+
+          if (customerDataChanged) {
+            previousCustomerData = JSON.stringify(currentCustomerData);
+          }
+
+          previousShippingRate = currentShippingRate;
+          previousCartItems = currentCartItems;
+          previousCartKeys = currentCartKeys;
           callback();
+
+          if (shippingMethodChanged || cartItemsChanged) {
+            try {
+              await updateContext();
+            } catch (error) {
+              // eslint-disable-next-line no-console
+              console.warn('[woocommerce-myparcel] delivery-options context update failed', error);
+            }
+          }
         });
       },
 
