@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Pdk\Context\Service;
 
+use MyParcelNL\Pdk\App\Cart\Contract\CartCalculationServiceInterface;
+use MyParcelNL\Pdk\App\Cart\Contract\KnownCartWeightServiceInterface;
 use MyParcelNL\Pdk\App\Cart\Model\PdkCart;
 use MyParcelNL\Pdk\Carrier\Service\CapabilitiesValidationService;
 use MyParcelNL\Pdk\Context\Model\CheckoutContext;
@@ -25,6 +27,13 @@ final class WcContextService extends ContextService
      */
     public function createCheckoutContext(?PdkCart $cart): CheckoutContext
     {
+        // Shipping classes exclude lines only from package selection. Keep the complete cart for weight.
+        $completeCart = $cart;
+        if ($cart) {
+            $cart        = clone $cart;
+            $cart->lines = clone $completeCart->lines;
+        }
+
         $allowedShippingMethods = Settings::get(CheckoutSettings::ALLOWED_SHIPPING_METHODS, CheckoutSettings::ID);
         $matrixService          = Pdk::get(WcShippingClassMatrixService::class);
 
@@ -71,6 +80,21 @@ final class WcContextService extends ContextService
         $highestShippingClass = $disableDeliveryOptions
             ? null
             : $this->resolveHighestShippingClass($cart, $candidates, $checkoutContext->config->packageType ?? null);
+
+        if ($completeCart && $checkoutContext->config) {
+            $packageType = $highestShippingClass
+                ? $matrixService->getAssociatedPackageType($highestShippingClass, $allowedShippingMethods)
+                : $checkoutContext->config->packageType;
+            $calculator = Pdk::get(CartCalculationServiceInterface::class);
+            $weight     = $completeCart->shippingMethod->hasDeliveryOptions
+                && $packageType && $calculator instanceof KnownCartWeightServiceInterface
+                ? $calculator->getKnownCartWeightForPackageType($completeCart, $packageType)
+                : null;
+
+            $checkoutContext->config->physicalProperties = null === $weight
+                ? null
+                : ['weight' => ['value' => $weight, 'unit' => 'g']];
+        }
 
         $settingsToMerge = [
             'highestShippingClass' => $highestShippingClass ?? '', // frontend expects empty string when not set

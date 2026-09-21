@@ -1,6 +1,11 @@
 // @vitest-environment happy-dom
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {getClassicCheckoutConfig} from './getClassicCheckoutConfig';
+
+const {updateContext, useDeliveryOptionsStore} = vi.hoisted(() => ({
+  updateContext: vi.fn().mockResolvedValue(undefined),
+  useDeliveryOptionsStore: vi.fn((): object | null => ({})),
+}));
 
 // The config object references these enums as object keys only; simple stubs suffice.
 // vi.mock is hoisted above the imports by Vitest.
@@ -9,6 +14,8 @@ vi.mock('@myparcel-dev/pdk-checkout-common', () => ({
 }));
 
 vi.mock('@myparcel-dev/pdk-checkout', () => ({
+  updateContext,
+  useDeliveryOptionsStore,
   AddressField: {
     Address1: 'address1',
     Address2: 'address2',
@@ -291,12 +298,23 @@ describe('getClassicCheckoutConfig - getAddressType', () => {
 });
 
 describe('getClassicCheckoutConfig - formChange', () => {
+  const listeners: {target: EventTarget; event: string; handler: EventListener}[] = [];
+
   beforeEach(() => {
+    updateContext.mockClear();
+    useDeliveryOptionsStore.mockReturnValue({});
     document.body.innerHTML = '';
     // Minimal jQuery stub: jQuery(el).on('change', h) -> el.addEventListener('change', h).
     (globalThis as unknown as {jQuery: unknown}).jQuery = (el: EventTarget) => ({
-      on: (event: string, handler: EventListener) => el.addEventListener(event, handler),
+      on: (event: string, handler: EventListener) => {
+        listeners.push({target: el, event, handler});
+        el.addEventListener(event, handler);
+      },
     });
+  });
+
+  afterEach(() => {
+    listeners.splice(0).forEach(({target, event, handler}) => target.removeEventListener(event, handler));
   });
 
   const fireChange = (selector: string) => {
@@ -314,6 +332,7 @@ describe('getClassicCheckoutConfig - formChange', () => {
     fireChange('input[name="shipping_method[0]"]');
 
     expect(calls).toBe(1);
+    expect(updateContext).not.toHaveBeenCalled();
   });
 
   it('fires the callback on change in ANY Divi checkout form', () => {
@@ -344,5 +363,50 @@ describe('getClassicCheckoutConfig - formChange', () => {
     document.body.dispatchEvent(new Event('updated_checkout', {bubbles: true}));
 
     expect(calls).toBe(1);
+    expect(updateContext).toHaveBeenCalledTimes(1);
+  });
+
+  it('refreshes cart weight after each completed update even when form values do not change', () => {
+    document.body.innerHTML = SINGLE_FORM;
+    const callback = vi.fn();
+    getClassicCheckoutConfig().config.formChange(callback);
+
+    document.body.dispatchEvent(new Event('updated_checkout'));
+    document.body.dispatchEvent(new Event('updated_checkout'));
+
+    expect(updateContext).toHaveBeenCalledTimes(2);
+    expect(callback.mock.invocationCallOrder[0]).toBeLessThan(updateContext.mock.invocationCallOrder[0]);
+  });
+
+  it('keeps form updates without fetching context when Delivery Options is not loaded', async () => {
+    document.body.innerHTML = SINGLE_FORM;
+    const callback = vi.fn();
+    useDeliveryOptionsStore.mockReturnValueOnce(null);
+    getClassicCheckoutConfig().config.formChange(callback);
+    const {handler} = listeners.find(({event}) => event === 'updated_checkout')!;
+
+    await handler(new Event('updated_checkout'));
+
+    expect(callback).toHaveBeenCalledOnce();
+    expect(updateContext).not.toHaveBeenCalled();
+  });
+
+  it('keeps form updates working when the context request fails', async () => {
+    document.body.innerHTML = SINGLE_FORM;
+    const callback = vi.fn();
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const error = new TypeError('Failed to fetch');
+    updateContext.mockRejectedValueOnce(error);
+    getClassicCheckoutConfig().config.formChange(callback);
+    const {handler} = listeners.find(({event}) => event === 'updated_checkout')!;
+
+    await expect(handler(new Event('updated_checkout'))).resolves.toBeUndefined();
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(warn).toHaveBeenCalledWith('[woocommerce-myparcel] delivery-options context update failed', error);
+
+    await handler(new Event('updated_checkout'));
+    expect(callback).toHaveBeenCalledTimes(2);
+    expect(updateContext).toHaveBeenCalledTimes(2);
+    warn.mockRestore();
   });
 });

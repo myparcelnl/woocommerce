@@ -51,7 +51,17 @@ export const initializeCheckoutDeliveryOptions = (): void => {
     },
   });
 
-  document.addEventListener(useEvent(PdkDeliveryOptionsEvent.DeliveryOptionsUpdated), () => {
+  let previousSelection: string | null | undefined = null;
+
+  document.addEventListener(useEvent(PdkDeliveryOptionsEvent.DeliveryOptionsUpdated), (event) => {
+    const selectionKey = JSON.stringify((event as CustomEvent).detail);
+
+    // A context refresh can re-emit the same selection. Do not start another checkout refresh.
+    if (selectionKey === previousSelection) {
+      return;
+    }
+
+    previousSelection = selectionKey;
     jQuery(document.body).trigger('update_checkout');
   });
 };
