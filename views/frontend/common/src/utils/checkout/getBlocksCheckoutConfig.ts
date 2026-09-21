@@ -65,6 +65,8 @@ export const getBlocksCheckoutConfig = (): CheckoutConfig => {
         // server is debounced, and a context built before it lands still carries the old flag.
         let businessRefreshPending = false;
         let previousSaving = false;
+        // The business flag the save in flight carries.
+        let savingIsBusiness = previousIsBusiness;
 
         wp.data.subscribe(async () => {
           const currentShippingRate = getShippingRate();
@@ -79,10 +81,18 @@ export const getBlocksCheckoutConfig = (): CheckoutConfig => {
             businessRefreshPending = canDetectSaving;
           }
 
-          // An address change always goes through a save request, so its end is the moment the
-          // server knows the new company.
+          // WooCommerce builds the payload when a save starts, so a save that was already on its
+          // way does not carry a company typed after it. Remember what the save in flight carries,
+          // and accept only the end of a save that carries the current flag as the moment the
+          // server knows it.
           const saving = Boolean(wcCartStore.selectors.isCustomerDataUpdating?.());
-          const businessChangeSaved = businessRefreshPending && previousSaving && !saving;
+
+          if (saving && !previousSaving) {
+            savingIsBusiness = currentIsBusiness;
+          }
+
+          const businessChangeSaved =
+            businessRefreshPending && previousSaving && !saving && savingIsBusiness === currentIsBusiness;
 
           previousSaving = saving;
 

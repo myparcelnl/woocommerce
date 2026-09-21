@@ -120,6 +120,27 @@ describe('getBlocksCheckoutConfig', () => {
     expect(updateContextMock).toHaveBeenCalledTimes(1);
   });
 
+  it('waits for the save that carries the company, not for one that was already running', async () => {
+    listen();
+
+    // A save of an earlier address field is already on its way. Its payload has no company.
+    cart.saving = true;
+    await tick();
+
+    cart.company = 'MyParcel';
+    await tick();
+
+    cart.saving = false;
+    await tick();
+
+    // The server has no company yet, so a context built now still says the recipient is private.
+    expect(updateContextMock).not.toHaveBeenCalled();
+
+    await saveCustomerData();
+
+    expect(updateContextMock).toHaveBeenCalledTimes(1);
+  });
+
   it('fetches a new context when the company is cleared', async () => {
     listen('MyParcel');
 
