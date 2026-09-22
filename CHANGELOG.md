@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.10.1](https://github.com/myparcelnl/woocommerce/compare/v6.10.0...v6.10.1) (2026-09-22)
+
+
+### :bug: Bug Fixes
+
+* **customs:** limit the customs item description to the api maximum ([#1907](https://github.com/myparcelnl/woocommerce/issues/1907)) ([a5dc9d4](https://github.com/myparcelnl/woocommerce/commit/a5dc9d429876d6aef632c4380eefa59088063fec))
+
 ## [6.10.0](https://github.com/myparcelnl/woocommerce/compare/v6.9.4...v6.10.0) (2026-09-16)
 
 
