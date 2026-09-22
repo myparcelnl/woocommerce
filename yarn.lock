@@ -4490,46 +4490,46 @@ __metadata:
   linkType: hard
 
 "@myparcel-dev/pdk-admin-component-tests@npm:^2.2.2":
-  version: 2.2.2
-  resolution: "@myparcel-dev/pdk-admin-component-tests@npm:2.2.2"
+  version: 2.2.3
+  resolution: "@myparcel-dev/pdk-admin-component-tests@npm:2.2.3"
   dependencies:
-    "@myparcel-dev/pdk-admin": "npm:^2.2.2"
+    "@myparcel-dev/pdk-admin": "npm:^2.2.3"
     "@pinia/testing": "npm:>= 0.1.0 < 1"
     "@vue/test-utils": "npm:^2.0.0"
     pinia: "npm:^2.0.0"
     vitest: "npm:^3.2.6"
   peerDependencies:
     vue: 3.4.31
-  checksum: 10c0/494c90aff41f506fb2bbca8dee18d6607e328a300d1dd319fe9a8f47f2e487d813fc3a9b4066eaf6e5bc8c8c91778fce0f367e802484a34889c3f53c63879905
+  checksum: 10c0/2655ffa096fdb07123a7fcd2c6e41803359b9105e73aab3af7f01e98440912ca3971fb05296ed1138e3c4b197afe015f87b7120e8ddadb6398f40b7f24347d25
   languageName: node
   linkType: hard
 
 "@myparcel-dev/pdk-admin-preset-dashicons@npm:^2.2.2":
-  version: 2.2.2
-  resolution: "@myparcel-dev/pdk-admin-preset-dashicons@npm:2.2.2"
+  version: 2.2.3
+  resolution: "@myparcel-dev/pdk-admin-preset-dashicons@npm:2.2.3"
   dependencies:
-    "@myparcel-dev/pdk-admin": "npm:^2.2.2"
+    "@myparcel-dev/pdk-admin": "npm:^2.2.3"
     vue: "npm:3.4.31"
-  checksum: 10c0/94d70112aefa9137a6bd61771cacc066c6283cd1ec37dde469ec51b6aac0ae6c352631bc5e599af5bb85f95027d1b7a2da1c8897edaab4b94601a981bc7bbfee
+  checksum: 10c0/fd10bca19ef4e0dcd709ddc19ee86a601ac7e9c2668f300da19e42e0e0295bf9e09eb0e7443b38dce6a3c54f4958a643dd266c0e74c89338e92c7e8cb9213cd4
   languageName: node
   linkType: hard
 
 "@myparcel-dev/pdk-admin-preset-default@npm:^2.2.2":
-  version: 2.2.2
-  resolution: "@myparcel-dev/pdk-admin-preset-default@npm:2.2.2"
+  version: 2.2.3
+  resolution: "@myparcel-dev/pdk-admin-preset-default@npm:2.2.3"
   dependencies:
-    "@myparcel-dev/pdk-admin": "npm:^2.2.2"
+    "@myparcel-dev/pdk-admin": "npm:^2.2.3"
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
     "@vuepic/vue-datepicker": "npm:^11.0.2"
     "@vueuse/core": "npm:^10.0.0"
     vue: "npm:3.4.31"
-  checksum: 10c0/edd7c4acd0f1991cb2094b73c8b749d85fbede2331483af81c675a90a7a88c5495441817cda7ad32ca9ba04cf85664e5e6a1327b96dcfeaf9136e5d9e01739df
+  checksum: 10c0/afc65d52e9d829f3d34748c528838470296a88270ad6530faa9c39d325a99b3c029c2ca2f95a5d17ba5a6d247a7aa84899287d6478609451738436a4657006a4
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-admin@npm:^2.2.2":
-  version: 2.2.2
-  resolution: "@myparcel-dev/pdk-admin@npm:2.2.2"
+"@myparcel-dev/pdk-admin@npm:^2.2.2, @myparcel-dev/pdk-admin@npm:^2.2.3":
+  version: 2.2.3
+  resolution: "@myparcel-dev/pdk-admin@npm:2.2.3"
   dependencies:
     "@myparcel-dev/constants": "npm:^2.9.0"
     "@myparcel-dev/pdk-common": "npm:^2.1.2"
@@ -4542,7 +4542,7 @@ __metadata:
     lodash-unified: "npm:^1.0.3"
     pinia: "npm:^2.0.0"
     vue: "npm:3.4.31"
-  checksum: 10c0/1ce74ea9217e6d1b9ca2c01f89f450d2e635095c5e0d3b6700840390d704c460f7f9010b54700f72ada3af5d229268c9920d575c3d6741077ee3985f69d4bd33
+  checksum: 10c0/d9d3e9250eb4cbf61a479d40dc5e1463ba437ec355ea9d927c1d27984723f299073994d2be5d96cbc1cf5590c28624c49ae5384fb7792b503a33f85c2091068d
   languageName: node
   linkType: hard
 
