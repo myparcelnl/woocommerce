@@ -17,7 +17,9 @@ use MyParcelNL\Pdk\Carrier\Repository\CarrierCapabilitiesRepository;
 use MyParcelNL\Pdk\Carrier\Service\CapabilitiesValidationService;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
+use MyParcelNL\Pdk\Settings\Model\OrderSettings;
 use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
+use MyParcelNL\Pdk\Types\Service\TriStateService;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpCache;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use RuntimeException;
@@ -389,3 +391,66 @@ it('falls back to the default package type when the cart has no destination coun
     // shipping_class:7 maps to the default package type, so it wins the fallback.
     expect($checkoutContext->settings['highestShippingClass'])->toBe('shipping_class:7');
 });
+
+it('uses all physical cart lines for weight while preserving shipping class package selection', function (
+    array $weights,
+    array $classIds,
+    string $packageType,
+    ?int $expectedWeight,
+    bool $hasDeliveryOptions = true
+) {
+    MockWpCache::reset();
+    WC()->cart->empty_cart();
+
+    factory(CheckoutSettings::class)
+        ->withAllowedShippingMethods([$packageType => ['shipping_class:12']])
+        ->store();
+    factory(OrderSettings::class)->withEmptyParcelWeight(250)->withEmptyMailboxWeight(20)->store();
+
+    $term          = new WP_Term();
+    $term->term_id = 12;
+    $term->name    = $term->slug = 'weight-test-class';
+    MockWpCache::$cache['terms'] = [12 => ['data' => $term], 5 => ['data' => false]];
+
+    foreach ($classIds as $index => $classId) {
+        add_product_to_cart(9000 + $index, $classId);
+    }
+
+    $cart = new PdkCart(['lines' => array_map(static function (int $index) use ($weights, $hasDeliveryOptions): array {
+        return [
+            'quantity' => 1,
+            'product' => [
+                'externalIdentifier' => (string) (9000 + $index),
+                'weight' => $weights[$index],
+                'isDeliverable' => true,
+                'settings' => ['disableDeliveryOptions' => $hasDeliveryOptions
+                    ? TriStateService::INHERIT
+                    : TriStateService::ENABLED],
+            ],
+        ];
+    }, array_keys($weights))]);
+    $cart->shippingMethod = factory(PdkShippingMethod::class)
+        ->withId('flat_rate:456')
+        ->withShippingAddress(factory(ShippingAddress::class)->withCc('NL'))
+        ->make();
+    wpFactory(WC_Shipping_Flat_Rate::class)->withId(456)->store();
+
+    $originalLines = $cart->lines->toArray();
+    $context = Pdk::get(WcContextService::class)->createCheckoutContext($cart);
+
+    expect($context->config->physicalProperties)->toBe(null === $expectedWeight
+        ? null
+        : ['weight' => ['value' => $expectedWeight, 'unit' => 'g']])
+        ->and($cart->lines->toArray())->toBe($originalLines);
+
+    if (null === $expectedWeight) {
+        expect($context->toArrayWithoutNull()['config'])->toHaveKey('physicalProperties', null);
+    }
+})->with([
+    'all products use a shipping class' => [[10000, 10000, 10000], [12, 12, 12], 'package', 30250],
+    'mixed class and regular products' => [[15000, 5000], [12, null], 'package', 20250],
+    'unknown weight in excluded class line' => [[0, 15000], [12, null], 'package', null],
+    'unknown weight in regular line' => [[15000, 0], [12, null], 'package', null],
+    'class selects mailbox packaging' => [[500], [12], 'mailbox', 520],
+    'product disables delivery options' => [[10000], [12], 'package', null, false],
+]);
