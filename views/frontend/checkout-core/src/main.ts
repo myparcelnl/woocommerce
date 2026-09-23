@@ -33,6 +33,9 @@ createPdkCheckout({
   formData: {
     [PdkField.AddressType]: config.addressTypeFormDataKey,
     [PdkField.ShippingMethod]: config.shippingMethodFormDataKey,
+    // Left out by a checkout that cannot tell when its address reached the server. The PDK then
+    // leaves the business flag alone.
+    ...(config.isBusinessFormDataKey ? {[PdkField.IsBusiness]: config.isBusinessFormDataKey} : {}),
     [AddressType.Billing]: createFields(config.addressFields, config.prefixBilling),
     [AddressType.Shipping]: createFields(config.addressFields, config.prefixShipping),
   },

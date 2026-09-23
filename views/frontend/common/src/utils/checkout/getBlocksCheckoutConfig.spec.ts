@@ -2,8 +2,11 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {getBlocksCheckoutConfig} from './getBlocksCheckoutConfig';
 
-// vi.mock is hoisted above the imports by Vitest, so the spy must be hoisted with it.
-const {updateContextMock} = vi.hoisted(() => ({updateContextMock: vi.fn(async () => undefined)}));
+// vi.mock is hoisted above the imports by Vitest, so the spies must be hoisted with it.
+const {updateContextMock, refreshContextMock} = vi.hoisted(() => ({
+  updateContextMock: vi.fn(async () => undefined),
+  refreshContextMock: vi.fn(async () => undefined),
+}));
 
 // The config object references these enums as object keys only; simple stubs suffice.
 vi.mock('@myparcel-dev/pdk-checkout-common', () => ({
@@ -15,7 +18,7 @@ vi.mock('@myparcel-dev/pdk-checkout-common', () => ({
     Country: 'country',
     PostalCode: 'postalCode',
   },
-  PdkField: {AddressType: 'addressType', ShippingMethod: 'shippingMethod'},
+  PdkField: {AddressType: 'addressType', IsBusiness: 'isBusiness', ShippingMethod: 'shippingMethod'},
 }));
 
 vi.mock('@myparcel-dev/pdk-checkout', () => ({
@@ -23,6 +26,7 @@ vi.mock('@myparcel-dev/pdk-checkout', () => ({
   SeparateAddressField: {Street: 'street', Number: 'number', NumberSuffix: 'numberSuffix'},
   useUtil: () => (selector: string) => document.querySelector(selector),
   updateContext: updateContextMock,
+  refreshContextIfBusinessChanged: refreshContextMock,
 }));
 
 /** Everything the fake cart store needs to answer the selectors the config calls. */
@@ -36,6 +40,9 @@ const cart = {
 /** The subscriber the config registers through `wp.data.subscribe`. */
 let subscriber: () => Promise<void> | void;
 
+/** Rebuilt per test, so a test can drop a selector an older WooCommerce Blocks does not have. */
+let cartSelectors: Record<string, unknown>;
+
 const shippingAddress = (): Record<string, string> => ({
   // eslint-disable-next-line @typescript-eslint/naming-convention
   address_1: 'Antareslaan 31',
@@ -46,9 +53,6 @@ const shippingAddress = (): Record<string, string> => ({
   country: 'NL',
   postcode: '2132 JE',
 });
-
-/** Rebuilt per test, so a test can drop a selector an older WooCommerce Blocks does not have. */
-let cartSelectors: Record<string, unknown>;
 
 const createCartSelectors = (): Record<string, unknown> => ({
   getCustomerData: () => ({billingAddress: shippingAddress(), shippingAddress: shippingAddress()}),
@@ -70,14 +74,14 @@ const saveCustomerData = async (): Promise<void> => {
   await tick();
 };
 
-/** Register the config's form listener, with `company` as the starting value. */
-const listen = (company = ''): void => {
-  cart.company = company;
+/** Register the config's form listener. */
+const listen = (): void => {
   getBlocksCheckoutConfig().config.formChange?.(vi.fn());
 };
 
 beforeEach(() => {
   updateContextMock.mockClear();
+  refreshContextMock.mockClear();
 
   cart.company = '';
   cart.saving = false;
@@ -101,53 +105,53 @@ beforeEach(() => {
 });
 
 describe('getBlocksCheckoutConfig', () => {
-  it('does not fetch a new context while the company is still being saved', async () => {
+  it('reports the recipient as a business when a company is filled in', () => {
+    cart.company = 'MyParcel';
+
+    expect(getBlocksCheckoutConfig().config.getFormData?.().isBusiness).toBe('1');
+  });
+
+  it('reports the recipient as private without a company', () => {
+    expect(getBlocksCheckoutConfig().config.getFormData?.().isBusiness).toBe('');
+  });
+
+  it('asks for a fresh context once the customer data has been saved', async () => {
+    listen();
+
+    cart.company = 'MyParcel';
+    await saveCustomerData();
+
+    expect(refreshContextMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not ask while the customer data is still being saved', async () => {
     listen();
 
     cart.company = 'MyParcel';
     cart.saving = true;
     await tick();
 
-    expect(updateContextMock).not.toHaveBeenCalled();
+    expect(refreshContextMock).not.toHaveBeenCalled();
   });
 
-  it('fetches a new context once the company has been saved', async () => {
+  it('asks after every save, so an answer that came back too early is corrected', async () => {
+    listen();
+
+    cart.company = 'MyParcel';
+    await saveCustomerData();
+    await saveCustomerData();
+
+    expect(refreshContextMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not ask when the store cannot report saving', async () => {
+    delete cartSelectors.isCustomerDataUpdating;
     listen();
 
     cart.company = 'MyParcel';
     await saveCustomerData();
 
-    expect(updateContextMock).toHaveBeenCalledTimes(1);
-  });
-
-  it('waits for the save that carries the company, not for one that was already running', async () => {
-    listen();
-
-    // A save of an earlier address field is already on its way. Its payload has no company.
-    cart.saving = true;
-    await tick();
-
-    cart.company = 'MyParcel';
-    await tick();
-
-    cart.saving = false;
-    await tick();
-
-    // The server has no company yet, so a context built now still says the recipient is private.
-    expect(updateContextMock).not.toHaveBeenCalled();
-
-    await saveCustomerData();
-
-    expect(updateContextMock).toHaveBeenCalledTimes(1);
-  });
-
-  it('fetches a new context when the company is cleared', async () => {
-    listen('MyParcel');
-
-    cart.company = '';
-    await saveCustomerData();
-
-    expect(updateContextMock).toHaveBeenCalledTimes(1);
+    expect(refreshContextMock).not.toHaveBeenCalled();
   });
 
   it('fetches a new context when the shipping method changes', async () => {
@@ -159,40 +163,7 @@ describe('getBlocksCheckoutConfig', () => {
     expect(updateContextMock).toHaveBeenCalledTimes(1);
   });
 
-  it('fetches a new context once when the shipping method changes as the company is saved', async () => {
-    listen();
-
-    cart.company = 'MyParcel';
-    cart.saving = true;
-    await tick();
-
-    cart.saving = false;
-    cart.rateId = 'local_pickup:2';
-    await tick();
-
-    expect(updateContextMock).toHaveBeenCalledTimes(1);
-  });
-
-  it('fetches a new context once, after the save, when the shipping method changes mid-save', async () => {
-    listen();
-
-    cart.company = 'MyParcel';
-    cart.saving = true;
-    await tick();
-
-    cart.rateId = 'local_pickup:2';
-    await tick();
-
-    // Fetching now would build the context from the company the server still has.
-    expect(updateContextMock).not.toHaveBeenCalled();
-
-    cart.saving = false;
-    await tick();
-
-    expect(updateContextMock).toHaveBeenCalledTimes(1);
-  });
-
-  it('keeps refreshing on a shipping method change when the store cannot report saving', async () => {
+  it('keeps fetching on a shipping method change when the store cannot report saving', async () => {
     delete cartSelectors.isCustomerDataUpdating;
     listen();
 
@@ -200,27 +171,5 @@ describe('getBlocksCheckoutConfig', () => {
     await tick();
 
     expect(updateContextMock).toHaveBeenCalledTimes(1);
-  });
-
-  it('keeps refreshing on a shipping method change after a company change it cannot track', async () => {
-    delete cartSelectors.isCustomerDataUpdating;
-    listen();
-
-    cart.company = 'MyParcel';
-    await tick();
-
-    cart.rateId = 'local_pickup:2';
-    await tick();
-
-    expect(updateContextMock).toHaveBeenCalledTimes(1);
-  });
-
-  it('does not fetch a new context when the recipient stays a business', async () => {
-    listen('MyParcel');
-
-    cart.company = 'MyParcel B.V.';
-    await saveCustomerData();
-
-    expect(updateContextMock).not.toHaveBeenCalled();
   });
 });
