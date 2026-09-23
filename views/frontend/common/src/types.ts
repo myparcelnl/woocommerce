@@ -12,8 +12,8 @@ export interface CheckoutConfig<Config extends Partial<PdkCheckoutConfigInput> =
   fieldAddressType: string;
   shippingMethodFormDataKey: string;
   addressTypeFormDataKey: string;
-  /** Only set by a checkout that can tell when its address reached the server. */
-  isBusinessFormDataKey?: string;
+  /** Set by a checkout that reports whether an address belongs to a business. */
+  reportsBusinessFlag?: boolean;
 }
 
 export interface WcShippingRate {

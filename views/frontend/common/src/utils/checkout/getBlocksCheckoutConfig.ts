@@ -1,4 +1,10 @@
-import {AddressField, AddressType, PdkField, type PdkFormData} from '@myparcel-dev/pdk-checkout-common';
+import {
+  ADDRESS_FIELD_IS_BUSINESS,
+  AddressField,
+  AddressType,
+  PdkField,
+  type PdkFormData,
+} from '@myparcel-dev/pdk-checkout-common';
 import {
   PdkUtil,
   refreshContextIfBusinessChanged,
@@ -13,14 +19,14 @@ import {getShippingRate} from './getShippingRate';
 const MYPARCEL_BLOCK_FIELDS_PREFIX = 'myparcelcom/';
 
 /**
- * Whether the recipient counts as a business: a filled-in company name. Mirrors the PDK's
- * `Address::deriveIsBusiness()`. The blocks checkout ships to the shipping address only.
+ * Whether an address belongs to a business: it has a company name. Mirrors the PDK's
+ * `Address::deriveIsBusiness()`.
  *
  * Only the flag is reported, never the company name. The PDK holds the company itself and puts the
  * flag in the checkout context, which decides which carriers the recipient is offered.
  */
-const isBusinessRecipient = (customerData: {shippingAddress: Record<string, string>}): boolean =>
-  Boolean((customerData.shippingAddress?.company ?? '').trim());
+const isBusinessAddress = (address?: Record<string, string>): boolean =>
+  Boolean((address?.company ?? '').trim());
 
 // eslint-disable-next-line max-lines-per-function
 export const getBlocksCheckoutConfig = (): CheckoutConfig => {
@@ -52,7 +58,7 @@ export const getBlocksCheckoutConfig = (): CheckoutConfig => {
 
     shippingMethodFormDataKey: PdkField.ShippingMethod,
     addressTypeFormDataKey: PdkField.AddressType,
-    isBusinessFormDataKey: PdkField.IsBusiness,
+    reportsBusinessFlag: true,
 
     config: {
       /**
@@ -108,17 +114,19 @@ export const getBlocksCheckoutConfig = (): CheckoutConfig => {
         const formData: PdkFormData = {};
 
         [AddressType.Shipping, AddressType.Billing].forEach((addressType) => {
+          const address = customerData[`${addressType}Address`];
+
           Object.keys(addressFields).forEach((field) => {
-            formData[`${addressType}-${addressFields[field]}`] =
-              customerData[`${addressType}Address`][addressFields[field]];
+            formData[`${addressType}-${addressFields[field]}`] = address[addressFields[field]];
           });
+
+          formData[`${addressType}-${ADDRESS_FIELD_IS_BUSINESS}`] = isBusinessAddress(address) ? '1' : '';
         });
 
         const shippingRates = wcCartStore.selectors.getShippingRates();
         const selectedRate = shippingRates[0]?.shipping_rates.find((rate) => rate.selected);
 
         formData[PdkField.ShippingMethod] = selectedRate?.rate_id;
-        formData[PdkField.IsBusiness] = isBusinessRecipient(customerData) ? '1' : '';
 
         // In the blocks checkout, the shipping address is *always* shown and billing address is optional. MyParcel uses the shipping address only.
         formData[PdkField.AddressType] = AddressType.Shipping;

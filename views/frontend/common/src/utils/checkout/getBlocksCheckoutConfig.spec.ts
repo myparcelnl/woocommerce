@@ -18,7 +18,8 @@ vi.mock('@myparcel-dev/pdk-checkout-common', () => ({
     Country: 'country',
     PostalCode: 'postalCode',
   },
-  PdkField: {AddressType: 'addressType', IsBusiness: 'isBusiness', ShippingMethod: 'shippingMethod'},
+  PdkField: {AddressType: 'addressType', ShippingMethod: 'shippingMethod'},
+  ADDRESS_FIELD_IS_BUSINESS: 'isBusiness',
 }));
 
 vi.mock('@myparcel-dev/pdk-checkout', () => ({
@@ -105,14 +106,20 @@ beforeEach(() => {
 });
 
 describe('getBlocksCheckoutConfig', () => {
-  it('reports the recipient as a business when a company is filled in', () => {
+  it('reports a business recipient on the address the company belongs to', () => {
     cart.company = 'MyParcel';
 
-    expect(getBlocksCheckoutConfig().config.getFormData?.().isBusiness).toBe('1');
+    const formData = getBlocksCheckoutConfig().config.getFormData?.();
+
+    expect(formData?.['shipping-isBusiness']).toBe('1');
+    expect(formData?.['billing-isBusiness']).toBe('1');
   });
 
   it('reports the recipient as private without a company', () => {
-    expect(getBlocksCheckoutConfig().config.getFormData?.().isBusiness).toBe('');
+    const formData = getBlocksCheckoutConfig().config.getFormData?.();
+
+    expect(formData?.['shipping-isBusiness']).toBe('');
+    expect(formData?.['billing-isBusiness']).toBe('');
   });
 
   it('asks for a fresh context once the customer data has been saved', async () => {
