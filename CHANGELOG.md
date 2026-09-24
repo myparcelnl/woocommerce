@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.10.2](https://github.com/myparcelnl/woocommerce/compare/v6.10.1...v6.10.2) (2026-09-24)
+
+
+### :bug: Bug Fixes
+
+* **admin:** show errors when they occur on (bulk) export or print ([#1880](https://github.com/myparcelnl/woocommerce/issues/1880)) ([2d87211](https://github.com/myparcelnl/woocommerce/commit/2d872117bae2ea42400749a84f4bfe214b5bb009))
+* **api:** stop fatal error on undefined trigger_deprecation() ([#1905](https://github.com/myparcelnl/woocommerce/issues/1905)) ([8edaa54](https://github.com/myparcelnl/woocommerce/commit/8edaa54eebb1a666be32dd8c026ef3b5dd4d7f7b))
+* **checkout:** refresh delivery options when the recipient becomes a business ([#1848](https://github.com/myparcelnl/woocommerce/issues/1848)) ([383f278](https://github.com/myparcelnl/woocommerce/commit/383f278b49f0566edd029b7fd88f53b817065492))
+
 ## [6.10.1](https://github.com/myparcelnl/woocommerce/compare/v6.10.0...v6.10.1) (2026-09-22)
 
 
