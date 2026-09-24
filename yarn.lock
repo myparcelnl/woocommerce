@@ -4820,7 +4820,7 @@ __metadata:
     "@myparcel-dev/pdk-admin-preset-default": "npm:^2.2.2"
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
     "@myparcel-woocommerce/vite-config": "workspace:*"
-    "@tanstack/vue-query": "npm:^4.43.0"
+    "@tanstack/vue-query": "npm:^5.103.2"
     "@types/jquery": "npm:^3.5.30"
     "@types/select2": "npm:^4.0.57"
     "@vitejs/plugin-vue": "npm:^6.0.1"
@@ -8025,7 +8025,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/match-sorter-utils@npm:^8.1.1":
+"@tanstack/match-sorter-utils@npm:^8.1.1, @tanstack/match-sorter-utils@npm:^8.19.4":
   version: 8.19.4
   resolution: "@tanstack/match-sorter-utils@npm:8.19.4"
   dependencies:
@@ -8045,6 +8045,13 @@ __metadata:
   version: 5.101.4
   resolution: "@tanstack/query-core@npm:5.101.4"
   checksum: 10c0/a407960303431e6498c6518cf6f8cc7283d3e4a95dbdc5e9fa42c217b9dd7afaffb82a4f2d36b38f578f745e8cf69ff8551abb947f5abcc0a290f3e3e75dc654
+  languageName: node
+  linkType: hard
+
+"@tanstack/query-core@npm:5.103.2":
+  version: 5.103.2
+  resolution: "@tanstack/query-core@npm:5.103.2"
+  checksum: 10c0/52362dd214a487b2194728a79c7fd1bd7af1831f21928030866a8ad28877eaec050e7215a6f3b3a0c4fdf601644ae8edb652e4cef7270f6f82d7371d2bbe9f41
   languageName: node
   linkType: hard
 
@@ -8144,7 +8151,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/vue-query@npm:^4.43.0, @tanstack/vue-query@npm:~4.43.0":
+"@tanstack/vue-query@npm:^5.103.2":
+  version: 5.103.2
+  resolution: "@tanstack/vue-query@npm:5.103.2"
+  dependencies:
+    "@tanstack/match-sorter-utils": "npm:^8.19.4"
+    "@tanstack/query-core": "npm:5.103.2"
+    "@vue/devtools-api": "npm:^6.6.3"
+    vue-demi: "npm:^0.14.10"
+  peerDependencies:
+    "@vue/composition-api": ^1.1.2
+    vue: ^2.6.0 || ^3.3.0
+  peerDependenciesMeta:
+    "@vue/composition-api":
+      optional: true
+  checksum: 10c0/62c97269b5257851119d0b616e6bc8eb57648de408744c5606f5b4f059df5297e5eaa85a24ee6946dc87fb660061bfb90ac3eeaa824b44461c989984360c8c6e
+  languageName: node
+  linkType: hard
+
+"@tanstack/vue-query@npm:~4.43.0":
   version: 4.43.0
   resolution: "@tanstack/vue-query@npm:4.43.0"
   dependencies:
