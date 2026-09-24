@@ -4490,49 +4490,49 @@ __metadata:
   linkType: hard
 
 "@myparcel-dev/pdk-admin-component-tests@npm:^2.2.2":
-  version: 2.2.3
-  resolution: "@myparcel-dev/pdk-admin-component-tests@npm:2.2.3"
+  version: 2.2.5
+  resolution: "@myparcel-dev/pdk-admin-component-tests@npm:2.2.5"
   dependencies:
-    "@myparcel-dev/pdk-admin": "npm:^2.2.3"
+    "@myparcel-dev/pdk-admin": "npm:^2.2.5"
     "@pinia/testing": "npm:>= 0.1.0 < 1"
     "@vue/test-utils": "npm:^2.0.0"
     pinia: "npm:^2.0.0"
     vitest: "npm:^3.2.6"
   peerDependencies:
     vue: 3.4.31
-  checksum: 10c0/2655ffa096fdb07123a7fcd2c6e41803359b9105e73aab3af7f01e98440912ca3971fb05296ed1138e3c4b197afe015f87b7120e8ddadb6398f40b7f24347d25
+  checksum: 10c0/55c3e149ec1f722381c420674ab5acdcadec6577d57938e307c5c3ab3319d94eb03b0c405c610defd01c51fe6c2344895680809706ead0c2cba930522db6b967
   languageName: node
   linkType: hard
 
 "@myparcel-dev/pdk-admin-preset-dashicons@npm:^2.2.2":
-  version: 2.2.3
-  resolution: "@myparcel-dev/pdk-admin-preset-dashicons@npm:2.2.3"
+  version: 2.2.5
+  resolution: "@myparcel-dev/pdk-admin-preset-dashicons@npm:2.2.5"
   dependencies:
-    "@myparcel-dev/pdk-admin": "npm:^2.2.3"
+    "@myparcel-dev/pdk-admin": "npm:^2.2.5"
     vue: "npm:3.4.31"
-  checksum: 10c0/fd10bca19ef4e0dcd709ddc19ee86a601ac7e9c2668f300da19e42e0e0295bf9e09eb0e7443b38dce6a3c54f4958a643dd266c0e74c89338e92c7e8cb9213cd4
+  checksum: 10c0/f466530b96d5ce54b8aff3401c1b6e5016b92be1656c603bd8378e3bc12316747994bba9615f0477370931094be58e934549a6e3317d166b31ee5c1c87e808f8
   languageName: node
   linkType: hard
 
 "@myparcel-dev/pdk-admin-preset-default@npm:^2.2.2":
-  version: 2.2.3
-  resolution: "@myparcel-dev/pdk-admin-preset-default@npm:2.2.3"
+  version: 2.2.5
+  resolution: "@myparcel-dev/pdk-admin-preset-default@npm:2.2.5"
   dependencies:
-    "@myparcel-dev/pdk-admin": "npm:^2.2.3"
+    "@myparcel-dev/pdk-admin": "npm:^2.2.5"
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
     "@vuepic/vue-datepicker": "npm:^11.0.2"
     "@vueuse/core": "npm:^10.0.0"
     vue: "npm:3.4.31"
-  checksum: 10c0/afc65d52e9d829f3d34748c528838470296a88270ad6530faa9c39d325a99b3c029c2ca2f95a5d17ba5a6d247a7aa84899287d6478609451738436a4657006a4
+  checksum: 10c0/05d29d09407ab6a7c14ffccc32fa7d009424bb5cca72a2a65c94f4791002fcfb38b8d846a7cd21f0b6554d102f086b4f830fb1f2ad35122220ef3e08c206ec53
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-admin@npm:^2.2.2, @myparcel-dev/pdk-admin@npm:^2.2.3":
-  version: 2.2.3
-  resolution: "@myparcel-dev/pdk-admin@npm:2.2.3"
+"@myparcel-dev/pdk-admin@npm:^2.2.2, @myparcel-dev/pdk-admin@npm:^2.2.5":
+  version: 2.2.5
+  resolution: "@myparcel-dev/pdk-admin@npm:2.2.5"
   dependencies:
     "@myparcel-dev/constants": "npm:^2.9.0"
-    "@myparcel-dev/pdk-common": "npm:^2.1.2"
+    "@myparcel-dev/pdk-common": "npm:^2.2.0"
     "@myparcel-dev/sdk": "npm:^5.1.0"
     "@myparcel-dev/vue-form-builder": "npm:1.0.0-beta.42.6"
     "@tanstack/vue-query": "npm:~4.43.0"
@@ -4542,7 +4542,7 @@ __metadata:
     lodash-unified: "npm:^1.0.3"
     pinia: "npm:^2.0.0"
     vue: "npm:3.4.31"
-  checksum: 10c0/d9d3e9250eb4cbf61a479d40dc5e1463ba437ec355ea9d927c1d27984723f299073994d2be5d96cbc1cf5590c28624c49ae5384fb7792b503a33f85c2091068d
+  checksum: 10c0/5e2a142e4c71a732bb17be580a3a2fe2f1ab78ad9f111005629af88992a103abd5b3a7fd4bb157bbdb15e59a12c44c98125fdd851ccfe655ac663f93e3f88bfb
   languageName: node
   linkType: hard
 
@@ -4615,16 +4615,6 @@ __metadata:
     "@myparcel-dev/pdk-checkout-separate-address-fields": "npm:^2.2.0"
     "@myparcel-dev/pdk-checkout-tax-fields": "npm:^2.2.0"
   checksum: 10c0/fc03e37f3c68fd0b8d6b74170a066db1bf4a5ef15582c9792b2153bdf96b6c89ddc10d60da59510e2fe63c7dc9703fd83d440a6a762cfc84f24a8030ecf01d77
-  languageName: node
-  linkType: hard
-
-"@myparcel-dev/pdk-common@npm:^2.1.2":
-  version: 2.1.2
-  resolution: "@myparcel-dev/pdk-common@npm:2.1.2"
-  dependencies:
-    "@myparcel-dev/constants": "npm:^2.7.0"
-    "@myparcel-dev/delivery-options": "npm:^7.5.0"
-  checksum: 10c0/b696de2d6dcb1d1209d765acdba1b9339c1fa009ee44c66a7e9714bb74d6f4293093f9af5f45d9421b957d1282755e494d8d7557623f5ff69b908b4f8272949d
   languageName: node
   linkType: hard
 
