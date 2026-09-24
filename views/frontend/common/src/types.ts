@@ -12,6 +12,8 @@ export interface CheckoutConfig<Config extends Partial<PdkCheckoutConfigInput> =
   fieldAddressType: string;
   shippingMethodFormDataKey: string;
   addressTypeFormDataKey: string;
+  /** Set by a checkout that reports whether an address belongs to a business. */
+  reportsBusinessFlag?: boolean;
 }
 
 export interface WcShippingRate {
@@ -52,6 +54,8 @@ export type WcCartStore = StoreInstance<
       getCustomerData(): {
         shippingAddress: Record<string, string>;
       };
+      /** Absent in older WooCommerce Blocks versions. */
+      isCustomerDataUpdating?(): boolean;
       // eslint-disable-next-line @typescript-eslint/naming-convention
       getShippingRates(): [{shipping_rates: WcShippingRate[]}];
     }
