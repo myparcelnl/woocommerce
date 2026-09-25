@@ -438,9 +438,7 @@ it('uses all physical cart lines for weight while preserving shipping class pack
     $originalLines = $cart->lines->toArray();
     $context = Pdk::get(WcContextService::class)->createCheckoutContext($cart);
 
-    expect($context->config->physicalProperties)->toBe(null === $expectedWeight
-        ? null
-        : ['weight' => ['value' => $expectedWeight, 'unit' => 'g']])
+    expect($context->config->physicalProperties)->toBe(null === $expectedWeight ? null : ['weight' => $expectedWeight])
         ->and($cart->lines->toArray())->toBe($originalLines);
 
     if (null === $expectedWeight) {

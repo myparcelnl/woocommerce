@@ -91,9 +91,8 @@ final class WcContextService extends ContextService
                 ? $calculator->getKnownCartWeightForPackageType($completeCart, $packageType)
                 : null;
 
-            $checkoutContext->config->physicalProperties = null === $weight
-                ? null
-                : ['weight' => ['value' => $weight, 'unit' => 'g']];
+            // The delivery options widget takes the weight in grams, without a unit.
+            $checkoutContext->config->physicalProperties = null === $weight ? null : ['weight' => $weight];
         }
 
         $settingsToMerge = [
