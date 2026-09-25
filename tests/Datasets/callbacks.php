@@ -10,7 +10,7 @@ dataset('callbacks', function () {
 
     return [
         'instantiated class callback' => [[$mockClass, 'mock']],
-        'static class callback'       => ['MyParcelNL\WooCommerce\Tests\Mock\MockCallableClass::mock'],
+        'static class callback'       => ['MyParcelNL\WooCommerce\Tests\Mock\MockCallableClass::mockStatic'],
         'function callback'           => '\MyParcelNL\WooCommerce\Tests\mockFunction',
     ];
 });

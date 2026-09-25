@@ -229,9 +229,10 @@ it('leaves order data without the old option alone', function () {
 
 it('flips the option on every stored shipment of an order', function () {
     // A shipment that went out untracked must keep saying so, under the option that now expresses it.
-    $orderId = givenOrderMeta('metaKeyOrderShipments', [
-        withShipmentOptions([NoTrackingChunkMigrator::LEGACY_SHIPMENT_OPTION_KEY => TriStateService::ENABLED]),
-        withShipmentOptions([NoTrackingChunkMigrator::LEGACY_SHIPMENT_OPTION_KEY => TriStateService::DISABLED]),
+    // The pass finds orders by their order data key, which every order with shipments also holds.
+    $orderId = givenOrderWithBothStores([], [
+        [NoTrackingChunkMigrator::LEGACY_SHIPMENT_OPTION_KEY => TriStateService::ENABLED],
+        [NoTrackingChunkMigrator::LEGACY_SHIPMENT_OPTION_KEY => TriStateService::DISABLED],
     ]);
 
     runOrderPass();
@@ -414,7 +415,7 @@ it('leaves a variation that never stored the option alone', function () {
 it('remembers its place in the orders only once the page is converted', function () {
     // Orders keep their order data key whatever the option holds, so this pass cannot tell converted
     // records apart by query and has to remember how far it got.
-    createWcOrder(['id' => 8201]);
+    givenOrderMeta('metaKeyOrderData', withShipmentOptions([]));
 
     runOrderPass();
 
