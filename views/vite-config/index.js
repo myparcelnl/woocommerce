@@ -13,6 +13,10 @@ const createDefaultConfig = (env) => {
   return {
     plugins: [customTsConfig()],
     build: {
+      // Vite 6 names the library CSS after the bundle, but PHP enqueues dist/style.css.
+      lib: {cssFileName: 'style'},
+      // Since Vite 7 the default target is "baseline-widely-available" (Safari 16+); keep the Vite 5 targets.
+      target: ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14'],
       minify: !isDev,
       sourcemap: isDev,
       rollupOptions: {
@@ -31,7 +35,8 @@ const createDefaultConfig = (env) => {
       passWithNoTests: true,
       setupFiles: [`${dirname}/test-setup.ts`],
       coverage: {
-        all: true,
+        // Absolute, because vitest matches coverage globs anywhere in the path.
+        include: [`${process.cwd()}/src/**/*.{ts,vue}`],
         enabled: false,
         reporter: ['text', 'clover'],
       },
