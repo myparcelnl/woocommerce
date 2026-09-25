@@ -83,7 +83,7 @@
     "@myparcel-dev/eslint-config-prettier": "^1.4.0",
     "@myparcel-dev/eslint-config-prettier-typescript": "^1.4.0",
     "@myparcel-dev/eslint-config-prettier-typescript-vue": "^1.4.0",
-    "@myparcel-dev/pdk-app-builder": "^4.1.3",
+    "@myparcel-dev/pdk-app-builder": "^4.1.4",
     "@myparcel-dev/prettier-config": "^2.0.1",
     "@myparcel-dev/semantic-release-config": "^7.0.0",
     "@myparcel-dev/semantic-release-wordpress-readme-generator": "^1.3.0",

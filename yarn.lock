@@ -4960,6 +4960,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@myparcel-dev/google-docs-importer@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@myparcel-dev/google-docs-importer@npm:1.0.2"
+  dependencies:
+    csv-parse: "npm:^7.0.2"
+    debug: "npm:^4.3.4"
+    dotenv: "npm:^16.0.1"
+    yargs: "npm:^17.5.1"
+  bin:
+    google-docs-importer: dist/bin.js
+  checksum: 10c0/09bd91fa80665e296b9ff258ba7ecfda37ba52adb61407d9d3cfefb8ebf985cf785844ddbfad5b7e87541a3d8c2b859eab24af02507ef7f0852ade46106a7fa0
+  languageName: node
+  linkType: hard
+
 "@myparcel-dev/pdk-admin-component-tests@npm:^2.2.6":
   version: 2.2.6
   resolution: "@myparcel-dev/pdk-admin-component-tests@npm:2.2.6"
@@ -5036,21 +5050,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-app-builder@npm:^4.1.3":
-  version: 4.1.3
-  resolution: "@myparcel-dev/pdk-app-builder@npm:4.1.3"
+"@myparcel-dev/pdk-app-builder@npm:^4.1.4":
+  version: 4.1.4
+  resolution: "@myparcel-dev/pdk-app-builder@npm:4.1.4"
   dependencies:
+    "@myparcel-dev/google-docs-importer": "npm:^1.0.2"
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
     chalk: "npm:^6.0.0"
     commander: "npm:^12.0.0"
     debug: "npm:^4.3.4"
     interpret: "npm:^3.1.1"
     liftoff: "npm:^5.0.0"
-    mypa-google-docs-importer: "npm:^1.0.1"
     radash: "npm:^12.1.0"
   bin:
     pdk-builder: ./bin/index.js
-  checksum: 10c0/2971cc27bd2de26fc33e576cb869308d71854eac2ee5097f47f9d97704c6b7cd98e0693d9f22dd6aa1062e883023ea32a11c81008e6b7beda5d2cf0b6c891c29
+  checksum: 10c0/55777830e8a4bc74729cbea64550a17a7a9e2b175043ebfdc61ab6c428e31c5c0ca10058728e2fbe8720e0541b1cf0ba9a6faac7a5c1169fbf0f4f01d063fd52
   languageName: node
   linkType: hard
 
@@ -5431,7 +5445,7 @@ __metadata:
     "@myparcel-dev/eslint-config-prettier": "npm:^1.4.0"
     "@myparcel-dev/eslint-config-prettier-typescript": "npm:^1.4.0"
     "@myparcel-dev/eslint-config-prettier-typescript-vue": "npm:^1.4.0"
-    "@myparcel-dev/pdk-app-builder": "npm:^4.1.3"
+    "@myparcel-dev/pdk-app-builder": "npm:^4.1.4"
     "@myparcel-dev/prettier-config": "npm:^2.0.1"
     "@myparcel-dev/semantic-release-config": "npm:^7.0.0"
     "@myparcel-dev/semantic-release-wordpress-readme-generator": "npm:^1.3.0"
@@ -14637,10 +14651,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csv-parse@npm:^5.3.0":
-  version: 5.6.0
-  resolution: "csv-parse@npm:5.6.0"
-  checksum: 10c0/52f5e6c45359902e0c8e57fc2eeed41366dc6b6d283b495b538dd50c8e8510413d6f924096ea056319cbbb8ed26e111c3a3485d7985c021bcf5abaa9e92425c7
+"csv-parse@npm:^7.0.2":
+  version: 7.0.2
+  resolution: "csv-parse@npm:7.0.2"
+  checksum: 10c0/52ffaafbf7be37201ad782ec3eda37bc24ee0ec6e8967b5a68d5ad2973f10b4154fd11a5b90a002615ef98395c4cd699a13d13509b10067297795b9d3c9320e9
   languageName: node
   linkType: hard
 
@@ -21742,20 +21756,6 @@ __metadata:
   peerDependencies:
     vue: ^3.0.0
   checksum: 10c0/4dd4d36358019bee61ca50498bfbef00aed7f64ac0213503ad2a648cf6cefa065f41b6009759a3d39488d7386ef02d773624e04a441f95ab8eb727ed4067ce69
-  languageName: node
-  linkType: hard
-
-"mypa-google-docs-importer@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "mypa-google-docs-importer@npm:1.0.1"
-  dependencies:
-    csv-parse: "npm:^5.3.0"
-    debug: "npm:^4.3.4"
-    dotenv: "npm:^16.0.1"
-    yargs: "npm:^17.5.1"
-  bin:
-    mypa-google-docs-importer: dist/bin.js
-  checksum: 10c0/99c4121c326d6072dbef62a73d3c22e33e4b10d9d3200997a9a76bb6383ba679192d913f34d6a1160d02fbbdcd84fdd42f2c20ad5c2b18b850e49c15fe58980f
   languageName: node
   linkType: hard
 
