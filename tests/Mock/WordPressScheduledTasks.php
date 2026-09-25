@@ -13,9 +13,29 @@ final class WordPressScheduledTasks
      */
     private static $tasks;
 
+    /**
+     * @var null|string
+     */
+    private static $failureCode;
+
     public function __construct()
     {
-        self::$tasks = new Collection();
+        self::$tasks       = new Collection();
+        self::$failureCode = null;
+    }
+
+    /**
+     * Make the next wp_schedule_single_event() call report this WordPress error code instead of
+     * scheduling. Pass null to schedule normally again.
+     */
+    public function failWith(?string $code): void
+    {
+        self::$failureCode = $code;
+    }
+
+    public function failureCode(): ?string
+    {
+        return self::$failureCode;
     }
 
     /**
@@ -40,5 +60,23 @@ final class WordPressScheduledTasks
     public function all(): Collection
     {
         return self::$tasks;
+    }
+
+    /**
+     * Drop every task for one hook, the way wp_unschedule_hook() does.
+     *
+     * @return int The number of tasks removed
+     */
+    public function clearHook(string $hook): int
+    {
+        $remaining = self::$tasks->filter(static function (array $task) use ($hook): bool {
+            return $task['callback'] !== $hook;
+        });
+
+        $removed = self::$tasks->count() - $remaining->count();
+
+        self::$tasks = new Collection($remaining->values()->all());
+
+        return $removed;
     }
 }

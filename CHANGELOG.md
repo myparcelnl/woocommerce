@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.10.2](https://github.com/myparcelnl/woocommerce/compare/v6.10.1...v6.10.2) (2026-09-24)
+
+
+### :bug: Bug Fixes
+
+* **admin:** show errors when they occur on (bulk) export or print ([#1880](https://github.com/myparcelnl/woocommerce/issues/1880)) ([2d87211](https://github.com/myparcelnl/woocommerce/commit/2d872117bae2ea42400749a84f4bfe214b5bb009))
+* **api:** stop fatal error on undefined trigger_deprecation() ([#1905](https://github.com/myparcelnl/woocommerce/issues/1905)) ([8edaa54](https://github.com/myparcelnl/woocommerce/commit/8edaa54eebb1a666be32dd8c026ef3b5dd4d7f7b))
+* **checkout:** refresh delivery options when the recipient becomes a business ([#1848](https://github.com/myparcelnl/woocommerce/issues/1848)) ([383f278](https://github.com/myparcelnl/woocommerce/commit/383f278b49f0566edd029b7fd88f53b817065492))
+
+## [6.10.1](https://github.com/myparcelnl/woocommerce/compare/v6.10.0...v6.10.1) (2026-09-22)
+
+
+### :bug: Bug Fixes
+
+* **customs:** limit the customs item description to the api maximum ([#1907](https://github.com/myparcelnl/woocommerce/issues/1907)) ([a5dc9d4](https://github.com/myparcelnl/woocommerce/commit/a5dc9d429876d6aef632c4380eefa59088063fec))
+
+## [6.10.0](https://github.com/myparcelnl/woocommerce/compare/v6.9.4...v6.10.0) (2026-09-16)
+
+
+### :sparkles: New Features
+
+* **shipments:** enable tracking by default for shipments that support it ([#1768](https://github.com/myparcelnl/woocommerce/issues/1768)) ([0680c06](https://github.com/myparcelnl/woocommerce/commit/0680c06cce4c066cf95ff9080dffcc093614488e))
+
+
+### :bug: Bug Fixes
+
+* **export:** prevent recursive automatic exports ([#1819](https://github.com/myparcelnl/woocommerce/issues/1819)) ([964f277](https://github.com/myparcelnl/woocommerce/commit/964f277e2634d6b757318105aded95a912281aea))
+
+## [6.9.4](https://github.com/myparcelnl/woocommerce/compare/v6.9.3...v6.9.4) (2026-09-04)
+
+
+### :bug: Bug Fixes
+
+* **migrations:** restore lost account data ([#1815](https://github.com/myparcelnl/woocommerce/issues/1815)) ([517acac](https://github.com/myparcelnl/woocommerce/commit/517acac659b7ce73e8ff053d48ee08f1b254b055))
+
+## [6.9.3](https://github.com/myparcelnl/woocommerce/compare/v6.9.2...v6.9.3) (2026-09-01)
+
+
+### :bug: Bug Fixes
+
+* **admin:** fix display of actions on the orders page ([#1810](https://github.com/myparcelnl/woocommerce/issues/1810)) ([a01c3fb](https://github.com/myparcelnl/woocommerce/commit/a01c3fbc09c7d24be6339d534266ec98e994abbb))
+* **checkout:** enforce required validation of separate address fields ([#1808](https://github.com/myparcelnl/woocommerce/issues/1808)) ([127f397](https://github.com/myparcelnl/woocommerce/commit/127f3974cd48240b9de8b2118b9140ec73bc0053))
+
+## [6.9.2](https://github.com/myparcelnl/woocommerce/compare/v6.9.1...v6.9.2) (2026-08-27)
+
+
+### :bug: Bug Fixes
+
+* **checkout:** preserve unique hidden form fields ([#1807](https://github.com/myparcelnl/woocommerce/issues/1807)) ([3e363b6](https://github.com/myparcelnl/woocommerce/commit/3e363b641597ae8a4cde7d36a702aecb9fe412d6))
+
+## [6.9.1](https://github.com/myparcelnl/woocommerce/compare/v6.9.0...v6.9.1) (2026-08-25)
+
+
+### :bug: Bug Fixes
+
+* **insurance:** refresh stored carrier data to stop using deprecated insurance amounts ([#1748](https://github.com/myparcelnl/woocommerce/issues/1748)) ([7f439eb](https://github.com/myparcelnl/woocommerce/commit/7f439eb1f0c86370882374a3567abc51ae663823)), closes [myparcelnl/pdk#511](https://github.com/myparcelnl/pdk/issues/511) [myparcelnl/pdk#511](https://github.com/myparcelnl/pdk/issues/511) [myparcelnl/js-pdk#383](https://github.com/myparcelnl/js-pdk/issues/383)
+
+## [6.9.0](https://github.com/myparcelnl/woocommerce/compare/v6.8.1...v6.9.0) (2026-08-18)
+
+
+### :sparkles: New Features
+
+* support divi 5 checkout ([#1661](https://github.com/myparcelnl/woocommerce/issues/1661)) ([2a0c61a](https://github.com/myparcelnl/woocommerce/commit/2a0c61a63d2e7f304e630137542e1845c38e3f52))
+
+
+### :bug: Bug Fixes
+
+* **carrier:** fix trunkrs not showing up by resolving issues with same day delivery settings ([#1777](https://github.com/myparcelnl/woocommerce/issues/1777)) ([969f1fb](https://github.com/myparcelnl/woocommerce/commit/969f1fb3819fb4d11c165923367af0230b63da72))
+* fix an error while the country was empty in checkout ([#1800](https://github.com/myparcelnl/woocommerce/issues/1800)) ([22804f9](https://github.com/myparcelnl/woocommerce/commit/22804f9ec8bc85ec849f02e836ee99f8848928b3))
+* **settings:** preserve settings on deactivation ([#1772](https://github.com/myparcelnl/woocommerce/issues/1772)) ([4b02e65](https://github.com/myparcelnl/woocommerce/commit/4b02e6578c33b238168836d63296fc0ebf53815a)), closes [#521](https://github.com/myparcelnl/woocommerce/issues/521)
+
 ## [6.8.1](https://github.com/myparcelnl/woocommerce/compare/v6.8.0...v6.8.1) (2026-08-11)
 
 

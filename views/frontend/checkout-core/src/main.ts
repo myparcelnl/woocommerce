@@ -4,11 +4,20 @@ import {
   isClassicCheckout,
 } from '@myparcel-woocommerce/frontend-common';
 import {getHighestShippingClass} from '@myparcel-woocommerce/frontend-checkout-delivery-options/src/utils/getHighestShippingClass';
-import {PdkField, AddressType} from '@myparcel-dev/pdk-checkout-common';
+import {ADDRESS_FIELD_IS_BUSINESS, PdkField, AddressType} from '@myparcel-dev/pdk-checkout-common';
 import {createPdkCheckout, getEnabledShippingMethods} from '@myparcel-dev/pdk-checkout';
 import {createName, createId, createFields, hideSeparateFields} from './utils';
 
 const config = isClassicCheckout() ? getClassicCheckoutConfig() : getBlocksCheckoutConfig();
+
+/**
+ * The form data keys of one address. The business flag is left out by a checkout that does not
+ * report it, and the PDK then leaves that flag alone.
+ */
+const addressFormData = (prefix: string): Record<string, string> => ({
+  ...createFields(config.addressFields, prefix),
+  ...(config.reportsBusinessFlag ? {[ADDRESS_FIELD_IS_BUSINESS]: `${prefix}${ADDRESS_FIELD_IS_BUSINESS}`} : {}),
+});
 
 hideSeparateFields();
 
@@ -33,8 +42,8 @@ createPdkCheckout({
   formData: {
     [PdkField.AddressType]: config.addressTypeFormDataKey,
     [PdkField.ShippingMethod]: config.shippingMethodFormDataKey,
-    [AddressType.Billing]: createFields(config.addressFields, config.prefixBilling),
-    [AddressType.Shipping]: createFields(config.addressFields, config.prefixShipping),
+    [AddressType.Billing]: addressFormData(config.prefixBilling),
+    [AddressType.Shipping]: addressFormData(config.prefixShipping),
   },
 
   selectors: {

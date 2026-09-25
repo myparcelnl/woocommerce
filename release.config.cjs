@@ -1,6 +1,4 @@
 /* eslint-disable no-template-curly-in-string */
-const path = require('path');
-const {spawnSync} = require('child_process');
 const {
   addExecPlugin,
   addGitHubPlugin,
@@ -12,8 +10,6 @@ const {
 } = require('@myparcel-dev/semantic-release-config/src/plugins');
 const {gitPluginDefaults} = require('@myparcel-dev/semantic-release-config/src/plugins/addGitPlugin');
 const mainConfig = require('@myparcel-dev/semantic-release-config');
-
-const branch = spawnSync('git', ['rev-parse', '--abbrev-ref', 'HEAD']).stdout.toString().trim();
 
 module.exports = {
   ...mainConfig,
@@ -27,7 +23,7 @@ module.exports = {
   plugins: [
     addCommitAnalyzerPlugin(),
     addGitHubActionsOutputPlugin(),
-    addReleaseNotesGeneratorPlugin({header: path.resolve(__dirname, `private/semantic-release/header-${branch}.md`)}),
+    addReleaseNotesGeneratorPlugin(),
     addChangelogPlugin(),
     // TODO: Uncomment when we're releasing to the WordPress svn repository.
     // '@myparcel-dev/semantic-release-wordpress-readme-generator',

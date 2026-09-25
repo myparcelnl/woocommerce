@@ -5,13 +5,8 @@
     "activate_woocommerce-myparcel": [
         "MyParcelNLWooCommerce::install"
     ],
-    "deactivate_woocommerce-myparcel": [
-        "MyParcelNLWooCommerce::uninstall"
-    ],
     "init": [
+        "MyParcelNLWooCommerce::upgrade",
         "MyParcelNLWooCommerce::initialize"
-    ],
-    "woocommerce_init": [
-        "MyParcelNLWooCommerce::upgrade"
     ]
 }

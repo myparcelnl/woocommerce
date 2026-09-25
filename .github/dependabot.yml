@@ -33,9 +33,7 @@ updates:
           - 'myparcelnl/pdk'
 
   - package-ecosystem: 'npm'
-    directories:
-      - '/'
-      - 'views/**/*'
+    directory: '/'
     schedule:
       interval: 'daily'
     commit-message:
@@ -48,14 +46,17 @@ updates:
         - '@myparcel/*'
         - '@myparcel-dev/*'
         - '@myparcel-eslint/*'
+        - '@myparcel-pdk/*'
     groups:
       minor-js-updates:
         applies-to: version-updates
         exclude-patterns:
+          - "@myparcel-pdk/*"
           - "@myparcel-dev/pdk-*"
         update-types:
           - "minor"
           - "patch"
       js-pdk:
         patterns:
+          - '@myparcel-pdk/*'
           - '@myparcel-dev/pdk-*'

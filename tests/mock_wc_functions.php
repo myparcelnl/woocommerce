@@ -5,6 +5,7 @@
 declare(strict_types=1);
 
 use MyParcelNL\WooCommerce\Tests\Mock\MockWc;
+use MyParcelNL\WooCommerce\Tests\Mock\MockQueries;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcData;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpCache;
 
@@ -70,7 +71,25 @@ function wc_get_order_statuses()
 /** @see \wc_get_orders() */
 function wc_get_orders($args)
 {
-    return MockWcData::getByClass(WC_Order::class);
+    MockQueries::record('wc_get_orders', $args);
+
+    return mockWcQueryResult(MockWcData::getByClass(WC_Order::class), $args);
+}
+
+/**
+ * Honour the documented "return" argument, so a caller asking for ids is not handed objects.
+ *
+ * @param  \MyParcelNL\WooCommerce\Tests\Mock\MockWcClass[] $records
+ */
+function mockWcQueryResult(array $records, array $args): array
+{
+    if ('ids' !== ($args['return'] ?? null)) {
+        return $records;
+    }
+
+    return array_map(static function ($record): int {
+        return $record->get_id();
+    }, array_values($records));
 }
 
 /** @see \wc_get_product() */
@@ -88,7 +107,9 @@ function wc_get_product($postId): ?WC_Product
  */
 function wc_get_products($args): array
 {
-    return MockWcData::getByClass(WC_Product::class);
+    MockQueries::record('wc_get_products', $args);
+
+    return mockWcQueryResult(MockWcData::getByClass(WC_Product::class), $args);
 }
 
 /** @see \WC */

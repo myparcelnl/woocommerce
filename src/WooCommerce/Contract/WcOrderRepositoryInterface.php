@@ -16,7 +16,21 @@ interface WcOrderRepositoryInterface
      */
     public function get($input): WC_Order;
 
+    /**
+     * Get an order without using WooCommerce's order object cache.
+     *
+     * @param  int|string|WC_Order|\WP_Post $input
+     *
+     * @return \WC_Order
+     */
+    public function getFresh($input): WC_Order;
+
     public function find($id): ?WC_Order;
+
+    /**
+     * Replace an order in the request-local repository cache.
+     */
+    public function updateCache(WC_Order $order): void;
 
     /**
      * @param  int|string|WC_Order|\WP_Post $input

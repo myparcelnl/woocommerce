@@ -43,7 +43,10 @@ class Guzzle7ClientAdapter implements ClientAdapterInterface
             return $value !== null;
         });
 
-        $response     = $this->client->request(strtolower($httpMethod), $uri, $requestOptions);
+        // Guzzle 7.11 deprecated non-uppercase HTTP methods. Passing a lowercase method makes it
+        // call trigger_deprecation(), which is fatal when another plugin claimed the composer
+        // file hash of symfony/deprecation-contracts before us.
+        $response     = $this->client->request(strtoupper($httpMethod), $uri, $requestOptions);
         $responseBody = $response->getBody();
 
         $body = $responseBody->isReadable()

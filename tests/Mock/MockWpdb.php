@@ -14,6 +14,21 @@ final class MockWpdb
     public $prefix = 'wp_';
 
     /**
+     * @var string
+     */
+    public $options = 'wp_options';
+
+    /**
+     * @var string
+     */
+    public $last_error = '';
+
+    /**
+     * @var null|string
+     */
+    public $preparedOptionPattern;
+
+    /**
      * @var array
      */
     private $db = [
@@ -44,6 +59,46 @@ final class MockWpdb
         }
 
         return [];
+    }
+
+    /**
+     * @param  string $text
+     *
+     * @return string
+     */
+    public function esc_like(string $text): string
+    {
+        return addcslashes($text, '_%\\');
+    }
+
+    /**
+     * @param  string $query
+     * @param  string $value
+     *
+     * @return string
+     */
+    public function prepare(string $query, string $value): string
+    {
+        $this->preparedOptionPattern = $value;
+
+        return $query;
+    }
+
+    /**
+     * @param  string $query
+     *
+     * @return string[]
+     */
+    public function get_col(string $query): array
+    {
+        $prefix = rtrim(str_replace('\\_', '_', $this->preparedOptionPattern ?? ''), '%');
+
+        return array_values(array_filter(
+            array_keys(WordPressOptions::$options),
+            static function (string $optionName) use ($prefix): bool {
+                return 0 === strpos($optionName, $prefix);
+            }
+        ));
     }
 
     /**

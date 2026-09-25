@@ -73,29 +73,39 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
         // Our hidden delivery-options input must live on the form that gets submitted: the one with the
         // place-order button. forms[0]! is safe — isClassicCheckout() guarantees at least one form.
         return (
-          forms.find((form) =>
-            form.querySelector('#place_order, [name="woocommerce_checkout_place_order"]'),
-          ) ?? forms[0]!
+          forms.find((form) => form.querySelector('#place_order, [name="woocommerce_checkout_place_order"]')) ??
+          forms[0]!
         );
       },
 
       getFormData() {
-        return getCheckoutForms().reduce<Record<string, FormDataEntryValue>>((merged, form) => {
-          // Divi's hidden duplicate billing fieldset isn't disabled, so FormData includes it and, being
-          // later in DOM order, would clobber live values. Skip names inside a display:none container,
-          // but keep self-hidden real inputs like `shipping_method[0]`. form.elements avoids escaping.
+        const visibleNames = new Set<string>();
+        const formStates = getCheckoutForms().map((form) => {
           const hiddenNames = new Set<string>();
 
-          for (const control of Array.from(form.elements)) {
+          for (const control of form.elements) {
             const name = control.getAttribute('name');
 
-            if (name && isInHiddenContainer(control)) {
+            if (!name) {
+              continue;
+            }
+
+            if (isInHiddenContainer(control)) {
               hiddenNames.add(name);
+            } else {
+              visibleNames.add(name);
             }
           }
 
+          return {form, hiddenNames};
+        });
+
+        // Visible names are global because Divi puts duplicate fields in separate forms. Hidden names
+        // stay scoped to their form, so only the hidden duplicate is skipped. Unique hidden fields are
+        // valid form values and remain in the merged data.
+        return formStates.reduce<Record<string, FormDataEntryValue>>((merged, {form, hiddenNames}) => {
           for (const [key, value] of new FormData(form).entries()) {
-            if (hiddenNames.has(key)) {
+            if (hiddenNames.has(key) && visibleNames.has(key)) {
               continue;
             }
 

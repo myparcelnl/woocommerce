@@ -24,18 +24,28 @@ final class MockWpActions implements StaticMockInterface
      */
     public static function add(string $tag, $functionToAdd, int $priority = 10, int $acceptedArgs = 1): void
     {
-        $existing = array_filter(Arr::wrap(self::get($tag)));
+        $existing = array_values(array_filter(Arr::wrap(self::get($tag))));
+        $index    = count($existing);
 
-        self::$actions->put(
-            $tag,
-            array_merge($existing, [
-                [
-                    'function'     => $functionToAdd,
-                    'priority'     => $priority,
-                    'acceptedArgs' => $acceptedArgs,
-                ],
-            ])
-        );
+        // WordPress runs callbacks in priority order and keeps registration order within one
+        // priority, so insert ahead of the first entry with a higher priority. Inserting rather
+        // than sorting keeps that order stable on PHP 7.4, where usort is not.
+        foreach ($existing as $position => $action) {
+            if ($action['priority'] > $priority) {
+                $index = $position;
+                break;
+            }
+        }
+
+        array_splice($existing, $index, 0, [
+            [
+                'function'     => $functionToAdd,
+                'priority'     => $priority,
+                'acceptedArgs' => $acceptedArgs,
+            ],
+        ]);
+
+        self::$actions->put($tag, $existing);
     }
 
     /**
