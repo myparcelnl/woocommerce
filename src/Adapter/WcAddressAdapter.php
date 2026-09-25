@@ -8,6 +8,7 @@ use Exception;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Base\Model\MyParcelAddress;
 use MyParcelNL\Sdk\Helper\SplitStreet;
+use MyParcelNL\WooCommerce\Facade\Filter;
 use WC_Cart;
 use WC_Customer;
 use WC_Order;
@@ -100,7 +101,7 @@ class WcAddressAdapter
         // Legacy fallback if the address widget wasn't used
         $state = $this->getState($class, $addressType);
 
-        return array_merge($pdkAddressAttributes, [
+        $data = array_merge($pdkAddressAttributes, [
             'address1'   => $this->getAddressField($class, Pdk::get('fieldAddress1'), $addressType),
             'address2'   => $this->getAddressField($class, Pdk::get('fieldAddress2'), $addressType),
             'cc'         => $this->getAddressField($class, Pdk::get('fieldCountry'), $addressType),
@@ -110,6 +111,8 @@ class WcAddressAdapter
             'region'     => $state,
             'state'      => $state,
         ]);
+
+        return Filter::apply('wcAddressFields', $data, $class, $addressType);
     }
 
     /**
