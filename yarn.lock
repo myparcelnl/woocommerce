@@ -5024,7 +5024,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-app-builder@npm:^4.1.3":
+"@myparcel-dev/pdk-app-builder@npm:^4.1.4":
   version: 4.1.4
   resolution: "@myparcel-dev/pdk-app-builder@npm:4.1.4"
   dependencies:
@@ -5399,7 +5399,7 @@ __metadata:
     "@myparcel-dev/eslint-config-prettier": "npm:^1.4.0"
     "@myparcel-dev/eslint-config-prettier-typescript": "npm:^1.4.0"
     "@myparcel-dev/eslint-config-prettier-typescript-vue": "npm:^1.4.0"
-    "@myparcel-dev/pdk-app-builder": "npm:^4.1.3"
+    "@myparcel-dev/pdk-app-builder": "npm:^4.1.4"
     "@myparcel-dev/prettier-config": "npm:^2.0.1"
     "@myparcel-dev/semantic-release-config": "npm:^7.0.0"
     "@myparcel-dev/semantic-release-wordpress-readme-generator": "npm:^1.3.0"
