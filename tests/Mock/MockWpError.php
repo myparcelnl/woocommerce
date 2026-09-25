@@ -6,21 +6,28 @@ namespace MyParcelNL\WooCommerce\Tests\Mock;
 
 class MockWpError implements StaticMockInterface
 {
+    /**
+     * @var string
+     */
     private $code;
+
+    /**
+     * @var string
+     */
     private $message;
 
-    public function __construct($code = '', $message = '')
+    public function __construct(string $code = '', string $message = '')
     {
         $this->code    = $code;
         $this->message = $message;
     }
 
-    public function get_error_code()
+    public function get_error_code(): string
     {
         return $this->code;
     }
 
-    public function get_error_message()
+    public function get_error_message(): string
     {
         return $this->message;
     }

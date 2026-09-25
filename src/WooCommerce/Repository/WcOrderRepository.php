@@ -45,9 +45,27 @@ final class WcOrderRepository extends Repository implements WcOrderRepositoryInt
         });
     }
 
+    /**
+     * @param  int|string|WC_Order|\WP_Post $input
+     *
+     * @return \WC_Order
+     */
+    public function getFresh($input): WC_Order
+    {
+        $cachedOrder = $this->get($input);
+        $className   = get_class($cachedOrder);
+
+        return new $className($cachedOrder->get_id());
+    }
+
     public function find($id): ?WC_Order
     {
         return wc_get_order((int) $id) ?: null;
+    }
+
+    public function updateCache(WC_Order $order): void
+    {
+        $this->save((string) $order->get_id(), $order);
     }
 
     /**

@@ -5,6 +5,7 @@
 declare(strict_types=1);
 
 use MyParcelNL\WooCommerce\Tests\Mock\MockWc;
+use MyParcelNL\WooCommerce\Tests\Mock\MockQueries;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcData;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpCache;
 
@@ -79,6 +80,8 @@ function wc_get_order_statuses()
  */
 function wc_get_orders($args)
 {
+    MockQueries::record('wc_get_orders', $args);
+
     $orders = MockWcData::getByClass(WC_Order::class);
 
     $compare = $args['meta_compare'] ?? null;
@@ -104,13 +107,23 @@ function wc_get_orders($args)
         $orders = array_slice($orders, ($page - 1) * $limit, $limit);
     }
 
-    if ('ids' === ($args['return'] ?? null)) {
-        return array_map(static function ($order) {
-            return $order->get_id();
-        }, $orders);
+    return mockWcQueryResult($orders, $args);
+}
+
+/**
+ * Honour the documented "return" argument, so a caller asking for ids is not handed objects.
+ *
+ * @param  \MyParcelNL\WooCommerce\Tests\Mock\MockWcClass[] $records
+ */
+function mockWcQueryResult(array $records, array $args): array
+{
+    if ('ids' !== ($args['return'] ?? null)) {
+        return $records;
     }
 
-    return $orders;
+    return array_map(static function ($record): int {
+        return $record->get_id();
+    }, array_values($records));
 }
 
 /** @see \wc_get_product() */
@@ -128,7 +141,9 @@ function wc_get_product($postId): ?WC_Product
  */
 function wc_get_products($args): array
 {
-    return MockWcData::getByClass(WC_Product::class);
+    MockQueries::record('wc_get_products', $args);
+
+    return mockWcQueryResult(MockWcData::getByClass(WC_Product::class), $args);
 }
 
 /** @see \WC */

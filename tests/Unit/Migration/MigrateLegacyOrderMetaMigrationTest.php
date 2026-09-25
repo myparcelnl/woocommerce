@@ -15,7 +15,6 @@ use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Order;
-use WP_Error;
 use RuntimeException;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function MyParcelNL\WooCommerce\Tests\wpFactory;
@@ -435,7 +434,7 @@ it('preserves missing carriers when it copies legacy metadata', function (array 
 it('leaves the migration pending when scheduling fails and can schedule it again', function () {
     $order = makeOrderWithMeta([LEGACY_SHIPMENTS_KEY => [legacyShipment()]]);
     $tasks = Pdk::get(WordPressScheduledTasks::class);
-    $tasks->scheduleResult = new WP_Error('could_not_set', 'Could not save cron events');
+    $tasks->failWith('could_not_set');
     $migration = loadLegacyOrderMetaMigration();
 
     $migration->up();
@@ -444,7 +443,7 @@ it('leaves the migration pending when scheduling fails and can schedule it again
         ->and($tasks->all())->toHaveCount(0)
         ->and($order->meta_exists(CURRENT_SHIPMENTS_KEY))->toBeFalse();
 
-    $tasks->scheduleResult = true;
+    $tasks->failWith(null);
     $retry = loadLegacyOrderMetaMigration();
     $retry->up();
     runLegacyOrderMetaTasks();
@@ -533,7 +532,7 @@ it('logs a retry scheduling failure without interrupting the other orders', func
     loadLegacyOrderMetaMigration()->up();
     $failed = orderWithFailingMigrationSave($failed);
     $tasks  = Pdk::get(WordPressScheduledTasks::class);
-    $tasks->scheduleResult = false;
+    $tasks->failWith('schedule_event_false');
 
     runLegacyOrderMetaTask($tasks->all()->first());
 
