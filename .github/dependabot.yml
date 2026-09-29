@@ -7,6 +7,11 @@ updates:
     commit-message:
       prefix: 'build'
       include: 'scope'
+    groups:
+      github-actions:
+        applies-to: version-updates
+        patterns:
+          - '*'
 
   - package-ecosystem: 'composer'
     directory: '/'
