@@ -14,6 +14,7 @@ use MyParcelNL\Pdk\Facade\Settings;
 use MyParcelNL\Pdk\Settings\Model\CheckoutSettings;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
+use MyParcelNL\Sdk\Services\Mapping\ApiMapperService;
 use MyParcelNL\WooCommerce\Pdk\Service\WcShippingClassMatrixService;
 
 final class WcContextService extends ContextService
@@ -145,10 +146,16 @@ final class WcContextService extends ContextService
             ? array_values(array_unique(array_merge($candidateTypes, [$cartPackageType])))
             : $candidateTypes;
 
-        $typeFilter = array_intersect_key(
-            DeliveryOptions::PACKAGE_TYPES_V2_MAP,
-            array_flip($relevant)
-        );
+        $typeFilter = [];
+
+        foreach ($relevant as $packageType) {
+            $v2PackageType = ApiMapperService::forPackageType()->v2NameFromLegacyName((string) $packageType);
+
+            if (null !== $v2PackageType) {
+                $typeFilter[$packageType] = $v2PackageType;
+            }
+        }
+
         $weightMap  = $service->getPackageTypeWeights($cc, $typeFilter);
 
         $heaviest = $service->resolveHeaviestType($relevant, $weightMap);

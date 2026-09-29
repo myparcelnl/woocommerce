@@ -6,10 +6,10 @@ namespace MyParcelNL\WooCommerce\Migration;
 
 use MyParcelNL\Pdk\App\Account\Contract\PdkAccountRepositoryInterface;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
-use MyParcelNL\Pdk\Carrier\Model\Carrier;
 use MyParcelNL\Pdk\Carrier\Repository\CarrierCapabilitiesRepository;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
+use MyParcelNL\Sdk\Services\Mapping\ApiMapperService;
 use WC_Order;
 
 final class Migration6_5_1 extends AbstractMigration
@@ -103,7 +103,7 @@ final class Migration6_5_1 extends AbstractMigration
             return;
         }
 
-        $legacyToNewMap = array_flip(Carrier::CARRIER_NAME_TO_LEGACY_MAP);
+        $legacyToNewMap = self::getLegacyToV2CarrierMap();
 
         $migratedSettings = [];
         foreach ($currentSettings as $legacyKey => $carrierData) {
@@ -143,7 +143,7 @@ final class Migration6_5_1 extends AbstractMigration
     {
         $orderIds       = $data['orderIds'] ?? [];
         $chunk          = $data['chunk'] ?? null;
-        $legacyToNewMap = array_flip(Carrier::CARRIER_NAME_TO_LEGACY_MAP);
+        $legacyToNewMap = self::getLegacyToV2CarrierMap();
 
         if (empty($orderIds)) {
             return;
@@ -213,7 +213,7 @@ final class Migration6_5_1 extends AbstractMigration
     {
         $orderIds       = $data['orderIds'] ?? [];
         $chunk          = $data['chunk'] ?? null;
-        $legacyToNewMap = array_flip(Carrier::CARRIER_NAME_TO_LEGACY_MAP);
+        $legacyToNewMap = self::getLegacyToV2CarrierMap();
 
         if (empty($orderIds)) {
             return;
@@ -299,6 +299,27 @@ final class Migration6_5_1 extends AbstractMigration
         $contractId = $parts[1] ?? null;
 
         return [$name, $contractId];
+    }
+
+    /**
+     * Map each legacy carrier name to its V2 name, as defined by the SDK.
+     *
+     * @return array<string, string>
+     */
+    private static function getLegacyToV2CarrierMap(): array
+    {
+        $map = [];
+
+        foreach (ApiMapperService::forCarrier()->allRows() as $row) {
+            $legacyName = $row[ApiMapperService::COLUMN_LEGACY_NAME];
+            $v2Name     = $row[ApiMapperService::COLUMN_V2_NAME];
+
+            if (null !== $legacyName && null !== $v2Name) {
+                $map[$legacyName] = $v2Name;
+            }
+        }
+
+        return $map;
     }
 
     /**
