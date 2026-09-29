@@ -80,6 +80,8 @@ function wc_get_order_statuses()
  */
 function wc_get_orders($args)
 {
+    MockQueries::record('wc_get_orders', $args);
+
     $orders = MockWcData::getByClass(WC_Order::class);
 
     $compare = $args['meta_compare'] ?? null;
@@ -105,13 +107,23 @@ function wc_get_orders($args)
         $orders = array_slice($orders, ($page - 1) * $limit, $limit);
     }
 
-    if ('ids' === ($args['return'] ?? null)) {
-        return array_map(static function ($order) {
-            return $order->get_id();
-        }, $orders);
+    return mockWcQueryResult($orders, $args);
+}
+
+/**
+ * Honour the documented "return" argument, so a caller asking for ids is not handed objects.
+ *
+ * @param  \MyParcelNL\WooCommerce\Tests\Mock\MockWcClass[] $records
+ */
+function mockWcQueryResult(array $records, array $args): array
+{
+    if ('ids' !== ($args['return'] ?? null)) {
+        return $records;
     }
 
-    return $orders;
+    return array_map(static function ($record): int {
+        return $record->get_id();
+    }, array_values($records));
 }
 
 /** @see \wc_get_product() */
