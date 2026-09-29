@@ -6,7 +6,6 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Adapter;
 
-use MyParcelNL\Pdk\Carrier\Model\Carrier;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
@@ -34,14 +33,14 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     ->with([
                         'deliveryType' => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
                         'packageType'  => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
-                        'carrier'      => Carrier::CARRIER_POSTNL_LEGACY_NAME,
+                        'carrier'      => 'postnl',
                         'date'         => '2037-12-31',
                     ])
                     ->make();
             },
             'expected' => [
                 'date'            => '2037-12-31T00:00:00.000Z',
-                'carrier'         => Carrier::CARRIER_POSTNL_LEGACY_NAME,
+                'carrier'         => 'postnl',
                 'labelAmount'     => 1,
                 'shipmentOptions' => [
                     'signature'         => null,
@@ -67,7 +66,7 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     ->with([
                         'deliveryType'    => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
                         'packageType'     => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
-                        'carrier'         => Carrier::CARRIER_POSTNL_LEGACY_NAME,
+                        'carrier'         => 'postnl',
                         'shipmentOptions' => [
                             'ageCheck'         => true,
                             'signature'        => true,
@@ -84,7 +83,7 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     ->make();
             },
             'expected' => [
-                'carrier'         => Carrier::CARRIER_POSTNL_LEGACY_NAME,
+                'carrier'         => 'postnl',
                 'labelAmount'     => 1,
                 'shipmentOptions' => [
                     'signature'         => true,
@@ -111,7 +110,7 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     ->with([
                         'deliveryType'   => DeliveryOptions::DELIVERY_TYPE_PICKUP_NAME,
                         'packageType'    => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
-                        'carrier'        => Carrier::CARRIER_DPD_LEGACY_NAME,
+                        'carrier'        => 'dpd',
                         'pickupLocation' => [
                             'locationCode'    => 'DPD-12',
                             'locationName'    => 'DPD Pakketshop',
@@ -126,7 +125,7 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     ->make();
             },
             'expected' => [
-                'carrier'         => Carrier::CARRIER_DPD_LEGACY_NAME,
+                'carrier'         => 'dpd',
                 'labelAmount'     => 1,
                 'pickupLocation'  => [
                     'postal_code'       => '1212DP',

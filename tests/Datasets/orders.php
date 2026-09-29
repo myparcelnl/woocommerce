@@ -7,7 +7,6 @@ namespace MyParcelNL\WooCommerce\Tests\Datasets;
 
 use MyParcelNL\Pdk\App\Options\Definition\SignatureDefinition;
 use MyParcelNL\Pdk\App\Order\Model\PdkOrderNote;
-use MyParcelNL\Pdk\Carrier\Model\Carrier;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Shipment\Model\ShipmentOptions;
@@ -52,7 +51,7 @@ dataset('orders', [
         return wpFactory(WC_Order::class)->withMeta([
             Pdk::get('metaKeyOrderData') => [
                 'deliveryOptions' => factory(DeliveryOptions::class)
-                    ->withCarrier(Carrier::CARRIER_DHL_FOR_YOU_LEGACY_NAME)
+                    ->withCarrier('dhlforyou')
                     ->withDeliveryType(DeliveryOptions::DELIVERY_TYPE_MORNING_NAME)
                     ->withDate('2039-12-31 12:00:00')
                     ->withShipmentOptions([(new SignatureDefinition())->getShipmentOptionsKey() => TriStateService::ENABLED])
@@ -66,7 +65,7 @@ dataset('orders', [
         return wpFactory(WC_Order::class)->withMeta([
             Pdk::get('metaKeyOrderData') => [
                 'deliveryOptions' => factory(DeliveryOptions::class)
-                    ->withCarrier(Carrier::CARRIER_DHL_FOR_YOU_LEGACY_NAME)
+                    ->withCarrier('dhlforyou')
                     ->withDeliveryType(DeliveryOptions::DELIVERY_TYPE_MORNING_NAME)
                     ->withDate('2039-12-31 12:00:00')
                     ->withShipmentOptions(factory(ShipmentOptions::class))
