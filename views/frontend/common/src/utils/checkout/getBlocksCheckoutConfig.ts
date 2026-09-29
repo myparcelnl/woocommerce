@@ -28,6 +28,33 @@ const MYPARCEL_BLOCK_FIELDS_PREFIX = 'myparcelcom/';
 const isBusinessAddress = (address?: Record<string, string>): boolean =>
   Boolean((address?.company ?? '').trim());
 
+type CartItem = {key: string; id: number; quantity: number};
+
+/**
+ * The cart items, with only the fields that change the cart weight: the cart item key, the product or
+ * variation id, and the quantity. A fee or a new total does not change these fields.
+ */
+const getCartItems = (): CartItem[] =>
+  useWcCartStore()
+    .selectors.getCartData()
+    .items.map(({key, id, quantity}) => ({key, id, quantity}));
+
+/**
+ * Whether WooCommerce is still saving a cart change to the server: a new quantity, a removed item, or a
+ * new shipping method. The cart data shows a new quantity before the server has it, so a context fetched
+ * at that moment holds the old weight.
+ *
+ * Pass the keys from before and after the change: a removed item is no longer in the current cart data.
+ */
+const isSavingCartChange = (itemKeys: string[]): boolean => {
+  const {selectors} = useWcCartStore();
+
+  return (
+    selectors.isShippingRateBeingSelected() ||
+    itemKeys.some((key) => selectors.isItemPendingQuantity(key) || selectors.isItemPendingDelete(key))
+  );
+};
+
 // eslint-disable-next-line max-lines-per-function
 export const getBlocksCheckoutConfig = (): CheckoutConfig => {
   const addressFields = {
@@ -73,10 +100,7 @@ export const getBlocksCheckoutConfig = (): CheckoutConfig => {
         // address, so it is the moment to let the PDK compare its context. Older WooCommerce Blocks
         // versions cannot report a save, and then there is no such moment to offer.
         let previousSaving = false;
-        const cartItemsKey = (): string =>
-          JSON.stringify(wcCartStore.selectors.getCartData().items.map(({key, id, quantity}) => ({key, id, quantity})));
-        let previousCartItems = cartItemsKey();
-        let previousCartKeys = wcCartStore.selectors.getCartData().items.map(({key}) => key);
+        let previousCartItems = getCartItems();
 
         wp.data.subscribe(async () => {
           const saving = Boolean(wcCartStore.selectors.isCustomerDataUpdating?.());
@@ -88,38 +112,31 @@ export const getBlocksCheckoutConfig = (): CheckoutConfig => {
             await refreshContextIfBusinessChanged();
           }
 
-          const currentCartKeys = wcCartStore.selectors.getCartData().items.map(({key}) => key);
-          // Retain removed keys until the server has finished deleting those cart items.
-          const pendingItem = [...new Set([...previousCartKeys, ...currentCartKeys])].some(
-            (key) => wcCartStore.selectors.isItemPendingQuantity(key) || wcCartStore.selectors.isItemPendingDelete(key),
-          );
+          const currentCartItems = getCartItems();
+          const itemKeys = [...new Set([...previousCartItems, ...currentCartItems].map(({key}) => key))];
 
-          // Quantity changes can be optimistic. Fetch only after the server has the new cart.
-          if (pendingItem || saving || wcCartStore.selectors.isShippingRateBeingSelected()) {
+          // Wait until WooCommerce has saved the change, so the context request reads the new cart and address.
+          if (saving || isSavingCartChange(itemKeys)) {
             return;
           }
 
           const currentShippingRate = getShippingRate();
-          const currentCustomerData = wcCartStore.selectors.getCustomerData();
-          const currentCartItems = cartItemsKey();
+          const currentCustomerData = JSON.stringify(wcCartStore.selectors.getCustomerData());
 
           const shippingMethodChanged = previousShippingRate?.rate_id !== currentShippingRate?.rate_id;
-          const customerDataChanged = previousCustomerData !== JSON.stringify(currentCustomerData);
-          const cartItemsChanged = previousCartItems !== currentCartItems;
+          const customerDataChanged = previousCustomerData !== currentCustomerData;
+          const cartItemsChanged = JSON.stringify(previousCartItems) !== JSON.stringify(currentCartItems);
 
           if (!shippingMethodChanged && !customerDataChanged && !cartItemsChanged) {
             return;
           }
 
-          if (customerDataChanged) {
-            previousCustomerData = JSON.stringify(currentCustomerData);
-          }
-
           previousShippingRate = currentShippingRate;
+          previousCustomerData = currentCustomerData;
           previousCartItems = currentCartItems;
-          previousCartKeys = currentCartKeys;
           callback();
 
+          // The weight in the context depends on the cart items and on the package type of the shipping method.
           if (shippingMethodChanged || cartItemsChanged) {
             try {
               await updateContext();

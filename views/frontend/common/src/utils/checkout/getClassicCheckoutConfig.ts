@@ -59,11 +59,16 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
           });
         });
 
-        // The server now has the updated cart, including quantity-only changes. Read the selected
-        // shipping method before fetching its context.
+        // WooCommerce re-selects the shipping-method radio after its AJAX re-render WITHOUT a bubbling
+        // `change`, so the form-level listener misses it; `updated_checkout` catches that. set() is
+        // equality-guarded, so a redundant callback is a safe no-op.
+        //
+        // `updated_checkout` also means that the server has the new cart, including a change to only the
+        // quantity. Call the callback first, so the context request reads the selected shipping method.
         jQuery(document.body).on('updated_checkout', async () => {
           callback();
 
+          // The delivery options have not loaded on this checkout, so there is no context to refresh.
           if (!useDeliveryOptionsStore()) {
             return;
           }
