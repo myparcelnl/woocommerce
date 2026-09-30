@@ -4820,7 +4820,7 @@ __metadata:
     "@myparcel-dev/pdk-admin-preset-default": "npm:^2.2.2"
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
     "@myparcel-woocommerce/vite-config": "workspace:*"
-    "@tanstack/vue-query": "npm:^4.43.0"
+    "@tanstack/vue-query": "npm:^5.104.0"
     "@types/jquery": "npm:^3.5.30"
     "@types/select2": "npm:^4.0.57"
     "@vitejs/plugin-vue": "npm:^6.0.1"
@@ -8034,6 +8034,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/match-sorter-utils@npm:^9.1.2":
+  version: 9.1.2
+  resolution: "@tanstack/match-sorter-utils@npm:9.1.2"
+  dependencies:
+    remove-accents: "npm:0.5.0"
+  checksum: 10c0/38d7211d816cffd3411ada08bf5dea086c1eed9baf4e016c2f2c58bd65148e8f143acf0a567bfcd7077b5b247d0f65a8ea80b3edd6c59bbdb8e3cde40885ddf6
+  languageName: node
+  linkType: hard
+
 "@tanstack/query-core@npm:4.43.0":
   version: 4.43.0
   resolution: "@tanstack/query-core@npm:4.43.0"
@@ -8045,6 +8054,13 @@ __metadata:
   version: 5.101.4
   resolution: "@tanstack/query-core@npm:5.101.4"
   checksum: 10c0/a407960303431e6498c6518cf6f8cc7283d3e4a95dbdc5e9fa42c217b9dd7afaffb82a4f2d36b38f578f745e8cf69ff8551abb947f5abcc0a290f3e3e75dc654
+  languageName: node
+  linkType: hard
+
+"@tanstack/query-core@npm:5.104.0":
+  version: 5.104.0
+  resolution: "@tanstack/query-core@npm:5.104.0"
+  checksum: 10c0/e080454f308dc41bf0e52e46aac455af3112f454519d369740aacaec4d260a3bfddde569204908ff7a6e1b1b84f8e065e0ac1375555e2bc1b023d398c0b44f96
   languageName: node
   linkType: hard
 
@@ -8144,7 +8160,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/vue-query@npm:^4.43.0, @tanstack/vue-query@npm:~4.43.0":
+"@tanstack/vue-query@npm:^5.104.0":
+  version: 5.104.0
+  resolution: "@tanstack/vue-query@npm:5.104.0"
+  dependencies:
+    "@tanstack/match-sorter-utils": "npm:^9.1.2"
+    "@tanstack/query-core": "npm:5.104.0"
+    "@vue/devtools-api": "npm:^6.6.3"
+    vue-demi: "npm:^0.14.10"
+  peerDependencies:
+    "@vue/composition-api": ^1.1.2
+    vue: ^2.6.0 || ^3.3.0
+  peerDependenciesMeta:
+    "@vue/composition-api":
+      optional: true
+  checksum: 10c0/8b9922a19ebacef6ea6868cdaadd32360e5180c5ad60840dbce4f756da566ef5b68b897ecf68a9bd9042766774a27aef549273f6df64e9a91561a814337ff8ff
+  languageName: node
+  linkType: hard
+
+"@tanstack/vue-query@npm:~4.43.0":
   version: 4.43.0
   resolution: "@tanstack/vue-query@npm:4.43.0"
   dependencies:
