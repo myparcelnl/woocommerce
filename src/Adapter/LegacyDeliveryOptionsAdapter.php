@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Adapter;
 
-use MyParcelNL\Pdk\Carrier\Model\Carrier;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
+use MyParcelNL\Sdk\Services\Mapping\ApiMapperService;
 use MyParcelNL\Sdk\Support\Str;
 
 class LegacyDeliveryOptionsAdapter
@@ -51,7 +51,7 @@ class LegacyDeliveryOptionsAdapter
         if (is_array($carrier)) {
             $carrierName = $carrier['externalIdentifier'] ?? ($carrier['carrier'] ?? null);
         } elseif (is_string($carrier)) {
-            $carrierName = Carrier::CARRIER_NAME_TO_LEGACY_MAP[$carrier] ?? $carrier;
+            $carrierName = ApiMapperService::forCarrier()->legacyNameFromV2Name($carrier) ?? $carrier;
         } else {
             return [];
         }

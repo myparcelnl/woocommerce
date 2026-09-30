@@ -14,7 +14,6 @@ use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\App\Order\Model\PdkOrder;
 use MyParcelNL\Pdk\App\Order\Model\PdkOrderNote;
 use MyParcelNL\Pdk\Audit\Contract\PdkAuditRepositoryInterface;
-use MyParcelNL\Pdk\Carrier\Model\Carrier;
 use MyParcelNL\Pdk\Facade\Actions;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\OrderSettings;
@@ -112,7 +111,7 @@ it('reads saved delivery options and normalises the legacy carrier', function ()
     $wcOrder = wpFactory(WC_Order::class)->withMeta([
         Pdk::get('metaKeyOrderData') => [
             'deliveryOptions' => factory(DeliveryOptions::class)
-                ->withCarrier(Carrier::CARRIER_DHL_FOR_YOU_LEGACY_NAME)
+                ->withCarrier('dhlforyou')
                 ->withDeliveryType(DeliveryOptions::DELIVERY_TYPE_MORNING_NAME)
                 ->withDate('2039-12-31 12:00:00')
                 ->withShipmentOptions([(new SignatureDefinition())->getShipmentOptionsKey() => TriStateService::ENABLED])
@@ -159,7 +158,7 @@ it('serves updated delivery options from the order cache', function () {
     $pdkOrder = new PdkOrder([
         'externalIdentifier' => '123',
         'deliveryOptions'    => factory(DeliveryOptions::class)
-            ->withCarrier(Carrier::CARRIER_DHL_FOR_YOU_LEGACY_NAME)
+            ->withCarrier('dhlforyou')
             ->make(),
     ]);
 
@@ -177,7 +176,7 @@ it('reads saved shipment options', function () {
     $wcOrder = wpFactory(WC_Order::class)->withMeta([
         Pdk::get('metaKeyOrderData') => [
             'deliveryOptions' => factory(DeliveryOptions::class)
-                ->withCarrier(Carrier::CARRIER_DHL_FOR_YOU_LEGACY_NAME)
+                ->withCarrier('dhlforyou')
                 ->withDeliveryType(DeliveryOptions::DELIVERY_TYPE_MORNING_NAME)
                 ->withShipmentOptions(factory(ShipmentOptions::class))
                 ->withAllShipmentOptions()
