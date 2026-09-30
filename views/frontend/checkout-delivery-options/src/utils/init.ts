@@ -51,7 +51,18 @@ export const initializeCheckoutDeliveryOptions = (): void => {
     },
   });
 
-  document.addEventListener(useEvent(PdkDeliveryOptionsEvent.DeliveryOptionsUpdated), () => {
+  let previousSelection: string | null | undefined = null;
+
+  document.addEventListener(useEvent(PdkDeliveryOptionsEvent.DeliveryOptionsUpdated), (event) => {
+    const selectionKey = JSON.stringify((event as CustomEvent).detail);
+
+    // `update_checkout` makes WooCommerce reload the checkout, which fetches a new context. The widget then
+    // emits the same selection again. Skip it, or the checkout reloads again and again.
+    if (selectionKey === previousSelection) {
+      return;
+    }
+
+    previousSelection = selectionKey;
     jQuery(document.body).trigger('update_checkout');
   });
 };

@@ -1,5 +1,5 @@
 import {AddressType} from '@myparcel-dev/pdk-checkout-common';
-import {AddressField, SeparateAddressField} from '@myparcel-dev/pdk-checkout';
+import {AddressField, SeparateAddressField, updateContext, useDeliveryOptionsStore} from '@myparcel-dev/pdk-checkout';
 import {type CheckoutConfig} from '../../types';
 
 /**
@@ -62,8 +62,23 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
         // WooCommerce re-selects the shipping-method radio after its AJAX re-render WITHOUT a bubbling
         // `change`, so the form-level listener misses it; `updated_checkout` catches that. set() is
         // equality-guarded, so a redundant callback is a safe no-op.
-        jQuery(document.body).on('updated_checkout', () => {
+        //
+        // `updated_checkout` also means that the server has the new cart, including a change to only the
+        // quantity. Call the callback first, so the context request reads the selected shipping method.
+        jQuery(document.body).on('updated_checkout', async () => {
           callback();
+
+          // The delivery options have not loaded on this checkout, so there is no context to refresh.
+          if (!useDeliveryOptionsStore()) {
+            return;
+          }
+
+          try {
+            await updateContext();
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.warn('[woocommerce-myparcel] delivery-options context update failed', error);
+          }
         });
       },
 
