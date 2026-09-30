@@ -185,8 +185,9 @@ it('schedules order data migration', function () {
     /** @var WordPressScheduledTasks $tasks */
     $tasks = Pdk::get(WordPressScheduledTasks::class);
 
+    // The migration only selects orders that actually hold the meta key it migrates.
     for ($i = 1; $i <= 5; $i++) {
-        createWcOrder(['id' => $i]);
+        createWcOrder(['id' => $i, 'meta' => [Pdk::get('metaKeyOrderData') => ['carrier' => 'postnl']]]);
     }
 
     /** @var Migration6_5_1 $migration */
@@ -205,8 +206,12 @@ it('schedules shipment data migration', function () {
     /** @var WordPressScheduledTasks $tasks */
     $tasks = Pdk::get(WordPressScheduledTasks::class);
 
+    // The migration only selects orders that actually hold the meta key it migrates.
     for ($i = 1; $i <= 5; $i++) {
-        createWcOrder(['id' => $i]);
+        createWcOrder([
+            'id'   => $i,
+            'meta' => [Pdk::get('metaKeyOrderShipments') => [['carrier' => 'postnl']]],
+        ]);
     }
 
     /** @var Migration6_5_1 $migration */
@@ -228,6 +233,10 @@ dataset('order carrier variants', [
     ],
     'legacy string with contract suffix' => [
         ['deliveryOptions' => ['carrier' => 'postnl:123']],
+        'POSTNL',
+    ],
+    'numeric legacy id' => [
+        ['deliveryOptions' => ['carrier' => ['id' => 1]]],
         'POSTNL',
     ],
     'object with externalIdentifier' => [
@@ -311,3 +320,17 @@ it('normalises the carrier field in shipment data', function (array $shipments, 
         }
     }
 })->with('shipment carrier variants');
+
+it('preserves the contract in order delivery options', function () {
+    $metaKey = Pdk::get('metaKeyOrderData');
+    createWcOrder(['id' => 1, 'meta' => [$metaKey => [
+        'deliveryOptions' => ['carrier' => ['carrier' => 'postnl:42']],
+    ]]]);
+
+    Pdk::get(Migration6_5_1::class)->migrateOrderChunk(['orderIds' => [1]]);
+
+    expect(MockWpMeta::get(1, $metaKey)['deliveryOptions'])->toBe([
+        'carrier'    => 'POSTNL',
+        'contractId' => 42,
+    ]);
+});
