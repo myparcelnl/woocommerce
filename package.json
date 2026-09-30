@@ -74,11 +74,10 @@
     "eslint-plugin-prettier": "^4.2.0",
     "react": "^18",
     "react-dom": "^18",
-    "tar": "7.5.11",
-    "axios": "1.15.0"
+    "tar": "^7.5.22",
+    "axios": "^1.20.0"
   },
   "devDependencies": {
-    "@automattic/data-stores": "^3.1.0-rc.5",
     "@myparcel-dev/eslint-config-esnext": "^1.4.0",
     "@myparcel-dev/eslint-config-import": "^1.3.0",
     "@myparcel-dev/eslint-config-node": "^1.4.0",
@@ -98,10 +97,7 @@
     "@types/wordpress__data": "*",
     "@vitest/coverage-v8": "^1.0.0",
     "@vue/tsconfig": "^0.9.1",
-    "@wordpress/core-data": "wp-6.0",
     "@wordpress/data": "wp-6.0",
-    "@wordpress/interactivity": "wp-6.3",
-    "@wordpress/scripts": "wp-6.0",
     "array.prototype.flatmap": "^1.3.1",
     "eslint": "^8.34.0",
     "eslint-plugin-react": "^7.0.0",
