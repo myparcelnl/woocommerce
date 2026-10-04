@@ -4,6 +4,10 @@ import {createViteConfig} from '@myparcel-woocommerce/vite-config';
 export default createViteConfig({
   plugins: [vue()],
 
+  resolve: {
+    dedupe: ['pinia', '@tanstack/vue-query', 'vue'],
+  },
+
   build: {
     lib: {
       name: 'MyParcelWooCommerceAdmin',
