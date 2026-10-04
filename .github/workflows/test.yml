@@ -47,6 +47,13 @@ jobs:
           flags: frontend
           files: coverage/**/*.xml
 
+      - uses: myparcelnl/actions/codecov-test-results@v5
+        if: always()
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          name: frontend
+          flags: frontend
+          files: junit/**/*.xml
 
   test-backend:
     runs-on: ubuntu-22.04
@@ -98,3 +105,10 @@ jobs:
           flags: backend
           files: clover.xml
 
+      - uses: myparcelnl/actions/codecov-test-results@v5
+        if: always()
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          name: backend
+          flags: backend
+          files: junit.xml
