@@ -5,7 +5,7 @@
     :value="transformedModel"
     type="hidden" />
 
-  <a v-test="[AdminComponent.ToggleInput, element]">
+  <a v-test="AdminComponent.ToggleInput">
     <input
       :id="`${id}-toggle`"
       v-model="model"
