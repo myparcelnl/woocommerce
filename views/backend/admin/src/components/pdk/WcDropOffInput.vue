@@ -49,7 +49,7 @@ const emit = defineEmits<(e: 'update:modelValue', value: DropOffInputModelValue)
 
 const {weekdaysObject, cutoffElements, toggleElements, toggleRefs, cutoffRefs} = useDropOffInputContext(props, emit);
 
-const id = generateFieldId();
+const id = generateFieldId(props.element);
 
 const {translate} = useLanguage();
 </script>
