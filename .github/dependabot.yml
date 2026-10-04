@@ -46,6 +46,10 @@ updates:
       include: 'scope'
     versioning-strategy: increase-if-necessary
     open-pull-requests-limit: 20
+    ignore:
+      # Must match the vue that @myparcel-dev/pdk-admin pins for vue-form-builder, or pinia and vue-query get installed
+      # twice. Remove when INT-1354 takes the form builder out of the JS PDK.
+      - dependency-name: 'vue'
     cooldown:
       exclude:
         - '@myparcel/*'
