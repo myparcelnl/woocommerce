@@ -14,6 +14,7 @@ use MyParcelNL\Pdk\Types\Service\TriStateService;
 use WC_Order;
 use function MyParcelNL\Pdk\Tests\factory;
 use function MyParcelNL\WooCommerce\Tests\wpFactory;
+use MyParcelNL\Sdk\Client\Generated\CoreApi\Model\ShipmentDefsDeliveryOptionsDeliveryNameV2;
 
 dataset('orders', [
     'simple order' => function () {
@@ -52,7 +53,7 @@ dataset('orders', [
             Pdk::get('metaKeyOrderData') => [
                 'deliveryOptions' => factory(DeliveryOptions::class)
                     ->withCarrier('dhlforyou')
-                    ->withDeliveryType(DeliveryOptions::DELIVERY_TYPE_MORNING_NAME)
+                    ->withDeliveryType(ShipmentDefsDeliveryOptionsDeliveryNameV2::MORNING)
                     ->withDate('2039-12-31 12:00:00')
                     ->withShipmentOptions([(new SignatureDefinition())->getShipmentOptionsKey() => TriStateService::ENABLED])
                     ->make()
@@ -66,7 +67,7 @@ dataset('orders', [
             Pdk::get('metaKeyOrderData') => [
                 'deliveryOptions' => factory(DeliveryOptions::class)
                     ->withCarrier('dhlforyou')
-                    ->withDeliveryType(DeliveryOptions::DELIVERY_TYPE_MORNING_NAME)
+                    ->withDeliveryType(ShipmentDefsDeliveryOptionsDeliveryNameV2::MORNING)
                     ->withDate('2039-12-31 12:00:00')
                     ->withShipmentOptions(factory(ShipmentOptions::class))
                     ->withAllShipmentOptions()

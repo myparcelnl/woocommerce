@@ -6,6 +6,7 @@ namespace MyParcelNL\WooCommerce\Adapter;
 
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
+use MyParcelNL\Sdk\Client\Generated\CoreApi\Model\RefTypesDeliveryTypeV2;
 use MyParcelNL\Sdk\Services\Mapping\ApiMapperService;
 use MyParcelNL\Sdk\Support\Str;
 
@@ -61,7 +62,8 @@ class LegacyDeliveryOptionsAdapter
         }
 
         $arr['carrier'] = $carrierName;
-        $arr['isPickup'] = DeliveryOptions::DELIVERY_TYPE_PICKUP_NAME === $arr['deliveryType'];
+        $arr['isPickup'] = RefTypesDeliveryTypeV2::PICKUP
+            === ApiMapperService::forDeliveryType()->v2NameFromLegacyName((string) $arr['deliveryType']);
 
         if (isset($arr['date']) && is_string($arr['date'])) {
             $arr['date'] = substr($arr['date'], 0, 10) . 'T00:00:00.000Z';

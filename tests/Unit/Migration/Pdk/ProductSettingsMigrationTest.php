@@ -8,12 +8,12 @@ namespace MyParcelNL\WooCommerce\Migration\Pdk;
 use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\Base\Service\CountryCodes;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function MyParcelNL\WooCommerce\Tests\createWcProduct;
+use MyParcelNL\Sdk\Client\Generated\CoreApi\Model\ShipmentResponsesDeliveryOptionsPackageTypeV2;
 
 usesShared(new UsesMockWcPdkInstance());
 
@@ -142,8 +142,8 @@ it('migrates pre v5.0.0 product settings', function (array $product, ?array $par
 
     WordPressOptions::updateOption(SettingsMigration::LEGACY_OPTION_EXPORT_DEFAULTS_SETTINGS, [
         'shipping_methods_package_types' => [
-            DeliveryOptions::PACKAGE_TYPE_DIGITAL_STAMP_NAME => ['flat_rate:0'],
-            DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME       => ['flat_rate:0'],
+            ShipmentResponsesDeliveryOptionsPackageTypeV2::DIGITAL_STAMP => ['flat_rate:0'],
+            ShipmentResponsesDeliveryOptionsPackageTypeV2::MAILBOX       => ['flat_rate:0'],
         ],
     ]);
 

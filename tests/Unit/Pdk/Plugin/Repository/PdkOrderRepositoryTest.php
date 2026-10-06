@@ -36,6 +36,7 @@ use WC_Order_Factory;
 use function MyParcelNL\Pdk\Tests\factory;
 use function MyParcelNL\Pdk\Tests\usesShared;
 use function MyParcelNL\WooCommerce\Tests\wpFactory;
+use MyParcelNL\Sdk\Client\Generated\CoreApi\Model\ShipmentDefsDeliveryOptionsDeliveryNameV2;
 
 usesShared(new UsesMockWcPdkInstance());
 
@@ -112,7 +113,7 @@ it('reads saved delivery options and normalises the legacy carrier', function ()
         Pdk::get('metaKeyOrderData') => [
             'deliveryOptions' => factory(DeliveryOptions::class)
                 ->withCarrier('dhlforyou')
-                ->withDeliveryType(DeliveryOptions::DELIVERY_TYPE_MORNING_NAME)
+                ->withDeliveryType(ShipmentDefsDeliveryOptionsDeliveryNameV2::MORNING)
                 ->withDate('2039-12-31 12:00:00')
                 ->withShipmentOptions([(new SignatureDefinition())->getShipmentOptionsKey() => TriStateService::ENABLED])
                 ->make()
@@ -177,7 +178,7 @@ it('reads saved shipment options', function () {
         Pdk::get('metaKeyOrderData') => [
             'deliveryOptions' => factory(DeliveryOptions::class)
                 ->withCarrier('dhlforyou')
-                ->withDeliveryType(DeliveryOptions::DELIVERY_TYPE_MORNING_NAME)
+                ->withDeliveryType(ShipmentDefsDeliveryOptionsDeliveryNameV2::MORNING)
                 ->withShipmentOptions(factory(ShipmentOptions::class))
                 ->withAllShipmentOptions()
                 ->make()

@@ -12,18 +12,12 @@ use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\CustomsSettings;
-use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use WC_Data;
 use WC_Meta_Data;
 use WC_Product;
 
 final class ProductSettingsMigration extends AbstractPdkMigration
 {
-    public const  PACKAGE_TYPES                     = [
-        DeliveryOptions::PACKAGE_TYPE_DIGITAL_STAMP_NAME,
-        DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME,
-        DeliveryOptions::PACKAGE_TYPE_LETTER_NAME,
-    ];
     private const CHUNK_SIZE                        = 100;
     private const LEGACY_META_KEY_HS_CODE           = '_myparcel_hs_code';
     private const LEGACY_META_KEY_COUNTRY           = '_myparcel_country_of_origin';

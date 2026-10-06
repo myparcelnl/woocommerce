@@ -13,6 +13,10 @@ use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 
 use function MyParcelNL\Pdk\Tests\factory;
 use function MyParcelNL\Pdk\Tests\usesShared;
+use MyParcelNL\Sdk\Client\Generated\CoreApi\Model\ShipmentResponsesDeliveryOptionsPackageTypeV2;
+use MyParcelNL\Sdk\Services\Mapping\ApiMapperService;
+use MyParcelNL\Sdk\Client\Generated\CoreApi\Model\RefTypesDeliveryTypeV2;
+use MyParcelNL\Sdk\Client\Generated\CoreApi\Model\ShipmentDefsDeliveryOptionsDeliveryNameV2;
 
 usesShared(new UsesMockWcPdkInstance());
 
@@ -31,8 +35,8 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
             'options'  => function () {
                 return factory(DeliveryOptions::class)
                     ->with([
-                        'deliveryType' => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
-                        'packageType'  => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
+                        'deliveryType' => ShipmentDefsDeliveryOptionsDeliveryNameV2::STANDARD,
+                        'packageType'  => ShipmentResponsesDeliveryOptionsPackageTypeV2::PACKAGE,
                         'carrier'      => 'postnl',
                         'date'         => '2037-12-31',
                     ])
@@ -54,8 +58,8 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     'hide_sender'       => null,
                     'extra_assurance'   => null,
                 ],
-                'deliveryType'    => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
-                'packageType'     => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
+                'deliveryType'    => ShipmentDefsDeliveryOptionsDeliveryNameV2::STANDARD,
+                'packageType'     => ShipmentResponsesDeliveryOptionsPackageTypeV2::PACKAGE,
                 'isPickup'        => false,
                 'pickupLocation'  => null,
             ],
@@ -64,8 +68,8 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
             'options'  => function () {
                 return factory(DeliveryOptions::class)
                     ->with([
-                        'deliveryType'    => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
-                        'packageType'     => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
+                        'deliveryType'    => ShipmentDefsDeliveryOptionsDeliveryNameV2::STANDARD,
+                        'packageType'     => ShipmentResponsesDeliveryOptionsPackageTypeV2::PACKAGE,
                         'carrier'         => 'postnl',
                         'shipmentOptions' => [
                             'ageCheck'         => true,
@@ -97,8 +101,8 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     'hide_sender'       => false,
                     'extra_assurance'   => null, // null because the option does not exist anymore
                 ],
-                'deliveryType'    => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
-                'packageType'     => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
+                'deliveryType'    => ShipmentDefsDeliveryOptionsDeliveryNameV2::STANDARD,
+                'packageType'     => ShipmentResponsesDeliveryOptionsPackageTypeV2::PACKAGE,
                 'isPickup'        => false,
                 'date'            => null,
                 'pickupLocation'  => null,
@@ -108,8 +112,8 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
             'options'  => function () {
                 return factory(DeliveryOptions::class)
                     ->with([
-                        'deliveryType'   => DeliveryOptions::DELIVERY_TYPE_PICKUP_NAME,
-                        'packageType'    => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
+                        'deliveryType'   => ApiMapperService::forDeliveryType()->legacyNameFromV2Name(RefTypesDeliveryTypeV2::PICKUP),
+                        'packageType'    => ShipmentResponsesDeliveryOptionsPackageTypeV2::PACKAGE,
                         'carrier'        => 'dpd',
                         'pickupLocation' => [
                             'locationCode'    => 'DPD-12',
@@ -149,8 +153,8 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     'hide_sender'       => null,
                     'extra_assurance'   => null,
                 ],
-                'deliveryType'    => DeliveryOptions::DELIVERY_TYPE_PICKUP_NAME,
-                'packageType'     => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
+                'deliveryType'    => ApiMapperService::forDeliveryType()->legacyNameFromV2Name(RefTypesDeliveryTypeV2::PICKUP),
+                'packageType'     => ShipmentResponsesDeliveryOptionsPackageTypeV2::PACKAGE,
                 'isPickup'        => true,
                 'date'            => null,
             ],
