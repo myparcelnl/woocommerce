@@ -59,6 +59,17 @@ abstract class MockWcClass extends WC_Data
     }
 
     /**
+     * @see \WC_Data::meta_exists()
+     */
+    public function meta_exists($key = ''): bool
+    {
+        $missing = new \stdClass();
+
+        // A stored empty value must still count as existing, so absence is detected by sentinel.
+        return MockWpMeta::get($this->get_id(), $key, $missing) !== $missing;
+    }
+
+    /**
      * @return array of objects.
      * @throws \Throwable
      * @see \WC_Product::get_meta_data()
