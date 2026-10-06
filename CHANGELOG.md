@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.10.3](https://github.com/myparcelnl/woocommerce/compare/v6.10.2...v6.10.3) (2026-10-06)
+
+
+### :bug: Bug Fixes
+
+* **migration:** move order meta from the pre-6.0.0 namespace ([#1816](https://github.com/myparcelnl/woocommerce/issues/1816)) ([fd1d0b3](https://github.com/myparcelnl/woocommerce/commit/fd1d0b3cfdc61be2a2d22fb48c8f3cd9dbab927f))
+
 ## [6.10.2](https://github.com/myparcelnl/woocommerce/compare/v6.10.1...v6.10.2) (2026-09-24)
 
 
