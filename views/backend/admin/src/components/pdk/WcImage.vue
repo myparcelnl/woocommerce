@@ -1,22 +1,12 @@
 <template>
   <img
     v-test="AdminComponent.Image"
-    :alt="alt"
-    :src="src" />
+    v-bind="$props" />
 </template>
 
 <script lang="ts" setup>
-import {AdminComponent} from '@myparcel-dev/pdk-admin';
+/* eslint-disable vue/no-unused-properties */
+import {AdminComponent, type ImageProps} from '@myparcel-dev/pdk-admin';
 
-defineProps({
-  alt: {
-    type: String,
-    required: true,
-  },
-
-  src: {
-    type: String,
-    required: true,
-  },
-});
+defineProps<ImageProps>();
 </script>

@@ -8,9 +8,9 @@
     "build:dev": "run ws:build:dev \"$(pwd)\"",
     "build:test": "run ws:build:test \"$(pwd)\"",
     "clean": "run ws:clean \"$(pwd)\"",
-    "test": "run ws:test \"$(pwd)\" || true",
-    "test:coverage": "run ws:test:coverage \"$(pwd)\" || true",
-    "test:run": "run ws:test:run \"$(pwd)\" || true"
+    "test": "run ws:test \"$(pwd)\"",
+    "test:coverage": "run ws:test:coverage \"$(pwd)\"",
+    "test:run": "run ws:test:run \"$(pwd)\""
   },
   "dependencies": {
     "@myparcel-dev/pdk-admin": "^2.2.2",
@@ -20,7 +20,7 @@
     "@tanstack/vue-query": "^4.43.0"
   },
   "devDependencies": {
-    "@myparcel-dev/pdk-admin-component-tests": "^2.2.2",
+    "@myparcel-dev/pdk-admin-component-tests": "^2.2.8",
     "@myparcel-woocommerce/vite-config": "workspace:*",
     "@types/jquery": "^3.5.30",
     "@types/select2": "^4.0.57",
@@ -35,6 +35,6 @@
     "tailwindcss": "^3.2.7",
     "typescript": "^5.7.3",
     "vite": "^5.0.0",
-    "vue": "^3.2.47"
+    "vue": "3.4.31"
   }
 }
