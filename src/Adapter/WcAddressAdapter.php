@@ -34,7 +34,7 @@ class WcAddressAdapter
      */
     public function fromWcCustomer(WC_Customer $customer, ?string $addressType = null): array
     {
-        return $this->getAddressFields($customer, $this->resolveAddressType($customer, $addressType));
+        return $this->applyAddressFieldsFilter($customer, $this->resolveAddressType($customer, $addressType));
     }
 
     /**
@@ -47,15 +47,29 @@ class WcAddressAdapter
     public function fromWcOrder(WC_Order $order, ?string $addressType = null): array
     {
         $resolvedAddressType = $this->resolveAddressType($order, $addressType);
+        $fields              = $this->applyAddressFieldsFilter($order, $resolvedAddressType);
 
-        return array_merge(
-            $this->getAddressFields($order, $resolvedAddressType),
-            $this->getSeparateAddressFromOrder($order, $resolvedAddressType),
-            [
+        // The filtered fields win over the order meta.
+        return $fields
+            + $this->getSeparateAddressFromOrder($order, $resolvedAddressType, $fields)
+            + [
                 'eoriNumber' => $this->getOrderMeta($order, Pdk::get('fieldEoriNumber'), $resolvedAddressType),
                 'vatNumber'  => $this->getOrderMeta($order, Pdk::get('fieldVatNumber'), $resolvedAddressType),
-            ]
-        );
+            ];
+    }
+
+    /**
+     * Get the address fields after the wcAddressFields filter. The PDK derives isBusiness from company, so an
+     * isBusiness set by the filter has no effect.
+     *
+     * @param  \WC_Customer|\WC_Order $class
+     * @param  string                 $addressType
+     *
+     * @return array
+     */
+    private function applyAddressFieldsFilter($class, string $addressType): array
+    {
+        return Filter::apply('wcAddressFields', $this->getAddressFields($class, $addressType), $class, $addressType);
     }
 
     /**
@@ -101,7 +115,7 @@ class WcAddressAdapter
         // Legacy fallback if the address widget wasn't used
         $state = $this->getState($class, $addressType);
 
-        $data = array_merge($pdkAddressAttributes, [
+        return array_merge($pdkAddressAttributes, [
             'address1'   => $this->getAddressField($class, Pdk::get('fieldAddress1'), $addressType),
             'address2'   => $this->getAddressField($class, Pdk::get('fieldAddress2'), $addressType),
             'cc'         => $this->getAddressField($class, Pdk::get('fieldCountry'), $addressType),
@@ -111,8 +125,6 @@ class WcAddressAdapter
             'region'     => $state,
             'state'      => $state,
         ]);
-
-        return Filter::apply('wcAddressFields', $data, $class, $addressType);
     }
 
     /**
@@ -154,17 +166,18 @@ class WcAddressAdapter
     /**
      * @param  \WC_Order $order
      * @param  string    $addressType
+     * @param  array     $fields the filtered address fields
      *
      * @return array
      */
-    private function getSeparateAddressFromOrder(WC_Order $order, string $addressType): array
+    private function getSeparateAddressFromOrder(WC_Order $order, string $addressType, array $fields): array
     {
         // If the address widget JSON is present, getAddressFields() already handled it — don't override.
         if ($this->getOrderMeta($order, Pdk::get('checkoutAddressHiddenInputName'), $addressType)) {
             return [];
         }
 
-        $country = $this->getAddressField($order, Pdk::get('fieldCountry'), $addressType);
+        $country = $fields['cc'] ?? null;
 
         if (! in_array($country, Pdk::get('countriesWithSeparateAddressFields'), true)) {
             return [];
@@ -182,22 +195,21 @@ class WcAddressAdapter
             ];
         }
 
-        return $this->splitAddress1($order, $addressType, $country);
+        return $this->splitAddress1($fields);
     }
 
     /**
      * The fulfilment API does not split a full street into street and house number server-side, so without this the
      * house number ends up in the street field when exporting in order mode.
      *
-     * @param  \WC_Order $order
-     * @param  string    $addressType
-     * @param  string    $country
+     * @param  array $fields the filtered address fields
      *
      * @return array
      */
-    private function splitAddress1(WC_Order $order, string $addressType, string $country): array
+    private function splitAddress1(array $fields): array
     {
-        $address1 = trim((string) $this->getAddressField($order, Pdk::get('fieldAddress1'), $addressType));
+        $country  = (string) $fields['cc'];
+        $address1 = trim((string) ($fields['address1'] ?? ''));
 
         if (! $address1) {
             return [];
@@ -212,7 +224,7 @@ class WcAddressAdapter
         }
 
         $number   = $fullStreet->getNumber();
-        $address2 = trim((string) $this->getAddressField($order, Pdk::get('fieldAddress2'), $addressType));
+        $address2 = trim((string) ($fields['address2'] ?? ''));
 
         return [
             'street'               => $fullStreet->getStreet() ?: null,

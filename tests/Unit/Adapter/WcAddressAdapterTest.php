@@ -373,22 +373,18 @@ it('allows filtering address fields through the wcAddressFields filter', functio
         ->with(array_merge($address, ['id' => 1234, 'meta' => []]))
         ->make();
 
-    $filter = function (array $fields, $object, string $addressType) {
+    add_filter('mpwc_checkout_wc_address_fields', function (array $fields, $object, string $addressType) {
         expect($object)->toBeInstanceOf(WC_Order::class)
             ->and($addressType)->toBe('shipping');
 
         $fields['company'] = 'Filtered Company';
 
         return $fields;
-    };
-
-    add_filter('mpwc_checkout_wc_address_fields', $filter, 10, 3);
+    }, 10, 3);
 
     $result = $adapter->fromWcOrder($order, 'shipping');
 
     expect($result['company'])->toBe('Filtered Company');
-
-    remove_filter('mpwc_checkout_wc_address_fields', $filter, 10);
 });
 
 dataset('filteredAddresses', function () {
@@ -423,6 +419,18 @@ dataset('filteredAddresses', function () {
             [],
             ['address1' => 'Siriusdreef 66 b'],
             ['street' => 'Siriusdreef', 'number' => '66', 'numberSuffix' => 'b'],
+        ],
+
+        'address1 is split with the pattern of the filtered country' => [
+            [],
+            ['cc' => 'BE', 'address1' => 'Adriaan Brouwerstraat 16 bus 2'],
+            ['street' => 'Adriaan Brouwerstraat', 'number' => '16', 'boxNumber' => '2'],
+        ],
+
+        'address1 is not split when the filtered country has no separate address fields' => [
+            [],
+            ['cc' => 'DE'],
+            ['street' => null, 'number' => null],
         ],
 
         'eori and vat numbers' => [
