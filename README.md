@@ -34,6 +34,10 @@ We recommend testing the plugin’s functionality in your specific setup before 
 
 [Plugin Manual]
 
+## Filters and actions
+
+To change the plugin with code, use the [filters and actions] in the manual. For example, the filter `mpwc_checkout_wc_address_fields` lets you correct the address that the plugin sends to MyParcel.
+
 ## Installation
 
 You can download the .zip file of the [latest release], or install it on your website from the [WordPress plugin repository].
@@ -54,6 +58,7 @@ Run `composer console list` to see all available commands, or `composer console 
 
 [Backoffice]: https://backoffice.myparcel.nl/
 [Delivery options]: https://github.com/myparcelnl/delivery-options
+[filters and actions]: https://developer.myparcel.com/platforms/woocommerce.html#17-for-developers-filters-and-actions
 [Plugin manual]: https://developer.myparcel.nl/nl/documentatie/10.woocommerce.html
 [WordPress plugin repository]: https://wordpress.org/plugins/woocommerce-myparcel/
 [Yarn]: https://classic.yarnpkg.com/en/docs/install
