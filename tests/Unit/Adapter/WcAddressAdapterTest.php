@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Adapter;
 
 use MyParcelNL\Pdk\App\Cart\Model\PdkCart;
+use MyParcelNL\Pdk\Base\Model\Address;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Cart;
@@ -389,3 +390,161 @@ it('allows filtering address fields through the wcAddressFields filter', functio
 
     remove_filter('mpwc_checkout_wc_address_fields', $filter, 10);
 });
+
+dataset('filteredAddresses', function () {
+    // Meta keys get the "_{addressType}_" prefix in the test.
+    return [
+        'address from the address widget' => [
+            function () {
+                return [
+                    Pdk::get('checkoutAddressHiddenInputName') => json_encode([
+                        'city'        => 'Hoofddorp',
+                        'countryCode' => 'NL',
+                        'houseNumber' => '31',
+                        'postalCode'  => '2132JE',
+                        'street'      => 'Antareslaan',
+                    ]),
+                ];
+            },
+            ['company' => 'Filtered Company'],
+            ['company' => 'Filtered Company'],
+        ],
+
+        'street fields on an NL order with separate address fields' => [
+            [
+                'street_name'  => 'Antareslaan',
+                'house_number' => '31',
+            ],
+            ['street' => 'Siriusdreef', 'number' => '66', 'numberSuffix' => 'b'],
+            ['street' => 'Siriusdreef', 'number' => '66', 'numberSuffix' => 'b'],
+        ],
+
+        'address1 on an NL order is split after filtering' => [
+            [],
+            ['address1' => 'Siriusdreef 66 b'],
+            ['street' => 'Siriusdreef', 'number' => '66', 'numberSuffix' => 'b'],
+        ],
+
+        'eori and vat numbers' => [
+            [
+                'eori_number' => 'NL123456789',
+                'vat_number'  => 'NL123456789B01',
+            ],
+            ['eoriNumber' => 'NL987654321', 'vatNumber' => 'NL987654321B01'],
+            ['eoriNumber' => 'NL987654321', 'vatNumber' => 'NL987654321B01'],
+        ],
+    ];
+});
+
+dataset('filterAddressTypes', ['shipping', 'billing']);
+
+/**
+ * Prefix WooCommerce address fields and order meta keys with the address type.
+ */
+function addressTypeFields(string $addressType, array $fields, array $meta = []): array
+{
+    $prefixed = [
+        'id'            => 1235,
+        'billing_email' => 'test@test.com',
+        'billing_phone' => '0612345678',
+        'meta'          => [],
+    ];
+
+    foreach ($fields as $key => $value) {
+        $prefixed["{$addressType}_{$key}"] = $value;
+    }
+
+    foreach ($meta as $key => $value) {
+        $prefixed['meta']["_{$addressType}_{$key}"] = $value;
+    }
+
+    return $prefixed;
+}
+
+it('uses the fields that the wcAddressFields filter returns', function (
+    array  $meta,
+    array  $filtered,
+    array  $expected,
+    string $addressType
+) {
+    /** @var WcAddressAdapter $adapter */
+    $adapter = Pdk::get(WcAddressAdapter::class);
+
+    $order = wpFactory(WC_Order::class)
+        ->fromScratch()
+        ->with(addressTypeFields($addressType, [
+            'address_1'  => 'Antareslaan 31',
+            'address_2'  => '',
+            'city'       => 'Hoofddorp',
+            'company'    => 'MyParcel',
+            'country'    => 'NL',
+            'first_name' => 'Felicia',
+            'last_name'  => 'Parcel',
+            'postcode'   => '2132JE',
+        ], $meta))
+        ->make();
+
+    add_filter('mpwc_checkout_wc_address_fields', function (array $fields) use ($filtered) {
+        return array_merge($fields, $filtered);
+    });
+
+    $result = $adapter->fromWcOrder($order, $addressType);
+
+    foreach ($expected as $key => $value) {
+        expect($result[$key] ?? null)->toBe($value);
+    }
+})->with('filteredAddresses')->with('filterAddressTypes');
+
+it('sets isBusiness when the filter adds a company to an order without one', function (string $addressType) {
+    /** @var WcAddressAdapter $adapter */
+    $adapter = Pdk::get(WcAddressAdapter::class);
+
+    $order = wpFactory(WC_Order::class)
+        ->fromScratch()
+        ->with(addressTypeFields($addressType, [
+            'address_1' => 'Straßmannstraße 2',
+            'city'      => 'Berlin',
+            'country'   => 'DE',
+            'postcode'  => '10249',
+        ]))
+        ->make();
+
+    add_filter('mpwc_checkout_wc_address_fields', function (array $fields) {
+        return array_merge($fields, ['company' => 'MyParcel']);
+    });
+
+    $address = new Address($adapter->fromWcOrder($order, $addressType));
+
+    expect($address->isBusiness)->toBeTrue();
+})->with('filterAddressTypes');
+
+it('ignores an isBusiness set by the filter that does not match the company', function (
+    ?string $company,
+    bool    $filteredIsBusiness,
+    string  $addressType
+) {
+    /** @var WcAddressAdapter $adapter */
+    $adapter = Pdk::get(WcAddressAdapter::class);
+
+    $order = wpFactory(WC_Order::class)
+        ->fromScratch()
+        ->with(addressTypeFields($addressType, [
+            'address_1' => 'Straßmannstraße 2',
+            'city'      => 'Berlin',
+            'company'   => $company,
+            'country'   => 'DE',
+            'postcode'  => '10249',
+        ]))
+        ->make();
+
+    add_filter('mpwc_checkout_wc_address_fields', function (array $fields) use ($filteredIsBusiness) {
+        return array_merge($fields, ['isBusiness' => $filteredIsBusiness]);
+    });
+
+    $address = new Address($adapter->fromWcOrder($order, $addressType));
+
+    expect($address->isBusiness)->toBe(! $filteredIsBusiness);
+})->with([
+    'company, filter sets false'   => ['MyParcel', false],
+    'no company, filter sets true' => [null, true],
+])->with('filterAddressTypes');
