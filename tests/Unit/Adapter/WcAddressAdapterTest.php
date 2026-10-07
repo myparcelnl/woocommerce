@@ -556,3 +556,50 @@ it('ignores an isBusiness set by the filter that does not match the company', fu
     'company, filter sets false'   => ['MyParcel', false],
     'no company, filter sets true' => [null, true],
 ])->with('filterAddressTypes');
+
+it('splits the address when the filter moves the house number from address_2 to address1', function (
+    string $country,
+    string $address1,
+    string $address2,
+    array  $expected,
+    string $addressType
+) {
+    /** @var WcAddressAdapter $adapter */
+    $adapter = Pdk::get(WcAddressAdapter::class);
+
+    $order = wpFactory(WC_Order::class)
+        ->fromScratch()
+        ->with(addressTypeFields($addressType, [
+            'address_1' => $address1,
+            'address_2' => $address2,
+            'city'      => 'Hoofddorp',
+            'country'   => $country,
+            'postcode'  => '2132JE',
+        ]))
+        ->make();
+
+    // The filter from https://github.com/myparcelnl/woocommerce/issues/1367
+    add_filter('mpwc_checkout_wc_address_fields', function (array $fields) {
+        $fields['address1'] = $fields['address1'] . ' ' . $fields['address2'];
+        $fields['address2'] = null;
+
+        return $fields;
+    });
+
+    $address = new Address($adapter->fromWcOrder($order, $addressType));
+
+    expect(array_intersect_key($address->toArray(), $expected))->toBe($expected);
+})->with([
+    'NL' => [
+        'NL',
+        'Antareslaan',
+        '31 b',
+        ['number' => '31', 'numberSuffix' => 'b', 'street' => 'Antareslaan', 'streetAdditionalInfo' => null],
+    ],
+    'BE' => [
+        'BE',
+        'Adriaan Brouwerstraat',
+        '16 bus 2',
+        ['boxNumber' => '2', 'number' => '16', 'street' => 'Adriaan Brouwerstraat', 'streetAdditionalInfo' => null],
+    ],
+])->with('filterAddressTypes');
