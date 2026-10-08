@@ -11,9 +11,9 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Shipment\Model\ShipmentOptions;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
-use WC_Order;
 use MyParcelNL\Sdk\Client\Generated\CoreApi\Model\ShipmentDefsDeliveryOptionsDeliveryNameV2;
 use MyParcelNL\Sdk\Client\Generated\CoreApi\Model\ShipmentParametersCarrierName;
+use WC_Order;
 use function MyParcelNL\Pdk\Tests\factory;
 use function MyParcelNL\WooCommerce\Tests\wpFactory;
 
