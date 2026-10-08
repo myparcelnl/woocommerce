@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Adapter;
 
 use Exception;
+use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Base\Model\MyParcelAddress;
 use MyParcelNL\Sdk\Helper\SplitStreet;
@@ -69,7 +70,19 @@ class WcAddressAdapter
      */
     private function applyAddressFieldsFilter($class, string $addressType): array
     {
-        return Filter::apply('wcAddressFields', $this->getAddressFields($class, $addressType), $class, $addressType);
+        $fields   = $this->getAddressFields($class, $addressType);
+        $filtered = Filter::apply('wcAddressFields', $fields, $class, $addressType);
+
+        if (! is_array($filtered)) {
+            Logger::warning(
+                'The wcAddressFields filter did not return an array, using the unfiltered address fields.',
+                ['type' => gettype($filtered)]
+            );
+
+            return $fields;
+        }
+
+        return $filtered;
     }
 
     /**
