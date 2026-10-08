@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Adapter;
 
-use MyParcelNL\Pdk\Carrier\Model\Carrier;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
+use MyParcelNL\Sdk\Client\Generated\CoreApi\Model\RefTypesDeliveryTypeV2;
+use MyParcelNL\Sdk\Services\Mapping\ApiMapperService;
 use MyParcelNL\Sdk\Support\Str;
 
 class LegacyDeliveryOptionsAdapter
@@ -51,7 +52,7 @@ class LegacyDeliveryOptionsAdapter
         if (is_array($carrier)) {
             $carrierName = $carrier['externalIdentifier'] ?? ($carrier['carrier'] ?? null);
         } elseif (is_string($carrier)) {
-            $carrierName = Carrier::CARRIER_NAME_TO_LEGACY_MAP[$carrier] ?? $carrier;
+            $carrierName = ApiMapperService::forCarrier()->legacyNameFromV2Name($carrier) ?? $carrier;
         } else {
             return [];
         }
@@ -61,7 +62,8 @@ class LegacyDeliveryOptionsAdapter
         }
 
         $arr['carrier'] = $carrierName;
-        $arr['isPickup'] = DeliveryOptions::DELIVERY_TYPE_PICKUP_NAME === $arr['deliveryType'];
+        $arr['isPickup'] = RefTypesDeliveryTypeV2::PICKUP
+            === ApiMapperService::forDeliveryType()->v2NameFromLegacyName((string) $arr['deliveryType']);
 
         if (isset($arr['date']) && is_string($arr['date'])) {
             $arr['date'] = substr($arr['date'], 0, 10) . 'T00:00:00.000Z';

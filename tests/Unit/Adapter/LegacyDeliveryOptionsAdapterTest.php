@@ -6,10 +6,13 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Adapter;
 
-use MyParcelNL\Pdk\Carrier\Model\Carrier;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
+use MyParcelNL\Sdk\Client\Generated\CoreApi\Model\RefTypesDeliveryTypeV2;
+use MyParcelNL\Sdk\Client\Generated\CoreApi\Model\ShipmentDefsDeliveryOptionsDeliveryNameV2;
+use MyParcelNL\Sdk\Client\Generated\CoreApi\Model\ShipmentResponsesDeliveryOptionsPackageTypeV2;
+use MyParcelNL\Sdk\Services\Mapping\ApiMapperService;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 
 use function MyParcelNL\Pdk\Tests\factory;
@@ -32,16 +35,16 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
             'options'  => function () {
                 return factory(DeliveryOptions::class)
                     ->with([
-                        'deliveryType' => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
-                        'packageType'  => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
-                        'carrier'      => Carrier::CARRIER_POSTNL_LEGACY_NAME,
+                        'deliveryType' => ShipmentDefsDeliveryOptionsDeliveryNameV2::STANDARD,
+                        'packageType'  => ShipmentResponsesDeliveryOptionsPackageTypeV2::PACKAGE,
+                        'carrier'      => 'postnl',
                         'date'         => '2037-12-31',
                     ])
                     ->make();
             },
             'expected' => [
                 'date'            => '2037-12-31T00:00:00.000Z',
-                'carrier'         => Carrier::CARRIER_POSTNL_LEGACY_NAME,
+                'carrier'         => 'postnl',
                 'labelAmount'     => 1,
                 'shipmentOptions' => [
                     'signature'         => null,
@@ -55,8 +58,8 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     'hide_sender'       => null,
                     'extra_assurance'   => null,
                 ],
-                'deliveryType'    => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
-                'packageType'     => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
+                'deliveryType'    => ShipmentDefsDeliveryOptionsDeliveryNameV2::STANDARD,
+                'packageType'     => ShipmentResponsesDeliveryOptionsPackageTypeV2::PACKAGE,
                 'isPickup'        => false,
                 'pickupLocation'  => null,
             ],
@@ -65,9 +68,9 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
             'options'  => function () {
                 return factory(DeliveryOptions::class)
                     ->with([
-                        'deliveryType'    => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
-                        'packageType'     => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
-                        'carrier'         => Carrier::CARRIER_POSTNL_LEGACY_NAME,
+                        'deliveryType'    => ShipmentDefsDeliveryOptionsDeliveryNameV2::STANDARD,
+                        'packageType'     => ShipmentResponsesDeliveryOptionsPackageTypeV2::PACKAGE,
+                        'carrier'         => 'postnl',
                         'shipmentOptions' => [
                             'ageCheck'         => true,
                             'signature'        => true,
@@ -84,7 +87,7 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     ->make();
             },
             'expected' => [
-                'carrier'         => Carrier::CARRIER_POSTNL_LEGACY_NAME,
+                'carrier'         => 'postnl',
                 'labelAmount'     => 1,
                 'shipmentOptions' => [
                     'signature'         => true,
@@ -98,8 +101,8 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     'hide_sender'       => false,
                     'extra_assurance'   => null, // null because the option does not exist anymore
                 ],
-                'deliveryType'    => DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
-                'packageType'     => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
+                'deliveryType'    => ShipmentDefsDeliveryOptionsDeliveryNameV2::STANDARD,
+                'packageType'     => ShipmentResponsesDeliveryOptionsPackageTypeV2::PACKAGE,
                 'isPickup'        => false,
                 'date'            => null,
                 'pickupLocation'  => null,
@@ -109,9 +112,9 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
             'options'  => function () {
                 return factory(DeliveryOptions::class)
                     ->with([
-                        'deliveryType'   => DeliveryOptions::DELIVERY_TYPE_PICKUP_NAME,
-                        'packageType'    => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
-                        'carrier'        => Carrier::CARRIER_DPD_LEGACY_NAME,
+                        'deliveryType'   => ApiMapperService::forDeliveryType()->legacyNameFromV2Name(RefTypesDeliveryTypeV2::PICKUP),
+                        'packageType'    => ShipmentResponsesDeliveryOptionsPackageTypeV2::PACKAGE,
+                        'carrier'        => 'dpd',
                         'pickupLocation' => [
                             'locationCode'    => 'DPD-12',
                             'locationName'    => 'DPD Pakketshop',
@@ -126,7 +129,7 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     ->make();
             },
             'expected' => [
-                'carrier'         => Carrier::CARRIER_DPD_LEGACY_NAME,
+                'carrier'         => 'dpd',
                 'labelAmount'     => 1,
                 'pickupLocation'  => [
                     'postal_code'       => '1212DP',
@@ -150,8 +153,8 @@ it('creates legacy options', function (DeliveryOptions $options, array $expected
                     'hide_sender'       => null,
                     'extra_assurance'   => null,
                 ],
-                'deliveryType'    => DeliveryOptions::DELIVERY_TYPE_PICKUP_NAME,
-                'packageType'     => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
+                'deliveryType'    => ApiMapperService::forDeliveryType()->legacyNameFromV2Name(RefTypesDeliveryTypeV2::PICKUP),
+                'packageType'     => ShipmentResponsesDeliveryOptionsPackageTypeV2::PACKAGE,
                 'isPickup'        => true,
                 'date'            => null,
             ],

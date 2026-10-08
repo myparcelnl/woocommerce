@@ -19,8 +19,8 @@ use MyParcelNL\Pdk\App\Options\Definition\NoTrackingDefinition;
 use MyParcelNL\Pdk\App\Order\Contract\PdkProductRepositoryInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Model\ProductSettings;
-use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Types\Service\TriStateService;
+use MyParcelNL\Sdk\Client\Generated\CoreApi\Model\ShipmentResponsesDeliveryOptionsPackageTypeV2;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Product;
 use function MyParcelNL\Pdk\Tests\usesShared;
@@ -44,7 +44,7 @@ function defaultProductSettings(): array
         (new NoTrackingDefinition())->getProductSettingsKey()       => TriStateService::INHERIT,
         ProductSettings::FIT_IN_DIGITAL_STAMP      => TriStateService::INHERIT,
         ProductSettings::FIT_IN_MAILBOX            => TriStateService::INHERIT,
-        ProductSettings::PACKAGE_TYPE              => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
+        ProductSettings::PACKAGE_TYPE              => ShipmentResponsesDeliveryOptionsPackageTypeV2::PACKAGE,
         ProductSettings::EXCLUDE_PARCEL_LOCKERS    => TriStateService::INHERIT,
         (new FreshFoodDefinition())->getProductSettingsKey()        => TriStateService::INHERIT,
         (new FrozenDefinition())->getProductSettingsKey()           => TriStateService::INHERIT,
@@ -101,7 +101,7 @@ it('saves product data correctly', function (array $postData, array $productSett
             ProductSettings::DROP_OFF_DELAY                      => 0,
             (new InsuranceDefinition())->getProductSettingsKey() => TriStateService::ENABLED,
             ProductSettings::FIT_IN_MAILBOX                      => 10,
-            ProductSettings::PACKAGE_TYPE                        => DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME,
+            ProductSettings::PACKAGE_TYPE                        => ShipmentResponsesDeliveryOptionsPackageTypeV2::MAILBOX,
         ]),
     ],
     'change all settings' => [
@@ -141,7 +141,7 @@ it('saves product data correctly', function (array $postData, array $productSett
             (new DirectReturnDefinition())->getProductSettingsKey()  => TriStateService::ENABLED,
             (new SignatureDefinition())->getProductSettingsKey()     => TriStateService::DISABLED,
             ProductSettings::FIT_IN_MAILBOX                          => 12,
-            ProductSettings::PACKAGE_TYPE                            => DeliveryOptions::PACKAGE_TYPE_DIGITAL_STAMP_NAME,
+            ProductSettings::PACKAGE_TYPE                            => ShipmentResponsesDeliveryOptionsPackageTypeV2::DIGITAL_STAMP,
         ]),
     ],
 ]);

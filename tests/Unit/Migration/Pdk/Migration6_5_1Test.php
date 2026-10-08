@@ -20,6 +20,7 @@ use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
 use MyParcelNL\Pdk\Tests\SdkApi\MockSdkApiHandler;
 use MyParcelNL\Pdk\Tests\SdkApi\Response\ExampleContractDefinitionsResponse;
 use MyParcelNL\Pdk\Tests\Uses\UsesSdkApiMock;
+use MyParcelNL\Sdk\Client\Generated\CoreApi\Model\RefCapabilitiesSharedCarrierV2;
 use MyParcelNL\WooCommerce\Migration\Migration6_5_1;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
@@ -145,6 +146,26 @@ it('remaps legacy carrier setting keys to new format', function () {
         ->and($result['DHL_FOR_YOU'])->toBe(['delivery_enabled' => '1'])
         ->and($result['DHL_PARCEL_CONNECT'])->toBe(['delivery_enabled' => '0']);
 });
+
+it('remaps the legacy key of a known carrier to its V2 name', function (string $legacyKey, string $v2Name) {
+    /** @var \MyParcelNL\Pdk\Tests\Bootstrap\MockSettingsRepository $settingsRepo */
+    $settingsRepo = Pdk::get(PdkSettingsRepositoryInterface::class);
+    $settingsKey  = Pdk::get('createSettingsKey')('carrier');
+
+    $settingsRepo->store($settingsKey, [$legacyKey => ['delivery_enabled' => '1']]);
+
+    /** @var Migration6_5_1 $migration */
+    $migration = Pdk::get(Migration6_5_1::class);
+    $migration->migrateCarrierSettings();
+
+    expect($settingsRepo->get($settingsKey))->toBe([$v2Name => ['delivery_enabled' => '1']]);
+})->with([
+    // Legacy keys as stored by earlier plugin versions.
+    'postnl'    => ['postnl', RefCapabilitiesSharedCarrierV2::POSTNL],
+    'dhlforyou' => ['dhlforyou', RefCapabilitiesSharedCarrierV2::DHL_FOR_YOU],
+    'dpd'       => ['dpd', RefCapabilitiesSharedCarrierV2::DPD],
+    'bpost'     => ['bpost', RefCapabilitiesSharedCarrierV2::BPOST],
+]);
 
 it('does not fail when carrier settings are empty', function () {
     /** @var Migration6_5_1 $migration */
