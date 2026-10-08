@@ -7,6 +7,8 @@ namespace MyParcelNL\WooCommerce\Adapter;
 
 use MyParcelNL\Pdk\App\Cart\Model\PdkCart;
 use MyParcelNL\Pdk\Base\Model\Address;
+use MyParcelNL\Pdk\Base\Support\Arr;
+use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
 use WC_Cart;
@@ -602,4 +604,58 @@ it('splits the address when the filter moves the house number from address_2 to 
         '16 bus 2',
         ['boxNumber' => '2', 'number' => '16', 'street' => 'Adriaan Brouwerstraat', 'streetAdditionalInfo' => null],
     ],
+])->with('filterAddressTypes');
+
+it('uses the unfiltered fields when the wcAddressFields filter does not return an array', function (
+    callable $getAddress,
+    string   $addressType
+) {
+    /** @var WcAddressAdapter $adapter */
+    $adapter = Pdk::get(WcAddressAdapter::class);
+
+    $unfiltered = $getAddress($adapter, $addressType);
+
+    // The mock apply_filters replaces null with the input value, so return another non-array.
+    add_filter('mpwc_checkout_wc_address_fields', function () {
+        return false;
+    });
+
+    expect($getAddress($adapter, $addressType))
+        ->toBe($unfiltered)
+        ->and(Arr::last(Logger::getLogs()))
+        ->toEqual([
+            'level'   => 'warning',
+            'message' => '[PDK]: The wcAddressFields filter did not return an array, using the unfiltered address fields.',
+            'context' => ['type' => 'boolean'],
+        ]);
+})->with([
+    'order' => function () {
+        return function (WcAddressAdapter $adapter, string $addressType): array {
+            $order = wpFactory(WC_Order::class)
+                ->fromScratch()
+                ->with(addressTypeFields($addressType, [
+                    'address_1' => 'Antareslaan 31',
+                    'city'      => 'Hoofddorp',
+                    'country'   => 'NL',
+                    'postcode'  => '2132JE',
+                ]))
+                ->make();
+
+            return $adapter->fromWcOrder($order, $addressType);
+        };
+    },
+    'cart'  => function () {
+        return function (WcAddressAdapter $adapter, string $addressType): array {
+            $cart = new WC_Cart([
+                'customer' => new WC_Customer(addressTypeFields($addressType, [
+                    'address_1' => 'Antareslaan 31',
+                    'city'      => 'Hoofddorp',
+                    'country'   => 'NL',
+                    'postcode'  => '2132JE',
+                ])),
+            ]);
+
+            return $adapter->fromWcCart($cart, $addressType);
+        };
+    },
 ])->with('filterAddressTypes');
