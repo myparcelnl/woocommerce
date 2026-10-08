@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@myparcel-woocommerce/webpack-config": "workspace:*",
-    "@wordpress/block-editor": "^17.1.0",
+    "@wordpress/block-editor": "^18.1.0",
     "@wordpress/blocks": "^16.0.0",
     "@wordpress/icons": "^17.0.0",
     "@wordpress/plugins": "^7.9.0",
