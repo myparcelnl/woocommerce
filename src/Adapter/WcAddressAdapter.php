@@ -17,6 +17,12 @@ use WC_Order;
 class WcAddressAdapter
 {
     /**
+     * The wcAddressFields filter gets one of these as its source argument.
+     */
+    public const SOURCE_CUSTOMER = 'customer';
+    public const SOURCE_ORDER    = 'order';
+
+    /**
      * @param  \WC_Cart    $cart
      * @param  null|string $addressType
      *
@@ -35,7 +41,11 @@ class WcAddressAdapter
      */
     public function fromWcCustomer(WC_Customer $customer, ?string $addressType = null): array
     {
-        return $this->applyAddressFieldsFilter($customer, $this->resolveAddressType($customer, $addressType));
+        return $this->applyAddressFieldsFilter(
+            $customer,
+            $this->resolveAddressType($customer, $addressType),
+            self::SOURCE_CUSTOMER
+        );
     }
 
     /**
@@ -48,7 +58,7 @@ class WcAddressAdapter
     public function fromWcOrder(WC_Order $order, ?string $addressType = null): array
     {
         $resolvedAddressType = $this->resolveAddressType($order, $addressType);
-        $fields              = $this->applyAddressFieldsFilter($order, $resolvedAddressType);
+        $fields              = $this->applyAddressFieldsFilter($order, $resolvedAddressType, self::SOURCE_ORDER);
 
         // The filtered fields win over the order meta.
         return $fields
@@ -65,13 +75,14 @@ class WcAddressAdapter
      *
      * @param  \WC_Customer|\WC_Order $class
      * @param  string                 $addressType
+     * @param  string                 $source One of the SOURCE_* constants.
      *
      * @return array
      */
-    private function applyAddressFieldsFilter($class, string $addressType): array
+    private function applyAddressFieldsFilter($class, string $addressType, string $source): array
     {
         $fields   = $this->getAddressFields($class, $addressType);
-        $filtered = Filter::apply('wcAddressFields', $fields, $class, $addressType);
+        $filtered = Filter::apply('wcAddressFields', $fields, $class, $addressType, $source);
 
         if (! is_array($filtered)) {
             Logger::warning(
