@@ -44,16 +44,10 @@ final class MockWpMeta implements StaticMockInterface
         $data = Arr::get(self::$meta, implode('.', array_filter([$postId, $key])), $default);
 
         if (is_string($data)) {
-            $decoded = json_decode($data, true);
+            $unserialized = @unserialize($data);
 
-            if (is_array($decoded) && JSON_ERROR_NONE === json_last_error()) {
-                $data = $decoded;
-            } else {
-                $unserialized = @unserialize($data);
-
-                if (false !== $unserialized) {
-                    $data = $unserialized;
-                }
+            if (false !== $unserialized) {
+                $data = $unserialized;
             }
         }
 
