@@ -109,6 +109,8 @@ treat rapid back-and-forth as an upstream stress-case.
 
 The supported WordPress range is declared once, in `readme.txt` (`Requires at least`). Before treating a WordPress version guard as dead code, check the `@since` lines in core against that minimum.
 
+The minimum PHP version is in `readme.txt` (`Requires PHP`) and in `composer.json` (`require.php` and `platform.php`). Code must run on that version: check it before you use a newer PHP function or syntax.
+
 - The plugin runs inside a Docker-based WordPress setup. Use `docker compose exec php wp ...` from the docker-wordpress project root for WP-CLI commands.
 
 ### Building JS (nx cache gotcha)
