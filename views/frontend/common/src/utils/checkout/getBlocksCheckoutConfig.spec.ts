@@ -36,6 +36,8 @@ const cart = {
   /** True while WooCommerce is saving the customer data to the server. */
   saving: false,
   rateId: 'flat_rate:1',
+  /** True while WooCommerce is saving a new shipping rate to the server. */
+  selectingRate: false,
 };
 
 /** The subscriber the config registers through `wp.data.subscribe`. */
@@ -60,6 +62,7 @@ const createCartSelectors = (): Record<string, unknown> => ({
   // eslint-disable-next-line @typescript-eslint/naming-convention
   getShippingRates: () => [{shipping_rates: [{rate_id: cart.rateId, selected: true}]}],
   isCustomerDataUpdating: () => cart.saving,
+  isShippingRateBeingSelected: () => cart.selectingRate,
 });
 
 /** Run one `wp.data` store tick. */
@@ -87,6 +90,7 @@ beforeEach(() => {
   cart.company = '';
   cart.saving = false;
   cart.rateId = 'flat_rate:1';
+  cart.selectingRate = false;
 
   cartSelectors = createCartSelectors();
 
@@ -162,6 +166,44 @@ describe('getBlocksCheckoutConfig', () => {
   });
 
   it('fetches a new context when the shipping method changes', async () => {
+    listen();
+
+    cart.rateId = 'local_pickup:2';
+    await tick();
+
+    expect(updateContextMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('waits until WooCommerce has saved the new shipping method', async () => {
+    listen();
+
+    cart.rateId = 'local_pickup:2';
+    cart.selectingRate = true;
+    await tick();
+
+    expect(updateContextMock).not.toHaveBeenCalled();
+
+    cart.selectingRate = false;
+    await tick();
+
+    expect(updateContextMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('updates the form before it fetches a new context', async () => {
+    const order: string[] = [];
+    updateContextMock.mockImplementationOnce(async () => {
+      order.push('updateContext');
+    });
+    getBlocksCheckoutConfig().config.formChange?.(() => order.push('callback'));
+
+    cart.rateId = 'local_pickup:2';
+    await tick();
+
+    expect(order).toEqual(['callback', 'updateContext']);
+  });
+
+  it('fetches on a shipping method change when the store cannot report a rate selection', async () => {
+    delete cartSelectors.isShippingRateBeingSelected;
     listen();
 
     cart.rateId = 'local_pickup:2';
