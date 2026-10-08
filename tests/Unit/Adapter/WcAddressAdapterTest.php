@@ -375,18 +375,45 @@ it('allows filtering address fields through the wcAddressFields filter', functio
         ->with(array_merge($address, ['id' => 1234, 'meta' => []]))
         ->make();
 
-    add_filter('mpwc_checkout_wc_address_fields', function (array $fields, $object, string $addressType) {
+    add_filter('mpwc_checkout_wc_address_fields', function (array $fields, $object, string $addressType, string $source) {
         expect($object)->toBeInstanceOf(WC_Order::class)
-            ->and($addressType)->toBe('shipping');
+            ->and($addressType)->toBe('shipping')
+            ->and($source)->toBe(WcAddressAdapter::SOURCE_ORDER);
 
         $fields['company'] = 'Filtered Company';
 
         return $fields;
-    }, 10, 3);
+    }, 10, 4);
 
     $result = $adapter->fromWcOrder($order, 'shipping');
 
     expect($result['company'])->toBe('Filtered Company');
+});
+
+it('passes the customer source to the wcAddressFields filter for a cart', function () {
+    /** @var WcAddressAdapter $adapter */
+    $adapter = Pdk::get(WcAddressAdapter::class);
+
+    $cart = new WC_Cart([
+        'customer' => new WC_Customer(addressTypeFields('shipping', [
+            'address_1' => 'Antareslaan 31',
+            'city'      => 'Hoofddorp',
+            'country'   => 'NL',
+            'postcode'  => '2132JE',
+        ])),
+    ]);
+
+    add_filter('mpwc_checkout_wc_address_fields', function (array $fields, $object, string $addressType, string $source) {
+        expect($object)->toBeInstanceOf(WC_Customer::class)
+            ->and($addressType)->toBe('shipping')
+            ->and($source)->toBe(WcAddressAdapter::SOURCE_CUSTOMER);
+
+        $fields['company'] = 'Filtered Company';
+
+        return $fields;
+    }, 10, 4);
+
+    expect($adapter->fromWcCart($cart, 'shipping')['company'])->toBe('Filtered Company');
 });
 
 dataset('filteredAddresses', function () {
