@@ -4957,15 +4957,15 @@ __metadata:
   linkType: hard
 
 "@myparcel-dev/pdk-admin-preset-default@npm:^2.2.2":
-  version: 2.2.7
-  resolution: "@myparcel-dev/pdk-admin-preset-default@npm:2.2.7"
+  version: 2.2.8
+  resolution: "@myparcel-dev/pdk-admin-preset-default@npm:2.2.8"
   dependencies:
     "@myparcel-dev/pdk-admin": "npm:^2.2.7"
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
     "@vuepic/vue-datepicker": "npm:^11.0.2"
     "@vueuse/core": "npm:^10.0.0"
     vue: "npm:3.4.31"
-  checksum: 10c0/dfdc2ada65e78069affd247ae4f545012ec0599c39f40f1e6e3e926c45dd3415454ba3a450f9d609a8168b6e920ec594060b3c86dc80ec9a48bb809e72cafcb5
+  checksum: 10c0/330d7bc8cd4f1f30a24117f066b7497a8d6729c71f7bdd4c9ff55c1abdf7acd561a19a2cfd0aa5e1c48473088fb648781554578b1b51314dcd9f6c0904042578
   languageName: node
   linkType: hard
 
