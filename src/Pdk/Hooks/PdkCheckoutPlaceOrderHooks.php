@@ -56,7 +56,9 @@ final class PdkCheckoutPlaceOrderHooks implements WordPressHooksInterface
                 return;
             }
 
-            $postData            = json_decode(wp_unslash($body), true);
+            // WordPress slashes $_POST but not the raw body, so stripping slashes here would destroy
+            // the JSON escapes and silently lose the selection.
+            $postData            = json_decode($body, true);
             $deliveryOptionsData = is_array($postData)
                 ? ($postData['extensions']["$namespace-delivery-options"] ?? null)
                 : null;
