@@ -227,6 +227,32 @@ it('stashes the blocks-checkout selection from the request body at order placeme
     expect(WC()->session->get(SESSION_KEY))->toBe(['carrier' => 'postnl']);
 });
 
+it('stashes the selection when the request body contains escaped characters', function () {
+    WC()->session->set(SESSION_KEY, null);
+
+    $request = new class {
+        public function get_body(): string
+        {
+            /**
+             * A quote anywhere in the checkout is sent as \" in the raw body. The raw body is not
+             * slashed by WordPress, so stripping slashes from it breaks the JSON and drops the fee.
+             */
+            return json_encode([
+                'customer_note' => 'Lever af bij de "achterdeur"',
+                'extensions'    => [
+                    'myparcelcom-delivery-options' => ['carrier' => 'postnl'],
+                ],
+            ]);
+        }
+    };
+
+    /** @var CartFeesHooks $hooks */
+    $hooks = Pdk::get(CartFeesHooks::class);
+    $hooks->stashBlocksCheckoutSelection(WC()->customer, $request);
+
+    expect(WC()->session->get(SESSION_KEY))->toBe(['carrier' => 'postnl']);
+});
+
 it('does not stash anything when the request body has no selection', function () {
     WC()->session->set(SESSION_KEY, null);
 
