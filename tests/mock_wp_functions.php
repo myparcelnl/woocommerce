@@ -218,13 +218,40 @@ function get_allowed_http_origins(): array
 }
 
 /**
+ * Mirrors WordPress, which strips slashes recursively. A no-op mock hides every bug where slashes
+ * are stripped from data WordPress never slashed, such as a raw REST request body.
+ *
  * @param $value
  *
  * @return mixed
  */
 function wp_unslash($value)
 {
-    return $value;
+    return stripslashes_deep($value);
+}
+
+/**
+ * @see \stripslashes_deep()
+ *
+ * @param $value
+ *
+ * @return mixed
+ */
+function stripslashes_deep($value)
+{
+    if (is_array($value)) {
+        return array_map('stripslashes_deep', $value);
+    }
+
+    if (is_object($value)) {
+        foreach (get_object_vars($value) as $key => $data) {
+            $value->{$key} = stripslashes_deep($data);
+        }
+
+        return $value;
+    }
+
+    return is_string($value) ? stripslashes($value) : $value;
 }
 
 /** @see \is_admin() */

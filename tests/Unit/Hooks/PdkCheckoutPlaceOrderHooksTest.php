@@ -85,3 +85,47 @@ it('saves delivery options for the blocks checkout', function ($orderId, $delive
         'expectedCarrier' => RefCapabilitiesSharedCarrierV2::POSTNL,
     ],
 ]);
+
+it('saves delivery options when the checkout body contains escaped characters', function () {
+    $namespace = PdkBootstrapper::PLUGIN_NAMESPACE;
+
+    /**
+     * A quote anywhere in the checkout is sent as \" in the raw body. The raw body is not slashed by
+     * WordPress, so stripping slashes from it breaks the JSON and silently loses the selection.
+     */
+    $body = json_encode([
+        'customer_note' => 'Lever af bij de "achterdeur"',
+        'extensions'    => [
+            "$namespace-delivery-options" => [
+                'carrier'     => 'dhlforyou',
+                'packageType' => 1,
+            ],
+        ],
+    ]);
+
+    $request = new class($body) {
+        /** @var string */
+        private $body;
+
+        public function __construct(string $body)
+        {
+            $this->body = $body;
+        }
+
+        public function get_body(): string
+        {
+            return $this->body;
+        }
+    };
+
+    $wcOrder = wpFactory(WC_Order::class)
+        ->withId(3)
+        ->make();
+
+    Pdk::get(PdkCheckoutPlaceOrderHooks::class)->saveBlocksDeliveryOptions($wcOrder, $request);
+
+    $pdkOrder = Pdk::get(PdkOrderRepositoryInterface::class)->get($wcOrder->get_id());
+
+    expect($pdkOrder->getDeliveryOptions()->getCarrier()->carrier)
+        ->toBe(RefCapabilitiesSharedCarrierV2::DHL_FOR_YOU);
+});

@@ -281,7 +281,9 @@ final class CartFeesHooks implements WordPressHooksInterface, WooCommerceInitCal
             return;
         }
 
-        $decoded = json_decode(wp_unslash($body), true);
+        // WordPress slashes $_POST but not the raw body, so stripping slashes here would destroy the
+        // JSON escapes and silently lose the selection.
+        $decoded = json_decode($body, true);
         $key     = PdkBootstrapper::PLUGIN_NAMESPACE . '-delivery-options';
         $data    = is_array($decoded) ? ($decoded['extensions'][$key] ?? null) : null;
 
