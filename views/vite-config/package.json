@@ -5,6 +5,11 @@
   "type": "module",
   "main": "index.js",
   "types": "index.d.ts",
+  "scripts": {
+    "test": "run ws:test \"$(pwd)\"",
+    "test:coverage": "run ws:test:coverage \"$(pwd)\"",
+    "test:run": "run ws:test:run \"$(pwd)\""
+  },
   "dependencies": {
     "@vitest/coverage-v8": "^4.1.11",
     "vite": "^8.3.1",

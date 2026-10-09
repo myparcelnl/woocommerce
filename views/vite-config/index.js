@@ -1,7 +1,38 @@
+import {createRequire} from 'node:module';
 import customTsConfig from 'vite-plugin-custom-tsconfig';
 import {mergeConfig} from 'vite';
 
 const dirname = new URL('.', import.meta.url).pathname;
+
+const VUE_DEMI_EXPORT_ALL = "export * from 'vue'";
+
+/**
+ * Make vue-demi re-export each Vue export by name instead of with `export * from 'vue'`.
+ *
+ * @TODO: Remove when Rolldown uses output.globals for `export * from` an external module in iife output.
+ *   Rolldown turns vue-demi's `export * from 'vue'` into `require("vue")`.
+ *   https://github.com/rolldown/rolldown/issues/11173
+ *
+ * @returns {import('vite').Plugin}
+ */
+const vueDemi = () => ({
+  name: 'myparcel-woocommerce:vue-demi',
+  apply: 'build',
+  transform(code, id) {
+    if (!id.endsWith('/vue-demi/lib/index.mjs')) {
+      return null;
+    }
+
+    if (!code.includes(VUE_DEMI_EXPORT_ALL)) {
+      throw new Error(`${id} no longer contains "${VUE_DEMI_EXPORT_ALL}", check if this plugin is still needed.`);
+    }
+
+    // Packages can have their own copy of vue-demi and vue, so read the vue next to this vue-demi.
+    const vueExports = Object.keys(createRequire(id)('vue')).filter((name) => name !== 'default');
+
+    return code.replace(VUE_DEMI_EXPORT_ALL, `export {${vueExports.join(', ')}} from 'vue'`);
+  },
+});
 
 /**
  * @type createDefaultConfig {import('vitest/config').UserConfigExport}
@@ -11,7 +42,7 @@ const createDefaultConfig = (env) => {
   const isDev = env.mode === 'development';
 
   return {
-    plugins: [customTsConfig()],
+    plugins: [customTsConfig(), vueDemi()],
     build: {
       // Vite 6 names the library CSS after the bundle, but PHP enqueues dist/style.css.
       lib: {cssFileName: 'style'},
@@ -29,6 +60,11 @@ const createDefaultConfig = (env) => {
         },
       },
     },
+
+    // Library mode leaves process.env.NODE_ENV in dependencies such as pinia, and the browser has no process.
+    // Vitest sets NODE_ENV itself.
+    define:
+      env.command === 'build' ? {'process.env.NODE_ENV': JSON.stringify(isDev ? 'development' : 'production')} : {},
 
     test: {
       reporters: ['default', ['junit', {outputFile: './junit.xml'}]],
