@@ -10,6 +10,7 @@ export default defineConfig({
       './views/frontend/checkout-separate-address-fields/vite.config.ts',
       './views/frontend/checkout-delivery-options/vite.config.ts',
       './views/frontend/checkout-address-widget/vite.config.ts',
+      './views/vite-config/vitest.config.js',
     ],
   },
 });

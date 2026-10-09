@@ -21,10 +21,6 @@ export default createViteConfig({
     },
   },
 
-  define: {
-    'process.env': {},
-  },
-
   test: {
     environment: 'happy-dom',
   },
