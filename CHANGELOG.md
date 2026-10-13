@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.10.4](https://github.com/myparcelnl/woocommerce/compare/v6.10.3...v6.10.4) (2026-10-13)
+
+### :bug: Bug Fixes
+
+* **build:** make the admin iife run under vite 8 ([#1974](https://github.com/myparcelnl/woocommerce/issues/1974)) ([f6efa71](https://github.com/myparcelnl/woocommerce/commit/f6efa71e43737312aa0e63c393f5213f6e7d766b)), closes [#1895](https://github.com/myparcelnl/woocommerce/issues/1895) [rolldown/rolldown#11173](https://github.com/rolldown/rolldown/issues/11173) [#1895](https://github.com/myparcelnl/woocommerce/issues/1895) [rolldown/rolldown#11173](https://github.com/rolldown/rolldown/issues/11173)
+* **checkout:** keep the chosen carrier when the order contains a quote ([#1973](https://github.com/myparcelnl/woocommerce/issues/1973)) ([3d53647](https://github.com/myparcelnl/woocommerce/commit/3d53647dc114c4deb629fcae9b1dc448776b4267))
+
 ## [6.10.3](https://github.com/myparcelnl/woocommerce/compare/v6.10.2...v6.10.3) (2026-10-06)
 
 
