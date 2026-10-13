@@ -22,7 +22,7 @@
     "@wordpress/blocks": "^16.0.0",
     "@wordpress/icons": "^17.0.0",
     "@wordpress/plugins": "^7.9.0",
-    "@wordpress/scripts": "^35.0.0",
+    "@wordpress/scripts": "^36.1.0",
     "react": "*",
     "react-dom": "*",
     "webpack": "^5.90.0",
