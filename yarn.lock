@@ -5258,7 +5258,7 @@ __metadata:
     "@vitejs/plugin-vue": "npm:^6.0.1"
     "@vue/test-utils": "npm:^2.3.2"
     autoprefixer: "npm:^10.4.14"
-    happy-dom: "npm:^20.14.5"
+    happy-dom: "npm:^21.0.1"
     jquery: "npm:^3.7.1"
     postcss: "npm:^8.4.21"
     sass: "npm:^1.60.0"
@@ -17674,9 +17674,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"happy-dom@npm:^20.14.5":
-  version: 20.14.5
-  resolution: "happy-dom@npm:20.14.5"
+"happy-dom@npm:^21.0.1":
+  version: 21.0.1
+  resolution: "happy-dom@npm:21.0.1"
   dependencies:
     "@types/node": "npm:>=20.0.0"
     "@types/whatwg-mimetype": "npm:^3.0.2"
@@ -17685,7 +17685,7 @@ __metadata:
     entities: "npm:^7.0.1"
     whatwg-mimetype: "npm:^3.0.0"
     ws: "npm:^8.21.0"
-  checksum: 10c0/c2f82774aaa42944918e5a8bd69e34e98f87f5d3f144b44829ba53ed1f49f11ad35598e96ee3cf49fc65dbddaed57ae3760d693e60ee245de87e3af1aeadf63e
+  checksum: 10c0/55d9c49dc5cad314cb3f0579de67f7f8f448ad277e547de43781504a86dc6ec4c43f0475eb795780d852db7ca43a15c0100025087c1078a27d2dec699d9949a1
   languageName: node
   linkType: hard
 
