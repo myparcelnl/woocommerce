@@ -1,5 +1,9 @@
 blank_issues_enabled: false
 contact_links:
+  - name: MyParcel Developer Portal
+    url: https://developer.myparcel.nl/
+    about: Check out our Developer Portal for information and guides on our API and integrations.
+
   - name: Contact customer support
-    url: https://www.myparcel.nl/services/contact/
+    url: https://www.myparcel.com/nl-NL/contact/
     about: For issues regarding your account and shipments.
