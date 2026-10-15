@@ -5403,7 +5403,6 @@ __metadata:
     "@vitest/coverage-v8": "npm:^4.1.11"
     typescript: "npm:^5.7.3"
     vite: "npm:^8.3.1"
-    vite-plugin-custom-tsconfig: "npm:^1.0.4"
     vitest: "npm:^4.1.11"
   languageName: unknown
   linkType: soft
@@ -27914,13 +27913,6 @@ __metadata:
   version: 1.1.2
   resolution: "vary@npm:1.1.2"
   checksum: 10c0/f15d588d79f3675135ba783c91a4083dcd290a2a5be9fcb6514220a1634e23df116847b1cc51f66bfb0644cf9353b2abb7815ae499bab06e46dd33c1a6bf1f4f
-  languageName: node
-  linkType: hard
-
-"vite-plugin-custom-tsconfig@npm:^1.0.4":
-  version: 1.0.4
-  resolution: "vite-plugin-custom-tsconfig@npm:1.0.4"
-  checksum: 10c0/ff6076bb29108d81d23038aa01de6c3b44aa749dd05a5f3a3457373609ce7cdef283c0036c74c29daf519e5a56a8fabe5e297c7c806d9dec1e906b8b398eeace
   languageName: node
   linkType: hard
 

@@ -14,11 +14,6 @@ coverage.xml
 
 docker-compose.override.yml
 
-views/**/tsconfig.json
-!views/backend/tsconfig.json
-!views/frontend/tsconfig.json
-!views/blocks/tsconfig.json
-
 *.zip
 .DS_Store
 

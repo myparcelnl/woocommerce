@@ -1,5 +1,4 @@
 import {createRequire} from 'node:module';
-import customTsConfig from 'vite-plugin-custom-tsconfig';
 import {mergeConfig} from 'vite';
 
 const dirname = new URL('.', import.meta.url).pathname;
@@ -42,7 +41,7 @@ const createDefaultConfig = (env) => {
   const isDev = env.mode === 'development';
 
   return {
-    plugins: [customTsConfig(), vueDemi()],
+    plugins: [vueDemi()],
     build: {
       // Vite 6 names the library CSS after the bundle, but PHP enqueues dist/style.css.
       lib: {cssFileName: 'style'},
