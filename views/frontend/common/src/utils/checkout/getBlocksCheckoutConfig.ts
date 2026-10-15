@@ -78,7 +78,10 @@ export const getBlocksCheckoutConfig = (): CheckoutConfig => {
           const currentShippingRate = getShippingRate();
           const currentCustomerData = wcCartStore.selectors.getCustomerData();
 
-          const shippingMethodChanged = previousShippingRate?.rate_id !== currentShippingRate?.rate_id;
+          // Wait until WooCommerce has saved the new rate, because the context request reads it from the server.
+          const shippingMethodChanged =
+            previousShippingRate?.rate_id !== currentShippingRate?.rate_id &&
+            !wcCartStore.selectors.isShippingRateBeingSelected?.();
           const customerDataChanged = previousCustomerData !== JSON.stringify(currentCustomerData);
 
           const saving = Boolean(wcCartStore.selectors.isCustomerDataUpdating?.());
@@ -92,8 +95,6 @@ export const getBlocksCheckoutConfig = (): CheckoutConfig => {
 
           if (shippingMethodChanged) {
             previousShippingRate = currentShippingRate;
-
-            await updateContext();
           }
 
           if (saveFinished) {
@@ -105,6 +106,10 @@ export const getBlocksCheckoutConfig = (): CheckoutConfig => {
           }
 
           callback();
+
+          if (shippingMethodChanged) {
+            await updateContext();
+          }
         });
       },
 
