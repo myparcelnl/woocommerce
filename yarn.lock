@@ -4957,15 +4957,15 @@ __metadata:
   linkType: hard
 
 "@myparcel-dev/pdk-admin-preset-default@npm:^2.2.2":
-  version: 2.2.7
-  resolution: "@myparcel-dev/pdk-admin-preset-default@npm:2.2.7"
+  version: 2.2.8
+  resolution: "@myparcel-dev/pdk-admin-preset-default@npm:2.2.8"
   dependencies:
     "@myparcel-dev/pdk-admin": "npm:^2.2.7"
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
     "@vuepic/vue-datepicker": "npm:^11.0.2"
     "@vueuse/core": "npm:^10.0.0"
     vue: "npm:3.4.31"
-  checksum: 10c0/dfdc2ada65e78069affd247ae4f545012ec0599c39f40f1e6e3e926c45dd3415454ba3a450f9d609a8168b6e920ec594060b3c86dc80ec9a48bb809e72cafcb5
+  checksum: 10c0/330d7bc8cd4f1f30a24117f066b7497a8d6729c71f7bdd4c9ff55c1abdf7acd561a19a2cfd0aa5e1c48473088fb648781554578b1b51314dcd9f6c0904042578
   languageName: node
   linkType: hard
 
@@ -4989,20 +4989,21 @@ __metadata:
   linkType: hard
 
 "@myparcel-dev/pdk-app-builder@npm:^4.1.4":
-  version: 4.1.4
-  resolution: "@myparcel-dev/pdk-app-builder@npm:4.1.4"
+  version: 4.1.5
+  resolution: "@myparcel-dev/pdk-app-builder@npm:4.1.5"
   dependencies:
     "@myparcel-dev/google-docs-importer": "npm:^1.0.2"
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
     chalk: "npm:^6.0.0"
     commander: "npm:^12.0.0"
     debug: "npm:^4.3.4"
+    fast-glob: "npm:^3.3.3"
     interpret: "npm:^3.1.1"
     liftoff: "npm:^5.0.0"
     radash: "npm:^12.1.0"
   bin:
     pdk-builder: ./bin/index.js
-  checksum: 10c0/55777830e8a4bc74729cbea64550a17a7a9e2b175043ebfdc61ab6c428e31c5c0ca10058728e2fbe8720e0541b1cf0ba9a6faac7a5c1169fbf0f4f01d063fd52
+  checksum: 10c0/2de589d71d6cc8b95d76d3d01b97d5310f730a64c6bc267c834d5122aef152cdbb403d503ce9b44a86c9b16a87b094774f896113fca547045163ab1343e51a62
   languageName: node
   linkType: hard
 
