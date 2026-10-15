@@ -153,8 +153,7 @@ final class TrackTraceHooks implements WordPressHooksInterface
             return false;
         }
 
-        // TODO: Replace with $pdkOrder->isDeliverable() when available
-        return $this->getPdkOrder($wcOrder)->lines->containsStrict('product.isDeliverable', true);
+        return $this->getPdkOrder($wcOrder)->isDeliverable();
     }
 
     /**
