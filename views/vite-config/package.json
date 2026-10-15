@@ -11,7 +11,7 @@
     "test:run": "run ws:test:run \"$(pwd)\""
   },
   "dependencies": {
-    "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/coverage-v8": "^5.0.4",
     "vite": "^8.3.1",
     "vitest": "^4.1.11"
   },
