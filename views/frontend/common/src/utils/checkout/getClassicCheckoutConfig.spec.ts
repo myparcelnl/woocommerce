@@ -8,7 +8,10 @@ vi.mock('@myparcel-dev/pdk-checkout-common', () => ({
   AddressType: {Billing: 'billing', Shipping: 'shipping'},
 }));
 
+const mocks = vi.hoisted(() => ({updateContext: vi.fn()}));
+
 vi.mock('@myparcel-dev/pdk-checkout', () => ({
+  updateContext: mocks.updateContext,
   AddressField: {
     Address1: 'address1',
     Address2: 'address2',
@@ -291,11 +294,18 @@ describe('getClassicCheckoutConfig - getAddressType', () => {
 });
 
 describe('getClassicCheckoutConfig - formChange', () => {
+  const listeners: [EventTarget, string, EventListener][] = [];
+
   beforeEach(() => {
+    // document.body outlives each test, so remove the listeners of earlier tests.
+    listeners.splice(0).forEach(([el, event, handler]) => el.removeEventListener(event, handler));
     document.body.innerHTML = '';
     // Minimal jQuery stub: jQuery(el).on('change', h) -> el.addEventListener('change', h).
     (globalThis as unknown as {jQuery: unknown}).jQuery = (el: EventTarget) => ({
-      on: (event: string, handler: EventListener) => el.addEventListener(event, handler),
+      on: (event: string, handler: EventListener) => {
+        listeners.push([el, event, handler]);
+        el.addEventListener(event, handler);
+      },
     });
   });
 
@@ -344,5 +354,32 @@ describe('getClassicCheckoutConfig - formChange', () => {
     document.body.dispatchEvent(new Event('updated_checkout', {bubbles: true}));
 
     expect(calls).toBe(1);
+  });
+
+  it('refreshes the context after WooCommerce saved a new shipping method', async () => {
+    document.body.innerHTML = SINGLE_FORM;
+    const order: string[] = [];
+    mocks.updateContext.mockReset().mockImplementation(() => {
+      order.push('updateContext');
+    });
+
+    getClassicCheckoutConfig().config.formChange(() => {
+      order.push('callback');
+    });
+    document.querySelector<HTMLInputElement>('input[name="shipping_method[0]"]')!.value = 'local_pickup:2';
+    document.body.dispatchEvent(new Event('updated_checkout', {bubbles: true}));
+
+    await vi.waitFor(() => expect(mocks.updateContext).toHaveBeenCalledTimes(1));
+    expect(order).toEqual(['callback', 'updateContext']);
+  });
+
+  it('does not refresh the context when the shipping method did not change', () => {
+    document.body.innerHTML = SINGLE_FORM;
+    mocks.updateContext.mockReset();
+
+    getClassicCheckoutConfig().config.formChange(() => undefined);
+    document.body.dispatchEvent(new Event('updated_checkout', {bubbles: true}));
+
+    expect(mocks.updateContext).not.toHaveBeenCalled();
   });
 });

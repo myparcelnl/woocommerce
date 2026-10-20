@@ -1,5 +1,5 @@
 import {AddressType} from '@myparcel-dev/pdk-checkout-common';
-import {AddressField, SeparateAddressField} from '@myparcel-dev/pdk-checkout';
+import {AddressField, SeparateAddressField, updateContext} from '@myparcel-dev/pdk-checkout';
 import {type CheckoutConfig} from '../../types';
 
 /**
@@ -29,6 +29,49 @@ const isHidden = (element: Element): boolean => hasDisplayNoneAncestor(element);
  */
 const isInHiddenContainer = (element: Element): boolean => hasDisplayNoneAncestor(element.parentElement);
 
+const SHIPPING_METHOD_FORM_DATA_KEY = 'shipping_method[0]';
+
+/**
+ * Read the form data of all checkout forms, without the hidden duplicates that Divi renders.
+ */
+const getFormData = (): Record<string, FormDataEntryValue> => {
+  const visibleNames = new Set<string>();
+  const formStates = getCheckoutForms().map((form) => {
+    const hiddenNames = new Set<string>();
+
+    for (const control of form.elements) {
+      const name = control.getAttribute('name');
+
+      if (!name) {
+        continue;
+      }
+
+      if (isInHiddenContainer(control)) {
+        hiddenNames.add(name);
+      } else {
+        visibleNames.add(name);
+      }
+    }
+
+    return {form, hiddenNames};
+  });
+
+  // Visible names are global because Divi puts duplicate fields in separate forms. Hidden names
+  // stay scoped to their form, so only the hidden duplicate is skipped. Unique hidden fields are
+  // valid form values and remain in the merged data.
+  return formStates.reduce<Record<string, FormDataEntryValue>>((merged, {form, hiddenNames}) => {
+    for (const [key, value] of new FormData(form).entries()) {
+      if (hiddenNames.has(key) && visibleNames.has(key)) {
+        continue;
+      }
+
+      merged[key] = value;
+    }
+
+    return merged;
+  }, {});
+};
+
 // eslint-disable-next-line max-lines-per-function
 export const getClassicCheckoutConfig = (): CheckoutConfig => {
   return {
@@ -48,7 +91,7 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
 
     fieldShippingMethod: 'shipping_method',
     fieldAddressType: 'ship_to_different_address',
-    shippingMethodFormDataKey: 'shipping_method[0]',
+    shippingMethodFormDataKey: SHIPPING_METHOD_FORM_DATA_KEY,
     addressTypeFormDataKey: 'ship_to_different_address',
 
     config: {
@@ -59,11 +102,24 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
           });
         });
 
+        let previousShippingMethod = getFormData()[SHIPPING_METHOD_FORM_DATA_KEY];
+
         // WooCommerce re-selects the shipping-method radio after its AJAX re-render WITHOUT a bubbling
         // `change`, so the form-level listener misses it; `updated_checkout` catches that. set() is
         // equality-guarded, so a redundant callback is a safe no-op.
-        jQuery(document.body).on('updated_checkout', () => {
+        jQuery(document.body).on('updated_checkout', async () => {
           callback();
+
+          const shippingMethod = getFormData()[SHIPPING_METHOD_FORM_DATA_KEY];
+
+          if (shippingMethod === previousShippingMethod) {
+            return;
+          }
+
+          previousShippingMethod = shippingMethod;
+
+          // The server has saved the new shipping method, which can change the package type and so the cart weight.
+          await updateContext();
         });
       },
 
@@ -78,43 +134,7 @@ export const getClassicCheckoutConfig = (): CheckoutConfig => {
         );
       },
 
-      getFormData() {
-        const visibleNames = new Set<string>();
-        const formStates = getCheckoutForms().map((form) => {
-          const hiddenNames = new Set<string>();
-
-          for (const control of form.elements) {
-            const name = control.getAttribute('name');
-
-            if (!name) {
-              continue;
-            }
-
-            if (isInHiddenContainer(control)) {
-              hiddenNames.add(name);
-            } else {
-              visibleNames.add(name);
-            }
-          }
-
-          return {form, hiddenNames};
-        });
-
-        // Visible names are global because Divi puts duplicate fields in separate forms. Hidden names
-        // stay scoped to their form, so only the hidden duplicate is skipped. Unique hidden fields are
-        // valid form values and remain in the merged data.
-        return formStates.reduce<Record<string, FormDataEntryValue>>((merged, {form, hiddenNames}) => {
-          for (const [key, value] of new FormData(form).entries()) {
-            if (hiddenNames.has(key) && visibleNames.has(key)) {
-              continue;
-            }
-
-            merged[key] = value;
-          }
-
-          return merged;
-        }, {});
-      },
+      getFormData,
 
       // The value js-pdk passes lags one form-read behind and omits an unchecked box; read the live DOM.
       getAddressType(): AddressType {
