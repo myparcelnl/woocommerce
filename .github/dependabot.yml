@@ -69,3 +69,7 @@ updates:
         patterns:
           - '@myparcel-pdk/*'
           - '@myparcel-dev/pdk-*'
+      npm-security:
+        applies-to: security-updates
+        patterns:
+          - '*'
