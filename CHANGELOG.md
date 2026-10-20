@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.11.0](https://github.com/myparcelnl/woocommerce/compare/v6.10.4...v6.11.0) (2026-10-20)
+
+### :sparkles: New Features
+
+* **admin:** show a spinner and a button in notifications ([#1929](https://github.com/myparcelnl/woocommerce/issues/1929)) ([8dca0da](https://github.com/myparcelnl/woocommerce/commit/8dca0da1b9332784a7364548fadf6f9063d6fbe1)), closes [myparcelnl/js-pdk#490](https://github.com/myparcelnl/js-pdk/issues/490) [myparcelnl/pdk#548](https://github.com/myparcelnl/pdk/issues/548)
+* **print:** let the frontend wait for bulk label pdfs ([#2007](https://github.com/myparcelnl/woocommerce/issues/2007)) ([ab42872](https://github.com/myparcelnl/woocommerce/commit/ab428724a96c6d026ab809367e91f10f2c5fea5a))
+
+### :bug: Bug Fixes
+
+* **checkout:** refresh the delivery options after a shipping method change ([#1906](https://github.com/myparcelnl/woocommerce/issues/1906)) ([dd8b53a](https://github.com/myparcelnl/woocommerce/commit/dd8b53af00eb48dc8717132f8b7f2d9ec87aa3f8)), closes [myparcelnl/prestashop#671](https://github.com/myparcelnl/prestashop/issues/671) [myparcelnl/prestashop#633](https://github.com/myparcelnl/prestashop/issues/633)
+
 ## [6.10.4](https://github.com/myparcelnl/woocommerce/compare/v6.10.3...v6.10.4) (2026-10-13)
 
 ### :bug: Bug Fixes
