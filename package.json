@@ -14,10 +14,10 @@
   "type": "module",
   "packageManager": "yarn@4.17.1",
   "engines": {
-    "node": "24.13.1"
+    "node": "^24.15.0"
   },
   "volta": {
-    "node": "24.13.1",
+    "node": "24.15.0",
     "yarn": "4.17.1"
   },
   "workspaces": [
