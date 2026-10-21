@@ -29,6 +29,11 @@ final class MockWpdb
     public $preparedOptionPattern;
 
     /**
+     * @var bool
+     */
+    public $suppress_errors = false;
+
+    /**
      * @var array
      */
     private $db = [
@@ -109,6 +114,35 @@ final class MockWpdb
     public function get_var(string $query): ?string
     {
         return $query;
+    }
+
+    /**
+     * Supports the option rename query: UPDATE ... SET option_name = REPLACE(option_name, 'from_', 'to_').
+     *
+     * @param  string $query
+     *
+     * @return int
+     */
+    public function query(string $query): int
+    {
+        if (! preg_match("/REPLACE\(option_name, '([^']*)', '([^']*)'\)/", $query, $matches)) {
+            return 0;
+        }
+
+        [, $from, $to] = $matches;
+        $renamed = 0;
+
+        foreach (WordPressOptions::$options as $name => $value) {
+            if (false === strpos($name, $from)) {
+                continue;
+            }
+
+            WordPressOptions::deleteOption($name);
+            WordPressOptions::updateOption(str_replace($from, $to, $name), $value);
+            $renamed++;
+        }
+
+        return $renamed;
     }
 
     /**

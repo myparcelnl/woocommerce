@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Migration;
 
 use MyParcelNL\Pdk\Base\PdkBootstrapper;
+use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\SdkApi\Service\CoreApi\Shipment\CapabilitiesService;
+use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
 
 final class Migration6_0_0 extends AbstractMigration
 {
@@ -25,6 +28,33 @@ final class Migration6_0_0 extends AbstractMigration
         $this->changeNamespace('myparcelbe', PdkBootstrapper::PLUGIN_NAMESPACE);
         $this->changeNamespace('myparcelnl', PdkBootstrapper::PLUGIN_NAMESPACE);
         \wp_cache_flush();
+
+        $settingsRepository = Pdk::get(PdkSettingsRepositoryInterface::class);
+
+        $renamedOptionNames = $this->getRenamedOptionNames();
+
+        foreach ($renamedOptionNames as $optionName) {
+            $value = \get_option($optionName);
+            $settingsRepository->store($optionName, $value);
+        }
+
+        Pdk::get(CapabilitiesService::class)->refreshApiConfig();
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getRenamedOptionNames(): array
+    {
+        global $wpdb;
+
+        $prefix = '_' . PdkBootstrapper::PLUGIN_NAMESPACE . '_';
+        $query  = $wpdb->prepare(
+            "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
+            $wpdb->esc_like($prefix) . '%'
+        );
+
+        return array_values(array_filter((array) $wpdb->get_col($query), 'is_string'));
     }
 
     private function changeNamespace(string $from, string $to): void
