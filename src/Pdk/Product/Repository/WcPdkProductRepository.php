@@ -118,13 +118,11 @@ class WcPdkProductRepository extends AbstractPdkPdkProductRepository
     private function getWcProduct($identifier): WC_Product
     {
         if ($identifier instanceof WC_Product) {
-            $product = $identifier;
-        } else {
-            $product = $this->retrieve("wc_product$identifier", function () use ($identifier) {
-                return wc_get_product($identifier);
-            });
+            return $identifier;
         }
 
-        return $product;
+        // Not via retrieve(): it returns a clone, and cloning a WC_Product clears its meta ids. If a filter
+        // saves that clone, all meta is inserted again and doubles on every save.
+        return wc_get_product($identifier);
     }
 }
