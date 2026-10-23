@@ -73,6 +73,12 @@ function delete_option(string $option): bool
     return WordPressOptions::deleteOption($option);
 }
 
+/** @see \wp_cache_flush() */
+function wp_cache_flush(): bool
+{
+    return true;
+}
+
 /** @see \apply_filters() */
 function apply_filters($tag, $value, ...$args)
 {
