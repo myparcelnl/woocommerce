@@ -4932,49 +4932,49 @@ __metadata:
   linkType: hard
 
 "@myparcel-dev/pdk-admin-component-tests@npm:^2.2.8":
-  version: 2.3.0
-  resolution: "@myparcel-dev/pdk-admin-component-tests@npm:2.3.0"
+  version: 2.4.0
+  resolution: "@myparcel-dev/pdk-admin-component-tests@npm:2.4.0"
   dependencies:
-    "@myparcel-dev/pdk-admin": "npm:^2.3.0"
+    "@myparcel-dev/pdk-admin": "npm:^2.4.0"
     "@pinia/testing": "npm:>= 0.1.0 < 1"
     "@vue/test-utils": "npm:^2.5.1"
     pinia: "npm:^2.0.0"
     vitest: "npm:^4.1.11"
   peerDependencies:
     vue: 3.4.31
-  checksum: 10c0/0fc55b830fa8f4c4837732eb81c4bf19b8e5be1ee0f00998799cf19f84f1d8e82771b53c7c1735147eb47f9a90e73c5f4a2460590be0c794af2cb06997c69fee
+  checksum: 10c0/0ad8a7789c0e90d4cd8a31d011c8d4d36636f63bcc9721a745809924c989b52235c83e92297e28d78612ae34a84fe878cf95b4d6b76630a37bdda5588b0695bb
   languageName: node
   linkType: hard
 
 "@myparcel-dev/pdk-admin-preset-dashicons@npm:^2.2.2":
-  version: 2.3.0
-  resolution: "@myparcel-dev/pdk-admin-preset-dashicons@npm:2.3.0"
+  version: 2.4.0
+  resolution: "@myparcel-dev/pdk-admin-preset-dashicons@npm:2.4.0"
   dependencies:
-    "@myparcel-dev/pdk-admin": "npm:^2.3.0"
+    "@myparcel-dev/pdk-admin": "npm:^2.4.0"
     vue: "npm:3.4.31"
-  checksum: 10c0/f8d6ea8d007c69a78327ed05dcb9a9eeea2448fb9cdd7a9d92f5fc470ab1b04083f121307d5271ef0c5e92c3629861ea2252a764c9c22b2e90986c59896ca906
+  checksum: 10c0/d546edc18aa5ce62836b6de74498c65ad5c32c80d40105694f6d2827448a19324dcf550dcc50c60e7b0cdd12445ee28f49b31aca0dccd814511242937ad404b4
   languageName: node
   linkType: hard
 
 "@myparcel-dev/pdk-admin-preset-default@npm:^2.2.2":
-  version: 2.3.0
-  resolution: "@myparcel-dev/pdk-admin-preset-default@npm:2.3.0"
+  version: 2.4.0
+  resolution: "@myparcel-dev/pdk-admin-preset-default@npm:2.4.0"
   dependencies:
-    "@myparcel-dev/pdk-admin": "npm:^2.3.0"
+    "@myparcel-dev/pdk-admin": "npm:^2.4.0"
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
     "@vuepic/vue-datepicker": "npm:^11.0.2"
     "@vueuse/core": "npm:^10.0.0"
     vue: "npm:3.4.31"
-  checksum: 10c0/4514e83d27408c6cb92de183294386ceb77ad42ae83bdb64502d6c0d956ff07bb0dd64ea8566f696dbeb64f89fada845248cfb15920d54010cae522c6bea3230
+  checksum: 10c0/0223045216aec1fd917c3e5a552ca372249f9b5165f16cbfcc932cbd428f8e5a565fec5b19c9b9b387ae2241e1a3437349d9aa9bfc61f454c1a4de96ee68db53
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-admin@npm:^2.2.2, @myparcel-dev/pdk-admin@npm:^2.3.0":
-  version: 2.3.0
-  resolution: "@myparcel-dev/pdk-admin@npm:2.3.0"
+"@myparcel-dev/pdk-admin@npm:^2.2.2, @myparcel-dev/pdk-admin@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "@myparcel-dev/pdk-admin@npm:2.4.0"
   dependencies:
     "@myparcel-dev/constants": "npm:^2.9.0"
-    "@myparcel-dev/pdk-common": "npm:^2.3.0"
+    "@myparcel-dev/pdk-common": "npm:^2.3.1"
     "@myparcel-dev/sdk": "npm:^5.1.0"
     "@myparcel-dev/vue-form-builder": "npm:1.0.0-beta.42.6"
     "@tanstack/vue-query": "npm:~4.43.0"
@@ -4984,7 +4984,7 @@ __metadata:
     lodash-unified: "npm:^1.0.3"
     pinia: "npm:^2.0.0"
     vue: "npm:3.4.31"
-  checksum: 10c0/9aaf917620881ebfdebf4853300ba28fabfb2a3ecd710ce99e91198b8eba363c72d508e44e217b977ad15684384de9a1562dc04d4e40a666ffbea6037d4da335
+  checksum: 10c0/91ff6a129a3159175b6f56bbd5e7a1fbc6e0bc8007b6013a1e803150537df8b93090c4343fa18cb7fe129f1a588e8fdb557e78d7ee3cfbb8c1f753af0356a2c3
   languageName: node
   linkType: hard
 
@@ -5007,67 +5007,67 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-checkout-common@npm:^2.2.0, @myparcel-dev/pdk-checkout-common@npm:^2.2.2":
-  version: 2.2.2
-  resolution: "@myparcel-dev/pdk-checkout-common@npm:2.2.2"
+"@myparcel-dev/pdk-checkout-common@npm:^2.2.0, @myparcel-dev/pdk-checkout-common@npm:^2.2.3":
+  version: 2.2.3
+  resolution: "@myparcel-dev/pdk-checkout-common@npm:2.2.3"
   dependencies:
     "@myparcel-dev/constants": "npm:^2.7.0"
     "@myparcel-dev/delivery-options": "npm:^7.5.0"
-    "@myparcel-dev/pdk-common": "npm:^2.3.0"
+    "@myparcel-dev/pdk-common": "npm:^2.3.1"
     radash: "npm:^12.1.0"
-  checksum: 10c0/3f84be181b87a8280e1ef6bb481c686fdf2a09d18605249a78028f9c5d1f8c07f8ad702436d4daad968e523ee00baeb752069559e805672cc775fda819a73d91
+  checksum: 10c0/2c8723b7f81a6c462e48be3b4328c1da6da148d227dfb35721c1088f56aac771e17d540a5dcae45725e324d7d15267b0dfedee6cfef8ba50926e35d49ba0f790
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-checkout-delivery-options@npm:^2.2.2":
-  version: 2.2.2
-  resolution: "@myparcel-dev/pdk-checkout-delivery-options@npm:2.2.2"
+"@myparcel-dev/pdk-checkout-delivery-options@npm:^2.2.3":
+  version: 2.2.3
+  resolution: "@myparcel-dev/pdk-checkout-delivery-options@npm:2.2.3"
   dependencies:
     "@myparcel-dev/delivery-options": "npm:^7.5.0"
-    "@myparcel-dev/pdk-checkout-common": "npm:^2.2.2"
+    "@myparcel-dev/pdk-checkout-common": "npm:^2.2.3"
     "@myparcel-dev/ts-utils": "npm:^1.15.0"
-  checksum: 10c0/87b859de6cbdf945ac70c5a3c862a8ffed3424300dbeb072a99bd9bbf4cff56b86e474c517a73faa1346c7c6f0b8d85e47a34a918db7d9c5b20ece25f7a00e02
+  checksum: 10c0/6e166a16d0dd726a299a0091eda352c73fbad69bde37fff5109bdfb2af00c7a8334185f42da006a2e662832f45456b121bda261b18d6f41ccb6fc2a993fdbac1
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-checkout-separate-address-fields@npm:^2.2.2":
-  version: 2.2.2
-  resolution: "@myparcel-dev/pdk-checkout-separate-address-fields@npm:2.2.2"
+"@myparcel-dev/pdk-checkout-separate-address-fields@npm:^2.2.3":
+  version: 2.2.3
+  resolution: "@myparcel-dev/pdk-checkout-separate-address-fields@npm:2.2.3"
   dependencies:
-    "@myparcel-dev/pdk-checkout-common": "npm:^2.2.2"
-  checksum: 10c0/2a445efdbb4b47fa96e46e06f5774ed6f845e03ce358243afa46dac55121341b0a2533b076a5df185f289d4c81ee82e34908b4a1414677ad52803bd475af5235
+    "@myparcel-dev/pdk-checkout-common": "npm:^2.2.3"
+  checksum: 10c0/3f75c2683cc697d30b1c85b3c453eb15a0be2fd02b3da7753597201501e954d678d368effc7c4819704ffa5f02dae33939113f573b778ecce4539a70b7d7fe79
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-checkout-tax-fields@npm:^2.2.2":
-  version: 2.2.2
-  resolution: "@myparcel-dev/pdk-checkout-tax-fields@npm:2.2.2"
+"@myparcel-dev/pdk-checkout-tax-fields@npm:^2.2.3":
+  version: 2.2.3
+  resolution: "@myparcel-dev/pdk-checkout-tax-fields@npm:2.2.3"
   dependencies:
     "@myparcel-dev/constants": "npm:^2.7.0"
-    "@myparcel-dev/pdk-checkout-common": "npm:^2.2.2"
-  checksum: 10c0/37f90bf822f36968ef116b398acdd47db2885eb31f50eeced81602323448b4848e3049669f7d58029262b843a3e74959ee97d571fb5bf926eba7763467f84a46
+    "@myparcel-dev/pdk-checkout-common": "npm:^2.2.3"
+  checksum: 10c0/34d358e7155e45007c1fd69a5e920b542f2bc386cd799055ddbc900a0feaf42048b7fdfe6b2b2bbcbcfe6eff098f0545f12420e0fc6f85d30de8aad1125d875d
   languageName: node
   linkType: hard
 
 "@myparcel-dev/pdk-checkout@npm:^2.2.0":
-  version: 2.2.2
-  resolution: "@myparcel-dev/pdk-checkout@npm:2.2.2"
+  version: 2.2.3
+  resolution: "@myparcel-dev/pdk-checkout@npm:2.2.3"
   dependencies:
-    "@myparcel-dev/pdk-checkout-common": "npm:^2.2.2"
-    "@myparcel-dev/pdk-checkout-delivery-options": "npm:^2.2.2"
-    "@myparcel-dev/pdk-checkout-separate-address-fields": "npm:^2.2.2"
-    "@myparcel-dev/pdk-checkout-tax-fields": "npm:^2.2.2"
-  checksum: 10c0/9bc413a0bc0eb0484d2820501238cc583a5222133e6447f718b94290b292fb1a5b254820dbf1706c7deef648ac6890d1f327baf76fdd5daad6914e699d05ee4e
+    "@myparcel-dev/pdk-checkout-common": "npm:^2.2.3"
+    "@myparcel-dev/pdk-checkout-delivery-options": "npm:^2.2.3"
+    "@myparcel-dev/pdk-checkout-separate-address-fields": "npm:^2.2.3"
+    "@myparcel-dev/pdk-checkout-tax-fields": "npm:^2.2.3"
+  checksum: 10c0/9d8750d3aa41a33cefaf829c5ad66b7119bedf27f6675f9525838510fc2668d780b985b13d94163ae0fa48e6d12ea020289c4734a3cd49bf920707fa9dee5d67
   languageName: node
   linkType: hard
 
-"@myparcel-dev/pdk-common@npm:^2.3.0":
-  version: 2.3.0
-  resolution: "@myparcel-dev/pdk-common@npm:2.3.0"
+"@myparcel-dev/pdk-common@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "@myparcel-dev/pdk-common@npm:2.3.1"
   dependencies:
     "@myparcel-dev/constants": "npm:^2.7.0"
     "@myparcel-dev/delivery-options": "npm:^7.5.0"
-  checksum: 10c0/b5a9bbbc8ae29ad27fe291afbac0cc90ea7c52cac67ee76852f97373dc38c23bcf504d064717017b0e5ebfec90c90d45d34560b338715a088f435f3dac0091f4
+  checksum: 10c0/adb2e1c9ad7caa0187035941c08ec8fe6815f65c2e7663e4310d9d53148a542121db7dd017d8cf8e3d3b06a4f85874b614f53ba9d1bbad9de838c5bfec2e32e6
   languageName: node
   linkType: hard
 
