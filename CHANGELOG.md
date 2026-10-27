@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.12.0](https://github.com/myparcelnl/woocommerce/compare/v6.11.0...v6.12.0) (2026-10-27)
+
+### :sparkles: New Features
+
+* **address:** allow filtering address fields with mpwc_checkout_wc_address_fields ([#1962](https://github.com/myparcelnl/woocommerce/issues/1962)) ([721e75d](https://github.com/myparcelnl/woocommerce/commit/721e75d3ed5e2e4e1b5e13d356b7a1a7e2cea4e6)), closes [#1798](https://github.com/myparcelnl/woocommerce/issues/1798) [myparcelnl/developer-portal#66](https://github.com/myparcelnl/developer-portal/issues/66) [#1367](https://github.com/myparcelnl/woocommerce/issues/1367) [#1798](https://github.com/myparcelnl/woocommerce/issues/1798) [myparcelnl/developer-portal#66](https://github.com/myparcelnl/developer-portal/issues/66)
+* **admin:** allow dynamic request headers ([#2013](https://github.com/myparcelnl/woocommerce/issues/2013)) ([2f4678f](https://github.com/myparcelnl/woocommerce/commit/2f4678f9314e79cbc3922f309d0ed66413bc0093))
+
+### :bug: Bug Fixes
+
+* **migration:** keep the carriers when upgrading from 5.x in one step ([#2012](https://github.com/myparcelnl/woocommerce/issues/2012)) ([96c1b2f](https://github.com/myparcelnl/woocommerce/commit/96c1b2f4213b664c76e4a0f615f4806da0da5246)), closes [#1677](https://github.com/myparcelnl/woocommerce/issues/1677) [#1648](https://github.com/myparcelnl/woocommerce/issues/1648)
+* **product:** stop product meta from doubling on every save ([#2008](https://github.com/myparcelnl/woocommerce/issues/2008)) ([4fbae1d](https://github.com/myparcelnl/woocommerce/commit/4fbae1d6e16291f9bbf32ca9e533e5a5119754e1)), closes [#2004](https://github.com/myparcelnl/woocommerce/issues/2004) [#1064](https://github.com/myparcelnl/woocommerce/issues/1064)
+
 ## [6.11.0](https://github.com/myparcelnl/woocommerce/compare/v6.10.4...v6.11.0) (2026-10-20)
 
 ### :sparkles: New Features
