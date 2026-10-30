@@ -114,6 +114,8 @@ The minimum PHP version is in `readme.txt` (`Requires PHP`) and in `composer.jso
 
 - The plugin runs inside a Docker-based WordPress setup. Use `docker compose exec php wp ...` from the docker-wordpress project root for WP-CLI commands.
 
+The prerequisites and the shared nx targets of the JavaScript packages are in `CONTRIBUTING.md`. Run a target in one package with `pnpm nx <target> <package name>`. The shared targets are nx targets, not package scripts, so `pnpm <target>` does not work inside a package folder.
+
 ### Building JS (nx cache gotcha)
 
 Editing the shared `views/frontend/common` package does **not** invalidate nx's build cache for

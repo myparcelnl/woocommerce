@@ -45,13 +45,37 @@
       "outputs": ["{projectRoot}/dist"]
     },
     "test:coverage": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "vitest run --coverage"
+      },
       "cache": true,
       "inputs": ["test"],
       "outputs": ["{projectRoot}/coverage", "{projectRoot}/junit.xml"]
     },
     "test:run": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "vitest run"
+      },
       "cache": true,
       "inputs": ["test"]
+    },
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "rimraf dist lib coverage"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "vitest"
+      }
     }
   },
   "tasksRunnerOptions": {

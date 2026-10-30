@@ -56,6 +56,17 @@ To run the frontend tests:
 pnpm test:run
 ```
 
+The JavaScript packages in `views/` share the nx targets `clean`, `test`, `test:coverage` and `test:run`. The command of
+each target is in `targetDefaults` in `nx.json`. A package lists the targets it uses under `nx.targets` in its
+`package.json`. To run a target for one package:
+
+```shell
+pnpm nx test:run @myparcel-woocommerce/frontend-common
+```
+
+`build`, `build:dev` and `build:test` stay as scripts in each `package.json`. `views/blocks/delivery-options` uses
+`wp-scripts build`, the other packages use `vite build`.
+
 To run the PHP tests:
 
 ```shell
