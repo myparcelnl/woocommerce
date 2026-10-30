@@ -11,7 +11,7 @@
       "{workspaceRoot}/package.json",
       "{workspaceRoot}/tsconfig.*.json",
       "{workspaceRoot}/views/vite-config/**/*",
-      "{workspaceRoot}/yarn.lock",
+      "{workspaceRoot}/pnpm-lock.yaml",
       "{projectRoot}/**/*"
     ],
     "production": [

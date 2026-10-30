@@ -1,0 +1,33 @@
+allowBuilds:
+  '@parcel/watcher': false
+  core-js: false
+  core-js-pure: false
+  nx: false
+  unrs-resolver: false
+  vue-demi: false
+
+autoDedupe: true
+
+# Same patterns as the cooldown exclude in .github/dependabot.yml, so a new release of our own packages installs at once.
+minimumReleaseAgeExclude:
+  - '@myparcel/*'
+  - '@myparcel-dev/*'
+  - '@myparcel-eslint/*'
+  - '@myparcel-pdk/*'
+
+overrides:
+  '@typescript-eslint/eslint-plugin': ^5.0.0
+  '@typescript-eslint/parser': ^5.0.0
+  axios: ^1.20.0
+  eslint-plugin-prettier: ^4.2.0
+  react: ^18
+  react-dom: ^18
+  tar: ^7.5.22
+
+packages:
+  - 'views/**'
+
+# @todo INT-892 remove pmOnFail and engines.pnpm in package.json once https://github.com/dependabot/dependabot-core/issues/15904 is fixed.
+# A pinned pnpm version makes pnpm 12 write a two-document pnpm-lock.yaml, and the GitHub dependency graph does not read it, so
+# Dependabot alerts and security updates stop. engines.pnpm blocks pnpm 11 and older in the meantime.
+pmOnFail: ignore

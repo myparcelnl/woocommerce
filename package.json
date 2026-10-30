@@ -12,31 +12,20 @@
   },
   "license": "MIT",
   "type": "module",
-  "packageManager": "yarn@4.17.1",
-  "engines": {
-    "node": "^24.15.0"
-  },
-  "volta": {
-    "node": "24.15.0",
-    "yarn": "4.17.1"
-  },
-  "workspaces": [
-    "views/**"
-  ],
   "scripts": {
-    "analyse": "yarn docker composer analyse",
-    "analyse:generate": "yarn docker composer analyse:generate",
-    "analyze": "yarn docker composer analyze",
-    "analyze:generate": "yarn docker composer analyze:generate",
-    "build": "yarn build:js",
-    "build:dev": "yarn build:js:dev",
+    "analyse": "pnpm docker composer analyse",
+    "analyse:generate": "pnpm docker composer analyse:generate",
+    "analyze": "pnpm docker composer analyze",
+    "analyze:generate": "pnpm docker composer analyze:generate",
+    "build": "pnpm build:js",
+    "build:dev": "pnpm build:js:dev",
     "build:js": "nx run-many --output-style=stream --target=build",
     "build:js:dev": "nx run-many --output-style=stream --target=build:dev",
-    "build:js:dev:backend": "yarn build:js:dev --projects='*/backend-*'",
-    "build:js:dev:blocks": "yarn build:js:dev --projects='*/block-*'",
-    "build:js:dev:frontend": "yarn build:js:dev --projects='*/frontend-*'",
+    "build:js:dev:backend": "pnpm build:js:dev --projects='*/backend-*'",
+    "build:js:dev:blocks": "pnpm build:js:dev --projects='*/block-*'",
+    "build:js:dev:frontend": "pnpm build:js:dev --projects='*/frontend-*'",
     "build:js:test": "nx run-many --output-style=stream --target=build:test",
-    "build:test": "yarn build:js:test",
+    "build:test": "pnpm build:js:test",
     "clean": "nx run-many --output-style=stream --parallel=99 --target=clean",
     "docker": "docker compose run --rm -it php",
     "docker:build": "docker build -t myparcelnl/woocommerce .",
@@ -46,36 +35,20 @@
     "test": "nx run-many --output-style=stream --target=test",
     "test:coverage": "nx run-many --output-style=stream --target=test:coverage",
     "test:run": "nx run-many --output-style=stream --target=test:run",
-    "translations:import": "yarn pdk-builder translations",
+    "translations:import": "pnpm pdk-builder translations",
     "update-wc-types": "bash private/updateTypes.sh",
-    "watch": "yarn build:js:dev --parallel=99 -- --watch",
-    "watch:backend": "yarn build:js:dev:backend --parallel=99 -- --watch",
-    "watch:blocks": "yarn build:js:dev:blocks --parallel=99 -- --watch",
-    "watch:frontend": "yarn build:js:dev:frontend --parallel=99 -- --watch",
-    "watch:test": "yarn build:js:test --parallel=99 -- --watch",
-    "ws:build": "vite build",
-    "ws:build:dev": "vite build --mode development",
-    "ws:build:test": "vite build --mode test",
-    "ws:clean": "cd $0 && rimraf dist lib coverage",
-    "ws:test": "cd $0 && vitest",
-    "ws:test:coverage": "cd $0 && vitest run --coverage",
-    "ws:test:run": "cd $0 && vitest run"
+    "watch": "pnpm build:js:dev --parallel=99 -- --watch",
+    "watch:backend": "pnpm build:js:dev:backend --parallel=99 -- --watch",
+    "watch:blocks": "pnpm build:js:dev:blocks --parallel=99 -- --watch",
+    "watch:frontend": "pnpm build:js:dev:frontend --parallel=99 -- --watch",
+    "watch:test": "pnpm build:js:test --parallel=99 -- --watch"
   },
   "lint-staged": {
     "*.{ts,vue}": "eslint --fix",
     "*.{md,json,yml,css,scss}": "prettier --write",
-    "package.json": "npx sort-package-json"
+    "package.json": "pnpm dlx sort-package-json"
   },
   "prettier": "@myparcel-dev/prettier-config",
-  "resolutions": {
-    "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "@typescript-eslint/parser": "^5.0.0",
-    "eslint-plugin-prettier": "^4.2.0",
-    "react": "^18",
-    "react-dom": "^18",
-    "tar": "^7.5.22",
-    "axios": "^1.20.0"
-  },
   "devDependencies": {
     "@myparcel-dev/eslint-config-esnext": "^1.4.0",
     "@myparcel-dev/eslint-config-import": "^1.3.0",
@@ -113,5 +86,22 @@
     "semantic-release": "^25.0.2",
     "typescript": "^5.7.3",
     "vitest": "^4.1.11"
+  },
+  "packageManager": "pnpm@12.14.0",
+  "engines": {
+    "node": ">=24.21.0",
+    "pnpm": ">=12.6.0"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^24.21",
+      "onFail": "download"
+    },
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^12.6",
+      "onFail": "download"
+    }
   }
 }

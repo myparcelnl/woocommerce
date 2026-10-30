@@ -36,7 +36,7 @@ export default defineConfig({
      * Run the build target in all workspaces.
      */
     beforeCopy() {
-      const buffer = spawnSync('yarn', ['nx', 'run-many', '--target=build', '--output-style=stream'], {
+      const buffer = spawnSync('pnpm', ['nx', 'run-many', '--target=build', '--output-style=stream'], {
         stdio: 'inherit',
       });
 

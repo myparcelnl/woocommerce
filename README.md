@@ -61,6 +61,5 @@ Run `composer console list` to see all available commands, or `composer console 
 [filters and actions]: https://developer.myparcel.com/platforms/woocommerce.html#17-for-developers-filters-and-actions
 [Plugin manual]: https://developer.myparcel.nl/nl/documentatie/10.woocommerce.html
 [WordPress plugin repository]: https://wordpress.org/plugins/woocommerce-myparcel/
-[Yarn]: https://classic.yarnpkg.com/en/docs/install
 [generate one]: https://myparcelnl.github.io/woocommerce/#2_A
 [latest release]: https://github.com/myparcelnl/woocommerce/releases/latest
