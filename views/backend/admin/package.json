@@ -6,11 +6,7 @@
   "scripts": {
     "build": "vite build",
     "build:dev": "vite build --mode development",
-    "build:test": "vite build --mode test",
-    "clean": "rimraf dist lib coverage",
-    "test": "vitest",
-    "test:coverage": "vitest run --coverage",
-    "test:run": "vitest run"
+    "build:test": "vite build --mode test"
   },
   "dependencies": {
     "@myparcel-dev/pdk-admin": "^2.2.2",
@@ -37,5 +33,13 @@
     "typescript": "^5.7.3",
     "vite": "^8.3.1",
     "vue": "3.4.31"
+  },
+  "nx": {
+    "targets": {
+      "clean": {},
+      "test": {},
+      "test:coverage": {},
+      "test:run": {}
+    }
   }
 }
