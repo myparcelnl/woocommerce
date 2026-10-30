@@ -3,9 +3,10 @@
 ## Prerequisites
 
 - [Docker]
-- [Volta] or [Node]
-
-> If you don't want to use Volta, make sure to use the Node version in the `volta.node` key in [./package.json].
+- [Node] 24.21 or later
+- [pnpm] 12.6 or later
+- No Volta on your machine. Its `yarn` does not go through corepack, so the `packageManager` field in `package.json`
+  does not stop it.
 
 ## Steps
 
@@ -17,16 +18,16 @@ Install composer dependencies with Docker:
 docker compose up php
 ```
 
-Install yarn dependencies:
+Install pnpm dependencies:
 
 ```shell
-yarn
+pnpm install
 ```
 
 ### Build the plugin
 
 ```shell
-yarn build
+pnpm build
 ```
 
 This will build the plugin and output a version for each platform to the `dist` folder.
@@ -38,7 +39,7 @@ This will build the plugin and output a version for each platform to the `dist` 
 If you run into issues where the plugin settings or other screens do not render, you may resolve these by running the following command:
 
 ```shell
-yarn pdk-builder translations
+pnpm pdk-builder translations
 ```
 
 Follow our [Developer Guide for contributing to MyParcel repositories].
@@ -52,8 +53,19 @@ You should always run the automated tests.
 To run the frontend tests:
 
 ```shell
-yarn test:run
+pnpm test:run
 ```
+
+The JavaScript packages in `views/` share the nx targets `clean`, `test`, `test:coverage` and `test:run`. The command of
+each target is in `targetDefaults` in `nx.json`. A package lists the targets it uses under `nx.targets` in its
+`package.json`. To run a target for one package:
+
+```shell
+pnpm nx test:run @myparcel-woocommerce/frontend-common
+```
+
+`build`, `build:dev` and `build:test` stay as scripts in each `package.json`. `views/blocks/delivery-options` uses
+`wp-scripts build`, the other packages use `vite build`.
 
 To run the PHP tests:
 
@@ -78,13 +90,13 @@ This is only sufficient if you're running WordPress locally and your source dire
 Run this after every change:
 
 ```shell
-yarn build
+pnpm build
 ```
 
 Or run this to monitor your changes and rebuild automatically:
 
 ```shell
-yarn watch
+pnpm watch
 ```
 
 ##### Using a remote WordPress instance
@@ -92,7 +104,7 @@ yarn watch
 Build plugin files:
 
 ```shell
-yarn build
+pnpm build
 ```
 
 The folder structure should look like this:
@@ -110,5 +122,5 @@ You can also upload the plugin folder manually using FTP.
 [Developer Guide for contributing to MyParcel repositories ]: https://github.com/myparcelnl/developer/blob/main/DEVELOPERS.md#developer-guide-for-contributing-to-myparcel-repositories
 [conventional commits]: https://www.conventionalcommits.org/
 [docker]: https://www.docker.com/
-[volta]: https://volta.sh/
+[pnpm]: https://pnpm.io/
 [node]: https://nodejs.org/

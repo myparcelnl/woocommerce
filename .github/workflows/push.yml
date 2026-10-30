@@ -26,7 +26,7 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - uses: myparcelnl/actions/pdk-prerelease@v5
+      - uses: myparcelnl/actions/pdk-prerelease@v6
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
@@ -52,5 +52,5 @@ jobs:
       - analyse
       - build
     if: always() && contains(needs.*.result, 'failure')
-    uses: myparcelnl/actions/.github/workflows/notify-on-failure.yml@v5
+    uses: myparcelnl/actions/.github/workflows/notify-on-failure.yml@v6
     secrets: inherit
