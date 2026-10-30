@@ -5,11 +5,16 @@
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
-    "test": "run ws:test \"$(pwd)\"",
-    "test:coverage": "run ws:test:coverage \"$(pwd)\"",
-    "test:run": "run ws:test:run \"$(pwd)\""
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:run": "vitest run"
+  },
+  "dependencies": {
+    "@myparcel-dev/pdk-checkout": "^2.2.3",
+    "@myparcel-dev/pdk-checkout-common": "^2.2.3"
   },
   "devDependencies": {
+    "@myparcel-woocommerce/vite-config": "workspace:*",
     "typescript": "^5.7.3"
   }
 }

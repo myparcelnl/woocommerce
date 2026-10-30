@@ -11,7 +11,7 @@
   "scripts": {
     "build": "wp-scripts build",
     "build:dev": "wp-scripts build --mode=development",
-    "clean": "run ws:clean \"$(pwd)\""
+    "clean": "rimraf dist lib coverage"
   },
   "dependencies": {
     "@myparcel-dev/pdk-checkout": "^2.2.0"
