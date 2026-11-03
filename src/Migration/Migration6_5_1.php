@@ -10,6 +10,7 @@ use MyParcelNL\Pdk\Carrier\Model\Carrier;
 use MyParcelNL\Pdk\Carrier\Repository\CarrierCapabilitiesRepository;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
+use MyParcelNL\Sdk\Client\Generated\CoreApi\ApiException;
 use MyParcelNL\Sdk\Services\Mapping\ApiMapperService;
 use Throwable;
 use WC_Order;
@@ -81,6 +82,16 @@ final class Migration6_5_1 extends AbstractMigration
             // Fetch the carrier definitions from the API
             $shop->carriers = $this->carrierCapabilitiesRepository->getContractDefinitions();
         } catch (\Throwable $exception) {
+            // A retry cannot fix a refused key, and it fails every request. Saving a valid key
+            // in the account settings fetches the carriers instead.
+            if ($exception instanceof ApiException && in_array($exception->getCode(), [401, 403], true)) {
+                $this->warning('API refused the API key; skipping carrier capabilities migration.', [
+                    'exception' => $exception->getMessage(),
+                ]);
+
+                return;
+            }
+
             // Re-throw so the installer does not bump the installed version, letting the
             // migration retry on the next load instead of leaving carrier data unfetched.
             $this->warning('Failed to fetch carrier definitions from the API; migration will retry.', [

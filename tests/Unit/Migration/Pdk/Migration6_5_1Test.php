@@ -10,6 +10,7 @@ use MyParcelNL\Pdk\App\Account\Contract\PdkAccountRepositoryInterface;
 use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Carrier\Collection\CarrierCollection;
 use MyParcelNL\Pdk\Carrier\Repository\CarrierCapabilitiesRepository;
+use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\SdkApi\Service\CoreApi\Shipment\CapabilitiesService;
 use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
@@ -20,6 +21,7 @@ use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
 use MyParcelNL\Pdk\Tests\SdkApi\MockSdkApiHandler;
 use MyParcelNL\Pdk\Tests\SdkApi\Response\ExampleContractDefinitionsResponse;
 use MyParcelNL\Pdk\Tests\Uses\UsesSdkApiMock;
+use MyParcelNL\Sdk\Client\Generated\CoreApi\ApiException;
 use MyParcelNL\Sdk\Client\Generated\CoreApi\Model\RefCapabilitiesSharedCarrierV2;
 use MyParcelNL\WooCommerce\Migration\Migration6_5_1;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
@@ -117,6 +119,60 @@ it('rethrows when fetching carrier definitions fails so the migration retries', 
 
     expect(fn() => $migration->migrateAccountData())->toThrow(RuntimeException::class);
 });
+
+it('rethrows when the api returns a server error so the migration retries', function () {
+    TestBootstrapper::hasAccount();
+
+    mockPdkProperties([CarrierCapabilitiesRepository::class => createThrowingCapabilitiesRepository(500)]);
+
+    /** @var Migration6_5_1 $migration */
+    $migration = Pdk::get(Migration6_5_1::class);
+
+    expect(fn() => $migration->migrateAccountData())->toThrow(ApiException::class);
+});
+
+it('skips carrier definitions without throwing when the api key is refused', function (int $statusCode) {
+    TestBootstrapper::hasAccount();
+
+    /** @var PdkAccountRepositoryInterface $accountRepo */
+    $accountRepo    = Pdk::get(PdkAccountRepositoryInterface::class);
+    $carriersBefore = $accountRepo->getAccount()->shops->first()->carriers->toArray();
+
+    mockPdkProperties([CarrierCapabilitiesRepository::class => createThrowingCapabilitiesRepository($statusCode)]);
+
+    /** @var Migration6_5_1 $migration */
+    $migration = Pdk::get(Migration6_5_1::class);
+    $migration->migrateAccountData();
+
+    expect($accountRepo->getAccount()->shops->first()->carriers->toArray())->toBe($carriersBefore)
+        ->and(array_column(Logger::getLogs('warning'), 'message'))
+        ->toContain('[PDK]: API refused the API key; skipping carrier capabilities migration.');
+})->with([
+    'unauthorized' => [401],
+    'forbidden'    => [403],
+]);
+
+function createThrowingCapabilitiesRepository(int $statusCode): CarrierCapabilitiesRepository
+{
+    return new class(
+        Pdk::get(StorageInterface::class),
+        Pdk::get(CapabilitiesService::class),
+        $statusCode
+    ) extends CarrierCapabilitiesRepository {
+        private int $statusCode;
+
+        public function __construct(StorageInterface $storage, CapabilitiesService $apiService, int $statusCode)
+        {
+            parent::__construct($storage, $apiService);
+            $this->statusCode = $statusCode;
+        }
+
+        public function getContractDefinitions(?string $carrier = null, bool $fresh = false): CarrierCollection
+        {
+            throw new ApiException("[$this->statusCode] Client error", $this->statusCode);
+        }
+    };
+}
 
 // --- migrateCarrierSettings ---
 
