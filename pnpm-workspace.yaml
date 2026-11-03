@@ -27,7 +27,7 @@ overrides:
 packages:
   - 'views/**'
 
-# @todo INT-892 remove pmOnFail and engines.pnpm in package.json once https://github.com/dependabot/dependabot-core/issues/15904 is fixed.
+# @TODO INT-892: remove pmOnFail and engines.pnpm in package.json once https://github.com/dependabot/dependabot-core/issues/15904 is fixed.
 # A pinned pnpm version makes pnpm 12 write a two-document pnpm-lock.yaml, and the GitHub dependency graph does not read it, so
 # Dependabot alerts and security updates stop. engines.pnpm blocks pnpm 11 and older in the meantime.
 pmOnFail: ignore
