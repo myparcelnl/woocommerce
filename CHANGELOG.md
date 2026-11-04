@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.13.0](https://github.com/myparcelnl/woocommerce/compare/v6.12.0...v6.13.0) (2026-11-04)
+
+### :sparkles: New Features
+
+* **customs:** send the external product reference per customs item ([#2024](https://github.com/myparcelnl/woocommerce/issues/2024)) ([ecdce91](https://github.com/myparcelnl/woocommerce/commit/ecdce9178d19e39de6b7460b19fc80f4e8711781))
+
 ## [6.12.0](https://github.com/myparcelnl/woocommerce/compare/v6.11.0...v6.12.0) (2026-10-27)
 
 ### :sparkles: New Features
