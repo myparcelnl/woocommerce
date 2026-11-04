@@ -4,15 +4,21 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Tests\Unit;
 
+use MyParcelNL\Pdk\App\Installer\Contract\InstallerServiceInterface;
 use MyParcelNL\Pdk\App\Installer\Contract\MigrationServiceInterface;
 use MyParcelNL\Pdk\Base\PdkBootstrapper;
+use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Tests\Bootstrap\MockLogger;
 use MyParcelNL\WooCommerce\Tests\Exception\DieException;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWcPdkBootstrapper;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
 use MyParcelNL\WooCommerce\Tests\Uses\UseInstantiatePlugin;
 use MyParcelNLWooCommerce;
+use Psr\Log\LoggerInterface;
+use RuntimeException;
+use function DI\get;
 use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 
 function bootPlugin() {
@@ -99,3 +105,29 @@ it('runs the upgrade after woocommerce has registered its post types and order s
         ->and(array_search('upgrade', $callbacks, true))
         ->toBeLessThan(array_search('initialize', $callbacks, true));
 });
+
+it('logs a failing install instead of crashing the request', function (string $action) {
+    $throwingInstaller = new class implements InstallerServiceInterface {
+        public function install(...$args): void
+        {
+            throw new RuntimeException('Migration failed');
+        }
+
+        public function uninstall(...$args): void {}
+    };
+
+    MockWcPdkBootstrapper::addConfig([
+        InstallerServiceInterface::class => $throwingInstaller,
+        LoggerInterface::class           => get(MockLogger::class),
+    ]);
+    WordPressOptions::updateOption('active_plugins', ['woocommerce/woocommerce.php']);
+    bootPlugin();
+
+    MockWpActions::execute($action);
+
+    expect(array_column(Logger::getLogs('error'), 'message'))
+        ->toContain('[PDK]: Plugin install or upgrade failed; it retries on the next request.');
+})->with([
+    'upgrade on init'   => ['init'],
+    'plugin activation' => ['activate_woocommerce-myparcel'],
+]);

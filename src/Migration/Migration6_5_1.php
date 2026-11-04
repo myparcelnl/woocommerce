@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration;
 
-use MyParcelNL\Pdk\App\Account\Contract\PdkAccountRepositoryInterface;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Carrier\Model\Carrier;
-use MyParcelNL\Pdk\Carrier\Repository\CarrierCapabilitiesRepository;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
 use MyParcelNL\Sdk\Services\Mapping\ApiMapperService;
@@ -18,21 +16,15 @@ final class Migration6_5_1 extends AbstractMigration
 {
     private const MAX_CHUNK_RETRIES = 3;
 
-    protected CarrierCapabilitiesRepository $carrierCapabilitiesRepository;
-    protected PdkAccountRepositoryInterface $accountRepository;
     protected PdkSettingsRepositoryInterface $settingsRepository;
     protected CronServiceInterface $cronService;
 
     public function __construct(
-        CarrierCapabilitiesRepository  $carrierCapabilitiesRepository,
-        PdkAccountRepositoryInterface  $accountRepository,
         PdkSettingsRepositoryInterface $settingsRepository,
         CronServiceInterface           $cronService
     ) {
-        $this->carrierCapabilitiesRepository = $carrierCapabilitiesRepository;
-        $this->accountRepository             = $accountRepository;
-        $this->settingsRepository            = $settingsRepository;
-        $this->cronService                   = $cronService;
+        $this->settingsRepository = $settingsRepository;
+        $this->cronService        = $cronService;
     }
 
     public function getVersion(): string
@@ -42,62 +34,17 @@ final class Migration6_5_1 extends AbstractMigration
 
     public function down(): void {}
 
+    /**
+     * Fetches no carrier capabilities: the timestamped refresh_carrier_capabilities migrations do
+     * that after this one, and retry on each load when the API fails.
+     */
     public function up(): void
     {
-        $this->migrateAccountData();
         $this->migrateCarrierSettings();
         $this->updateOrderData();
         $this->updateShipmentData();
     }
 
-    /**
-     * Replaces Account->Shop->Carriers with the new Capabilities data from the API
-     * @return void
-     */
-    public function migrateAccountData(): void
-    {
-        $accountSettings = $this->settingsRepository->all()->account;
-
-        if (! $accountSettings->apiKey || ! $accountSettings->apiKeyValid) {
-            $this->debug('No valid API key available; skipping carrier capabilities migration.');
-
-            return;
-        }
-
-        // Keep plugin-managed account fields that are absent from the accounts API response.
-        $account = $this->accountRepository->getAccount();
-        // PHPStan types Account::$shops as a non-null ShopCollection, but the guard is kept
-        // intentionally to stay safe against partial/corrupted account data during upgrade.
-        // @phpstan-ignore booleanAnd.rightAlwaysTrue
-        $shop    = $account && $account->shops ? $account->shops->first() : null;
-
-        if (! $shop) {
-            $this->debug('No account or shop available; skipping carrier capabilities migration.');
-
-            return;
-        }
-
-        try {
-            // Fetch the carrier definitions from the API
-            $shop->carriers = $this->carrierCapabilitiesRepository->getContractDefinitions();
-        } catch (\Throwable $exception) {
-            // Re-throw so the installer does not bump the installed version, letting the
-            // migration retry on the next load instead of leaving carrier data unfetched.
-            $this->warning('Failed to fetch carrier definitions from the API; migration will retry.', [
-                'exception' => $exception->getMessage(),
-            ]);
-
-            throw $exception;
-        }
-
-        // Store the updated account data
-        $this->accountRepository->store($account);
-    }
-
-    /**
-     * Replaces user-stored carrier settings so they will map to the new carrier definitions.
-     * @return void
-     */
     public function migrateCarrierSettings(): void
     {
         $settingsKey     = Pdk::get('createSettingsKey')('carrier');
