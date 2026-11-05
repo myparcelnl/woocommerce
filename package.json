@@ -89,8 +89,7 @@
   },
   "packageManager": "pnpm@12.14.0",
   "engines": {
-    "node": "^24.21",
-    "pnpm": ">=12.6.0"
+    "node": "^24.21"
   },
   "devEngines": {
     "runtime": {
