@@ -1,7 +1,5 @@
 <template>
-  <div
-    v-test="AdminComponent.Table"
-    class="mypa-overflow-scroll">
+  <div v-test="AdminComponent.Table">
     <table class="striped widefat">
       <thead v-if="$slots.header">
         <slot name="header" />
