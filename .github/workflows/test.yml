@@ -24,7 +24,7 @@ jobs:
           path: |
             coverage
             junit
-          key: test-frontend-${{ hashFiles('**/package.json', 'pnpm-lock.yaml', 'views/**/*') }}
+          key: test-frontend-${{ hashFiles('**/package.json', 'pnpm-lock.yaml', 'nx.json', 'views/**/*') }}
 
       - uses: myparcelnl/actions/pdk-setup-frontend@v6
         if: steps.cache.outputs.cache-hit != 'true'
