@@ -37,6 +37,12 @@
   .postbox-header {
     @apply mypa-cursor-default mypa-pointer-events-none;
   }
+
+  // Do not clip the actions dropdown of the last row in the shipments table.
+  // The utility class is !important (important: true), so the override must be too.
+  .mypa-overflow-scroll {
+    @apply mypa-overflow-visible !important;
+  }
 }
 
 // Product variations
