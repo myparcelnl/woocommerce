@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
-use DateTime;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Base\Support\Collection;
@@ -66,7 +65,16 @@ final class OrdersMigration extends AbstractPdkMigration
         );
 
         foreach ($orderIds as $orderId) {
-            $this->savePdkData(new WC_Order($orderId));
+            $wcOrder = new WC_Order($orderId);
+
+            // Never overwrite shipments that were created after the upgrade.
+            if ($wcOrder->meta_exists(Pdk::get('metaKeyOrderShipments'))) {
+                $this->debug("Order $orderId already migrated, skipping.");
+
+                continue;
+            }
+
+            $this->savePdkData($wcOrder);
 
             $this->debug("Order $orderId migrated.");
         }
@@ -122,23 +130,44 @@ final class OrdersMigration extends AbstractPdkMigration
     }
 
     /**
-     * @return array
+     * Returns every order that holds MyParcel data from the plugin before 5.0.0, regardless of its age.
+     * Queries each legacy key separately and in pages, because `wc_get_orders` returns only
+     * `posts_per_page` orders when no limit is given.
+     *
+     * @return int[]
      */
     private function getAllOrderIds(): array
     {
-        $date = new DateTime();
-        $date->modify('-3 months');
+        $pageSize = 100;
+        $orderIds = [];
 
-        $allOrders = wc_get_orders([
-            'date_after'   => $date->format('Y-m-d'),
-            'meta_key'     => Pdk::get('metaKeyMigrated'),
-            'meta_value'   => sprintf('"%s"', $this->getVersion()),
-            'meta_compare' => 'NOT LIKE',
-        ]);
+        foreach ([self::LEGACY_META_SHIPMENTS, self::LEGACY_META_DELIVERY_OPTIONS] as $metaKey) {
+            $page = 1;
 
-        return array_map(static function (WC_Order $order) {
-            return $order->get_id();
-        }, $allOrders);
+            do {
+                /** @var int[] $ids */
+                $ids = wc_get_orders([
+                    'limit'        => $pageSize,
+                    'paged'        => $page,
+                    'meta_key'     => $metaKey,
+                    'meta_compare' => 'EXISTS',
+                    'return'       => 'ids',
+                    'orderby'      => 'ID',
+                    'order'        => 'ASC',
+                ]);
+
+                foreach ($ids as $id) {
+                    // Use the id as key: an order with both legacy keys is scheduled once.
+                    $orderIds[(int) $id] = (int) $id;
+                }
+
+                $page++;
+            } while (count($ids) === $pageSize);
+        }
+
+        ksort($orderIds);
+
+        return array_values($orderIds);
     }
 
     /**
@@ -168,14 +197,51 @@ final class OrdersMigration extends AbstractPdkMigration
     }
 
     /**
+     * Reads meta that a 4.x plugin wrote. Since 4.6.0, `WCX_Order::update_meta_data()` stored arrays
+     * as JSON strings, so the raw value can be an array (older orders) or a JSON string.
+     *
+     * @param  \WC_Order $wcOrder
+     * @param  string    $key
+     *
+     * @return array
+     */
+    private function getLegacyMeta(WC_Order $wcOrder, string $key): array
+    {
+        $value = $wcOrder->get_meta($key);
+
+        if (is_array($value)) {
+            return $value;
+        }
+
+        // A missing key returns an empty string. That is normal, so do not log it.
+        if (! is_string($value) || '' === $value) {
+            return [];
+        }
+
+        $decoded = json_decode($value, true);
+
+        if (! is_array($decoded)) {
+            // Do not log the value: shipment meta holds recipient addresses.
+            $this->warning('Skipped legacy order meta that is not valid JSON.', [
+                'orderId' => $wcOrder->get_id(),
+                'key'     => $key,
+            ]);
+
+            return [];
+        }
+
+        return $decoded;
+    }
+
+    /**
      * @param  \WC_Order $wcOrder
      *
      * @return array
      */
     private function getDeliveryOptions(WC_Order $wcOrder): ?array
     {
-        $deliveryOptions = $wcOrder->get_meta(self::LEGACY_META_DELIVERY_OPTIONS);
-        $extraOptions    = $wcOrder->get_meta(self::LEGACY_META_SHIPMENT_OPTIONS_EXTRA);
+        $deliveryOptions = $this->getLegacyMeta($wcOrder, self::LEGACY_META_DELIVERY_OPTIONS);
+        $extraOptions    = $this->getLegacyMeta($wcOrder, self::LEGACY_META_SHIPMENT_OPTIONS_EXTRA);
 
         if (! $deliveryOptions && ! $extraOptions) {
             return null;
@@ -183,7 +249,7 @@ final class OrdersMigration extends AbstractPdkMigration
 
         return Utils::filterNull([
             'carrier'         => $deliveryOptions['carrier'] ?? null,
-            'date'            => $deliveryOptions['date'] ?: null,
+            'date'            => ($deliveryOptions['date'] ?? null) ?: null,
             'deliveryType'    => $deliveryOptions['deliveryType'] ?? null,
             'labelAmount'     => $extraOptions['collo_amount'] ?? null,
             'packageType'     => $deliveryOptions['packageType'] ?? null,
@@ -199,13 +265,18 @@ final class OrdersMigration extends AbstractPdkMigration
      */
     private function getShipments(WC_Order $wcOrder): array
     {
-        $shipmentMeta = $wcOrder->get_meta(self::LEGACY_META_SHIPMENTS);
+        $shipmentMeta = $this->getLegacyMeta($wcOrder, self::LEGACY_META_SHIPMENTS);
 
         if (! $shipmentMeta) {
             return [];
         }
 
-        $collection = new Collection(Arr::pluck($shipmentMeta, 'shipment'));
+        // 4.x sometimes stored only ['shipment_id' => …] without the 'shipment' array from the API.
+        // Pluck gives null for such an entry. There is nothing to migrate in it, so leave it out.
+        $collection = (new Collection(Arr::pluck($shipmentMeta, 'shipment')))
+            ->filter(static function ($shipment): bool {
+                return is_array($shipment);
+            });
 
         $newShipments = $collection->map(function (array $shipment) use ($wcOrder) {
             return [
@@ -377,7 +448,7 @@ final class OrdersMigration extends AbstractPdkMigration
      */
     private function savePdkData(WC_Order $wcOrder): void
     {
-        $fulfilmentData = $wcOrder->get_meta(self::LEGACY_META_PPS_EXPORTED);
+        $fulfilmentData = $this->getLegacyMeta($wcOrder, self::LEGACY_META_PPS_EXPORTED);
 
         $wcOrder->update_meta_data(
             Pdk::get('metaKeyOrderData'),
