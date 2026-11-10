@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.13.1](https://github.com/myparcelnl/woocommerce/compare/v6.13.0...v6.13.1) (2026-11-10)
+
+### :bug: Bug Fixes
+
+* **admin:** offer the €100 insurance tier in the shipment options form ([#2032](https://github.com/myparcelnl/woocommerce/issues/2032)) ([a2b4d16](https://github.com/myparcelnl/woocommerce/commit/a2b4d16ca428c8a66e691421fed50d3d7944e660))
+* **migration:** fix the site crash when the API refuses the key ([#2023](https://github.com/myparcelnl/woocommerce/issues/2023)) ([d905644](https://github.com/myparcelnl/woocommerce/commit/d905644a1e18a7436245a1a3c6bf5ec675f4e76f)), closes [#1748](https://github.com/myparcelnl/woocommerce/issues/1748) [#2018](https://github.com/myparcelnl/woocommerce/issues/2018)
+
 ## [6.13.0](https://github.com/myparcelnl/woocommerce/compare/v6.12.0...v6.13.0) (2026-11-04)
 
 ### :sparkles: New Features
