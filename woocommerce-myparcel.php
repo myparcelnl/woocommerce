@@ -22,6 +22,7 @@ use Automattic\WooCommerce\Utilities\FeaturesUtil;
 use MyParcelNL\Pdk\Base\Pdk as PdkInstance;
 use MyParcelNL\Pdk\Base\PdkBootstrapper;
 use MyParcelNL\Pdk\Facade\Installer;
+use MyParcelNL\Pdk\Facade\Logger;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\Facade\WooCommerce;
 use MyParcelNL\WooCommerce\Integration\WcBlocksLoader;
@@ -104,7 +105,7 @@ final class MyParcelNLWooCommerce
             wp_die(implode('<br>', $errors), '', ['back_link' => true]);
         }
 
-        Installer::install();
+        $this->runInstaller();
     }
 
     /**
@@ -121,7 +122,22 @@ final class MyParcelNLWooCommerce
         }
 
         // The install function will check whether we are installing a new plugin or upgrading an existing one and run the appropiate migrations.
-        Installer::install();
+        $this->runInstaller();
+    }
+
+    /**
+     * Runs on every request, so an exception here takes down the whole site. A failed migration
+     * stays unapplied and runs again on the next request.
+     */
+    private function runInstaller(): void
+    {
+        try {
+            Installer::install();
+        } catch (Throwable $exception) {
+            Logger::error('Plugin install or upgrade failed; it retries on the next request.', [
+                'exception' => $exception->getMessage(),
+            ]);
+        }
     }
 
     /**
