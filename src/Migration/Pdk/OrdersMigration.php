@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Migration\Pdk;
 
+use DateTime;
 use MyParcelNL\Pdk\Base\Contract\CronServiceInterface;
 use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Base\Support\Utils;
 use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\WooCommerce\Migration\Migration6_5_1;
 use WC_Order;
 
 final class OrdersMigration extends AbstractPdkMigration
@@ -74,6 +76,9 @@ final class OrdersMigration extends AbstractPdkMigration
             )
         );
 
+        $withNewOrderData = [];
+        $withNewShipments = [];
+
         foreach ($orderIds as $orderId) {
             $wcOrder = new WC_Order($orderId);
 
@@ -98,6 +103,8 @@ final class OrdersMigration extends AbstractPdkMigration
                 $wcOrder->update_meta_data(Pdk::get('metaKeyOrderShipments'), $this->getShipments($wcOrder));
                 $wcOrder->save();
 
+                $withNewShipments[] = $orderId;
+
                 $this->debug("Order $orderId shipments migrated.");
 
                 continue;
@@ -105,8 +112,13 @@ final class OrdersMigration extends AbstractPdkMigration
 
             $this->savePdkData($wcOrder);
 
+            $withNewOrderData[] = $orderId;
+            $withNewShipments[] = $orderId;
+
             $this->debug("Order $orderId migrated.");
         }
+
+        $this->normalizeForCurrentVersion($withNewOrderData, $withNewShipments);
     }
 
     /**
@@ -159,7 +171,9 @@ final class OrdersMigration extends AbstractPdkMigration
     }
 
     /**
-     * Returns every order that holds MyParcel data from the plugin before 5.0.0, regardless of its age.
+     * Returns the orders of the last three months that hold MyParcel data from the plugin before 5.0.0.
+     * Older orders are left out on purpose: on a large shop, migrating every order keeps WP-Cron busy
+     * for a long time, and each later order migration would have to walk those orders as well.
      * Queries each legacy key separately and in pages, because `wc_get_orders` returns only
      * `posts_per_page` orders when no limit is given.
      *
@@ -167,8 +181,9 @@ final class OrdersMigration extends AbstractPdkMigration
      */
     private function getAllOrderIds(): array
     {
-        $pageSize = 100;
-        $orderIds = [];
+        $pageSize  = 100;
+        $orderIds  = [];
+        $dateAfter = (new DateTime('-3 months'))->format('Y-m-d');
 
         // An order exported in 4.x order mode can hold only the pps key.
         $legacyKeys = [
@@ -185,6 +200,7 @@ final class OrdersMigration extends AbstractPdkMigration
                 $ids = wc_get_orders([
                     'limit'        => $pageSize,
                     'paged'        => $page,
+                    'date_after'   => $dateAfter,
                     'meta_key'     => $metaKey,
                     'meta_compare' => 'EXISTS',
                     'return'       => 'ids',
@@ -315,6 +331,10 @@ final class OrdersMigration extends AbstractPdkMigration
             });
 
         $newShipments = $collection->map(function (array $shipment) use ($wcOrder) {
+            // Leave the carrier out when 4.x did not store one. Migration6_5_1 cannot convert an empty
+            // carrier, and then skips every shipment of the order.
+            $carrier = isset($shipment['carrier_id']) ? ['id' => $shipment['carrier_id']] : null;
+
             return [
                 'id'                       => $shipment['id'] ?? null,
                 'parentId'                 => $shipment['parent_id'] ?? null,
@@ -323,9 +343,7 @@ final class OrdersMigration extends AbstractPdkMigration
                 'referenceIdentifier'      => $shipment['reference_identifier'] ?? null,
                 'externalIdentifier'       => $shipment['external_identifier'] ?? null,
                 'barcode'                  => $shipment['barcode'] ?? null,
-                'carrier'                  => [
-                    'id' => $shipment['carrier_id'] ?? null,
-                ],
+                'carrier'                  => $carrier,
                 'customsDeclaration'       => $shipment['customs_declaration']
                     ? [
                         'contents' => $shipment['customs_declaration']['contents'] ?? null,
@@ -340,9 +358,7 @@ final class OrdersMigration extends AbstractPdkMigration
                 'delivered'                => $shipment['delivered'] ?? null,
                 'deliveryOptions'          => $shipment['options']
                     ? [
-                        'carrier'         => [
-                            'id' => $shipment['carrier_id'] ?? null,
-                        ],
+                        'carrier'         => $carrier,
                         'date'            => $shipment['options']['delivery_date'] ?? null,
                         'deliveryType'    => $shipment['options']['delivery_type'] ?? null,
                         'labelAmount'     => $shipment['options']['label_amount'] ?? null,
@@ -394,6 +410,31 @@ final class OrdersMigration extends AbstractPdkMigration
         }
 
         return false;
+    }
+
+    /**
+     * This migration writes the format of 5.0.0. The later order migrations pick their orders when they
+     * are scheduled, and at that moment a 4.x order has no PDK data yet, so they never see it. Only
+     * Migration6_5_1 changes data that this migration writes: it stores the carrier as a V2 name. Run
+     * it here, so a migrated order ends up in the same format as an order from 5.x.
+     *
+     * @param  int[] $withNewOrderData
+     * @param  int[] $withNewShipments
+     *
+     * @return void
+     */
+    private function normalizeForCurrentVersion(array $withNewOrderData, array $withNewShipments): void
+    {
+        /** @var \MyParcelNL\WooCommerce\Migration\Migration6_5_1 $migration */
+        $migration = Pdk::get(Migration6_5_1::class);
+
+        if ($withNewOrderData) {
+            $migration->migrateOrderChunk(['orderIds' => $withNewOrderData]);
+        }
+
+        if ($withNewShipments) {
+            $migration->migrateShipmentChunk(['orderIds' => $withNewShipments]);
+        }
     }
 
     /**

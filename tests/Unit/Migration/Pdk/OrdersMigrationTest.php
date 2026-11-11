@@ -5,10 +5,12 @@ declare(strict_types=1);
 
 namespace MyParcelNL\Pdk\Tests\Unit\Migration\Pdk;
 
+use DateTime;
 use MyParcelNL\Pdk\App\Order\Contract\PdkOrderRepositoryInterface;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Tests\Bootstrap\TestBootstrapper;
 use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
+use MyParcelNL\WooCommerce\Tests\Mock\MockQueries;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressScheduledTasks;
 use MyParcelNL\WooCommerce\Tests\Uses\UsesMockWcPdkInstance;
@@ -27,7 +29,7 @@ it('schedules order migration in chunks', function () {
     /** @var \MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration $orderMigration */
     $orderMigration = Pdk::get(OrdersMigration::class);
 
-    // 324 orders with 4.x data: more than the default page size of wc_get_orders, and of any age.
+    // 324 orders with 4.x data: more than the default page size of wc_get_orders.
     // Half of them have both legacy keys, to prove an order is scheduled only once.
     for ($i = 92000; $i < 92324; $i++) {
         $meta = [OrdersMigration::LEGACY_META_SHIPMENTS => '{}'];
@@ -84,6 +86,41 @@ it('schedules order migration in chunks', function () {
         expect($task['time'])->toBe($timestamps[$index - 1] + 5);
     }
 });
+
+it('schedules only orders of the last three months', function () {
+    /** @var \MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration $orderMigration */
+    $orderMigration = Pdk::get(OrdersMigration::class);
+
+    createWcOrder(['id' => 1, 'meta' => [OrdersMigration::LEGACY_META_SHIPMENTS => '{}']]);
+
+    $orderMigration->up();
+
+    // The mock does not filter on date, so check the query that WooCommerce receives.
+    expect(MockQueries::first('wc_get_orders')['date_after'] ?? null)
+        ->toBe((new DateTime('-3 months'))->format('Y-m-d'));
+});
+
+it('stores the carriers of a migrated order as V2 names', function (array $oldMeta, array $expected) {
+    /** @var \MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration $orderMigration */
+    $orderMigration = Pdk::get(OrdersMigration::class);
+
+    createWcOrder(['id' => 1, 'meta' => $oldMeta]);
+
+    $orderMigration->migrateOrder(['orderIds' => [1]]);
+
+    // Read the raw meta, not the PDK models: the models also accept the format of 5.0.0.
+    $postMeta  = MockWpMeta::all(1);
+    $orderData = $postMeta[Pdk::get('metaKeyOrderData')];
+
+    expect($orderData['deliveryOptions']['carrier'] ?? null)->toBe($expected['carrier']);
+
+    foreach ($postMeta[Pdk::get('metaKeyOrderShipments')] as $index => $shipment) {
+        // A shipment that 4.x stored without a carrier has none here. The PDK model then falls back
+        // to the default carrier.
+        expect($shipment['carrier'] ?? $expected['shipmentCarriers'][$index])
+            ->toBe($expected['shipmentCarriers'][$index]);
+    }
+})->with('legacy meta data');
 
 it('migrates orders', function (array $oldMeta, array $expected) {
     /** @var \MyParcelNL\Pdk\Tests\Bootstrap\MockPdkOrderRepository $pdkOrderRepository */

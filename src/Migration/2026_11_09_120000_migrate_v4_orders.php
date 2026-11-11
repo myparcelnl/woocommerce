@@ -9,8 +9,9 @@ use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
 /**
  * Before this fix, OrdersMigration found no orders on a shop that upgraded from 4.x, and could not read
  * the JSON strings that 4.x stored. Migration5_0_0 is already marked as applied on those shops, so
- * schedule the order migration again. It skips each order that already has shipments in the current
- * format, so labels created after the upgrade stay as they are.
+ * schedule the order migration again. Like the first run, it takes the orders of the last three months.
+ * It skips each order that already has shipments in the current format, so labels created after the
+ * upgrade stay as they are.
  */
 return new class extends AbstractTimestampedMigration {
     public function up(): void
