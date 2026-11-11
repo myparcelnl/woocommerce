@@ -188,3 +188,47 @@ it('does not overwrite shipments that already exist in the current format', func
 
     expect(MockWpMeta::all(1)[Pdk::get('metaKeyOrderShipments')])->toBe($currentShipments);
 });
+
+it('leaves orders with PDK data from before 6.0.0 to the namespace migration', function (string $key) {
+    /** @var \MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration $orderMigration */
+    $orderMigration = Pdk::get(OrdersMigration::class);
+
+    createWcOrder([
+        'id'   => 1,
+        'meta' => [
+            OrdersMigration::LEGACY_META_SHIPMENTS => '{"1":{"shipment_id":1}}',
+            $key                                   => [['id' => 123]],
+        ],
+    ]);
+
+    $orderMigration->migrateOrder(['orderIds' => [1]]);
+
+    expect(MockWpMeta::all(1))
+        ->not->toHaveKey(Pdk::get('metaKeyOrderShipments'))
+        ->not->toHaveKey(Pdk::get('metaKeyOrderData'));
+})->with(OrdersMigration::PDK_META_BEFORE_NAMESPACE_CHANGE);
+
+it('restores 4.x shipments on an order saved without shipments after the upgrade', function (
+    array $oldMeta,
+    array $expected
+) {
+    /** @var \MyParcelNL\Pdk\Tests\Bootstrap\MockPdkOrderRepository $pdkOrderRepository */
+    $pdkOrderRepository = Pdk::get(PdkOrderRepositoryInterface::class);
+    /** @var \MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration $orderMigration */
+    $orderMigration = Pdk::get(OrdersMigration::class);
+
+    $currentOrderData = ['exported' => false, 'deliveryOptions' => ['carrier' => 'postnl']];
+
+    createWcOrder([
+        'id'   => 1,
+        'meta' => array_merge($oldMeta, [
+            Pdk::get('metaKeyOrderData')      => $currentOrderData,
+            Pdk::get('metaKeyOrderShipments') => [],
+        ]),
+    ]);
+
+    $orderMigration->migrateOrder(['orderIds' => [1]]);
+
+    expect(MockWpMeta::all(1)[Pdk::get('metaKeyOrderData')])->toBe($currentOrderData)
+        ->and($pdkOrderRepository->get(1)->shipments->count())->toBe($expected['shipments']);
+})->with('legacy meta data');

@@ -23,6 +23,16 @@ final class OrdersMigration extends AbstractPdkMigration
     public const LEGACY_META_SHIPPING_STREET_NAME         = '_shipping_street_name';
 
     /**
+     * Order meta that 5.x wrote, before Migration6_0_0 moved the namespace to _myparcelcom_.
+     */
+    public const PDK_META_BEFORE_NAMESPACE_CHANGE = [
+        '_myparcelnl_order_shipments',
+        '_myparcelnl_order_data',
+        '_myparcelbe_order_shipments',
+        '_myparcelbe_order_data',
+    ];
+
+    /**
      * @var \MyParcelNL\Pdk\Base\Contract\CronServiceInterface
      */
     private $cronService;
@@ -67,9 +77,28 @@ final class OrdersMigration extends AbstractPdkMigration
         foreach ($orderIds as $orderId) {
             $wcOrder = new WC_Order($orderId);
 
+            // 5.x already migrated this order. Migration6_5_1 copies its newer data to the current keys,
+            // and skips an order once those keys exist, so writing 4.x data here would hide that data.
+            if ($this->hasPdkMetaFromBeforeNamespaceChange($wcOrder)) {
+                $this->debug("Order $orderId has PDK data from before 6.0.0, skipping.");
+
+                continue;
+            }
+
             // Never overwrite shipments that were created after the upgrade.
-            if ($wcOrder->meta_exists(Pdk::get('metaKeyOrderShipments'))) {
+            if (! empty($wcOrder->get_meta(Pdk::get('metaKeyOrderShipments')))) {
                 $this->debug("Order $orderId already migrated, skipping.");
+
+                continue;
+            }
+
+            // Saving an order writes an empty shipments list. Restore the 4.x shipments, but keep the
+            // order data, which may have changed since the upgrade.
+            if ($wcOrder->meta_exists(Pdk::get('metaKeyOrderShipments'))) {
+                $wcOrder->update_meta_data(Pdk::get('metaKeyOrderShipments'), $this->getShipments($wcOrder));
+                $wcOrder->save();
+
+                $this->debug("Order $orderId shipments migrated.");
 
                 continue;
             }
@@ -342,6 +371,22 @@ final class OrdersMigration extends AbstractPdkMigration
         });
 
         return $newShipments->toArrayWithoutNull();
+    }
+
+    /**
+     * @param  \WC_Order $wcOrder
+     *
+     * @return bool
+     */
+    private function hasPdkMetaFromBeforeNamespaceChange(WC_Order $wcOrder): bool
+    {
+        foreach (self::PDK_META_BEFORE_NAMESPACE_CHANGE as $key) {
+            if ($wcOrder->meta_exists($key)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
