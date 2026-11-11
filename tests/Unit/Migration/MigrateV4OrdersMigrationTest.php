@@ -37,6 +37,8 @@ it('schedules the order migration again for orders with 4.x data', function () {
     createWcOrder(['id' => 101, 'meta' => [OrdersMigration::LEGACY_META_SHIPMENTS => '{}']]);
     createWcOrder(['id' => 102, 'meta' => [OrdersMigration::LEGACY_META_DELIVERY_OPTIONS => '{}']]);
     createWcOrder(['id' => 103]);
+    // Exported in 4.x order mode, without shipments or delivery options.
+    createWcOrder(['id' => 104, 'meta' => [OrdersMigration::LEGACY_META_PPS_EXPORTED => '{}']]);
 
     loadMigrateV4OrdersMigration()->up();
 
@@ -44,5 +46,5 @@ it('schedules the order migration again for orders with 4.x data', function () {
 
     expect($tasks->count())->toBe(1)
         ->and($tasks->first()['callback'])->toBe(Pdk::get('migrateAction_5_0_0_Orders'))
-        ->and($tasks->first()['args'][0]['orderIds'])->toBe([101, 102]);
+        ->and($tasks->first()['args'][0]['orderIds'])->toBe([101, 102, 104]);
 });

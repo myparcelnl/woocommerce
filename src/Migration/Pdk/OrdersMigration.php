@@ -170,7 +170,14 @@ final class OrdersMigration extends AbstractPdkMigration
         $pageSize = 100;
         $orderIds = [];
 
-        foreach ([self::LEGACY_META_SHIPMENTS, self::LEGACY_META_DELIVERY_OPTIONS] as $metaKey) {
+        // An order exported in 4.x order mode can hold only the pps key.
+        $legacyKeys = [
+            self::LEGACY_META_SHIPMENTS,
+            self::LEGACY_META_DELIVERY_OPTIONS,
+            self::LEGACY_META_PPS_EXPORTED,
+        ];
+
+        foreach ($legacyKeys as $metaKey) {
             $page = 1;
 
             do {
