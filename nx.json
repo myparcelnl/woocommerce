@@ -61,5 +61,8 @@
         "parallel": 10
       }
     }
+  },
+  "affected": {
+    "legacy": true
   }
 }
