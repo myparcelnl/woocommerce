@@ -8,9 +8,6 @@
     "psr/log": "*",
     "php": ">= 7.4"
   },
-  "platform": {
-    "php": "7.4"
-  },
   "scripts": {
     "console": "php vendor/myparcelnl/pdk/bin/console",
     "analyse": "php -dmemory_limit=-1 vendor/bin/phpstan analyse",
@@ -57,6 +54,9 @@
     "prepend-autoloader": false,
     "allow-plugins": {
       "pestphp/pest-plugin": true
+    },
+    "platform": {
+      "php": "7.4"
     }
   }
 }
