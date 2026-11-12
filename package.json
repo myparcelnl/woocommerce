@@ -12,14 +12,6 @@
   },
   "license": "MIT",
   "type": "module",
-  "packageManager": "yarn@4.17.1",
-  "engines": {
-    "node": "^24.15.0"
-  },
-  "volta": {
-    "node": "24.15.0",
-    "yarn": "4.17.1"
-  },
   "workspaces": [
     "views/**"
   ],
@@ -72,8 +64,7 @@
     "@typescript-eslint/parser": "^5.0.0",
     "eslint-plugin-prettier": "^4.2.0",
     "react": "^18",
-    "react-dom": "^18",
-    "tar": "^7.5.22"
+    "react-dom": "^18"
   },
   "devDependencies": {
     "@myparcel-dev/eslint-config-esnext": "^1.4.0",
@@ -112,5 +103,13 @@
     "semantic-release": "^25.0.2",
     "typescript": "^5.7.3",
     "vitest": "^4.1.11"
+  },
+  "packageManager": "yarn@4.17.1",
+  "engines": {
+    "node": "^24.15.0"
+  },
+  "volta": {
+    "node": "24.15.0",
+    "yarn": "4.17.1"
   }
 }
