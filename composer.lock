@@ -291,16 +291,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "2.13.2",
+            "version": "2.13.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "adee536f95101929f262b8c59e8a61472f347d58"
+                "reference": "6d3cd8285a97eaa352956a4ada92fa03ecce1c4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/adee536f95101929f262b8c59e8a61472f347d58",
-                "reference": "adee536f95101929f262b8c59e8a61472f347d58",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/6d3cd8285a97eaa352956a4ada92fa03ecce1c4e",
+                "reference": "6d3cd8285a97eaa352956a4ada92fa03ecce1c4e",
                 "shasum": ""
             },
             "require": {
@@ -390,7 +390,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/2.13.2"
+                "source": "https://github.com/guzzle/psr7/tree/2.13.3"
             },
             "funding": [
                 {
@@ -406,7 +406,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-17T23:49:46+00:00"
+            "time": "2026-11-12T15:57:42+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -471,16 +471,16 @@
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "5.3.0",
+            "version": "5.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/pdk.git",
-                "reference": "d2c9f56e4ed84da48e38dc6236ede21142938808"
+                "reference": "bff6952ea74bf4bd20acf15956c66056748dbe7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/d2c9f56e4ed84da48e38dc6236ede21142938808",
-                "reference": "d2c9f56e4ed84da48e38dc6236ede21142938808",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/bff6952ea74bf4bd20acf15956c66056748dbe7f",
+                "reference": "bff6952ea74bf4bd20acf15956c66056748dbe7f",
                 "shasum": ""
             },
             "require": {
@@ -528,22 +528,22 @@
             "homepage": "https://myparcel.nl",
             "support": {
                 "issues": "https://github.com/myparcelnl/pdk/issues",
-                "source": "https://github.com/myparcelnl/pdk/tree/v5.3.0"
+                "source": "https://github.com/myparcelnl/pdk/tree/v5.3.1"
             },
-            "time": "2026-11-03T16:12:23+00:00"
+            "time": "2026-11-12T16:12:29+00:00"
         },
         {
             "name": "myparcelnl/sdk",
-            "version": "11.3.0",
+            "version": "11.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/sdk.git",
-                "reference": "eff97ba1af2bc74838124bd114c2ac522cd28bb2"
+                "reference": "6b3e9abb0e023dfc4e38a9d0d0413a5376819995"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/eff97ba1af2bc74838124bd114c2ac522cd28bb2",
-                "reference": "eff97ba1af2bc74838124bd114c2ac522cd28bb2",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/6b3e9abb0e023dfc4e38a9d0d0413a5376819995",
+                "reference": "6b3e9abb0e023dfc4e38a9d0d0413a5376819995",
                 "shasum": ""
             },
             "require": {
@@ -597,9 +597,9 @@
             ],
             "support": {
                 "issues": "https://github.com/myparcelnl/sdk/issues",
-                "source": "https://github.com/myparcelnl/sdk/tree/v11.3.0"
+                "source": "https://github.com/myparcelnl/sdk/tree/v11.3.1"
             },
-            "time": "2026-11-02T11:55:03+00:00"
+            "time": "2026-11-12T16:15:14+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -5610,5 +5610,5 @@
     "platform-overrides": {
         "php": "7.4"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
