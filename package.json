@@ -96,7 +96,7 @@
     "is-ci": "^4.1.0",
     "lint-staged": "^15.0.0",
     "nx": "^24.0.6",
-    "prettier": "^2.8.4",
+    "prettier": "^3.10.1",
     "react": "*",
     "react-dom": "*",
     "rimraf": "^6.1.3",
