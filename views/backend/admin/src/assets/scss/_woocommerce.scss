@@ -37,6 +37,13 @@
   .postbox-header {
     @apply mypa-cursor-default mypa-pointer-events-none;
   }
+
+  // WooCommerce clips every .postbox on the order page to its rounded corners.
+  // That cuts off the actions dropdown of the last row in the shipments table.
+  &.postbox,
+  .postbox {
+    @apply mypa-overflow-visible;
+  }
 }
 
 // Product variations
