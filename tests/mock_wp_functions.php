@@ -11,6 +11,7 @@ use MyParcelNL\WooCommerce\Tests\Mock\MockWpCache;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpEnqueue;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpRestServer;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpScreen;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpTerm;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpUser;
 use MyParcelNL\WooCommerce\Tests\Mock\WordPressOptions;
@@ -381,4 +382,10 @@ function __($text, $domain = 'default'): string
 
 function rest_authorization_required_code(): int {
     return is_user_logged_in() ? 403 : 401;
+}
+
+/** @see \get_current_screen() */
+function get_current_screen()
+{
+    return MockWpScreen::get();
 }
