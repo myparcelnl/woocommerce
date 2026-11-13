@@ -124,6 +124,9 @@
     "myparcelcom_migrate_no_tracking_orders": [
         "MyParcelNL\\WooCommerce\\Migration\\NoTrackingChunkMigrator::migrateOrderChunk"
     ],
+    "myparcelcom_migrate_v4_orders": [
+        "MyParcelNL\\WooCommerce\\Migration\\V4OrdersChunkMigrator::migrateChunk"
+    ],
     "woocommerce_get_country_locale": [
         "MyParcelNL\\WooCommerce\\Hooks\\SeparateAddressFieldsHooks::extendLocaleWithSeparateAddressFields",
         "MyParcelNL\\WooCommerce\\Hooks\\TaxFieldsHooks::extendLocaleWithTaxFields"

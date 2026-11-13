@@ -322,3 +322,18 @@ it('migrates pre v5.0.0 settings', function (array $settings, array $expected) {
     // we still want a positive signal that the migration completed without polluting Settings.
     expect($allSettings)->toHaveKey('account');
 })->with('old plugin settings');
+
+it('migrates the 4.x automatic export to processDirectly', function (array $exportDefaults, $expected) {
+    /** @var \MyParcelNL\WooCommerce\Migration\Pdk\SettingsMigration $migration */
+    $migration = Pdk::get(SettingsMigration::class);
+    $migration->migrateSettings(['export_defaults' => $exportDefaults]);
+
+    expect(Settings::get('order.processDirectly'))->toEqual($expected);
+})->with([
+    'enabled with a status'      => [['export_automatic' => '1', 'export_automatic_status' => 'processing'], 'wc-processing'],
+    'enabled with a prefix'      => [['export_automatic' => '1', 'export_automatic_status' => 'wc-completed'], 'wc-completed'],
+    'enabled but not active'     => [['export_automatic' => '1', 'export_automatic_status' => 'notActive'], '-1'],
+    'enabled without a status'   => [['export_automatic' => '1'], '-1'],
+    'disabled with a status'     => [['export_automatic' => '0', 'export_automatic_status' => 'processing'], '-1'],
+    'never set'                  => [[], '-1'],
+]);
