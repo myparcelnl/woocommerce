@@ -71,15 +71,18 @@ final class PdkCoreHooks implements WordPressHooksInterface
 
         $select = version_compare(WC()->version, '3.2.0', '>=') ? 'selectWoo' : 'select2';
 
+        $dependencies = [WpScriptService::HANDLE_JQUERY, WpScriptService::HANDLE_VUE, $select];
+
+        // WooCommerce only provides the data for its admin script on its own screens. The plugins overview only shows
+        // the deactivation modal, which does not need it.
+        if (! $viewService->isPluginsOverviewPage()) {
+            $dependencies[] = WpScriptService::HANDLE_WOOCOMMERCE_ADMIN;
+        }
+
         $this->service->enqueueLocalScript(
             WpScriptService::HANDLE_PDK_ADMIN,
             'views/backend/admin/dist/admin',
-            [
-                WpScriptService::HANDLE_JQUERY,
-                WpScriptService::HANDLE_WOOCOMMERCE_ADMIN,
-                WpScriptService::HANDLE_VUE,
-                $select,
-            ]
+            $dependencies
         );
 
         $this->service->enqueueLocalStyle(WpScriptService::HANDLE_PDK_ADMIN, 'views/backend/admin/dist/style.css');
@@ -92,6 +95,7 @@ final class PdkCoreHooks implements WordPressHooksInterface
     {
         echo Frontend::renderInitScript();
         echo Frontend::renderModals();
+        echo Frontend::renderDeactivationFeedback();
     }
 
     /**
