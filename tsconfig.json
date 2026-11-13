@@ -4,7 +4,7 @@
     "paths": {
       "@myparcel-woocommerce/frontend-*": ["./views/frontend/*/src"],
       "@myparcel-woocommerce/backend-*": ["./views/backend/*/src"],
-      // For WooCommerce TS support. Run `yarn update-wc-types` to get the types. Yes, I know, it's terrible.
+      // For WooCommerce TS support. Run `pnpm update-wc-types` to get the types. Yes, I know, it's terrible.
       "@woocommerce/atomic-blocks": [
         "./private/wc-types/plugins/woocommerce-blocks/assets/js/base/atomic/blocks/index.ts",
         "./private/wc-types/plugins/woocommerce-blocks/assets/js/base/atomic/blocks/index.js"

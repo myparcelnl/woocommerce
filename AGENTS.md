@@ -6,14 +6,14 @@ The WooCommerce plugin for MyParcel. It is a thin adapter layer on top of the PD
 
 This repository is one part of the MyParcel plugin stack:
 
-| Repository | Role |
-| --- | --- |
-| [myparcelnl/sdk](https://github.com/myparcelnl/sdk) | PHP client generated from the MyParcel API OpenAPI spec. Source of carriers, delivery types, package types and API types. |
-| [myparcelnl/pdk](https://github.com/myparcelnl/pdk) | PHP Plugin Development Kit. Business logic, models, settings, migrations and API calls shared by all plugins. |
-| [myparcelnl/js-pdk](https://github.com/myparcelnl/js-pdk) | JS Plugin Development Kit. Admin UI and checkout scripts that the plugins build on. |
-| [myparcelnl/delivery-options](https://github.com/myparcelnl/delivery-options) | Checkout widget in which the consumer picks a delivery or pickup option. |
-| [myparcelnl/woocommerce](https://github.com/myparcelnl/woocommerce) **(this repository)** | WooCommerce plugin. Thin adapter on top of the PDK. |
-| [myparcelnl/prestashop](https://github.com/myparcelnl/prestashop) | PrestaShop module. Thin adapter on top of the PDK. |
+| Repository                                                                                | Role                                                                                                                      |
+| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| [myparcelnl/sdk](https://github.com/myparcelnl/sdk)                                       | PHP client generated from the MyParcel API OpenAPI spec. Source of carriers, delivery types, package types and API types. |
+| [myparcelnl/pdk](https://github.com/myparcelnl/pdk)                                       | PHP Plugin Development Kit. Business logic, models, settings, migrations and API calls shared by all plugins.             |
+| [myparcelnl/js-pdk](https://github.com/myparcelnl/js-pdk)                                 | JS Plugin Development Kit. Admin UI and checkout scripts that the plugins build on.                                       |
+| [myparcelnl/delivery-options](https://github.com/myparcelnl/delivery-options)             | Checkout widget in which the consumer picks a delivery or pickup option.                                                  |
+| [myparcelnl/woocommerce](https://github.com/myparcelnl/woocommerce) **(this repository)** | WooCommerce plugin. Thin adapter on top of the PDK.                                                                       |
+| [myparcelnl/prestashop](https://github.com/myparcelnl/prestashop)                         | PrestaShop module. Thin adapter on top of the PDK.                                                                        |
 
 How they connect:
 
@@ -46,14 +46,14 @@ The marketplace is private, so only MyParcel employees can install it.
 
 WooCommerce order meta (via `WC_Order::get_meta()` / `update_meta_data()`), works with both HPOS and legacy post meta:
 
-| Meta Key | Content |
-|----------|---------|
-| `_myparcelcom_order_data` | PDK order data (deliveryOptions, exported, apiIdentifier) |
-| `_myparcelcom_order_shipments` | Serialized `ShipmentCollection` array |
-| `_myparcel_delivery_options` | Legacy-format delivery options, kept for external systems that still read it |
-| `_myparcelcom_order_notes` | PDK order notes |
-| `_myparcelcom_version` | Plugin version the resource was last saved with |
-| `_myparcelcom_migrated` | Versions of the versioned migrations that already processed this order or product. Separate from the site-wide `applied_migrations` setting |
+| Meta Key                       | Content                                                                                                                                     |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `_myparcelcom_order_data`      | PDK order data (deliveryOptions, exported, apiIdentifier)                                                                                   |
+| `_myparcelcom_order_shipments` | Serialized `ShipmentCollection` array                                                                                                       |
+| `_myparcel_delivery_options`   | Legacy-format delivery options, kept for external systems that still read it                                                                |
+| `_myparcelcom_order_notes`     | PDK order notes                                                                                                                             |
+| `_myparcelcom_version`         | Plugin version the resource was last saved with                                                                                             |
+| `_myparcelcom_migrated`        | Versions of the versioned migrations that already processed this order or product. Separate from the site-wide `applied_migrations` setting |
 
 ### Settings Storage
 
@@ -64,6 +64,7 @@ Plugin settings are stored in `wp_options` with key prefix `_myparcelcom_` (from
 Migrations are registered in `WcMigrationService` (class migrations) or auto-discovered as timestamped files in `src/Migration/`, and run by the PDK `InstallerService`. A migration runs once: its identity (the class name, or the file name for a timestamped migration) is recorded in the `applied_migrations` setting, independent of the plugin version.
 
 For long-running migrations, use **chunked cron jobs**:
+
 1. `up()` queries affected records and splits into chunks
 2. Each chunk is scheduled via `CronServiceInterface::schedule()` with a unique action name
 3. The action name is registered in `WcPdkBootstrapper`, next to the existing migration actions
@@ -89,7 +90,7 @@ slot/fills are display-only). These invariants must hold — each fixes a real b
 - **Never push at order placement.** Forcing `extensionCartUpdate` there reverts the chosen shipping
   method on the resulting order. The order POST already carries the selection in its `extensions`
   payload; the server primes the fee from it in `CartFeesHooks::stashBlocksCheckoutSelection` (hooked
-  on `woocommerce_store_api_checkout_update_customer_from_request`, which runs *before*
+  on `woocommerce_store_api_checkout_update_customer_from_request`, which runs _before_
   `OrderController::update_order_from_cart` recalculates fees). Do **not** read `php://input` in the
   fee calc (`woocommerce_cart_calculate_fees`) — it corrupts the order build (duplicate lines, 500s).
 - **The push must block the place-order flow while in flight.** An `extensionCartUpdate` overlapping
@@ -101,7 +102,7 @@ slot/fills are display-only). These invariants must hold — each fixes a real b
   re-emit fires a spurious push that races the shipping commit.
 
 **Known WooCommerce core bug (not ours):** rapidly toggling "Afhalen in de winkel" ↔ "Verzenden" then
-ordering can place the order on the *previous* method (WC fails to commit the final local-pickup
+ordering can place the order on the _previous_ method (WC fails to commit the final local-pickup
 toggle server-side). Reproduces with all our checkout JS disabled. Normal single toggles are fine;
 treat rapid back-and-forth as an upstream stress-case.
 
@@ -113,12 +114,14 @@ The minimum PHP version is in `readme.txt` (`Requires PHP`) and in `composer.jso
 
 - The plugin runs inside a Docker-based WordPress setup. Use `docker compose exec php wp ...` from the docker-wordpress project root for WP-CLI commands.
 
+The prerequisites and the shared nx targets of the JavaScript packages are in `CONTRIBUTING.md`. Run a target in one package with `pnpm nx <target> <package name>`. The shared targets are nx targets, not package scripts, so `pnpm <target>` does not work inside a package folder.
+
 ### Building JS (nx cache gotcha)
 
 Editing the shared `views/frontend/common` package does **not** invalidate nx's build cache for
-dependent bundles (e.g. `frontend-checkout-core`), so a plain `yarn build` can silently replay a
+dependent bundles (e.g. `frontend-checkout-core`), so a plain `pnpm build` can silently replay a
 stale bundle and your change won't reach the browser. Build with `--skip-nx-cache` (or run
-`npx nx reset` first). Verify a change landed with `grep` on the `dist/*.iife.js` / `dist/*.js`
+`pnpm nx reset` first). Verify a change landed with `grep` on the `dist/*.iife.js` / `dist/*.js`
 (the dev build keeps variable names; the production build minifies).
 
 ### Running Tests
