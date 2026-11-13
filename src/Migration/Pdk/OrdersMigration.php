@@ -10,7 +10,6 @@ use MyParcelNL\Pdk\Base\Support\Arr;
 use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Base\Support\Utils;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\WooCommerce\Migration\Migration6_5_1;
 use WC_Order;
 
 final class OrdersMigration extends AbstractPdkMigration
@@ -76,9 +75,6 @@ final class OrdersMigration extends AbstractPdkMigration
             )
         );
 
-        $withNewOrderData = [];
-        $withNewShipments = [];
-
         foreach ($orderIds as $orderId) {
             $wcOrder = new WC_Order($orderId);
 
@@ -103,8 +99,6 @@ final class OrdersMigration extends AbstractPdkMigration
                 $wcOrder->update_meta_data(Pdk::get('metaKeyOrderShipments'), $this->getShipments($wcOrder));
                 $wcOrder->save();
 
-                $withNewShipments[] = $orderId;
-
                 $this->debug("Order $orderId shipments migrated.");
 
                 continue;
@@ -112,19 +106,26 @@ final class OrdersMigration extends AbstractPdkMigration
 
             $this->savePdkData($wcOrder);
 
-            $withNewOrderData[] = $orderId;
-            $withNewShipments[] = $orderId;
-
             $this->debug("Order $orderId migrated.");
         }
-
-        $this->normalizeForCurrentVersion($withNewOrderData, $withNewShipments);
     }
 
     /**
      * @return void
      */
     public function up(): void
+    {
+        $this->scheduleChunks(Pdk::get('migrateAction_5_0_0_Orders'));
+    }
+
+    /**
+     * Schedules the orders with 4.x data in chunks. The action decides which callback handles a chunk.
+     *
+     * @param  string $action
+     *
+     * @return void
+     */
+    public function scheduleChunks(string $action): void
     {
         if (! function_exists('wc_get_orders')) {
             $this->error('WooCommerce is not active, aborting migration.');
@@ -145,7 +146,7 @@ final class OrdersMigration extends AbstractPdkMigration
                 'lastChunk' => $lastChunk,
             ];
 
-            $this->cronService->schedule(Pdk::get('migrateAction_5_0_0_Orders'), $time, $chunkContext);
+            $this->cronService->schedule($action, $time, $chunkContext);
 
             $this->debug('Scheduled migration for orders', [
                 'time'  => $time,
@@ -331,8 +332,8 @@ final class OrdersMigration extends AbstractPdkMigration
             });
 
         $newShipments = $collection->map(function (array $shipment) use ($wcOrder) {
-            // Leave the carrier out when 4.x did not store one. Migration6_5_1 cannot convert an empty
-            // carrier, and then skips every shipment of the order.
+            // Leave the carrier out when 4.x did not store one. The carrier normalisation of 6.5.1
+            // cannot convert an empty carrier, and then skips every shipment of the order.
             $carrier = isset($shipment['carrier_id']) ? ['id' => $shipment['carrier_id']] : null;
 
             return [
@@ -410,31 +411,6 @@ final class OrdersMigration extends AbstractPdkMigration
         }
 
         return false;
-    }
-
-    /**
-     * This migration writes the format of 5.0.0. The later order migrations pick their orders when they
-     * are scheduled, and at that moment a 4.x order has no PDK data yet, so they never see it. Only
-     * Migration6_5_1 changes data that this migration writes: it stores the carrier as a V2 name. Run
-     * it here, so a migrated order ends up in the same format as an order from 5.x.
-     *
-     * @param  int[] $withNewOrderData
-     * @param  int[] $withNewShipments
-     *
-     * @return void
-     */
-    private function normalizeForCurrentVersion(array $withNewOrderData, array $withNewShipments): void
-    {
-        /** @var \MyParcelNL\WooCommerce\Migration\Migration6_5_1 $migration */
-        $migration = Pdk::get(Migration6_5_1::class);
-
-        if ($withNewOrderData) {
-            $migration->migrateOrderChunk(['orderIds' => $withNewOrderData]);
-        }
-
-        if ($withNewShipments) {
-            $migration->migrateShipmentChunk(['orderIds' => $withNewShipments]);
-        }
     }
 
     /**
