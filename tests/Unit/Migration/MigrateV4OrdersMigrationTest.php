@@ -33,7 +33,7 @@ it('is a timestamped migration the installer can discover', function () {
         ->and($migration->getId())->toBe('2026_11_09_120000_migrate_v4_orders');
 });
 
-it('schedules the order migration again for orders with 4.x data', function () {
+it('schedules its own chunks for orders with 4.x data', function () {
     createWcOrder(['id' => 101, 'meta' => [OrdersMigration::LEGACY_META_SHIPMENTS => '{}']]);
     createWcOrder(['id' => 102, 'meta' => [OrdersMigration::LEGACY_META_DELIVERY_OPTIONS => '{}']]);
     createWcOrder(['id' => 103]);
@@ -45,6 +45,6 @@ it('schedules the order migration again for orders with 4.x data', function () {
     $tasks = Pdk::get(WordPressScheduledTasks::class)->all();
 
     expect($tasks->count())->toBe(1)
-        ->and($tasks->first()['callback'])->toBe(Pdk::get('migrateAction_5_0_0_Orders'))
+        ->and($tasks->first()['callback'])->toBe(Pdk::get('migrateAction_V4Orders'))
         ->and($tasks->first()['args'][0]['orderIds'])->toBe([101, 102, 104]);
 });

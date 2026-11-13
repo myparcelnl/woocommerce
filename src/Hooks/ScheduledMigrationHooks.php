@@ -10,6 +10,7 @@ use MyParcelNL\WooCommerce\Migration\Migration6_5_1;
 use MyParcelNL\WooCommerce\Migration\NoTrackingChunkMigrator;
 use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
 use MyParcelNL\WooCommerce\Migration\Pdk\ProductSettingsMigration;
+use MyParcelNL\WooCommerce\Migration\V4OrdersChunkMigrator;
 
 /**
  * For scheduled migrations that need to be accessible through cron jobs.
@@ -21,6 +22,23 @@ final class ScheduledMigrationHooks implements WordPressHooksInterface
         $this->addPdkMigrations();
         $this->addMigration651();
         $this->addNoTrackingMigration();
+        $this->addV4OrdersMigration();
+    }
+
+    /**
+     * Chunks for the timestamped migration that repairs the 4.x orders.
+     *
+     * @return void
+     */
+    private function addV4OrdersMigration(): void
+    {
+        /** @var \MyParcelNL\WooCommerce\Migration\V4OrdersChunkMigrator $migrator */
+        $migrator = Pdk::get(V4OrdersChunkMigrator::class);
+
+        add_action(
+            Pdk::get('migrateAction_V4Orders'),
+            [$migrator, 'migrateChunk']
+        );
     }
 
     /**
