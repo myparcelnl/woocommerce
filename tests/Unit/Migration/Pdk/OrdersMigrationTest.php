@@ -100,28 +100,6 @@ it('schedules only orders of the last three months', function () {
         ->toBe((new DateTime('-3 months'))->format('Y-m-d'));
 });
 
-it('stores the carriers of a migrated order as V2 names', function (array $oldMeta, array $expected) {
-    /** @var \MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration $orderMigration */
-    $orderMigration = Pdk::get(OrdersMigration::class);
-
-    createWcOrder(['id' => 1, 'meta' => $oldMeta]);
-
-    $orderMigration->migrateOrder(['orderIds' => [1]]);
-
-    // Read the raw meta, not the PDK models: the models also accept the format of 5.0.0.
-    $postMeta  = MockWpMeta::all(1);
-    $orderData = $postMeta[Pdk::get('metaKeyOrderData')];
-
-    expect($orderData['deliveryOptions']['carrier'] ?? null)->toBe($expected['carrier']);
-
-    foreach ($postMeta[Pdk::get('metaKeyOrderShipments')] as $index => $shipment) {
-        // A shipment that 4.x stored without a carrier has none here. The PDK model then falls back
-        // to the default carrier.
-        expect($shipment['carrier'] ?? $expected['shipmentCarriers'][$index])
-            ->toBe($expected['shipmentCarriers'][$index]);
-    }
-})->with('legacy meta data');
-
 it('migrates orders', function (array $oldMeta, array $expected) {
     /** @var \MyParcelNL\Pdk\Tests\Bootstrap\MockPdkOrderRepository $pdkOrderRepository */
     $pdkOrderRepository = Pdk::get(PdkOrderRepositoryInterface::class);

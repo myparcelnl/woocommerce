@@ -12,6 +12,9 @@ use MyParcelNL\WooCommerce\Migration\Pdk\OrdersMigration;
  * schedule the order migration again. Like the first run, it takes the orders of the last three months.
  * It skips each order that already has shipments in the current format, so labels created after the
  * upgrade stay as they are.
+ *
+ * The chunks run in V4OrdersChunkMigrator. After the order migration, it brings the migrated data to
+ * the current format, which the migrations between 5.0.0 and this one did not do for these orders.
  */
 return new class extends AbstractTimestampedMigration {
     public function up(): void
@@ -21,7 +24,7 @@ return new class extends AbstractTimestampedMigration {
         }
 
         try {
-            Pdk::get(OrdersMigration::class)->up();
+            Pdk::get(OrdersMigration::class)->scheduleChunks(Pdk::get('migrateAction_V4Orders'));
         } catch (Throwable $exception) {
             $this->markFailed('Could not schedule the migration of 4.x orders; it will be retried.', [
                 'exception' => $exception->getMessage(),
