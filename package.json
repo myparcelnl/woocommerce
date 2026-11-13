@@ -1,6 +1,6 @@
 {
   "name": "@myparcel-woocommerce/monorepo",
-  "version": "6.13.0",
+  "version": "6.13.1",
   "private": true,
   "homepage": "https://github.com/myparcelnl/woocommerce#readme",
   "bugs": {
@@ -78,7 +78,7 @@
     "husky": "^9.0.0",
     "is-ci": "^4.1.0",
     "lint-staged": "^15.0.0",
-    "nx": "^23.2.1",
+    "nx": "^24.0.6",
     "prettier": "^2.8.4",
     "react": "*",
     "react-dom": "*",
