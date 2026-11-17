@@ -13,7 +13,7 @@
     "@myparcel-dev/pdk-admin-preset-dashicons": "^2.2.2",
     "@myparcel-dev/pdk-admin-preset-default": "^2.2.2",
     "@myparcel-dev/ts-utils": "^1.15.0",
-    "@tanstack/vue-query": "^4.43.0",
+    "@tanstack/vue-query": "^5.108.0",
     "@vueuse/core": "^10.11.1"
   },
   "devDependencies": {
