@@ -33,7 +33,7 @@ jobs:
       - test
       - analyse
     steps:
-      - uses: myparcelnl/actions/pdk-prerelease@v5
+      - uses: myparcelnl/actions/pdk-prerelease@v6
         with:
           app-id: ${{ secrets.MYPARCEL_APP_ID }}
           private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}

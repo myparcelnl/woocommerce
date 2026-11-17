@@ -4,20 +4,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "run ws:build \"$(pwd)\"",
-    "build:dev": "run ws:build:dev \"$(pwd)\"",
-    "build:test": "run ws:build:test \"$(pwd)\"",
-    "clean": "run ws:clean \"$(pwd)\"",
-    "test": "run ws:test \"$(pwd)\"",
-    "test:coverage": "run ws:test:coverage \"$(pwd)\"",
-    "test:run": "run ws:test:run \"$(pwd)\""
+    "build": "vite build",
+    "build:dev": "vite build --mode development",
+    "build:test": "vite build --mode test"
   },
   "dependencies": {
     "@myparcel-dev/pdk-admin": "^2.2.2",
     "@myparcel-dev/pdk-admin-preset-dashicons": "^2.2.2",
     "@myparcel-dev/pdk-admin-preset-default": "^2.2.2",
     "@myparcel-dev/ts-utils": "^1.15.0",
-    "@tanstack/vue-query": "^4.43.0"
+    "@tanstack/vue-query": "^4.43.0",
+    "@vueuse/core": "^10.11.1"
   },
   "devDependencies": {
     "@myparcel-dev/pdk-admin-component-tests": "^2.2.8",
@@ -36,5 +33,13 @@
     "typescript": "^5.7.3",
     "vite": "^8.3.1",
     "vue": "3.4.31"
+  },
+  "nx": {
+    "targets": {
+      "clean": {},
+      "test": {},
+      "test:coverage": {},
+      "test:run": {}
+    }
   }
 }
