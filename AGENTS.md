@@ -23,7 +23,7 @@ How they connect:
 - The widget and the js-pdk admin get carrier capabilities by POSTing to the PDK `proxyCapabilities` action (`PdkCapabilitiesActions`).
 - Carriers, delivery types and package types come from the SDK. Do not add definitions of them to the PDK or the plugins.
 
-For local development, `pdk-dev-on` links local checkouts of the PDK and js-pdk into a plugin. It adds a composer `path` repository to `composer.json` and yarn `portal:` links to `package.json`. Never commit these changes. Suggest it only when the task needs changes in the PDK or js-pdk, or needs to test such changes in a plugin. MyParcel employees can find the setup in [Local PDK in PDK plugin](https://myparcelnl.atlassian.net/wiki/spaces/IG/pages/319422473).
+To link local checkouts of the PDK and js-pdk into a plugin, use `pdk-dev` from the PDK, as described in [Testing your changes in a plugin](https://github.com/myparcelnl/pdk#testing-your-changes-in-a-plugin) in the PDK README. Never commit the changes it makes. Suggest it only when the task needs changes in the PDK or js-pdk, or needs to test such changes in a plugin.
 
 The delivery options widget has no link command. To test a local build, serve `apps/delivery-options/dist` from a delivery-options checkout and override `deliveryOptionsCdnUrlJs`, `deliveryOptionsCdnUrlJsLib` and `deliveryOptionsCdnUrlCss` in the plugin's `config/pdk.php`. Never commit these overrides. This works only locally: there is no way to give a tester a plugin build with a custom widget version.
 
