@@ -20,20 +20,9 @@
   }
 }
 
-// Disable dragging of the MyParcel box on the order page.
-#myparcelcom_woocommerce_order_data {
-  &.postbox {
-    @apply mypa-p-0 mypa-border-0 mypa-bg-transparent mypa-shadow-none mypa-m-0;
-  }
-
-  & > .postbox-header {
-    @apply mypa-hidden;
-  }
-
-  & > .inside {
-    @apply mypa-p-0 mypa-m-0;
-  }
-
+// The MyParcel box on the order page is a regular WordPress box: it can be moved and collapsed.
+// The boxes inside it only borrow the WordPress styling, so they must not react to dragging or clicks.
+#myparcelcom_woocommerce_order_data > .inside {
   .postbox-header {
     @apply mypa-cursor-default mypa-pointer-events-none;
   }
