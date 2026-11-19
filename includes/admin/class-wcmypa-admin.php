@@ -1720,15 +1720,14 @@ class WCMYPA_Admin
         $lastOrder  = end($orderMeta);
         $orderUuid  = $lastOrder ? $lastOrder[self::META_PPS_UUID] : null;
         $comment    = get_comment($commentId);
-        $orderNotes = (new OrderNotesCollection())->setApiKey(
-            WCMYPA()->setting_collection->getByName(
-                WCMYPA_Settings::SETTING_API_KEY
-            )
-        );
+        $apiKey     = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_API_KEY);
 
-        if (! $orderUuid || 'system' === $comment->comment_author) {
+        // Without an API key, setApiKey() throws a TypeError, which would break every order note, including checkout.
+        if (! $orderUuid || ! $apiKey || 'system' === $comment->comment_author) {
             return;
         }
+
+        $orderNotes = (new OrderNotesCollection())->setApiKey($apiKey);
 
         $orderNote = new OrderNote([
             'note'      => $comment->comment_content,
