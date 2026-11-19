@@ -17,6 +17,8 @@ This WooCommerce extension allows you to export your orders to the MyParcel serv
 
 **Online Manual (in Dutch):** [https://myparcelnl.github.io/woocommerce/](https://myparcelnl.github.io/woocommerce/)
 
+**Source code:** The source code and the build tools of this plugin are on GitHub: [https://github.com/myparcelnl/woocommerce](https://github.com/myparcelnl/woocommerce). The file `CONTRIBUTING.md` in that repository explains how to build the plugin.
+
 ###The no. 1 shipping platform for every online entrepreneur.
 We are MyParcel, the platform with which every online entrepreneur, large or small, can easily create shipping labels to send parcels, mail, letterbox parcels, and pallets. To destinations inland and abroad. Our goal is to make the services of major carriers accessible to every online entrepreneur so that they have time for what they are good at: doing business. We do this with our easy and accessible shipping service, smart IT solutions, and the most personal customer service.
 
