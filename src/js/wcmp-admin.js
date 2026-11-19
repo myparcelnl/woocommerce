@@ -617,7 +617,8 @@ jQuery(($) => {
     event.preventDefault();
     removeNotices();
 
-    const checkedRowsSelector = '#the-list th.check-column input[type="checkbox"]:checked';
+    // WordPress 7.1 renders the row checkbox in a td instead of a th, so match the cell by class only.
+    const checkedRowsSelector = '#the-list .check-column input[type="checkbox"]:checked';
     const checkedRows = [...document.querySelectorAll(checkedRowsSelector)];
     const orderIds = checkedRows.map((element) => element.value);
 
