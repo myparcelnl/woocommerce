@@ -52,6 +52,18 @@ class WcViewService extends AbstractViewService
     }
 
     /**
+     * The plugins overview, where the deactivation modal asks why the plugin is deactivated. Only for users that can
+     * deactivate plugins.
+     *
+     * @return bool
+     */
+    public function isPluginsOverviewPage(): bool
+    {
+        return in_array($this->getScreenId(), ['plugins', 'plugins-network'], true)
+            && current_user_can('activate_plugins');
+    }
+
+    /**
      * @return bool
      */
     public function isProductPage(): bool

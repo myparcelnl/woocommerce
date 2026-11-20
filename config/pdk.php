@@ -197,6 +197,16 @@ return [
     }),
 
     /**
+     * The "Deactivate" link of this plugin in the plugins overview. WordPress identifies the row by
+     * "<directory>/<main file>.php". pluginBasename holds the directory, or the full path, so take its first segment.
+     */
+    'deactivationFeedbackLinkSelector' => factory(function (): string {
+        $directory = explode('/', trim((string) Pdk::get('pluginBasename'), '/'))[0];
+
+        return sprintf('tr[data-plugin^="%s/"] .deactivate a', $directory);
+    }),
+
+    /**
      * Directory the installer scans for timestamped migration files. The PDK default resolves
      * against its own package directory, so without this the plugin's migrations are never found.
      */
