@@ -374,3 +374,25 @@ it('writes order data through a fresh order instance', function () {
         ->and($wcRepository->getFreshOrderCallCount())->toBe(1)
         ->and($wcRepository->getLastCacheUpdate())->toBe($freshOrder);
 });
+
+it('does not save an order that does not exist in the shop', function () {
+    $missingOrder = new TrackingWcOrder(0);
+    $wcRepository = new TrackingWcOrderRepository($missingOrder, $missingOrder);
+
+    $repository = new PdkOrderRepository(
+        Pdk::get(StorageInterface::class),
+        Pdk::get(PdkProductRepositoryInterface::class),
+        $wcRepository,
+        Pdk::get(WcAddressAdapter::class),
+        Pdk::get(LegacyDeliveryOptionsAdapter::class)
+    );
+
+    /** @var \MyParcelNL\Pdk\Tests\Bootstrap\MockLogger $logger */
+    $logger = Pdk::get(LoggerInterface::class);
+
+    $repository->update(new PdkOrder(['externalIdentifier' => '0']));
+
+    expect($missingOrder->getSaveCount())->toBe(0)
+        ->and($wcRepository->getLastCacheUpdate())->toBeNull()
+        ->and($logger->getLogs('warning'))->toHaveCount(1);
+});
