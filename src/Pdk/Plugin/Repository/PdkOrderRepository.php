@@ -158,6 +158,15 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     {
         $wcOrder = $this->wcOrderRepository->getFresh($order->externalIdentifier);
 
+        // An order without an id does not exist in the shop. WooCommerce inserts a new, empty order when it saves one.
+        if (! $wcOrder->get_id()) {
+            Logger::warning('Skipping update of an order that does not exist', [
+                'externalIdentifier' => $order->externalIdentifier,
+            ]);
+
+            return $order;
+        }
+
         $order->shipments = $this
             ->getShipments($wcOrder)
             ->mergeByKey($order->shipments, 'id');
