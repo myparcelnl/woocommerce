@@ -26,6 +26,12 @@
   .postbox-header {
     @apply mypa-cursor-default mypa-pointer-events-none;
   }
+
+  // The side column of the order page is narrower than the content of these boxes.
+  // Scroll inside each box there, so nothing is cut off and nothing sticks out of the MyParcel box.
+  #side-sortables & .postbox {
+    @apply mypa-overflow-x-auto;
+  }
 }
 
 // Product variations
