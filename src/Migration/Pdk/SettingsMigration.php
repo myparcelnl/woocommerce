@@ -323,6 +323,22 @@ class SettingsMigration extends AbstractPdkMigration
         ];
 
         yield [
+            self::TRANSFORM_KEY_SOURCE    => 'export_defaults.export_automatic',
+            self::TRANSFORM_KEY_TARGET    => 'order.processDirectly',
+            self::TRANSFORM_KEY_TRANSFORM => function ($value, array $oldSettings) {
+                $status = Arr::get($oldSettings, 'export_defaults.export_automatic_status');
+
+                // 'notActive' is the "not active" option of the 4.x status select.
+                if ('1' !== $value || ! $status || 'notActive' === $status) {
+                    return Settings::OPTION_NONE;
+                }
+
+                // 4.x stores the status without the 'wc-' prefix that v6 expects.
+                return sprintf('wc-%s', preg_replace('/^wc-/', '', $status));
+            },
+        ];
+
+        yield [
             self::TRANSFORM_KEY_SOURCE => 'general.barcode_in_note',
             self::TRANSFORM_KEY_TARGET => 'order.barcodeInNote',
             self::TRANSFORM_KEY_CAST   => self::TRANSFORM_CAST_BOOL,
