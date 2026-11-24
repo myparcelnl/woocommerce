@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.13.2](https://github.com/myparcelnl/woocommerce/compare/v6.13.1...v6.13.2) (2026-11-24)
+
+### :bug: Bug Fixes
+
+* **admin:** do not clip the actions dropdown in the order shipments table ([#2033](https://github.com/myparcelnl/woocommerce/issues/2033)) ([85ddca9](https://github.com/myparcelnl/woocommerce/commit/85ddca9d1f5bd24069bea25b5c81482d3ba2bdae)), closes [#1104](https://github.com/myparcelnl/woocommerce/issues/1104) [myparcelnl/js-pdk#260](https://github.com/myparcelnl/js-pdk/issues/260) [#2030](https://github.com/myparcelnl/woocommerce/issues/2030)
+* **checkout:** translate the empty option in the address widget ([#2044](https://github.com/myparcelnl/woocommerce/issues/2044)) ([7371582](https://github.com/myparcelnl/woocommerce/commit/7371582854e7f3ca80f03e99742165fd92673602))
+
 ## [6.13.1](https://github.com/myparcelnl/woocommerce/compare/v6.13.0...v6.13.1) (2026-11-10)
 
 ### :bug: Bug Fixes
