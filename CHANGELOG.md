@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.13.3](https://github.com/myparcelnl/woocommerce/compare/v6.13.2...v6.13.3) (2026-11-24)
+
+### :bug: Bug Fixes
+
+* **migration:** keep labels and automatic export when upgrading from 4.x ([#2035](https://github.com/myparcelnl/woocommerce/issues/2035)) ([b2fb37d](https://github.com/myparcelnl/woocommerce/commit/b2fb37dfeebc39805d8ec2162f7b88855c0b66b2)), closes [#2027](https://github.com/myparcelnl/woocommerce/issues/2027) [#2028](https://github.com/myparcelnl/woocommerce/issues/2028)
+
 ## [6.13.2](https://github.com/myparcelnl/woocommerce/compare/v6.13.1...v6.13.2) (2026-11-24)
 
 ### :bug: Bug Fixes
