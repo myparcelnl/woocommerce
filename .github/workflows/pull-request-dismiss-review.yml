@@ -13,6 +13,8 @@ jobs:
     # A pull request from a fork gets a read-only token and no secrets.
     if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-22.04
+    # The action uses the app token, so GITHUB_TOKEN needs no permissions.
+    permissions: {}
     steps:
       # An app token, so that the dismissal starts the "Label pull request" workflow.
       # An event that GITHUB_TOKEN causes does not start another workflow.
