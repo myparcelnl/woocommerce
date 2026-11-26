@@ -1,0 +1,22 @@
+name: 'Dismiss changes requested on re-request'
+
+on:
+  pull_request:
+    types:
+      - review_requested
+
+concurrency:
+  group: '${{ github.workflow }}-${{ github.event.pull_request.number }}'
+
+jobs:
+  dismiss-review:
+    # A pull request from a fork gets a read-only token and no secrets.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-22.04
+    steps:
+      # An app token, so that the dismissal starts the "Label pull request" workflow.
+      # An event that GITHUB_TOKEN causes does not start another workflow.
+      - uses: myparcelnl/actions/pr-dismiss-review@v6
+        with:
+          app-id: ${{ secrets.MYPARCEL_APP_ID }}
+          private-key: ${{ secrets.MYPARCEL_APP_PRIVATE_KEY }}
