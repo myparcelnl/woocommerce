@@ -72,6 +72,45 @@ it('returns proper permission callback', function (array $roles, bool $expected)
     ],
 ]);
 
+it('allows filtering the roles that have backend access', function (array $roles, array $allowedRoles, bool $expected) {
+    MockWpUser::reset();
+    foreach ($roles as $role) {
+        MockWpUser::addRole($role);
+    }
+
+    add_filter('mpwc_backend_permission_roles', function (array $defaultRoles, $user) use ($allowedRoles) {
+        expect($defaultRoles)->toBe(['shop_manager', 'administrator'])
+            ->and($user->roles)->toBe(MockWpUser::$roles);
+
+        return $allowedRoles;
+    }, 10, 2);
+
+    $actual = (Pdk::get('routeBackendPermissionCallback'))();
+
+    expect($actual)->toBe($expected);
+})->with([
+    'custom role added'         => [
+        'roles'        => ['warehouse'],
+        'allowedRoles' => ['shop_manager', 'administrator', 'warehouse'],
+        'expected'     => true,
+    ],
+    'shop manager removed'      => [
+        'roles'        => ['shop_manager'],
+        'allowedRoles' => ['administrator'],
+        'expected'     => false,
+    ],
+    'administrator still works' => [
+        'roles'        => ['administrator'],
+        'allowedRoles' => ['administrator'],
+        'expected'     => true,
+    ],
+    'role not in filtered list' => [
+        'roles'        => ['subscriber'],
+        'allowedRoles' => ['warehouse'],
+        'expected'     => false,
+    ],
+]);
+
 it('enables or disables delivery options position setting', function ($pageId, $group, $data, $result) {
     MockWpCache::add($pageId, $data, $group);
     $disabledSettings = Pdk::get('disabledSettings');
