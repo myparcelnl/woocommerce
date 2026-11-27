@@ -471,16 +471,16 @@
         },
         {
             "name": "myparcelnl/pdk",
-            "version": "5.3.2",
+            "version": "5.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/pdk.git",
-                "reference": "966b61fc0c59ae7915cdbe061e97f1554b0a7c59"
+                "reference": "b0cb838de6d0ce7190b46e2c0a89551d8defebed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/966b61fc0c59ae7915cdbe061e97f1554b0a7c59",
-                "reference": "966b61fc0c59ae7915cdbe061e97f1554b0a7c59",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/b0cb838de6d0ce7190b46e2c0a89551d8defebed",
+                "reference": "b0cb838de6d0ce7190b46e2c0a89551d8defebed",
                 "shasum": ""
             },
             "require": {
@@ -490,7 +490,7 @@
                 "php": ">=7.4.0",
                 "php-di/php-di": "^6.0.0",
                 "psr/log": "^1.0.0 || ^2.0.0 || ^3.0.0",
-                "symfony/http-foundation": "^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0"
+                "symfony/http-foundation": "^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0"
             },
             "require-dev": {
                 "behat/behat": "^3.13",
@@ -528,22 +528,22 @@
             "homepage": "https://myparcel.nl",
             "support": {
                 "issues": "https://github.com/myparcelnl/pdk/issues",
-                "source": "https://github.com/myparcelnl/pdk/tree/v5.3.2"
+                "source": "https://github.com/myparcelnl/pdk/tree/v5.3.3"
             },
-            "time": "2026-11-13T16:12:31+00:00"
+            "time": "2026-11-26T10:34:48+00:00"
         },
         {
             "name": "myparcelnl/sdk",
-            "version": "11.3.2",
+            "version": "11.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/sdk.git",
-                "reference": "55bed4e011de7b1ab18f253ff346d44f9d846718"
+                "reference": "6cb1bf4acb0714f99eec4bb40ccf67a6915b24a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/55bed4e011de7b1ab18f253ff346d44f9d846718",
-                "reference": "55bed4e011de7b1ab18f253ff346d44f9d846718",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/6cb1bf4acb0714f99eec4bb40ccf67a6915b24a4",
+                "reference": "6cb1bf4acb0714f99eec4bb40ccf67a6915b24a4",
                 "shasum": ""
             },
             "require": {
@@ -597,9 +597,9 @@
             ],
             "support": {
                 "issues": "https://github.com/myparcelnl/sdk/issues",
-                "source": "https://github.com/myparcelnl/sdk/tree/v11.3.2"
+                "source": "https://github.com/myparcelnl/sdk/tree/v11.3.3"
             },
-            "time": "2026-11-17T16:15:51+00:00"
+            "time": "2026-11-26T16:15:17+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -1145,16 +1145,16 @@
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v5.4.56",
+            "version": "v5.4.57",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "6c66f8dc46282c3cae6a851aa051927800c4bf7b"
+                "reference": "fc674f5de38b72e6fc43ebcb965f53d045d398e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/6c66f8dc46282c3cae6a851aa051927800c4bf7b",
-                "reference": "6c66f8dc46282c3cae6a851aa051927800c4bf7b",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/fc674f5de38b72e6fc43ebcb965f53d045d398e0",
+                "reference": "fc674f5de38b72e6fc43ebcb965f53d045d398e0",
                 "shasum": ""
             },
             "require": {
@@ -1201,7 +1201,7 @@
             "description": "Defines an object-oriented layer for the HTTP specification",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/http-foundation/tree/v5.4.56"
+                "source": "https://github.com/symfony/http-foundation/tree/v5.4.57"
             },
             "funding": [
                 {
@@ -1221,7 +1221,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-04T07:37:33+00:00"
+            "time": "2026-11-24T17:11:07+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -4762,16 +4762,16 @@
         },
         {
             "name": "symfony/property-access",
-            "version": "v5.4.45",
+            "version": "v5.4.57",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/property-access.git",
-                "reference": "111e7ed617509f1a9139686055d234aad6e388e0"
+                "reference": "0c973ba2c5e1ce7105e6e2857e0b84c692759aaf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/property-access/zipball/111e7ed617509f1a9139686055d234aad6e388e0",
-                "reference": "111e7ed617509f1a9139686055d234aad6e388e0",
+                "url": "https://api.github.com/repos/symfony/property-access/zipball/0c973ba2c5e1ce7105e6e2857e0b84c692759aaf",
+                "reference": "0c973ba2c5e1ce7105e6e2857e0b84c692759aaf",
                 "shasum": ""
             },
             "require": {
@@ -4823,7 +4823,7 @@
                 "reflection"
             ],
             "support": {
-                "source": "https://github.com/symfony/property-access/tree/v5.4.45"
+                "source": "https://github.com/symfony/property-access/tree/v5.4.57"
             },
             "funding": [
                 {
@@ -4835,24 +4835,28 @@
                     "type": "github"
                 },
                 {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
                     "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-25T14:11:13+00:00"
+            "time": "2026-11-05T21:11:59+00:00"
         },
         {
             "name": "symfony/property-info",
-            "version": "v5.4.48",
+            "version": "v5.4.57",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/property-info.git",
-                "reference": "a0396295ad585f95fccd690bc6a281e5bd303902"
+                "reference": "756773226377bd4c9d5883ed31090bfe463e6d3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/property-info/zipball/a0396295ad585f95fccd690bc6a281e5bd303902",
-                "reference": "a0396295ad585f95fccd690bc6a281e5bd303902",
+                "url": "https://api.github.com/repos/symfony/property-info/zipball/756773226377bd4c9d5883ed31090bfe463e6d3e",
+                "reference": "756773226377bd4c9d5883ed31090bfe463e6d3e",
                 "shasum": ""
             },
             "require": {
@@ -4914,7 +4918,7 @@
                 "validator"
             ],
             "support": {
-                "source": "https://github.com/symfony/property-info/tree/v5.4.48"
+                "source": "https://github.com/symfony/property-info/tree/v5.4.57"
             },
             "funding": [
                 {
@@ -4926,24 +4930,28 @@
                     "type": "github"
                 },
                 {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
                     "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-25T16:14:41+00:00"
+            "time": "2026-11-19T21:45:55+00:00"
         },
         {
             "name": "symfony/serializer",
-            "version": "v5.4.56",
+            "version": "v5.4.57",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/serializer.git",
-                "reference": "ffaeb561f97bb0045f1f9720a5224607816a75ee"
+                "reference": "2dc0c2af4c50848c175c501151223e85b5d341e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/serializer/zipball/ffaeb561f97bb0045f1f9720a5224607816a75ee",
-                "reference": "ffaeb561f97bb0045f1f9720a5224607816a75ee",
+                "url": "https://api.github.com/repos/symfony/serializer/zipball/2dc0c2af4c50848c175c501151223e85b5d341e0",
+                "reference": "2dc0c2af4c50848c175c501151223e85b5d341e0",
                 "shasum": ""
             },
             "require": {
@@ -5017,7 +5025,7 @@
             "description": "Handles serializing and deserializing data structures, including object graphs, into array structures or other formats like XML and JSON.",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/serializer/tree/v5.4.56"
+                "source": "https://github.com/symfony/serializer/tree/v5.4.57"
             },
             "funding": [
                 {
@@ -5037,7 +5045,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-04T07:38:25+00:00"
+            "time": "2026-11-24T17:11:35+00:00"
         },
         {
             "name": "symfony/service-contracts",
