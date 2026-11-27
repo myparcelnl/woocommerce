@@ -41,6 +41,10 @@ final class MockWpUser implements StaticMockInterface
             return in_array('shop_manager', self::$roles, true);
         }
 
+        if ($capability === 'activate_plugins') {
+            return in_array('administrator', self::$roles, true);
+        }
+
         return false;
     }
 }

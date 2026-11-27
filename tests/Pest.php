@@ -19,6 +19,8 @@ use MyParcelNL\WooCommerce\Tests\Mock\MockWpActions;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpCache;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpEnqueue;
 use MyParcelNL\WooCommerce\Tests\Mock\MockWpMeta;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpScreen;
+use MyParcelNL\WooCommerce\Tests\Mock\MockWpUser;
 
 require __DIR__ . '/../vendor/myparcelnl/pdk/tests/Pest.php';
 require __DIR__ . '/mock_class_map.php';
@@ -43,6 +45,8 @@ uses()
             MockWpCache::class,
             MockWpEnqueue::class,
             MockWpMeta::class,
+            MockWpScreen::class,
+            MockWpUser::class,
         ];
 
         foreach ($resetInterfaces as $class) {
