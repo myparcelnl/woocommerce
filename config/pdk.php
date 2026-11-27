@@ -38,6 +38,7 @@ use MyParcelNL\Pdk\Settings\Contract\PdkSettingsRepositoryInterface;
 use MyParcelNL\WooCommerce\Contract\WooCommerceServiceInterface;
 use MyParcelNL\WooCommerce\Contract\WordPressServiceInterface;
 use MyParcelNL\WooCommerce\Contract\WpFilterServiceInterface;
+use MyParcelNL\WooCommerce\Facade\Filter;
 use MyParcelNL\WooCommerce\Database\Contract\WpDatabaseServiceInterface;
 use MyParcelNL\WooCommerce\Database\Service\WpDatabaseService;
 use MyParcelNL\WooCommerce\Facade\WooCommerce;
@@ -254,18 +255,15 @@ return [
     'routeBackendWebhook'            => factory(function (): string {
         return sprintf('%s/(?P<hash>.+)', Pdk::get('routeBackendWebhookBase'));
     }),
-    'routeBackendPermissionCallback' => factory(static function (): string {
+    'routeBackendPermissionCallback' => value(static function (): bool {
         if (! is_user_logged_in()) {
-            return '__return_false';
+            return false;
         }
 
-        foreach (wp_get_current_user()->roles as $role) {
-            if (in_array($role, ['shop_manager', 'administrator'])) {
-                return '__return_true';
-            }
-        }
+        $user         = wp_get_current_user();
+        $allowedRoles = (array) Filter::apply('backendPermissionRoles', null, $user);
 
-        return '__return_false';
+        return (bool) array_intersect((array) $user->roles, $allowedRoles);
     }),
 
     'routeFrontend'         => value(PdkBootstrapper::PLUGIN_NAMESPACE . '/frontend/v1'),

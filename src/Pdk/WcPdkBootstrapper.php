@@ -218,6 +218,11 @@ class WcPdkBootstrapper extends PdkBootstrapper
                  * Account page
                  */
                 'trackTraceLabel'                  => 'mpwc_track_trace_label',
+
+                /**
+                 * Admin
+                 */
+                'backendPermissionRoles'           => 'mpwc_backend_permission_roles',
             ]),
 
             'filterDefaults' => value([
@@ -243,6 +248,8 @@ class WcPdkBootstrapper extends PdkBootstrapper
 
                 'fieldEoriNumberPriority' => 900,
                 'fieldVatNumberPriority'  => 901,
+
+                'backendPermissionRoles' => ['shop_manager', 'administrator'],
             ]),
 
             ###
